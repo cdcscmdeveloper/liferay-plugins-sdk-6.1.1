@@ -11,10 +11,8 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td width="134px;"><p:outputLabel
-							value="#{lbl['lbl.sm.facility.ownerType']}" />
-					</td>
-					<td style="width: 100px; padding-bottom: 2px;">
+					<td width="134px;" style="float:left;"><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
+					<td style="float:left;">
 						<p:outputLabel value="Own" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
 						<p:outputLabel value="Rent" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
 					</td>
@@ -24,32 +22,29 @@
 				rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="134px;">
-							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']}" />
+						<td width="134px;" style="float:left;">
+							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" />
 						</td>
-						<td colspan="3" style="padding-bottom: 4px;">
-							<p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType}"
-								disabled="true">
-								<f:selectItem itemLabel="Home Office" itemValue="H" />
-								<f:selectItem itemLabel="Business Office" itemValue="B" />
-							</p:selectOneRadio>
+						<td style="float:left;">
+							<p:outputLabel value="Home Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+							<p:outputLabel value="Business Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 						</td>
 					</tr>
 					<tr>
 						<td style="width: 14%">
-							<p:outputLabel value="#{lbl['lbl.sm.facility.landLordName']}" /> 
+							<p:outputLabel value="#{lbl['lbl.sm.facility.landLordName']} :" /> 
 						</td>
-						<td>
+						<td style="float:left;">
 							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" />
 						</td>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.facility.monthRent']}" />
+							<p:outputLabel value="#{lbl['lbl.sm.facility.monthRent']} :" />
 						</td>
 						<td>
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}">
+							<h:outputText value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							</h:outputText>
 						</td>
 					</tr>
 					<tr>
@@ -59,22 +54,22 @@
 						<td>
 							<table style="width: 100%">
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
 									</td>
 								</tr>
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
 									</td>
 								</tr>
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
 									</td>
 								</tr>
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address4}" />
 									</td>
 								</tr>
@@ -84,23 +79,23 @@
 							<TABLE style="width: 100%; height: 100px;">
 								<tr>
 									<td>
-										<p:outputLabel value="#{lbl['lbl.sm.country']}" />
+										<p:outputLabel value="#{lbl['lbl.sm.country']} :" />
 									</td>
 								</tr>
 								<tr>
 
 									<td>
-										<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+										<p:outputLabel value="#{lbl['lbl.sm.state']} :" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+										<p:outputLabel value="#{lbl['lbl.sm.district']} :" />
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+										<p:outputLabel value="#{lbl['lbl.sm.towncity']} :" />
 									</td>
 								</tr>
 							</TABLE>
@@ -108,24 +103,24 @@
 						<td>
 							<TABLE style="width: 100%">
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/>
 									</td>
 								</tr>
 								<tr>
 
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/>
 									</td>
 								</tr>
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtName}"/>
 									</td>
 
 								</tr>
 								<tr>
-									<td>
+									<td style="float:left;">
 										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityName}"/>
 									</td>
 								</tr>
@@ -133,8 +128,8 @@
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+						<td style="float:left;">
 							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
 						</td>
 					</tr>
@@ -144,41 +139,35 @@
 				rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 				<table style="width: 100%">
 					<tr>
-						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
-						<td style="padding-bottom: 4px;">
-							<p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType}" disabled="true">
-								<f:selectItem itemLabel="Home Office" itemValue="H" />
-								<f:selectItem itemLabel="Business Office" itemValue="B" />
-							</p:selectOneRadio>
+						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
+						<td style="float:left;">
+							<p:outputLabel value="Home Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+							<p:outputLabel value="Business Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 						</td>
 
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel
-								value="#{lbl['lbl.sm.facility.ownerName']}" /></td>
-						<td>
+						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']} :" /></td>
+						<td style="float:left;">
 							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}"/>
 						</td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel
-								value="#{lbl['lbl.sm.facility.purchaseDate']}" />
-						</td>
-						<td style="padding-bottom: 3px;">
-							<p:calendar value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}"
-								disabled="true">
-							</p:calendar>
+						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.purchaseDate']} :" /></td>
+						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+							<h:outputText value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</h:outputText>
 						</td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel
-								value="#{lbl['lbl.sm.facility.purchasePrice']}" />
-						</td>
-						<td>
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}">
+						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.purchasePrice']} :" /></td>
+						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+							<h:outputText value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							</h:outputText>
 						</td>
 					</tr>
 				</table>

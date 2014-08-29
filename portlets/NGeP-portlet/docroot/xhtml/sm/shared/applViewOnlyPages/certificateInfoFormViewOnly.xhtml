@@ -35,79 +35,62 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}"
-						update=":form:tt:certPop" partialSubmit="true" process="@this">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png"
+						update=":form:tt:certPop" partialSubmit="true" process="@this" oncomplete="certDialog.show()">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="500px" height="275px"
+	<p:dialog width="350px" height="150px"
 		header="#{lbl['lbl.sm.cert.certDiaHdrMsg']}" widgetVar="certDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="certPop" closable="false">
-		<p:messages id="suppCertInfoMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
-
-
-		<table style="width: 100%">
-			<tr>
-				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.cert.certType']}" />
-				</td>
-				<td>
-					<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{viewSmApplBackingBean.managedBean.selectedCert.certTypeId}"
-						disabled="true">
-						<f:selectItems value="#{viewSmApplBackingBean.getDropdownValues('CRT')}" />
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']}" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
-						<f:selectItems var="certBody"
-							value="#{viewSmApplBackingBean.managedBean.certBodyLs}"
-							itemValue="#{certBody.certBodyId}"
-							itemLabel="#{certBody.bodyName}" />
-					</p:selectOneMenu>
-				</td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']}" /></td>
-				<td>
-					<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" />
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']}" /></td>
-				<td>
-					<p:calendar value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" disabled="true"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']}" /></td>
-				<td>
-					<p:calendar value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" disabled="true"/>
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']}" /></td>
-				<td>
-					<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
-				</td>
-			</tr>
-
-		</table>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"/>
-		</div>
+		id="certPop" closable="true">
+		
+		<p:panel id="certificateDetailsPanel">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']} :" /></td>
+					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']} :" /></td>
+					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']} :" /></td>
+					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
+					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+						<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
+					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+						<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" >
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</h:outputText>
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']} :" /></td>
+					<td style="float:left;">
+						<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
+					</td>
+				</tr>
+	
+			</table>
+		</p:panel>
 
 	</p:dialog>
 </ui:composition>

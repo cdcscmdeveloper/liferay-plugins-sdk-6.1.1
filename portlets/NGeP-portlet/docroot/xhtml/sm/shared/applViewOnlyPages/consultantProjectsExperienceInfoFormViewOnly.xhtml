@@ -63,17 +63,17 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.clientName']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projCost']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -85,17 +85,17 @@
 						</tr>
 						<tr>
 							<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.refNo}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.refNo}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.projLoc']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.projectLocation}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.projectLocation}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.workServiceDesc}" cols="36" style="margin-bottom:5px;" /></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.workServiceDesc}" cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -109,58 +109,37 @@
 						<tr>
 							<td><p:outputLabel
 									value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.consultantFee}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.consultantFee}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-							<td><p:selectOneMenu id="consultProjParCatCode" disabled="true"
-									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierParentCatList}"
-										var="parent" itemLabel="#{parent.categoryName}"
-										itemValue="#{parent.categoryL1Id}" />
-									<p:ajax event="change"
-										listener="#{viewSmApplBackingBean.populateChildCategoryByParent(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id,
-								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
-								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
-										update="conslChild,conslSubChild" />
-								</p:selectOneMenu></td>
-
-
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryName}" />
+								</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}" disabled="true"
-									id="conslChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierChildCatList}"
-										var="conslChild" itemLabel="#{conslChild.categoryName}"
-										itemValue="#{conslChild.categoryL2Id}" />
-									<p:ajax event="change"
-										listener="#{viewSmApplBackingBean.populateSubChildCategoryByChild(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,viewSmApplBackingBean.managedBean.selectedCategory.pmCategoryL3)}"
-										update="conslSubChild" />
-								</p:selectOneMenu> <p:message id="conslChildMsg" for="conslChild"
-									showSummary="true" showDetail="false" display="icon" /></td>
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryName}" />
+								</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}" disabled="true"
-									id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierSubChildCatList}"
-										var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
-										itemValue="#{conslSubChild.categoryL3Id}" />
-								</p:selectOneMenu></td>
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryName}" />
+								</c:if>
+							</td>
 						</tr>
 					</table>
 

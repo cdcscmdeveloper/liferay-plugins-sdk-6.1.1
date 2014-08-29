@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="Dockyard Details" toggleable="true" id="smDocDtPanel">
+
+		<p:dataTable var="doc" widgetVar="smFacilityDockDtWidVar"
+			value="#{viewSmApplBackingBean.managedBean.applDockyardFacilities}"
+			rowKey="#{doc}" rowIndexVar="index" id="docDt">
+			<ac:paginator for="docDt" />
+
+			<p:column headerText="Dockyard Name">
+				<h:outputText value="#{doc.facilityName}" />
+			</p:column>
+
+			<p:column headerText="Dockyard Address">
+				<h:outputText
+					value="#{doc.smAddress.address1},#{doc.smAddress.address2},#{doc.smAddress.address3}" />
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink action="#{viewSmApplBackingBean.assignSelDockyard(doc)}" oncomplete="dockYardDialog.show()"
+					process="@this" partialSubmit="true"
+					update=":form:tt:dockYardDialog" style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+		<br />
+	</p:panel>
+	
+	<p:dialog width="500px" height="500px" header="Dockyard Information"
+		widgetVar="dockYardDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="dockYardDialog">
+		
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Name" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.facilityName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Address" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address1}" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address3}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.address4}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmCountry.countryName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmState.stateName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmDistrict.districtName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.pmCity.cityName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.smAddress.postcode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.phoneNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.faxNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Area(Sq Ft)" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.areaSquareFeet}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:outputLabel>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Ownership Type" /></td>
+				<td>
+					<p:outputLabel value="Own"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
+					<p:outputLabel value="Rent"
+						rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputPanel id="docPanLbl">
+						<p:outputLabel value="Price (RM.)"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}" />
+						<p:outputLabel value="Rent (RM.)"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}" />
+					</p:outputPanel></td>
+				<td>
+					<p:outputPanel id="docPan">
+						<ui:fragment
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
+							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.purchasePrice}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:outputLabel>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
+							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.rentalRate}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:outputLabel>
+						</ui:fragment>
+					</p:outputPanel>
+				</td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Owner Name" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownerName}" /></td>
+			</tr>
+
+		</table>
+	</p:dialog>
+</ui:composition>

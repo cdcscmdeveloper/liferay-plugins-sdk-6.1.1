@@ -1,0 +1,203 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<table style="width: 100%">
+		<tr>
+			<td valign="top" width="50%"><p:panel id="permAddrPan">
+					<table style="width: 100%">
+						<tr>
+							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.permAddr']} " /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address1}" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address2}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address3}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.address4}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"/></td>
+						</tr>
+					</table>
+				</p:panel></td>
+			<td valign="top"><p:panel id="mailAddrPan">
+					<table style="width: 100%">
+						<tr>
+							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.mailAddr']} " /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address1}"/></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address2}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address3}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.address4}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"/></td>
+						</tr>
+					</table>
+				</p:panel></td>
+		</tr>
+	</table>
+
+	<table style="width: 100%">
+		<tr>
+			<td valign="top" width="50%"><p:panel id="resiAddrPan">
+					<table style="width: 100%">
+						<tr>
+							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} " /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address1}" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address2}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address3}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.address4}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderResdAddr.smAddress.postcode}"/></td>
+						</tr>
+					</table>
+				</p:panel></td>
+			<td valign="top"><p:panel id="offcAddrPan">
+					<table style="width: 100%">
+						<tr>
+							<td style="font-size: 12px;font-weight: bold;font-family: Arial;text-decoration: underline;float:right;"><h:outputText value="#{lbl['lbl.sm.person.offAddr']} " /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address1}" /></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address2}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address3}" /></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.address4}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateName}"/></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityName}"/></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.shareHolderOffAddr.smAddress.postcode}"/></td>
+						</tr>
+					</table>
+				</p:panel></td>
+		</tr>
+	</table>
+</ui:composition>

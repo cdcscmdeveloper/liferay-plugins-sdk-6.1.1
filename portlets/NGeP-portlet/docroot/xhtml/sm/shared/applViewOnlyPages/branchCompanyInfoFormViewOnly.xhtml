@@ -25,25 +25,27 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink id="selectButton"
 						partialSubmit="true" process="@this"
-						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png"
+						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}" update=":form:tt:branchDialogId" oncomplete="banchDialog.show()">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
 
 				</p:column>
 			</p:dataTable>
+			
+			
 		</p:panel>
 	</p:panel>
-	<p:dialog width="450px" height="430px"
+	
+	<p:dialog width="450px" height="180px"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
-		id="banchDialog" resizable="false" showEffect="fade" hideEffect="fade"
+		id="branchDialogId" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
-			autoUpdate="true" closable="true" />
 		<ui:fragment
 			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
 			<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
 		</ui:fragment>
 	</p:dialog>
+	
 </ui:composition>

@@ -1,0 +1,42 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<c:choose>
+		<c:when
+			test="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
+			<table style="width: 100%">
+				<tr>
+					<td><ui:include
+							src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
+
+					</td>
+				</tr>
+
+			</table>
+		</c:when>
+		<c:otherwise>
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 20%; vertical-align: baseline;"
+						class="sidemenutd"><ui:include
+							src="smViewBumiApplnSideMenuItem.xhtml" /></td>
+					<td>
+						 <ui:include
+							src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityStatusInfoFormViewOnly.xhtml" />
+						<c:if
+							test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+							 <ui:include
+								src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHolderInfoFormViewOnly.xhtml" />
+						</c:if> 
+						 <ui:include
+							src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHoldingCompanyInfoFormViewOnly.xhtml" />
+					</td>
+				</tr>
+			</table>
+		</c:otherwise>
+	</c:choose>
+</ui:composition>

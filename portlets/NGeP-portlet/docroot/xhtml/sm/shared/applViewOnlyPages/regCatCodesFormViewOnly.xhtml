@@ -1,0 +1,231 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true">
+		<table style="width: 250px">
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryVerified}"
+							id="poCatCodeVer">
+							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.categoryVerified)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
+							title="For PO to highlight the verified section " /></td>
+
+				</tr>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified}"
+							id="apprCatCodeVer">
+							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
+							title="For Approver to highlight the verified section " /></td>
+				</tr>
+			</p:outputPanel>
+		</table>
+		<br />
+		<p:panel id="catCodeInfPan">
+			<p:blockUI block=":form:tt:catCodeInfPan" widgetVar="buiPoCatCode"
+				id="poCatCodeBlc"
+				blocked="#{viewSmApplBackingBean.managedBean.poUser ? viewSmApplBackingBean.managedBean.poSecReview.categoryVerified : (viewSmApplBackingBean.managedBean.approverUser ? viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}: " /></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.catCodes.norm']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'N'}"/>
+						<p:outputLabel value="#{lbl['lbl.sm.catCodes.spl']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}"/>
+					</td>
+				</tr>
+			</table>
+			<p:spacer height="2px;" />
+			<table>
+				<tr>
+					<td align="left" colspan="2"><h:outputText
+							value="#{viewSmApplBackingBean.managedBean.catTypeConfirm}"
+							rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType != null}"
+							style="color: blue; font-weight: bold;" /></td>
+
+				</tr>
+			</table>
+
+			<br />
+			<h:inputHidden
+				value="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode}" />
+				
+			<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}"
+				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
+				rendered="#{!(viewSmApplBackingBean.managedBean.smAppl.applType == 'R')}">
+				<ac:paginator for="catDt" />
+				<p:columnGroup type="header">
+
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+							rendered="#{viewSmApplBackingBean.managedBean.poUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
+							rendered="#{viewSmApplBackingBean.managedBean.approverUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText
+						value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{catBean.otherDesc}" rendered="#{catBean.pmCategoryL3.categoryL3Code eq 99}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+						rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+						rendered="#{catBean.specialCategory}" />
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:selectOneRadio layout="pageDirection" id="catPoAppr" disabled="true"
+						value="#{catBean.poDecFlg}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:outputLabel value="#{catBean.poRemarks}" />
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr" disabled="true"
+						value="#{catBean.apprvrDecFlg}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:outputLabel value="#{catBean.approverRemarks}" />
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			
+			
+			<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierCategories}"
+				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">
+				<ac:paginator for="catDtR" />
+				<p:columnGroup type="header">
+
+					<p:row>
+						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.othDesc']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.poAct']}"
+							rendered="#{viewSmApplBackingBean.managedBean.poUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.appAct']}"
+							rendered="#{viewSmApplBackingBean.managedBean.approverUser}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.remark']}"
+							rendered="#{viewSmApplBackingBean.managedBean.poUser or viewSmApplBackingBean.managedBean.approverUser}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText
+						value="#{catBeanR.pmCategoryL1.categoryL1Code} -  #{catBeanR.pmCategoryL1.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBeanR.pmCategoryL2.categoryL2Code} -  #{catBeanR.pmCategoryL2.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{catBeanR.pmCategoryL3.categoryL3Code} -  #{catBeanR.pmCategoryL3.categoryName}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{catBeanR.otherDesc}"
+						rendered="#{catBeanR.pmCategoryL3.categoryL3Code eq 99}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+						rendered="#{!catBeanR.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+						rendered="#{catBeanR.specialCategory}" />
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:selectOneRadio layout="pageDirection" id="catPoApprR" disabled="true"
+						value="#{catBeanR.poDecFlg}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<p:outputLabel value="#{catBeanR.poRemarks}" />
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr" disabled="true"
+						value="#{catBeanR.apprvrDecFlg}">
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
+							itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
+							itemValue="0" />
+					</p:selectOneRadio>
+				</p:column>
+				<p:column rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<p:outputLabel value="#{catBeanR.approverRemarks}" />
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			
+			
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryRemark}" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+		</p:panel>
+	</p:panel>
+	
+</ui:composition>

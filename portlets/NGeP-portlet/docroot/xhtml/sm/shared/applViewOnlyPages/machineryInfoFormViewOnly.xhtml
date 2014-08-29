@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.machine.panHdr']}" toggleable="true">
+		<table style="width: 250px">
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryVerified}"
+							id="poMachVer">
+							<p:ajax update=":form:tt:machInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.machineryVerified)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionPoVerf']}"
+							title="For PO to highlight the verified section " /></td>
+
+				</tr>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryVerified}"
+							id="apprMachVer">
+							<p:ajax update=":form:tt:machInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.machineryVerified)}" />
+						</p:selectBooleanCheckbox></td>
+					<td valign="top"><h:outputText
+							value="#{lbl['lbl.sm.sectionApprVerf']}"
+							title="For Approver to highlight the verified section " /></td>
+				</tr>
+			</p:outputPanel>
+		</table>
+		<br />
+		<p:panel id="machInfPan">
+			<p:blockUI block=":form:tt:machInfPan" widgetVar="buiPoMach"
+				id="poMachBlc"
+				blocked="#{viewSmApplBackingBean.managedBean.poUser ? viewSmApplBackingBean.managedBean.poSecReview.machineryVerified : (viewSmApplBackingBean.managedBean.approverUser ? viewSmApplBackingBean.managedBean.apprvrSecReview.machineryVerified : false)}" />
+
+			<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
+				selection="#{viewSmApplBackingBean.managedBean.selectedMachineList}"
+				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
+				<ac:paginator for="macDt" />
+				<p:column selectionMode="multiple" width="5%" />
+
+				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
+					<h:outputText value="#{macBean.machineType}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.machine.brand']}">
+					<h:outputText value="#{macBean.brandName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.machine.function']}">
+					<h:outputText value="#{macBean.machineFunction}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
+					<h:outputText value="#{macBean.qty}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sm.machine.value']}">
+					<h:outputText value="#{macBean.value}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink partialSubmit="true" process="@this"
+						action="#{viewSmApplBackingBean.assignSelMachinery(macBean)}" oncomplete="equipmentDialog.show()" 
+						update=":form:tt:equipmentDialog" style="padding-right:5px">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			<br />
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41"
+								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
+	</p:panel>
+	<p:dialog width="600px" height="350px"
+		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
+		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
+		modal="true" id="equipmentDialog">
+
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.brandName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineFunction}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.qty}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.value}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:outputLabel></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']}" /></td>
+				<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedMachine.purchaseMethod}" disabled="true"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Cash" itemValue="A" />
+						<f:selectItem itemLabel="Credit Card" itemValue="B" />
+						<f:selectItem itemLabel="Debit Card" itemValue="C" />
+						<f:selectItem itemLabel="Online Banking" itemValue="D" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.guarantorName}"/></td>
+			</tr>
+
+
+		</table>
+	</p:dialog>
+</ui:composition>

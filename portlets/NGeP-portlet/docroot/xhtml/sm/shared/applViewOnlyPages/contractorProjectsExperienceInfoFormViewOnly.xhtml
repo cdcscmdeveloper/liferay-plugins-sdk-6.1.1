@@ -62,13 +62,13 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
 
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}"/></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -90,7 +90,7 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"
 									cols="36" /></td>
 						</tr>
 						<tr>
@@ -105,54 +105,34 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.procDate']}" /></td>
-							<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
+							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="
 										#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-							<td><p:selectOneMenu id="supCntrMainCatCode"
-									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierParentCatList}"
-										var="parent" itemLabel="#{parent.categoryName}"
-										itemValue="#{parent.categoryL1Id}" />
-									<p:ajax event="change"
-										listener="#{viewSmApplBackingBean.populateChildCategoryByParent(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id,
-								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
-								viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
-										update="contrChild,contrSubChild" />
-								</p:selectOneMenu></td>
-
-
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryName}" />
+								</c:if>
+							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
-									id="contrChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierChildCatList}"
-										var="contrChild" itemLabel="#{contrChild.categoryName}"
-										itemValue="#{contrChild.categoryL2Id}" />
-									<p:ajax event="change"
-										listener="#{viewSmApplBackingBean.populateSubChildCategoryByChild(viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,viewSmApplBackingBean.managedBean.selectedCategory.pmCategoryL3)}"
-										update="contrSubChild" />
-								</p:selectOneMenu></td>
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryName}" />
+								</c:if>
+		`					</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
-									id="contrSubChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
-									<f:selectItems
-										value="#{viewSmApplBackingBean.managedBean.supplierSubChildCatList}"
-										var="contrSubChild" itemLabel="#{contrSubChild.categoryName}"
-										itemValue="#{contrSubChild.categoryL3Id}" />
-								</p:selectOneMenu></td>
+							<td>
+								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryName}" />
+								</c:if>
+		`					</td>
 						</tr>
 
 

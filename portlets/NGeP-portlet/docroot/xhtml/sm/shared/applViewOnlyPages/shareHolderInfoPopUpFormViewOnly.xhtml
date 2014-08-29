@@ -1,0 +1,391 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.person.panHdr']}" toggleable="true"
+		id="equiPerDtlPan">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryName}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationTypeId}" /></td>
+				<td style="float:left;"><p:outputPanel id="equiPerDtlIdenTypeLblPan"><p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" id="equiPerIcNumLbl" /></p:outputPanel></td>
+				<td style="float:left;"><p:outputPanel id="equiPerDtlIdenTypePan"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationNo}"/></p:outputPanel></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.dob']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}"/></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileNo}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneNo}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxNo}"/></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']} :" title="For Malaysian Only" /></td>
+				<td style="float:left;">
+					<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
+					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
+				</td>
+				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']} :" title="For Malaysian Only" /></td>
+				<td style="float:left;">
+					<p:outputLabel value="Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
+					<p:outputLabel value="Non-Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
+				</td>
+			</tr>
+
+		</table>
+	</p:panel>
+	<p:panel header="User Roles" toggleable="true" id="shrRolesPanel">
+		<ui:include src="personnelRolesPanelViewOnly.xhtml" />
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
+		id="shrPrivPanel"
+		rendered="#{viewSmApplBackingBean.managedBean.userWithRole}">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']} :" /></td>
+				<td style="float:left;">
+					<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
+					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
+			</tr>
+			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+							and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']} :" /></td>
+						<td style="float:left;">
+							<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
+							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
+						</td>
+					</tr>
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
+							and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' 
+							and viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']} :" /></td>
+						<td style="float:left;">
+							<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '1'}" />
+							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '0'}" />
+						</td>
+					</tr>
+			</c:if>
+		</table>
+
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sm.person.shrDtls']}" toggleable="true"
+		id="shareAmtPanel"
+		rendered="#{viewSmApplBackingBean.managedBean.currentPageType eq SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 13%;"><p:outputLabel value="#{lbl['lbl.sm.person.shrAmt']}" /></td>
+				<td style="padding-right: 42px;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
+
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sm.person.addrDtls']} " toggleable="true"
+		id="shareHolderAddrDialog">
+		<ui:include
+			src="/xhtml/sm/shared/applViewOnlyPages/shareHolderAddressInfoPopUpFormViewOnly.xhtml" />
+	</p:panel>
+
+	<p:panel header="Job Function" toggleable="true" id="equiShrHldrJbFnc">
+		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
+			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffExperiences}"
+			var="jf"
+			rowIndexVar="rowIndex" rowKey="#{jf}">
+			<ac:paginator for="shrJfdt" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Company" />
+				</f:facet>
+				<h:outputText value="#{jf.companyName}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Designation" />
+				</f:facet>
+				<h:outputText value="#{jf.designation}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year From" />
+				</f:facet>
+				<h:outputText value="#{jf.fromYear}" maxlength="4" label="Year From" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year To" />
+				</f:facet>
+				<h:outputText value="#{jf.toYear}" maxlength="4" label="Year To" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:commandLink update=":form:tt:equiJobFunctionInfo"
+					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
+					partialSubmit="true" process="@this">
+					<p:graphicImage library="ep/images/design" name="document.png"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+	<p:dialog width="500px" height="200px" header="Job Function Details "
+		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo"
+		closable="false" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value=" Year From :" /></td>
+				<td><p:outputLabel style="margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Year To :" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"/></td>
+			</tr>
+		</table>
+	</p:dialog>
+	<p:panel header="Related Companies" toggleable="true"
+		id="equiShrHldrRelComp">
+
+		<p:dataTable id="shrRelCom"
+			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smRelatedCompanies}"
+			var="relCom" widgetVar="suppPrsnRelComDtWidVar"
+			rowIndexVar="rowIndex" rowKey="#{relCom}">
+			<ac:paginator for="shrRelCom" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
+				</f:facet>
+				<h:outputText value="#{relCom.companyName}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="ROC/ROB/ROS NO." />
+				</f:facet>
+				<h:outputText value="#{relCom.regNo}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Shareholding Total(RM.)" />
+				</f:facet>
+				<h:outputText value="#{relCom.shareAmt}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="MOF Reg NO." />
+				</f:facet>
+				<h:outputText value="#{relCom.mofNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:commandLink update=":form:tt:equiRelCompInfo"
+					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
+					partialSubmit="true" process="@this">
+					<p:graphicImage library="ep/images/design" name="document.png"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:dialog width="500px" height="300px" closable="false"
+		header="Related Company Details " id="equiRelCompInfo"
+		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Reg NO. :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="MOF Reg NO :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/></td>
+			</tr>
+		</table>
+	</p:dialog>
+	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
+		id="equiShrPfBdyPan">
+		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
+			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smAssociationBodies}"
+			rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
+			<ac:paginator for="shrProfDt" />
+			<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
+				<h:outputText value="#{profBean.pmCertBody.bodyName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
+				<h:outputText value="#{profBean.regNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
+				<h:outputText value="#{profBean.expDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:commandLink update=":form:tt:equiShrProfBeanInfo"
+					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
+					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
+					<p:graphicImage library="ep/images/design" name="document.png"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+	<p:dialog width="500px" height="300px" closable="false"
+		header="Professional Body Details" id="equiShrProfBeanInfo"
+		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.bodyName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.expDate}" /></td>
+			</tr>
+
+		</table>
+	</p:dialog>
+	<p:panel header="Academic Qualification" toggleable="true"
+		id="equiShrHldrAcadPan">
+
+		<p:dataTable id="shrAqdt"
+			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffAcademics}"
+			var="aq" widgetVar="suppPrsnAcadDtWidVar"
+			rowIndexVar="rowIndex" rowKey="#{aq}">
+			<ac:paginator for="shrAqdt" />
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Year" />
+				</f:facet>
+				<h:outputText value="#{aq.year}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Institute" />
+				</f:facet>
+				<h:outputText value="#{aq.instituteName}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Education Field" />
+				</f:facet>
+				<h:outputText value="#{aq.pmEduField.fieldName}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="Major In" />
+				</f:facet>
+				<h:outputText value="#{aq.fieldMajor}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+				<p:commandLink update=":form:tt:equiAcadInfo"
+					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
+					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
+					<p:graphicImage library="ep/images/design" name="document.png"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:dialog width="450px" height="300px" closable="false"
+		header="Staff Academics Details" id="equiAcadInfo"
+		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Year :" /></td>
+				<td><p:outputLabel style="margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.year}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Institute :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Qualification Level :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationLevelId}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Education Field" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Major In" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/></td>
+			</tr>
+		</table>
+	</p:dialog>
+
+
+</ui:composition>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="shrHolderPanGroup">
+		<p:panel header="#{lbl['lbl.sm.shrHldrInfo.panHdr']}"
+			toggleable="true">
+			
+			<p:panel id="shrInfPan">
+				
+				<p:dataTable var="shareBean" widgetVar="suppCapShrHldrDtWidVar"
+					value="#{viewSmApplBackingBean.managedBean.smapplShareHolders}"
+					rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">
+					<ac:paginator for="shrPerDt" />
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.name']}">
+						<h:outputText value="#{shareBean.name}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.idNo']}">
+						<h:outputText value="#{shareBean.identificationNo}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}">
+						<h:outputText value="#{shareBean.sharePercentage}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.shrVal']}">
+						<h:outputText value="#{shareBean.shareAmt}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sm.shrHldrInfo.equiOwnr']}">
+						<h:outputText value="Yes" />
+					</p:column>
+				</p:dataTable>
+			
+			</p:panel>
+		</p:panel>
+	</h:panelGroup>
+
+
+
+</ui:composition>

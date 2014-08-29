@@ -7,13 +7,64 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="contentSection">
 
-		<p:dialog id="viewApplPopUp" widgetVar="viewApplPopUp"
-			header="View Application" width="580 " height="480"
-			resizable="true" modal="true" dynamic="true">
-		<ui:include src="/xhtml/sm/revisionSmApplView/smViewApplnSideMenu_BasePage.xhtml" />
-		</p:dialog>	
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:outputPanel>
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{viewSmApplBackingBean.redirect}"></p:outputLabel></td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandLink value="View Previous Upgrade to MOF Application (Branch)" 
+							action="/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml">
+							<f:param name="page" value="N" />
+							<f:param name="tab" value="BRANCHINFO" />
+						</p:commandLink>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandLink value="View Previous Bumi Application (Bank)"
+							action="/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml">
+								<f:param name="page" value="B" />
+								<f:param name="tab" value="BANKINFO" />
+						</p:commandLink>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandLink value="View Previous New Category Application (Personnel)"
+							action="/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml">
+								<f:param name="page" value="A" />
+								<f:param name="tab" value="PERSONNELINFO" />
+						</p:commandLink>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandLink value="View Previous Renew MOF Account Application (Category)"
+							action="/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml">
+								<f:param name="page" value="R" />
+								<f:param name="tab" value="CATEGORYINFO" />
+						</p:commandLink>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandLink value="View Previous MOF Profile Update Application (Supporting Doc)"
+							action="/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml">
+								<f:param name="page" value="U" />
+								<f:param name="tab" value="SUPPORTDOCSINFO" />
+						</p:commandLink>
+					</td>
+				</tr>
+			</table>
+		</p:outputPanel>
 	</ui:define>
 
 </ui:composition>

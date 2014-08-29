@@ -1,0 +1,118 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<c:choose>
+		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}">
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 18%"><p:outputLabel value="Role(s) : " /></td>
+					<td style="padding-left: 5px;">
+						<table>
+							<tr>
+								<c:if test="#{viewSmApplBackingBean.managedBean.validEquityLimit}">
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left"
+											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
+								</c:if>
+								<c:if
+									test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+									<c:if
+										test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
+										viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
+										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}">
+											</p:selectBooleanCheckbox></td>
+										<td><p:outputLabel style="float: left" value="Director" /></td>
+										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}">
+											</p:selectBooleanCheckbox></td>
+										<td><p:outputLabel style="float: left"
+												value="Higher Management" /></td>
+									</c:if>
+								</c:if>
+							</tr>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+								<tr>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left" value="Management" /></td>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td>
+									<td><p:outputLabel style="float: left" value="Staff" /></td>
+								</tr>
+							</c:if>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</c:when>
+		<c:otherwise>
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 18%"><p:outputLabel value="Role(s) : " /></td>
+					<td style="padding-left: 5px;">
+						<table>
+							<tr>
+								<c:if test="#{viewSmApplBackingBean.managedBean.validEquityLimit}">
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left"
+											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
+								</c:if>
+								<c:if
+									test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+									<c:if
+										test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT and 
+										viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
+										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}">
+											</p:selectBooleanCheckbox></td>
+										<td><p:outputLabel style="float: left" value="Director" /></td>
+										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}">
+											</p:selectBooleanCheckbox></td>
+										<td><p:outputLabel style="float: left"
+												value="Higher Management" /></td>
+									</c:if>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left" value="Management" /></td>
+								</c:if>
+							</tr>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
+								<tr>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.prof}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left"
+											value="Professional" /></td>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.semiProf}">
+										</p:selectBooleanCheckbox></td>
+									<td><p:outputLabel style="float: left"
+											value="Semi-Professional" /></td>
+									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td>
+									<td><p:outputLabel style="float: left" value="Clerical-Staff" /></td>
+								</tr>
+							</c:if>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</c:otherwise>
+	</c:choose>
+
+</ui:composition>

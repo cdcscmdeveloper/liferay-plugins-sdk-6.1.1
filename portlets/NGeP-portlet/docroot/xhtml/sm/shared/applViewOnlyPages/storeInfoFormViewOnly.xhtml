@@ -1,0 +1,142 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="Store Details" toggleable="true" id="smStrDtPanel">
+
+		<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
+			value="#{viewSmApplBackingBean.managedBean.applStoreFacilities}" rowKey="#{stor}" rowIndexVar="index" id="storeDt">
+			<ac:paginator for="storeDt" />
+			<p:column headerText="Store Name">
+				<h:outputText value="#{stor.facilityName}" />
+			</p:column>
+
+			<p:column headerText="Store Address">
+				<h:outputText
+					value="#{stor.smAddress.address1},#{stor.smAddress.address2},#{stor.smAddress.address3}" />
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink process="@this" partialSubmit="true"
+					action="#{viewSmApplBackingBean.assignSelStore(stor)}" oncomplete="storeDialog.show()"
+					update=":form:tt:storeDialog" style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+		<br />
+	</p:panel>
+	<p:dialog width="500px" height="500px" header="Store Information"
+		widgetVar="storeDialog" resizable="false" showEffect="fade"
+		closable="true" hideEffect="fade" modal="true" id="storeDialog">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Name" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.facilityName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Address" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.address1}" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.address3}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.address4}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.pmCountry.countryName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.pmState.stateName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.pmDistrict.districtName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.pmCity.cityName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.smAddress.postcode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.phoneNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.faxNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Area(Sq Ft)" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.areaSquareFeet}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:outputLabel>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Ownership Type" /></td>
+				<td>
+					<p:outputLabel value="Own"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
+					<p:outputLabel value="Rent"
+						rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputPanel id="storPanLbl">
+						<p:outputLabel value="Price (RM.)"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
+						<p:outputLabel value="Rent (RM.)"
+							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
+					</p:outputPanel></td>
+				<td><p:outputPanel id="storPan">
+						<ui:fragment
+							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
+							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.purchasePrice}">
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:outputLabel>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
+							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.rentalRate}" >
+								<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:outputLabel>
+						</ui:fragment>
+					</p:outputPanel></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="Owner Name" /></td>
+				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownerName}" /></td>
+			</tr>
+
+		</table>
+	</p:dialog>
+</ui:composition>

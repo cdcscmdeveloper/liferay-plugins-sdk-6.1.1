@@ -1,0 +1,473 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<h:panelGroup id="perDataPanGroup">
+		<p:panel header="#{lbl['lbl.sm.person.compositionHdr']}"
+			toggleable="true" id="stfSummaryPan">
+
+			<br />
+			<table style="width: 100%">
+				<tr>
+					<td colspan="4"><div align="center" style="width: 98%">
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}">
+								<p:panelGrid styleClass="tablePanel" id="contrPerSumTable">
+
+									<p:row id="contrPerSumTableHdrRow1">
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:20%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.stfTtl']}</p:column>
+									</p:row>
+									<p:row id="contrPerSumTableHdrRow2">
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.bumi']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfBumiActCnt}" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfFrgActCnt}" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>Total / Summary</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfActualTotalCnt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</c:if>
+							<c:if
+								test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+								<p:panelGrid styleClass="tablePanel" id="consultPerSumTable">
+									<p:row id="consultPerSumHdrRow">
+										<p:column rowspan="2" styleClass="tableheaderrow" />
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.equiOwn']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.bod']}</p:column>
+										<p:column rowspan="2" style="width:15%"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.hghMngt']}</p:column>
+										<p:column rowspan="2" styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.mngt']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.prfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.semiPrfStf']}</p:column>
+										<p:column colspan="2" style="text-align:center"
+											styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.clrStf']}</p:column>
+									</p:row>
+									<p:row id="consultPerEntActSumHdrRow">
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.entered']}</p:column>
+										<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.person.composition.actual']}</p:column>
+
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.bumi']} </p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfBumiActCnt}" />
+										</p:column>
+
+
+
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.nonBumi']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtNonBumiCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profNonBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiNonBumiActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfNonBumiEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfNonBumiActCnt}" />
+										</p:column>
+
+									</p:row>
+									<p:row>
+										<p:column>#{lbl['lbl.sm.person.composition.Frg']}</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equiOwnrFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghMngFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngtFrgCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profFrgActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiFrgActCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfFrgEnterCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfFrgActCnt}" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>Total / Summary</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.bodTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.hghrMngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.mngmtTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.profActualTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.semiActualTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfTotalCnt}" />
+										</p:column>
+										<p:column>
+											<h:outputText
+												value="#{viewSmApplBackingBean.managedBean.personCalc.stfActualTotalCnt}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</c:if>
+						</div></td>
+
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
+			toggleable="true" id="smPersonnelParentPan">
+
+			<table style="width: 250px">
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{viewSmApplBackingBean.managedBean.poSecReview.personnelVerified}"
+								id="poPersVer">
+								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+									event="change"
+									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.personnelVerified)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value=" Section Verified By PO: "
+								title="For PO to highlight the verified section " /></td>
+
+					</tr>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<tr>
+						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified}"
+								id="apprPersVer">
+								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+									event="change"
+									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified)}" />
+							</p:selectBooleanCheckbox></td>
+						<td valign="top"><h:outputText
+								value=" Section Verified By Approver: "
+								title="For Approver to highlight the verified section " /></td>
+					</tr>
+				</p:outputPanel>
+			</table>
+			<br />
+			<p:panel id="persInfPan">
+				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
+					id="poPersBlc"
+					blocked="#{viewSmApplBackingBean.managedBean.poUser ? viewSmApplBackingBean.managedBean.poSecReview.personnelVerified : (viewSmApplBackingBean.managedBean.approverUser ? viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
+				<p:panel id="persInfoDtPanel">
+					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
+						value="#{viewSmApplBackingBean.managedBean.smAppl.smPersonnels}"
+						rowKey="#{person}" rowIndexVar="index" id="personDt">
+						<ac:paginator for="personDt" />
+
+						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
+							<h:outputText value="#{person.name}" />
+						</p:column>
+
+						<p:column headerText="#{lbl['lbl.sm.person.composition.idenNum']}">
+							<h:outputText value="#{person.identificationNo}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
+							<h:outputText value="Yes" rendered="#{person.equityOwner}" />
+							<h:outputText value="No" rendered="#{!person.equityOwner}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
+							<h:outputText value="Yes"
+								rendered="#{person.authorizedFlg eq '1'}" />
+							<h:outputText value="No"
+								rendered="#{person.authorizedFlg eq '0'}" />
+						</p:column>
+						<p:column
+							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
+							<h:outputText value="Requested"
+								rendered="#{person.softcertFlg eq '2'}" />
+							<h:outputText value="Issued"
+								rendered="#{person.softcertFlg eq '1'}" />
+							<h:outputText value="Not Applied"
+								rendered="#{person.softcertFlg eq '0'}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
+							<h:outputText value="#{person.roleName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.eprole']}">
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+								rendered="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.suppUser']}"
+								rendered="#{person.epRole eq 'BASIC_SUPPLIER_USER' or person.epRole eq 'MOF_SUPPLIER_USER'}" />
+							<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+								rendered="#{person.epRole eq 'CM_USER'}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.label.action']}">
+							<p:commandLink
+								action="#{viewSmApplBackingBean.assignSelShareHolder(person)}"
+								process="@this" partialSubmit="true" update=":form" 
+								style="padding-right:5px;">
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/resources/ep/images/design/document.png" />
+							</p:commandLink>
+
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+				<p:panel id="persBranMapInfo"
+					header="#{lbl['lbl.sm.person.composition.brnchPoc']}"
+					rendered="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches.size() gt 0}">
+					<p:dataTable var="branch" id="perBrDt"
+						value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
+						rowIndexVar="index">
+						<ac:paginator for="perBrDt" />
+						<p:column
+							headerText="#{lbl['lbl.sm.person.composition.brnName']} ">
+							<h:outputText value="#{branch.branchName}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}">
+							<h:outputText value="#{branch.smPersonnel.name}" />
+						</p:column>
+
+					</p:dataTable>
+				</p:panel>
+			</p:panel>
+		</p:panel>
+	</h:panelGroup>
+
+</ui:composition>
