@@ -1428,7 +1428,7 @@ public class UnspscCodeBackingBean extends
 					.getRequestExtCode().getMeasurementName());
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestColor()
-				&& this.getManagedBean().getRequestExtCode().getColorName()
+				&& !this.getManagedBean().getRequestExtCode().getColorName()
 						.isEmpty()) {
 			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
 					.getColorName());
