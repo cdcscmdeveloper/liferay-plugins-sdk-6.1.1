@@ -30,11 +30,13 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -400,16 +402,15 @@ public class LovBackingBean implements Serializable {
 	public List<SelectItem> getSearchOperators() {
 		List<SelectItem> operatorList = new ArrayList<SelectItem>();
 		
-		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_EQUALS.value(), "EQUALS");
-		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), "STARTS WITH");
-		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), "END WITH");
-//		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_BETWEEN.value(), "BETWEEN");
-		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), "LIKE");
+		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), ResourceBundleUtils.getMessage("lbl.operator.equals",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), ResourceBundleUtils.getMessage("lbl.operator.startWith",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), ResourceBundleUtils.getMessage("lbl.operator.endWith",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+//		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_LIKE.value(), ResourceBundleUtils.getMessage("lbl.operator.like",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
 		
 		operatorList.add(item1);
 		operatorList.add(item2);
 		operatorList.add(item3);
-		operatorList.add(item4);
+//		operatorList.add(item4);
 		
 		return operatorList;
 	}
@@ -532,7 +533,7 @@ public class LovBackingBean implements Serializable {
 	public ISearchBean getLovSearchBean() {
 		if(lovSearchBean.getDataFilterBeans().size() == 0) {
 			for(int i = 0; i < 3; i++) {
-				SearchFilterBean filterBean = new SearchFilterBean();
+				SearchFilterBean filterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 				lovSearchBean.getDataFilterBeans().add(filterBean);
 			}
 		}
