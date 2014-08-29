@@ -100,48 +100,48 @@
 							<p:dataTable id="memberListTbl" 
 								var="committeeMember"
 								widgetVar="committeeMemberWidVar"
-								value="#{suppFinalMeetingBackingBean.managedBean.committeeMemberActivity}"
-								selection="#{suppFinalMeetingBackingBean.managedBean.committeeActivitySelect}"
+								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
+								selection="#{suppFinalMeetingBackingBean.managedBean.committeeMeetingSelectList}"
 								rowKey="#{committeeMember}">
 								<ac:paginator for="memberListTbl" />
 					
 								<p:column selectionMode="multiple" style="width:2%"></p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.name']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.memberName}"></h:outputText>
+									<h:outputText value="#{committeeMember.memberName}"></h:outputText>
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.id.no']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.icPassport}"></h:outputText>
+									<h:outputText value="#{committeeMember.icPassport}"></h:outputText>
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.designation']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.designation}"></h:outputText>
+									<h:outputText value="#{committeeMember.designation}"></h:outputText>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.email']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.email}"></h:outputText>
+									<h:outputText value="#{committeeMember.email}"></h:outputText>
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.grade']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
+									<h:outputText value="#{committeeMember.grade}"></h:outputText>
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.pnp']}">
-									<h:outputText value="#{committeeMember.scCommitteeMember.PNP}"></h:outputText>
+									<h:outputText value="#{committeeMember.PNP}"></h:outputText>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.scCommitteeMember.PNP}" />
-									<p:selectOneMenu id="meetingRoleId" required="true" rendered="#{!committeeMember.scCommitteeMember.PNP}"
-										value="#{committeeMember.scCommitteeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
+									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.PNP}" />
+									<p:selectOneMenu id="meetingRoleId" required="true" rendered="#{!committeeMember.PNP}"
+										value="#{committeeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
 									</p:selectOneMenu>
 									<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ommitteeMember.scCommitteeMember.memberType)}"/>
+									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ommitteeMember.memberType)}"/>
 								</p:column>
 							</p:dataTable>
 					

@@ -11,7 +11,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -28,6 +27,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 
 	//Header
 	private ScQt scQt;
+	private String processName;
 		
 	private List<ScQtMeeting> scQtMeetings;
 	private List<ScQtMeeting> meetingMultiSelect;
@@ -48,8 +48,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQt> selectedCloneTender;
 	private List<ScCommitteeMember> cloneCommitteMembers;
 	private List<ScCommitteeMember> cloneCommitteMembersSelect;
-	private List<ScQtCommitteeActivity> committeeMemberActivity;
-	private List<ScQtCommitteeActivity> committeeActivitySelect;
 	private ScQtCommittee scQtCommittee;
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	
@@ -265,29 +263,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the committeeMemberActivity
 	 */
-	public List<ScQtCommitteeActivity> getCommitteeMemberActivity() {
-		return committeeMemberActivity;
-	}
-	/**
-	 * @param committeeMemberActivity the committeeMemberActivity to set
-	 */
-	public void setCommitteeMemberActivity(
-			List<ScQtCommitteeActivity> committeeMemberActivity) {
-		this.committeeMemberActivity = committeeMemberActivity;
-	}
-	/**
-	 * @return the committeeActivitySelect
-	 */
-	public List<ScQtCommitteeActivity> getCommitteeActivitySelect() {
-		return committeeActivitySelect;
-	}
-	/**
-	 * @param committeeActivitySelect the committeeActivitySelect to set
-	 */
-	public void setCommitteeActivitySelect(
-			List<ScQtCommitteeActivity> committeeActivitySelect) {
-		this.committeeActivitySelect = committeeActivitySelect;
-	}
 	/**
 	 * @return the scQtCommittee
 	 */
@@ -373,6 +348,18 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCommiteeChanged(boolean isCommiteeChanged) {
 		this.isCommiteeChanged = isCommiteeChanged;
+	}
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 	
 }
