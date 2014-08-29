@@ -1390,32 +1390,35 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
+			
+             ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+             if(requestItem.getCmItem() != null){
+            	 String ItemCode = requestItem.getCmItem().getExtensionCode();
+            	 CharSequence charSeq = ItemCode.subSequence(0, 2); 
+            	 Integer itemCode = Integer.valueOf(charSeq.toString()); 
 
-			String ItemCode = scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
-			CharSequence charSeq = ItemCode.subSequence(0, 2); 
-			Integer itemCode = Integer.valueOf(charSeq.toString()); 
+            	 // TODO checking first two digits in itemCode whether service or product 
+            	 if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+            		 getManagedBean().setItemCheck(Boolean.TRUE); 
 
-			// TODO checking first two digits in itemCode whether service or product 
-			if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-				getManagedBean().setItemCheck(Boolean.TRUE); 
+            	 } else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
+            		 getManagedBean().setItemCheck(Boolean.FALSE); 
+            	 }
 
-			} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-				getManagedBean().setItemCheck(Boolean.FALSE); 
-			}
+            	 if(scRequestSupplierItem.getRequestNoteItem() == null){
+            		 scRequestSupplierItem.setRequestNoteItem(scRequestNoteDtl.getRequestItem());
+            	 }
 
-			if(scRequestSupplierItem.getRequestNoteItem() == null){
-				scRequestSupplierItem.setRequestNoteItem(scRequestNoteDtl.getRequestItem());
-			}
-
-			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
-				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
-						scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
-					}
-				}
-			}
-			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
-			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+            	 if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
+            		 for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+            			 if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+            				 scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
+            			 }
+            		 }
+            	 }
+             }
+             getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
+             getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		}
 	}
 	
@@ -1425,20 +1428,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public boolean checkServiceOrProduct(ScRequestNoteDtl scRequestNoteDtl){
 		log.info("checkServiceOrProduct");
+		boolean prodOrService = false;
+		if(scRequestNoteDtl.getRequestItem() != null){
+			ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
+			
+			if(requestItem.getCmItem() != null){
+				String ItemCode = requestItem.getCmItem().getExtensionCode();
+				CharSequence charSeq = ItemCode.subSequence(0, 2); 
+				Integer itemCode = Integer.valueOf(charSeq.toString()); 
 
-		Boolean prodOrService = Boolean.TRUE;
-		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
-
-			String ItemCode = scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode();
-			CharSequence charSeq = ItemCode.subSequence(0, 2); 
-			Integer itemCode = Integer.valueOf(charSeq.toString()); 
-
-			// TODO checking first two digits in itemCode whether service or product 
-			if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-
-				prodOrService = Boolean.TRUE;
-			} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
-				prodOrService = Boolean.FALSE;
+				// TODO checking first two digits in itemCode whether service or product 
+				if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+					prodOrService = false;
+				} else if (itemCode < 70 || itemCode > 94) { // for product  < 70 and  > 94  
+					prodOrService = true;
+				}
 			}
 		}
 		return prodOrService;
@@ -1458,6 +1462,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl requestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					if(requestNoteDtl.equals(selectedRequestNoteDtl)){
+						requestNoteDtl.getRequestItem().setQuantity(quantity);
 						requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().setQuantity(quantity);
 						requestNoteDtls.add(requestNoteDtl);
 					} else{
