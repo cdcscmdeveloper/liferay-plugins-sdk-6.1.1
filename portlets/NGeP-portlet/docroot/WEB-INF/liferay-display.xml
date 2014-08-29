@@ -179,6 +179,7 @@
 			<portlet id="SmUserProfileMaintenance"></portlet>
 			<portlet id="SoftCertReg"></portlet>
 			<portlet id="TaskSummary"></portlet>
+			<portlet id="SmApplRevisionView"></portlet>
 		</category>
 
 		<category name="Template">
