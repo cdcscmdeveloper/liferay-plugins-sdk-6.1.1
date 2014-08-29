@@ -60,13 +60,13 @@
 					<p:column headerText="#{lbl['lbl.ct.search.cno']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.search.table.cname']}"  style="width:15%;">
+					<p:column headerText="#{lbl['lbl.ct.search.table.cname']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.clno']}"  style="width:10%;">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  style="width:15%;">
+					<p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.companyName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  style="width:8%;">
@@ -79,10 +79,10 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.lno']}"  style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.search.lno']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.status']}"  style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.search.table.status']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:14%;">
