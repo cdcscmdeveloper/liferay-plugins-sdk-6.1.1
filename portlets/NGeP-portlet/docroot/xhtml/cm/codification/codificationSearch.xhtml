@@ -7,8 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<script>
-		$('#portlet_CatalogueMaintenance_WAR_NGePportlet').find(
-				'.portlet-title-text').html('Item Code Search');
+		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.item.code.search']}");
 	</script>
 
 	<h:panelGroup id="cmUNSPSCsearchID">
@@ -18,13 +17,13 @@
 					<td><div class="navDiv" id="menuDiv" align="center">
 							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
 								<li style="width: 210px;"><h:outputText
-										value="Choose UNSPSC" /></li>
+										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
 
 								<li style="width: 210px;"><h:outputText
-										value="Choose Product" /></li>
+										value="#{lbl['lbl.cm.choose.product']}" /></li>
 
 								<li style="width: 210px;"><h:outputText
-										value="Complete Product Details" /></li>
+										value="#{lbl['lbl.cm.complete.product.details']}" /></li>
 							</ul>
 							<ul id="tripMeter" class="menu-line">
 								<li class="red-dot" style="margin-right: 200px;" />
@@ -38,7 +37,7 @@
 			</table>
 		</h:panelGroup>
 		<br />
-		<p:panel header="SEARCH" toggleable="true">
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
@@ -72,7 +71,7 @@
 
 
 
-		<p:panel header="SEARCH RESULTS" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
 				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
@@ -121,7 +120,7 @@
 
 			<div class="clear"></div>
 			<div style="text-align: right;">
-				<p:commandButton value="Request UNSPSC"
+				<p:commandButton value="#{lbl['lbl.cm.request.unspsc']}"
 					rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}"
 					action="#{unspscCodeBackingBean.requestUnspscCode}" />
 			</div>

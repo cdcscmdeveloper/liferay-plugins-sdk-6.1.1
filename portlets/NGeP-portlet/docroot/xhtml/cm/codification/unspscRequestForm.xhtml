@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 
 		<script>
-			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html('UNSPSC Request Form');
+			$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.unspsc.code.request.form']}");
 		</script>
 		
 		<p:blockUI block="form" widgetVar="blockWidget">
@@ -31,7 +31,7 @@
 				
 
 				<div style="float: left; clear: both;">
-					<p:commandButton value="Back" icon="ui-icon-back" immediate="true"
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" immediate="true"
 						action="#{unspscCodeBackingBean.backToCodificationSearch}"
 						update="@form">
 					</p:commandButton>
