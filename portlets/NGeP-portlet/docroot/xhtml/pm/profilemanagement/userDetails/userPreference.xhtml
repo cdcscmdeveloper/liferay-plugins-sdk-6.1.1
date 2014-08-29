@@ -35,14 +35,15 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
+					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" 
+						label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
 						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" 
-						 validatorMessage="#{lbl['lbl.pm.profiles.invalidNo']}">
-		
+						validatorMessage="#{lbl['lbl.pm.profiles.invalidNo']}">
+						 <f:validateLongRange minimum="1"  disabled="#{empty param['disableValidation']}"/>
 					</p:inputText>
 						
 						&#160;
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" style="width:62px" />&#160;
+					<h:outputText value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" style="width:62px" />&#160;
                 	<p:graphicImage id="giDay" library="ep/images/design" name="tooltips.png"
 								value="/resources/ep/images/design/tooltips.png" />
 					<p:tooltip for="giDay" value="#{lbl['lbl.pm.profiles.preferences.notificationremoval.tooltip']}" showEffect="fade" hideEffect="fade" />
