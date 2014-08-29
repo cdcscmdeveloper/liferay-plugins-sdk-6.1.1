@@ -839,7 +839,7 @@ public void ConstructSideTabMenu(){
 						  stateNode = new DefaultTreeNode("state",new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getState()) , zoneNode);
 					   }state.add(zoneDtl.getState());
 				    }
-				   if(zoneDtl.getDistrict() != null){
+				   if(zoneDtl.getDistrict() != null && !getParameterDesc(getManagedBean().getContractVer().getCtContract().getLocationLevel()).equalsIgnoreCase(ContractConst.ZONE_LOCATION_NAME)){
 					   new DefaultTreeNode("district", new LocationDTO(zoneDtl.getContractZoneDtlId(),zoneDtl.getDistrict()), stateNode);
 				   }
 				 }
