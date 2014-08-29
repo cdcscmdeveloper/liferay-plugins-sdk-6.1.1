@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -24,6 +25,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -43,6 +45,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -118,7 +121,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser sUsers = facesScopes.getUserSessionBean();
 		if(sUsers==null){
-			throw new EpException("Unable to get the user details."); 
+			throw new EpException(MessageConst.ERROR_770045); 
 		}
 		this.retrieveIdentityTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
@@ -171,7 +174,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		try {
 			initialUserProfile();
 			if(id==null){
-				throw new EpException("Please login."); //TODO
+				throw new EpException(MessageConst.ERROR_770015); //TODO
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id, false);
@@ -202,7 +205,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to view User Profile.", new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); //TODO exception
 		}	
 	}
 	
@@ -227,7 +230,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve/populate address.", new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); //TODO exception
 		}
 	}
 	
@@ -346,13 +349,89 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		return PmCommonUtil.retrieveLanguageObjs();
 	}
 	
+	/**
+	 * Validation for PmUser's fields (User Profile Sub Menu)
+	 * @param user
+	 */
+	private void validateUser(PmUser user){
+		logger.info("validateUser");
+		if(StringUtils.isBlank(user.getLoginId())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770030);
+		}
+		if(user.getSalutationCode().getSalutationId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770031);
+		}
+		if(StringUtils.isBlank(user.getUserName())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770032);
+		}
+		if(user.getIdentificationCode().getParameterId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770033);
+		}
+		if(StringUtils.isBlank(user.getIdentificationNo())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770034);
+		}
+		if(user.getPmCountry().getCountryId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770035);
+		}
+		if(StringUtils.isBlank(user.getEmail())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770036);
+		}
+		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770037);
+		}
+		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
+				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
+				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
+			throw new IllegalArgumentException(MessageConst.ERROR_770038);
+		}
 
+	}
+	
+	/**
+	 * Validation for PmAddress's fields (User Profile Sub Menu)
+	 * @param pmAddress
+	 */
+	private void validateUserAddress(PmAddress pmAddress){
+		logger.info("validateUserAddress");
+		if(pmAddress.getPmCountry().getCountryId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770039);
+		}
+
+		if(StringUtils.isBlank(pmAddress.getAddress1())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770040);
+		}
+		
+		if(StringUtils.isBlank(pmAddress.getPostcode())){
+			throw new IllegalArgumentException(MessageConst.ERROR_770041);
+		}
+		
+		if(pmAddress.getPmState().getStateId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770042);
+		}
+
+		if(pmAddress.getPmDistrict().getDistrictId()==null){
+			throw new IllegalArgumentException(MessageConst.ERROR_770043);
+		}
+		
+		if(this.getManagedBean().isDivisionFlagC()){
+			if(pmAddress.getPmDivision().getDivisionId()==null){
+				throw new IllegalArgumentException(MessageConst.ERROR_770044);
+			}
+		}
+	
+	}	
+	
+	
 	/**
 	 * Method to update the user details
 	 */
 	public void saveUserProfile() {
 		debugLogger("saveUserProfile");
 		PmUser user = this.getManagedBean().getSelectedUser();
+		
+		//validation
+		validateUser(user);	
+		validateUserAddress(this.getManagedBean().getUserAddress());		
 		
 		//update contact address
 		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
