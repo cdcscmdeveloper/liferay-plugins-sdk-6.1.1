@@ -12,7 +12,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -21,7 +20,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -55,7 +53,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -73,11 +70,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.model.CompanyConstants;
-import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -923,6 +915,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				orgBean.setSearchValue(currentOrgTypeId);
 				searchBean.getDataFilterBeans().add(orgBean);
 				
+				SearchFilterBean statusBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				statusBean.setSearchField("pmRole.recordStatusFlg");
+				statusBean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(statusBean);
+				
 				//remove parent role as children were selected
 				SearchFilterBean approverBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_NOT_EQUALS.value());
@@ -930,8 +928,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				approverBean.setSearchValue(ProfileManagementConst.ROLE_APPROVER);
 				searchBean.getDataFilterBeans().add(approverBean);
 			}
-			
-		
+		}else{
+			SearchFilterBean statusBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			statusBean.setSearchField("pmRole.recordStatusFlg");
+			statusBean.setSearchValue(null);
+			searchBean.getDataFilterBeans().add(statusBean);
 		}
 		return searchBean;
 	}
@@ -1460,7 +1462,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			oneActiveResponsibleOrg(user);
 			
 			reqDTO = new UserReqDTO();
-
+			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
+			reqDTO.setServerPort(getFacesScopes().getRequest().getServerPort());
+			
 			/* no need check as assumed user have logged in
 			if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword())){ //!StringUtils.isBlank(user.getOldPassword()) &&
 				isChangePwd = true;
@@ -1562,6 +1566,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
 		logger.info("handleFileUpload - END");
 	}
+
 	
 //	/**
 //	 * TODO: fix the remote updatePortrait
