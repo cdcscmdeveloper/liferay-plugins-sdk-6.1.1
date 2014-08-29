@@ -5473,7 +5473,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>pmBusinessNature</portlet-name>
-		<display-name>Unit of Measurement</display-name>
+		<display-name>Business Nature</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
