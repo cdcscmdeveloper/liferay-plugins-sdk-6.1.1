@@ -14,7 +14,9 @@
 		     selection="#{profileManagementBackingBean.managedBean.selectedUserOrg}" 
 		     selectionMode="single"
 		     rowIndexVar="index" rowKey="#{orgUnit}">   
-			<p:ajax event="rowSelect" update=":form:tvRoleReceivingAddr" listener="#{profileManagementBackingBean.showReceivingAddress}"  />
+			<p:ajax event="rowSelect" update=":form:tvRoleReceivingAddr" listener="#{profileManagementBackingBean.showReceivingAddress}" >
+				<f:param name="disableValidation" value="" />     
+			</p:ajax>
 			
 		    <p:column>
 			    <f:facet name="header">
@@ -22,7 +24,7 @@
 			     	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}" />
 			    </f:facet>
 		   
-				<h:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
+				<p:selectOneMenu value="#{orgUnit.pmOrgProfile.orgTypeCode.parameterId}" styleClass="ppDropDownWidthM" 
 					disabled="#{!orgUnit.brandNew}" id="somOrgType"  required="#{!empty param['disableValidation']}" 
 					label="#{lbl['lbl.pm.profiles.resorg.table.orgtype']}">  
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
@@ -31,7 +33,7 @@
 			     	<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType(index)}" 
 			     		update="lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, dtOrgUnit, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"/> 
-	            </h:selectOneMenu>		 
+	            </p:selectOneMenu>		 
 	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />    
 	        </p:column>	 
 	        <p:column>
@@ -39,8 +41,9 @@
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
 			    </f:facet>
-			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" required="#{!empty param['disableValidation']}" 
-	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew}"
+			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" 
+			    	required="#{!empty param['disableValidation']}" 
+	            	update=":form:dtOrgUnit" readonly="true" disabled="#{!orgUnit.brandNew or orgUnit.pmOrgProfile.orgTypeCode.parameterId==null}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 
 					postUpdateListener="profileManagementBackingBean.updateOrgCode
