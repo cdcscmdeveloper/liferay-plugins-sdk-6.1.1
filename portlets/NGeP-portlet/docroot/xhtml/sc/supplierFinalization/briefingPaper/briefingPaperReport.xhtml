@@ -9,39 +9,114 @@
 	
 	<p:panel header="#{lbl['lbl.sc.briefing.paper']}" toggleable="true">
 		
-		<p:dataTable id="documentTbl" 
-			var="document" 
-			widgetVar="documentWidget"
-			value="#{suppFinalizationBackingBean.managedBean.documentList}"
-			styleClass="documentslist" 
-			rowKey="#{document}" 
+		<p:dataTable id="reportTbl" 
+			widgetVar="reportWidget" var="report"
+			value="#{suppFinalizationBackingBean.managedBean.documentList}" 
+			rows="10"
+			styleClass="documentslist"
+			rowKey="#{report}"
 			rowIndexVar="rowIndex">
+			<ac:paginator for="reportTbl" />
 
 			<p:column headerText="#{lbl['lbl.sc.contents']}" style="width:78%">
-				<h:outputText value="#{document.docName}" />
+				<h:inputText style="width:96%" value="#{report.title}" rendered="#{empty report.pmDocument}" />
+				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:20%">
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(report.definationType)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.type']}" style="width:10%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(document.docDefinitionTypeCode)}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%; text-align: center;">
-				<h:commandLink action="#{suppFinalizationBackingBean.downloadDocFile(document)}">
-					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/resources/ep/images/design/download.png"
-						title="#{lbl['lbl.txt.file.download']}" />
-				</h:commandLink>
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%; text-align: center;">
+				<p:commandButton id="download" 
+					icon="ui-icon-download" 
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{suppFinalizationBackingBean.downloadReport(report)}"
+					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty report.scQtFinalizationAttachment.fileName : true}" />
 			</p:column>
 		</p:dataTable>
 		
 		<p:spacer height="20px" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.download.all']}" 
-				action="#{suppFinalizationBackingBean.downloadAll}"
-				ajax="false"
+		<div class="ppRightBtn">
+			<p:commandButton 
 				icon="ui-icon-download" 
-				title="#{lbl['lbl.txt.file.download.all']}"/>
+				value="#{lbl['lbl.btn.download.all']}"
+				ajax="false"	
+				action="#{suppFinalizationBackingBean.downloadAllReports}" />
 		</div>
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.briefing.paper']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td class="TableFieldLeft" width="24%">
+				<h:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+			</td>
+			<td class="TableFieldRight">
+				<p:commandButton oncomplete="attachmentPopupDlg.show();return false;" icon="iconAttachment"
+					partialSubmit="true" process="@this" update="@([id$=attachmentPopup])" 
+					value="#{lbl['lbl.txt.attach.file']}">
+				</p:commandButton>
+			</td>
+		</tr>
+		<tr>
+			<td />
+			<td>
+				<h:panelGroup id="attachFilesPanel">
+					<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td width="5%" rowspan="2">
+							<h:graphicImage library="ep/images/design"
+								name="#{suppFinalizationBackingBean.determineIcon(suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment)}"
+								height="30" width="30"
+								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" />
+						</td>
+						<td width="5"></td>
+						<td>
+							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdUser.userName}" />,
+							<h:outputText value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.createdDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<h:commandLink value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment.fileName}"
+								styleClass="blue_font"
+								action="#{suppFinalizationBackingBean.downloadFile(suppFinalizationBackingBean.managedBean.scQtFinalization.scLoaAttachment)}" />
+							<p:spacer width="5" />
+							<p:commandLink
+								immediate="true"
+								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}"
+								update="attachFilesPanel">
+								<h:graphicImage library="ep/images/design"
+									name="icon_trash.png" styleClass="tasklist_title1" />
+									
+								<f:setPropertyActionListener target="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" value="#{null}" />
+							</p:commandLink>
+						</td>
+					</tr>
+					</table>
+				</h:panelGroup>
+			</td>
+		</tr>
+		</table>
+	</p:panel>
+	
+	<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
+		modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
+		header="#{lbl['lbl.txt.choose.files']}">
+		<p:ajax event="close" />
+		
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{suppFinalizationBackingBean.handleFileUpload}"
+			mode="advanced" id="uploadattachment"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="attachFilesPanel" oncomplete="attachmentPopupDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 	
 </ui:composition>

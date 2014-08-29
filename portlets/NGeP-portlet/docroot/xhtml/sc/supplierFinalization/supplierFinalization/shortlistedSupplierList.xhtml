@@ -40,11 +40,11 @@
 				
 				<p:ajax event="rowSelect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl" />
+					update="@([id$=itemListTbl])" />
 					
 				<p:ajax event="rowEdit"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl" />
+					update="@([id$=itemListTbl])" />
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -131,19 +131,19 @@
 				
 				<p:ajax event="rowSelect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl" />
+					update="@([id$=itemListTbl])" process="@this" partialSubmit="true"/>
 				
 				<p:ajax event="rowSelectCheckbox"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl" />
+					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselect"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl"></p:ajax>
+					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselectCheckbox"
 					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
-					update=":form:tab:itemListTbl"></p:ajax>
+					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>

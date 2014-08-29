@@ -14,14 +14,14 @@
 					style="display : table-caption;">
 					
 					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
-						action="#{suppFinalizationBackingBean.retriveMeetingDtls}"
-						update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.committee.b']}"
-						action="#{suppFinalizationBackingBean.retriveCommitteeDtls}"
-						update="@form" />
+						action="#{suppFinalizationBackingBean.retrieveMeetingDtls}"
+						process="@form" update="@form" />
+					<p:menuitem value="#{suppFinalizationBackingBean.managedBean.committeeTabLabel}"
+						action="#{suppFinalizationBackingBean.retrieveCommitteeDtls}"
+						process="@form" update="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.join.in']}"
-						action="#{suppFinalizationBackingBean.retriveMeetingAttendanceDtls}"
-						update="@form" />
+						action="#{suppFinalizationBackingBean.retrieveMeetingAttendanceDtls}"
+						process="@form" update="@form" />
 				</p:tabMenu>
 			</td>
 			

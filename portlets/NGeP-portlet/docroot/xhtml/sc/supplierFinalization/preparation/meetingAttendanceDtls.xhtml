@@ -9,14 +9,6 @@
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
 			<td width="100%" align="left" valign="top">
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.save']}" 
-						process="@all"
-						partialSubmit="true"
-						action="#{suppFinalizationBackingBean.saveMeetingAttendance}"
-						icon="ui-icon-save" />
-				</div>
-				
 				<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
 					<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 						value="#{suppFinalizationBackingBean.managedBean.meetingAttendanceList}" rows="10"

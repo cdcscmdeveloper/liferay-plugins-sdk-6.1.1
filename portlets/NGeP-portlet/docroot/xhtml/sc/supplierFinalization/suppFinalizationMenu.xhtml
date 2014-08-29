@@ -11,7 +11,14 @@
 	
 		<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info"/>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.submit']}" 
+			<p:commandButton value="#{lbl['lbl.btn.save']}" 
+				process="@all"
+				partialSubmit="true"
+				update="@form"
+				action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
+				icon="ui-icon-save" />
+			
+			<p:commandButton value="#{lbsl['lbl.btn.submit']}" 
 					process="@all"
 					partialSubmit="true"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
@@ -20,7 +27,8 @@
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
 		
-		<p:tabView id="tab" dynamic="true" cache="true" orientation="top">
+		<p:tabView id="tab" dynamic="true" cache="true" orientation="top" 
+			activeIndex="#{suppFinalizationBackingBean.managedBean.activeIndex}">
 			<p:ajax event="tabChange" listener="#{suppFinalizationBackingBean.onTabMenuChangeAction}" immediate="true" />
 		
 			<p:tab title="#{lbl['lbl.sc.preparation']}">
@@ -33,7 +41,7 @@
 				<ui:include src="/xhtml/sc/supplierFinalization/briefingPaper/briefingPaperReport.xhtml" />
 			</p:tab>
 			
-			<p:tab title="#{lbl['lbl.sc.supplier.finalization']}">
+			<p:tab title="#{lbl['lbl.sc.supplier.finalization']}" >
 				<p:spacer height="10px"></p:spacer>
 				<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/suppplierFinalization.xhtml" />
 			</p:tab>

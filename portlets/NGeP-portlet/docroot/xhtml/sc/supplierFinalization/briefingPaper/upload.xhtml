@@ -8,17 +8,7 @@
 
 	<h:panelGroup id="reportFile">
 
-		<p:dialog widgetVar="uploadDlg" position="top" resizable="false" 
-			width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-
-			<p:fileUpload mode="advanced" style="display:inline;" id="evaReportUpld" process="@this" 
-				fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" update="evauploadfile"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				oncomplete="uploadDlg.hide()">
-			</p:fileUpload>
-		</p:dialog>
+		
 	
 	</h:panelGroup>
 </ui:composition>

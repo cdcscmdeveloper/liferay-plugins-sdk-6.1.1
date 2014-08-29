@@ -9,14 +9,6 @@
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
 			<td width="100%" align="left" valign="top"> 
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.save']}" 
-						process="@all"
-						partialSubmit="true"
-						action="#{suppFinalizationBackingBean.saveMeetingDtls}"
-						icon="ui-icon-save" />
-				</div>
-				
 				<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 					<p:dataTable id="meetingDtlTbl" var="meetingDtl" 
 						value="#{suppFinalizationBackingBean.managedBean.meetingList}" rows="10"
@@ -26,20 +18,31 @@
 
 						<p:column selectionMode="multiple" style="width:2%"></p:column>
 						
-						<p:column headerText="#{lbl['lbl.sc.meeting.date']}" style="width:18%">
-							<p:calendar value="#{meetingDtl.meetingDate}"
-								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-								id="notdate" showOn="button" />
+						<p:column style="width:18%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
+							</f:facet>
+							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
+								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"/>
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.sc.location']}" style="width:30%">
-							<p:inputTextarea value="#{meetingDtl.meetingLocation}" rows="2" cols="50"/>
+						<p:column style="width:30%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.location']}" />
+							</f:facet>
+							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" 
+								value="#{meetingDtl.meetingLocation}"/>
 						</p:column>
 						
-						<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
-							<p:selectOneMenu id="meetingstatus" required="true" label="#{lbl['lbl.sc.status']}"
-								value="#{meetingDtl.meetingStatus.statusId}">
-								<f:selectItems value="#{suppFinalizationBackingBean.getStatusDropdownValues('SC', 'MS')}"/>
+						<p:column style="width:20%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
+								<h:outputText value="#{lbl['lbl.sc.status']}" />
+							</f:facet>
+							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="true" value="#{meetingDtl.meetingStatus.statusId}">
+								<f:selectItems value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}"/>
 							</p:selectOneMenu>
 						</p:column>
 						
@@ -65,7 +68,6 @@
 	
 					</div>
 				</p:panel> 
-
 			</td>
 		</tr>
 	</table>

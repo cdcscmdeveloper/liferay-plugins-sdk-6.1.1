@@ -8,20 +8,11 @@
 
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
-			<td> 
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.save']}" 
-						process="@all"
-						partialSubmit="true"
-						action="#{suppFinalizationBackingBean.saveCommitteeDtls}"
-						icon="ui-icon-save" />
-				</div>
-				
-				<p:panel header="#{lbl['lbl.sc.committee.b']}" toggleable="true">
+			<td width="100%" align="left" valign="top"> 
+				<p:panel header="#{suppFinalizationBackingBean.managedBean.committeeTabLabel}" toggleable="true">
 					<p:dataTable id="committeeDtlTbl" var="committeeDtl"
 						value="#{suppFinalizationBackingBean.managedBean.committeeList}" rows="10"
-						rowKey="#{committeeDtl}" rowIndexVar="rowIndex"
-						selection="#{suppFinalizationBackingBean.managedBean.selectedCommitteeList}">
+						rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 						<ac:paginator for="committeeDtlTbl" />
 
 						<p:column headerText="#{lbl['lbl.sc.name']}">
@@ -56,7 +47,9 @@
 							<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberType)}"/>
 						</p:column>
 						
-						<p:column headerText="#{lbl['lbl.sc.attendance']}" selectionMode="multiple" style="width:2%"></p:column>
+						<p:column headerText="#{lbl['lbl.sc.attendance']}">
+							<p:selectBooleanCheckbox value="#{committeeDtl.attended}" />
+						</p:column>
 					</p:dataTable>
 					
 					<p:spacer height="10px"></p:spacer>

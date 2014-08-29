@@ -22,90 +22,95 @@
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 		<p:dataTable id="itemListTbl" var="item"
-			value="#{suppFinalizationBackingBean.managedBean.itemList}"
+			value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtRecommends}"
 			rows="10"
-			selection="#{suppFinalizationBackingBean.managedBean.selectedItemList}"
-			rowKey="#{item.requestNoteItemId}" rowIndexVar="rowIndex">
+			selection="#{suppFinalizationBackingBean.managedBean.selectedRecommendList}"
+			rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
 			<ac:paginator for="itemListTbl" />
 			
 			<p:ajax event="rowSelect" 
 				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update=":form:tab:supplierPanel" />
+				update="@([id$=supplierPanel])" />
 				
 			<p:ajax event="rowSelectCheckbox" 
 				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update=":form:tab:supplierPanel" />
+				update="@([id$=supplierPanel])" />
 				
 			<p:ajax event="rowUnselect"
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
-				update=":form:tab:supplierPanel"></p:ajax>
+				update="@([id$=supplierPanel])"></p:ajax>
 				
 			<p:ajax event="rowUnselectCheckbox"
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
-				update=":form:tab:supplierPanel"></p:ajax>
+				update="@([id$=supplierPanel])"></p:ajax>
 
 			<p:column selectionMode="multiple" style="width:2%" /> 
 			<p:column headerText="#{lbl['lbl.sc.item']}">
-				<h:outputText value="#{item.itemName}" />
+				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.item.type']}">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.itemType)}" />
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.itemType)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.uom']}">
-				<h:outputText value="#{item.uom.uomName}" />
+				<h:outputText value="#{item.requestItem.uom.uomName}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.price.type']}">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.tplSpecQuestion.clPriceTypeCode)}" />
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.recommend.by']}">
 				<h:column>
-					<p:selectOneMenu id="recommendByItem" value="#{item.recommendBy}">
-						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(item.tplSpecQuestion.clPriceTypeCode)}" />
+					<p:selectOneMenu id="recommendByItem" value="#{item.recommendBy.parameterCode}">
+						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 						<p:ajax event="change" 
-							update="selectedSupplierListTbl, quantityListTbl,:form:tab:supplierListTblMultiple"
-							listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"/>
+							update="@([id$=itemListTbl],[id$=supplierPanel])"
+							listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
+							process="@this" partialSubmit="true"/>
 	   				</p:selectOneMenu>	
 				</h:column>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
-				<div class="datalist-noborder">
-					<p:dataList id="selectedSupplierListTbl"  
-						var="supplier"
-						value="#{item.awardSupplierList}" >
-						
-						<p:column>
-							<p:commandLink update=":form:suppDtlPopUp"
-								action="#{suppFinalizationBackingBean.supplier}"
-								oncomplete="suppDtlWidgetVar.show();">
-								<f:setPropertyActionListener value="#{supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-								<h:outputText value="#{supplier.scQtProposal.scQtSupplier.smSupplier.companyName}" />
-							</p:commandLink>
-						</p:column>
-					</p:dataList>
-				</div>	
+				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.awardSupplierList}">
+								
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							
+							<p:column>
+								<p:commandLink update="@([id$=suppDtlPopUp])"
+									action="#{suppFinalizationBackingBean.supplier}"
+									oncomplete="suppDtlWidgetVar.show();">
+									<f:setPropertyActionListener value="#{supplier}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
+									<h:outputText value="#{supplier.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>	
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.quantity']}">
-				<div class="datalist-quantity">
-					<p:dataList id="quantityListTbl" 
-						var="qty"
-						value="#{item.awardSupplierList}"
-						rendered="#{item.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
-								and item.recommendStr == ParameterConst.recommendByMultipleAward}">
-						<p:column>
-							<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10"/>
-						</p:column>
-					</p:dataList>
-				</div>
+				<p:outputPanel id="quantityListTbl"  rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendBy.parameterCode == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-quantity">
+						<p:dataList 
+							var="qty"
+							value="#{item.awardSupplierList}">
+							<p:column>
+								<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10"/>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
 				
-				<h:outputText value="#{qty.qtyAward}" 
-					rendered="#{item.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
-							and item.recommendStr != ParameterConst.recommendByMultipleAward}"/>
+				<h:outputText value="#{item.requestItem.quantity}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendBy.parameterCode != ParameterConst.recommendByMultipleAward}"/>
 			</p:column>
 		</p:dataTable>
 		
@@ -127,7 +132,7 @@
 					partialSubmit="true"
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
 					icon="ui-icon-check" 
-					update=":form:tab:itemListTbl, :form:tab:supplierListTblMultiple"/>
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])"/>
 			</h:column>
 			
 		</h:panelGrid>

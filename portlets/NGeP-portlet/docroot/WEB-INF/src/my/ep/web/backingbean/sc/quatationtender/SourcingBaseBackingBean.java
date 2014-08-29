@@ -59,8 +59,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQtRptBriefingPaperAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
@@ -200,7 +200,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if (scAttachment instanceof ScLoaReportAttachment
 				|| scAttachment instanceof ScQtCheckListAttachment
 				|| scAttachment instanceof ScQtProposalChecklistAttachment
-				|| scAttachment instanceof ScQtRptBriefingPaperAttachment) {
+				|| scAttachment instanceof ScQtFinalizationAttachment) {
 
 			return new AttachmentDateFormat();
 		} else {
