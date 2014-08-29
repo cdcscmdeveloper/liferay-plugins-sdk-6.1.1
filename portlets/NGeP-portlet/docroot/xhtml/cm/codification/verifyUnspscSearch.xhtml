@@ -106,11 +106,9 @@
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
-				<p:dataTable id="unspscTableID"
-					value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
-					lazy="true" rowKey="#{unspscObj.unspscId}" rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
-					width="100%" selectionMode="single">
+				<p:dataTable id="unspscTableID" lazy="true"
+				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
+				width="100%" rows="10">
 
 
 
