@@ -156,18 +156,36 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				resDTO = invoiceSO.saveInvoice(reqDTO);
 			}
 			if(resDTO.isSuccessful()) {
+				String messagePrefix = "";
 				String messageId = MessageConst.INFO_700026;
 				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} else if(resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
 						resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					messageId = MessageConst.INFO_700004;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					messageId = MessageConst.INFO_700007;
+					messagePrefix = "Cancellation for ";
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					messageId = MessageConst.INFO_700008;
+					messagePrefix = "Cancellation for ";
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+					messageId = MessageConst.INFO_700011;
+					messagePrefix = "Update for ";						
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
+					messageId = MessageConst.INFO_700043;
+					messagePrefix = "Update for ";
+				} else {
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+						messagePrefix = "Cancellation for ";	
+					}
+					messageId = MessageConst.INFO_700005;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getInvoiceNo()}, 
+								new String[]{messagePrefix+getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_INVOICE), resDTO.getInvoiceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && resDTO.getInvoice()!=null && resDTO.getInvoice().getAp59Status()!=null && 
