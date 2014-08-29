@@ -13,7 +13,7 @@
 		<p:confirmDialog message="#{simpleQuoteBackingBean.managedBean.promptMessage}" id="promptId"
 			width="450px" height="80px"
 			widgetVar="sqConformDlg"  severity="alert" 
-			closable="true" appendToBody="true" header="Confirmation">
+			closable="false"  header="Submit Confirmation">
 
 			<p:blockUI block="conformDlgId" widgetVar="promptWidget" id="conformDlg">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -22,14 +22,14 @@
 			<p:panel id="conformDlgId">
 				<p:panelGrid styleClass="noBorders tr,noBorders td">
 					<p:row>
-						<p:column width="60%" style="text-align:right">
+						<p:column width="100%" style="text-align:right">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
 								onstart="promptWidget.show()" oncomplete="promptWidget.hide();"
-								icon="ui-icon-submit" 	
+								icon="ui-icon-accept" 	
 								onsuccess="sqConformDlg.hide()"	
 								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
 							<p:commandButton value="#{lbl['lbl.btn.no']}"
-								partialSubmit="true" process="@this" icon="ui-icon-cancel"
+								partialSubmit="true" process="@this" icon="ui-icon-reject"
 								onclick="sqConformDlg.hide();" type="button" />
 						</p:column>
 					</p:row>
@@ -59,7 +59,7 @@
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-				    update="promptId"
+				    update="promptId" process="@this"
 					icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 					
 					<ui:param name="action" value=""></ui:param>
