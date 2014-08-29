@@ -62,6 +62,7 @@
 						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
+						         disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"     
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
@@ -78,6 +79,7 @@
 							value="#{lbl['lbl.sc.just.rmks']}" /></td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 					          id="justificationRmk" label="#{lbl['lbl.sc.just.rmks']}" maxlength="100"
+					           disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
 					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 							rows="3" cols="122" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
