@@ -118,7 +118,6 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -248,79 +247,74 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						   //adding selected item to item List
 					       prepareQuestions(selectedPanelItem , null);
 					       zoneEvent();
-					       scQuote.setPanelItem(selectedPanelItem);    
+					       scQuote.setPanelItem(selectedPanelItem);   
+					       getManagedBean().getPanelItems().add(selectedPanelItem);
 						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
 					}
 				} else{
-					throw new EpException("Select non contract items only");
+					throw new EpException("Select non contract items only.");
 				}
-		  } else { // non contract item and non panel item
-				    CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-				    catalogueReqDTO.setDocId(docId);
-					CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
+			} else { // non contract item and non panel item
+				if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){
+				CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+				catalogueReqDTO.setDocId(docId);
+				CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
 
-				   if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
-					 CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
-					 
-					 // for checking govt.seller 
-					 if(selectedSupplierItem.getSmSupplier().getPmOrgProfile() != null){
-						 scQuote = checkGovtSeller(selectedSupplierItem.getSmSupplier().getPmOrgProfile(), scQuote);
-					 }
-					 
-					 // copy all selected suppliers from the catalogue search
-					 if(compareSupplierItems == null){
-						 IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
-						 catalogueReqDTO = new CatalogueReqDTO();
-						 catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
-						 catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
-						 catalogueReqDTO.setExtensionCode(selectedSupplierItem.getCmItem().getExtensionCode());
-						 catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
-						 List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
-						 for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-							 if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-								 CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
-								 if(supplierItem.getSmSupplier() != null){
-									 selectedSuppliers.add(supplierItem.getSmSupplier());
-								 }
-							 }
-						 }
-						 selectedSuppliers.add(selectedSupplierItem.getSmSupplier());
-						 supplierListListener(selectedSuppliers , scQuote);
-					 } else {
-						 // copy suppliers from the compare screen
-						 supplierListListener(addSelectedSuppliers(compareSupplierItems , selectedSupplierItem) , scQuote);
-					 }
+				if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
+					CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
 
-					 List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
-					 if(supplierItems == null){
-						 supplierItems = new ArrayList<CmSupplierItem>();
-					 }
+					// for checking govt.seller 
+					if(selectedSupplierItem.getSmSupplier().getPmOrgProfile() != null){
+						scQuote = checkGovtSeller(selectedSupplierItem.getSmSupplier().getPmOrgProfile(), scQuote);
+					}
 
-					 if(selectedSupplierItem != null) {
-						 if(supplierItems.isEmpty()){
-							 supplierItems.add(selectedSupplierItem);
-							 prepareQuestions(null , selectedSupplierItem);
-							 getManagedBean().setSupplierItems(supplierItems);
-						 } else {
-							 List<Long> itemIds = new ArrayList<Long>();
-							 for (CmSupplierItem cmSupplierItem : supplierItems) {
-								 itemIds.add(cmSupplierItem.getCmItem().getItemId());
-							 }
-							 if (itemIds.size() > 0) {
-								 if(itemIds.contains(selectedSupplierItem.getCmItem().getItemId())){
-									 throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""});
-								 } else {
-									 supplierItems.add(selectedSupplierItem);
-									 getManagedBean().setSupplierItems(supplierItems);
-									 prepareQuestions(null , selectedSupplierItem);
-								 }
-							 }
-						 }
-					 }
-				   }
-			      }
-		  }
-		
+					// copy all selected suppliers from the catalogue search
+					if(compareSupplierItems == null){
+						IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+						catalogueReqDTO = new CatalogueReqDTO();
+						catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
+						catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
+						catalogueReqDTO.setExtensionCode(selectedSupplierItem.getCmItem().getExtensionCode());
+						catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+						List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
+						for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
+							if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
+								CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+								if(supplierItem.getSmSupplier() != null){
+									selectedSuppliers.add(supplierItem.getSmSupplier());
+								}
+							}
+						}
+						selectedSuppliers.add(selectedSupplierItem.getSmSupplier());
+						supplierListListener(selectedSuppliers , scQuote);
+					} else {
+						// copy suppliers from the compare screen
+						supplierListListener(addSelectedSuppliers(compareSupplierItems , selectedSupplierItem) , scQuote);
+					}
+
+					List<CmSupplierItem> supplierItems = getManagedBean().getSupplierItems();
+					if(supplierItems == null){
+						supplierItems = new ArrayList<CmSupplierItem>();
+					} 
+					
+					if(selectedSupplierItem != null) {
+
+						boolean alreadyExists = checkItemExists(selectedSupplierItem);
+						if(alreadyExists){
+							throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""}); 
+						} else{
+							supplierItems.add(selectedSupplierItem);
+							prepareQuestions(null , selectedSupplierItem);
+						}
+						getManagedBean().setSupplierItems(supplierItems);
+					}
+				}
+				} else{
+					throw new EpException("Select panel items only.");
+				}
+			}
+		}
+
 		 // for procurement type drop down 
 		 if(scQuote.getProcurementType() == null){
 			 scQuote = checkGovtSeller(null, scQuote);
@@ -369,6 +363,49 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		 return "simpleQuote";
 		 
 	}
+	
+	
+  private boolean checkItemExists(CmSupplierItem cmSupplierItem){
+		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
+		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
+		boolean exists = false;
+
+		if(cmSupplierItem != null){
+			// product 
+			if(productTplSpecBean.getSpecMaster() != null){
+				TplSpecMaster prodSpecMaster = productTplSpecBean.getSpecMaster();
+
+				if(prodSpecMaster.getTplSpecQuestions() != null && prodSpecMaster.getTplSpecQuestions().size()>0){
+					for (TplSpecQuestion question : prodSpecMaster.getTplSpecQuestions()) {
+
+						if(cmSupplierItem.getCmItem() != null){
+							if(cmSupplierItem.getCmItem().getItemId().equals(question.getCmItem().getItemId())){
+								exists = true;
+								break;
+							}
+						}
+					}
+				}	
+				// service
+				if(serviceTplSpecBean.getSpecMaster() != null){
+					TplSpecMaster serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
+					if(serviceSpecMaster.getTplSpecQuestions() != null && serviceSpecMaster.getTplSpecQuestions().size()>0){
+						for (TplSpecQuestion question : serviceSpecMaster.getTplSpecQuestions()) {
+
+							if(cmSupplierItem.getCmItem() != null){
+								if(cmSupplierItem.getCmItem().getItemId().equals(question.getCmItem().getItemId())){
+									exists = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return exists;
+	}
+
 	
 	public void preparePanelZones(CtPanelItem ctPanelItem , ScQuote scQuote) {
 		// location level
@@ -654,15 +691,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setJustificationType(null);
 			}
 			
-
-			// panel item zone 
-			if(quote.isPanel()){
-				// zone details
-				if(!getManagedBean().getZoneTrees().isEmpty()){
-					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-				}
-			}
-			
 			//by location
 			if(!getManagedBean().getLocationTrees().isEmpty()){
 				quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
@@ -675,21 +703,47 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias());
 			}
 			
-			// by supplier 
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
-			if(getManagedBean().getSupplierList() != null){
-				suppliers.addAll(getManagedBean().getSupplierList());
+			// panel item zone 
+			if(quote.getPanelItem() != null){
+				// zone details
+				if(!getManagedBean().getZoneTrees().isEmpty()){
+					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				}
+
+				// panel item
+				if(getManagedBean().getPanelSuppliers() != null){
+
+					for (ScQuoteSupplier scQuoteSupplier : getManagedBean().getPanelSuppliers()) {
+						if(quote.getScQuoteSuppliers() != null && !quote.getScQuoteSuppliers().isEmpty()){
+							if(!quote.getScQuoteSuppliers().contains(scQuoteSupplier)){
+								suppliers.add(scQuoteSupplier);
+							}
+						} else{
+							suppliers.add(scQuoteSupplier);
+						}
+					}
+				}
+				
+			} else{
+				if(quote.getProcurementType() != null){
+
+					if(quote.getProcurementType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+						// govt sellers
+						if(getManagedBean().getGovtSellers() != null){
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
+					} else{
+						// by supplier 
+						if(getManagedBean().getSupplierList() != null){
+							suppliers.addAll(getManagedBean().getSupplierList());
+						}
+					}
+				}
 			}
 			
-			// panel item
-			if(getManagedBean().getPanelSuppliers() != null){
-				suppliers.addAll(getManagedBean().getPanelSuppliers());
-			}
-			// govt sellers
-			if(getManagedBean().getGovtSellers() != null){
-				suppliers.addAll(getManagedBean().getGovtSellers());
-			}
-			if(suppliers != null){
+			if(suppliers != null && !suppliers.isEmpty()){
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
@@ -839,15 +893,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				quote.setZoneLocatonLevel(resDTO.getPmParameter());
 			}
 			
-			
-			// panel item zone 
-			if(quote.isPanel()){
-				// zone details
-				if(!getManagedBean().getZoneTrees().isEmpty()){
-					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-				}
-			}
-			
 			// justification type
 			parameterReqDTO = new ParameterReqDTO();
 			if (quote.getProcurementType().getParameterCode()
@@ -892,20 +937,46 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
-			// by supplier 
-			if(getManagedBean().getSupplierList() != null){
-				suppliers.addAll(getManagedBean().getSupplierList());
+			// panel item zone 
+			if(quote.getPanelItem() != null){
+				// zone details
+				if(!getManagedBean().getZoneTrees().isEmpty()){
+					quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				}
+
+				// panel item
+				if(getManagedBean().getPanelSuppliers() != null){
+
+					for (ScQuoteSupplier scQuoteSupplier : getManagedBean().getPanelSuppliers()) {
+						if(quote.getScQuoteSuppliers() != null && !quote.getScQuoteSuppliers().isEmpty()){
+							if(!quote.getScQuoteSuppliers().contains(scQuoteSupplier)){
+								suppliers.add(scQuoteSupplier);
+							}
+						} else{
+							suppliers.add(scQuoteSupplier);
+						}
+					}
+				}
+				
+			} else {
+				if(quote.getProcurementType() != null){
+
+					if(quote.getProcurementType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+						// govt sellers
+						if(getManagedBean().getGovtSellers() != null){
+							suppliers.addAll(getManagedBean().getGovtSellers());
+						}
+					} else{
+						// by supplier 
+						if(getManagedBean().getSupplierList() != null){
+							suppliers.addAll(getManagedBean().getSupplierList());
+						}
+					}
+				}
 			}
 			
-			// panel item
-			if(getManagedBean().getPanelSuppliers() != null){
-				suppliers.addAll(getManagedBean().getPanelSuppliers());
-			}
-			// govt sellers
-			if(getManagedBean().getGovtSellers() != null){
-				suppliers.addAll(getManagedBean().getGovtSellers());
-			}
-			if(suppliers != null){
+			if(suppliers != null && !suppliers.isEmpty()){
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
@@ -1188,6 +1259,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					getManagedBean().setSupplierList(supplierList);
 				}
 			}
+		} else{
+			throw new EpException("Please select At least one Item");
 		}
 	}
 	
@@ -1205,14 +1278,17 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					getManagedBean().setGovtSellers(govtSuppliers);
 				}
 			}
+		} else {
+			throw new EpException("Please select At least one Item");
 		}
 	}
-	
+
 	/**
 	 * deletePanelSupplier method for deleting panel item 
 	 */
 	public void deletePanelSupplier() {
 		debugLogger("deletePanelSupplier");
+
 		if (getManagedBean().getSelectedPanelSuppliers() != null) {
 			for (ScQuoteSupplier scQuoteSupplier : getManagedBean()
 					.getSelectedPanelSuppliers()) {
@@ -1222,6 +1298,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 					getManagedBean().setPanelSuppliers(suppliers);
 				}
 			}
+		} else {
+			throw new EpException("Please select At least one Item");
 		}
 	}	
 	
@@ -1831,7 +1909,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			 Date dateOne = new Date();
 			 Date dateTwo = quote.getEndDate();
 			 StringBuilder message  = new StringBuilder();
-			 if(quote.getEndDate().after(quote.getStartDate())){
+			 if(quote.getEndDate().after(dateOne)){
 				 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
 				 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
 				 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
@@ -1848,9 +1926,12 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				 .append("minute(s)")
 				 .append(" ")
 				 .append("Proceed?");
-				 getManagedBean().setPromptMessage(message.toString());
-				 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
+				
+			 } else{
+				 message.append("End date is over than current time, please change the end date to more than current time."); 
 			 }
+			 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
+			 getManagedBean().setPromptMessage(message.toString());
 		 }
 	 }
 		
@@ -2388,14 +2469,24 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				getManagedBean().setBusinessNatureCriterias(scQuote.getBusinessNatureCriterias());
 			}
 
-			// supplier list
 			if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
-				getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
-			}
-			
-			// panel supplier
-			if(scQuote.getScQuoteSuppliers() != null && scQuote.getScQuoteSuppliers().size() > 0){
-				getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+				// panel supplier
+				if(scQuote.getPanelItem() != null){
+					getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
+					
+				} else{
+
+					if(scQuote.getProcurementType() != null &&  scQuote.getProcurementType().getParameterCode()
+							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+
+						// govt supplers
+						getManagedBean().setGovtSellers(scQuote.getScQuoteSuppliers());
+
+					} else { // supplier list
+						getManagedBean().setSupplierList(scQuote.getScQuoteSuppliers());
+
+					}
+				}
 			}
 			
 			// remarks
