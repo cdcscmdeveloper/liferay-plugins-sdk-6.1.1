@@ -93,6 +93,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
 			validateFulfilmentNote();
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
 			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
