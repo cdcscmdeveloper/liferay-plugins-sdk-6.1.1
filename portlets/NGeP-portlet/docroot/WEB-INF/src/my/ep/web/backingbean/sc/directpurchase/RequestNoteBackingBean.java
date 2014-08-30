@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -85,7 +84,6 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
-import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
@@ -1557,6 +1555,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					reqNoteDtls.remove(requestNoteDtl);
 					getManagedBean().setRequestNoteDtls(reqNoteDtls);
 					
+					if(getManagedBean().getRequestNote() != null){
+						ScRequestNote scRequestNote =  getManagedBean().getRequestNote();
+						if(scRequestNote.getRequestNoteDtls() !=null && scRequestNote.getRequestNoteDtls().size()>0){
+							getManagedBean().getRequestNote().getRequestNoteDtls().remove(requestNoteDtl);
+						}
+					}
+
 					// delete request note list
 					requestNoteDtl.setDeleted(Boolean.TRUE);
 					deleteRequestNoteDtls.add(requestNoteDtl);
@@ -1719,17 +1724,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			purchaseInDefaultReqDTO.setFetchSubEntity(true);
 			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
 			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
+			
 			if(purchaseInDefault != null){
-				List<ScPIDRemark> results= new ArrayList<ScPIDRemark>();
-				for (ScPIDRemark remark : purchaseInDefault.getRemarks()) {
-					remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-					remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-					remark.setChangedBy(remark.getCreatedBy());
-					remark.setChangedDate(remark.getCreatedDate());
-					remark.setUser(facesScopes.getUserSessionBean());
-					results.add(remark);
+				// contract item 
+				if(purchaseInDefault.getContractedItem() != null){
+					purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.TRUE);
+					
+				} else{ //panel item
+					purchaseInDefaultBackingBean.getManagedBean().setCheckContractItem(Boolean.FALSE);
 				}
-				purchaseInDefault.setRemarks(results);
+				
 				purchaseInDefaultBackingBean.getManagedBean().setPurchaseInDefault(purchaseInDefault);
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
