@@ -9,6 +9,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<ui:define name="contentSection">
+	<p:blockUI widgetVar="blkCentralSearchTable"  block=":form" id="centralSearchId">  
+			      <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		      </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
 		<p:panel id="searchPanel" header="Search" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
@@ -30,7 +33,8 @@
 				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
+				<p:commandButton id="centralSearchId" value="#{lbl['lbl.ct.search.btn.search']}" onstart="blkCentralSearchTable.show();" 
+				    oncomplete="blkCentralSearchTable.hide();"  action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{centralContractBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
 			</div>		
 		</p:panel>
@@ -78,7 +82,8 @@
 						<p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="View" />
 					</p:commandLink>
 				</p:column>
-			</p:dataTable>		
+			</p:dataTable>	
+			
 			<p:remoteCommand name="gotoPage" action="#{centralContractBackingBean.gotoPage}" />
 		</p:panel>           
 	</ui:define>

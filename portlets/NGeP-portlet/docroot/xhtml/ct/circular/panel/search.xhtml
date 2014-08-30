@@ -8,6 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<ui:define name="contentSection">
+	    <p:blockUI widgetVar="blkPanelSearchTable"  block=":form" trigger="panelSearchId">  
+			  <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		 </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
 		<p:panel id="searchPanel" header="Search" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
@@ -33,7 +36,8 @@
 				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{panelBackingBean.searchCircularVer}" icon="ui-icon-search" update="circularVerDt" />
+				<p:commandButton id="panelSearchId" value="#{lbl['lbl.ct.search.btn.search']}" action="#{panelBackingBean.searchCircularVer}"
+				    onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"  icon="ui-icon-search" update="circularVerDt" />
 				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{panelBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
 			</div>		
 		</p:panel>

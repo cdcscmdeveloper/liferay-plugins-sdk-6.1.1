@@ -78,7 +78,7 @@
 			</p:dataTable> 
 			<p:spacer height="5"/>
 			<div class="ppRightBtn">
-			      <p:commandButton value="Add" process="@form" icon="ui-icon-add" onclick="dlg2.show();">
+			      <p:commandButton value="Add" process="@form" icon="ui-icon-add"  onclick="dlg2.show();">
 			         <p:ajax event="change" update="associateCreation" process="@this" />
 			      </p:commandButton>
 			      <p:commandButton value="Delete" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />     
@@ -106,7 +106,7 @@
                   <p:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
                   <p:inputText value="#{associationBackingBean.managedBean.ctNumber}" style="width:150px;"/>
                   <p:commandButton value="Search" process="modelDialog" icon="ui-icon-search"
-                    action="#{associationBackingBean.searchContract}" update=":form:advanceCtSearch"/>
+                    onstart="blkDlgAssociateTable.show();" oncomplete="blkDlgAssociateTable.hide();" action="#{associationBackingBean.searchContract}" update=":form:advanceCtSearch"/>
               </h:panelGrid>
 		     <p:spacer height="2"/>
              <p:dataTable id="advanceCtSearch" var="data" value="#{associationBackingBean.contractDataModel}" 
@@ -133,6 +133,9 @@
 						</h:outputText>
                   	</p:column>
 			  	 </p:dataTable>
+			  	  <p:blockUI widgetVar="blkDlgAssociateTable" trigger="advanceCtSearch"  block=":form:advancePanel">  
+			      <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
+		      </p:blockUI> 
 			 <f:facet name="footer">
 			   <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
 				  <p:commandButton value="Select" process="modelDialog" action="#{associationBackingBean.addAdvanceContract}" 
