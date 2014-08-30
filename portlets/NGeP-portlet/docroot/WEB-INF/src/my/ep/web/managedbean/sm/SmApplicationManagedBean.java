@@ -1,13 +1,17 @@
 package my.ep.web.managedbean.sm;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.constants.CommonConstants;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -48,6 +52,7 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -153,7 +158,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String poSiteVisitType;
 	private boolean testBlock;
 	private int maxReviewCount;
-	//private int authPerCount;
+	// private int authPerCount;
 	private SmApplSectionReview poSecReview;
 	private SmApplSectionReview apprvrSecReview;
 	private boolean termsAccepted;
@@ -265,6 +270,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean validSmUserLimit;
 	private boolean userWithRole;
 	private boolean validEquityLimit;
+	private String today;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -451,6 +457,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			defPmCountry = new PmCountry();
 		}
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
+		DateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		today = df.format(new Date());
+		System.out.println("*** Date String *** " + df.format(new Date()));
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -1730,13 +1739,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.reasonId = reasonId;
 	}
 
-//	public int getAuthPerCount() {
-//		return authPerCount;
-//	}
-//
-//	public void setAuthPerCount(int authPerCount) {
-//		this.authPerCount = authPerCount;
-//	}
+	// public int getAuthPerCount() {
+	// return authPerCount;
+	// }
+	//
+	// public void setAuthPerCount(int authPerCount) {
+	// this.authPerCount = authPerCount;
+	// }
 
 	public SmPersonnleCalcVO getPersonCalc() {
 		return personCalc;
@@ -2010,6 +2019,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setValidEquityLimit(boolean validEquityLimit) {
 		this.validEquityLimit = validEquityLimit;
+	}
+
+	public String getToday() {
+		return today;
+	}
+
+	public void setToday(String today) {
+		this.today = today;
 	}
 
 }

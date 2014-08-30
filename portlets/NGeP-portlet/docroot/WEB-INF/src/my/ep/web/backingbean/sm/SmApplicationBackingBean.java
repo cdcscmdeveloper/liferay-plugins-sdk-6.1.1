@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -227,11 +229,19 @@ public class SmApplicationBackingBean extends
 		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
 
+	public String getMaxDate() {
+		DateFormat df = new SimpleDateFormat();
+		System.out.println("*** Date String *** " + df.format(new Date()));
+		return df.format(new Date());
+	}
+
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
 		if (!applicationType.equalsIgnoreCase("C")) {
+			System.out.println("*** Today ****" + getManagedBean().getToday());
+
 			retrievePmCountryList();
 			retrievePmCertBodyList();
 			retrievePmProfBodyList();
@@ -2319,6 +2329,8 @@ public class SmApplicationBackingBean extends
 						.getCategoryL1Id() == 21) {
 			validCat = validateIctCatCode();
 		}
+		validCat = validL3CategoryCode(getManagedBean().getSelectedCategory()
+				.getPmCategoryL3().getCategoryL3Id());
 		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.getPmCategoryL1()
@@ -6431,6 +6443,33 @@ public class SmApplicationBackingBean extends
 	public String getCompanyId() {
 		return EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.PORTAL_COMPANY_ID);
+	}
+
+	private boolean validL3CategoryCode(Long catL3Id) {
+		System.out
+				.println("*** Validate the code with directors and equi owners ***** ");
+		IMofRegistrationSO mofRegistrationSO = null;
+		boolean validCategory = true;
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSupplierId(getManagedBean().getSmSupplier()
+					.getSupplierId());
+			reqDto.setCatL3Id(catL3Id);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.checkValidCategoryForSupplier(reqDto);
+			if (resDTO.isInvalidCategory()) {
+				validCategory = false;
+				throw new EpException(MessageConst.ERROR_722548);
+			} else {
+				validCategory = true;
+			}
+			return validCategory;
+		} finally {
+			mofRegistrationSO = null;
+		}
 	}
 
 	private boolean validateIctCatCode() {
