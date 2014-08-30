@@ -462,7 +462,6 @@ public class QTDetailBackingBean extends
 			goList = objResDTO.getPmGoList();
 			this.getManagedBean().setGoList(goList);
 		}
-		
 		return goList;
 	}
 
@@ -485,7 +484,6 @@ public class QTDetailBackingBean extends
 			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
 			this.getManagedBean().setUserDivisionList(pmOrgProfiles);
 			return pmOrgProfiles;
-
 		}
 		return null;
 	}
@@ -1118,78 +1116,36 @@ public class QTDetailBackingBean extends
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public void retriveFinancialSpecification() {
 		debugLogger("retriveFinancialSpecification");
-		/*
-		 * if (getManagedBean().getQt().getQtStatus().getStatusId() <= 60002) {
-		 * this.getManagedBean().setActiveIndex(5); }
-		 */
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setSpecType("F");
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
-			if (resDto != null) {
-				List<ScQtCheckList> financialSpecList = this.getManagedBean()
-						.getFinancialSpecList();
-				if (financialSpecList == null) {
-					financialSpecList = new ArrayList<ScQtCheckList>();
-				}
-				List<ScQtCheckList> localList = new ArrayList<ScQtCheckList>();
-				if (resDto.getSpecResultBean().getResultList().size() != financialSpecList
-						.size()) {
-					for (ScQtCheckList checklist : resDto.getSpecResultBean()
-							.getResultList()) {
-						localList.add(checklist);
-					}
-					this.getManagedBean().setFinancialSpecList(localList);
-				}
+			if (resDto.getFinSpecResultBean().getResultList() != null && !resDto.getFinSpecResultBean().getResultList().isEmpty()) {
+				this.getManagedBean().setFinancialSpecList(resDto.getFinSpecResultBean().getResultList());
 			}
 		} finally {
 			specSO = null;
 		}
 	}
 
-	/**
-	 * 
-	 */
 	public void retriveTechnicalSpecification() {
 		debugLogger("retriveTechnicalSpecification");
-		/*
-		 * if (getManagedBean().getQt().getQtStatus().getStatusId() <= 60002) {
-		 * this.getManagedBean().setActiveIndex(4); }
-		 */
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		try {
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-			reqDTO.setSpecType("T");
-			specSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
-			if (resDto != null) {
-				List<ScQtCheckList> techSpecList = this.getManagedBean()
-						.getTechnicalSpecList();
-				if (techSpecList == null) {
-					techSpecList = new ArrayList<ScQtCheckList>();
-				}
-				List<ScQtCheckList> localList = new ArrayList<ScQtCheckList>();
-				if (resDto.getSpecResultBean().getResultList().size() != techSpecList
-						.size()) {
-					for (ScQtCheckList checklist : resDto.getSpecResultBean()
-							.getResultList()) {
-						localList.add(checklist);
-					}
-					this.getManagedBean().setTechnicalSpecList(localList);
-				}
+			if (resDto.getSpecResultBean().getResultList() != null && !resDto.getSpecResultBean().getResultList().isEmpty()) {
+				this.getManagedBean().setTechnicalSpecList(resDto.getSpecResultBean().getResultList());
 			}
 		} finally {
 			specSO = null;
@@ -1264,58 +1220,36 @@ public class QTDetailBackingBean extends
 		System.out.println("=======get id value=====" + id);
 	}
 
-	/**
-	 * 
-	 */
 	public void retrieveCommitteeAppointmentTabDtl() {
 		debugLogger("retrieveCommitteeAppointmentTabDtl");
-		// this.getManagedBean().setActiveIndex(1);
-		this.getManagedBean().getQt()
-				.setFinalizationCommitte(new PmParameter());
+		this.getManagedBean().getQt().setFinalizationCommitte(new PmParameter());
 		this.getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 		MenuModel menuModel = new DefaultMenuModel();
-		List<TabBean> committeTabs = this.getManagedBean()
-				.getScCommitteeMemberTabList();
+		List<TabBean> committeTabs = this.getManagedBean().getScCommitteeMemberTabList();
 		Long qtId = getManagedBean().getQt().getQtId();
 		if (null != qtId && null == committeTabs) {
-			String evaluationType = this.getManagedBean().getQt()
-					.getEvaluationType();
+			String evaluationType = this.getManagedBean().getQt().getEvaluationType();
 			committeTabs = new ArrayList<TabBean>();
 			// BO and specification committe is common for both evaluations..
-			committeTabs.add(new TabBean("Business Owner",
-					getQtCommiteDtlsByQtIdNType("BO", qtId)));
-			committeTabs.add(new TabBean("Specification Committee",
-					getQtCommiteDtlsByQtIdNType(
-							CommitteType.getValue("SpecificationCommittee"),
-							qtId)));
+			committeTabs.add(new TabBean(QTConstants.BUSINESS_OWNER, getQtCommiteDtlsByQtIdNType("BO", qtId)));
+			committeTabs.add(new TabBean(QTConstants.SPECIFICATION_COMMITTEE_TAB, getQtCommiteDtlsByQtIdNType(CommitteType.getValue("SpecificationCommittee"), qtId)));
 			// evaluation type is one tier only oc is added..
 			if ("1".equals(evaluationType)) {
-				committeTabs.add(new TabBean("Evaluation Committee",
-						getQtCommiteDtlsByQtIdNType(
-								CommitteType.getValue("EvaluationCommittee"),
-								qtId)));
+				committeTabs.add(new TabBean("Evaluation Committee", getQtCommiteDtlsByQtIdNType(CommitteType.getValue("EvaluationCommittee"), qtId)));
 			}
 			// evaluation type is two tier below committe are added
 			else {
-				committeTabs
-						.add(new TabBean("Opening Committee",
-								getQtCommiteDtlsByQtIdNType(CommitteType
-										.getValue("OpeningCommittee"), qtId)));
-				committeTabs.add(new TabBean("TEC",
-						getQtCommiteDtlsByQtIdNType("TEC", qtId)));
-				committeTabs.add(new TabBean("FEC",
-						getQtCommiteDtlsByQtIdNType("FEC", qtId)));
+				committeTabs.add(new TabBean(QTConstants.OPENING_COMMITTEE_TAB, getQtCommiteDtlsByQtIdNType(CommitteType.getValue("OpeningCommittee"), qtId)));
+				committeTabs.add(new TabBean("TEC", getQtCommiteDtlsByQtIdNType("TEC", qtId)));
+				committeTabs.add(new TabBean("FEC", getQtCommiteDtlsByQtIdNType("FEC", qtId)));
 			}
 
 			ScQtCommittee qtCommittee = new ScQtCommittee();
-			this.getManagedBean().getQt()
-					.setFinalizationCommitte(new PmParameter());
-			this.getManagedBean().getQt()
-					.setFinalizationSecratery(new PmUser());
+			this.getManagedBean().getQt().setFinalizationCommitte(new PmParameter());
+			this.getManagedBean().getQt().setFinalizationSecratery(new PmUser());
 			qtCommittee.setScQt(this.getManagedBean().getQt());
-			committeTabs
-					.add(new TabBean("Finalization Secretary", qtCommittee));
-
+			committeTabs.add(new TabBean(QTConstants.FINALIZATION_SECRETARY_TAB, qtCommittee));
+			
 			this.getManagedBean().setScCommitteeMemberTabList(committeTabs);
 
 			int zoneTabIndex = 0;
@@ -1323,19 +1257,12 @@ public class QTDetailBackingBean extends
 				MenuItem committeItem = new MenuItem();
 				committeItem.setValue(tabBean.getTitleName());
 				committeItem.setUpdate("@form");
-				if (!"Finalization Secretary".equalsIgnoreCase(tabBean
-						.getTitleName())) {
-					if (tabBean.getScQtCommittee().getScCommittee()
-							.getCommitteStatus().getStatusId()
-							.equals(QTStatusConst.CM_COMPLETE)) {
+				if (!QTConstants.FINALIZATION_SECRETARY_TAB.equalsIgnoreCase(tabBean.getTitleName())) {
+					if (tabBean.getScQtCommittee().getScCommittee().getCommitteStatus().getStatusId().equals(QTStatusConst.CM_COMPLETE)) {
 						committeItem.setIcon("ui-icon-endorse");
 					}
 				}
-				committeItem.setActionExpression(FacesScopes
-						.createMethodExpression(facesContext,
-								"#{qTDetailBB.committeTabChangeAction("
-										+ zoneTabIndex + ")}", null,
-								new Class[] { Integer.class }));
+				committeItem.setActionExpression(FacesScopes.createMethodExpression(facesContext, "#{qTDetailBB.committeTabChangeAction(" + zoneTabIndex + ")}", null, new Class[] { Integer.class }));
 				menuModel.addMenuItem(committeItem);
 				zoneTabIndex++;
 			}
@@ -1356,8 +1283,7 @@ public class QTDetailBackingBean extends
 		reqDTO.setQtId(qtId);
 		CommitteResDTO resDTO = null;
 		try {
-			committeSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO.retrieveFinalizationSecratryDtls(reqDTO);
 		} finally {
 			committeSO = null;
@@ -1445,9 +1371,6 @@ public class QTDetailBackingBean extends
 		return qtCommitte;
 	}
 
-	/**
-	 * 
-	 */
 	public void retrieveBusinessOwnerTabDtl() {
 		debugLogger("retrieveBusinessOwnerTabDtl");
 		if (getManagedBean().getQt().getQtId() != null) {
@@ -1456,12 +1379,9 @@ public class QTDetailBackingBean extends
 			CommitteResDTO resDTO = null;
 			ICommitteSO committeSO;
 			try {
-				committeSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-				resDTO = committeSO
-						.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
-				List<ScCommitteeMember> committeeMembersList = resDTO
-						.getCommMemberResultBean().getResultList();
+				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+				List<ScCommitteeMember> committeeMembersList = resDTO.getCommMemberResultBean().getResultList();
 				getManagedBean().setScCommitteeMemberList(committeeMembersList);
 			} finally {
 				committeSO = null;
@@ -2568,37 +2488,8 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
-		// ICommitteSO committeSO =
-		// EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		// ICommitteSO.class);
-		// int previousTabIndex = this.getManagedBean().getSelectedTabIndex();
-		// TabBean selctedcommTabBean =
-		// this.getManagedBean().getScCommitteeMemberTabList().get(previousTabIndex);
-		// ScCommittee committe = null;
-		/*
-		 * if (null == this.getManagedBean().getFinalizationSecratary() ||
-		 * this.getManagedBean().getFinalizationSecratary().isEmpty()) {
-		 * List<PmParameter> finalizeList =
-		 * retrieveFinalizationSecratryDtl(this.
-		 * getManagedBean().getQt().getQtId());
-		 * this.getManagedBean().setFinalizationSecratary(finalizeList); } if
-		 * (!QTConstants
-		 * .FINALIZATION_SECRETARY_TAB.equalsIgnoreCase(selctedcommTabBean
-		 * .getTitleName())) { committe =
-		 * selctedcommTabBean.getScQtCommittee().getScCommittee(); if
-		 * (previousTabIndex > 0 && committe.isApprovalReq()) { CommitteReqDTO
-		 * reqDTO = new CommitteReqDTO(); reqDTO.setScCommittee(committe);
-		 * this.getManagedBean().getQt().setFinalizationCommitte(null);
-		 * reqDTO.setScQt(this.getManagedBean().getQt()); reqDTO.setUser(new
-		 * FacesScopes().getUserSessionBean());
-		 * committeSO.validateCommitteDtls(reqDTO); } } else { CommitteReqDTO
-		 * reqDTO = new CommitteReqDTO(); reqDTO.setScCommittee(committe);
-		 * reqDTO.setScQt(this.getManagedBean().getQt());
-		 * committeSO.validateCommitteDtls(reqDTO); }
-		 */
 		this.getManagedBean().setSelectedTabIndex(selectedZoneTabIndex);
-		TabBean committeTabBean = this.getManagedBean()
-				.getScCommitteeMemberTabList().get(selectedZoneTabIndex);
+		TabBean committeTabBean = this.getManagedBean().getScCommitteeMemberTabList().get(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedTabBean(committeTabBean);
 	}
 
@@ -2606,26 +2497,9 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("ApprovalTabChange Action");
 		}
-		/*
-		 * int previousTabIndex = this.getManagedBean()
-		 * .getSelectedApprovalTabIndex();
-		 */
-		TabBean approvalTabBean = this.getManagedBean().getTabList()
-				.get(selectedZoneTabIndex);
+		TabBean approvalTabBean = this.getManagedBean().getTabList().get(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedApprovalTabIndex(selectedZoneTabIndex);
 		this.getManagedBean().setSelectedApprovalTabBean(approvalTabBean);
-		/*
-		 * TabBean previousApprovalTab = this.getManagedBean().getTabList()
-		 * .get(previousTabIndex);
-		 */
-		/*
-		 * IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-		 * IQTDetailSO.class); QuationTenderReqDTO reqDto = new
-		 * QuationTenderReqDTO();
-		 * reqDto.setApproval(previousApprovalTab.getScQtApproval());
-		 * detailSO.validateApproval(reqDto);
-		 */
 	}
 
 	public void validateQtDetails() {
