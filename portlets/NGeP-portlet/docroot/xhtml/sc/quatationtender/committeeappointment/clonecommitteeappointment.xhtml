@@ -138,7 +138,7 @@
 
 					<p:column headerText="#{lbl['lbl.so.bo.name']}">
 						<h:outputText
-							value="#{committeeNode.object.committeeType.parameterCode}"
+							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
 							rendered="#{committeeNode.type == 'committee'}" />
 						<h:outputText value="#{committeeNode.object.memberName}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
