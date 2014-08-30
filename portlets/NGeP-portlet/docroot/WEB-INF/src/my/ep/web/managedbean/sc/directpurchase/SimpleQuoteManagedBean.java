@@ -20,6 +20,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -160,6 +161,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	private String promptMessage;
 	private String selectedAction;
+	
+	private List<CtPanelItem> panelItems = new ArrayList<CtPanelItem>();
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -194,6 +197,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 
 				if(getSearchProcType() !=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcType()));
+				}
+				
+				// for panel item search
+				if(getScQuote().isPanel()) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("panel",SearchOperator.OPERATOR_EQUALS.value(),1));
 				}
 
 				if (getSearchFromCreatedDate() != null
@@ -1363,6 +1371,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedAction(String selectedAction) {
 		this.selectedAction = selectedAction;
+	}
+	/**
+	 * @return the panelItems
+	 */
+	public List<CtPanelItem> getPanelItems() {
+		return panelItems;
+	}
+	/**
+	 * @param panelItems the panelItems to set
+	 */
+	public void setPanelItems(List<CtPanelItem> panelItems) {
+		this.panelItems = panelItems;
 	}
 	
 }
