@@ -1222,7 +1222,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				row = rowIterator.next();
 
 				//uom
-				if ((row.getCell(12) == null || row.getCell(12).getStringCellValue().isEmpty())
+				if ((row.getCell(10) == null || row.getCell(10).getStringCellValue().isEmpty())
 						&& (row.getCell(0) != null && !row.getCell(0).toString().isEmpty())) {
 					invalidDataMsg = invalidDataMsg.concat("Row" + rowNum
 							+ "\n");
@@ -1310,22 +1310,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									cmStandardPricing.setEndDate(endDate);
 								}*/
 
-								//item desc
-								if (row.getCell(10) != null && !row.getCell(10).toString().isEmpty()) {
-									additionalItemDesc = row.getCell(10).toString();
-									supplierItem.setItemDesc(additionalItemDesc);
-								}
-
-								//frequency
-								if (row.getCell(11) != null && !row.getCell(11).toString().isEmpty()) {
-									frequency = row.getCell(11)
-											.getNumericCellValue();
-									supplierItem.setFrequency(new BigDecimal(
-											frequency));
-								}
-								
 								//uom
-								if (row.getCell(12) != null && !row.getCell(12).getStringCellValue().isEmpty()) {
+								if (row.getCell(10) != null && !row.getCell(10).getStringCellValue().isEmpty()) {
 
 									IUomSO uomSO = (IUomSO) BusinessDelegate
 											.getInstance().getServiceObject(
@@ -1333,7 +1319,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 									UomResDTO resDTO = uomSO.retrieveUomList();
 									List<PmUom> uomList = resDTO.getPmUomList();
 
-									uom = row.getCell(12).toString();
+									uom = row.getCell(10).toString();
 									PmUom pmUom = new PmUom();
 									for (PmUom u : uomList) {
 										if (u.getUomName() != null
@@ -1357,7 +1343,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 										break;
 									}
 								}
+								
+								//item desc
+								if (row.getCell(11) != null && !row.getCell(11).toString().isEmpty()) {
+									additionalItemDesc = row.getCell(11).toString();
+									supplierItem.setItemDesc(additionalItemDesc);
+								}
 
+								//frequency
+								if (row.getCell(12) != null && !row.getCell(12).toString().isEmpty()) {
+									frequency = row.getCell(12)
+											.getNumericCellValue();
+									supplierItem.setFrequency(new BigDecimal(
+											frequency));
+								}
+								
 								//model
 								if (row.getCell(13) != null
 										&& !row.getCell(13).toString()
@@ -1570,9 +1570,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			else
 				dataLs.add("");
 
+			dataLs.add(catalog.getPmUom().getUomName());
 			dataLs.add(catalog.getItemDesc());
 			dataLs.add(catalog.getFrequency());
-			dataLs.add(catalog.getPmUom().getUomName());
 			dataLs.add(catalog.getModelNumber());
 			dataLs.add(catalog.getSkuNumber());
 			dataLs.add(catalog.getManufacturer());
