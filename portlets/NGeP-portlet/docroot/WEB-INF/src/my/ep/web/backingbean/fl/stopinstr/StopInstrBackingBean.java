@@ -37,6 +37,7 @@ import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.type.pm.RoleCode;
@@ -215,6 +216,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		for(Entry<Long, List<FlStopInstrItem>> itemEntry : siItemsMap.entrySet()){
 			List<FlStopInstrItem> stopInstrItems = itemEntry.getValue();
 			FlStopInstrItem flsiItem = (FlStopInstrItem) stopInstrItems.get(0).cloneEntity(); 
+			flsiItem.setFlFulfilmentItem((FlFulfilmentItem)flsiItem.getFlFulfilmentItem().cloneEntity());
 			flsiItem.setParent(true);
 			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getCmItem().getItemId().toString(), flsiItem, getManagedBean().getChargeLineItemRoot());
 			

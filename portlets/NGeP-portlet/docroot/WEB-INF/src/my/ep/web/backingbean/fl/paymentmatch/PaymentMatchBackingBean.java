@@ -467,6 +467,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		//for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
 			List<FlPaymentItem> paymentItems = itemEntry.getValue();
 			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+			flPaymentItem.setFlInvoiceItem((FlInvoiceItem) flPaymentItem.getFlInvoiceItem().cloneEntity());
+			flPaymentItem.setFlAdjustmentItem((FlAdjustmentItem) flPaymentItem.getFlAdjustmentItem().cloneEntity());
 			flPaymentItem.setParent(true);
 			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
 			
