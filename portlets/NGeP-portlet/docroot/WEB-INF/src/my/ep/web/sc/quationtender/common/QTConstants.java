@@ -87,7 +87,7 @@ public interface QTConstants {
 	public static final String DP_OTHERS = "OT";
 
 	// committee Appointment
-
+	public static final String BUSINESS_OWNER  = "Business Owner";
 	public static final String SPECIFICATION_COMMITTEE_TAB = "Specification Committee";
 	public static final String OPENING_COMMITTEE_TAB = "Opening Committee";
 	public static final String TECHNICAL_COMMITTEE_TAB = "Technical Evaluation Committee";
@@ -131,6 +131,9 @@ public interface QTConstants {
 	public static final String BSV_TYPE_BRIEFING = "B";
 	public static final String BSV_TYPE_SITEVISIT = "S";
 	public static final String BSV_TYPE_BRIEFING_SITEVIST = "B";
+	
+	public static final String USER_SELECTION = "E";
+	public static final String ACCESS_RIGHT = "E";
 
 	// SPECIFICATION CONSTANTS
 	public static final String TECHNICAL_DOC_TYPE = "1";
