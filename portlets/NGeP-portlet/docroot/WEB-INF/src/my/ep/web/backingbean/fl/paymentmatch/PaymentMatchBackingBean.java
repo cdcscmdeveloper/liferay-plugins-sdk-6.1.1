@@ -509,7 +509,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	public void calPmSummary(){
 		BigDecimal totalDeductionAmt = new BigDecimal(0);
 		for(FlPaymentDeduction deduction : getManagedBean().getPaymentAdvice().getFlPaymentDeduction()) {
-			if(!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
+			if(deduction.getDeductionType().getParameterCode()!=null && 
+				!deduction.getDeductionType().getParameterCode().equalsIgnoreCase(ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE)) {
 				totalDeductionAmt = totalDeductionAmt.add(deduction.getDeductionAmt());
 			}
 		}
