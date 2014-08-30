@@ -30,7 +30,7 @@
 				update="@all" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',null)}"
+				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"
 				icon="ui-icon-save" />
 
 		</div>
@@ -75,7 +75,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio

@@ -40,7 +40,7 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+							disabled="true"
 							maxlength="200" style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
@@ -67,7 +67,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
-							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.status.statusId)}"></p:inputText></td>
+							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 				</tr>
 			</table>
 
