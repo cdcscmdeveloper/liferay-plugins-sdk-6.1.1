@@ -100,7 +100,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
