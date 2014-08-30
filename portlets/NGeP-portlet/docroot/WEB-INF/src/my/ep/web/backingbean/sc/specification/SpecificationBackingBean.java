@@ -1346,10 +1346,13 @@ public class SpecificationBackingBean extends
 									.getScQtSupplierCriteria().isAllState())) {
 
 						List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-
+						getManagedBean().setZoneTrees(null);
 						if (null != tenderResDTO.getLocationDetails()) {
+
 							for (TplSpecLoc localLoc : tenderResDTO
 									.getLocationDetails()) {
+								getManagedBean().setZoneTrees(
+										new ArrayList<TreeNode>());
 								ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
 								locCriteria.add(criteria);
 							}
@@ -2810,6 +2813,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Edit General ZoneLocations Method
 	public void editBusinessOwnerZoneLocation(TreeNode rootZoneLocation,
 			int index) {
 		IParameterSO parameterSo = null;
@@ -2887,6 +2891,7 @@ public class SpecificationBackingBean extends
 		getManagedBean().setRequired(Boolean.TRUE);
 	}
 
+	// Display Location level Dropdown values
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
 
 		List<String> types = new ArrayList<String>();
@@ -2922,6 +2927,7 @@ public class SpecificationBackingBean extends
 		// return getDropdownCodeValues(committeeRole);
 	}
 
+	// Supplier Locations Pop Up Method
 	public void showZoneLocationPopup() {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
@@ -2979,6 +2985,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Zone Details Pop up method
 	public void showGeneralZoneLocationPopup() {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
@@ -3034,6 +3041,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Supplier Qualification Criteria Locations Add Method
 	public void updateZoneLocation() {
 		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
 		// TreeNode[] listSelectedTreeNode =
@@ -3092,6 +3100,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// General Zone Locations Add Method
 	public void updateZoneGeneralLocation() {
 
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
@@ -3162,6 +3171,7 @@ public class SpecificationBackingBean extends
 	 * 
 	 * @return
 	 */
+
 	private SpecificationReqDTO prepareSpecReq() {
 
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -3379,6 +3389,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Retrive Non Panel Zone Details Method
 	public void retriveNonpanelZoneDtls(Long qtId, String docType) {
 		IQTDetailSO QtDetailsSO;
 		try {
@@ -3403,11 +3414,14 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Evaluation Type set Method
 	public void tierEvent(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setEvaluationType(type);
 	}
+
+	// Quaptaion/Tender Type Set Method
 
 	public void onChangeQtType(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
@@ -3416,12 +3430,14 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().getScQt().setQtType(type);
 	}
 
+	// Panel Yes or no Method
 	public void panelChangeValue(AjaxBehaviorEvent event) {
 		Boolean panel = (Boolean) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getScQt().setPanel(panel);
 	}
 
+	// Technical Checklist Action values Chnanged by DocDefination type method
 	public void typeChange(int index, List<ScQtCheckList> checkList) {
 		// Long type = (Long) event.getComponent().getAttributes().get("value");
 		ScQtCheckList list = checkList.get(index);
@@ -3506,6 +3522,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Finncial Checklist Action Dropdown Values
 	public SelectItem[] getFinChecklIstActionValues(String type) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -3522,6 +3539,7 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	// Technical Checklist Defination Type DropDOwn Values
 	public SelectItem[] getTechnicalChecklIstDefValues(String type) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -3540,6 +3558,7 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	// Set technical Checklist DropDown Values Set to List
 	public void checklistActionChange(int index, List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
 
@@ -3559,6 +3578,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Set Financial Checklist DropDown Values Set to List
 	public void financialCheckListAction(int index,
 			List<ScQtCheckList> checklist) {
 		ScQtCheckList list = checklist.get(index);
@@ -3579,6 +3599,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Set Procurement Mode Quotation/Tender Method.
 	public void setProcurementMode(ScQt scQt) {
 		IParameterSO parameterSo = null;
 		try {
@@ -3677,6 +3698,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// set FulFilMent Dropdown Values Method
 	public void fulfilmentChange(AjaxBehaviorEvent event) {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -3714,12 +3736,14 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Set FulFilmentType Parameter Code Method
 	public void getfulfilmentDtls(ScQt scQt) {
 		this.getManagedBean().setFulfilmentType(
 				scQt.getFulfilmentType().getParameterCode());
 
 	}
 
+	// Set Procurement Category Parameter Code method
 	public void procurementChange(AjaxBehaviorEvent event) {
 		try {
 			Long type = (Long) event.getComponent().getAttributes()
@@ -3740,6 +3764,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Supplier Qualification Criteria All Stats Select Or DeSelect Methos
 	public void stateChange(AjaxBehaviorEvent event) {
 		boolean state = (boolean) event.getComponent().getAttributes()
 				.get("value");
@@ -3763,6 +3788,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Frequency Schedule Type change Method
 	public void scheduleTypeChange(AjaxBehaviorEvent event) {
 		IQTSpecSO specso = getSpecSO();
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
@@ -3775,6 +3801,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Standard or Non standard Spec Selection Method
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -3818,6 +3845,7 @@ public class SpecificationBackingBean extends
 				.getLocationLevel().setParameterId(location);
 	}
 
+	// User And Auto Score Select Methods in spec committee
 	public void scoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -3837,6 +3865,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setChecklistScoreType(scoreType);
 	}
 
+	// User And Auto Score Select Methods in spec committee
 	public void companyscoreTypeChange(AjaxBehaviorEvent event) {
 		String scoreType = (String) event.getComponent().getAttributes()
 				.get("value");
@@ -3896,7 +3925,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setToMonth(String.valueOf(j));
 	}
 
-	// While click on edit will call this..
+	// While Technical Checklist click on edit will call this..
 	public String technicalChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
@@ -3914,6 +3943,8 @@ public class SpecificationBackingBean extends
 					.getDefinationType().getParameterCode())) {
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
+				this.getManagedBean().setIndex(index);
+				this.getManagedBean().setCheckListTitle(checkList.getTitle());
 
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
 						.getInstance().getServiceObject(
@@ -3924,10 +3955,10 @@ public class SpecificationBackingBean extends
 						.getTplSpecMaster());
 				specReqDTO
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO specResDTO = templateSpecSO
+				TemplateSpecResDTO templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
 				checkList.getScQtDoc().setTplSpecMaster(
-						specResDTO.getSpecMaster());
+						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
@@ -4284,6 +4315,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// All Financial Checklists Edit Actions
 	public String financialChecklistEditAction(int index,
 			ScQtCheckList checkList, String specType) {
 		IQTSpecSO specSo = null;
@@ -4299,6 +4331,9 @@ public class SpecificationBackingBean extends
 					.getDefinationType().getParameterCode())) {
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
+
+				this.getManagedBean().setCheckListTitle(checkList.getTitle());
+
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.COMMON_COMPONENT,
@@ -4308,10 +4343,10 @@ public class SpecificationBackingBean extends
 						.getTplSpecMaster());
 				specReqDTO
 						.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-				TemplateSpecResDTO specResDTO = templateSpecSO
+				TemplateSpecResDTO templateresDTO = templateSpecSO
 						.getTemplateMaster(specReqDTO);
 				checkList.getScQtDoc().setTplSpecMaster(
-						specResDTO.getSpecMaster());
+						templateresDTO.getSpecMaster());
 				TemplateSpecBean templateSpecBean = getManagedBean()
 						.getTemplateSpecBean();
 				templateSpecBean.setSpecMaster(checkList.getScQtDoc()
@@ -4803,103 +4838,33 @@ public class SpecificationBackingBean extends
 		return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
 	}
 
-	public String financialSpecEditAction(ScQtCheckList checklist) {
-
-		IQTTemplateSO qtTemplateSO;
-		try {
-
-			QTTemplateDocResDTO resDto = null;
-
-			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
-
-			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
-
-			docReqDTO.setCheckListId(checklist.getQtChecklistId());
-			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
-
-			resDto = qtTemplateSO
-					.retriveTemplateDocDetailsByCheckListId(docReqDTO);
-
-			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
-
-			templateSpecBean.setSpecMaster(resDto.getScQtCheckList()
-					.getScQtDoc().getTplSpecMaster());
-
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-
-			specBB.retrieveTemplateSpecMaster(templateSpecBean);
-
-			this.getManagedBean()
-					.getScqtDoc()
-					.setTplSpecMaster(
-							resDto.getScQtCheckList().getScQtDoc()
-									.getTplSpecMaster());
-
-			this.getManagedBean().setScqtDoc(
-					resDto.getScQtCheckList().getScQtDoc());
-
-		} finally {
-			qtTemplateSO = null;
-		}
-		return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
-	}
-
+	// Spec Committee One tier Edit Action
 	public String committeeSpecEditAction(int index, ScQtCheckList checklist,
 			String specType) {
 
 		IQTTemplateSO qtTemplateSO;
 		try {
 
-			QTTemplateDocResDTO resDto = null;
 			this.getManagedBean().setSpecStatusId(
 					checklist.getPmStatus().getStatusId());
-			this.getManagedBean().setSpecSelectStats(true);
-			this.getManagedBean().setSpecType(specType);
-			this.getManagedBean().setSelectedCheckList(index);
+			this.getManagedBean().setIndex(index);
+			this.getManagedBean().setScQtChecklist(checklist);
+			this.getManagedBean().setCheckListTitle(checklist.getTitle());
 
-			this.getManagedBean().setScqtDoc(checklist.getScQtDoc());
-			ISearchResultBean<ScQtCheckList> finchecklist = retriveChecklistByIdAndTitle(checklist
-					.getTitle());
-
-			if (null != finchecklist.getResultList()
-					&& !finchecklist.getResultList().isEmpty()) {
-				this.getManagedBean().setFinspecChecklist(
-						finchecklist.getResultList());
-			}
-
-			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
-
-			docReqDTO.setCheckListId(checklist.getQtChecklistId());
-			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
-
-			resDto = qtTemplateSO
-					.retriveTemplateDocDetailsByCheckListId(docReqDTO);
-
-			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setSpecMaster(checklist.getScQtDoc().getTplSpecMaster());
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+			checklist.getScQtDoc().setTplSpecMaster(resDTO.getSpecMaster());
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
-
-			templateSpecBean.setSpecMaster(resDto.getScQtCheckList()
-					.getScQtDoc().getTplSpecMaster());
-
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-
-			specBB.retrieveTemplateSpecMaster(templateSpecBean);
-
-			this.getManagedBean()
-					.getScqtDoc()
-					.setTplSpecMaster(
-							resDto.getScQtCheckList().getScQtDoc()
-									.getTplSpecMaster());
-
-			this.getManagedBean().setScqtDoc(
-					resDto.getScQtCheckList().getScQtDoc());
+			templateSpecBean.setSpecMaster(checklist.getScQtDoc()
+					.getTplSpecMaster());
 
 		} finally {
 			qtTemplateSO = null;
@@ -4950,6 +4915,7 @@ public class SpecificationBackingBean extends
 		return additionProposalst1;
 	}
 
+	// financial checklist Add Action
 	public void stageTwoFiProposalAdd() {
 		IStatusSO statussO;
 		IParameterSO parameterSo = null;
@@ -5005,6 +4971,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Standard Technical checklist Popup methos
 	public void stageTwoTechProposal() {
 
 		try {
@@ -5057,6 +5024,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Technical Checklist Add method in Spec committee
 	public void stageTwoTechnicalAddProposal() {
 		IStatusSO statussO;
 
@@ -5099,6 +5067,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Financial Standard checklist slect
 	public void stageTwoFinanceCheckList() {
 		IStatusSO statussO;
 
@@ -5151,6 +5120,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Technical Checklist Pm Documnet method
 	public void stageTwoTechcompilenceList() {
 		IDocumentSO documentSo;
 		DocumentResDTO resDTO;
@@ -6394,6 +6364,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Circular List Set method
 	public void circularListSelect(SelectEvent selectEvent) {
 		ICircularDetailSO circularDetailSO;
 		try {
@@ -6432,6 +6403,8 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Panel Items Set Method
+
 	public void panelListSelect(SelectEvent selectEvent) {
 		CtPanelItem ctPanelItem = (CtPanelItem) selectEvent.getObject();
 		List<CtPanelItem> panelList = this.getManagedBean()
@@ -6448,6 +6421,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Technical weightage Sum
 	public void techWeightageSum() {
 		try {
 			int total = 0;
@@ -6478,6 +6452,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Technical Scoring sum
 	public void techScoreSum() {
 		try {
 			int total = 0;
@@ -6503,6 +6478,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Financial Scoring Sum
 	public void finScoreSum() {
 		try {
 			int total = 0;
@@ -6541,6 +6517,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Finacial Scoring Weightage Sum
 	public void finWeightageSum() {
 		try {
 			int total = 0;
@@ -6587,6 +6564,7 @@ public class SpecificationBackingBean extends
 		this.searchCircular = searchCircular;
 	}
 
+	// Search circular Details Method.
 	public void searchCircularList() {
 		searchCircular.reloadData();
 		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
@@ -6598,6 +6576,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// ct Circular Details paging Data Model
 	private class SearchCircularPagingDataModel extends
 			PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
@@ -6669,14 +6648,17 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Search template Spec
 	public void searchScqtDocAction() {
 		templateSpecCreate.reloadData();
 	}
 
+	// Search Delivery Address
 	public void searchDeliveryAddress() {
 		searchDeliveryAddress.reloadData();
 	}
 
+	// Reset Template Spec
 	public void resetTemplate() {
 		getManagedBean().setSpecName(null);
 		// getManagedBean().setStandardTemplate(null);
@@ -6685,6 +6667,7 @@ public class SpecificationBackingBean extends
 		getManagedBean().setSearchItemTypeId(null);
 	}
 
+	// Tenplate Spec Paging Data Model
 	private class CreateTemplateSpecPagingDataModel extends
 			PagingDataModel<TplSpecMaster> {
 		private static final long serialVersionUID = 1L;
@@ -6797,6 +6780,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Delivery Details Paging Data Model
 	private class DeliveryPagingDataModel extends
 			PagingDataModel<PmAddressType> {
 		private static final long serialVersionUID = 1L;
@@ -7047,6 +7031,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// Prepare Qt Checklist Data Construct method
 	private SpecificationReqDTO constructSpecCommitteDtls() {
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 		ScQt scQt = this.getManagedBean().getScQt();
@@ -7417,6 +7402,7 @@ public class SpecificationBackingBean extends
 		return reqDTO;
 	}
 
+	// Prepare Qt Checklist Save related method
 	public void validatePrepareQtChecklist() {
 
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
@@ -7837,6 +7823,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setIndex(-1);
 	}
 
+	// Category Codes Set method
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
 			ScQt scQt) {
 
@@ -7934,6 +7921,7 @@ public class SpecificationBackingBean extends
 		return scQtDoc;
 	}
 
+	// Ministry Spec Approval Method
 	private SpecificationReqDTO prepareSpecChirPersonRequest() {
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
@@ -8007,6 +7995,7 @@ public class SpecificationBackingBean extends
 
 	}
 
+	// View Circular Attachmnets Download Method
 	public void downloadCircularDtls() {
 
 		try {
@@ -8019,6 +8008,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
+	// Spec Item Type DropDOwn Values method
 	public SelectItem[] getRoleTypeDropdownValues(String itemType) {
 
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -8034,6 +8024,7 @@ public class SpecificationBackingBean extends
 		return items;
 	}
 
+	// Local Goods DisPlay List Values Method
 	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
 
 		List<String> types = new ArrayList<String>();
@@ -8269,6 +8260,10 @@ public class SpecificationBackingBean extends
 			status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 			scQtCheckList.setPmStatus(status);
 
+		} else {
+			PmStatus status = new PmStatus();
+			status.setStatusId(QTStatusConst.TS_COMPLETE);
+			scQtCheckList.setPmStatus(status);
 		}
 		List<ScQtCheckList> toBeRemoveList = null;
 		if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
@@ -8354,6 +8349,8 @@ public class SpecificationBackingBean extends
 			scQtCheckList.setTitle(scQtCheckList.getScQtDoc()
 					.getTplSpecMaster().getSpecName());
 		}
+		scQtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
+				.getSpecName());
 		PmStatus status = new PmStatus();
 		status.setStatusId(QTStatusConst.TS_COMPLETE);
 		scQtCheckList.setPmStatus(status);
@@ -8368,6 +8365,7 @@ public class SpecificationBackingBean extends
 				.cloneTplSpecMaster(
 						scQtCheckList.getScQtDoc().getTplSpecMaster(), false);
 		specMaster.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+
 		if (scQt.isZonal()) {
 			ScQtSupplierCriteria supplierCriteria = scQt
 					.getScQtSupplierCriteria();
@@ -8395,7 +8393,9 @@ public class SpecificationBackingBean extends
 						.getTplSpecQuestions());
 		ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
 				SourcingConstants.FINANCIAL_DOCTYPE);
-		qtCheckList.setPmStatus(status);
+		PmStatus financialstatus = new PmStatus();
+		financialstatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+		qtCheckList.setPmStatus(financialstatus);
 		qtCheckList.setTitle(scQtCheckList.getScQtDoc().getTplSpecMaster()
 				.getSpecName());
 		qtCheckList.getScQtDoc().getTplSpecMaster()
@@ -8412,8 +8412,8 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> toBeRemoveList = new ArrayList<ScQtCheckList>();
 		if (null != finanicalCheckList && !finanicalCheckList.isEmpty()) {
 			for (ScQtCheckList financialCheckList : finanicalCheckList) {
-				if (financialCheckList.getTitle().equalsIgnoreCase(
-						scQtCheckList.getTitle())) {
+				if (this.getManagedBean().getCheckListTitle()
+						.equalsIgnoreCase(financialCheckList.getTitle())) {
 					financialCheckList.setDeleted(true);
 					toBeRemoveList.add(financialCheckList);
 				}
@@ -8564,6 +8564,9 @@ public class SpecificationBackingBean extends
 		checkList.setAction(checkListactionresDTO.getPmParameter());
 		checkList.setScQt(this.getManagedBean().getScQt());
 		checkList.setDefinationType(specTyperesDTO.getPmParameter());
+		PmStatus checklistStatus = new PmStatus();
+		checklistStatus.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
+		checkList.setPmStatus(checklistStatus);
 		setUserDetails(checkList);
 		scqtDocDest.setScQtCheckList(checkList);
 
@@ -8576,6 +8579,8 @@ public class SpecificationBackingBean extends
 				checklist.getPmStatus().getStatusId());
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setScQtChecklist(checklist);
+		this.getManagedBean().setCheckListTitle(checklist.getTitle());
+
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
