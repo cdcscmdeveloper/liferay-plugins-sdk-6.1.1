@@ -43,8 +43,8 @@
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}"
 						update=":form:tt:contDialog">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
+						<p:graphicImage library="css/images/design" name="document.png"
+							value="/css/images/design/document.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
@@ -52,7 +52,7 @@
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="contDialog" resizable="false" showEffect="fade"
-		closable="false" hideEffect="fade" modal="true" id="contDialog"
+		hideEffect="fade" modal="true" id="contDialog"
 		width="550px" height="500px">
 		<table style="width: 100%">
 			<tr>

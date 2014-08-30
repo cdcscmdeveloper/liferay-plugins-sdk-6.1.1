@@ -26,8 +26,8 @@
 					<p:commandLink update=":form:tt:asDisp"
 						action="#{viewSmApplBackingBean.assignSelAssoc(assocBean)}"
 						partialSubmit="true" process="@this">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png"
+						<p:graphicImage library="css/images/design" name="document.png"
+							value="/css/images/design/document.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
 
@@ -37,7 +37,7 @@
 			</p:dataTable>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="500px" height="435px" closable="false"
+	<p:dialog width="500px" height="435px"
 		header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
