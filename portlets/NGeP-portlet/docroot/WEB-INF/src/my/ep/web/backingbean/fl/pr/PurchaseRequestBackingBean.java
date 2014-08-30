@@ -112,6 +112,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -279,7 +280,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_750017);
 				}
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
@@ -2331,5 +2332,29 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	        };
 			Collections.sort(flDelAddressList, comparator);
     }
+	
+	// get the Request Item Information based on ReqItemId and SuppId
+	
+	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
+		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
+		//getManagedBean().setPriceType(priceType);
+		getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().longValue());
+		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
+		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		//flItemAddr.getFlFulfilmentItem().getFlFulfilmentRequest().getSmSupplier().getSupplierId()
+		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
+		purResDTO.getSupplierItem().getSupplierItemPrice().getPriceType();
+		System.out.println("price type:::: "+purResDTO.getSupplierItem().getSupplierItemPrice().getPriceType());
+		
+		if(purResDTO.getSupplierItem().getSupplierItemPrices().size() >0){
+			for(ScSupplierItemPrice suppItemPrice :purResDTO.getSupplierItem().getSupplierItemPrices()){
+				System.out.println("4444444444444444   "+suppItemPrice.getPriceType().getParameterCode());
+			}
+		}
+		
+		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItem().getSupplierItemPrices());
+	}
 	
 }
