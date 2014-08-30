@@ -24,7 +24,7 @@
 		       <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" style="width:15%;">
 		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth"
 			            disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
-			             mindate="#{suspensionBackingBean.currentDate}"  readonlyInput="true" 
+			             mindate="#{suspensionBackingBean.currentDate}"  readonlyInput="true" navigator="true"
 			             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			             <p:ajax event="dateSelect" update="agencyDateExp" />
 			       </p:calendar>
@@ -33,7 +33,7 @@
 	           <p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" style="width:15%;">
 		            <p:calendar  id="agencyDateExp" value="#{data.expDate}" styleClass="calanderWidth"
 			          disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
-			          mindate="#{data.effDate}" readonlyInput="true"
+			          mindate="#{data.effDate}" readonlyInput="true" navigator="true"
 			           pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			          <f:attribute name="startDate" value="#{data.effDate}" />
                       <f:validator validatorId="primeDateRangeValidator" />

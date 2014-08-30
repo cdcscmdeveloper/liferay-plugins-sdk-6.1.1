@@ -140,9 +140,13 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 
 	 public void setSuspensionStatusValue(CtContractItem item) {		 
 		 for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
-			 if(ctItem.equals(item)) {				 
-				 ctItem.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				 ctItem.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			 if(ctItem.equals(item)) {		
+				 if(ctItem.getRecordStatusFlg().intValue() == 1){
+				      ctItem.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				      ctItem.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				 } else {
+					 ctItem.setEffDate(getCurrentDate());
+				 }
 			 }
 		 }
 	 }
@@ -150,8 +154,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 public void setSuspensionAgencyStatusValue(CtAgency agency){		 
 		 for(CtAgency ctAgency :this.getManagedBean().getContractVer().getCtAgencies()) {
 			 if(ctAgency.equals(agency)) {
-				 ctAgency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
-				 ctAgency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+				 if(ctAgency.getRecordStatusFlg().intValue() == 1){
+				      ctAgency.setEffDate(this.getManagedBean().getContractVer().getCtContractValue().getEffDate());
+				      ctAgency.setExpDate(this.getManagedBean().getContractVer().getCtContractValue().getExpDate());
+			     } else {
+				      ctAgency.setEffDate(getCurrentDate());
+			     }
 			 }
 		 }  
 	 }
