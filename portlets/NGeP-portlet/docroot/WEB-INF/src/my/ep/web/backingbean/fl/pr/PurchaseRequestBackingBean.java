@@ -2333,28 +2333,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			Collections.sort(flDelAddressList, comparator);
     }
 	
-	// get the Request Item Information based on ReqItemId and SuppId
 	
-	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
-		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-		//getManagedBean().setPriceType(priceType);
-		getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().longValue());
-		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
-		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
-		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
-		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
-		//flItemAddr.getFlFulfilmentItem().getFlFulfilmentRequest().getSmSupplier().getSupplierId()
-		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
-		purResDTO.getSupplierItem().getSupplierItemPrice().getPriceType();
-		System.out.println("price type:::: "+purResDTO.getSupplierItem().getSupplierItemPrice().getPriceType());
-		
-		if(purResDTO.getSupplierItem().getSupplierItemPrices().size() >0){
-			for(ScSupplierItemPrice suppItemPrice :purResDTO.getSupplierItem().getSupplierItemPrices()){
-				System.out.println("4444444444444444   "+suppItemPrice.getPriceType().getParameterCode());
-			}
-		}
-		
-		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItem().getSupplierItemPrices());
-	}
 	
 }
