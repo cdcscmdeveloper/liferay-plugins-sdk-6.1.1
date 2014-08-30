@@ -21,13 +21,21 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
    <p:panel id="mailPanel">
 	  <div align="right">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
-	      
-	       <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
-			 style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}" />
+	        <p:commandButton  immediate="true" 
+	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
+	          rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+			  style="float:left;" action="#{purchaseInDefaultBackingBean.backToPervious}"  />
+			 
+			<p:commandButton immediate="true"  
+			   value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+			   partialSubmit="true" process="@this" style="float:left;"
+			   rendered="#{!purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"
+			   action="#{purchaseInDefaultBackingBean.backToPervious}" />
 					 
-		  <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
+		    <p:commandButton value="#{lbl['lbl.sc.common.submit']}" action="#{purchaseInDefaultBackingBean.submitPurchaseInDefault()}"
 		      onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-			 icon="ui-icon-submit" update="mailPanel" process="@all" rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
+			  icon="ui-icon-submit" update="mailPanel" process="@all" 
+			  rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
 	    
 	     <table>
