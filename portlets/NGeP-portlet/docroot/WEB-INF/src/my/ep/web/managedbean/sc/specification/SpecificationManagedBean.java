@@ -289,6 +289,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckListScore> otherScoreSelected;
 	private String criteriaType;
 	private String otherCriteriaType;
+	private String checkListTitle;
 
 	public SpecificationManagedBean() {
 
@@ -2981,6 +2982,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setPanelItemList(List<CtPanelItem> panelItemList) {
 		this.panelItemList = panelItemList;
+	}
+
+	/**
+	 * @return the checkListTitle
+	 */
+	public String getCheckListTitle() {
+		return checkListTitle;
+	}
+
+	/**
+	 * @param checkListTitle the checkListTitle to set
+	 */
+	public void setCheckListTitle(String checkListTitle) {
+		this.checkListTitle = checkListTitle;
 	}
 
 	
