@@ -860,6 +860,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setPreparedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			getAgAccount();
 			getLoginUserOrg();
 			String[] outcome = new String[2];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;

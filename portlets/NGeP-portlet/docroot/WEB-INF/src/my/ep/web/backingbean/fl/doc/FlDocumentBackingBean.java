@@ -273,8 +273,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 			crBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
-				String[] outcome = new String[1];
-				outcome[0] = BpmOutcomeConst.BPM_UPDATE;
+				String[] outcome = new String[2];
+				outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				outcome[1] = BpmOutcomeConst.BPM_SUBMIT;
 				crBB.getManagedBean().setOutComes(outcome);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
