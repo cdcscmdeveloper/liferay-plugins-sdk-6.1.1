@@ -701,6 +701,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		if(itemAddr.getFlFulfilmentItem()!=null) {
 			itemAddr.getFlFulfilmentItem().setUnitPrice(itemAddr.getUnitPrice());
+			if(null== itemAddr.getOrderedQty() || itemAddr.getOrderedQty().doubleValue()==0) {
+				itemAddr.getFlFulfilmentItem().getFlFulfilmentItemAddr().remove(itemAddr);
+			}
 		} else {
 			FlFulfilmentItem fulfilmentItem = null;
 			String key = itemAddr.getCmItem().getItemId().toString() + itemAddr.getUnitPrice().doubleValue() + "";
