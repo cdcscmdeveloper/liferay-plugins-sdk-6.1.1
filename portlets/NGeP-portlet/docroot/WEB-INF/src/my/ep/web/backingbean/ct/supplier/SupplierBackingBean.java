@@ -343,7 +343,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					&& this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {
-					if(obj.getRecordStatusFlg().longValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();

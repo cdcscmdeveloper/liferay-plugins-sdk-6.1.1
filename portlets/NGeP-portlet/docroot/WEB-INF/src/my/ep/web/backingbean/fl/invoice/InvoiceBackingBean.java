@@ -47,6 +47,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.invoice.FLInvoiceDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlStopInstrItem;
@@ -457,9 +458,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchName (supplierSearchReqDTO);
 				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
-					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
-					if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						}
 					}
 				}
 			}
@@ -469,9 +472,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {
-					populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
-					if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-						getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
+							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						}
 					}
 				}
 			}
