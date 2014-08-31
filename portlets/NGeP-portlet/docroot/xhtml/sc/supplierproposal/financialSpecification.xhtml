@@ -11,42 +11,33 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				icon="ui-icon-back" process="@this" partialSubmit="true"
+				icon="ui-icon-back" 
+				process="@all" partialSubmit="true" update="@all"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
 				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction}"
-				process="@this" partialSubmit="true" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				process="@all" partialSubmit="true" update="@all" />
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" 
+				action="#{supplierProposalDetailBackingBean.completeFinancialSpecificationAction}"
+				process="@all" partialSubmit="true" update="@all"
 				icon="ui-icon-check" />
 		</div>
 
-		<p:panel>
-
-			<table>
-				<tr>
-					<ui:fragment
-						rendered="#{supplierProposalDetailBackingBean.managedBean.qt.maxProposal gt '1'}">
-						<td><h:outputLabel value="#{lbl['lbl.sc.sp.pplno']}" /></td>
-						<td><p:inputText
-								value="#{supplierProposalDetailBackingBean.managedBean.proposalIndex}"
-								disabled="true" size="30" /></td>
-					</ui:fragment>
-					<td style="width: 90px;"><h:outputLabel
-							value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
-
-		<p:panel id="financespecificationid">
+		<ui:include src="checklistHeader.xhtml" />
+		
+		<c:if test="#{supplierProposalDetailBackingBean.managedBean.qt.zonal}">
+			<ui:include src="financialSpecificationDtlbyzone.xhtml" />
+		</c:if>
+		<c:if test="#{!supplierProposalDetailBackingBean.managedBean.qt.zonal}">
 			<ac:templateSpec
 				templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
-		</p:panel>
+		</c:if>
+		
 	</ui:define>
 
 </ui:composition>
