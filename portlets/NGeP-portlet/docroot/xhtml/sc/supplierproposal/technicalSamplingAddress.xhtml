@@ -12,33 +12,27 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 			rendered="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.scQt.zonal eq 'true'}">
+			
+			#{lbl['lbl.sc.sp.note2']} 
+			<br />
+			
 			<table>
-				<tr>
-					<td colspan="4"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.note2']}" /></td>
-				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
 					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}"
+							value="#{supplierProposalDetailBackingBean.managedBean.qt.sampleClosingDate}"
 							size="30" disabled="true" readonly="true">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -55,15 +49,17 @@
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.address']}">
-					<h:outputText value="#{samplesubmissiondtl.address.address1}" />
+					<h:outputText value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
 				</p:column>
 			</p:dataTable>
 
+			<br />
+			
+			#{lbl['lbl.sc.sp.note3']}
+			
+			<br />
+			
 			<table>
-				<tr>
-					<td colspan="4"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.note3']}" /></td>
-				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
 					<td><p:inputText
@@ -79,8 +75,7 @@
 			rendered="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.scQt.zonal ne 'true'}">
 			<table>
 				<tr>
-					<td colspan="4"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.note2']}" /></td>
+					<td colspan="4">#{lbl['lbl.sc.sp.note2']}</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
@@ -91,17 +86,16 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>
 				</tr>
-				<tr>
+				<tr valign="top">
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.address']}" /></td>
 					<td><p:inputTextarea
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
+							value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address)}"
 							cols="32" rows="3" readonly="true" disabled="true" /></td>
 					<td />
 					<td />
 				</tr>
 				<tr>
-					<td colspan="4"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.note3']}" /></td>
+					<td colspan="4"><br/>#{lbl['lbl.sc.sp.note3']}</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
@@ -123,7 +117,7 @@
 					<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.clItem}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
-					<h:outputText value="#{sampleitemdtl.subLableNo}" />
+					#{sampleitemdtl.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column>
 			</p:dataTable>
 
