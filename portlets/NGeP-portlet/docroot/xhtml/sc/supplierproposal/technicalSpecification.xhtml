@@ -11,6 +11,8 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back" process="@this" partialSubmit="true"
@@ -18,22 +20,14 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
 				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction}"
-				process="@all" partialSubmit="true" />
+				process="@all" partialSubmit="true" update="@all" />
 
 			<p:commandButton value="#{lbl['lbl.btn.complete']}" action="#{supplierProposalDetailBackingBean.completeTechnicalSpecificationAction}"
-				process="@all" partialSubmit="true"
+				process="@all" partialSubmit="true" update="@all"
 				icon="ui-icon-check" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel id="techspecificationid">
 			<ac:templateSpec
