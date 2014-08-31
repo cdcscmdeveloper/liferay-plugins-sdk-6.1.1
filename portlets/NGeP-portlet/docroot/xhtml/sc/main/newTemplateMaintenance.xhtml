@@ -75,6 +75,13 @@
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
+							<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
+					<td><p:selectOneRadio
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq}">
+							<f:selectItems
+								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio></td>
 				</tr>
 
 			</table>

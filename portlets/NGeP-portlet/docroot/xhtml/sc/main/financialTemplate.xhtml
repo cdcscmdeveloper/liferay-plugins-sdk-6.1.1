@@ -40,8 +40,7 @@
 					<td valign="top"><h:outputLabel
 							value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel></td>
 					<td colspan="3"><p:inputTextarea rows="2" cols="95"
-							disabled="true"
-							maxlength="200" style="margin-bottom:5px;"
+							disabled="true" maxlength="200" style="margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specName}" /></td>
 				</tr>
 				<tr>
@@ -68,6 +67,12 @@
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
+					<td><p:inputText
+							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq}"
+							disabled="true" readonly="true">
+						</p:inputText></td>
 				</tr>
 			</table>
 
