@@ -25,9 +25,9 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -138,7 +138,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Supplier Information
 	private SmSupplier smSupplier;
 	private SmAppl smAppl;
-	private List<SmPersonnel> smPersonnelList;
+	private List<TechnicalStaffBean> smPersonnelList;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -686,11 +686,11 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.smAppl = smAppl;
 	}
 
-	public List<SmPersonnel> getSmPersonnelList() {
+	public List<TechnicalStaffBean> getSmPersonnelList() {
 		return smPersonnelList;
 	}
 
-	public void setSmPersonnelList(List<SmPersonnel> smPersonnelList) {
+	public void setSmPersonnelList(List<TechnicalStaffBean> smPersonnelList) {
 		this.smPersonnelList = smPersonnelList;
 	}
 
