@@ -12,21 +12,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.technicalstafflist']}"
 			toggleable="true">
@@ -37,23 +31,26 @@
 				<ac:paginator for="techEmployeeList"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.name']}">
-					<h:outputText value="#{techEmployee.name}" />
+					#{techEmployee.smPersonnel.name}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.identificationno']}">
-					<h:outputText value="#{techEmployee.identificationNo}" />
+					#{techEmployee.smPersonnel.identificationNo}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.designation']}">
-					<h:outputText value="#{techEmployee.designation}" />
+					#{techEmployee.smPersonnel.designation}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.qualification']}">
-					<h:outputText  value="#{techEmployee.designation}"/>
+					<ui:repeat var="smStaffAcademic" value="#{techEmployee.smStaffAcademics}">
+						#{smStaffAcademic.codeName}
+						<br />
+					</ui:repeat>
 				</p:column>
 			<!-- value="#{supplierProposalDetailBackingBean.getParameterDesc('QL',techEmployee.getSmStaffAcademics().get(0).getQualificationLevelId)}" -->
 				<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
-					<h:outputText style="float : right" value="#{techEmployee.workExperienceYear}" />
+					<h:outputText style="float : right" value="#{techEmployee.smPersonnel.workExperienceYear}" />
 				</p:column>
 			</p:dataTable>
 
