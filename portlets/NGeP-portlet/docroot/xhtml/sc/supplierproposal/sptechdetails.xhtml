@@ -11,7 +11,8 @@
 		<p:dataTable id="techDeailsId" var="techList"
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{techList}" rowIndexVar="rowIndex">
+			rowKey="#{techList}" rowIndexVar="rowIndex"
+			rows="10">
 
 			<ac:paginator for="techDeailsId" />
 
@@ -58,13 +59,17 @@
 
 				<ui:fragment
 					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'UP'}">
-					<h:outputText
-						value="#{techList.scQtProposalChecklistAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentDlg.show();return false;"
-						value="Attachment" icon="iconAttachment" update="techDeailsId">
+						value="Attachment" icon="iconAttachment">
 						<f:setPropertyActionListener value="#{techList}"
 							target="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist}" />
 					</p:commandButton>
+					<h:commandLink 
+						value="#{techList.scQtProposalChecklistAttachment.fileName}" 
+						styleClass="blue_font" 
+						immediate="true" 
+						action="#{supplierProposalDetailBackingBean.downloadFile(techList.scQtProposalChecklistAttachment)}"
+						rendered="#{!empty techList.scQtProposalChecklistAttachment}"/>
 
 				</ui:fragment>
 
@@ -72,18 +77,5 @@
 
 		</p:dataTable>
 	</p:panel>
-
-	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
-		resizable="false" width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.sc.choose.files']}">
-		<p:ajax event="close" />
-		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
-			mode="advanced" id="uploadattachment"
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="techDeailsId" oncomplete="attachmentDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
 
 </ui:composition>
