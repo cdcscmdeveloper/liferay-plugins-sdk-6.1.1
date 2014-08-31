@@ -93,29 +93,29 @@
 		</f:facet>
 		
 		<h:panelGroup id="ansPG">
-			<p:inputText id="answerText" style="width:96%;" value="#{tplSpecAnswer.answerText}" 
+			<p:inputText id="answerText" style="width:76%;" value="#{tplSpecAnswer.answerText}" 
 				rendered="#{isAnswerTypeText}" required="#{question.clAnswerRequired}" maxlength="200"
 				label="#{lbl[answerlbl]}" />
-			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText and question.clAnswerRequired}" />
-			<p:inputText id="answerNumeric" style="width:96%;" styleClass="ppNumericAlign" 
+			<p:message id="answerTextMsg" for="answerText" display="icon" rendered="#{isAnswerTypeText}" />
+			<p:inputText id="answerNumeric" style="width:85%;" styleClass="ppNumericAlign" 
 				value="#{tplSpecAnswer.answerNumeric}" maxlength="19"
 				rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 			</p:inputText>
-			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and ((isSpecTypeFinancial and !isPriceTypeTier) or !isSpecTypeFinancial) and question.clAnswerRequired}" />
+			<p:message id="answerNumericMsg" for="answerNumeric" display="icon" rendered="#{isAnswerTypeNumeric and !isSpecTypeFinancial}" />
 			<h:outputText id="answerNumText" 
 				value="#{tplSpecAnswer.answerNumeric}"
 				rendered="#{isAnswerTypeNumeric and (isSpecTypeFinancial and !isPriceTypeTier)}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</h:outputText>
-			<h:selectOneMenu id="answerCompliance" style="width:100%;" 
+			<h:selectOneMenu id="answerCompliance" style="width:85%;" 
 				value="#{tplSpecAnswer.answerCompliance}" 
 				rendered="#{isAnswerTypeDropdown}" required="#{question.clAnswerRequired}"
 				label="#{lbl[answerlbl]}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownCodeValues(ParameterTypeConst.yesNoFlag)}" />
 			</h:selectOneMenu>
-			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown and question.clAnswerRequired}" />
+			<p:message id="answerComplianceMsg" for="answerCompliance" display="icon" rendered="#{isAnswerTypeDropdown}" />
 		</h:panelGroup>
 	</p:column>
 	<p:column style="width:140px;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
