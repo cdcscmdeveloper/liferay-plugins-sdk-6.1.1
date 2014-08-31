@@ -11,23 +11,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back" process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 		</div>
 
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
-
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel id="financespecificationid">
 			<ui:include src="financialSpecMoreProposalDtlbyzone.xhtml" />

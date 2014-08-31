@@ -12,6 +12,8 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
@@ -23,16 +25,8 @@
 				icon="ui-icon-check"
 				action="#{supplierProposalDetailBackingBean.completeTechEmployeesDtlAction}" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
 			<table>
@@ -40,7 +34,7 @@
 					<td><p:selectOneRadio id="allEmployees"
 							value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.employeesinvolve']}"
-								itemValue="fasle" />
+								itemValue="false" />
 							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
 								itemValue="true" />
 							<p:ajax event="change" process="@this,allEmployees"
