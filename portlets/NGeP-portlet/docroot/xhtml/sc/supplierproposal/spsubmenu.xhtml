@@ -38,4 +38,17 @@
 				</h:panelGroup></td>
 		</tr>
 	</table>
+	
+	<p:dialog id="attachmentDlgid" widgetVar="attachmentDlg" modal="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.sc.choose.files']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{supplierProposalDetailBackingBean.handleFileUpload}"
+			mode="advanced" id="uploadattachment"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="menuSPContent" oncomplete="attachmentDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 </ui:composition>
