@@ -14,7 +14,8 @@
 			listener="#{supplierProposalDetailBackingBean.zoneTabChange}"
 			immediate="true" />
 		<p:tab title="#{zones.zoneName}">
-			<ui:include src="financialZoneSpecification.xhtml" />
+			<ac:templateSpec
+				templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
 		</p:tab>
 
 	</p:tabView>
