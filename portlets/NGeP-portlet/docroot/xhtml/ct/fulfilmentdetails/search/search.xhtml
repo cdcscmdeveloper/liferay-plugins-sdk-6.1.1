@@ -91,19 +91,21 @@
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:14%;">
-						<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+						<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoSuspendPage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="pause.png"
 						  		value="/css/images/design/pause.png" title="#{lbl['lbl.ct.search.susContract']}" />
 						</p:commandLink>					   
-					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
-					  	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />
+					  	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoTerminatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="terminate.png"
 						  		value="/css/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
 						</p:commandLink>
-					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}" />
-					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
+					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved
+					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}" />
+					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved
+					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
@@ -113,13 +115,13 @@
 							<p:graphicImage library="ep/images/design" name="revise.png"
 						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
 						</p:commandLink>
-						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />					   
-					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />					   
+					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoUpdatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 						   		value="/css/images/design/evaluate.png" title="#{lbl['lbl.ct.search.update']}" />
 						</p:commandLink>
-						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
+						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />
 					   	<p:commandLink onclick="gotoViewPage([{name:'contractVerId',value:'#{data.ctContract.currentContractVer.contractVerId}'}])">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/css/images/design/document.png" title="#{lbl['lbl.ct.search.viewCt']}" />
