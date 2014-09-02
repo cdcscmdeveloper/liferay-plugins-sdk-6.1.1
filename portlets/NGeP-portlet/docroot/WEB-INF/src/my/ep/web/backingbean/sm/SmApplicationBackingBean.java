@@ -993,10 +993,15 @@ public class SmApplicationBackingBean extends
 		svTask.setSmSvCategories(smSvCategories);
 		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
 		for (PmParameter param : catParam) {
-			SmSvTemplate temp = new SmSvTemplate();
-			temp.setPmParameter(param);
-			temp.setSmSvTask(svTask);
-			templates.add(temp);
+			if(param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP ||
+					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD || 
+					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_BUMIPUTERA || 
+					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA){
+				SmSvTemplate temp = new SmSvTemplate();
+				temp.setPmParameter(param);
+				temp.setSmSvTask(svTask);
+				templates.add(temp);
+			}
 		}
 		svTask.setSmSvTemplates(templates);
 		return updateSiteVisitTask(svTask);
