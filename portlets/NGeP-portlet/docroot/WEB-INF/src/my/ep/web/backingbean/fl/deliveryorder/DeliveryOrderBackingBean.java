@@ -296,6 +296,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				
 				if(itemAddr.getFlTempDoItem()==null) {
 					itemAddr.setFlTempDoItem(new FlTempDoItem());
+					itemAddr.setDeliveredQty(new BigDecimal(0));
+					itemAddr.setDeliveredAmt(new BigDecimal(0));
 				} else {
 					itemAddr.setDeliveredQty(itemAddr.getFlTempDoItem().getDeliveryQty());
 					itemAddr.setDeliveredAmt(itemAddr.getFlTempDoItem().getDeliveryAmt());
