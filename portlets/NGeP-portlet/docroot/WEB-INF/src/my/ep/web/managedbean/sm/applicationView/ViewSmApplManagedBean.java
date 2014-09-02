@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -99,8 +100,8 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private String facilityType;
 	private String selBankBranchName;
 	private String chequeSignPersonnelName;
-	private String tabParam;
-	private String pageParam;
+	private String applicationNoParam;
+	
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
 	private BigDecimal equiCompCapTotal;
@@ -743,20 +744,11 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 		this.chequeSignPersonnelName = chequeSignPersonnelName;
 	}
 
-	public String getTabParam() {
-		return tabParam;
+	public String getApplicationNoParam() {
+		return applicationNoParam;
 	}
 
-	public void setTabParam(String tabParam) {
-		this.tabParam = tabParam;
+	public void setApplicationNoParam(String applicationNoParam) {
+		this.applicationNoParam = applicationNoParam;
 	}
-
-	public String getPageParam() {
-		return pageParam;
-	}
-
-	public void setPageParam(String pageParam) {
-		this.pageParam = pageParam;
-	}
-
 }

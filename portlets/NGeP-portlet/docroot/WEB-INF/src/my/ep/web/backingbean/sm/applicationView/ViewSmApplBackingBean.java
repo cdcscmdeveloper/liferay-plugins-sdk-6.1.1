@@ -92,28 +92,9 @@ public class ViewSmApplBackingBean extends
 
 	@PostConstruct
 	public void init() {
-		String pageParam = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("page");
-		String tabParam = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("tab");
-		if (pageParam != null) {
-			if (getManagedBean().getPageParam() == null) {
-				initBasePageAndTab(pageParam, tabParam);
-				initPreviousApplication();
-			} else {
-				if (!getManagedBean().getPageParam().equals(
-						FacesContext.getCurrentInstance().getExternalContext()
-								.getRequestParameterMap().get("page"))) {
-					initBasePageAndTab(pageParam, tabParam);
-					initPreviousApplication();
-				}
-			}
+		if (reloadPreviousApplication()) {
+			initPreviousApplication();
 		}
-	}
-
-	private void initBasePageAndTab(String pageParam, String tabParam) {
-		getManagedBean().setPageParam(pageParam);
-		getManagedBean().setTabParam(tabParam);
 	}
 
 	// temp change for testing
@@ -125,7 +106,8 @@ public class ViewSmApplBackingBean extends
 					.getServiceObject("sm", ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setDeSerFileName("/TestHistRev/Appl_KN-20140823-0016.ser");
+			reqDTO.setDeSerFileName("/TestHistRev/"
+					+ getManagedBean().getApplicationNoParam() + ".ser");
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
@@ -149,7 +131,6 @@ public class ViewSmApplBackingBean extends
 					.getSmFacilities());
 			setPersonnelInfoCalculationSummary();
 			retrievePmCertBodyList();
-			redirectToBasePage();
 
 		} finally {
 			applRevisionSO = null;
@@ -209,6 +190,29 @@ public class ViewSmApplBackingBean extends
 		return retVal;
 	}
 
+	private boolean reloadPreviousApplication() {
+		boolean reload = false;
+		String applicationNo = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("applicationNo");
+
+		if (applicationNo != null) {
+			if (getManagedBean().getApplicationNoParam() == null) {
+				reload = true;
+				getManagedBean().setApplicationNoParam(applicationNo);
+			} else {
+				if (!applicationNo.equals(getManagedBean()
+						.getApplicationNoParam())) {
+					reload = true;
+					getManagedBean().setApplicationNoParam(applicationNo);
+				}
+			}
+			setTabParam();
+		}
+
+		return reload;
+	}
+
 	// temp added for testing
 	private String getDropDownViewOnlyValueById(String parameterType,
 			Long parameterId) {
@@ -224,6 +228,19 @@ public class ViewSmApplBackingBean extends
 		}
 
 		return retVal;
+	}
+
+	private void setTabParam() {
+		String tabParam = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("tab");
+
+		try {
+			if (tabParam != null) {
+				getManagedBean().setTabActiveIndex(Integer.parseInt(tabParam));
+			}
+		} catch (NumberFormatException ne) {
+			getManagedBean().setTabActiveIndex(0);
+		}
 	}
 
 	public void setTabValue(int currentTab, int outputTab) {
@@ -1275,177 +1292,6 @@ public class ViewSmApplBackingBean extends
 	public void retrieveBusinessTypeList() {
 		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
 		this.getManagedBean().setBusinessTypeLs(selectItems);
-	}
-
-	// temp added for testing
-	private void redirectToBasePage() {
-		String s = null;
-		switch (getManagedBean().getPageParam()) {
-
-		case "N":
-			s = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
-			setTabFromParamNewMof();
-			break;
-		case "A":
-			s = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
-			setTabFromParamAddCategoryCode();
-			break;
-		case "B":
-			s = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
-			setTabFromParamBumiApplication();
-			break;
-		case "U":
-			s = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
-			setTabFromParamUpdateMofAccount();
-			break;
-		case "R":
-			s = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
-			setTabFromParamRenewMofAccount();
-			break;
-		default:
-			s = "/xhtml/sm/revisionSmApplView/preRenderViewAppl.xhtml";
-			break;
-		}
-
-		// redirect page and tab
-		// FacesContext fc = FacesContext.getCurrentInstance();
-		// fc.getApplication()
-		// .getNavigationHandler()
-		// .handleNavigation(fc, null,
-		// s);
-	}
-
-	private void setTabFromParamNewMof() {
-		switch (getManagedBean().getTabParam()) {
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
-			getManagedBean().setTabActiveIndex(1);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-			getManagedBean().setTabActiveIndex(2);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			getManagedBean().setTabActiveIndex(3);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
-			getManagedBean().setTabActiveIndex(4);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
-			getManagedBean().setTabActiveIndex(5);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			getManagedBean().setTabActiveIndex(6);
-			break;
-		default:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		}
-	}
-
-	private void setTabFromParamAddCategoryCode() {
-		switch (getManagedBean().getTabActiveIndex() + "") {
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
-			getManagedBean().setTabActiveIndex(1);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-			getManagedBean().setTabActiveIndex(2);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			getManagedBean().setTabActiveIndex(3);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
-			getManagedBean().setTabActiveIndex(4);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			getManagedBean().setTabActiveIndex(5);
-			break;
-		default:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		}
-	}
-
-	private void setTabFromParamBumiApplication() {
-		switch (getManagedBean().getTabActiveIndex() + "") {
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-			getManagedBean().setTabActiveIndex(1);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			getManagedBean().setTabActiveIndex(2);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
-			getManagedBean().setTabActiveIndex(3);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			getManagedBean().setTabActiveIndex(4);
-			break;
-		default:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		}
-	}
-
-	private void setTabFromParamRenewMofAccount() {
-		switch (getManagedBean().getTabActiveIndex() + "") {
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
-			getManagedBean().setTabActiveIndex(1);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-			getManagedBean().setTabActiveIndex(2);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			getManagedBean().setTabActiveIndex(3);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
-			getManagedBean().setTabActiveIndex(4);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
-			getManagedBean().setTabActiveIndex(5);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			getManagedBean().setTabActiveIndex(6);
-			break;
-		default:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		}
-	}
-
-	private void setTabFromParamUpdateMofAccount() {
-		switch (getManagedBean().getTabActiveIndex() + "") {
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BRANCH:
-			getManagedBean().setTabActiveIndex(1);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL:
-			getManagedBean().setTabActiveIndex(2);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
-			getManagedBean().setTabActiveIndex(3);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BANK:
-			getManagedBean().setTabActiveIndex(4);
-			break;
-		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
-			getManagedBean().setTabActiveIndex(5);
-			break;
-		default:
-			getManagedBean().setTabActiveIndex(0);
-			break;
-		}
 	}
 
 	public StreamedContent getFile() {
