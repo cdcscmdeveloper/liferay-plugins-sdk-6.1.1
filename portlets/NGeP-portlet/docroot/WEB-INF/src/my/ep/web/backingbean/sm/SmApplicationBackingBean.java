@@ -995,13 +995,21 @@ public class SmApplicationBackingBean extends
 		for (PmParameter param : catParam) {
 			if(param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP ||
 					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD || 
-					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_BUMIPUTERA || 
+					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING || 
 					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA){
 				SmSvTemplate temp = new SmSvTemplate();
 				temp.setPmParameter(param);
 				temp.setSmSvTask(svTask);
 				templates.add(temp);
 			}
+		}
+		
+		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(ParameterTypeConst.CATEGORY_TYPE, SupplierManagementConst.CAT_TYPE_BUMIPUTERA, new FacesScopes().getUserLocale().getLanguage());
+			SmSvTemplate temp = new SmSvTemplate();
+			temp.setPmParameter(applType);
+			temp.setSmSvTask(svTask);
+			templates.add(temp);
 		}
 		svTask.setSmSvTemplates(templates);
 		return updateSiteVisitTask(svTask);
