@@ -19,10 +19,11 @@
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction}"
+				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all" />
 
-			<p:commandButton value="#{lbl['lbl.btn.complete']}" action="#{supplierProposalDetailBackingBean.completeTechnicalSpecificationAction}"
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" 
+				action="#{supplierProposalDetailBackingBean.saveTechnicalSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all"
 				icon="ui-icon-check" />
 		</div>

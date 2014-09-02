@@ -16,14 +16,14 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back" 
-				process="@all" partialSubmit="true" update="@all"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction}"
+				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
 				process="@all" partialSubmit="true" update="@all" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}" 
-				action="#{supplierProposalDetailBackingBean.completeFinancialSpecificationAction}"
+				action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
 				process="@all" partialSubmit="true" update="@all"
 				icon="ui-icon-check" />
 		</div>
