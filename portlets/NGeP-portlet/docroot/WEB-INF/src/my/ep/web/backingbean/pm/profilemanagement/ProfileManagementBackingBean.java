@@ -1,6 +1,11 @@
 package my.ep.web.backingbean.pm.profilemanagement;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +25,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -37,6 +43,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
@@ -55,13 +62,17 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -251,6 +262,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				pmUser.setPmUserPreference(pmUserPreference);
 			}
 			
+			//load attachment
+			if(pmUser.getPmUserAttachments()==null){
+				pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
+			}
+			
 			//load password
 			pmUser.setPassword(null);
 //			pmUser.setOldPassword(null);
@@ -305,6 +321,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setPassword(null);
 //		pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
+		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 		
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedUserOrg(null);
@@ -1626,41 +1643,45 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 
-//	
-//	/**
-//	 * Get attachment
-//	 * @param event
-//	 * @throws Exception
-//	 */
-//	public void handleFileUpload(FileUploadEvent event)  throws FileNotFoundException, IOException {
-//		logger.info("handleFileUpload - START");
-//		if(event!=null){
-//			
-//			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
-//			
-//			UploadedFile item = event.getFile();
-//			
-//			String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/PM/temp";
-//			File file = new File(filePath);
-//			file.mkdirs();
-//			filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
-//			
-//			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
-//		    fileOuputStream.write(item.getContents());
-//		    fileOuputStream.close();
-//		    
-//		    PmUserAttachment attachment = new PmUserAttachment();
-//			attachment.setFileName(item.getFileName());
-//			attachment.setFilePath(filePath);
-//			attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-//			attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
-//			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//			this.getManagedBean().getSelectedUser().addPmUserAttachments(attachment);
-//		}
-//		
-//		logger.info("handleFileUpload - END");
-//	}
+	
+	/**
+	 * Get attachment
+	 * @param event
+	 * @throws Exception
+	 */
+	public void handleFileUpload(FileUploadEvent event)  throws FileNotFoundException, IOException {
+		logger.info("handleFileUpload - START");
+		try{
+			if(event!=null){
+				if(this.getManagedBean().getSelectedUser().getPmUserAttachments()==null){
+					this.getManagedBean().getSelectedUser().setPmUserAttachments(new ArrayList<PmUserAttachment>());
+				}
+				
+				UploadedFile item = event.getFile();
+			    PmUserAttachment attachment = new PmUserAttachment();
+				attachment.setFileName(item.getFileName());
+				attachment.setFilePath(PmCommonUtil.getFullUploadPath());
+				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
+				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				
+				this.getManagedBean().getSelectedUser().addPmUserAttachments(attachment);
+				
+				commonUploadFile(event, PmCommonUtil.getPmUploadPath(item.getFileName()));
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new EpException("Failed to upload attachement: {0}", new String[]{e.getMessage()});
+			
+		}
+		logger.info("handleFileUpload - END");
+	}
 
+
+	public String getUsername(Long userId){
+		return PmCommonUtil.retriveUserName(userId);
+	}
 	
 //	/**
 //	 * TODO: fix the remote updatePortrait
