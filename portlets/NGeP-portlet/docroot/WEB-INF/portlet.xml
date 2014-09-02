@@ -4137,7 +4137,7 @@
 	
 	<portlet>
 		<portlet-name>pmZone</portlet-name>
-		<display-name>Zone Search</display-name>
+		<display-name>Zone Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -4149,7 +4149,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Zone Search</title>
+			<title>Zone Maintenance</title>
 			<short-title>Zone Search</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -5153,7 +5153,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>pmLocation</portlet-name>
-		<display-name>Location Search</display-name>
+		<display-name>Location Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -5165,8 +5165,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Location Search</title>
-			<short-title>Location Search</short-title>
+			<title>Location Maintenance</title>
+			<short-title>Location Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -5184,7 +5184,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>pmFinancialOrg</portlet-name>
-		<display-name>Financial Organisation Search</display-name>
+		<display-name>Financial Organisation Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -5196,8 +5196,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Financial Organisation Search</title>
-			<short-title>Financial Organisation Search</short-title>
+			<title>Financial Organisation Maintenance</title>
+			<short-title>Financial Organisation Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -5215,7 +5215,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>pmOrganisation</portlet-name>
-		<display-name>Organisation Search</display-name>
+		<display-name>Organisation Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -5227,8 +5227,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Organisation Search</title>
-			<short-title>Organisation Search</short-title>
+			<title>Organisation Maintenance</title>
+			<short-title>Organisation Maintenance</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
