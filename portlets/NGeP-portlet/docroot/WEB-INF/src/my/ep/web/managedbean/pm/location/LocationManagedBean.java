@@ -1,12 +1,10 @@
 package my.ep.web.managedbean.pm.location;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -21,31 +19,30 @@ public class LocationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private VPmLocation pmLocation = new VPmLocation();
-	private List<SearchFilterBean> advSearchBeans = new ArrayList<SearchFilterBean>();
-
-	private Long locationId;
 
 	private String locationCode;
 
 	private String selectedType;
 
 	private String locationName;
-	
+
 	private String recordStatus;
 
-	private PmState state = new PmState();
+	private PmState state;
 
-	private PmDivision division = new PmDivision();
+	private PmDivision division;
 
-	private PmDistrict district = new PmDistrict();
+	private PmDistrict district;
 
-	private PmCity city = new PmCity();
+	private PmCity city;
 
 	private PmCountry country;
 
 	private List<PmCountry> countries;
 
 	private List<PmState> states;
+
+	private List<PmState> divisionStates;
 
 	private List<PmDivision> divisions;
 
@@ -55,102 +52,20 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private List<VPmLocation> vPmLocation;
 
-	private Long countryId;
-
-	private Long stateId;
-
-	private Long divisionId;
-
-	private Long districtId;
-	
 	private int status;
-	
+
 	private VPmLocation location;
 
-	
-	private String stateCode;
-	private String stateName;
-	private String divisionCode;
-	private String divisionName;
-	private String districtCode;
-	private String districtName;
-	private String cityCode;
-	private String cityName;
-
 	public LocationManagedBean() {
-		if (advSearchBeans.isEmpty()) {
-			advSearchBeans.add(new SearchFilterBean());
-			advSearchBeans.add(new SearchFilterBean());
-			advSearchBeans.add(new SearchFilterBean());
-			advSearchBeans.add(new SearchFilterBean());
-			advSearchBeans.add(new SearchFilterBean());
+		state = new PmState();
+		division = new PmDivision();
+		district = new PmDistrict();
+		city = new PmCity();
+		state.setPmCountry(new PmCountry());
+		division.setPmState(state);
+		district.setPmState(state);
+		city.setPmDistrict(district);
 
-		}
-
-	}
-
-	public String getDivisionCode() {
-		return divisionCode;
-	}
-
-	public void setDivisionCode(String divisionCode) {
-		this.divisionCode = divisionCode;
-	}
-
-	public String getDivisionName() {
-		return divisionName;
-	}
-
-	public void setDivisionName(String divisionName) {
-		this.divisionName = divisionName;
-	}
-
-	public String getDistrictCode() {
-		return districtCode;
-	}
-
-	public void setDistrictCode(String districtCode) {
-		this.districtCode = districtCode;
-	}
-
-	public String getDistrictName() {
-		return districtName;
-	}
-
-	public void setDistrictName(String districtName) {
-		this.districtName = districtName;
-	}
-
-	public String getCityCode() {
-		return cityCode;
-	}
-
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
-
-	public String getCityName() {
-		return cityName;
-	}
-
-	public void setCityName(String cityName) {
-		this.cityName = cityName;
-	}
-
-	public String getStateName() {
-		return stateName;
-	}
-
-	public void setStateName(String stateName) {
-		this.stateName = stateName;
-	}
-
-	public String getStateCode() {
-		return stateCode;
-	}
-
-	public void setStateCode(String stateCode) {
-		this.stateCode = stateCode;
 	}
 
 	public List<PmCountry> getCountries() {
@@ -273,55 +188,6 @@ public class LocationManagedBean extends BaseManagedBean {
 		this.country = country;
 	}
 
-	public Long getCountryId() {
-		return countryId;
-	}
-
-	public void setCountryId(Long countryId) {
-		this.countryId = countryId;
-	}
-
-	public Long getStateId() {
-		return stateId;
-	}
-
-	public void setStateId(Long stateId) {
-		this.stateId = stateId;
-	}
-
-	public Long getDivisionId() {
-		return divisionId;
-	}
-
-	public void setDivisionId(Long divisionId) {
-		this.divisionId = divisionId;
-	}
-
-	public Long getDistrictId() {
-		return districtId;
-	}
-
-	public void setDistrictId(Long districtId) {
-		this.districtId = districtId;
-	}
-
-	public Long getLocationId() {
-		return locationId;
-	}
-
-	public void setLocationId(Long locationId) {
-		this.locationId = locationId;
-	}
-
-	public List<SearchFilterBean> getAdvSearchBeans() {
-
-		return advSearchBeans;
-	}
-
-	public void setAdvSearchBeans(List<SearchFilterBean> advSearchBeans) {
-		this.advSearchBeans = advSearchBeans;
-	}
-
 	public int getStatus() {
 		return status;
 	}
@@ -338,7 +204,8 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param recordStatus the recordStatus to set
+	 * @param recordStatus
+	 *            the recordStatus to set
 	 */
 	public void setRecordStatus(String recordStatus) {
 		this.recordStatus = recordStatus;
@@ -352,12 +219,26 @@ public class LocationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param location the location to set
+	 * @param location
+	 *            the location to set
 	 */
 	public void setLocation(VPmLocation location) {
 		this.location = location;
 	}
 
-	
+	/**
+	 * @return the divisionStates
+	 */
+	public List<PmState> getDivisionStates() {
+		return divisionStates;
+	}
+
+	/**
+	 * @param divisionStates
+	 *            the divisionStates to set
+	 */
+	public void setDivisionStates(List<PmState> divisionStates) {
+		this.divisionStates = divisionStates;
+	}
 
 }

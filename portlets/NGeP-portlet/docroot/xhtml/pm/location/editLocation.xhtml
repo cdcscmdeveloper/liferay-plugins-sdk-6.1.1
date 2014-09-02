@@ -9,26 +9,27 @@
 	<ui:define name="contentSection">
 		<p:panel header="#{lbl['lbl.pm.location.details']}" toggleable="true">
 			<p:outputPanel>
-				
-					<table>
+
+				<table>
 					<ui:fragment
-					rendered="#{locationBackingBean.managedBean.selectedType eq 'ST'}">
+						rendered="#{locationBackingBean.managedBean.selectedType eq 'ST'}">
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
 									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
 							<td class="TableFieldRight"><p:inputText value="STATE"
-									disabled="true" /></td>
+									size="40" disabled="true" /></td>
 						</tr>
-						
+
 						<tr>
 							<td class="TableFieldLeft"><p:outputLabel
-									value="#{lbl['lbl.pm.state.code']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.state.code']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td class="TableFieldRight"><p:inputText id="statecode"
-									label="#{lbl['lbl.pm.state.code']}"
+									maxlength="10" label="#{lbl['lbl.pm.state.code']}" size="40"
 									value="#{locationBackingBean.managedBean.state.stateCode}"
-									required="true" /> <p:message id="statecodeMsg"
-									for="statecode" display="icon" /></td>
+									required="true" /></td>
+							<td><p:message id="statecodeMsg" for="statecode"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
@@ -46,35 +47,36 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
-									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.location.status']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
-									value="#{locationBackingBean.managedBean.state.recordStatusFlg}" required="true"
-									style="margin-bottom: 5px;">
+									value="#{locationBackingBean.managedBean.state.recordStatusFlg}"
+									required="true" style="width: 235px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 								</p:selectOneMenu></td>
 						</tr>
-					
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{locationBackingBean.managedBean.selectedType eq 'DV'}">
-					
+
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{locationBackingBean.managedBean.selectedType eq 'DV'}">
+
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
 									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
 							<td class="TableFieldRight"><p:inputText value="DIVISION"
-									disabled="true" /></td>
+									size="40" disabled="true" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><p:outputLabel
-									value="#{lbl['lbl.pm.division.code']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.division.code']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td class="TableFieldRight"><p:inputText id="divisioncode"
-									label="#{lbl['lbl.pm.division.code']}"
+									maxlength="10" label="#{lbl['lbl.pm.division.code']}"
 									value="#{locationBackingBean.managedBean.division.divisionCode}"
-									required="true" /> <p:message id="divisioncodeMsg"
-									for="divisioncode" display="icon" /></td>
+									required="true" style="width: 235px;margin-bottom: 5px;" /></td>
+							<td><p:message id="divisioncodeMsg" for="divisioncode"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
@@ -99,36 +101,37 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
-									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.location.status']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
-									value="#{locationBackingBean.managedBean.division.recordStatusFlg}" required="true"
-									style="margin-bottom: 5px;">
+									value="#{locationBackingBean.managedBean.division.recordStatusFlg}"
+									required="true" style="width: 235px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 								</p:selectOneMenu></td>
 						</tr>
-				
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{locationBackingBean.managedBean.selectedType eq 'DS'}">
-					
+
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{locationBackingBean.managedBean.selectedType eq 'DS'}">
+
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
 									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
 							<td class="TableFieldRight"><p:inputText value="DISTRICT"
-									disabled="true" /></td>
+									size="40" disabled="true" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
-									value="#{lbl['lbl.pm.district.code']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.district.code']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 							<td class="TableFieldRight"><p:inputText id="districtcode"
-									label="#{lbl['lbl.pm.district.code']}"
+									label="#{lbl['lbl.pm.district.code']}" maxlength="10"
 									value="#{locationBackingBean.managedBean.district.districtCode}"
-									required="true" /> <p:message id="districtcodeMsg"
-									for="districtcode" display="icon" /></td>
+									required="true" size="40" /></td>
+							<td><p:message id="districtcodeMsg" for="districtcode"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
@@ -136,7 +139,7 @@
 							<td class="TableFieldRight"><p:inputText
 									value="#{locationBackingBean.managedBean.district.districtName}"
 									disabled="true" size="50" /></td>
-						</tr>						
+						</tr>
 
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
@@ -156,35 +159,36 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
-									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.location.status']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
-									value="#{locationBackingBean.managedBean.district.recordStatusFlg}" required="true"
-									style="margin-bottom: 5px;">
+									value="#{locationBackingBean.managedBean.district.recordStatusFlg}"
+									required="true" style="width: 235px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 								</p:selectOneMenu></td>
 						</tr>
-				
-				</ui:fragment>
-				<ui:fragment
-					rendered="#{locationBackingBean.managedBean.selectedType eq 'CT'}">
-				
+
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{locationBackingBean.managedBean.selectedType eq 'CT'}">
+
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
 									value="#{lbl['lbl.pm.location.type']}"></h:outputLabel></td>
 							<td class="TableFieldRight"><p:inputText value="CITY"
-									disabled="true" /></td>
+									size="40" disabled="true" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
-									value="#{lbl['lbl.pm.city.code']}" /><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.city.code']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 							<td class="TableFieldRight"><p:inputText id="citycode"
-									label="#{lbl['lbl.pm.city.code']}"
+									label="#{lbl['lbl.pm.city.code']}" maxlength="10"
 									value="#{locationBackingBean.managedBean.city.cityCode}"
-									required="true" /> <p:message id="citycodeMsg" for="citycode"
+									size="40" required="true" /></td>
+							<td><p:message id="citycodeMsg" for="citycode"
 									display="icon" /></td>
 						</tr>
 
@@ -202,7 +206,7 @@
 									value="#{locationBackingBean.managedBean.city.pmDistrict.districtName}"
 									style="margin-bottom: 5px;" size="50" /></td>
 						</tr>
-						
+
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
 									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
@@ -219,17 +223,18 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
-									value="#{lbl['lbl.pm.location.status']}"/><p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.location.status']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:selectOneMenu
-									value="#{locationBackingBean.managedBean.city.recordStatusFlg}" required="true"
-									style="margin-bottom: 5px;">
+									value="#{locationBackingBean.managedBean.city.recordStatusFlg}"
+									required="true" style="width: 235px;margin-bottom: 5px;">
 									<f:selectItems
 										value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 								</p:selectOneMenu></td>
-						</tr></ui:fragment>
-					</table>
-				
+						</tr>
+					</ui:fragment>
+				</table>
+
 			</p:outputPanel>
 
 		</p:panel>
