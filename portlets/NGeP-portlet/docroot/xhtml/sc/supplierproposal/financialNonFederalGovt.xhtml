@@ -12,27 +12,25 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveNonGovCompanyExpDtls}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(false)}" />
+				
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(true)}" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
 			<table>
@@ -46,15 +44,15 @@
 				selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}">
 
 				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
-					<h:outputText value="#{financenongovt.clientName}" />
+					#{financenongovt.clientName}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
-					<h:outputText value="#{financenongovt.contractTitle}" />
+					#{financenongovt.contractTitle}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
-					<h:outputText value="#{financenongovt.contractNo}" />
+					#{financenongovt.contractNo}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
@@ -71,16 +69,26 @@
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					<h:outputText value="#{financenongovt.contractPeriod}" />
+				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}" style="text-align: right;">
+					#{financenongovt.contractPeriod/12}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contract.amt']}">
-					<p:inputText value="#{financenongovt.contractAmt}" size="20">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.contract.amt']}"/>
+					</f:facet>
+					<p:inputText id="contractAmt" value="#{financenongovt.contractAmt}" 
+						size="20" style="text-align: right;"
+						maxlength="19" required="true"
+						label="#{lbl['lbl.sc.sp.contract.amt']}">
 						<p:ajax event="blur" process="@this"
 							listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
-							update=":form:totalcontractamt" />
+							update="@this, :form:totalcontractamt" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
+					<p:message id="contractAmtMsg" for="contractAmt" display="icon" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.remarks']}">
