@@ -10,7 +10,7 @@
 		widgetVar="dlImageUpload" dynamic="true" width="500" height="300">
 		<p:outputPanel id="opImageUpload">
 			<p:fileUpload id="fuPortrait" 
-							 	fileUploadListener="#{profilePersonalizationBackingBean.handleFileUpload}" mode="advance" 
+							 	fileUploadListener="#{profilePersonalizationBackingBean.handlePortraitUpload}" mode="advance" 
             					sizeLimit="1000000" allowTypes="/(\.|\/)(png)$/" multiple="false"
             					invalidFileMessage="Only PNG file is accepted" 
             					fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.confirm']}" label="#{lbl['lbl.btn.browse']}"/>
@@ -19,7 +19,8 @@
 			<div style="height:200px; text-align:right;">
 				<div style="bottom:0">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="dlImageUpload.hide();" />	
-					<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="dlImageUpload.hide();" />		
+					<p:commandButton value="#{lbl['lbl.btn.close']}" oncomplete="dlImageUpload.hide();"
+						actionListener="#{profileManagementBackingBean.clearPortraitUpload}"  />		
 				</div>
 			</div>    
 		</p:outputPanel>

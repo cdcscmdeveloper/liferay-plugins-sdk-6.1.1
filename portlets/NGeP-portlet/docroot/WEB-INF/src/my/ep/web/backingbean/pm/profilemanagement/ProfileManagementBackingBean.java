@@ -1559,7 +1559,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
+			throw e;
+//			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -1612,6 +1613,18 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
 		logger.info("handlePortraitUpload - END");
 	}
+	
+	/**
+	 * clear user portrait 
+	 * @throws Exception
+	 */
+	public void clearPortraitUpload() throws Exception{
+		logger.info("clearPortraitUpload - START");
+		this.getManagedBean().getSelectedUser().setPortrait(null);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(false);
+		logger.info("clearPortraitUpload - END");
+	}
+
 
 //	
 //	/**

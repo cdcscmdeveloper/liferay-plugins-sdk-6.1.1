@@ -472,7 +472,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
+			throw e;
+//			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -556,15 +557,26 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param event
 	 * @throws Exception
 	 */
-	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUpload - START");
+	public void handlePortraitUpload(FileUploadEvent event) throws Exception{
+		logger.info("handlePortraitUpload - START");
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		logger.info("handleFileUpload - END");
+		logger.info("handlePortraitUpload - END");
 	}
-	
+
+	/**
+	 * clear user portrait 
+	 * @throws Exception
+	 */
+	public void clearPortraitUpload() throws Exception{
+		logger.info("clearPortraitUpload - START");
+		this.getManagedBean().getSelectedUser().setPortrait(null);  
+		this.getManagedBean().getSelectedUser().setReplacePortrait(false);
+		logger.info("clearPortraitUpload - END");
+	}
+
 		
 		
 	
