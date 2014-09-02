@@ -55,6 +55,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -227,7 +228,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		try {
 			initialUserProfile();
 			if(id==null){
-				throw new EpException(MessageConst.ERROR_770015); //TODO
+				throw new EpException(MessageConst.ERROR_770015); 
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id, true);
@@ -271,7 +272,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); 
 		}	
 	}
 	
@@ -332,7 +333,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); 
 		}
 	}
 
@@ -508,11 +509,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			int size = this.getManagedBean().getSelectedUser().getPmUserOrgs().size();
 			PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUser().getPmUserOrgs().get(size-1);
 			if(pmUserOrg.getExpDate()==null){
-				throw new EpException(MessageConst.ERROR_770018); //TODO exception
+				throw new EpException(MessageConst.ERROR_770018); 
 			}
 		}
 		
-		//validation on eff date & exp date TODO
 		PmUserOrg pmUserOrg = new PmUserOrg();
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		pmOrgProfile.setOrgTypeCode(new PmParameter());
@@ -560,7 +560,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 				if(!isValid){
 					this.getManagedBean().getSelectedUser().getPmUserOrgs().get(index).getPmOrgProfile().setPmOrgValidity(new PmOrgValidity());
-					throw new EpException(MessageConst.ERROR_770019); //TODO exception
+					throw new EpException(MessageConst.ERROR_770019); 
 				}
 				
 			}
@@ -646,13 +646,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 					}
 					updateReceivingAddressFlag();
 				}else{
-					throw new EpException(MessageConst.ERROR_770020); //TODO exception
+					throw new EpException(MessageConst.ERROR_770020);
 				}
 			}else{
-				throw new EpException(MessageConst.ERROR_770021); //TODO exception
+				throw new EpException(MessageConst.ERROR_770021);
 			}
 		}else{
-			throw new EpException(MessageConst.ERROR_770022); //TODO exception
+			throw new EpException(MessageConst.ERROR_770022); 
 		}
 		RequestContext.getCurrentInstance().execute("dlRoleOptions.hide()");
 		
@@ -693,7 +693,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getDeleteUserRoles().clear();
 			updateReceivingAddressFlag();
 		}else{
-			throw new EpException(MessageConst.ERROR_770022); //TODO
+			throw new EpException(MessageConst.ERROR_770022);
 		}
 	}
 	
@@ -789,7 +789,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770023, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770023, new String[]{e.getMessage()});
 		}
 	}
 	
@@ -816,7 +816,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				this.getManagedBean().getSelectedDeliveringAddrTypes().clear();
 				showReceivingAddress();
 			}else{
-				throw new EpException(MessageConst.ERROR_770024); //TODO exception
+				throw new EpException(MessageConst.ERROR_770024);
 			}
 		}
 	}
@@ -837,7 +837,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().getDeleteReceivingAddrTypes().clear();
 			showReceivingAddress();
 		}else{
-			throw new EpException(MessageConst.ERROR_770025); //TODO
+			throw new EpException(MessageConst.ERROR_770025); 
 		}
 	
 	}
@@ -1153,7 +1153,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				//TODO
 			}
 			return null;
 		}
@@ -1209,7 +1208,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			int size = user.getPmUserOrgs().size();
 			user.setOrgTypeCode(user.getPmUserOrgs().get(size-1).getPmOrgProfile().getOrgTypeCode());
 		}else{
-			throw new EpException(MessageConst.ERROR_770026); //TODO
+			throw new EpException(MessageConst.ERROR_770026);
 		}
 	}
 	
@@ -1375,36 +1374,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void validateUser(PmUser user){
 		logger.info("validateUser");
 		if(StringUtils.isBlank(user.getLoginId())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770030);
+			throw new EpException(MessageConst.ERROR_770030);
 		}
 		if(user.getSalutationCode().getSalutationId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770031);
+			throw new EpException(MessageConst.ERROR_770031);
 		}
 		if(StringUtils.isBlank(user.getUserName())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770032);
+			throw new EpException(MessageConst.ERROR_770032);
 		}
 		if(user.getIdentificationCode().getParameterId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770033);
+			throw new EpException(MessageConst.ERROR_770033);
 		}
 		if(StringUtils.isBlank(user.getIdentificationNo())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770034);
+			throw new EpException(MessageConst.ERROR_770034);
 		}
 		if(user.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770035);
+			throw new EpException(MessageConst.ERROR_770035);
 		}
 		if(StringUtils.isBlank(user.getEmail())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770036);
+			throw new EpException(MessageConst.ERROR_770036);
 		}
 		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770037);
+			throw new EpException(MessageConst.ERROR_770037);
 		}
 		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
 				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
 				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
-			throw new IllegalArgumentException(MessageConst.ERROR_770038);
+			throw new EpException(MessageConst.ERROR_770038);
 		}
 //		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
-//			throw new IllegalArgumentException("Old Password is mandatory.");
+//			throw new EpException("Old Password is mandatory.");
 //		}
 	}
 	
@@ -1415,28 +1414,28 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void validateUserAddress(PmAddress pmAddress){
 		logger.info("validateUserAddress");
 		if(pmAddress.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770039);
+			throw new EpException(MessageConst.ERROR_770039);
 		}
 
 		if(StringUtils.isBlank(pmAddress.getAddress1())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770040);
+			throw new EpException(MessageConst.ERROR_770040);
 		}
 		
 		if(StringUtils.isBlank(pmAddress.getPostcode())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770041);
+			throw new EpException(MessageConst.ERROR_770041);
 		}
 		
 		if(pmAddress.getPmState().getStateId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770042);
+			throw new EpException(MessageConst.ERROR_770042);
 		}
 
 		if(pmAddress.getPmDistrict().getDistrictId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770043);
+			throw new EpException(MessageConst.ERROR_770043);
 		}
 		
 		if(this.getManagedBean().isDivisionFlagC()){
 			if(pmAddress.getPmDivision().getDivisionId()==null){
-				throw new IllegalArgumentException(MessageConst.ERROR_770044);
+				throw new EpException(MessageConst.ERROR_770044);
 			}
 		}
 	
@@ -1451,11 +1450,13 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(pmUserPreference!=null){
 			if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserPreference.getRecordStatusFlg()){
 				if(StringUtils.isBlank(pmUserPreference.getPreferredLanguage())){
-					throw new IllegalArgumentException("Preferred Language is mandatory.");
+					throw new EpException(MessageConst.ERROR_770046);
+
 				}
 				
 				if(pmUserPreference.getNotifyRemovalDay()==null || pmUserPreference.getNotifyRemovalDay()<=0){
-					throw new IllegalArgumentException("Delete Notification is mandatory.");
+					throw new EpException(MessageConst.ERROR_770047);
+
 				}
 			}
 		}
@@ -1479,7 +1480,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}
 		if(selected==0){
-			throw new IllegalArgumentException("At least one Preferred Notification Mode is required.");
+			throw new EpException(MessageConst.ERROR_770048);
 		}
 	}
 
@@ -1545,20 +1546,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}*/
 				
 				loadUserProfile(resDTO.getPmUser().getUserId());
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Record save successfully for Login ID: "
-										+ resDTO.getPmUser().getLoginId()));
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
 				
 				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}

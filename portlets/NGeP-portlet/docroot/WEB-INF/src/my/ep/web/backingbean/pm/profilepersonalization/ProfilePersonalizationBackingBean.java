@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilepersonalization.ProfilePersonalizationManagedBean;
@@ -174,7 +175,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		try {
 			initialUserProfile();
 			if(id==null){
-				throw new EpException(MessageConst.ERROR_770015); //TODO
+				throw new EpException(MessageConst.ERROR_770015);
 			}
 			//load user
 			PmUser pmUser = PmCommonUtil.retrieveUserById(id, false);
@@ -205,7 +206,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()});
 		}	
 	}
 	
@@ -230,7 +231,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); 
 		}
 	}
 	
@@ -356,33 +357,33 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private void validateUser(PmUser user){
 		logger.info("validateUser");
 		if(StringUtils.isBlank(user.getLoginId())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770030);
+			throw new EpException(MessageConst.ERROR_770030);
 		}
 		if(user.getSalutationCode().getSalutationId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770031);
+			throw new EpException(MessageConst.ERROR_770031);
 		}
 		if(StringUtils.isBlank(user.getUserName())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770032);
+			throw new EpException(MessageConst.ERROR_770032);
 		}
 		if(user.getIdentificationCode().getParameterId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770033);
+			throw new EpException(MessageConst.ERROR_770033);
 		}
 		if(StringUtils.isBlank(user.getIdentificationNo())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770034);
+			throw new EpException(MessageConst.ERROR_770034);
 		}
 		if(user.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770035);
+			throw new EpException(MessageConst.ERROR_770035);
 		}
 		if(StringUtils.isBlank(user.getEmail())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770036);
+			throw new EpException(MessageConst.ERROR_770036);
 		}
 		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770037);
+			throw new EpException(MessageConst.ERROR_770037);
 		}
 		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
 				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
 				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
-			throw new IllegalArgumentException(MessageConst.ERROR_770038);
+			throw new EpException(MessageConst.ERROR_770038);
 		}
 
 	}
@@ -394,28 +395,28 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	private void validateUserAddress(PmAddress pmAddress){
 		logger.info("validateUserAddress");
 		if(pmAddress.getPmCountry().getCountryId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770039);
+			throw new EpException(MessageConst.ERROR_770039);
 		}
 
 		if(StringUtils.isBlank(pmAddress.getAddress1())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770040);
+			throw new EpException(MessageConst.ERROR_770040);
 		}
 		
 		if(StringUtils.isBlank(pmAddress.getPostcode())){
-			throw new IllegalArgumentException(MessageConst.ERROR_770041);
+			throw new EpException(MessageConst.ERROR_770041);
 		}
 		
 		if(pmAddress.getPmState().getStateId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770042);
+			throw new EpException(MessageConst.ERROR_770042);
 		}
 
 		if(pmAddress.getPmDistrict().getDistrictId()==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770043);
+			throw new EpException(MessageConst.ERROR_770043);
 		}
 		
 		if(this.getManagedBean().isDivisionFlagC()){
 			if(pmAddress.getPmDivision().getDivisionId()==null){
-				throw new IllegalArgumentException(MessageConst.ERROR_770044);
+				throw new EpException(MessageConst.ERROR_770044);
 			}
 		}
 	
@@ -459,19 +460,19 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				}
 				*/
 				loadUserProfile(user.getUserId());
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								null, "Record save successfully for Login ID: "
-										+ resDTO.getPmUser().getLoginId()));
+				FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(
+					    FacesMessage.SEVERITY_INFO,
+					    null,
+			    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
+				    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+				    		new FacesScopes().getUserLocale())
+			    		));
 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
 		} finally {
 			userSO = null;
 		}
