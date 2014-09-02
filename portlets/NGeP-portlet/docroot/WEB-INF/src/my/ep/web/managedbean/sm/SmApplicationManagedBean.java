@@ -77,6 +77,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmAssociationBody> selectedAssocBodyList;
 	private SmAssociationBody selectedAssocBody;
 	private List<SmCompanyExperience> selectedCompanyExperiences;
+	private List<SmCompanyExperienceCat> selectedCompExpCats;
 	private SmCompanyExperience selectedCompanyExperience;
 	private String selectedParentCat;
 	private String selectedChildCat;
@@ -2027,6 +2028,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setToday(String today) {
 		this.today = today;
+	}
+
+	public List<SmCompanyExperienceCat> getSelectedCompExpCats() {
+		return selectedCompExpCats;
+	}
+
+	public void setSelectedCompExpCats(
+			List<SmCompanyExperienceCat> selectedCompExpCats) {
+		this.selectedCompExpCats = selectedCompExpCats;
 	}
 
 }

@@ -125,9 +125,10 @@
 	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="consDialog" id="consDialog" resizable="false"
 		closable="false" showEffect="fade" hideEffect="fade" modal="true"
-		width="550px" height="500px">
+		width="850px" height="500px">
 		<p:messages id="consultPrjMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
+
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -244,69 +245,7 @@
 								<p:message id="consultProjAppDateMsg" for="consultProjAppDate"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
-							<td><p:selectOneMenu
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.projDtls.mainCat']}"
-									id="consultProjParCatCode"
-									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id}"
-									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{backingBean.managedBean.supplierParentCatList}"
-										var="parent" itemLabel="#{parent.categoryName}"
-										itemValue="#{parent.categoryL1Id}" />
-									<p:ajax event="change"
-										listener="#{backingBean.populateChildCategoryByParent(backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryL1Id,
-								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2,
-								backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3)}"
-										update="conslChild,conslSubChild" />
-								</p:selectOneMenu> <p:message id="consultProjParCatCodeMsg"
-									for="consultProjParCatCode" showSummary="true"
-									showDetail="false" display="icon" /></td>
-
-
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" />
-								<p:outputLabel value="*" styleClass="mandatory" /></td>
-							<td><p:selectOneMenu
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.projDtls.subCat']}"
-									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id}"
-									id="conslChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
-									<f:selectItems
-										value="#{backingBean.managedBean.supplierChildCatList}"
-										var="conslChild" itemLabel="#{conslChild.categoryName}"
-										itemValue="#{conslChild.categoryL2Id}" />
-									<p:ajax event="change"
-										listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
-										update="conslSubChild" />
-								</p:selectOneMenu> <p:message id="conslChildMsg" for="conslChild"
-									showSummary="true" showDetail="false" display="icon" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel
-									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td><p:selectOneMenu
-									required="#{backingBean.managedBean.valueReqd}"
-									label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-									value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryL3Id}"
-									id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
-									<f:selectItems
-										value="#{backingBean.managedBean.supplierSubChildCatList}"
-										var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
-										itemValue="#{conslSubChild.categoryL3Id}" />
-								</p:selectOneMenu> <p:message id="conslSubChildMsg" for="conslSubChild"
-									showSummary="true" showDetail="false" display="icon" /></td>
-						</tr>
-					</table>
-
+					</table> <ui:include src="compExperienceCategoriesInfoPanelForm.xhtml" />
 				</td>
 
 			</tr>

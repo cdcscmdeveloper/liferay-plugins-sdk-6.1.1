@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sm.projDtls.catHdr']}" toggleable="true"
+		id="compExpCatPanHdr">
+		<p:dataTable var="catBean" widgetVar="suppExpCatCodesDtWidVar"
+			value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
+			selection="#{backingBean.managedBean.selectedCompExpCats}"
+			rowKey="#{catBean}" rowIndexVar="index" id="suppExpCatCodesDtWidVar">
+			<ac:paginator for="suppExpCatCodesDtWidVar" />
+
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="#{lbl['lbl.sm.projDtls.mainCat']}">
+				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.projDtls.mainCat']}"
+					id="consultProjParCatCode"
+					value="#{catBean.pmCategoryL1.categoryL1Id}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+					<f:selectItems
+						value="#{backingBean.managedBean.supplierParentCatList}"
+						var="parent" itemLabel="#{parent.categoryName}"
+						itemValue="#{parent.categoryL1Id}" />
+					<p:ajax event="change"
+						listener="#{backingBean.populateChildCategoryByParent(catBean.pmCategoryL1.categoryL1Id,
+								catBean.pmCategoryL2,
+								catBean.pmCategoryL3)}"
+						update="conslChild,conslSubChild" />
+				</p:selectOneMenu>
+				<p:message id="consultProjParCatCodeMsg" for="consultProjParCatCode"
+					showSummary="true" showDetail="false" display="icon" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
+				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.projDtls.subCat']}"
+					value="#{catBean.pmCategoryL2.categoryL2Id}" id="conslChild"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
+					<f:selectItems value="#{catBean.pmCategoryL2.pmCategoryL2s}"
+						var="conslChild" itemLabel="#{conslChild.categoryName}"
+						itemValue="#{conslChild.categoryL2Id}" />
+					<p:ajax event="change"
+						listener="#{backingBean.populateSubChildCategoryByChild(catBean.pmCategoryL2.categoryL2Id,catBean.pmCategoryL3)}"
+						update="conslSubChild" />
+				</p:selectOneMenu>
+				<p:message id="conslChildMsg" for="conslChild" showSummary="true"
+					showDetail="false" display="icon" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
+				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
+					value="#{catBean.pmCategoryL3.categoryL3Id}" id="conslSubChild"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
+					<f:selectItems value="#{catBean.pmCategoryL3.pmCategoryL3s}"
+						var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
+						itemValue="#{conslSubChild.categoryL3Id}" />
+				</p:selectOneMenu>
+				<p:message id="conslSubChildMsg" for="conslSubChild"
+					showSummary="true" showDetail="false" display="icon" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				action="#{backingBean.assignCategoryForCompExperience(backingBean.managedBean.selectedCompanyExperience)}"
+				update=":form:tt:suppExpCatCodesDtWidVar" partialSubmit="true"
+				process=":form:tt:compExpCatPanHdr" />
+
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				action="#{backingBean.deleteSelectedCategoryFromCompanyExperience(backingBean.managedBean.selectedCompanyExperience)}"
+				update=":form:tt:suppExpCatCodesDtWidVar" partialSubmit="true"
+				process=":form:tt:compExpCatPanHdr" />
+
+		</div>
+
+	</p:panel>
+</ui:composition>

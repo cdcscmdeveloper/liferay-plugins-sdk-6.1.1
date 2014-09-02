@@ -1970,6 +1970,15 @@ public class SmApplicationBackingBean extends
 	// -- Process Consultant or Contractor Company Experience Start
 	public void addOrUpdateCompanyExperienceToSmAppl() {
 		if (getManagedBean().getSelectedCompanyExperience()
+				.getSmCompanyExperienceCats() == null
+				|| (getManagedBean().getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats() != null && getManagedBean()
+						.getSelectedCompanyExperience()
+						.getSmCompanyExperienceCats().isEmpty())) {
+			throw new EpException(
+					"Category list cannot be empty : Please add atleast one category");
+		}
+		if (getManagedBean().getSelectedCompanyExperience()
 				.getPaymentMethodId() == null) {
 			getManagedBean().getSelectedCompanyExperience().setPaymentMethodId(
 					new BigDecimal(0));
@@ -2023,12 +2032,15 @@ public class SmApplicationBackingBean extends
 		assignValReqdToTrue();
 		if (consultantBean.getSmCompanyExperienceCats() != null
 				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
-			populateChildCategoryByParent(consultantBean
-					.getSmCompanyExperienceCats().get(0).getPmCategoryL1()
-					.getCategoryL1Id(), new PmCategoryL2(), new PmCategoryL3());
-			populateSubChildCategoryByChild(consultantBean
-					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
-					.getCategoryL2Id(), new PmCategoryL3());
+			for (SmCompanyExperienceCat cat : consultantBean
+					.getSmCompanyExperienceCats()) {
+				populateExperienceChildCategoryByParent(cat.getPmCategoryL1()
+						.getCategoryL1Id(), cat.getPmCategoryL2(),
+						cat.getPmCategoryL3());
+				populateExperienceSubChildCategoryByChild(cat.getPmCategoryL2()
+						.getCategoryL2Id(), cat.getPmCategoryL3());
+			}
+
 		}
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -2038,6 +2050,42 @@ public class SmApplicationBackingBean extends
 				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
 			RequestContext.getCurrentInstance().execute("contDialog.show()");
 		}
+	}
+
+	public void assignCategoryForCompExperience(SmCompanyExperience exp) {
+		getManagedBean().setSelectedCompanyExperience(exp);
+		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
+		cat.setPmCategoryL1(new PmCategoryL1());
+		PmCategoryL2 catL2 = new PmCategoryL2();
+		catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
+		cat.setPmCategoryL2(catL2);
+		PmCategoryL3 catL3 = new PmCategoryL3();
+		catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		cat.setPmCategoryL3(catL3);
+		cat.setSmCompanyExperience(getManagedBean()
+				.getSelectedCompanyExperience());
+		getManagedBean().getSelectedCompanyExperience()
+				.getSmCompanyExperienceCats().add(cat);
+
+	}
+
+	public void deleteSelectedCategoryFromCompanyExperience(
+			SmCompanyExperience exp) {
+		if (getManagedBean().getSelectedCompExpCats().size() == exp
+				.getSmCompanyExperienceCats().size()) {
+			throw new EpException("All category codes cannot be removed.At least one category is required.");
+		}
+		if (getManagedBean().getSelectedCompExpCats().size() > 0) {
+			for (SmCompanyExperienceCat cat : getManagedBean()
+					.getSelectedCompExpCats()) {
+				exp.getSmCompanyExperienceCats().remove(cat);
+			}
+			getManagedBean().getSelectedCompExpCats().clear();
+		} else {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { "Category" });
+		}
+
 	}
 
 	public void assignNewCompanyExperience() {
@@ -2054,8 +2102,12 @@ public class SmApplicationBackingBean extends
 		List<SmCompanyExperienceCat> expCatList = new ArrayList<SmCompanyExperienceCat>();
 		SmCompanyExperienceCat cat = new SmCompanyExperienceCat();
 		cat.setPmCategoryL1(new PmCategoryL1());
-		cat.setPmCategoryL2(new PmCategoryL2());
-		cat.setPmCategoryL3(new PmCategoryL3());
+		PmCategoryL2 catL2 = new PmCategoryL2();
+		catL2.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
+		cat.setPmCategoryL2(catL2);
+		PmCategoryL3 catL3 = new PmCategoryL3();
+		catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		cat.setPmCategoryL3(catL3);
 		cat.setSmCompanyExperience(exp);
 		expCatList.add(cat);
 		exp.setSmCompanyExperienceCats(expCatList);
@@ -5619,6 +5671,31 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	public void populateExperienceChildCategoryByParent(long parentId,
+			PmCategoryL2 catL2, PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL2> categoryL2s = this
+					.retrieveChildCategoryList(parentId);
+			catL2.setPmCategoryL2s(categoryL2s);
+			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void populateExperienceSubChildCategoryByChild(long childId,
+			PmCategoryL3 catL3) {
+		try {
+			List<PmCategoryL3> categoryL3s = this
+					.retrieveSubChildCategoryList(childId);
+			catL3.setPmCategoryL3s(categoryL3s);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public void populateChildCategoryByParent(long parentId,
 			PmCategoryL2 catL2, PmCategoryL3 catL3) {
 		try {
@@ -5626,8 +5703,11 @@ public class SmApplicationBackingBean extends
 					.retrieveChildCategoryList(parentId);
 
 			this.getManagedBean().setSupplierChildCatList(categoryL2s);
+			catL2.setPmCategoryL2s(categoryL2s);
+
 			this.getManagedBean().setSupplierSubChildCatList(
 					new ArrayList<PmCategoryL3>());
+			catL3.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
 
 			resetChildCategory(catL2);
 			resetSubChildCategory(catL3);
@@ -5642,6 +5722,7 @@ public class SmApplicationBackingBean extends
 					.retrieveSubChildCategoryList(childId);
 
 			this.getManagedBean().setSupplierSubChildCatList(categoryL3s);
+			catL3.setPmCategoryL3s(categoryL3s);
 
 			resetSubChildCategory(catL3);
 		} catch (Exception e) {
