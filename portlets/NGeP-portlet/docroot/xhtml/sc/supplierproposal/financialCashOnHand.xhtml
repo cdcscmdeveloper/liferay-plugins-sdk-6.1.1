@@ -12,27 +12,25 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<div class="ppRightBtn">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
+		<div class="ppRightBtn">				
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
-
+				
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction}" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
+				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(false)}"
+				process="@all" partialSubmit="true" update="@all" />
+
+			<p:commandButton value="#{lbl['lbl.btn.complete']}" 
+				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(true)}"
+				process="@all" partialSubmit="true" update="@all"
 				icon="ui-icon-check" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.cash.on.hand']}" toggleable="true">
 			<p:dataTable id="cashonhandid" var="cashonhand"
@@ -44,47 +42,89 @@
 
 				<ac:paginator for="cashonhand" />
 
-				<p:column headerText="#{lbl['lbl.sc.sp.bank.name']}">
-					<h:outputText value="#{cashonhand.bankName}"
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.bank.name']}"/>
+					</f:facet>
+					<h:outputText id="bankName" value="#{cashonhand.bankName}"
 						rendered="#{cashonhand.brandNew eq false}" />
 					<p:inputText value="#{cashonhand.bankName}" size="20"
+						required="true" maxlength="100"
+						label="#{lbl['lbl.sc.sp.bank.name']}"
 						rendered="#{cashonhand.brandNew eq true}" />
+					<p:message id="bankNameMsg" for="bankName" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.ac.no']}">
-					<h:outputText value="#{cashonhand.accountNum}"
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.ac.no']}"/>
+					</f:facet>
+					<h:outputText id="accountNum" value="#{cashonhand.accountNum}"
 						rendered="#{cashonhand.brandNew eq false}" />
 					<p:inputText value="#{cashonhand.accountNum}" size="20"
+						required="true" maxlength="30"
+						label="#{lbl['lbl.sc.sp.ac.no']}"
 						rendered="#{cashonhand.brandNew eq true}" />
+					<p:message id="accountNumMsg" for="accountNum" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.ac.type']}">
-					<h:outputText value="#{cashonhand.accountType.parameterId}"
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.ac.type']}"/>
+					</f:facet>
+					<h:outputText value="#{supplierProposalDetailBackingBean.getParameterDesc(cashonhand.accountType)}"
 						rendered="#{cashonhand.brandNew eq false}" />
-					<p:selectOneMenu value="#{cashonhand.accountType.parameterId}"
+					<p:selectOneMenu id="accountType" value="#{cashonhand.accountType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"
+						required="true"
+						label="#{lbl['lbl.sc.sp.ac.type']}"
 						rendered="#{cashonhand.brandNew eq true}">
 						<f:selectItems
 							value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.accountType)}" />
+						<p:ajax event="change" listener="#{supplierProposalDetailBackingBean.accountTypeChange(cashonhand)}" />
 					</p:selectOneMenu>
+					<p:message id="accountTypeMsg" for="accountType" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.address']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.address']}"/>
+					</f:facet>
 					<h:outputText value="#{cashonhand.bankAddress}"
 						rendered="#{cashonhand.brandNew eq false}" />
-					<p:inputTextarea value="#{cashonhand.bankAddress}" cols="20"
-						rows="2" rendered="#{cashonhand.brandNew eq true}" />
+					<p:inputTextarea id="bankAddress" value="#{cashonhand.bankAddress}" cols="35"
+						rows="2" required="true" maxlength="100"
+						label="#{lbl['lbl.sc.sp.address']}"
+						rendered="#{cashonhand.brandNew eq true}" />
+					<p:message id="bankAddressMsg" for="bankAddress" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.amount']}">
+				<p:column style="text-align:right">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.amount']}"/>
+					</f:facet>
 					<h:outputText value="#{cashonhand.cashAmount}"
-						rendered="#{cashonhand.brandNew eq false}" />
-					<p:inputText value="#{cashonhand.cashAmount}" size="20"
+						rendered="#{cashonhand.brandNew eq false}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+					<p:inputText id="cashAmount" value="#{cashonhand.cashAmount}" size="20"
+						 style="text-align:right"
+						required="true" maxlength="19"
+						label="#{lbl['lbl.sc.sp.amount']}"
 						rendered="#{cashonhand.brandNew eq true}">
 						<p:ajax event="blur" process="@this"
 							listener="#{supplierProposalDetailBackingBean.totalCashOnHandSum}"
-							update=":form:totalcashonhand" />
+							update="@this, :form:totalcashonhand" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
+					<p:message id="cashAmountMsg" for="cashAmount" display="icon" />
 				</p:column>
 
 			</p:dataTable>
@@ -95,7 +135,7 @@
 					update="cashonhandid" icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.so.delete']}"
-					icon="ui-icon-delete" update="cashonhandid"
+					icon="ui-icon-delete" update="cashonhandid, totalcashonhand"
 					action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
 
 			</div>
