@@ -1,5 +1,8 @@
 package my.ep.web.util.pm.helper;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +72,8 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
@@ -420,13 +425,17 @@ public class PmCommonUtil {
 	 * Get full attachment upload path
 	 * @return String
 	 */
-	public static String getFullUploadPath(){
+	public static String getFullUploadPath(String fileName){
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat(); 
+		String formattedName = attachmentFormat.format(fileName, null);
 		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(DateUtils.getLast2DigitOfYear());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formattedName);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		return filePath.toString();
 	}
@@ -449,5 +458,30 @@ public class PmCommonUtil {
 		return filePath.toString();
 	}
 	
-	
+	/**
+	 * Retrieve user name
+	 * @param userId
+	 * @return
+	 */
+	public static String retriveUserName(Long userId){
+		IUserSO userSo=null;
+		String userName="";
+		try{
+			if(userId!=null){
+				userSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTo=new UserReqDTO();
+				reqDTo.setUserId(userId);
+				UserResDTO resDTO=userSo.retrieveUserByUserId(reqDTo);
+				if(resDTO.isSuccessful()==true){
+					userName=resDTO.getPmUser()!=null ? resDTO.getPmUser().getUserName(): "";
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return userName;
+	}
+
 }
