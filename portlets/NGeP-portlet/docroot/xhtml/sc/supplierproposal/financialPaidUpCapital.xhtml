@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+
+		<div class="ppRightBtn">
+			<p:commandButton value="Back" style="float:left;" icon="ui-icon-back"
+				process="@this" partialSubmit="true"
+				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+				
+		</div>
+		
+		<ui:include src="checklistHeader.xhtml" />
+		
+		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+			toggleable="true">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
+				<p:inputText style="text-align:right"
+					value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
+					disabled="true" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</h:panelGrid>
+		</p:panel>
+		
+	</ui:define>
+</ui:composition>
