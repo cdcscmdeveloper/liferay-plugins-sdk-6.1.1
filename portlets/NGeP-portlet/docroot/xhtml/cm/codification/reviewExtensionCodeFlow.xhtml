@@ -22,7 +22,6 @@
 				</ui:repeat>
 			</div>
 
-
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 			<p:panel header="Request Info" toggleable="true">
@@ -39,7 +38,8 @@
 								size="40" disabled="true" /></td>
 					</tr>
 				</table>
-
+				
+				
 				<p:dataTable style="width:100%;"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
@@ -48,24 +48,10 @@
 						<f:facet name="header">
 						Extension
 					</f:facet>
-
-						<table style="height: 140px;">
-							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
-							</tr>
-						</table>
-
-
-
+						<div style="width:100%; display: table;">#{lbl['lbl.cm.type']}</div>
+						<div style="width:100%; display: table;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width:100%; display: table;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width:100%; display: table;">#{lbl['lbl.cm.color']}</div>
 					</p:column>
 
 
@@ -74,76 +60,143 @@
 							Supplier
 						</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.typeName}"
-											disabled="#{!review.requestType}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestType}"
-											style="width: 128px;" value="#{review.typeNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItems
-												value="#{unspscCodeBackingBean.managedBean.typeList}"
-												var="type" itemLabel="#{type.typeName}"
-												itemValue="#{type.typeId}"></f:selectItems>
-										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.brandName}"
-											disabled="#{!review.requestBrand}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestBrand}"
-											style="width: 128px;" value="#{review.brandNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItems
-												value="#{unspscCodeBackingBean.managedBean.brandList}"
-												var="brand" itemLabel="#{brand.brandName}"
-												itemValue="#{brand.brandId}"></f:selectItems>
-										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.measurementName}"
-											disabled="#{!review.requestMeasurement}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestMeasurement}"
-											style="width: 128px;" value="#{review.measurementNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItems
-												value="#{unspscCodeBackingBean.managedBean.measurementList}"
-												var="measurement" itemLabel="#{measurement.measurementName}"
-												itemValue="#{measurement.measurementId}"></f:selectItems>
-										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.colorName}"
-											disabled="#{!review.requestColor}"></p:inputText>
-										<p:selectOneMenu rendered="#{review.requestColor}"
-											style="width: 128px;" value="#{review.colorNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItems
-												value="#{unspscCodeBackingBean.managedBean.colorList}"
-												var="color" itemLabel="#{color.colorName}"
-												itemValue="#{color.colorId}"></f:selectItems>
-										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-						</table>
+						<div style="width:100%; display: table;">
+								<p:inputText value="#{review.typeName}"
+									disabled="#{!review.requestType}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestType}"
+									style="width: 128px;" value="#{review.typeNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.typeList}"
+										var="type" itemLabel="#{type.typeName}"
+										itemValue="#{type.typeId}"></f:selectItems>
+								</p:selectOneMenu>
+						</div>
+						<div style="width:100%; display: table;">
+								<p:inputText value="#{review.brandName}"
+									disabled="#{!review.requestBrand}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestBrand}"
+									style="width: 128px;" value="#{review.brandNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.brandList}"
+										var="brand" itemLabel="#{brand.brandName}"
+										itemValue="#{brand.brandId}"></f:selectItems>
+								</p:selectOneMenu>
+						</div>
+						<div style="width:100%; display: table;">
+								<p:inputText value="#{review.measurementName}"
+									disabled="#{!review.requestMeasurement}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestMeasurement}"
+									style="width: 128px;" value="#{review.measurementNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.measurementList}"
+										var="measurement" itemLabel="#{measurement.measurementName}"
+										itemValue="#{measurement.measurementId}"></f:selectItems>
+								</p:selectOneMenu>
+						</div>
+						<div style="width:100%; display: table;">
+								<p:inputText value="#{review.colorName}"
+									disabled="#{!review.requestColor}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestColor}"
+									style="width: 128px;" value="#{review.colorNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.colorList}"
+										var="color" itemLabel="#{color.colorName}"
+										itemValue="#{color.colorId}"></f:selectItems>
+								</p:selectOneMenu>
+						</div>						
 
 					</p:column>
 
 
 				</p:dataTable>
+				
+				<ui:remove>
+				<p:dataTable style="width:100%;"
+					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
+					var="review">
+					
+					<p:column>
+						<f:facet name="header">
+						
+						<div style="display: table; width:100%;">
+							<div style="display: table-cell; width:15%;">Extension</div>
+							<div style="display: table-cell; width:85%;">Supplier</div>
+						</div>
+						
+					</f:facet>
+					
+					<div style="display: table; width:100%;">
+						<div style="display: table-row;">
+							<div style="display: table-cell; width:15%;">#{lbl['lbl.cm.type']}</div>
+							<div style="display: table-cell; width:85%;">
+								<p:inputText value="#{review.typeName}"
+									disabled="#{!review.requestType}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestType}"
+									style="width: 128px;" value="#{review.typeNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.typeList}"
+										var="type" itemLabel="#{type.typeName}"
+										itemValue="#{type.typeId}"></f:selectItems>
+								</p:selectOneMenu>
+							</div>						
+						</div>
+						<div style="display: table-row;">
+							<div style="display: table-cell; width:15%;">#{lbl['lbl.cm.brand']}</div>
+							<div style="display: table-cell; width:85%;">
+								<p:inputText value="#{review.brandName}"
+									disabled="#{!review.requestBrand}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestBrand}"
+									style="width: 128px;" value="#{review.brandNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.brandList}"
+										var="brand" itemLabel="#{brand.brandName}"
+										itemValue="#{brand.brandId}"></f:selectItems>
+								</p:selectOneMenu>
+							</div>						
+						</div>
+						<div style="display: table-row; ">
+							<div style="display: table-cell; width:15%;">#{lbl['lbl.cm.measurement']}</div>
+							<div style="display: table-cell; width:85%;">
+								<p:inputText value="#{review.measurementName}"
+									disabled="#{!review.requestMeasurement}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestMeasurement}"
+									style="width: 128px;" value="#{review.measurementNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.measurementList}"
+										var="measurement" itemLabel="#{measurement.measurementName}"
+										itemValue="#{measurement.measurementId}"></f:selectItems>
+								</p:selectOneMenu>
+							</div>						
+						</div>
+						<div style="display: table-row;">
+							<div style="display: table-cell; width:15%;">#{lbl['lbl.cm.color']}</div>
+							<div style="display: table-cell; width:85%;">
+								<p:inputText value="#{review.colorName}"
+									disabled="#{!review.requestColor}"></p:inputText>
+								<p:selectOneMenu rendered="#{review.requestColor}"
+									style="width: 128px;" value="#{review.colorNameDD}">
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems
+										value="#{unspscCodeBackingBean.managedBean.colorList}"
+										var="color" itemLabel="#{color.colorName}"
+										itemValue="#{color.colorId}"></f:selectItems>
+								</p:selectOneMenu>
+							</div>						
+						</div>
+					</div>
 
+					</p:column>
+					
+				</p:dataTable>
+				</ui:remove>
+				
 			</p:panel>
 
 
