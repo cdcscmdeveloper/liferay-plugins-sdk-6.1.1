@@ -124,7 +124,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private ScQtPRPAssetLiability scQtPRPAssetLiability;
 	private List<ScQtPRPAssetLiability> scQtPRPAssetLiabilities;
 	private List<ScQtPRPAssetLiability> selectedPRPAssetLiabilities;
-	private BigDecimal acidRatio;
 
 	// No of Employees
 	private ScQtPRPEmployee scQtPRPEmployee;
@@ -616,14 +615,6 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setNoOfYears(int noOfYears) {
 		this.noOfYears = noOfYears;
-	}
-
-	public BigDecimal getAcidRatio() {
-		return acidRatio;
-	}
-
-	public void setAcidRatio(BigDecimal acidRatio) {
-		this.acidRatio = acidRatio;
 	}
 
 	public ScQtDoc getScQtDoc() {
