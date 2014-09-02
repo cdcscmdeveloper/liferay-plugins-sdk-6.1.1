@@ -154,6 +154,8 @@ public class SupplierManagementConst {
 	public static final String CAT_TYPE_MANUFACTURING = "M";
 	public static final String CAT_TYPE_PRINTING = "PC";
 	public static final String CAT_TYPE_TRAVEL = "PG";
+	public static final String CAT_TYPE_BUMIPUTERA = "BP";
+	public static final String CAT_TYPE_READING_MATERIAL_FROM_OVERSEA = "RM";
 
 	public static final String P221601 = "221601";
 	public static final String P221602 = "221602";
@@ -553,7 +555,15 @@ public class SupplierManagementConst {
 	public String getCAT_TYPE_TRAVEL() {
 		return CAT_TYPE_TRAVEL;
 	}
-
+	
+	public String getCAT_TYPE_BUMIPUTERA() {
+		return CAT_TYPE_BUMIPUTERA;
+	}
+	
+	public String getCAT_TYPE_READING_MATERIAL_FROM_OVERSEA() {
+		return CAT_TYPE_READING_MATERIAL_FROM_OVERSEA;
+	}
+	
 	public String getACC_BASIC() {
 		return ACC_BASIC;
 	}
