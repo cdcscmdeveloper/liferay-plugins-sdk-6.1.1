@@ -7,24 +7,42 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.attachment']}" toggleable="true">
-		<table class="ppOneTable">
-			<tr>
-				<th width="20%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.attachment']}" />
-				</th>
-				<td>
-				  <p:fileUpload 
-				  	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" 
-				  	mode="advanced" sizeLimit="1000000" 
-            		allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-					invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-	            	/> 
-	            	
-		
-		
-				</td>
-			</tr>
-		</table>	
+	<p:panel id="pAttachment" header="#{lbl['lbl.pm.profiles.authorisation.attachment']}" toggleable="true"
+		rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+		<p:dataTable id="dtAttachment" var="attachment" 
+	  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}"
+			    >   
+		    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
+	          	#{attachment.fileName}
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pp.created.by']}" >
+	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
+	        </p:column>
+	    </p:dataTable>
+		<div align="right">
+			<p:commandButton onclick="dlAttachment.show();return false;" update="dtAttachment"
+				value="#{lbl['lbl.pm.profiles.authorisation.attachment']}">
+			</p:commandButton>
+		</div>
+		<p:dialog id="dlAttachment" widgetVar="dlAttachment" modal="true"
+			resizable="false" width="700px" height="200" styleClass="pop_up_top"
+			header="#{lbl['lbl.pm.profiles.authorisation.choose.file']}">		
+			<p:outputPanel id="opAttachment">
+				<table class="ppOneTable">
+					<tr>
+						<td>
+						  <p:fileUpload oncomplete="dlAttachment.hide();" update="dtAttachment"
+						  	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" 
+						  	mode="advanced" sizeLimit="1000000" 
+		            		allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+							invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			            	fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.confirm']}" 
+		   					label="#{lbl['lbl.btn.browse']}"/>	            	
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:dialog>	
 	</p:panel>
 </ui:composition>	
