@@ -165,12 +165,13 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		styleClass="ppDropDownWidthM">
+		        		styleClass="ppDropDownWidthM" id="somCountry" required="#{!empty param['disableValidation']}">
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profilePersonalizationBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
 						<p:ajax event="change" update="somStateC, somDivisionC, somDistrictC, somCityC" />
-                   </p:selectOneMenu>
+                    </p:selectOneMenu>
+                    <p:message id="somCountryMsg" for="somCountry" display="icon" />
                  </td>	  
                  <th></th>
                  <td></td>
@@ -180,8 +181,11 @@
   					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressone']}" />
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" 
-			    		styleClass="ppDisplayTextL" maxlength="35"/></td>	
+			    <td>
+			    	<p:inputText id="itUserAdd1" value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" 
+			    		styleClass="ppDisplayTextL" maxlength="35" required="#{!empty param['disableValidation']}"/>
+			    	<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />	
+	    		</td>	
 			    <th></th>
                 <td></td>                    
             </tr>
@@ -211,8 +215,12 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	 
-		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
-		    			styleClass="ppDisplayTextM"  maxlength="10" /></td>	
+		    	<td>
+		    		<p:inputText id="itPostcode" required="#{!empty param['disableValidation']}" 
+		    			value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
+		    			styleClass="ppDisplayTextM"  maxlength="10" />
+	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
+    			</td>	
 		    	<th></th>
                	<td></td>
 		    </tr>			
@@ -222,10 +230,9 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 		        <td>
-		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM"
+		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId}" >
-		        		
 					   	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 					   	<f:selectItems
 						  value="#{profilePersonalizationBackingBean.getStateList(profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId)}" 
@@ -235,6 +242,7 @@
 					  		profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}" 
 					  		update="somDistrictC, somDivisionC, somCityC" />
 			       </p:selectOneMenu>
+			       <p:message id="somStateCMsg" for="somStateC" display="icon" />
 		       	</td>						
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.division']}" />
@@ -243,12 +251,14 @@
 		        <td>
 		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDivision.divisionId}" 
+		        		required="#{!empty param['disableValidation'] and profileManagementBackingBean.managedBean.divisionFlagC}"
 		        		styleClass="ppDropDownWidthM"> 
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					 	<f:selectItems
 						  value="#{profilePersonalizationBackingBean.getDivisionList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}" 
 						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>     
 				    </p:selectOneMenu>
+				    <p:message id="somDivisionCMsg" for="somDivisionC" display="icon" />
 			    </td>
 			</tr>    	
 			<tr>
@@ -257,7 +267,8 @@
 	            	<p:outputLabel value="*" styleClass="mandatory" />
             	</th> 
 		        <td>
-		        	<p:selectOneMenu id="somDistrictC" disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null}"
+		        	<p:selectOneMenu id="somDistrictC" required="#{!empty param['disableValidation']}"
+		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		              	styleClass="ppDropDownWidthM"> 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
@@ -267,13 +278,15 @@
 							itemValue="#{district.districtId}"/>
 						<p:ajax event="change" update="somCityC"/>
 				   </p:selectOneMenu>
+				   <p:message id="somDistrictCMsg" for="somDistrictC" display="icon" />
 			    </td>	
 			    <td>
 			    	<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.citytown']}" />
 			    	<p:outputLabel value="*" styleClass="mandatory" />
 		    	</td>
 		        <td>
-		        	<p:selectOneMenu id="somCityC" disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
+		        	<p:selectOneMenu id="somCityC" required="#{!empty param['disableValidation']}"
+		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCity.cityId}"
     					styleClass="ppDropDownWidthM"> 
 				        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
@@ -281,7 +294,8 @@
 							value="#{profilePersonalizationBackingBean.getCityList(profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId)}"
 							var="city" itemLabel="#{city.cityName}"
 							itemValue="#{city.cityId}"/>
-				   </p:selectOneMenu>
+				    </p:selectOneMenu>
+				   	<p:message id="somCityCMsg" for="somCityC" display="icon" />
 			    </td>	
 			    <th></th>
       			<td></td>
@@ -292,34 +306,54 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 			    <td>
-			    	<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" 
-			    		styleClass="ppDisplayTextM"  maxlength="80"/>
+			    	<p:inputText id="itEmail" required="#{!empty param['disableValidation']}"
+			    		value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" 
+			    		styleClass="ppDisplayTextM" maxlength="80">
+			    		<f:validateRegex disabled="#{empty param['disableValidation']}"
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+		    		</p:inputText>
 		    		&#160;&#160;   
 	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
 		                   value="/css/images/design/tooltips.png" />
 					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itEmailMsg" for="itEmail" display="icon" />
 		    	</td>
 			    <th></th>
                	<td></td>
 			</tr>    
 			<tr>   
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" 
-			    		styleClass="ppDisplayTextM"  maxlength="12"/></td> 	
+			    <td>
+			    	<p:inputText id="itTelNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" 
+			    		styleClass="ppDisplayTextM"  maxlength="12">
+			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+		    		<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
+	    		</td> 	
 			    <th></th>
                	<td></td>
 			</tr>    		     			    		 			   
 			<tr>    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" 
-			    		styleClass="ppDisplayTextM" maxlength="12"/></td>
+			    <td>
+			    	<p:inputText id="itFaxNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" 
+			    		styleClass="ppDisplayTextM" maxlength="12">
+			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+		    		<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
+	    		</td>
 			    <th></th>
                	<td></td>
 		    </tr>     
 			<tr>    			    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
-			    		styleClass="ppDisplayTextM"  maxlength="12" /></td>
+			    <td>
+			    	<p:inputText id="itMobileNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
+			    		styleClass="ppDisplayTextM"  maxlength="12">
+			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+		    		</p:inputText>
+		    		<p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
+	    		</td>
 			    <th></th>
                	<td></td>		    			    			    			    			    		    			    			                                          			                     		                                                 
             </tr>		    			                     

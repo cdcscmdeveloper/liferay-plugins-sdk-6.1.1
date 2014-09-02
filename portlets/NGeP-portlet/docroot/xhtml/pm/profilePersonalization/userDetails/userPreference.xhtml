@@ -15,7 +15,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>	        
-          			<p:selectOneMenu styleClass="ppDropDownWidthM"  value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
+          			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
+          				value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
           				<!-- <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> -->  
 	            		<f:selectItems value="#{profilePersonalizationBackingBean.getLanguageList()}" 
 	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
@@ -23,7 +24,8 @@
 	              	&#160;&#160;   
 	                <p:graphicImage id="giLang" library="ep/images/design" name="tooltips.png"
 		                   value="/resources/ep/images/design/tooltips.png" />
-					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" />                                                        
+					<p:tooltip for="giLang" value="#{lbl['lbl.pm.profiles.preferences.notification.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="somPreLanguageMsg" for="somPreLanguage" display="icon" />                                                                
 				</td>
 			</tr>
 			<tr>
@@ -32,12 +34,17 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" 
-						size="5" maxlength="2"/>&#160;
+					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}"
+						value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" 
+						size="5" maxlength="2">
+						<f:validateLongRange minimum="1"  disabled="#{empty param['disableValidation']}"/>
+					</p:inputText>
+					&#160;
 					<h:outputText value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" />&#160;
                 	<p:graphicImage id="giDay" library="ep/images/design" name="tooltips.png"
 								value="/resources/ep/images/design/tooltips.png" />
 					<p:tooltip for="giDay" value="#{lbl['lbl.pm.profiles.preferences.notificationremoval.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itPreNotifyDayMsg" for="itPreNotifyDay" display="icon" />
 				</td>
 			</tr>
 		</table>
