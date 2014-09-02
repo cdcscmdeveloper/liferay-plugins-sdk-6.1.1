@@ -630,6 +630,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
 			}
 			
+			List<CmZonalPromotionTierPricing> zonalPromotionTierPricings = this.getManagedBean()
+					.getSelectedMaintainItem().getCmZonalPromotionTierPricings();
+			if (zonalPromotionTierPricings != null && zonalPromotionTierPricings.size() > 0) {
+				for (CmZonalPromotionTierPricing cmPricing : zonalPromotionTierPricings) {
+					if (cmPricing.getParentPrice() != null) {
+						cmPricing.getParentPrice().setStandardDisabled(true);
+						cmPricing.setStandardDisabled(true);
+					}
+				}
+			}
+	
 			List<CmPromotionTierPricing> cmList = this.getManagedBean()
 					.getSelectedMaintainItem().getCmPromotionTierPricings();
 			if (cmList != null && cmList.size() > 0) {
