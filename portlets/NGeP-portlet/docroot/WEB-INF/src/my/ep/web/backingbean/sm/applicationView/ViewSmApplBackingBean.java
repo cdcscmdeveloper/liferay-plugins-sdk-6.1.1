@@ -82,7 +82,7 @@ public class ViewSmApplBackingBean extends
 	private int currentTab;
 	private int outputTab;
 	private StreamedContent file;
-	private String redirect = "REVIEW APPLICATION LANDING PAGE";
+	private String redirect = "REVIEW APPLICATION TESTING PAGE";
 
 	public ViewSmApplBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
