@@ -12,27 +12,24 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(false)}" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.completeTechNonGovCompanyExpAction}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveTechNonGovCompanyExpAction(true)}" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
 			<table>
@@ -43,86 +40,111 @@
 			<p:dataTable id="technongovtid" var="technongovt"
 				value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 				rowKey="#{technongovt}" rowIndexVar="rowIndex"
-				selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}">
+				selection="#{supplierProposalDetailBackingBean.managedBean.selectedPRPExperiences}"
+				rows="10">
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<ac:paginator for="technongovtid" />
 
-				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.agencyname']}"/>
+					</f:facet>
 					<h:outputText value="#{technongovt.clientName}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.clientName}" size="20" required="true"
+					<p:inputText id="clientName" value="#{technongovt.clientName}" 
+						size="20" maxlength="50" required="true"
+						label="#{lbl['lbl.sc.sp.agencyname']}"
 						rendered="#{technongovt.brandNew eq true}" />
+					<p:message id="clientNameMsg" for="clientName" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.contracttitle']}"/>
+					</f:facet>
 					<h:outputText value="#{technongovt.contractTitle}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.contractTitle}" size="20" required="true"
+					<p:inputText id="contractTitle" value="#{technongovt.contractTitle}" 
+						size="20" maxlength="50" required="true"
+						label="#{lbl['lbl.sc.sp.contracttitle']}"
 						rendered="#{technongovt.brandNew eq true}" />
+					<p:message id="contractTitleMsg" for="contractTitle" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.contractno']}"/>
+					</f:facet>
 					<h:outputText value="#{technongovt.contractNo}"
 						rendered="#{technongovt.brandNew eq false}" />
-					<p:inputText value="#{technongovt.contractNo}" size="20" required="true"
+					<p:inputText id="contractNo" value="#{technongovt.contractNo}" 
+						size="20" maxlength="30" required="true"
+						label="#{lbl['lbl.sc.sp.contractno']}"
 						rendered="#{technongovt.brandNew eq true}" />
+					<p:message id="contractNoMsg" for="contractNo" display="icon" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.effectivedt']}"/>
+					</f:facet>
 					<h:outputText value="#{technongovt.effectiveDate}"
 						rendered="#{technongovt.brandNew eq false}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-					<p:calendar value="#{technongovt.effectiveDate}" showOn="button"
+					<p:calendar id="effectiveDate" value="#{technongovt.effectiveDate}" showOn="button"
 						navigator="true" size="15" mindate="01/01/2008" maxdate="#{supplierProposalDetailBackingBean.managedBean.nonFedEffMaxDate}"
-						rendered="#{technongovt.brandNew eq true}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						required="true"
+						label="#{lbl['lbl.sc.sp.effectivedt']}"
+						rendered="#{technongovt.brandNew eq true}">
 						<p:ajax event="dateSelect" process="@this" partialSubmit="true"
 							update="@([id$=expDatePanelGroupID],[id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
 							listener="#{supplierProposalDetailBackingBean.effectiveDateSelectListener(technongovt)}" />
-
 					</p:calendar>
+					<p:message id="effectiveDateMsg" for="effectiveDate" display="icon" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
-
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.expirydt']}"/>
+					</f:facet>
 					<h:panelGroup id="expDatePanelGroupID">
-
 						<h:outputText value="#{technongovt.expiryDate}"
 							rendered="#{technongovt.brandNew eq false}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
-						<p:calendar value="#{technongovt.expiryDate}" showOn="button"
+						<p:calendar id="expiryDate" value="#{technongovt.expiryDate}" showOn="button"
 							navigator="true"
 							mindate="#{supplierProposalDetailBackingBean.managedBean.nonFedMinDate}"
-							size="15" rendered="#{technongovt.brandNew eq true}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							required="true"
+							label="#{lbl['lbl.sc.sp.expirydt']}"
+							rendered="#{technongovt.brandNew eq true}">
 							<p:ajax event="dateSelect"
 								listener="#{supplierProposalDetailBackingBean.expiryDateSelectListener(rowIndex)}"
 								update="@([id$=totalcontractyrs],[id$=contractPeriodPanelGropID])"
 								process="@this" partialSubmit="true" />
 						</p:calendar>
-
+						<p:message id="expiryDateMsg" for="expiryDate" display="icon" />
 					</h:panelGroup>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
 
 					<h:panelGroup id="contractPeriodPanelGropID">
 						<h:outputText style="float:right"
-							value="#{technongovt.contractPeriod/12}"
-							rendered="#{technongovt.brandNew eq false}">
+							value="#{technongovt.contractPeriod/12}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 						</h:outputText>
-						<p:inputText value="#{technongovt.contractPeriod/12}" size="20" style="text-align:right"
-							 disabled="true"
-							rendered="#{technongovt.brandNew eq true}">
-							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-						</p:inputText>
 					</h:panelGroup>
 
 				</p:column>
@@ -131,7 +153,8 @@
 					<h:outputText value="#{technongovt.remark}"
 						rendered="#{technongovt.brandNew eq false}" />
 					<p:inputTextarea value="#{technongovt.remark}"
-						rendered="#{technongovt.brandNew eq true}" rows="3" cols="20" />
+						rows="3" cols="20" maxlength="300"
+						rendered="#{technongovt.brandNew eq true}" />
 				</p:column>
 
 			</p:dataTable>
