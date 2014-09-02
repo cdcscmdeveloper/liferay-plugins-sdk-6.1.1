@@ -422,6 +422,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void flManualDeliveryAddr() {
+		retrieveCountryList();
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
 		getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
@@ -2173,7 +2174,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(selectedTabIndex==1){
 			if(getManagedBean().getSelectedDelAddr()==null) { 
 				addPurchsedItems();
-				retrieveCountryList();
 			}
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 		}
