@@ -63,7 +63,7 @@
 			 </p:fileUpload>
 		 </p:dialog>
 		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="350"
-		    header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title" resizable="false"  height="95">
+		    header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title" resizable="false"  height="95">
 			 <h:panelGrid columns="3">
 				 <p:graphicImage library="ep/images/design" name="exclamation.png"
 					 value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
@@ -72,9 +72,9 @@
 				     styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?" />
 			 </h:panelGrid>
 			 <div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept"  update=":form:loaContentDt" 
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"  update=":form:loaContentDt" 
 				    process="@form"  actionListener="#{amendmentBackingBean.deleteLoaContents()}" onclick="dlgDocumentDel.hide();" />
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" 
+				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 				    icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
 			</div>
 		</p:dialog>

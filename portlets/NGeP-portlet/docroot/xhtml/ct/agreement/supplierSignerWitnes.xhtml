@@ -46,9 +46,9 @@
               styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:agSupplierSigner" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:agSupplierSigner" process="@form" 
 				actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
         <h:panelGrid style="width:100%">
@@ -83,9 +83,9 @@
               styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" process="@form" 
 				actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
        </p:panel>

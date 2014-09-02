@@ -10,7 +10,7 @@
 			width: 80px;
 		}
 	</style>
-	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true" toggleSpeed="500"
+	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}" toggleable="true" toggleSpeed="500"
 		rendered="#{contractDetailsBackingBean.managedBean.ctContract.bondReq and !contractDetailsBackingBean.managedBean.directPurchase}">
 		 <p:dataTable id="tableBond" var="varBond"
 			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
@@ -18,14 +18,14 @@
 			  <ac:paginator for="tableBond" />
 			  <p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="Select" rendered="#{contractDetailsBackingBean.managedBean.updateContract}" />
-					<p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}" />
-					<p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" />
-					<p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" />
-					<p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" />
-					<p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
-					<p:column headerText="Attachment" />
-					<p:column headerText="Status" />
+					<p:column headerText="#{lbl['lbl.btn.select']}" rendered="#{contractDetailsBackingBean.managedBean.updateContract}" />
+					<p:column headerText="#{lbl['lbl.ct.ref.no']}" />
+					<p:column headerText="#{lbl['lbl.ct.financial.inst']}" />
+					<p:column headerText="#{lbl['lbl.ct.amount']}" />
+					<p:column headerText="#{lbl['lbl.ct.effective.date']}" />
+					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" />
+					<p:column headerText="#{lbl['lbl.txt.attachment']}" />
+					<p:column headerText="#{lbl['lbl.ct.status']}" />
 				</p:row>
 			 </p:columnGroup>
 			<p:column selectionMode="multiple" style="width:2%;" disabledSelection="true"
@@ -48,7 +48,7 @@
 			
 			<p:column style="width:12%;">
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23"
-				    disabled="#{varBond.performanceBondId != null}" style="width:90px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
+				    disabled="#{varBond.performanceBondId != null}" style="width:90px;" label="#{lbl['lbl.ct.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -87,17 +87,17 @@
 			<p:column style="width:10%;">
 				<p:selectOneMenu id="rStatus" value="#{varBond.recordStatusFlg}"
 					disabled="#{varBond.performanceBondId != null}" style="width:80px;">
-					<f:selectItem itemLabel="Active" itemValue="1" />
-					<f:selectItem itemLabel="Inactive" itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.active']}" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.ct.inactive']}" itemValue="0" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<c:if test='#{contractDetailsBackingBean.managedBean.updateContract}'>
-				<p:commandButton value="Add" process="@form" 
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
 				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" />
 				<p:spacer width="1" />
-				<p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();" />
 			</c:if>
 		</div>
 		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false"
@@ -107,12 +107,12 @@
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{contractDetailsBackingBean.fileUpload}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 				update=":form:tableBond">
 			</p:fileUpload>
 		</p:dialog>
 		<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel"
-			header="Delete Confirmation" styleClass="screen-title"
+			header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title"
 			resizable="false" modal="true" width="350" height="95">
 			<h:panelGrid columns="3">
 				<p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -123,11 +123,11 @@
 					value="Are you sure you want to delete this record?" rows="2" cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="Yes" icon="ui-icon-accept"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
 					update="tableBond" process="@form"
 					actionListener="#{contractDetailsBackingBean.delBondDetails()}"
 					onclick="dlgPerformDel.hide();" />
-				<p:commandButton value="No" icon="ui-icon-reject"
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
 					onclick="dlgPerformDel.hide();" type="button" />
 			</div>
 		</p:dialog>

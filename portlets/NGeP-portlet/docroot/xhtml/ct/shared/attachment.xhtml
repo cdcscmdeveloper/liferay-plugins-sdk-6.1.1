@@ -9,7 +9,7 @@
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadDlg.show();return false;" icon="iconAttachment" 
-					update="lampiran" value="Attach file(s)" />
+					update="lampiran" value="#{lbl['lbl.ct.upload.attach.files']}" />
 			</td>
 		</tr>
 		<tr>
@@ -23,8 +23,8 @@
 							<td width="5"></td>
 							<td>
 								<h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
-								<h:outputText value="#{attachFile.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+								<h:outputText value="#{attachFile.createdDate}">									
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 								</h:outputText>
 							</td>
 						</tr>
@@ -50,7 +50,7 @@
 			fileUploadListener="#{ctBackingBean.fileUpload}"
 			mode="advanced" id="upload"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="lampiran" >
 		</p:fileUpload> 
 	</p:dialog>		

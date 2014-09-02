@@ -69,7 +69,7 @@
              </p:outputPanel>
          </p:panel>      
 	     <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" modal="true" width="350"
-	         header="Delete Confirmation"  styleClass="screen-title"  resizable="false"  height="95">  
+	         header="#{lbl['lbl.ct.dialog.cofirm.header']}"  styleClass="screen-title"  resizable="false"  height="95">  
              <h:panelGrid columns="3">
                   <p:graphicImage library="ep/images/design" name="exclamation.png"
 			          value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -77,12 +77,12 @@
                      <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" styleClass="ui-inputtextarea"/>
              </h:panelGrid>
              <div class="ppRightBtn">
-		            <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:tableClause" 
+		            <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tableClause" 
 		                 process="@form"  actionListener="#{contractDetailsBackingBean.deleteClauseDetails()}" onclick="dlgDeduction.hide();"/>
-			        <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
+			        <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDeduction.hide();" type="button" />
 		      </div>
         </p:dialog>  
-	    <p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
+	    <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		  <table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

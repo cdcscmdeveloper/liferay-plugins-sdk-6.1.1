@@ -9,26 +9,26 @@
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth250,columnWidth250">
-		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
+		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 			  <p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
-			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
+			  <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 		 	  <p:inputText for="physicalNo" value="#{terminationBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" disabled="true" />				
-		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		      <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effective.date']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true" 
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
-			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.expiryDate']}" />
+			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.expiry.date']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
-			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
+			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signedDate']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
+			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
 			   rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
-			<p:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
+			<p:outputLabel id="dperiod" value="#{lbl['lbl.ct.delivery.period']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
 				   value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
@@ -40,7 +40,7 @@
 			</h:panelGrid>	
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
-			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.agstatus']}"
+			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.agreement.status']}"
 			 	rendered="#{terminationBackingBean.managedBean.ctContract.agreement and
 			    			terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					 	 	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -65,7 +65,7 @@
 							terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.contract.title']}" />
 			  </div>
 			</h:panelGroup>
 		    <h:panelGrid>
@@ -74,7 +74,7 @@
 				rows="3" style="width:170px;margin-bottom: 5px;" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.agstatus']}"
+			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.agreement.status']}"
 				rendered="#{terminationBackingBean.managedBean.ctContract.agreement and
 			 			 	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					 	 	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -107,7 +107,7 @@
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
-		     <p:outputLabel value="#{lbl['lbl.ct.feeExmp']}"/>
+		     <p:outputLabel value="#{lbl['lbl.ct.fee.exmption']}"/>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
@@ -131,7 +131,7 @@
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.pbexemption']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:1000px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
@@ -330,19 +330,19 @@
 		        <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgTerminationReason.show()">
 			  </p:commandButton> 
 	   	  </div>
-	   	   <p:dialog id="dlgTerminationReason" widgetVar="dlgTerminationReason" header="Delete Confirmation" styleClass="screen-title"  
+	   	   <p:dialog id="dlgTerminationReason" widgetVar="dlgTerminationReason" header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title"  
             resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
                <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			   <p:spacer width="10"/>
-               <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
+               <p:inputTextarea value="Are you sure you want to delete this record?" rows="2" cols="48" 
                   styleClass="ui-inputtextarea"></p:inputTextarea>
              </h:panelGrid>
              <div class="ppRightBtn">
-		        <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="terminationReason" process="@form" 
+		        <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="terminationReason" process="@form" 
 			      action="#{terminationBackingBean.deleteTerminateReason}" onclick="dlgTerminationReason.hide();"/>
-			    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgTerminationReason.hide();" type="button" />
+			    <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgTerminationReason.hide();" type="button" />
 		    </div>
          </p:dialog>
      </p:panel>

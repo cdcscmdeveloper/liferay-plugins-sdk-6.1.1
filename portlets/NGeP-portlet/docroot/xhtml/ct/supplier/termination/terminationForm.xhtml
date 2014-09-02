@@ -25,14 +25,14 @@
 			<table style="width: 99%; margin-left: 25px;" class="header-info">
 				<tr style="margin-button: 10px;">
 				     <td>	
-							<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+							<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 					</td>
 					<td>
 							<p:inputText size="20" disabled="true"
 								value="#{supplierBackingBean.managedBean.ctContract.loaNo}"  />	
 					</td>		
 					<td>
-							<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+							<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 					</td>
 					<td>
 							<p:inputText size="20" disabled="true"
@@ -66,17 +66,17 @@
 				      <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
 				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
 			         </p:selectOneMenu></td>
-		         <td style="width:20%;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
+		         <td style="width:20%;">	<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
 			               value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"/>	</td>
 		   </tr>
 		   <tr>		
-			     <td><p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" /></td>
+			     <td><p:outputLabel value="#{lbl['lbl.ct.effective.date']}" /></td>
 			     <td> <p:inputText disabled="true" style="width:170px;" 
 			            value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.effDate)}"/> 
 			          
 			          </td>
-			     <td><h:outputLabel value="#{lbl['lbl.ct.expiryDate']}" /></td>
+			     <td><h:outputLabel value="#{lbl['lbl.ct.expiry.date']}" /></td>
 			     <td><p:inputText disabled="true" style="width:170px;" 
 			          value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.expDate)}" >
 			         </p:inputText>	</td>
@@ -85,7 +85,7 @@
 			    <td>		
 			        
 		               <div style="height: 40px; vertical-align: top;">
-			               <p:outputLabel  value="Contract Title" />
+			               <p:outputLabel  value="#{lbl['lbl.ct.contract.title']}"/>
 			           </div>
 		    
 			   </td>
@@ -100,7 +100,7 @@
 		  </table>
 		</p:outputPanel>
 		 </p:panel>
-          <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
+          <p:panel id="sbd" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
            <table style="width: 100%">
                   <tr>
                       <td style="width:15%;">   <p:outputLabel value="EP No." />  </td>
@@ -120,28 +120,28 @@
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"
                                disabled="true" style="width:218px;"/> </td>
-                     <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel']}" />  </td>       
+                     <td> <p:outputLabel  value="#{lbl['lbl.ct.tel']}" />  </td>       
                      <td> <p:inputText disabled="true"  style="width:170px;" /></td>
                     
                 </tr>  
                  <tr>  
-                      <td>  <p:outputLabel   value="#{lbl['lbl.ct.su.tel.hp']}"/> </td>
+                      <td>  <p:outputLabel   value="#{lbl['lbl.ct.mobile']}"/> </td>
                       <td>  <p:inputText  disabled="true" style="width:170px;" /></td>       
-                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/></td>       
+                      <td> <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/></td>       
                       <td> <p:inputText   disabled="true" style="width:170px;" /> </td>   
                  </tr>
                       <tr>
                          <td>       
                              <h:panelGroup>
 			         	         <div style="height: 40px; vertical-align: top">
-					               <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
+					               <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.address']}" />
 			                     </div>
 			                 </h:panelGroup></td>
 			              <td>
 			                   <h:panelGrid>
 				                  <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" cols="31"   />
 			                   </h:panelGrid></td>
-			                 <td style="width:10%;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
+			                 <td style="width:10%;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.email']}"/>  </td>
                              <td valign="top">  <p:inputText   disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>

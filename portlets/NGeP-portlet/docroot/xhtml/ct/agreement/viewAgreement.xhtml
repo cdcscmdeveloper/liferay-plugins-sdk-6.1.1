@@ -8,34 +8,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
    <p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
-			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />
-			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
 			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
-			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.type']}" />
 			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode}" style="width:170px;" />					
-			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			<p:inputText style="width:170px;" disabled="true"/>				
-			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 			<p:calendar style="width:170px;"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"
 				id="popupCal1" showOn="button" />
-			<p:outputLabel value="#{lbl['lbl.ct.expiryDate']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
 			<p:calendar style="width:170px;"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"
 				id="popupCal" showOn="button" />							
-			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.amount']}" />
 			<p:inputText
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractAmount}"
 				size="8" disabled="true" />			
-			<p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.delivery.period']}" />
 			<h:panelGrid columns="2">
 				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
 				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
 			</h:panelGrid>
 			 <h:panelGroup>
 		      <div style="height: 30px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.contract.title']}" />
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>

@@ -44,7 +44,7 @@
 			  partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"/>				
 		</div>
 		
-		<p:dialog id="delCtPersonDlg" header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
+		<p:dialog id="delCtPersonDlg" header="#{lbl['lbl.ct.dialog.cofirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delCtPersonDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -52,9 +52,9 @@
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=contactPersonDt])"
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=contactPersonDt])"
 		       process="@all" actionListener="#{centralContractBackingBean.deleteContactPerson()}" onclick="delCtPersonDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delCtPersonDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delCtPersonDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  		
         
@@ -95,7 +95,7 @@
 			    </tr>
 			</table>
 		 </div>
-		<p:dialog id="delExemptedOrgDlg" header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
+		<p:dialog id="delExemptedOrgDlg" header="#{lbl['lbl.ct.dialog.cofirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delExemptedOrgDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -103,9 +103,9 @@
               <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=exemptedOrgDt])"
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=exemptedOrgDt])"
 		       process="@all" actionListener="#{centralContractBackingBean.deleteExemptedOrg()}" onclick="delExemptedOrgDlg.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delExemptedOrgDlg.hide();" type="button" />
+			 <p:commandButton value="#{lbl['llbl.btn.no']}" icon="ui-icon-reject" onclick="delExemptedOrgDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  	
         

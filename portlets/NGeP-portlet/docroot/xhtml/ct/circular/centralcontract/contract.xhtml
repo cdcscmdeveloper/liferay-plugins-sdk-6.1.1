@@ -62,7 +62,7 @@
 		</div>
 
 		<p:dialog id="delCtContractDlg"
-			header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false"
+			header="#{lbl['lbl.ct.dialog.cofirm.header']}" resizable="false"
 			styleClass="screen-title" widgetVar="delCtContractDlg" modal="true"
 			width="350" height="95">
 			<h:panelGrid columns="3">
@@ -74,12 +74,12 @@
 					value="Are you sure you want to delete this record?" />
 			</h:panelGrid>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					icon="ui-icon-accept" update="@([id$=contractListPnl])"
 					process="@all"
 					actionListener="#{centralContractBackingBean.deleteCircularContract()}"
 					onclick="delCtContractDlg.hide();" />
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}"
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					icon="ui-icon-reject" onclick="delCtContractDlg.hide();"
 					type="button" />
 			</div>
@@ -228,7 +228,7 @@
 			widgetVar="contractDlg" modal="true" width="750" height="400">
 			<p:panel id="listOfContract">
 				<h:panelGrid columns="6">
-					<h:outputText value="#{lbl['lbl.ct.cno']}" />
+					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
 					<p:inputText id="contractNo"
 						value="#{centralContractBackingBean.managedBean.searchContractNo}"
 						maxlength="17" />
@@ -276,7 +276,7 @@
 		</p:dialog>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">

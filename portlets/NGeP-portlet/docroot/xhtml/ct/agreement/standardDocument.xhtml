@@ -83,7 +83,7 @@
 		      <p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{agreementBackingBean.downloadAll()}"
 		        	icon="ui-icon-download" process="@form"/> 
 	   </div>
-	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" 
+	    <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel" header="#{lbl['lbl.ct.dialog.cofirm.header']}" 
 	      styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -93,9 +93,9 @@
                  styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?"/>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:contentTable" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:contentTable" process="@form" 
 				actionListener="#{agreementBackingBean.delAgreementContents()}" onclick="dlgDocumentDel.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
+			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDocumentDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 	</p:panel>

@@ -54,7 +54,7 @@
 		       <p:spacer width="1"/>
              <p:commandButton value="Delete" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
 		 </div>
-		  <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
+		  <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title"  
                resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -64,9 +64,9 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update=":form:dataTable" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:dataTable" process="@form" 
 				actionListener="#{contractTemplateBackingBean.deleteTemplate()}" onclick="dlgDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 		 </p:panel>

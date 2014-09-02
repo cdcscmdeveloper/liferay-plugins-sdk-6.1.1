@@ -61,7 +61,7 @@ public  class CtTabSideMenus {
 		   
 		   if(menuPaymentTracking == null){
 			   menuPaymentTracking =  new ArrayList<String>(Arrays.asList(
-					   ResourceBundleUtils.getMessage("lbl.ct.menu.advPaymentTracking", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					   ResourceBundleUtils.getMessage("lbl.ct.menu.adv.payment.tracking", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
 		   if(menuSetting == null){

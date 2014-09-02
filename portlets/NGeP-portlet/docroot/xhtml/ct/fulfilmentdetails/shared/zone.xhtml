@@ -5,10 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="Zone Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.ct.panel.zone']}" toggleable="true">
 		<table style="width: 100%">
 		  <tr>
-			  <td style="width: 105px"><p:outputLabel value="Location Level" /></td>
+			  <td style="width: 105px"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
 				  <td>
 				  		<p:inputText id="locLevels2" disabled="true" 
 				  			value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.contractVer.ctContract.locationLevel)}" />
@@ -20,7 +20,7 @@
  		    var="zoneTree">
  		    
  		    <p:column style="width:70%;">
-            <f:facet name="header">  Location Name </f:facet>
+            <f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
               <p:treeNode type="zone">
                   <h:outputText value="#{zoneTree.zone}"/>
               </p:treeNode>
@@ -35,7 +35,7 @@
         </p:column>
  
         <p:column style="width:30%;">
-            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" /> Delivery Term </f:facet>
+            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />#{lbl['lbl.ct.delivery.term']}</f:facet>
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true"
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="Delivery Term" />
@@ -49,13 +49,13 @@
       </p:treeTable>
  	 </h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.zoneRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -67,7 +67,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

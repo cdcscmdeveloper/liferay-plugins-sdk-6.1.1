@@ -31,13 +31,13 @@
 	          <table style="width: 100%">
 			   <tr>
 				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
 					#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}
 				</td>
 				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.cno']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
 					#{supplierBackingBean.managedBean.ctContract.contractNo}
@@ -77,20 +77,20 @@
 				</h:panelGrid>
 			     <p:inputText value="#{supplierBackingBean.managedBean.ctContract.contractNo}" style="width:200px;" disabled="true"
 			       rendered="#{supplierBackingBean.managedBean.taskId != null}"/>
-			     <p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+			     <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
 		         <p:inputText disabled="true" style="width:200px;"
 			        value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}"/>	
-			     <p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+			     <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />			           
 			     </p:inputText>
-			     <h:outputLabel value="#{lbl['lbl.ct.expiryDate']}" />
+			     <h:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
 			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 			     	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			     </p:inputText>    
 		         <h:panelGroup>
 		            <div style="height: 40px; vertical-align: top;">
-			            <p:outputLabel  value="#{lbl['lbl.ct.ctitle']}"/>
+			            <p:outputLabel  value="#{lbl['lbl.ct.contract.title']}"/>
 			        </div>
 		        </h:panelGroup>
 		        <h:panelGrid>
@@ -100,15 +100,15 @@
 			 </h:panelGrid>
 		</p:outputPanel>
 	</p:panel>
-    <p:panel id="bankId" header="#{lbl['lbl.ct.su.panel.bankInfo']}"  toggleable="true"  toggleSpeed="500">
+    <p:panel id="bankId" header="#{lbl['lbl.ct.panel.bank.info']}"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20"
           styleClass="top-aligned-columns">
             <h:panelGrid columns="2" style="float:right;">
 			      <p:outputLabel value="*" styleClass="mandatory" />
-                  <p:outputLabel  value="#{lbl['lbl.ct.bank.banckac']}" />
+                  <p:outputLabel  value="#{lbl['lbl.ct.bank.account.name']}" />
              </h:panelGrid>
              <h:panelGrid id="menuBankId" columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
-              <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;" label="#{lbl['lbl.ct.bank.banckac']}"
+              <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;" label="#{lbl['lbl.ct.bank.account.name']}"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
 			     <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 			     <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
@@ -135,7 +135,7 @@
 		   </h:panelGrid>
         </h:panelGrid>
       </p:panel>
-	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.su.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
+	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
 	          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
              <p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /> 
@@ -152,23 +152,23 @@
              <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /> 
              <p:inputText disabled="true" style="width:230px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
-             <p:outputLabel  value="#{lbl['lbl.ct.su.tel']}" />
+             <p:outputLabel  value="#{lbl['lbl.ct.tel']}" />
              <p:inputText disabled="true"  style="width:200px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
              <p:outputLabel   value="Branch Name"/>
              <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
-             <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
+             <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
              <p:inputText   disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" /> 
              <h:panelGroup>
 			   <div style="height: 40px; vertical-align: top">
-			     <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
+			     <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.address']}" />
 			   </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
 				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" style="width:200px;" autoResize="false"  
 				     value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"/>
 			 </h:panelGrid>
-			 <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/> 
+			 <p:outputLabel  value="#{lbl['lbl.ct.email']}"/> 
 			 <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
 		</h:panelGrid>
 	 </p:panel>

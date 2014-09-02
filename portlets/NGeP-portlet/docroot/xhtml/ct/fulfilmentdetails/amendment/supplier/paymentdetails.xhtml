@@ -9,10 +9,10 @@
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 		  <h:panelGrid columns="2" style="float:right;">
 			 <p:outputLabel value="*" styleClass="mandatory" />
-			 <p:outputLabel value="Account No"/>
+			 <p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}"/>
 		 </h:panelGrid>
 		<h:panelGrid columns="2">
-		   <p:selectOneMenu id="accountNo"  style="width:180px; margin-bottom: 5px;" required="true" label="Account No"
+		   <p:selectOneMenu id="accountNo"  style="width:180px; margin-bottom: 5px;" required="true" label="#{lbl['lbl.ct.bank.account.name']}"
 			 value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
 			   <f:selectItem itemLabel="-Select One-" itemValue=""/>
 			   <f:selectItems value="#{amendmentBackingBean.populateBankAccountList}"/>

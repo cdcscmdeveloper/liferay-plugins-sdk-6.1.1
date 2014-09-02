@@ -38,7 +38,7 @@
 		    </div>
 		    
 		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
-		         header="#{lbl['lbl.ct.dialong.cofirm.header']}" resizable="false" modal="true" width="350" height="95">  
+		         header="#{lbl['lbl.ct.dialog.cofirm.header']}" resizable="false" modal="true" width="350" height="95">  
                
                  <h:panelGrid columns="3">
                       <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -49,9 +49,9 @@
                   </h:panelGrid>
                  
                   <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="meetingTable" 
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="meetingTable" 
 		                    process="@form"  action="#{amendmentBackingBean.delPbQccMeetingDetails}" onclick="dlgMeetingDetails.hide();"/>
-			           <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
+			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgMeetingDetails.hide();" type="button" />
 		           </div>
              </p:dialog>
       	</p:panel>

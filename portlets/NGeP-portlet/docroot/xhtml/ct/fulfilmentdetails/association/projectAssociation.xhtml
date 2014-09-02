@@ -103,7 +103,7 @@
 		
 		  <p:spacer height="4"/>
 		      <p:dialog id="dlgAssociateDel" widgetVar="dlgAssociateDel" styleClass="screen-title"
-		           header="#{lbl['lbl.ct.dialong.cofirm.header']}"  resizable="false" modal="true" width="350" height="95">  
+		           header="#{lbl['lbl.ct.dialog.cofirm.header']}"  resizable="false" modal="true" width="350" height="95">  
                    <h:panelGrid columns="3">
                        <p:graphicImage library="ep/images/design" name="exclamation.png"
 			                value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -111,9 +111,9 @@
                        <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48"  styleClass="ui-inputtextarea"/>
                    </h:panelGrid>
                    <div class="ppRightBtn">
-		                <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" process="@form" 
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
 		                     update=":form:associateSearch" action="#{associationBackingBean.deleteAssociation()}" onclick="dlgAssociateDel.hide();"/>
-			            <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgAssociateDel.hide();" type="button" />
+			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAssociateDel.hide();" type="button" />
 		          </div>
               </p:dialog>  
 	     </p:panel>

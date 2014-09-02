@@ -7,43 +7,43 @@
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		   <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
-		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
+		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 		      <p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"
 		     		action="#{agreementBackingBean.gotoContractView}" >
 					<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.contractVerId}" />
 		      </p:commandLink>
 			  <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
+				<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 			  </h:panelGrid> 
 			  <h:panelGrid columns="2">
 		    	<p:inputText id="contractPhysicalNo" for="physicalNo" value="#{agreementBackingBean.managedBean.ctContract.contractPhysicalNo}" style="width:170px;" 
-		    		maxlength="30"  required="true" label="#{lbl['lbl.ct.physicalNo']}" />
+		    		maxlength="30"  required="true" label="#{lbl['lbl.ct.physical.no']}" />
 		     	<p:message for="contractPhysicalNo" display="icon"/>
 		 	  </h:panelGrid>
-		 	  <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		 	  <p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effective.date']}" />
 			  <p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  </p:inputText>
-			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.expiryDate']}" />
+			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.expiry.date']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
 				value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  </p:inputText>
-			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
+			  <p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
 			  <p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signedDate']}"  rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" />
+			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}"  rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy"  value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedDate}"
 			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;">
 			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>			
 			<h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.ctitle']}" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.contract.title']}" />
 			</div>
 			</h:panelGroup>
 		    <h:panelGrid>
@@ -51,7 +51,7 @@
 				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
 				      rows="3" disabled="true" style="width:170px;margin-bottom: 5px;" autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus" value="#{lbl['lbl.ct.agstatus']}" 
+			<p:outputLabel id="astatus" value="#{lbl['lbl.ct.agreement.status']}" 
 			   rendered="#{agreementBackingBean.managedBean.ctContract.agreement}" />
 		
 			<p:inputText for="astatus" style="width:170px;" disabled="true" 
@@ -68,7 +68,7 @@
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
-		     <p:outputLabel value="#{lbl['lbl.ct.feeExmp']}"/>
+		     <p:outputLabel value="#{lbl['lbl.ct.fee.exmption']}"/>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
@@ -93,7 +93,7 @@
 			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.pbexemption']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
 		   </h:panelGrid>
 	    </h:panelGrid>
 	</h:panelGrid>

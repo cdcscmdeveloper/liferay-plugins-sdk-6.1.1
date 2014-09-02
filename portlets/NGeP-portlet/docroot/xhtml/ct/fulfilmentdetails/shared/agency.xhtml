@@ -8,42 +8,41 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	
-   <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"    toggleable="true"  toggleSpeed="500">
+   <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
      <div style="overflow-x:auto">
        <p:dataTable id="tableAgencyDetails" var="agencyData" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
              <ac:paginator for="tableAgencyDetails"/>
              <p:ajax event="rowSelect" update=":form:agencyId" />
              <p:column selectionMode="multiple" style="width:2%;" />
-             <p:column headerText="#{lbl['lbl.ct.agn.model.min']}">
+             <p:column headerText="#{lbl['lbl.ct.ministry']}">
 				<h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
-			  <p:column headerText="#{lbl['lbl.ct.agn.ptj']}">
+			  <p:column headerText="#{lbl['lbl.ct.ptj']}">
 				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
 				<p:spacer width="5"/>
 				<p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
 					rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}"
 					action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
 					<p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address"
-						title="#{lbl['lbl.ct.agn.table.da']}" style="margin-bottom: -5px;" />
+						title="#{lbl['lbl.ct.delivery.address']}" style="margin-bottom: -5px;" />
 				</p:commandLink>
 			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.agn.tree.ptj.amount']}" style="width:130px;">
+			 <p:column headerText="#{lbl['lbl.ct.ceiling.amount']}" style="width:130px;">
 				<p:inputText value="#{agencyData.ceilingAmount}"  required="true"
-				     maxlength="23"  styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.agn.tree.ptj.amount']}">
-				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /> 
-				 	
+				     maxlength="23"  styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.ceiling.amount']}">
+				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.effectiveDate']}" style="width:80px;">
+		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:80px;">
 				<h:outputText value="#{agencyData.effDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.expiryDate']}" style="width:80px;">
+		   	 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:80px;">
 				<h:outputText value="#{agencyData.expDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.agn.ap178']}" style="width:50px;">
+		   	 <p:column headerText="#{lbl['lbl.ct.ap178']}" style="width:50px;">
 		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"
 		   	      rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
 		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
@@ -51,13 +50,13 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       		<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
-			<p:commandButton id="delBtn" value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/>
 	  	</div>
 	  	    
-        <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
+        <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -67,21 +66,21 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tableAgencyDetails,:form:itemId"
+		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tableAgencyDetails,:form:itemId"
 		         process="@form" actionListener="#{contractDetailsBackingBean.deleteAgencyDetails()}" onclick="dlgDel.hide();"/>
-			  <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
 	   </p:panel>  
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.agn.header.add.agency']}" widgetVar="dlgAgency" modal="true" width="650" height="450">
+		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="650" height="450">
 		   <p:panel  id="agencyies">
               <h:panelGrid columns="7">
                  <p:selectOneMenu for="ministry"  style="width:100px" disabled="true" >
-            	    <f:selectItem itemLabel="Ministry" itemValue=""/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:selectOneMenu  style="width:70px" disabled="true">
-            	    <f:selectItem itemLabel="Equals" itemValue=""/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.equal']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                  <p:selectOneMenu id="ministry" value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" style="width:230px">
@@ -89,17 +88,17 @@
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                   <p:selectOneMenu  style="width:70px" disabled="true">
-            	    <f:selectItem itemLabel="And" itemValue=""/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.and']}" itemValue=""/>
                  </p:selectOneMenu>
                  <p:selectOneMenu for="ptjcodename" value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:100px;">
-                    <f:selectItem itemLabel="-Select One-" itemValue="null"/>
-            	    <f:selectItem itemLabel="PTJ Code" itemValue="Code"/>
-            	    <f:selectItem itemLabel="PTJ Name" itemValue="Name"/>
+                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="null"/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="Code"/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="Name"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.ptjSearchtype}"  style="width:70px">
-            	    <f:selectItem itemLabel="Equals" itemValue="E"/>
-            	     <f:selectItem itemLabel="Like" itemValue="L"/>
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.equal']}" itemValue="E"/>
+            	     <f:selectItem itemLabel="#{lbl['lbl.ct.like']}" itemValue="L"/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
                  <p:inputText  style="width:220px;" 
@@ -116,10 +115,10 @@
                  rowIndexVar="rowIndex" selection="#{contractDetailsBackingBean.selectedPmOrgProfile}" rowKey="#{pmVar}" lazy="true">
                   <ac:paginator for="tableAgency"/>
                     <p:column selectionMode="multiple" style="width:18px;"/>        
-                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">
+                    <p:column headerText="#{lbl['lbl.ct.ptj.code']}">
                        <p:outputLabel value="#{pmVar.orgCode}" style="float:left;"/>
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.name']}" >
+                    <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
                       <p:outputLabel value="#{pmVar.orgName}" style="float:left;"/>
 					</p:column>
 			 </p:dataTable>
@@ -128,29 +127,29 @@
 		      </p:blockUI> 
              <f:facet name="footer">
 			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="Select"   process="@form" update=":form:tableAgencyDetails,:form:itemId" 
+				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId" 
 				    action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
-                <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
+                <p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>
 			</f:facet>
            </p:panel>
 	</p:dialog>
-	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.agn.table.da']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
+	<p:dialog id="deliveryAddressDlg" header="#{lbl['lbl.ct.delivery.address']}" widgetVar="deliveryAddressDlg" modal="true" width="600" height="400">
 	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 		rowKey="#{deliveryAddress}">
 		<ac:paginator for="deliveryAddressTbl"/>
-		<p:column headerText="#{lbl['lbl.ct.agn.table.da']}">
+		<p:column headerText="#{lbl['lbl.ct.delivery.address']}">
 		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" style="float:left;" />
 		</p:column>
 	   </p:dataTable>
 	</p:dialog>
-	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.agencyRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -162,7 +161,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>
@@ -182,10 +181,10 @@
 				<td width="50%" valign="top">
 				    <table style="width: 100%">
 		             <tr>
-			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.ct.attachement']}" /></td>
+			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td class="TableFieldRight">
 				         <p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
-					        update="lampiran1" value="Attach file(s)" />
+					        update="lampiran1" value="#{lbl['lbl.ct.upload.attach.files']}" />
 			           </td>
 		             </tr>
 		             <tr>
@@ -200,7 +199,7 @@
 							       <td>
 								       <h:outputText value=" #{attachFile.createdUser.userName}"></h:outputText>,
 								       <h:outputText value="#{attachFile.createdDate}">
-									     <f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									     <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 						   </h:outputText>
 						</td>
 						</tr>
@@ -226,7 +225,7 @@
 			fileUploadListener="#{contractDetailsBackingBean.agencyFileUpload}"
 			mode="advanced" id="upload1"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="lampiran1" >
 		</p:fileUpload> 
 	</p:dialog>		

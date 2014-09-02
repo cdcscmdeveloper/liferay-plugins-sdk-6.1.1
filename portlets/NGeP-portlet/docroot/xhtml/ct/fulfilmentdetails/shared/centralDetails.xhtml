@@ -7,37 +7,37 @@
 	<p:panel id="cc" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		<h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
-		     <p:outputLabel id="centralNo" value="#{lbl['lbl.ct.cno']}" />
+		     <p:outputLabel id="centralNo" value="#{lbl['lbl.ct.contract.no']}" />
 		     <p:inputText for="centralNo" disabled="true" style="width:170px;"
 		        maxlength="17"  value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
-		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physicalNo']}" />
+		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physical.no']}" />
 		     <p:inputText for="centralphyNo" style="width:170px;"  maxlength="30"
 		       value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>				
-		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+		     <p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effective.date']}" />
 		     <p:inputText for="centralEfDate" style="width:170px;" disabled="true"
 			    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			 </p:inputText>
-		     <p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.expiryDate']}" />
+		     <p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.expiry.date']}" />
 		     <p:inputText for="centralExpDate" style="width:170px;" disabled="true"
 			    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 			    <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			 </p:inputText>
 		     <h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
-		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.dperiod']}" />
+		     	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}" />
 		     </h:panelGrid>
 		     <h:panelGrid columns="4">
 		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}"
 		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
                <p:spacer width="2" />
                <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
-                 style="width:120px;" required="true"  label="#{lbl['lbl.ct.dperiod']}" >
+                 style="width:120px;" required="true"  label="#{lbl['lbl.ct.delivery.period']}" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>			   
 			   <p:message for="centralDelPeriod" display="icon"/>
 			</h:panelGrid>	
-			<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.signedDate']}" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
+			<p:outputLabel id="centralSignDate" value="#{lbl['lbl.ct.signed.date']}" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"/>
 			<p:inputText for="centralSignDate"  disabled="true" rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}"
 			   style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate}">
 			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -69,7 +69,7 @@
 		       <p:selectBooleanCheckbox 
 			       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true" />
 		       <p:spacer width="2" />	
-		       <p:outputLabel value="#{lbl['lbl.ct.feeExmp']}" />
+		       <p:outputLabel value="#{lbl['lbl.ct.fee.exmption']}" />
 	         </h:panelGrid>	
 	         <h:panelGrid columns="3">  
 			   <p:selectBooleanCheckbox 

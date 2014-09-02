@@ -59,7 +59,7 @@
 			</p:panel>
 		</p:dialog>	
 		 <p:dialog id="delCancelCircular" widgetVar="delCancelCircular" 
-		   header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
+		   header="#{lbl['lbl.ct.dialog.cofirm.header']}" styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
                <p:graphicImage library="ep/images/design" name="exclamation.png"
 			      value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -69,8 +69,8 @@
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton icon="ui-icon-accept" update=":form:cancelCcrDt,:form:cancelCcrPnl" process="@all"
-		        value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
-			 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="delCancelCircular.hide();" type="button" />
+		        value="#{lbl['lbl.btn.yes']}" actionListener="#{panelBackingBean.deleteCancelReqCircular()}" onclick="delCancelCircular.hide();"/>
+			 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delCancelCircular.hide();" type="button" />
 		  </div>
         </p:dialog>  		
 	</p:panel>
