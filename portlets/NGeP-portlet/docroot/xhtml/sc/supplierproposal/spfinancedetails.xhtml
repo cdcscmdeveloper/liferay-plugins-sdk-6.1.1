@@ -12,7 +12,8 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.financeCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{financeList}" rowIndexVar="rowIndex"
-			rows="10">
+			rows="10"
+			first="#{supplierProposalDetailBackingBean.managedBean.financialTableRow}">
 
 			<ac:paginator for="financeDeailsId" />
 
@@ -33,7 +34,8 @@
 
 			<p:column style="width:2%">
 				<p:selectBooleanCheckbox id="allChk"
-					value="#{financeList.submitted}" disabled="true" />
+					value="#{financeList.submitted}" disabled="true"
+					rendered="#{financeList.scQtCheckList.definationType.parameterCode ne 'SP' and financeList.scQtCheckList.definationType.parameterCode ne 'SD'}" />
 			</p:column>
 
 			<p:column>

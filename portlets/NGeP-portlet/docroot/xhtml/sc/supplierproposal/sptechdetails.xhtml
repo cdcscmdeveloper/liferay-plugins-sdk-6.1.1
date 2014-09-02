@@ -12,7 +12,8 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.tecCheckDetailsList}"
 			selection="#{supplierProposalDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{techList}" rowIndexVar="rowIndex"
-			rows="10">
+			rows="10"
+			first="#{supplierProposalDetailBackingBean.managedBean.technicalTableRow}">
 
 			<ac:paginator for="techDeailsId" />
 
@@ -33,7 +34,8 @@
 
 			<p:column style="width:2%">
 				<p:selectBooleanCheckbox id="selAllChk"
-					value="#{techList.submitted}" disabled="true" />
+					value="#{techList.submitted}" disabled="true" 
+					rendered="#{techList.scQtCheckList.definationType.parameterCode ne 'SP' and techList.scQtCheckList.definationType.parameterCode ne 'SD'}" />
 			</p:column>
 
 			<p:column>
