@@ -5,8 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}"
-		styleClass="sidemenu">
+	<p:tabMenu activeIndex="#{viewSmApplBackingBean.managedBean.tabActiveIndex}" styleClass="sidemenu">
 
 		<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}"
 			actionListener="#{viewSmApplBackingBean.setTabValue(viewSmApplBackingBean.managedBean.tabActiveIndex,'0')}"
