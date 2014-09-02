@@ -15,7 +15,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" id="itLoginId"
+							<p:inputText styleClass="ppDisplayTextM" id="itLoginId" maxlength="75"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}"
 								disabled="true"/>
@@ -55,7 +55,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true"
+							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="50"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}"/>
 						</td>
 						<th></th>
@@ -85,7 +85,7 @@
 						</th>
 						<td>
 							<p:inputText styleClass="ppDisplayTextM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}">
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}" maxlength="12">
 								<p:ajax event="change" update="itLoginId" listener="#{profilePersonalizationBackingBean.updateLoginId()}"/>
 							</p:inputText>
 						</td>
@@ -118,7 +118,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
 						</th>
 						<td>
-							<p:inputText disabled="true" styleClass="ppDisplayTextM" 
+							<p:inputText disabled="true" styleClass="ppDisplayTextM" maxlength="30"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.designation}" />
 						</td>
 						<th></th>
@@ -143,7 +143,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" 
+							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="10"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.grade}"/>
 						</td>
 						<th></th>
@@ -180,25 +180,29 @@
   					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressone']}" />
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" styleClass="ppDisplayTextL" /></td>	
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" 
+			    		styleClass="ppDisplayTextL" maxlength="35"/></td>	
 			    <th></th>
                 <td></td>                    
             </tr>
             <tr>       
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addresstwo']}" /></th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address2}" styleClass="ppDisplayTextL" /></td>	   
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address2}"
+			     		styleClass="ppDisplayTextL" maxlength="35"/></td>	   
 			    <th></th>
                 <td></td>
 			 </tr>
 			 <tr>   
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressthree']}" /></th>	  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address3}" styleClass="ppDisplayTextL" /></td>	
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address3}" 
+			   	 		styleClass="ppDisplayTextL" maxlength="35"/></td>	
 			    <th></th>
                 <td></td> 
 		    </tr>
 		    <tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.addressfour']}" /></th>	  
-		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address4}" styleClass="ppDisplayTextL" /></td>	 
+		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.address4}" 
+		    			styleClass="ppDisplayTextL" maxlength="35"/></td>	 
 		    	<th></th>
                	<td></td>	
 		    </tr>
@@ -207,7 +211,8 @@
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.postcode']}" /> 
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>	 
-		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" styleClass="ppDisplayTextM" /></td>	
+		    	<td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
+		    			styleClass="ppDisplayTextM"  maxlength="10" /></td>	
 		    	<th></th>
                	<td></td>
 		    </tr>			
@@ -287,7 +292,8 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 			    <td>
-			    	<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" styleClass="ppDisplayTextM"  />
+			    	<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" 
+			    		styleClass="ppDisplayTextM"  maxlength="80"/>
 		    		&#160;&#160;   
 	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
 		                   value="/css/images/design/tooltips.png" />
@@ -298,19 +304,22 @@
 			</tr>    
 			<tr>   
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" styleClass="ppDisplayTextM" /></td> 	
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" 
+			    		styleClass="ppDisplayTextM"  maxlength="12"/></td> 	
 			    <th></th>
                	<td></td>
 			</tr>    		     			    		 			   
 			<tr>    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" styleClass="ppDisplayTextM"  /></td>
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" 
+			    		styleClass="ppDisplayTextM" maxlength="12"/></td>
 			    <th></th>
                	<td></td>
 		    </tr>     
 			<tr>    			    
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
-			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" styleClass="ppDisplayTextM"  /></td>
+			    <td><p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
+			    		styleClass="ppDisplayTextM"  maxlength="12" /></td>
 			    <th></th>
                	<td></td>		    			    			    			    			    		    			    			                                          			                     		                                                 
             </tr>		    			                     

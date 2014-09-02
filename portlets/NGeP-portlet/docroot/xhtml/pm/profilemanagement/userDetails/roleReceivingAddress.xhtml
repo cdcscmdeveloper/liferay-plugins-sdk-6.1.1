@@ -25,7 +25,7 @@
 			        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}" > 
 			          	<p:inputText id="itAppLimit" styleClass="ppDisplayTextS" value="#{role.approvalLimit}" 
 			          		required="#{!empty param['disableValidation']} and role.pmRole.limitRequired}"  label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
-			          		disabled="#{!role.pmRole.limitRequired}">
+			          		disabled="#{!role.pmRole.limitRequired}" maxlength="18">
 			          		<f:validateDoubleRange minimum="1"  />
 			          		<p:ajax event="change" process="@this" />
 		          		</p:inputText>

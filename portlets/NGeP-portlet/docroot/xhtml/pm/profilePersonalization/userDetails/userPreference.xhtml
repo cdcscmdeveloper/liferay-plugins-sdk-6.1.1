@@ -32,7 +32,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" />&#160;
+					<p:inputText value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" 
+						size="5" maxlength="2"/>&#160;
 					<h:outputText value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" />&#160;
                 	<p:graphicImage id="giDay" library="ep/images/design" name="tooltips.png"
 								value="/resources/ep/images/design/tooltips.png" />

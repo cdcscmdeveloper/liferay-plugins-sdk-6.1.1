@@ -35,7 +35,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" 
+					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" maxlength="2"
 						label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
 						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" 
 						validatorMessage="#{lbl['lbl.pm.profiles.invalidNo']}">

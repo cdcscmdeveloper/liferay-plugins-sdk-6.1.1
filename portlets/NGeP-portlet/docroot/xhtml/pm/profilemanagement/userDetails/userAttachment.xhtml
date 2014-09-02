@@ -7,18 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="ATTACHMENTS" toggleable="true">
-    <h:panelGrid columns="2" >	
-    
-    <h:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.attachment']}"></h:outputLabel>
-    <p:fileUpload fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" mode="advanced"   
-            update="messages" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
- 
-    <p:growl id="messages" showDetail="true"/>
-    
-    
-    </h:panelGrid>    
-
-    		
+	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.attachment']}" toggleable="true">
+		<table class="ppOneTable">
+			<tr>
+				<th width="20%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.authorisation.attachment']}" />
+				</th>
+				<td>
+				  <p:fileUpload 
+				  	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" 
+				  	mode="advanced" sizeLimit="1000000" 
+            		allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+					invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+	            	/> 
+	            	
+		
+		
+				</td>
+			</tr>
+		</table>	
 	</p:panel>
 </ui:composition>	

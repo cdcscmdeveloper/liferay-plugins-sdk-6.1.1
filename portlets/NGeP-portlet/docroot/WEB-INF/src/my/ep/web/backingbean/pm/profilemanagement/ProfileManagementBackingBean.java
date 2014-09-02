@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -1442,6 +1443,47 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
+	 * Validation for PmUserPreference
+	 * @param PmUserPreference
+	 */
+	private void validatePreference(PmUserPreference pmUserPreference){
+		logger.info("validatePreferences");
+		if(pmUserPreference!=null){
+			if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserPreference.getRecordStatusFlg()){
+				if(StringUtils.isBlank(pmUserPreference.getPreferredLanguage())){
+					throw new IllegalArgumentException("Preferred Language is mandatory.");
+				}
+				
+				if(pmUserPreference.getNotifyRemovalDay()==null || pmUserPreference.getNotifyRemovalDay()<=0){
+					throw new IllegalArgumentException("Delete Notification is mandatory.");
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Validation for PmUserNotification
+	 * @param PmUserNotification
+	 */
+	private void validateNotification(List <PmUserNotification> pmUserNotifications){
+		logger.info("validateNotification");
+		int selected = 0;
+		if(pmUserNotifications!=null && !pmUserNotifications.isEmpty()){
+			for(PmUserNotification pmUserNotification:pmUserNotifications){
+				if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserNotification.getRecordStatusFlg()){
+					if(pmUserNotification.isPreferred()){
+						selected++;
+						break;
+					}
+				}
+			}
+		}
+		if(selected==0){
+			throw new IllegalArgumentException("At least one Preferred Notification Mode is required.");
+		}
+	}
+
+	/**
 	 * Method to update the user details
 	 */
 	public void saveUserProfile() throws Exception{
@@ -1461,6 +1503,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateUserAddress(this.getManagedBean().getUserAddress());
 			validateResponsibleOrg(user);
 			oneActiveResponsibleOrg(user);
+			validatePreference(user.getPmUserPreference());
+			validateNotification(user.getPmUserNotifications());
 			
 			reqDTO = new UserReqDTO();
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
@@ -1559,14 +1603,49 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param event
 	 * @throws Exception
 	 */
-	public void handleFileUpload(FileUploadEvent event) throws Exception{
-		logger.info("handleFileUpload - START");
+	public void handlePortraitUpload(FileUploadEvent event) throws Exception{
+		logger.info("handlePortraitUpload - START");
 		UploadedFile item = event.getFile();
 		byte[] bytes = item.getContents();
 		this.getManagedBean().getSelectedUser().setPortrait(bytes);  
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
-		logger.info("handleFileUpload - END");
+		logger.info("handlePortraitUpload - END");
 	}
+
+//	
+//	/**
+//	 * Get attachment
+//	 * @param event
+//	 * @throws Exception
+//	 */
+//	public void handleFileUpload(FileUploadEvent event)  throws FileNotFoundException, IOException {
+//		logger.info("handleFileUpload - START");
+//		if(event!=null){
+//			
+//			AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+//			
+//			UploadedFile item = event.getFile();
+//			
+//			String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/PM/temp";
+//			File file = new File(filePath);
+//			file.mkdirs();
+//			filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+//			
+//			FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+//		    fileOuputStream.write(item.getContents());
+//		    fileOuputStream.close();
+//		    
+//		    PmUserAttachment attachment = new PmUserAttachment();
+//			attachment.setFileName(item.getFileName());
+//			attachment.setFilePath(filePath);
+//			attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+//			attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
+//			attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//			this.getManagedBean().getSelectedUser().addPmUserAttachments(attachment);
+//		}
+//		
+//		logger.info("handleFileUpload - END");
+//	}
 
 	
 //	/**
