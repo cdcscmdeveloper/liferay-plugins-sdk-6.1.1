@@ -134,12 +134,12 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Ordered Qty." style="text-align:right">
-					<p:inputText value="#{flItem.orderedQty}" size="5"
+					<p:inputText value="#{flItem.orderedQty}" size="5" id="orderedQty"
 						styleClass="colFloatRight" maxlength="14"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
-						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice "
+						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty"
 							process="@this" onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();"
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
