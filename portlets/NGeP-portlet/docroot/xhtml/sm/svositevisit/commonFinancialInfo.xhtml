@@ -5,10 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
+	<ui:remove>
 	<div align="right">
 		<p:commandButton value="Test" action="#{svoSiteVisitBackingBean.test}" />
 	</div>
+	</ui:remove>
 	
 	<p:panel header="Financial" toggleable="true">
 		<table class="rptTbl">
@@ -63,7 +64,7 @@
 			
 			<p:column>
 				<f:facet name="header">Verify</f:facet>
-				<p:selectBooleanCheckbox value="#{bankInfo.valid}"></p:selectBooleanCheckbox>
+				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -83,13 +84,13 @@
 			</p:column>
 
 			<p:column headerText="Available">
-				<p:selectBooleanCheckbox value="#{finLsItem.valid}">
+				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
 
 			<p:column headerText="Remark">
-				<p:inputTextarea rows="2" cols="40" autoResize="false"
+				<p:inputTextarea rows="2" cols="40" autoResize="false" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.remarkMap[finLsItem.pmParameter.parameterId].remark}" />
 			</p:column>
 		</p:dataTable>

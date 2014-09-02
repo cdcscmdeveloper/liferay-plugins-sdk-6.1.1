@@ -1,0 +1,78 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:param name="viewFlag" value="true" />
+
+	<div align="right">
+		<p:commandButton value="Submit" id="btnBpmSubmit" onclick="submissionConfirmDlg.show();"></p:commandButton>
+	</div>
+	
+
+	<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+   			 Do you want to proceed ?	
+   			<div align="right">
+			<p:commandButton value="Yes"
+				action="#{svoSiteVisitBackingBean.submitSiteVisitReport}"></p:commandButton>
+			<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+		</div>
+	</p:dialog>
+	
+	
+<!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
+	<p:panel header="Report by Category">
+		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
+			<p:column headerText="Category Type">
+					#{template.pmParameter.pmParameterDescs[0].codeDesc}
+			</p:column>
+	
+			<p:column headerText="Template">
+				<p:commandButton value="Preview" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:dialog id="rptDialogId" header="Report Preview" widgetVar="rptDlg" modal="true" height="650" width="1200" dynamic="true">
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
+			<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
+			<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
+			<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}">
+			<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
+		</c:if>
+
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_INSURANCE}">
+			<ui:include src="/xhtml/sm/svositevisit/insurance.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}">
+			<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == 'bumiputera'}">
+			<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == 'studyMaterial'}">
+			<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
+		</c:if>
+		
+		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRANSPORTATION }">
+			<ui:include src="/xhtml/sm/svositevisit/transportation.xhtml" />
+		</c:if>
+										
+	</p:dialog>
+	
+</ui:composition>

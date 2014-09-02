@@ -1,0 +1,41 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/js">
+	
+	<ui:param name="applInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl}" />
+	<p:panel header="Company Info">
+		<table class="customTbl">
+			<tr>
+				<td><p:outputLabel value="Company Name" /></td>
+				<td><p:inputText value="#{applInfo.smSupplier.companyName}" disabled="true" /></td>
+<!-- 				<td>MOF Registration No</td> -->
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="Application Reference No." /></td>
+				<td><p:inputText value="#{applInfo.applNo}" disabled="true" /></td>
+				<td><p:outputLabel value="Application Type" /></td>
+				<td><p:inputText value="#{lbl[svoSiteVisitBackingBean.getsupplierApplTypeDesc(applInfo.applType)]}" disabled="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="ROC/ROB/ROS No." /></td>
+				<td><p:inputText value="#{applInfo.smSupplier.regNo}" disabled="true" /></td>
+				<td><p:outputLabel value="Telephone No." /></td>
+				<td><p:inputText value="#{applInfo.smCompanyBasic.phoneNo}" disabled="true" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="Contact Person Name" /></td>
+				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.name}" disabled="true" /></td>
+				<td><p:outputLabel value="Contact Person Designation" /></td>
+				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.contactPerson.designation}" disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	
+</ui:composition>

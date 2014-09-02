@@ -9,41 +9,46 @@
 	<p:panel id="pnlPremiseLocation" header="#{lbl['lbl.sm.sitevisit.premiselocation']}" toggleable="true">
 	<table class="customTbl">
 		<tr>
-			<td class="tdTitle">Ownership</td>
-			<td class="tdContent">
-				<p:selectOneMenu value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}">
-					<f:selectItem itemLabel = "---Select---" itemValue=""></f:selectItem>
+			<td><p:outputLabel value="Ownership" /></td>
+			<td>
+				<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="#{viewFlag}">
+					<f:selectItem itemLabel = "---Select one---" itemValue="" />
 					<f:selectItem itemLabel = "Private" itemValue="P" />
 					<f:selectItem itemLabel = "Rent" itemValue="R" />
 				</p:selectOneMenu>
 			</td>
 			
-			<td class="tdTitle">Purchasing Price/ Monthly Rate(RM)</td>
-			<td class="tdContent">
-				<p:inputText  id="pmPriceRate" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}" />
+			<td><p:outputLabel value="Purchasing Price/ Monthly Rate(RM)" /></td>
+			<td>
+				<p:inputText  id="pmPriceRate" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}" disabled="#{viewFlag}"/>
 			</td>
 		</tr>
 		
 		<tr>
 		
-			<td class="tdTitle">Overall Square Feet/ Meter</td>
-			<td class="tdContent"><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" /></td>
+			<td><p:outputLabel value="Overall Square Feet/ Meter" /></td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.overallSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
 			
-			<td class="tdTitle">Enclosed Square Feet/ Meter</td>
-			<td class="tdContent"><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" /></td>
+			<td><p:outputLabel value="Enclosed Square Feet/ Meter" /></td>
+			<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.enclosedSqft}" maxlength="20" disabled="#{viewFlag}" /></td>
 		</tr>
 		
 		<tr>
-			<td class="tdTitle" valign="top">Floor</td>
-			<td class="tdContent">
-				<p:inputTextarea rows="5" cols="50" autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}" />
+			<td valign="top"><p:outputLabel value="Floor" /></td>
+			<td>
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.cementFloor}" />Cement<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.tarFloor}" />Tar<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor}" />Others
 			</td>
 			
-			<td class="tdTitle" valign="top">Environment</td>
-			<td class="tdContent">
-				<p:inputTextarea rows="5" cols="50" autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOther}" />
+			<td valign="top"><p:outputLabel value="Environment" /></td>
+			<td>
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envFence}" />Fenced<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envClean}" />Cleanliness<br />
+				<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.envOrganize}" />Organized
 			</td>
 		</tr>
+		
 	</table>
 	</p:panel>
 </ui:composition>

@@ -7,31 +7,18 @@
 
 	<p:panel header="Category Applicable" id="pnlCategoryApplicable" toggleable="true">
 		<p:dataTable
-			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvCategories}"
+			value="#{svoSiteVisitBackingBean.managedBean.categoryApplicable}"
 			var="catApp">
-
-			<p:column headerText="L1">
-						#{catApp.pmCategoryL1.categoryL1Code}
-				</p:column>
-
-			<p:column headerText="L2">
-						#{catApp.pmCategoryL2.categoryL2Code}
-					</p:column>
-
-			<p:column headerText="L3">
-						#{catApp.pmCategoryL3.categoryL3Code}
-				</p:column>
-
+			<ui:param name="catCode" value="#{catApp.pmCategoryL1.categoryL1Code}#{catApp.pmCategoryL2.categoryL2Code}#{catApp.pmCategoryL3.categoryL3Code}" />
+			<p:column headerText="Category Code">
+					#{catCode}
+			</p:column>
 			<p:column headerText="Category Description">
 						#{catApp.pmCategoryL3.categoryName}
-				</p:column>
-
+			</p:column>
+			
 			<p:column headerText="First Recommendation">
-				<p:selectOneMenu id="catPassed" value="#{catApp.passed}">
-					<f:selectItem noSelectionOption="true" itemLabel="---Select---" />>
-					<f:selectItem itemValue="1" itemLabel="Approve" />
-					<f:selectItem itemValue="0" itemLabel="Reject" />
-				</p:selectOneMenu>
+				Approved
 			</p:column>
 		</p:dataTable>
 	</p:panel>

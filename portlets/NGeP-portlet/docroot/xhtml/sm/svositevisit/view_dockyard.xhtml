@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabView>
+		<p:tab title="Site Info">
+			<ui:include src="/xhtml/sm/shared/sitevisit/view_addressRepresentatives.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/licenseInsurance.xhtml" />
+		</p:tab>
+		
+		<p:tab title="Site Info">
+			<ui:include src="/xhtml/sm/shared/sitevisit/view_addressRepresentatives.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/licenseInsurance.xhtml" />
+		</p:tab>
+		
+		<p:tab title="Tool/ Equipment/ Machine">
+			<ui:include src="/xhtml/sm/shared/sitevisit/equipment.xhtml" />
+			<ui:include src="/xhtml/sm/shared/sitevisit/machine.xhtml" />
+		</p:tab>
+	</p:tabView>
+</ui:composition>

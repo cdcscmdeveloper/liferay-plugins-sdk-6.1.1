@@ -9,42 +9,43 @@
 	<p:panel header="Employee" id="pnlSvWorkerId">
 	<p:dataTable id="dtWorkerId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvWorkers}" var="svWorker"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkers}" rowKey="#{svWorker}">
-		<p:column selectionMode="multiple" style="width:2%" />
-		<p:ajax event="rowSelectCheckbox" />
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
+		<p:ajax event="rowSelectCheckbox" disabled="#{viewFlag}" />
 			<p:column>
 					<f:facet name="header">
 						Specialization
 					</f:facet>
-					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" />
+					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 						Name
 					</f:facet>
-				<p:inputText id="workerNameId" value="#{svWorker.name}" />
+				<p:inputText id="workerNameId" value="#{svWorker.name}" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
 						IC No.
 					</f:facet>
-				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" />
+				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" disabled="#{viewFlag}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 						Experience
 				</f:facet>
-				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" />
+				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>
 		
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true"
-				action="#{svoSiteVisitBackingBean.addWorkshopWorker}"
+				action="#{svoSiteVisitBackingBean.addWorkshopWorker}" rendered="#{!viewFlag}"
 				update="pnlSvWorkerId" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				action="#{svoSiteVisitBackingBean.removeWorkshopWorker}"
+				action="#{svoSiteVisitBackingBean.removeWorkshopWorker}" rendered="#{!viewFlag}"
 				update="pnlSvWorkerId" />
 		</div>
 	</p:panel>

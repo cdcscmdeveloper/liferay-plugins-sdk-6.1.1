@@ -13,7 +13,6 @@
 		
 		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
 			<ui:param name="lblCategory" value="lbl.sm.sitevisit.category.categorycode_#{entry.value}" />
-	   		<ui:param name="lastNo" value="#{entry.key}" />
 	   		<p:menuitem value="#{lbl[lblCategory]}" update="pnlDisplay,tabIndex" 
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(entry.key,entry.value)}" />
 		</c:forEach>

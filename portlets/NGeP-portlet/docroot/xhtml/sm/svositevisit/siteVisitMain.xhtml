@@ -5,80 +5,71 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
 		<f:event listener="#{svoSiteVisitBackingBean.preRenderView}" type="preRenderView" />
 		<ui:include src="/xhtml/sm/svositevisit/siteVisitHeader.xhtml" />
 		<!-- 		<ui:include src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /> -->
-
-
+		<ui:param name="viewFlag" value="false" />
+		
 		<table class="customTbl">
 			<tr valign="top">
 				<td style="width:20%"><ui:include
 						src="/xhtml/sm/shared/sidemenu/svoSideMenu.xhtml" /></td>
 
-				<td  style="width:80%"><p:outputPanel id="pnlDisplay">
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
+				<td  style="width:80%" align="left"><p:outputPanel id="pnlDisplay">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+					<ui:param name="category" value="#{svoSiteVisitBackingBean.managedBean.indexPageMap[svoSiteVisitBackingBean.managedBean.activeIndex]}" />
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 0}">
 							<ui:include src="/xhtml/sm/svositevisit/siteVisitCommonInfo.xhtml" />
 						</c:if>
 
-<!-- 						<c:if -->
-<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}"> -->
-<!-- 							<ui:include src="/xhtml/sm/svositevisit/siteVisitRptCommon.xhtml" /> -->
-<!-- 						</c:if> -->
-
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 1}">
 							<ui:include src="/xhtml/sm/svositevisit/commonFinancialInfo.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 2}">
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 2}">
 							<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 3}">
-							<ui:include src="/xhtml/sm/svositevisit/commentRecommendation.xhtml" />
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 3}">
+							<ui:include src="/xhtml/sm/svositevisit/officeLocation.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 11}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}">
 							<ui:include src="/xhtml/sm/svositevisit/transportation.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 12}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_WORKSHOP}">
 							<ui:include src="/xhtml/sm/svositevisit/workshop.xhtml" />
 						</c:if>
 
-
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 13}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_INSURANCE}">
 							<ui:include src="/xhtml/sm/svositevisit/insurance.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 14}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
 							<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 15}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_MANUFACTURING}">
 							<ui:include src="/xhtml/sm/svositevisit/manufacturing.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 16}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_PRINTING}">
 							<ui:include src="/xhtml/sm/svositevisit/printing.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 17}">
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_TRAVEL}">
 							<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 						</c:if>
+						
+						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
+							<ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" />
+						</c:if>
+						
 					</p:outputPanel></td>
 			</tr>
 		</table>

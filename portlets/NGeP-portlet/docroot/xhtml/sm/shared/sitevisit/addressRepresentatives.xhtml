@@ -11,9 +11,7 @@
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}" 
 			selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedAddresses}" 
 			 rowKey="#{svAdd}">
-<!-- 			<p:column selectionMode="single" style="width:2%" event="rowSelect" update=":form:pnlIntRep" /> -->
-				<p:column selectionMode="multiple" style="width:2%" />
-<!-- 			<p:ajax event="rowSelectRadio" update=":form:pnlIntRep" listener="#{svoSiteVisitBackingBean.selectSvAddress}" /> -->
+				<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{viewFlag}"/>
 			<p:column headerText="Address">
 					#{svAdd.smAddress.address1}<br />
 					#{svAdd.smAddress.address2}<br />
@@ -48,17 +46,17 @@
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedInterviewees}" rowKey="#{interviewee}">
 		<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="Name">
-				<p:inputText value="#{interviewee.name}" id="intName" readonly="#{viewFlag}" />
+				<p:inputText value="#{interviewee.name}" id="intName"  />
 			</p:column>
 
 			<p:column headerText="Designation">
-				<p:inputText value="#{interviewee.designation}" id="intDesignation" readonly="#{viewFlag}" />
+				<p:inputText value="#{interviewee.designation}" id="intDesignation"  />
 			</p:column>
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="Add"  disabled="#{viewFlag}" update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
-			<p:commandButton value="Delete"  disabled="#{viewFlag}" update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.removeInterviewee}"/>
+			<p:commandButton value="Add"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.addInterviewee}" />
+			<p:commandButton value="Delete"  update="dtIntRepTbl" action="#{svoSiteVisitBackingBean.removeInterviewee}"/>
 		</div>
 	</p:panel>
 </ui:composition>

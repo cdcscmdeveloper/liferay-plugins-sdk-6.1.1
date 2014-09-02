@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel heaader="License/ Insurance">
+	<p:panel header="License/ Insurance">
 		<p:dataTable var="dockWorkLicenseIns"
 			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvLicenseInsurances}">
 			<p:column>
@@ -24,7 +24,7 @@
 				</f:facet>
 				<p:calendar id="closingDateCalId"
 						navigator="true"  label="Closing Date"
-						value="#{dockWorkLicenseIns.expDate}"
+						value="#{dockWorkLicenseIns.expDate}" disabled="#{viewFlag}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						readonlyInput="true" size="30" showOn="button" />
 
