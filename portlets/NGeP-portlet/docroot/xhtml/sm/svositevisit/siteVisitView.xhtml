@@ -5,6 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:remove>
 	<p:panel header="Category">
 		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
 			<p:column headerText="Category Type">
@@ -17,6 +18,7 @@
 			
 		</p:dataTable>
 	</p:panel>
+	</ui:remove>
 	
 	<p:panel header="Site Visit Address">
 		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}">
