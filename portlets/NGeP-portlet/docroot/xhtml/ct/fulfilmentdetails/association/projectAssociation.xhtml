@@ -37,12 +37,14 @@
                    label="#{lbl['lbl.ct.asearch.sname']}" value="#{associationBackingBean.managedBean.ctSupplierName}"/>
          
               <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-              <p:calendar style="width:130px;margin-bottom:5px;" id="calefdate" readonlyInput="true" showOn="button"
-                 value="#{associationBackingBean.managedBean.ctDateStart}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+              <p:calendar id="calefdate" style="width:130px;margin-bottom:5px;"  navigator="true"
+                 value="#{associationBackingBean.managedBean.ctDateStart}" readonlyInput="true"   showOn="button"
+                 pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
       
               <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-              <p:calendar id="calepdate" style="width:130px;"  readonlyInput="true" showOn="button"
-                  value="#{associationBackingBean.managedBean.ctDateEnd}"  pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+              <p:calendar id="calepdate"  showOn="button" readonlyInput="true"
+                  value="#{associationBackingBean.managedBean.ctDateEnd}" style="width:130px;"  navigator="true"
+                  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
        
               <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
               <p:inputText  id="ProdName"  style="width:170px;margin-top:3px;"  maxlength="30"

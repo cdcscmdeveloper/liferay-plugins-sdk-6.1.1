@@ -5,42 +5,55 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="advancePayment" header="ADVANCED PAYMENT TRACKING"    toggleable="true"  toggleSpeed="500">     
-     <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
-       <p:outputLabel  value="Advanced Payment Amount"/>  
-       <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-          value="#{contractDetailsBackingBean.managedBean.advancePaymentAmt}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
-       <p:outputLabel  value=" Paid Amount (RM)"  />  
-       <p:inputText  style="width:170px;"  styleClass="ppRightBtn" disabled="true"
-         value="#{contractDetailsBackingBean.managedBean.paidAdvancePaymentAmt}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
-       <p:outputLabel  value="Paid (%)"/>  
-       <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-        value="#{contractDetailsBackingBean.paidAdvancePercentage}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText>
-       <p:outputLabel  value="Balanced To Be Paid (RM)"/>
-        <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-          value="#{contractDetailsBackingBean.balanceToPaid}" >
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText> 
+        <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
+            
+             <p:outputLabel  value="Advanced Payment Amount"/>  
+             <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
+                  value="#{contractDetailsBackingBean.managedBean.advancePaymentAmt}">
+                  <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+             </p:inputText>
+     
+             <p:outputLabel  value=" Paid Amount (RM)"  />  
+             <p:inputText  style="width:170px;"  styleClass="ppRightBtn" disabled="true"
+                  value="#{contractDetailsBackingBean.managedBean.paidAdvancePaymentAmt}">
+                  <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+             </p:inputText>
        
-     </h:panelGrid>
+            <p:outputLabel  value="Paid (%)"/>  
+            <p:inputText style="width:170px;" styleClass="ppRightBtn"
+                 disabled="true"  value="#{contractDetailsBackingBean.paidAdvancePercentage}">
+                 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+            </p:inputText>
+     
+           <p:outputLabel  value="Balanced To Be Paid (RM)"/>
+           <p:inputText style="width:170px;" styleClass="ppRightBtn" 
+               disabled="true" value="#{contractDetailsBackingBean.balanceToPaid}" >
+               <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+           </p:inputText> 
+        </h:panelGrid>
 	  </p:panel>
+	  
 	  <p:panel id="contractCompletion" header="CONTRACT COMPLETION"    toggleable="true"  toggleSpeed="500">     
-	  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
-       <p:outputLabel  value="Contract Amount (RM)" />  
-       <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-         value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
-       <p:outputLabel  value="Utilization Amount (RM)" />  
-       <p:inputText    style="width:170px;" styleClass="ppRightBtn" disabled="true"
-           value="#{contractDetailsBackingBean.managedBean.paidInvoiceAmt}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText>
-       <p:outputLabel  value="Completion (%)"  />  
-       <p:inputText    style="width:170px;" styleClass="ppRightBtn" disabled="true"
-          value="#{contractDetailsBackingBean.paidPercentage}">
-        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText>
-     </h:panelGrid>
-   </p:panel>
+	       <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
+                <p:outputLabel  value="Contract Amount (RM)" />  
+                <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
+                    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}">
+                    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+       
+                <p:outputLabel  value="Utilization Amount (RM)" />  
+                <p:inputText    style="width:170px;" styleClass="ppRightBtn"
+                   disabled="true" value="#{contractDetailsBackingBean.managedBean.paidInvoiceAmt}">
+                   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                </p:inputText>
+       
+                <p:outputLabel  value="Completion (%)"  />  
+                <p:inputText    style="width:170px;" styleClass="ppRightBtn"
+                    disabled="true"  value="#{contractDetailsBackingBean.paidPercentage}">
+                    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+                </p:inputText>
+           </h:panelGrid>
+       </p:panel>
 </ui:composition>
 
 
