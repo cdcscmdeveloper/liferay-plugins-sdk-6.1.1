@@ -10,7 +10,7 @@
 		widgetVar="dlImageUpload" dynamic="true" width="500" height="300">
 		<p:outputPanel id="opImageUpload">
 			<p:fileUpload id="fuPortrait" 
-					 	fileUploadListener="#{profileManagementBackingBean.handleFileUpload}" mode="advance" 
+					 	fileUploadListener="#{profileManagementBackingBean.handlePortraitUpload}" mode="advance" 
 	   					sizeLimit="1000000" allowTypes="/(\.|\/)(png)$/" multiple="false"
 	   					invalidFileMessage="Only PNG file is accepted" 
 	   					fileLimit="1" dragDropSupport="false" uploadLabel="#{lbl['lbl.btn.confirm']}" 
