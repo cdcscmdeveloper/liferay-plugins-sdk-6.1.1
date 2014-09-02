@@ -89,7 +89,7 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierList}"
 			var="smSupplier" id="ressupplier"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
-			rowKey="#{smSupplier.supplierId}">
+			rowKey="#{smSupplier.supplierId}" rows="10">
 
 			<ac:paginator for="ressupplier" />
 

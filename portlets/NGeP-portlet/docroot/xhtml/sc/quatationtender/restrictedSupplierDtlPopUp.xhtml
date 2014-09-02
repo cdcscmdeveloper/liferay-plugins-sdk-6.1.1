@@ -3,117 +3,109 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<!--  Supplier Details dialog -->
-	<p:dialog id="popupSuppDtl" widgetVar="suppDetails" resizable="false"
-		styleClass="pop_up_top" header="Supplier Details" width="380"
-		height="500">
-		<table style="width: 100%" border="1">
-			<tr>
-				<td style="width: 154px;"><p:outputLabel value="EP No" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.epNo}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.suppliername']}" /></td>
-				<td><p:inputText size="30" style=" margin-bottom:5px;"
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.companyName}"
-						readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Registration Type" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Registration No" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.regNo}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.mofno']}" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Income Tax Reference No" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smAppl.smCompanyBasic.incomeTaxNo}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Establishment Date" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.establishDate}"
-						size="30" readonly="true" disabled="true">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Type of Company" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.so.mofexp']}" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smMofAccounts[0].expDate}"
-						size="30" readonly="true" disabled="true">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Disciplinary Rating" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Branch" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierBranch}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td valign="top"><p:outputLabel value="Address" /></td>
-				<td><p:inputTextarea
-						value="#{qTSupplierQulCriteriaBackingBean.getFullAddress(qTSupplierQulCriteriaBackingBean.managedBean.supplierAddress)}"
-						rows="3" cols="32" readonly="true" disabled="true"
-						style=" margin-bottom:5px;" /></td>
-			</tr>
+	<p:dialog id="popupSuppDtl" widgetVar="suppDetails"
+		styleClass="pop_up_top" header="Supplier Details" width="450"
+		height="600" position="true">
+		<p:panel>
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 180px;"><p:outputLabel value="EP No" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.epNo}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.suppliername']}" /></td>
+					<td><p:inputText size="30" style=" margin-bottom:5px;"
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.companyName}"
+							readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Registration Type" /></td>
+					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Registration No" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.regNo}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.mofno']}" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Income Tax Reference No" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smAppl.smCompanyBasic.incomeTaxNo}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Establishment Date" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.establishDate}"
+							size="30" readonly="true" disabled="true">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Type of Company" /></td>
+					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.mofexp']}" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smMofAccounts[0].expDate}"
+							size="30" readonly="true" disabled="true">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Disciplinary Rating" /></td>
+					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Branch" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierBranch}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td valign="top"><p:outputLabel value="Address" /></td>
+					<td><p:inputTextarea
+							value="#{qTSupplierQulCriteriaBackingBean.getFullAddress(qTSupplierQulCriteriaBackingBean.managedBean.supplierAddress)}"
+							rows="3" cols="32" readonly="true" disabled="true"
+							style=" margin-bottom:5px;" /></td>
+				</tr>
 
-			<tr>
-				<td><p:outputLabel value="Contact Person" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierContact}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Designation" /></td>
-				<td><p:inputText size="30" readonly="true" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Email" /></td>
-				<td><p:inputText
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierEmail}"
-						size="30" readonly="true" disabled="true" /></td>
-			</tr>
-		</table>
-
-		<p:spacer height="5" />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Cancel" icon="ui-icon-back"
-						onclick="suppDetails.hide();" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-
-
+				<tr>
+					<td><p:outputLabel value="Contact Person" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierContact}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Designation" /></td>
+					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierEmail}"
+							size="30" readonly="true" disabled="true" /></td>
+				</tr>
+			</table>
+			<div class="ppRightBtn">
+				<p:commandButton value="Cancel" icon="ui-icon-back"
+					onclick="suppDetails.hide();" />
+			</div>
+		</p:panel>
 	</p:dialog>
-
 </ui:composition>

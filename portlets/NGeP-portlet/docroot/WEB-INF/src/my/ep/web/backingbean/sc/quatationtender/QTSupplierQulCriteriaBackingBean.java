@@ -372,9 +372,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void searchRestrictedSupplierPopupAction() {
 		debugLogger("searchRestrictedSupplierPopupAction");
-
 		getManagedBean().setSupplierName(null);
 		getManagedBean().setMofAccountNo(null);
+		getManagedBean().setMinPaidUpCapital(null);
 		getManagedBean().setSearchSupplierList(null);
 		getManagedBean().setSelectedSupplierList(null);
 	}
@@ -389,13 +389,11 @@ public class QTSupplierQulCriteriaBackingBean extends
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+			tenderReqDTO.setCategoryList(getManagedBean().getSuppCriteriarestrictedList());
 			tenderReqDTO.setSupplierName(getManagedBean().getSupplierName());
 			tenderReqDTO.setMofAccountNo(getManagedBean().getMofAccountNo());
-			tenderReqDTO.setMinPaidUpCapital(getManagedBean()
-					.getMinPaidUpCapital());
-			
-			QuationTenderResDTO tenderResDTO = QtDetailsSO
-					.retriveSupplierProfiles(tenderReqDTO);
+			tenderReqDTO.setMinPaidUpCapital(getManagedBean().getMinPaidUpCapital());
+			QuationTenderResDTO tenderResDTO = QtDetailsSO.retriveSupplierProfiles(tenderReqDTO);
 			List<SmSupplier> list = tenderResDTO.getSupplierList();
 			getManagedBean().setSearchSupplierList(list);
 		} catch (Exception ex) {
@@ -403,17 +401,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 		} finally {
 			QtDetailsSO = null;
 		}
-
-		/*
-		 * // TODO Temporary get from panel supplier. List<CtPanelSupplier>
-		 * panelSupplierList = retriverSuppliersForPanelQT(); List<SmSupplier>
-		 * searchSupplierList = new ArrayList<SmSupplier>();
-		 * 
-		 * for (CtPanelSupplier panelSupplier : panelSupplierList) {
-		 * searchSupplierList.add(panelSupplier.getSupplier()); }
-		 * 
-	 * getManagedBean().setSearchSupplierList(searchSupplierList);
-		 */
 	}
 
 	/*
@@ -595,6 +582,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		// update qt supplier list.
 		getManagedBean().setTotalSupplier(qtSupplierList.size());
+		//getManagedBean().getQtSupplierList().addAll(qtSupplierList);
 		getManagedBean().setQtSupplierList(qtSupplierList);
 
 		// For save the criteria details when search button if clicked.
@@ -958,6 +946,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		debugLogger("reset");
 		getManagedBean().setSupplierName(null);
 		getManagedBean().setMofAccountNo(null);
+		getManagedBean().setMinPaidUpCapital(null);
 	}
 	
 	/**
