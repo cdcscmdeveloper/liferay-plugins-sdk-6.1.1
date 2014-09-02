@@ -48,7 +48,7 @@
 				style="width:7%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 				<h:outputText
-					value="#{(scqt.bsvRequired eq '1')?lbl['lbl.ct.dialong.cofirm.no']:lbl['lbl.ct.dialong.cofirm.yes']}" />
+					value="#{(scqt.bsvRequired eq '1')?lbl['lbl.btn.no']:lbl['lbl.btn.yes']}" />
 						&#160;
 						<p:commandLink id="supRegIcon"
 					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt)}"
