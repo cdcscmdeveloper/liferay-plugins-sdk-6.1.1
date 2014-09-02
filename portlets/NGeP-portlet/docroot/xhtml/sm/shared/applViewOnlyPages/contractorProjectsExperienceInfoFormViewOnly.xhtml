@@ -41,7 +41,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink partialSubmit="true" process="@this"
-						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}"
+						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}" oncomplete="contDialog.show()"
 						update=":form:tt:contDialog">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png" />
@@ -62,16 +62,18 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
-							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
 
-							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}">
+							<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+								<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}">
 									<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-								</h:outputText></td>
+								</h:outputText>
+							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -93,8 +95,7 @@
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
-							<td><h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"
-									cols="36" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
@@ -110,35 +111,36 @@
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
 							<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-							<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}">
-								<f:convertDateTime
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-							</h:outputText></td>
+								<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="
 										#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-							<td>
+							<td style="float:left;">
 								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryName}" />
+									<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL1.categoryName}" />
 								</c:if>
 							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-							<td>
+							<td style="float:left;">
 								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryName}" />
+									<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL2.categoryName}" />
 								</c:if>
 		`					</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel
 									value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-							<td>
+							<td style="float:left;">
 								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryName}" />
+									<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats[0].pmCategoryL3.categoryName}" />
 								</c:if>
 		`					</td>
 						</tr>

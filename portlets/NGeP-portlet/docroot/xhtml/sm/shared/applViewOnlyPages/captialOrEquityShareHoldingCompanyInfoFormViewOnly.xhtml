@@ -33,10 +33,11 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:eqiCompDialog" partialSubmit="true"
-						process="@this"
+						process="@this" oncomplete="eqiCompDialog.show()"
 						action="#{viewSmApplBackingBean.assignSelEquiCompany(equiBean)}">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
+						<p:graphicImage library="ep/images/design" name="document.png"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
@@ -49,73 +50,73 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.compName']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.companyName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.regNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.regNo']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.regNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} " /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.shareAmt}" >
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.shareAmt}" >
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:outputLabel></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.sharePercentage}">
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.sharePercentage}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:outputLabel></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.addr']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address1}" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address2}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address3}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address4}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.address4}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.smAddress.postcode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.phoneNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedEquityCompany.faxNo}" /></td>
 			</tr>
 
 		</table>

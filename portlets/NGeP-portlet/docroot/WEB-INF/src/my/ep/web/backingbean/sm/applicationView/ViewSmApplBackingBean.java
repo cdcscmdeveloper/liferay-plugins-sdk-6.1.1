@@ -121,8 +121,6 @@ public class ViewSmApplBackingBean extends
 									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 									getManagedBean().getSmSupplier()
 											.getBusinessType()));
-			getManagedBean().setSelectedCompanyExperience(
-					new SmCompanyExperience());
 			setSmCompanyBasicCalculation();
 			setApplicationShareHolders(getManagedBean().getSmAppl()
 					.getSmPersonnels());
@@ -433,14 +431,6 @@ public class ViewSmApplBackingBean extends
 			populateSubChildCategoryByChild(consultantBean
 					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
 					.getCategoryL2Id(), new PmCategoryL3());
-		}
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equals(SupplierManagementConst.STYPE_CONSULTANT)) {
-			RequestContext.getCurrentInstance().execute("consDialog.show()");
-		}
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equals(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			RequestContext.getCurrentInstance().execute("contDialog.show()");
 		}
 	}
 

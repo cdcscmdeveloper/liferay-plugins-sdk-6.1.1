@@ -140,6 +140,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 		selectedManufacturer.setPmUom(new PmUom());
 		selectedSignatoryBankAcct = new SmSupplierBank();
 		selectedBank = new SmSupplierBank();
+		selectedCompanyExperience = new SmCompanyExperience();
 		selectedEquityCompany = new SmEquityCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
 		apprvrSecReview = new SmApplSectionReview();
@@ -156,8 +157,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 		shareHolderResdAddr = new SmPersonnelAddress();
 		shareHolderResdAddr.setSmAddress(defaultAddr);
 		
-
-		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
 
 	// temp added for testing
