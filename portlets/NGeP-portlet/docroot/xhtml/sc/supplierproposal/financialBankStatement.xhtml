@@ -12,27 +12,24 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				icon="ui-icon-back"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveBankStatementAction}" />
+				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
+				partialSubmit="true" process="@all" update="@all" />
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
+				partialSubmit="true" process="@all" update="@all" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.bankstatement']}" toggleable="true">
 			<table>
@@ -48,15 +45,22 @@
 					<h:outputText value="#{bankstmt.month}" />
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.amount']}">
-					<p:inputText value="#{bankstmt.balanceAmt}" size="30"
-						style="text-align:right">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.sp.amount']}"/>
+					</f:facet>
+					<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}" size="30"
+						style="text-align:right" 
+						maxlength="19" required="true"
+						label="#{bankstmt.month} #{lbl['lbl.sc.sp.amount']}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur" process="@this"
 							listener="#{supplierProposalDetailBackingBean.totalAmountSum}"
-							update=":form:totalamount" />
+							update="@this, :form:totalamount" />
 					</p:inputText>
+					<p:message id="balanceAmtMsg" for="balanceAmt" display="icon" />
 				</p:column>
 
 			</p:dataTable>
