@@ -18,6 +18,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.type.sm.ApplType;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.id.Hex;
@@ -94,6 +95,45 @@ public class SmCommonUtil {
 			statDescMap.put(pmStatDesc.getPmStatus().getStatusId(), pmStatDesc);
 		}
 		return statDescMap;
+	}
+	
+	public static String getApplTypeDesc(String applType){
+		System.out.println("--------getApplTypeDesc start--------" + applType);
+		String apType = "";
+
+		switch(applType){
+		case "O" : 
+			apType = ApplType.O.value();
+			break;
+
+		case "N" : 
+			apType = ApplType.N.value();
+			break;
+
+		case "B" : 
+			apType = ApplType.B.value();
+			break;
+
+		case "A" : 
+			apType = ApplType.A.value();
+			break;
+
+		case "U" : 
+			apType = ApplType.U.value();
+			break;
+
+		case "R" : 
+			apType = ApplType.R.value();
+			break;
+
+		case "C" : 
+			apType = ApplType.C.value();
+			break;
+		}
+		
+		System.out.println("--------getApplTypeDesc--------" + apType);
+		
+		return apType;
 	}
 	
 }
