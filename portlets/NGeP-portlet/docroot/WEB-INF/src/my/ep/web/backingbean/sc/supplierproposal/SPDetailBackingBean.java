@@ -252,6 +252,15 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			
+			CriteriaValue contractAmountVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV,
+					this.getManagedBean().getTotalContractAmount());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					contractAmountVal);
 
 			List<ScQtPRPExperienceNCheckList> experienceNCheckLists = this.getManagedBean()
 					.getScQtPRPExperienceNCheckLists();
@@ -272,34 +281,11 @@ public class SPDetailBackingBean extends
 						experienceNCheckLists.add(checkList);
 					}
 				}
-			}
-			
-			// TODO check any chance of returning null from SO
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
+			}			
 
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(17);
-				scQtProposalScore.setCriteriaValue(this.getManagedBean()
-						.getTotalContractAmount());
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(17);
-					scQtProposalScore.setCriteriaValue(this.getManagedBean()
-							.getTotalContractAmount());
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
 			scQtProposalChecklist
 					.setExperienceNCheckLists(experienceNCheckLists);
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			// to delete the deleted experiences from db
 			reqDTO.setTobeRemovedExperience(getManagedBean()
@@ -393,33 +379,21 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
+			
+			CriteriaValue totalCreditVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES,
+					this.getManagedBean().getTotalAmountCredit());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					totalCreditVal);
 			
 			scQtProposalChecklist.setSubmitted(isCompleted);
-
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(51);
-				scQtProposalScore.setCriteriaValue(this.getManagedBean()
-						.getTotalAmountCredit());
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(51);
-					scQtProposalScore.setCriteriaValue(this.getManagedBean()
-							.getTotalAmountCredit());
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
+			
 			scQtProposalChecklist.setScQtPRPCreditFacilities(this
 					.getManagedBean().getScQtPRPCreditFacilities());
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobeRemovedCreditFacilities(getManagedBean()
 					.getToBeDeletedCreditFacilities());
@@ -450,34 +424,21 @@ public class SPDetailBackingBean extends
 
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
+			
+			CriteriaValue cashOnHandVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND,
+					this.getManagedBean().getTotalcashHand());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					cashOnHandVal);
 			
 			scQtProposalChecklist.setSubmitted(isCompleted);
 			
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(52);
-				scQtProposalScore.setCriteriaValue(this.getManagedBean()
-						.getTotalcashHand());
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(52);
-					scQtProposalScore.setCriteriaValue(this.getManagedBean()
-							.getTotalcashHand());
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
 			scQtProposalChecklist.setScQtPRPCashOnHands(this.getManagedBean()
 					.getScQtPRPCashOnHand());
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobecashOnHand(getManagedBean()
 					.getToBeDeletedCashOnHandList());
@@ -508,32 +469,20 @@ public class SPDetailBackingBean extends
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
 			
+			CriteriaValue avgBankStatementVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT,
+					this.getManagedBean().getAvgAmount());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					avgBankStatementVal);
+			
 			scQtProposalChecklist.setSubmitted(isCompleted);
 
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(50);
-				scQtProposalScore.setCriteriaValue(this.getManagedBean()
-						.getAvgAmount());
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(50);
-					scQtProposalScore.setCriteriaValue(this.getManagedBean()
-							.getAvgAmount());
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
 			scQtProposalChecklist.setPrpBankStmts(this.getManagedBean()
 					.getScQtPRPBankStmts());
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 			
@@ -559,62 +508,23 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-			List<ScQtProposalScore> qtProposalScoreList = this.getManagedBean()
-					.getScQtProposalScoreList();
-			if (qtProposalScoreList == null) {
-				debugLogger("*****qtProposalScoreList is null *****");
-				qtProposalScoreList = new ArrayList<ScQtProposalScore>();
-			}
-			// TODO check for possible issue
-			if (qtProposalScoreList.isEmpty()) {
-
-				if (!scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListValue().isAllEmployee()) {
-
-					ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(21);
-					ScQtPRPEmployee employee = getManagedBean()
-							.getScQtPRPEmployee();
-					employee.setScQtProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaValue(new BigDecimal(employee
-							.getTotalEmployees()));
-					scQtProposalChecklist.setScQtPRPEmployee(null);
-					setUserDetails(scQtProposalScore);
-					qtProposalScoreList.add(scQtProposalScore);
-
-				} else {
-					scQtProposalChecklist.setScQtPRPEmployee(null);
-					qtProposalScoreList = null;
-				}
-			} else {
-				if (!scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListValue().isAllEmployee()) {
-					ScQtPRPEmployee employee = getManagedBean()
-							.getScQtPRPEmployee();
-					employee.setScQtProposalChecklist(scQtProposalChecklist);
-					scQtProposalChecklist.setScQtPRPEmployee(employee);
-
-					for (ScQtProposalScore scQtProposalScore : qtProposalScoreList) {
-						scQtProposalScore
-								.setProposalChecklist(scQtProposalChecklist);
-						scQtProposalScore.setCriteriaType(21);
-						scQtProposalScore.setCriteriaValue(new BigDecimal(
-								employee.getTotalEmployees()));
-					}
-
-				} else {
-					scQtProposalChecklist.setScQtPRPEmployee(null);
-					for (ScQtProposalScore scQtProposalScore : qtProposalScoreList) {
-						scQtProposalScore
-								.setProposalChecklist(scQtProposalChecklist);
-						scQtProposalScore.setCriteriaType(21);
-						scQtProposalScore.setCriteriaValue(null);
-					}
-				}
-			}
-			scQtProposalChecklist.setProposalScore(qtProposalScoreList);
+			
+			CriteriaValue totalEmployeeVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_EMPLOYEE,
+					BigDecimal.valueOf(getManagedBean().getScQtPRPEmployee().getTotalEmployees()));
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					totalEmployeeVal);
+			
+			ScQtPRPEmployee employee = getManagedBean()
+					.getScQtPRPEmployee();
+			
+			
+			// TODO - kenny
+			
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
@@ -669,51 +579,25 @@ public class SPDetailBackingBean extends
 					experienceNCheckList.add(checkList);
 				}
 			}
+			
+			MathContext mc = new MathContext(4);
+			CriteriaValue totalContractsVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV,
+					BigDecimal.valueOf(getManagedBean().getTotalContracts()));
+			CriteriaValue totalYearsVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV,
+					BigDecimal.valueOf(getManagedBean().getTotalYears()).divide(
+							BigDecimal.valueOf(12), mc));
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					totalContractsVal,
+					totalYearsVal);
 
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
-			if (proposalScore == null) {
-				proposalScore = new ArrayList<ScQtProposalScore>();
-			}
-
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(15);
-				scQtProposalScore.setCriteriaValue(new BigDecimal(this
-						.getManagedBean().getTotalContracts()));
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-
-				ScQtProposalScore scQtProposalScore1 = new ScQtProposalScore();
-				scQtProposalScore1.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore1.setCriteriaType(16);
-				scQtProposalScore1.setCriteriaValue(new BigDecimal(this
-						.getManagedBean().getTotalYears()));
-				setUserDetails(scQtProposalScore1);
-				proposalScore.add(scQtProposalScore1);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-
-					if (scQtProposalScore.getCriteriaType() == 15) {
-						scQtProposalScore.setCriteriaValue(new BigDecimal(this
-								.getManagedBean().getTotalContracts()));
-					} else if (scQtProposalScore.getCriteriaType() == 16) {
-						scQtProposalScore.setCriteriaValue(new BigDecimal(this
-								.getManagedBean().getTotalContracts()));
-					}
-					setUserDetails(scQtProposalScore);
-
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-
-			}
 			scQtProposalChecklist
 					.setExperienceNCheckLists(experienceNCheckList);
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			// to delete the deleted experiences from db
 			reqDTO.setTobeRemovedExperience(getManagedBean()
@@ -744,7 +628,7 @@ public class SPDetailBackingBean extends
 		return null;
 	}
 
-	public void saveAssetLiabilityAction() {
+	public String saveAssetLiabilityAction(boolean isCompleted) {
 		debugLogger("saveAssetLiabilityAction");
 		IQTProposalSO proposalSO = null;
 		try {
@@ -752,46 +636,39 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 
-			ProposalResDTO resDTO = new ProposalResDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(60);
-				/*
-				 * scQtProposalScore.setCriteriaValue(this.getManagedBean()
-				 * .getAvgAmount());
-				 */
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(60);
-					/*
-					 * scQtProposalScore.setCriteriaValue(this.getManagedBean()
-					 * .getAvgAmount());
-					 */
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
-			this.getManagedBean().setAcidRatio(
-					this.getManagedBean().getAcidRatio());
-			this.getManagedBean().getScQtPRPAssetLiability()
-					.setScQtProposalChecklist(scQtProposalChecklist);
-			scQtProposalChecklist.setPrpAssetLiabilities(this.getManagedBean()
-					.getScQtPRPAssetLiability());
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			ScQtPRPAssetLiability scQtPRPAssetLiability = this.getManagedBean()
+					.getScQtPRPAssetLiability();
+			
+			CriteriaValue acidRatioVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO,
+					scQtPRPAssetLiability.getAcidRatio());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					acidRatioVal);
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
+			
+			scQtProposalChecklist.setPrpAssetLiabilities(scQtPRPAssetLiability);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				return navigatePrepareFinProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
+			}
+			
 		} finally {
 			proposalSO = null;
 		}
+		
+		return null;
 	}
 	
 	public String saveFinancialPaidUpCapitalAction(boolean isCompleted) {
@@ -805,33 +682,20 @@ public class SPDetailBackingBean extends
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
 
-			List<ScQtProposalScore> proposalScore = this.getManagedBean()
-					.getScQtProposalScoreList();
+			CriteriaValue cashOnHandVal = new CriteriaValue(
+					SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND,
+					this.getManagedBean().getTotalcashHand());
+			
+			List<ScQtProposalScore> proposalScores = updateProposalScoresValue(
+					scQtProposalChecklist,
+					this.getManagedBean().getScQtProposalScoreList(), 
+					cashOnHandVal);
 			
 			scQtProposalChecklist.setSubmitted(isCompleted);
 			
-			if (null != proposalScore && proposalScore.isEmpty()) {
-				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
-				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
-				scQtProposalScore.setCriteriaType(52);
-				scQtProposalScore.setCriteriaValue(this.getManagedBean()
-						.getTotalcashHand());
-				setUserDetails(scQtProposalScore);
-				proposalScore.add(scQtProposalScore);
-			} else {
-				for (ScQtProposalScore scQtProposalScore : proposalScore) {
-					scQtProposalScore
-							.setProposalChecklist(scQtProposalChecklist);
-					scQtProposalScore.setCriteriaType(52);
-					scQtProposalScore.setCriteriaValue(this.getManagedBean()
-							.getTotalcashHand());
-					int a = proposalScore.indexOf(scQtProposalScore);
-					proposalScore.set(a, scQtProposalScore);
-				}
-			}
 			scQtProposalChecklist.setScQtPRPCashOnHands(this.getManagedBean()
 					.getScQtPRPCashOnHand());
-			scQtProposalChecklist.setProposalScore(proposalScore);
+			scQtProposalChecklist.setProposalScore(proposalScores);
 			
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
@@ -1427,10 +1291,7 @@ public class SPDetailBackingBean extends
 				
 				return retrieveAssetLiabilityDtls(scQtProposalChecklist);
 				
-			} else if (SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL.equalsIgnoreCase(docDefinitionKey)) {
-				
-				return retrievePaidUpCapitalDtls(scQtProposalChecklist);
-			}
+			} 
 		}
 		
 		return null;
@@ -1699,23 +1560,19 @@ public class SPDetailBackingBean extends
 
 			ScQtPRPAssetLiability assetLiability = resDTO
 					.getScQtPRPAssetLiability();
-			if (null != resDTO.getProposalScores()
-					&& !resDTO.getProposalScores().isEmpty()) {
-				this.getManagedBean().setScQtProposalScoreList(
-						resDTO.getProposalScores());
+			
+			if (assetLiability == null) {
+				assetLiability = new ScQtPRPAssetLiability();
+				assetLiability.setScQtProposalChecklist(scQtProposalChecklist);
 			}
-			if (null != assetLiability) {
-				BigDecimal asset = assetLiability.getCurrentAssets();
-				BigDecimal liabilities = assetLiability
-						.getCurrentLiabilities();
-				MathContext mc = new MathContext(4);
-				if (asset.intValue() > 0 && liabilities.intValue() > 0) {
-					BigDecimal ratio = asset.divide(liabilities, mc);
-					this.getManagedBean().setAcidRatio(ratio);
-				}
-				this.getManagedBean().setScQtPRPAssetLiability(
-						assetLiability);
-			}
+			
+			this.getManagedBean().setScQtPRPAssetLiability(
+					assetLiability);
+			this.getManagedBean().setScQtProposalScoreList(
+					resDTO.getProposalScores());
+			
+			totalAcidRatio();
+			
 			System.out.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
 			
 			return NAV_TO_ASSET_LIABILITY_PAGE + "?faces-redirect=true";
@@ -1728,7 +1585,6 @@ public class SPDetailBackingBean extends
 	private String retrievePaidUpCapitalDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
@@ -1736,31 +1592,19 @@ public class SPDetailBackingBean extends
 					+ scQtProposalChecklist.getScQtCheckList()
 							.getPmDocument()
 							.getDocDefinitionKey());
-
-			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			ProposalResDTO resDTO = proposalSO.retrieveAssetLiabilityDtls(reqDTO);
-
-			ScQtPRPAssetLiability assetLiability = resDTO
-					.getScQtPRPAssetLiability();
-			if (null != resDTO.getProposalScores()
-					&& !resDTO.getProposalScores().isEmpty()) {
-				this.getManagedBean().setScQtProposalScoreList(
-						resDTO.getProposalScores());
-			}
-			if (null != assetLiability) {
-				BigDecimal asset = assetLiability.getCurrentAssets();
-				BigDecimal liabilities = assetLiability
-						.getCurrentLiabilities();
-				MathContext mc = new MathContext(4);
-				if (asset.intValue() > 0 && liabilities.intValue() > 0) {
-					BigDecimal ratio = asset.divide(liabilities, mc);
-					this.getManagedBean().setAcidRatio(ratio);
-				}
-				this.getManagedBean().setScQtPRPAssetLiability(
-						assetLiability);
-			}
-			System.out.println("PC ***** NAV_TO_PAID_UP_CAPITAL_PAGE *****");
 			
+			long supplierId = scQtProposalChecklist.getScQtProposal()
+					.getScQtSupplier().getSmSupplier().getSupplierId();
+			
+			log.info("Supplier Id : " + supplierId);
+			
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setSupplierId(supplierId);
+			
+			ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
+			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+
 			return NAV_TO_PAID_UP_CAPITAL_PAGE + "?faces-redirect=true";
 			
 		} finally {
@@ -1774,6 +1618,9 @@ public class SPDetailBackingBean extends
 		
 		String definationType = scQtProposalChecklist.getScQtCheckList()
 				.getDefinationType().getParameterCode();
+		
+		getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+		getManagedBean().setScQtCheckList(scQtProposalChecklist.getScQtCheckList());
 
 		// what's happening here
 		// TODO - check still valid or not
@@ -1801,6 +1648,9 @@ public class SPDetailBackingBean extends
 				
 				return retrieveSupplierDtls(scQtProposalChecklist);
 
+			} else if (SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL.equalsIgnoreCase(definitionKey)) {
+				
+				return retrievePaidUpCapitalDtls(scQtProposalChecklist);
 			}
 		}
 		
@@ -1851,7 +1701,6 @@ public class SPDetailBackingBean extends
 	private String retrieveSupplierDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
@@ -1865,12 +1714,12 @@ public class SPDetailBackingBean extends
 			ScQtCheckList scQtCheckList = scQtProposalChecklist
 					.getScQtCheckList();
 			this.getManagedBean().setScQtCheckList(scQtCheckList);
-			ProposalReqDTO reqDTO1 = new ProposalReqDTO();
-			reqDTO1.setSupplierId(supplierId);
-			ProposalResDTO resDTO1 = proposalSO
-					.retriveSupplierById(reqDTO1);
-			getManagedBean().setSmSupplier(resDTO1.getSmSupplier());
-			getManagedBean().setSmAppl(resDTO1.getSmAppl());
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setSupplierId(supplierId);
+			ProposalResDTO resDTO = proposalSO
+					.retriveSupplierById(reqDTO);
+			getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			List<SmSupplierBank> smSupplierBanks = getManagedBean()
 					.getSmAppl().getSmSupplierBanks();
 			log.info("Paid up capital : "
@@ -1978,7 +1827,7 @@ public class SPDetailBackingBean extends
 		}		
 
 		if (bankStmtList.size() > 0 && totalAmount != null && totalAmount.intValue() > 0) {
-			MathContext mc = new MathContext(4);
+			MathContext mc = new MathContext(14);
 			
 			avgAmount = totalAmount.divide(
 					BigDecimal.valueOf(bankStmtList.size()), mc);
@@ -2081,15 +1930,21 @@ public class SPDetailBackingBean extends
 
 	public void totalAcidRatio() {
 		debugLogger("totalAcidRatio");
+		
 		ScQtPRPAssetLiability assetLiability = this.getManagedBean()
 				.getScQtPRPAssetLiability();
 		BigDecimal asset = assetLiability.getCurrentAssets();
 		BigDecimal liabilities = assetLiability.getCurrentLiabilities();
-		MathContext mc = new MathContext(4);
-		if (asset.intValue() > 0 && liabilities.intValue() > 0) {
-			BigDecimal ratio = asset.divide(liabilities, mc);
-			this.getManagedBean().setAcidRatio(ratio);
+		BigDecimal acidRatio = null;
+		
+		if (asset!= null && liabilities != null && 
+				asset.intValue() > 0 && liabilities.intValue() > 0) {
+			
+			MathContext mc = new MathContext(14);
+			
+			acidRatio = asset.divide(liabilities, mc);
 		}
+		assetLiability.setAcidRatio(acidRatio);
 	}
 
 	public void addNonFederalGovtExperience() {
@@ -2316,6 +2171,73 @@ public class SPDetailBackingBean extends
 			parameterSO = null;
 		}
 		
+	}
+	
+	private List<ScQtProposalScore> updateProposalScoresValue(ScQtProposalChecklist proposalChecklist, 
+			List<ScQtProposalScore> proposalScores, CriteriaValue... criteriaValues) {
+		
+		List<ScQtProposalScore> updateProposalScore = new ArrayList<ScQtProposalScore>();
+		Map<Integer, ScQtProposalScore> proposalScoreMap = new HashMap<Integer, ScQtProposalScore>();
+		
+		for (ScQtProposalScore proposalScore : proposalScores) {
+			proposalScoreMap.put(proposalScore.getCriteriaType(), proposalScore);
+		}		
+		
+		for (CriteriaValue criteriaValue : criteriaValues) {
+			
+			ScQtProposalScore proposalScore = proposalScoreMap.get(criteriaValue.getCriteriaType());
+			
+			if (proposalScore == null) {
+				proposalScore = new ScQtProposalScore();
+				proposalScore.setProposalChecklist(proposalChecklist);
+				proposalScore.setCriteriaType(criteriaValue.getCriteriaType());
+				setUserDetails(proposalScore);
+			}
+			
+			proposalScore.setCriteriaValue(criteriaValue.getCriteriaValue());
+			
+			updateProposalScore.add(proposalScore);
+		}
+		
+		return updateProposalScore;
+	}
+	
+	private class CriteriaValue {
+		private int criteriaType;
+		private BigDecimal criteriaValue;
+		
+		public CriteriaValue(int criteriaType, BigDecimal criteriaValue) {
+			this.criteriaType = criteriaType;
+			this.criteriaValue = criteriaValue;
+		}
+
+		/**
+		 * @return the criteriaType
+		 */
+		public int getCriteriaType() {
+			return criteriaType;
+		}
+
+		/**
+		 * @param criteriaType the criteriaType to set
+		 */
+		public void setCriteriaType(int criteriaType) {
+			this.criteriaType = criteriaType;
+		}
+
+		/**
+		 * @return the criteriaValue
+		 */
+		public BigDecimal getCriteriaValue() {
+			return criteriaValue;
+		}
+
+		/**
+		 * @param criteriaValue the criteriaValue to set
+		 */
+		public void setCriteriaValue(BigDecimal criteriaValue) {
+			this.criteriaValue = criteriaValue;
+		}
 	}
 	
 	private String navigatePrepareTecProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
