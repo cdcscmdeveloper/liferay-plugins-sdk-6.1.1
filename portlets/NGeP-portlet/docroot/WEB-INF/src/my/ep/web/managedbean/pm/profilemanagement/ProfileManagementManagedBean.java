@@ -1,37 +1,23 @@
 package my.ep.web.managedbean.pm.profilemanagement;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
-import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmCriteria;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.web.bean.pm.AddressList;
-import my.ep.web.bean.pm.PreferenceList;
-import my.ep.web.bean.pm.RoleList;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 
 
 /**
@@ -58,7 +44,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> selectedDeliveringAddrTypes; //Address Type - D
 	private List<PmAddressType> deleteReceivingAddrTypes; //Address Type - D
 	private boolean receivingAddressFlag;
-	
+	private List<FileUploadEvent> fileUploadEvents;
 	
 
 	/**
@@ -257,8 +243,22 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
-	}	
+	}
+	/**
+	 * @return the fileUploadEvents
+	 */
+	public List<FileUploadEvent> getFileUploadEvents() {
+		return fileUploadEvents;
+	}
+	/**
+	 * @param fileUploadEvents the fileUploadEvents to set
+	 */
+	public void setFileUploadEvents(List<FileUploadEvent> fileUploadEvents) {
+		this.fileUploadEvents = fileUploadEvents;
+	}
 	
+	
+
 }	
 	
 

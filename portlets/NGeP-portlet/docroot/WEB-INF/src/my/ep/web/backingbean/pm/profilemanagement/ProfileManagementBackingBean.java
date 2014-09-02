@@ -280,6 +280,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().setSelectedRoles(null);
 			this.getManagedBean().setSelectedReceivingAddrTypes(null);
 			this.getManagedBean().setReceivingAddressFlag(false);
+			this.getManagedBean().setFileUploadEvents(null);
 			//for the initial load
 			if(pmUser.getPmUserOrgs()!=null && !pmUser.getPmUserOrgs().isEmpty()){
 				this.getManagedBean().setSelectedUserOrg(pmUser.getPmUserOrgs().get(0));
@@ -330,6 +331,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().setDeleteReceivingAddrTypes(null);
 		this.getManagedBean().setSelectedDeliveringAddrTypes(null);
 		this.getManagedBean().setSelectedReceivingAddrTypes(null);
+		this.getManagedBean().setFileUploadEvents(null);
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
 	
@@ -1557,6 +1559,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 
 			if (resDTO.isSuccessful()) {
+				
+				uploadAttachments();
 				/*
 				if(user.getPortrait()!=null){
 					uploadPortrait(resDTO.getPmUser());
@@ -1656,18 +1660,21 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				if(this.getManagedBean().getSelectedUser().getPmUserAttachments()==null){
 					this.getManagedBean().getSelectedUser().setPmUserAttachments(new ArrayList<PmUserAttachment>());
 				}
-				
+				if(this.getManagedBean().getFileUploadEvents()==null){
+					this.getManagedBean().setFileUploadEvents(new ArrayList<FileUploadEvent>());
+				}
 				UploadedFile item = event.getFile();
 			    PmUserAttachment attachment = new PmUserAttachment();
 				attachment.setFileName(item.getFileName());
-				attachment.setFilePath(PmCommonUtil.getFullUploadPath());
+				attachment.setFilePath(PmCommonUtil.getFullUploadPath(item.getFileName()));
 				attachment.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 				attachment.setCreatedUser(getFacesScopes().getUserSessionBean());
 				attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 				
 				this.getManagedBean().getSelectedUser().addPmUserAttachments(attachment);
+				this.getManagedBean().getFileUploadEvents().add(event);
 				
-				commonUploadFile(event, PmCommonUtil.getPmUploadPath(item.getFileName()));
+//				commonUploadFile(event, PmCommonUtil.getPmUploadPath(item.getFileName()));
 				
 			}
 		}catch(Exception e){
@@ -1678,7 +1685,25 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - END");
 	}
 
+	public void uploadAttachments() throws FileNotFoundException, IOException {
+		logger.info("uploadAttachments - START");
+		try{
+			if(this.getManagedBean().getFileUploadEvents()!=null && !this.getManagedBean().getFileUploadEvents().isEmpty()){
+				for(FileUploadEvent event:this.getManagedBean().getFileUploadEvents()){
+					UploadedFile item = event.getFile();
+					commonUploadFile(event, PmCommonUtil.getPmUploadPath(item.getFileName()));
+				}
+				this.getManagedBean().getFileUploadEvents().clear();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new EpException("Failed to upload attachement: {0}", new String[]{e.getMessage()});
+			
+		}
+		logger.info("uploadAttachments - END");
+	}
 
+	
 	public String getUsername(Long userId){
 		return PmCommonUtil.retriveUserName(userId);
 	}
