@@ -18,11 +18,11 @@
 					</td>
 					<td ><h:outputLabel
 							value="#{lbl['lbl.sc.closing.date']}" /></td>
-					<td class="header-info-text"><h:outputLabel style="float : left;"
+					<td class="header-info-text"><h:outputText style="float : left;"
 							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}">
 							<f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputLabel></td>
+						</h:outputText></td>
 					<td ><h:outputLabel
 							value="#{lbl['lbl.sc.remaining.day']}" /></td>
 					<td class="header-info-text">#{supplierProposalDetailBackingBean.managedBean.days}</td>
