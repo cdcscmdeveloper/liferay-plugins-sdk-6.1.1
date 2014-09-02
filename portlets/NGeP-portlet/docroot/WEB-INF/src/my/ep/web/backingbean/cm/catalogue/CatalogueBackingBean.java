@@ -1131,10 +1131,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		log.info("*********cancelToMaintenanceFile*************");
 
-		this.getManagedBean()
-				.getMaintainItemList()
-				.set(this.getManagedBean().getCloneIndex(),
-						this.getManagedBean().getCloneCmSupplierItem());
+		if(this.getManagedBean().getCloneCmSupplierItem()!=null && this.getManagedBean().getCloneIndex()>=0){
+			this.getManagedBean().getMaintainItemList().set(this.getManagedBean().getCloneIndex(),this.getManagedBean().getCloneCmSupplierItem());
+		}
 		// this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getCloneCmSupplierItem());
 
 		return "catalogMaintenanceFile";

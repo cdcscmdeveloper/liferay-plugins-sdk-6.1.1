@@ -7,23 +7,22 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
-import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -147,7 +146,9 @@ public class ReviewCatalogueBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
-				"", "Item Successfully approved"));
+				"", MessageUtils.getMessage(MessageConst.ERROR_715055,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 
 	}
@@ -176,7 +177,9 @@ public class ReviewCatalogueBackingBean extends
 					if(bb.getManagedBean().getRejectReason()==null || bb.getManagedBean().getRejectReason().isEmpty()){
 						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_ERROR,
-							"", "Remark is required"));
+							"", MessageUtils.getMessage(MessageConst.ERROR_715056,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 						return "addCatalogView";
 					}
 				}
@@ -211,7 +214,9 @@ public class ReviewCatalogueBackingBean extends
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_ERROR,
-						"", "Item Reject Reason Required"));
+						"", MessageUtils.getMessage(MessageConst.ERROR_715057,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 	
 				return "addCatalogView";
 			}
@@ -229,7 +234,9 @@ public class ReviewCatalogueBackingBean extends
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(
 				FacesMessage.SEVERITY_INFO,
-				"", "Item Successfully rejected"));
+				"", MessageUtils.getMessage(MessageConst.ERROR_715058,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale())));
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 
 	}
