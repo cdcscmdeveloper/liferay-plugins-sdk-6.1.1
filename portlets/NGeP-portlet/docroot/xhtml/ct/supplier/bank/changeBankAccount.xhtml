@@ -58,7 +58,7 @@
 		</table>
 	</div> 	
 	</p:panel>
-    <p:panel id="fulfilmentDetail" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
+    <p:panel id="fulfilmentDetail" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" toggleSpeed="500">
         <p:outputPanel id="ChangeBankAcc">
             <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
                 <h:panelGrid columns="2" style="float:right;">
@@ -84,7 +84,7 @@
 			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />			           
 			     </p:inputText>
-			     <h:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			     <h:outputLabel value="#{lbl['lbl.ct.expiryDate']}" />
 			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 			     	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			     </p:inputText>    
@@ -100,7 +100,7 @@
 			 </h:panelGrid>
 		</p:outputPanel>
 	</p:panel>
-    <p:panel id="bankId" header="#{lbl['lbl.ct.bank.bankdtls']}"  toggleable="true"  toggleSpeed="500">
+    <p:panel id="bankId" header="#{lbl['lbl.ct.su.panel.bankInfo']}"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20"
           styleClass="top-aligned-columns">
             <h:panelGrid columns="2" style="float:right;">
@@ -135,7 +135,7 @@
 		   </h:panelGrid>
         </h:panelGrid>
       </p:panel>
-	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
+	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.su.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
 	          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
              <p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /> 
@@ -152,7 +152,7 @@
              <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /> 
              <p:inputText disabled="true" style="width:230px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
-             <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />
+             <p:outputLabel  value="#{lbl['lbl.ct.su.tel']}" />
              <p:inputText disabled="true"  style="width:200px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
              <p:outputLabel   value="Branch Name"/>

@@ -48,7 +48,7 @@
 		</tr>
 	</table>	 
 	</p:panel>
-	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
+	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		<h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
 	    	<p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
@@ -59,7 +59,7 @@
 	      	<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
 		  	<p:inputText for="effectiveDate" style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
-		  	<p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
+		  	<p:outputLabel id="edate" value="#{lbl['lbl.ct.expiryDate']}" />
 		  	<p:inputText for="edate" style="width:170px;" disabled="true"
 				value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 		  	<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
@@ -67,7 +67,7 @@
 			 	disabled="true" style="width:170px;">
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"/>
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
+			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signedDate']}"  rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" value="#{terminationBackingBean.convertTime(terminationBackingBean.managedBean.ctContract.currentAgreement.signedDate)}"
 		   		rendered="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"/>
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}" />
@@ -79,7 +79,7 @@
 			</h:panelGrid>	
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
 			<f:verbatim rendered="#{terminationBackingBean.managedBean.ctContract.zonalPricing and !terminationBackingBean.managedBean.ctContract.agreement}"/>
-		 	<p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}"
+		 	<p:outputLabel id="astatus" value="#{lbl['lbl.ct.agstatus']}"
 		 		rendered="#{terminationBackingBean.managedBean.ctContract.agreement and
 		    				terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					 	 	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -113,7 +113,7 @@
 			required="false" rows="3" cols="31" disabled="true"
 			autoResize="false" />	
 		</h:panelGrid>	
-		<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}"
+		<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.agstatus']}"
 			rendered="#{terminationBackingBean.managedBean.ctContract.agreement and
 		  			  	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 					  	terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -142,12 +142,12 @@
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
-			 <p:outputLabel value="#{lbl['lbl.ct.chkbx.concession']}" />
+			 <p:outputLabel value="#{lbl['lbl.ct.concession']}" />
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
-		     <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}"/>
+		     <p:outputLabel value="#{lbl['lbl.ct.feeExmp']}"/>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
@@ -166,13 +166,13 @@
 			     disabled="true" style="text-align:top;">
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.ap201']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		    <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.pbexemption']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.pbexemption']}" style="text-align:top;" />
 		   </h:panelGrid>			   
 	    </h:panelGrid>
 	</h:panelGrid>

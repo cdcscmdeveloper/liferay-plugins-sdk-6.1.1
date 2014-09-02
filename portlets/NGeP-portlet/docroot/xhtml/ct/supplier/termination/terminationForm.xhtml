@@ -55,7 +55,7 @@
 				</tr>
 			</table>	    	
 	</p:panel>
-	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
+	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" toggleSpeed="500">
 	    <p:outputPanel id="terminationRequest">
 	    <table style="width: 100%">
             <tr>
@@ -76,7 +76,7 @@
 			            value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.effDate)}"/> 
 			          
 			          </td>
-			     <td><h:outputLabel value="#{lbl['lbl.ct.edate']}" /></td>
+			     <td><h:outputLabel value="#{lbl['lbl.ct.expiryDate']}" /></td>
 			     <td><p:inputText disabled="true" style="width:170px;" 
 			          value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.expDate)}" >
 			         </p:inputText>	</td>
@@ -100,7 +100,7 @@
 		  </table>
 		</p:outputPanel>
 		 </p:panel>
-          <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
+          <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
            <table style="width: 100%">
                   <tr>
                       <td style="width:15%;">   <p:outputLabel value="EP No." />  </td>
@@ -120,7 +120,7 @@
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"
                                disabled="true" style="width:218px;"/> </td>
-                     <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
+                     <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel']}" />  </td>       
                      <td> <p:inputText disabled="true"  style="width:170px;" /></td>
                     
                 </tr>  

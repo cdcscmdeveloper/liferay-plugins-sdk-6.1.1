@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
+	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		   <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
@@ -17,7 +17,7 @@
 				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
-			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
+			  <p:outputLabel id="edate" value="#{lbl['lbl.ct.expiryDate']}" />
 			  <p:inputText for="edate" style="width:170px;" disabled="true"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -27,7 +27,7 @@
 				 disabled="true" style="width:170px;">
 				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>	
-			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.sdate']}" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}" />
+			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signedDate']}" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy" disabled="true" style="width:170px;" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}" />
 			<h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}" />
 			<h:panelGrid columns="3" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}">
@@ -39,7 +39,7 @@
 			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
 			</h:panelGrid>	
-			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.ag.agstatus']}"
+			 <p:outputLabel id="astatus" value="#{lbl['lbl.ct.agstatus']}"
 			 	rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
 			 				amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -73,7 +73,7 @@
 				required="false" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>	
-			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.ag.agstatus']}"
+			<p:outputLabel id="astatus1" value="#{lbl['lbl.ct.agstatus']}"
 				rendered="#{amendmentBackingBean.managedBean.ctContract.agreement and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete and
@@ -103,12 +103,12 @@
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
-			 <p:outputLabel value="#{lbl['lbl.ct.chkbx.concession']}" />
+			 <p:outputLabel value="#{lbl['lbl.ct.concession']}" />
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.feeExampted}" disabled="true"/>
 		     <p:spacer width="2" />	
-		     <p:outputLabel value="#{lbl['lbl.ct.chkbx.feeExmp']}"/>
+		     <p:outputLabel value="#{lbl['lbl.ct.feeExmp']}"/>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
@@ -128,13 +128,13 @@
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.ap201']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.ap201']}" style="text-align:top;" />
 		   </h:panelGrid>	
 		    <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
-			  <p:outputLabel value="#{lbl['lbl.ct.chkbx.pbexemption']}" style="text-align:top;" />
+			  <p:outputLabel value="#{lbl['lbl.ct.pbexemption']}" style="text-align:top;" />
 		   </h:panelGrid>		
 	    </h:panelGrid>
 	</h:panelGrid>
