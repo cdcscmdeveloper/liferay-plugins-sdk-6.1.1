@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.spec.capital.status']}"
+		toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 170px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.auth.capital']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{smAppl.smCompanyBasic.authorizedCapital}" /></td>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.paid.capital']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{smAppl.smCompanyBasic.paidUpCapital}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.accumulate.capital']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.spec.accumulate.share']}" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+			</tr>
+		</table>
+		<p:panelGrid style="margin-top:20px;width:100%;">
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.composition.capital.distribution']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.no.of.members']}</p:column>
+					<p:column colspan="1">#{lbl['lbl.sc.spec.amount']}</p:column>
+					<p:column>(%)</p:column>
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.bumiputra']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<h:outputText value="#{smAppl.smCompanyBasic.bumiEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.bumiputra']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.equity.govt']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.govt.equity']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.local.company']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+			<p:row>
+				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.foreign.company']}</p:column>
+				<p:column style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;" />
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sc.spec.capital.share.holders']}"
+		toggleable="true">
+		<p:dataTable id="sharePersonal" rowIndexVar="index" var="factory"
+			rowKey="#{factory}">
+			<ac:paginator for="sharePersonal" />
+			<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.sc.spec.shareholder.company']}"
+		toggleable="true">
+		<p:dataTable id="shareCompany" rowIndexVar="index" var="factory"
+			rowKey="#{factory}">
+			<ac:paginator for="shareCompany" />
+			<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+				<p:inputText />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
