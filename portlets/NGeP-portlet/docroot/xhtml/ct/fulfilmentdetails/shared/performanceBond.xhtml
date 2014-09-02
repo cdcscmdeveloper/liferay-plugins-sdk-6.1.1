@@ -35,9 +35,9 @@
 			<p:column selectionMode="multiple" style="width:2%;"
 				rendered="#{varBond.performanceBondId == null and contractDetailsBackingBean.managedBean.updateContract}" />
 			
-			<p:column style="width:8%;">
+			<p:column style="width:10%;">
 				<p:inputText value="#{varBond.refNo}" maxlength="50"
-					disabled="#{varBond.performanceBondId != null}" style="width:70px;" />
+					disabled="#{varBond.performanceBondId != null}" style="width:85px;" />
 			</p:column>
 		
 			<p:column style="width:30%;">
@@ -47,32 +47,32 @@
 				</p:selectOneMenu>
 			</p:column>
 			
-			<p:column style="width:10%;">
+			<p:column style="width:12%;">
 				<p:inputText value="#{varBond.bondAmount}" styleClass="ppRightBtn" maxlength="23"
-				    disabled="#{varBond.performanceBondId != null}" style="width:80px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
+				    disabled="#{varBond.performanceBondId != null}" style="width:90px;" label="#{lbl['lbl.ct.pbd.table.amt']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 			
-			<p:column style="width:10%;">
+			<p:column style="width:8%;">
 				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4" styleClass="calendarDateField"
-					showOn="button" readonlyInput="true" size="12"  disabled="#{varBond.performanceBondId != null}"
+					showOn="button" readonlyInput="true" size="9"  disabled="#{varBond.performanceBondId != null}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 					 <p:ajax event="dateSelect" update="popupButtonCal5" />
 					</p:calendar>
 			</p:column>
 			
-			<p:column style="width:10%;">
+			<p:column style="width:8%;">
 				<p:calendar id="popupButtonCal5"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
 				    readonlyInput="true" disabled="#{varBond.performanceBondId != null}" mindate="#{varBond.effDate}" 
-					size="12"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
                     <f:validator validatorId="primeDateRangeValidator" />
 			    </p:calendar>
 			</p:column>
 			
-			<p:column styleClass="column-align-center" style="width:20%;">
+			<p:column styleClass="column-align-center" style="width:22%;">
 				<h:panelGroup id="uploadBondPg">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
 						icon="iconAttachment" update=":form:tableBond"

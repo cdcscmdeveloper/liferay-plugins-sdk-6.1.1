@@ -304,17 +304,17 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 public void changeField() {
 		try {
 			flush();
-			
-		    String parameterCode = retrieveParameterById(new Long(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
+			getManagedBean().getContractVer().getCtTermination().setRemedyStartDate(null);
+		    String parameterCode = retrieveParameterById(new Long(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterId()));
 			if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)) {
-				this.getManagedBean().setRemedy(true);
+				  getManagedBean().setRemedy(true);
 			}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE)) {
-				this.getManagedBean().setTermination(true);
+				  getManagedBean().setTermination(true);
 				if(getManagedBean().getContractVer().getCtTermination().getRecommendedAgency()==null || getManagedBean().getContractVer().getCtTermination().getRecommendedAgency().length()==0) {
-					getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
+				  	getManagedBean().getContractVer().getCtTermination().setRecommendedAgency(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgName());
 				}
 			}else if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)) {
-				this.getManagedBean().setMutualTermination(true);
+				  getManagedBean().setMutualTermination(true);
 			}
 						
 		 } catch (Exception e) {
@@ -323,9 +323,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 }
 	  
 	 public void flush() {
-	     this.getManagedBean().setTermination(false);
-		 this.getManagedBean().setRemedy(false);
-		 this.getManagedBean().setMutualTermination(false);
+	     getManagedBean().setTermination(false);
+		 getManagedBean().setRemedy(false);
+		 getManagedBean().setMutualTermination(false);
 	 }
 	
 	public void previewNoticeAction() {
@@ -606,5 +606,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
+	}
+    
+    public boolean isApprover() {
+		return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
 	}
 }

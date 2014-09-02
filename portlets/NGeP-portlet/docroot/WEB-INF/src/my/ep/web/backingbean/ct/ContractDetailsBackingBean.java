@@ -1225,9 +1225,9 @@ public void ConstructSideTabMenu(){
     /*Implementation of Bond Details*/
     public void addBondDetails() {
 		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
-		if (ctPerformanceBond.getFinancialOrg() == null) {
-			ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
-		}
+	    ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
+	    ctPerformanceBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+	    ctPerformanceBond.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
 	}
     

@@ -222,7 +222,7 @@
 					<p:column headerText="Ministry Name" style="width:25%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.parentOrgProfile.orgName}" />
 					</p:column>
-					<p:column headerText="PTJ Name"	style="width:25%; white-space:normal;">
+					<p:column headerText="PTJ Name"	style="width:30%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />
 					</p:column>
 					<p:column headerText="Ceiling Quantity" style="width:10%;">
@@ -246,7 +246,7 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Action" style="width:10%;" styleClass="column-align-center">
+					<p:column headerText="Action" style="width:5%;" styleClass="column-align-center">
 						<p:commandLink update=":form:ceilingTable" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />

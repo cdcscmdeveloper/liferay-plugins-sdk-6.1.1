@@ -2240,6 +2240,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		 return null;
 	 }
 	
+	  public boolean isApprover() {
+			return (getFacesScopes().hasRoleUser(RoleCode.APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
+		}
+	
 	public boolean invalidContractExtendPeriod() {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);

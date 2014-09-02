@@ -156,7 +156,8 @@
          </h:panelGrid>
           <h:panelGrid columns="4">
 	          <p:selectOneMenu id="menuSelectionId" required="true"  style="width:180px;" label="#{lbl['lbl.ct.tr.recom']}"
-	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}"
+	          	 disabled="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate
+	          	 or terminationBackingBean.isApprover()}"
 				 value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
 				 <f:selectItems value="#{terminationBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
 				 <p:ajax event="change" update=":form:terminateContract" process="@this"
