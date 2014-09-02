@@ -11,8 +11,7 @@
 		}
 	</style>
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true" toggleSpeed="500"
-		rendered="#{(contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds.size() != 0  
-	     or contractDetailsBackingBean.managedBean.updateContract) and !contractDetailsBackingBean.managedBean.directPurchase}">
+		rendered="#{contractDetailsBackingBean.managedBean.ctContract.bondReq and !contractDetailsBackingBean.managedBean.directPurchase}">
 		 <p:dataTable id="tableBond" var="varBond"
 			  value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
 			  rowKey="#{varBond}" selection="#{contractDetailsBackingBean.selectedBondList}">
@@ -95,12 +94,10 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<c:if test='#{contractDetailsBackingBean.managedBean.updateContract}'>
-				<p:commandButton value="Add" process="@form" icon="ui-icon-add"
-					action="#{contractDetailsBackingBean.addBondDetails}"
-					update="tableBond" />
+				<p:commandButton value="Add" process="@form" 
+				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" />
 				<p:spacer width="1" />
-				<p:commandButton value="Delete" icon="ui-icon-delete"
-					process="@form" onclick="dlgPerformDel.show();" />
+				<p:commandButton value="Delete" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();" />
 			</c:if>
 		</div>
 		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false"
