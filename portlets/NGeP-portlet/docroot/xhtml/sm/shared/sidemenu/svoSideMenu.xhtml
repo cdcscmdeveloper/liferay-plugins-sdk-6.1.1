@@ -9,46 +9,16 @@
 		<p:menuitem value="Site Visit Info" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
 		<p:menuitem value="Financial Information" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
 		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
+		<p:menuitem value="Office Location"  update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
 		
-		<c:forEach var="catType" items="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.transportation']}"
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRANSPORTATION}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(11,catType.pmParameter.parameterCode)}" />
-			
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.workshop']}"  
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_WORKSHOP}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(12,catType.pmParameter.parameterCode)}" />
-
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.insurance']}" 
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_INSURANCE}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(13,catType.pmParameter.parameterCode)}" />
-			
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.dockyard']}"
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(14,catType.pmParameter.parameterCode)}" />
-
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.manufacturing']}" 
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_MANUFACTURING}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(15,catType.pmParameter.parameterCode)}" />
-			
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.printing']}" 
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_PRINTING}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(16,catType.pmParameter.parameterCode)}" />
-			
-				<p:menuitem value="#{lbl['lbl.sm.sitevisit.category.travel']}" 
-					update="pnlDisplay,tabIndex" rendered="#{catType.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_TRAVEL}"
-					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(17,catType.pmParameter.parameterCode)}" />
-					
+		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
+			<ui:param name="lblCategory" value="lbl.sm.sitevisit.category.categorycode_#{entry.value}" />
+	   		<ui:param name="lastNo" value="#{entry.key}" />
+	   		<p:menuitem value="#{lbl[lblCategory]}" update="pnlDisplay,tabIndex" 
+					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(entry.key,entry.value)}" />
 		</c:forEach>
-		<p:menuitem value="Report Submission" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(20,'')}" />
+
+		<p:menuitem value="Report Submission" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />.
 	</p:tabMenu>
-<!-- 							<c:if -->
-<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 18}"> -->
-<!-- 							<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" /> -->
-<!-- 						</c:if> -->
-						
-<!-- 						<c:if -->
-<!-- 							test="#{svoSiteVisitBackingBean.managedBean.activeIndex == 19}"> -->
-<!-- 							<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" /> -->
-<!-- 						</c:if> -->
+	
 </ui:composition>

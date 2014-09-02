@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.sitevisit;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,12 +8,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvCategory;
+import my.ep.persistence.entity.sm.SmSvEquipment;
 import my.ep.persistence.entity.sm.SmSvInterviewee;
+import my.ep.persistence.entity.sm.SmSvManufacturingDoc;
+import my.ep.persistence.entity.sm.SmSvPrintwork;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
+import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "svoSiteVisitMB")
@@ -31,6 +40,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private Map<String,SmSvTemplate> smSvTemplateMap;
 	private SmSvTemplate selectedSvTemplate;
 	private SmSvInterviewee[] selectedInterviewees;
+	private SmSvWorker[] selectedWorkers;
+	private SmSvManufacturingDoc[] selectedAddFinancialDoc;
 	
 	private int totalBOD;
 	private int totalMgmt;
@@ -53,7 +64,28 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private int cheqNonBumi;
 	private int cheqNonMalaysian;
 	
+//	private List<SmSvEquipment> dockyardEquipMain;
+//	private List<SmSvEquipment> dockyardEquipBeating;
+//	private Map<Long,PmParameterDesc> dockyardEquipmentMap;
+//	private Map<Long,PmParameterDesc> dockWorkLicenseInsMap;
 	
+	private List<SmSvEquipment> workshopEquipMain;
+	private List<SmSvEquipment> workshopEquipBeating;
+	private Map<Long,PmParameterDesc> workshopEquipmentMap;
+	
+	private SmMachineDtl[] selectedDockyardMachine;
+	private SmMachineDtl[] selectedWorkshopMachine;
+	
+	private Map<Long, PmParameterDesc> printingParamMap;
+	private ArrayList<String> printingCatLs;
+	private Map<String, SmSvCategory> printingCatMap;
+	private SmSvPrintwork[] selectedPrintWorks;
+	
+	private List<SmSupplierCategory> categoryApplicable;
+	private Map<Integer,String> indexPageMap;
+	private SmPersonnel contactPerson;
+	
+	private int lastIndex;
 
 	public SMSiteVisitDataType getBpmPojo() {
 		return bpmPojo;
@@ -296,4 +328,162 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	public void setCheqNonMalaysian(int cheqNonMalaysian) {
 		this.cheqNonMalaysian = cheqNonMalaysian;
 	}
+
+//	public List<SmSvEquipment> getDockyardEquipMain() {
+//		return dockyardEquipMain;
+//	}
+//
+//	public void setDockyardEquipMain(List<SmSvEquipment> dockyardEquipMain) {
+//		this.dockyardEquipMain = dockyardEquipMain;
+//	}
+
+/*	public Map<Long, PmParameterDesc> getDockyardEquipmentMap() {
+		return dockyardEquipmentMap;
+	}
+
+	public void setDockyardEquipmentMap(
+			Map<Long, PmParameterDesc> dockyardEquipmentMap) {
+		this.dockyardEquipmentMap = dockyardEquipmentMap;
+	}
+
+	public Map<Long, PmParameterDesc> getDockWorkLicenseInsMap() {
+		return dockWorkLicenseInsMap;
+	}
+
+	public void setDockWorkLicenseInsMap(
+			Map<Long, PmParameterDesc> dockWorkLicenseInsMap) {
+		this.dockWorkLicenseInsMap = dockWorkLicenseInsMap;
+	}*/
+
+	public SmMachineDtl[] getSelectedDockyardMachine() {
+		return selectedDockyardMachine;
+	}
+
+	public void setSelectedDockyardMachine(SmMachineDtl[] selectedDockyardMachine) {
+		this.selectedDockyardMachine = selectedDockyardMachine;
+	}
+
+//	public List<SmSvEquipment> getDockyardEquipBeating() {
+//		return dockyardEquipBeating;
+//	}
+//
+//	public void setDockyardEquipBeating(List<SmSvEquipment> dockyardEquipBeating) {
+//		this.dockyardEquipBeating = dockyardEquipBeating;
+//	}
+
+	public List<SmSvEquipment> getWorkshopEquipMain() {
+		return workshopEquipMain;
+	}
+
+	public List<SmSvEquipment> getWorkshopEquipBeating() {
+		return workshopEquipBeating;
+	}
+
+	public Map<Long, PmParameterDesc> getWorkshopEquipmentMap() {
+		return workshopEquipmentMap;
+	}
+
+	public void setWorkshopEquipMain(List<SmSvEquipment> workshopEquipMain) {
+		this.workshopEquipMain = workshopEquipMain;
+	}
+
+	public void setWorkshopEquipBeating(List<SmSvEquipment> workshopEquipBeating) {
+		this.workshopEquipBeating = workshopEquipBeating;
+	}
+
+	public void setWorkshopEquipmentMap(
+			Map<Long, PmParameterDesc> workshopEquipmentMap) {
+		this.workshopEquipmentMap = workshopEquipmentMap;
+	}
+
+	public SmMachineDtl[] getSelectedWorkshopMachine() {
+		return selectedWorkshopMachine;
+	}
+
+	public void setSelectedWorkshopMachine(SmMachineDtl[] selectedWorkshopMachine) {
+		this.selectedWorkshopMachine = selectedWorkshopMachine;
+	}
+
+	public SmSvWorker[] getSelectedWorkers() {
+		return selectedWorkers;
+	}
+
+	public void setSelectedWorkers(SmSvWorker[] selectedWorkers) {
+		this.selectedWorkers = selectedWorkers;
+	}
+
+	public SmSvManufacturingDoc[] getSelectedAddFinancialDoc() {
+		return selectedAddFinancialDoc;
+	}
+
+	public void setSelectedAddFinancialDoc(
+			SmSvManufacturingDoc[] selectedAddFinancialDoc) {
+		this.selectedAddFinancialDoc = selectedAddFinancialDoc;
+	}
+
+	public Map<Long, PmParameterDesc> getPrintingParamMap() {
+		return printingParamMap;
+	}
+
+	public void setPrintingParamMap(Map<Long, PmParameterDesc> printingParamMap) {
+		this.printingParamMap = printingParamMap;
+	}
+
+	public ArrayList<String> getPrintingCatLs() {
+		return printingCatLs;
+	}
+
+	public void setPrintingCatLs(ArrayList<String> printingCatLs) {
+		this.printingCatLs = printingCatLs;
+	}
+
+	public Map<String, SmSvCategory> getPrintingCatMap() {
+		return printingCatMap;
+	}
+
+	public void setPrintingCatMap(Map<String, SmSvCategory> printingCatMap) {
+		this.printingCatMap = printingCatMap;
+	}
+
+	public SmSvPrintwork[] getSelectedPrintWorks() {
+		return selectedPrintWorks;
+	}
+
+	public void setSelectedPrintWorks(SmSvPrintwork[] selectedPrintWorks) {
+		this.selectedPrintWorks = selectedPrintWorks;
+	}
+
+	public List<SmSupplierCategory> getCategoryApplicable() {
+		return categoryApplicable;
+	}
+
+	public void setCategoryApplicable(List<SmSupplierCategory> categoryApplicable) {
+		this.categoryApplicable = categoryApplicable;
+	}
+
+	public Map<Integer, String> getIndexPageMap() {
+		return indexPageMap;
+	}
+
+	public void setIndexPageMap(Map<Integer, String> indexPageMap) {
+		this.indexPageMap = indexPageMap;
+	}
+
+	public SmPersonnel getContactPerson() {
+		return contactPerson;
+	}
+
+	public void setContactPerson(SmPersonnel contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public int getLastIndex() {
+		return lastIndex;
+	}
+
+	public void setLastIndex(int lastIndex) {
+		this.lastIndex = lastIndex;
+	}
+
+
 }
