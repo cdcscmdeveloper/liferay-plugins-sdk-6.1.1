@@ -66,6 +66,14 @@
 							<ui:include src="/xhtml/sm/svositevisit/travel.xhtml" />
 						</c:if>
 						
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_BUMIPUTERA}">
+							<ui:include src="/xhtml/sm/svositevisit/bumiputera.xhtml" />
+						</c:if>
+
+						<c:if test="#{category == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA}">
+							<ui:include src="/xhtml/sm/svositevisit/overseaReadingMaterial.xhtml" />
+						</c:if>
+						
 						<c:if test="#{svoSiteVisitBackingBean.managedBean.activeIndex == svoSiteVisitBackingBean.managedBean.lastIndex}">
 							<ui:include src="/xhtml/sm/svositevisit/reportPreview.xhtml" />
 						</c:if>
