@@ -160,9 +160,7 @@ public class SupplierManagementConst {
 	public static final String P221603 = "221603";
 	public static final String P221604 = "221604";
 	public static final String P221605 = "221605";
-	public static final String P221606 = "221606";
 	public static final String P221607 = "221607";
-	public static final String P221608 = "221608";
 	public static final String P221609 = "221609";
 	public static final String P221610 = "221610";
 	public static final String P221611 = "221611";
