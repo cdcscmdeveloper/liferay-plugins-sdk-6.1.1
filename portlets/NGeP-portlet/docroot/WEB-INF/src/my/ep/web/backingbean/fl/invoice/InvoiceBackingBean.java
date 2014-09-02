@@ -225,6 +225,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			return RoleCode.BASIC_SUPPLIER_ADMIN.value();
 		else if(getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
 			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value()))
+			return RoleCode.FL_APPROVER.value();		
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
 			return RoleCode.BPK_APPROVER.value();
 		else 
