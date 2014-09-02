@@ -29,7 +29,11 @@
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.incomeTaxNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.est.date']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" 
+						value="#{smSupplier.establishDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+				</td>
 			</tr>
 
 			<tr>
@@ -37,13 +41,18 @@
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.bumi.status']}" /></td>
-				<td><p:inputText value="Yes/No" disabled="true" readonly="true"
+				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, smSupplier.bumi)}" disabled="true" readonly="true"
 						size="30" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.eff.date']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText
+						value="#{smSupplier.smMofAccounts[0].effDate}"
+						size="30" readonly="true" disabled="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.exp.date']}" /></td>
 				<td><p:inputText
 						value="#{smSupplier.smMofAccounts[0].expDate}"
@@ -109,8 +118,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true">
-		<p:dataTable id="factory" rowIndexVar="index" var="factory"
-			rowKey="#{factory}">
+		<p:dataTable id="factory" rowIndexVar="index" >
 			<ac:paginator for="factory"></ac:paginator>
 			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
 			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
