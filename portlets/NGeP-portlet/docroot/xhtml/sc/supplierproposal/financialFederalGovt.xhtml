@@ -12,21 +12,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
 		<div>
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
 		</div>
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.sp.title']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.title}"
-							disabled="true" size="150" /></td>
-				</tr>
-			</table>
-		</p:panel>
+		
+		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.fed.gov']}" toggleable="true">
 			<table>
@@ -36,14 +30,17 @@
 			</table>
 			<p:dataTable id="financegovtid" var="financegovt"
 				value="#{supplierProposalDetailBackingBean.managedBean.scLoaList}"
-				rowKey="#{financegovt}" rowIndexVar="rowIndex">
+				rowKey="#{financegovt}" rowIndexVar="rowIndex"
+				rows="10">
+				
+				<ac:paginator for="financegovtid" />
 
 				<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}">
-					<h:outputText />
+					<h:outputText value="#{financegovt.scLoiLoa.pmOrgProfile.orgName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}">
-					<h:outputText value="#{financegovt.title}" />
+					<h:outputText value="#{financegovt.scLoiLoa.title}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractno']}">
@@ -51,19 +48,28 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.effectivedt']}">
-					<h:outputText value="#{financegovt.contractEffDate}" />
+					<h:outputText value="#{financegovt.contractEffDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.expirydt']}">
-					<h:outputText value="#{financegovt.contractExpDate}" />
+					<h:outputText value="#{financegovt.contractExpDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}">
-					<h:outputText />
+					<h:outputText style="float : right" value="#{financegovt.contractDuration.intValue()/12}">
+						<f:convertNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.contract.amt']}">
-					<h:outputText value="#{financegovt.loaAmt}" />
+				<p:column headerText="#{lbl['lbl.sc.sp.contract.amt']}" style="text-align:right">
+					<h:outputText value="#{financegovt.loaAmt}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 
 			</p:dataTable>
