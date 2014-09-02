@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -90,6 +91,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Non-Federal Government
 	private List<ScQtPRPExperience> scQtPRPExperiences;
 	private List<ScQtPRPExperience> selectedPRPExperiences;
+	private List<ScQtPRPExperienceNCheckList> scQtPRPExperienceNCheckLists;
 	private int totalContracts;
 	private int totalYears;
 	private BigDecimal totalContractAmount;
@@ -139,6 +141,9 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmAppl smAppl;
 	private List<TechnicalStaffBean> smPersonnelList;
+	
+	private int technicalTableRow;
+	private int financialTableRow;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -370,6 +375,21 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	public void setSelectedPRPExperiences(
 			List<ScQtPRPExperience> selectedPRPExperiences) {
 		this.selectedPRPExperiences = selectedPRPExperiences;
+	}
+
+	/**
+	 * @return the scQtPRPExperienceNCheckLists
+	 */
+	public List<ScQtPRPExperienceNCheckList> getScQtPRPExperienceNCheckLists() {
+		return scQtPRPExperienceNCheckLists;
+	}
+
+	/**
+	 * @param scQtPRPExperienceNCheckLists the scQtPRPExperienceNCheckLists to set
+	 */
+	public void setScQtPRPExperienceNCheckLists(
+			List<ScQtPRPExperienceNCheckList> scQtPRPExperienceNCheckLists) {
+		this.scQtPRPExperienceNCheckLists = scQtPRPExperienceNCheckLists;
 	}
 
 	public List<ScQtPRPCreditFacility> getScQtPRPCreditFacilities() {
@@ -700,6 +720,34 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
 		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
+	}
+
+	/**
+	 * @return the technicalTableRow
+	 */
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+
+	/**
+	 * @param technicalTableRow the technicalTableRow to set
+	 */
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+
+	/**
+	 * @return the financialTableRow
+	 */
+	public int getFinancialTableRow() {
+		return financialTableRow;
+	}
+
+	/**
+	 * @param financialTableRow the financialTableRow to set
+	 */
+	public void setFinancialTableRow(int financialTableRow) {
+		this.financialTableRow = financialTableRow;
 	}
 	
 }
