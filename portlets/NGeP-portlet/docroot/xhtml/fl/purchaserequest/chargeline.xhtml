@@ -33,9 +33,8 @@
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Code" sortBy="#{chargeLineNode.cmItem.extensionCode}">
-				<h:outputText
-					value="#{chargeLineNode.cmItem.extensionCode}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" />
+				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" />			
 			</p:column>
 			<p:column headerText="Item Name" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
