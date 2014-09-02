@@ -16,6 +16,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.sm.ApplType;
@@ -95,6 +96,17 @@ public class SmCommonUtil {
 			statDescMap.put(pmStatDesc.getPmStatus().getStatusId(), pmStatDesc);
 		}
 		return statDescMap;
+	}
+	
+	public static PmParameter retrieveParameterByTypeAndCode(String paramType, String paramCode, String lang){
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(paramType);
+		reqDTO.setParameterCode(paramCode);
+		reqDTO.setLanguageCode(lang);
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
+		
+		return resDTO.getPmParameter();
 	}
 	
 	public static String getApplTypeDesc(String applType){
