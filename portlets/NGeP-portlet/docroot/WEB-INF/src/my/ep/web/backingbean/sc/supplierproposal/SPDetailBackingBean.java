@@ -20,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
@@ -28,6 +29,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -67,12 +70,12 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
-import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -109,7 +112,10 @@ public class SPDetailBackingBean extends
 	private static final String NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE = "/xhtml/sc/supplierproposal/financialNonFederalGovt.xhtml";
 	private static final String NAV_TO_FINANCE_BANK_STATEMENT_PAGE = "/xhtml/sc/supplierproposal/financialBankStatement.xhtml";
 	private static final String NAV_TO_ASSET_LIABILITY_PAGE = "/xhtml/sc/supplierproposal/financialAssetLiability.xhtml";
+	private static final String NAV_TO_PAID_UP_CAPITAL_PAGE = "/xhtml/sc/supplierproposal/financialPaidUpCapital.xhtml";
 	private static final String NAV_TO_PROPOSAL_MAIN_PAGE = "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml";
+	
+	private static final SimpleDateFormat BANK_STATEMENT_MONTH_FORMAT = new SimpleDateFormat("MMMM yyyy");
 
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
@@ -148,57 +154,18 @@ public class SPDetailBackingBean extends
 			if (resDTO.getTechnicalCheckLists() != null) {
 				getManagedBean().setTecCheckDetailsList(
 						resDTO.getTechnicalCheckLists());
+				
 				log.info("Technical Check list: "
 						+ resDTO.getTechnicalCheckLists().size());
-
-				for (ScQtProposalChecklist scQtProposalChecklist : resDTO
-						.getTechnicalCheckLists()) {
-					// this.getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
-					System.out
-							.println("*****ScQtProposalChecklist---proposal checklist id is"
-									+ scQtProposalChecklist
-											.getQtProposalChecklistId());
-					System.out
-							.println("*****proposalChecklist--- qt checklist id is"
-									+ scQtProposalChecklist.getScQtCheckList()
-											.getQtChecklistId());
-					System.out.println("*****proposalChecklist---qt id is"
-							+ scQtProposalChecklist.getScQtCheckList()
-									.getScQt().getQtId());
-
-					if (scQtProposalChecklist.getScQtCheckList()
-							.getScQtCheckListValue() != null) {
-
-						System.out.println("*****is all employee*****"
-								+ scQtProposalChecklist.getScQtCheckList()
-										.getScQtCheckListValue()
-										.isAllEmployee());
-
-					}
-				}
 			}
 			// Financial Check List
 			if (resDTO.getFinancialCheckLists() != null) {
 
 				getManagedBean().setFinanceCheckDetailsList(
 						resDTO.getFinancialCheckLists());
+				
 				log.info("Financial Check list: "
 						+ resDTO.getFinancialCheckLists().size());
-
-				for (ScQtProposalChecklist scQtProposalChecklist : resDTO
-						.getFinancialCheckLists()) {
-					System.out
-							.println("*****ScQtProposalChecklist---proposal checklist id is"
-									+ scQtProposalChecklist
-											.getQtProposalChecklistId());
-					System.out
-							.println("*****proposalChecklist---checklist id is"
-									+ scQtProposalChecklist.getScQtCheckList()
-											.getQtChecklistId());
-					System.out.println("*****proposalChecklist---qt id is"
-							+ scQtProposalChecklist.getScQtCheckList()
-									.getScQt().getQtId());
-				}
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
@@ -274,8 +241,9 @@ public class SPDetailBackingBean extends
 	/**
 	 * Will be called for financial non government company experiance..
 	 */
-	public void saveNonGovCompanyExpDtls() {
-		debugLogger("savePRPExperinceInfo");
+	public String saveFinancialNonGovCompanyExpAction(boolean isCompleted) {
+		debugLogger("saveFinancialNonGovCompanyExpAction");
+		
 		IQTProposalSO proposalSO = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
@@ -285,18 +253,27 @@ public class SPDetailBackingBean extends
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
 
-			List<ScQtPRPExperienceNCheckList> experienceNCheckList = new ArrayList<ScQtPRPExperienceNCheckList>();
-			List<ScQtPRPExperience> experiences = this.getManagedBean()
-					.getScQtPRPExperiences();
-			// TODO refer later for other requirements
-
-			for (ScQtPRPExperience prpExperience : experiences) {
-
-				ScQtPRPExperienceNCheckList checkList = new ScQtPRPExperienceNCheckList();
-				checkList.setScQtProposalChecklist(scQtProposalChecklist);
-				checkList.setScQtPRPExperience(prpExperience);
-				experienceNCheckList.add(checkList);
+			List<ScQtPRPExperienceNCheckList> experienceNCheckLists = this.getManagedBean()
+					.getScQtPRPExperienceNCheckLists();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
+			
+			if (experienceNCheckLists == null || experienceNCheckLists.size() == 0) {
+				List<ScQtPRPExperience> experiences = this.getManagedBean()
+						.getScQtPRPExperiences();
+				
+				if (experiences != null) {
+					experienceNCheckLists = new ArrayList<ScQtPRPExperienceNCheckList>();
+					
+					for (ScQtPRPExperience prpExperience : experiences) {
+						ScQtPRPExperienceNCheckList checkList = new ScQtPRPExperienceNCheckList();
+						checkList.setScQtProposalChecklist(scQtProposalChecklist);
+						checkList.setScQtPRPExperience(prpExperience);
+						experienceNCheckLists.add(checkList);
+					}
+				}
 			}
+			
 			// TODO check any chance of returning null from SO
 			List<ScQtProposalScore> proposalScore = this.getManagedBean()
 					.getScQtProposalScoreList();
@@ -321,74 +298,66 @@ public class SPDetailBackingBean extends
 				}
 			}
 			scQtProposalChecklist
-					.setExperienceNCheckLists(experienceNCheckList);
+					.setExperienceNCheckLists(experienceNCheckLists);
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			// to delete the deleted experiences from db
+			reqDTO.setTobeRemovedExperience(getManagedBean()
+					.getDeletedPRPExperiences());
+			
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setDeletedPRPExperiences(null);
+				
+				return navigatePrepareFinProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
+			}
 
 		} finally {
 			proposalSO = null;
 		}
+		
+		return null;
 	}
 
-	public void saveTechnicalSpecificationAction() {
+	public String saveTechnicalSpecificationAction(boolean isCompleted) {
 		debugLogger("saveTechnicalSpecificationAction");
 		
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		
-		scQtProposalChecklist.setSubmitted(false);
+		scQtProposalChecklist.setSubmitted(isCompleted);
 		
 		ProposalResDTO proposalResDTO = saveTempleateSpecDtls();
 
 		if (proposalResDTO.isSuccessful()) {
-			ScQtProposalChecklist qtProposalChecklist = proposalResDTO.getProposalChecklist();
-						
-			updateQtTechProposalCheckList(qtProposalChecklist);
-			
-			prepareTechnicalAction(qtProposalChecklist);
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(
-						FacesMessage.SEVERITY_INFO,
-						null,
-						MessageUtils.getMessage(
-							MessageConst.INFO_100002,
-							null,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
+			return navigatePrepareTecProposalCheckList(
+					scQtProposalChecklist,
+					proposalResDTO.getProposalChecklist(), isCompleted);
 		}
 
+		return null;
 	}
 
-	public void saveFinancialSpecificationAction() {
+	public String saveFinancialSpecificationAction(boolean isCompleted) {
 		debugLogger("saveFinancialSpecificationAction");
 		
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 		
-		scQtProposalChecklist.setSubmitted(false);
+		scQtProposalChecklist.setSubmitted(isCompleted);
 		
 		ProposalResDTO proposalResDTO = saveTempleateSpecDtls();
 		
 		if (proposalResDTO.isSuccessful()) {
-			
-			updateQtFinProposalCheckList(proposalResDTO.getProposalChecklist());
-			
-			prepareFinancialAction(scQtProposalChecklist);
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(
-						FacesMessage.SEVERITY_INFO,
-						null,
-						MessageUtils.getMessage(
-							MessageConst.INFO_100002,
-							null,
-							MessageUtils.BUNDLE_COMMON_MESSAGES,
-							new FacesScopes().getUserLocale())));
+			return navigatePrepareFinProposalCheckList(
+					scQtProposalChecklist,
+					proposalResDTO.getProposalChecklist(), isCompleted);
 		}
+		
+		return null;
 	}
 
 	private ProposalResDTO saveTempleateSpecDtls() {
@@ -414,7 +383,7 @@ public class SPDetailBackingBean extends
 		return proposalResDTO;
 	}
 
-	public void saveFinancialCreditFacilityAction() {
+	public String saveFinancialCreditFacilityAction(boolean isCompleted) {
 		debugLogger("saveFinancialCreditFacilityAction");
 		IQTProposalSO proposalSO = null;
 		try {
@@ -422,11 +391,12 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 
-			ProposalResDTO resDTO = new ProposalResDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
 			List<ScQtProposalScore> proposalScore = this.getManagedBean()
 					.getScQtProposalScoreList();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			if (null != proposalScore && proposalScore.isEmpty()) {
 				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
@@ -451,16 +421,26 @@ public class SPDetailBackingBean extends
 					.getManagedBean().getScQtPRPCreditFacilities());
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			reqDTO.setTobeCreditFacility(getManagedBean()
+			reqDTO.setTobeRemovedCreditFacilities(getManagedBean()
 					.getToBeDeletedCreditFacilities());
-			resDTO = proposalSO.saveProposalDetails(reqDTO);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setToBeDeletedCreditFacilities(null);
+				
+				return navigatePrepareFinProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
+			}
+			
 		} finally {
 			proposalSO = null;
 		}
 
+		return null;
 	}
 
-	public void saveFinancialCashOnHandAction() {
+	public String saveFinancialCashOnHandAction(boolean isCompleted) {
 		debugLogger("saveFinancialCashOnHandAction");
 		IQTProposalSO proposalSO = null;
 		try {
@@ -468,12 +448,14 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 
-			ProposalResDTO resDTO = new ProposalResDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
 
 			List<ScQtProposalScore> proposalScore = this.getManagedBean()
 					.getScQtProposalScoreList();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
+			
 			if (null != proposalScore && proposalScore.isEmpty()) {
 				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
 				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
@@ -499,13 +481,23 @@ public class SPDetailBackingBean extends
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
 			reqDTO.setTobecashOnHand(getManagedBean()
 					.getToBeDeletedCashOnHandList());
-			resDTO = proposalSO.saveProposalDetails(reqDTO);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				getManagedBean().setToBeDeletedCashOnHandList(null);
+				
+				return navigatePrepareFinProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
+			}
 		} finally {
 			proposalSO = null;
 		}
+		
+		return null;
 	}
 
-	public void saveBankStatementAction() {
+	public String saveBankStatementAction(boolean isCompleted) {
 		debugLogger("saveBankStatementAction");
 		IQTProposalSO proposalSO = null;
 		try {
@@ -513,9 +505,10 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 
-			ProposalResDTO resDTO = new ProposalResDTO();
 			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 					.getQtProposalChecklist();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			List<ScQtProposalScore> proposalScore = this.getManagedBean()
 					.getScQtProposalScoreList();
@@ -542,10 +535,18 @@ public class SPDetailBackingBean extends
 					.getScQtPRPBankStmts());
 			scQtProposalChecklist.setProposalScore(proposalScore);
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			resDTO = proposalSO.saveProposalDetails(reqDTO);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				return navigatePrepareFinProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
+			}
 		} finally {
 			proposalSO = null;
 		}
+		
+		return null;
 	}
 
 	// TODO to save no of employees involved in the current QT
@@ -626,7 +627,8 @@ public class SPDetailBackingBean extends
 					qtProposalChecklist.setSubmitted(false);
 				}
 				
-				updateQtTechProposalCheckList(qtProposalChecklist);
+				updateQtTechProposalCheckList(getManagedBean().getQtProposalChecklist(), 
+						qtProposalChecklist);
 
 				// return
 				// "/xhtml/sc/supplierproposal/supplierProposalMain.xhtml?faces-redirect=true";
@@ -638,7 +640,7 @@ public class SPDetailBackingBean extends
 		// return null;
 	}
 
-	public void saveTechNonGovCompanyExpAction() {
+	public String saveTechNonGovCompanyExpAction(boolean isCompleted) {
 		debugLogger("saveTechNonGovCompanyExpAction");
 		IQTProposalSO proposalSO = null;
 		try {
@@ -650,6 +652,8 @@ public class SPDetailBackingBean extends
 					.getQtProposalChecklist();
 			List<ScQtPRPExperience> experiences = this.getManagedBean()
 					.getScQtPRPExperiences();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
 
 			// initial save list is empty
 			List<ScQtPRPExperienceNCheckList> experienceNCheckList = new ArrayList<ScQtPRPExperienceNCheckList>();
@@ -714,83 +718,29 @@ public class SPDetailBackingBean extends
 			// to delete the deleted experiences from db
 			reqDTO.setTobeRemovedExperience(getManagedBean()
 					.getDeletedPRPExperiences());
+			
+			ScQtProposalChecklist finProposalChecklist = findProposalChecklistByDocDefKey(
+					getManagedBean().getFinanceCheckDetailsList(), 
+					SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
+			
+			reqDTO.setTobeUpdateProposalChecklist(finProposalChecklist);
+			
 			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-
-				ScQtProposalChecklist qtProposalChecklist = resDTO
-						.getProposalChecklist();
-				if (qtProposalChecklist.isSubmitted()) {
-					qtProposalChecklist.setSubmitted(false);
-				}
+				getManagedBean().setDeletedPRPExperiences(null);
 				
-				updateQtTechProposalCheckList(qtProposalChecklist);
+				updateQtFinProposalCheckList(finProposalChecklist, resDTO.getTobeUpdateProposalChecklist());
 				
-				prepareTechnicalAction(qtProposalChecklist);
-				
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(
-							FacesMessage.SEVERITY_INFO,
-							null,
-							MessageUtils.getMessage(
-								MessageConst.INFO_100002,
-								null,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-
+				return navigatePrepareTecProposalCheckList(
+						scQtProposalChecklist,
+						resDTO.getProposalChecklist(), isCompleted);
 			}
 
 		} finally {
 			proposalSO = null;
 		}
 
-	}
-
-	public String completeTechnicalSpecificationAction() {
-
-		debugLogger("completeTechnicalSpecificationAction");
-		
-		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
-		
-		scQtProposalChecklist.setSubmitted(true);
-		
-		ProposalResDTO proposalResDTO = saveTempleateSpecDtls();
-
-		if (proposalResDTO.isSuccessful()) {
-			ScQtProposalChecklist qtProposalChecklist = proposalResDTO.getProposalChecklist();
-						
-			updateQtTechProposalCheckList(qtProposalChecklist);
-			
-			prepareTechnicalAction(qtProposalChecklist);
-
-			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
-		}
-		
-		return null;
-	}
-	
-	public String completeFinancialSpecificationAction() {
-		debugLogger("completeFinancialSpecificationAction");
-		
-		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
-				.getQtProposalChecklist();
-		
-		scQtProposalChecklist.setSubmitted(true);
-		
-		ProposalResDTO proposalResDTO = saveTempleateSpecDtls();
-
-		if (proposalResDTO.isSuccessful()) {
-			ScQtProposalChecklist qtProposalChecklist = proposalResDTO.getProposalChecklist();
-						
-			updateQtFinProposalCheckList(qtProposalChecklist);
-			
-			prepareFinancialAction(qtProposalChecklist);
-
-			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
-		}
-		
 		return null;
 	}
 
@@ -843,6 +793,56 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
+	
+	public String saveFinancialPaidUpCapitalAction(boolean isCompleted) {
+		debugLogger("saveFinancialPaidUpCapitalAction");
+		IQTProposalSO proposalSO = null;
+		try {
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+
+			ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
+					.getQtProposalChecklist();
+
+			List<ScQtProposalScore> proposalScore = this.getManagedBean()
+					.getScQtProposalScoreList();
+			
+			scQtProposalChecklist.setSubmitted(isCompleted);
+			
+			if (null != proposalScore && proposalScore.isEmpty()) {
+				ScQtProposalScore scQtProposalScore = new ScQtProposalScore();
+				scQtProposalScore.setProposalChecklist(scQtProposalChecklist);
+				scQtProposalScore.setCriteriaType(52);
+				scQtProposalScore.setCriteriaValue(this.getManagedBean()
+						.getTotalcashHand());
+				setUserDetails(scQtProposalScore);
+				proposalScore.add(scQtProposalScore);
+			} else {
+				for (ScQtProposalScore scQtProposalScore : proposalScore) {
+					scQtProposalScore
+							.setProposalChecklist(scQtProposalChecklist);
+					scQtProposalScore.setCriteriaType(52);
+					scQtProposalScore.setCriteriaValue(this.getManagedBean()
+							.getTotalcashHand());
+					int a = proposalScore.indexOf(scQtProposalScore);
+					proposalScore.set(a, scQtProposalScore);
+				}
+			}
+			scQtProposalChecklist.setScQtPRPCashOnHands(this.getManagedBean()
+					.getScQtPRPCashOnHand());
+			scQtProposalChecklist.setProposalScore(proposalScore);
+			
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
+			
+			return navigatePrepareFinProposalCheckList(
+					scQtProposalChecklist,
+					resDTO.getProposalChecklist(), isCompleted);
+		} finally {
+			proposalSO = null;
+		}
+	}
 
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
@@ -877,8 +877,10 @@ public class SPDetailBackingBean extends
 				
 				ProposalResDTO resDTO = proposalSO.saveProposalDetails(reqDTO);
 				
-				updateQtProposalCheckList(resDTO.getProposalChecklist());
-				
+				if (resDTO.isSuccessful()) {
+					updateQtProposalCheckList(getManagedBean().getQtProposalChecklist(), 
+							resDTO.getProposalChecklist());	
+				}				
 
 			} finally {
 				proposalSO = null;
@@ -1050,9 +1052,9 @@ public class SPDetailBackingBean extends
 					.getScQtCheckList().getPmDocument()
 					.getDocDefinitionKey();
 			
-			if (SourcingConstants.DOC_DEF_KEY_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
+			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
 
-				return retrieveNonGovCompanyExpDtls(scQtProposalChecklist);
+				return retrieveTecNonGovCompanyExpDtls(scQtProposalChecklist);
 			}
 			
 			// to check proposalchecklist is technicalspecification -
@@ -1091,7 +1093,7 @@ public class SPDetailBackingBean extends
 				+ "?faces-redirect=true";
 	}
 	
-	private String retrieveNonGovCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
+	private String retrieveTecNonGovCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1099,21 +1101,22 @@ public class SPDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setDocDefinationKey(scQtProposalChecklist.getScQtCheckList()
+					.getPmDocument().getDocDefinitionKey());
 			ProposalResDTO resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
 			this.getManagedBean().setScQtProposalScoreList(resDTO.getProposalScores());
 
-			int totalYears = 0;
+			int totalContracts = 0;
 			List<ScQtPRPExperience> qtPRPExperiences = resDTO.getPrpExperience();
 			if (null != qtPRPExperiences) {
 				log.info("Size : " + qtPRPExperiences.size());
-
-				for (ScQtPRPExperience experience : qtPRPExperiences) {
-					totalYears += (experience.getContractPeriod());
-				}
-				this.getManagedBean().setTotalContracts(qtPRPExperiences.size());
+				totalContracts = qtPRPExperiences.size();
 			}
-			this.getManagedBean().setTotalYears((totalYears));
+			
+			this.getManagedBean().setTotalContracts(totalContracts);
 			this.getManagedBean().setScQtPRPExperiences(qtPRPExperiences);
+			
+			totalContractYears();
 			
 			return NAV_TO_NON_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
 			
@@ -1184,8 +1187,8 @@ public class SPDetailBackingBean extends
 					.getScQtCheckList().getPmDocument()
 					.getDocDefinitionKey();
 			
-			if (SourcingConstants.DOC_DEF_KEY_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
-				return retrieveCompanyExpDtls(scQtProposalChecklist);
+			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
+				return retrieveTecCompanyExpDtls(scQtProposalChecklist);
 				
 			} // to check proposalchecklist is technicalspecification -
 				// technical EMPL_LIST_PAGE
@@ -1308,7 +1311,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 	
-	private String retrieveCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
+	private String retrieveTecCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -1341,17 +1344,11 @@ public class SPDetailBackingBean extends
 					loa.setContractDuration(new BigDecimal(0));
 				}
 				total = total + loa.getContractDuration().intValue();
-				log.info("Total No of Years : " + total);
+				
 				// ScQtPRPExperience experience = (ScQtPRPExperience)
 				// experiencesList.get(i);
 			}
 			this.getManagedBean().setNoOfYears(total);
-			
-			for (ScLoa loa : getManagedBean().getScLoaList()) {
-				// log.info("Agency Name : " +
-				// loa.getPmOrgProfile().getOrgName());
-				log.info("Title : " + loa.getScLoiLoa().getTitle());
-			}
 			this.getManagedBean().setContractSize(list.size());
 			
 			return NAV_TO_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
@@ -1392,331 +1389,61 @@ public class SPDetailBackingBean extends
 	}
 
 	public String prepareFinancialAction(
-			ScQtProposalChecklist financialChecklist) {
+			ScQtProposalChecklist scQtProposalChecklist) {
 		debugLogger("prepareFinancialAction");
-		IQTProposalSO proposalSO = null;
-		ProposalResDTO resDTO = null;
-		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+		
+		String definationType = scQtProposalChecklist.getScQtCheckList()
+				.getDefinationType().getParameterCode();
+		
+		getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+		getManagedBean().setScQtCheckList(scQtProposalChecklist.getScQtCheckList());
+
+		// to check financial check list is for
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
+			return retrieveFinancialSpecDtls(scQtProposalChecklist);
+		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM.equalsIgnoreCase(definationType)) {
 			
-			String definationType = financialChecklist.getScQtCheckList()
-					.getDefinationType().getParameterCode();
+			String docDefinitionKey = scQtProposalChecklist
+					.getScQtCheckList().getPmDocument()
+					.getDocDefinitionKey();
 			
-			getManagedBean().setQtProposalChecklist(financialChecklist);
-			getManagedBean().setScQtCheckList(financialChecklist.getScQtCheckList());
+			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrieveFinNonGovCompanyExpDtls(scQtProposalChecklist);
 
-			// to check financial check list is for
-			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION.equalsIgnoreCase(definationType)) {
-				return retrieveFinancialSpecDtls(financialChecklist);
-			}
+			} else if (SourcingConstants.DOC_DEF_KEY_CREDIT_FACILITIES.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrieveCreditFacilitiesDtls(scQtProposalChecklist);
 
-			// TODO
-			else {
-				if ("FN".equalsIgnoreCase(financialChecklist.getScQtCheckList()
-						.getPmDocument().getDocDefinitionKey())) {
-					System.out
-							.println("******FN(NON_GOVT_COMPANY_EXPERIENCE_PAGE) defenition type parameter code is ******"
-									+ financialChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
+			} else if (SourcingConstants.DOC_DEF_KEY_CASH_ON_HAND.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrieveCashOnHandDtls(scQtProposalChecklist);
 
-					List<ScQtProposalChecklist> techinicalProposalCheckLists = this
-							.getManagedBean().getTecCheckDetailsList();
-					ScQtProposalChecklist proposalCheckList = null;
-					if (null != techinicalProposalCheckLists) {
-						for (ScQtProposalChecklist prChecklist : techinicalProposalCheckLists) {
-							if (null != prChecklist.getScQtCheckList()
-									.getPmDocument()) {
-								if (QTConstants.TECHNICAL_PRIVATE_CODE
-										.equalsIgnoreCase(prChecklist
-												.getScQtCheckList()
-												.getPmDocument()
-												.getDocDefinitionKey())) {
-									proposalCheckList = prChecklist;
-									break;
-								}
-							}
-						}
-					}
-					if (null != proposalCheckList) {
-						reqDTO.setScQtProposalChecklist(proposalCheckList);
-						reqDTO.setDocDefinationKey(financialChecklist
-								.getScQtCheckList().getPmDocument()
-								.getDocDefinitionKey());
-						resDTO = proposalSO
-								.retrieveNonGovCompanyExpDtls(reqDTO);
+			} else if (SourcingConstants.DOC_DEF_KEY_FINANCE_BANK_STATEMENT.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrieveBankStmtDtls(scQtProposalChecklist);
 
-						this.getManagedBean().setScQtProposalScoreList(
-								resDTO.getProposalScores());
-						List<ScQtPRPExperience> list = resDTO
-								.getPrpExperience();
-						int totalContractAmount = 0;
-						for (ScQtPRPExperience scQtPRPExperience : list) {
-							totalContractAmount = totalContractAmount
-									+ scQtPRPExperience.getContractAmt()
-											.intValue();
-						}
-						this.getManagedBean().setTotalContractAmount(
-								new BigDecimal(totalContractAmount));
-						this.getManagedBean().setScQtPRPExperiences(list);
-					}
-					System.out
-							.println("FN ***** NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE *****");
-					return NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE
-							+ "?faces-redirect=true";
-
-				} else if ("CF".equalsIgnoreCase(financialChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					System.out
-							.println("******CF(CREDIT_FACILITIES_PAGE) defenition type parameter code is ******"
-									+ financialChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-
-					reqDTO.setScQtProposalChecklist(financialChecklist);
-					// to retrieve credit facility details
-					resDTO = proposalSO.retrieveCreditFacilitiesDtls(reqDTO);
-
-					this.getManagedBean().setScQtProposalScoreList(
-							resDTO.getProposalScores());
-
-					List<ScQtPRPCreditFacility> facilitiesList = resDTO
-							.getCreditFacilityResultBean();
-
-					double totalCredit = 0;
-					double totalPaid = 0;
-
-					for (ScQtPRPCreditFacility scQtPRPCreditFacility : facilitiesList) {
-						totalCredit += scQtPRPCreditFacility.getCreditAmt()
-								.doubleValue();
-						totalPaid += scQtPRPCreditFacility.getAmtPaid()
-								.doubleValue();
-					}
-
-					this.getManagedBean().setTotalAmountCredit(
-							new BigDecimal(totalCredit));
-					this.getManagedBean().setTotalAmountPaid(
-							new BigDecimal(totalPaid));
-
-					BigDecimal credit = new BigDecimal(totalCredit);
-					BigDecimal amountPaid = new BigDecimal(totalPaid);
-
-					MathContext mc = new MathContext(4);
-					if (credit.doubleValue() > 0) { // &&
-													// amountPaid.doubleValue()
-													// > 0
-						BigDecimal paid = amountPaid.divide(credit, mc);
-						BigDecimal amt = new BigDecimal(100);
-						BigDecimal percentage = paid.multiply(amt);
-						this.getManagedBean()
-								.setTotalPercentagePaid(percentage);
-					}
-					this.getManagedBean().setScQtPRPCreditFacilities(
-							facilitiesList);
-					System.out
-							.println("CF ***** NAV_TO_CREDIT_FACILITIES_PAGE *****");
-
-					return NAV_TO_CREDIT_FACILITIES_PAGE
-							+ "?faces-redirect=true";
-
-				} else if ("CH".equalsIgnoreCase(financialChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					System.out
-							.println("******CH(CASH_ON_HAND_PAGES) defenition type parameter code is ******"
-									+ financialChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-					reqDTO.setQtProposalCheckListId(financialChecklist
-							.getQtProposalChecklistId());
-					resDTO = proposalSO.retrieveCashOnHandDtls(reqDTO);
-					this.getManagedBean().setScQtProposalScoreList(
-							resDTO.getProposalScores());
-					List<ScQtPRPCashOnHand> cashOnHand = resDTO
-							.getCashOnHandResultBean();
-
-					int totalCashOnHand = 0;
-
-					if (cashOnHand != null) {
-
-						for (ScQtPRPCashOnHand scQtPRPCashOnHand : cashOnHand) {
-							totalCashOnHand = totalCashOnHand
-									+ scQtPRPCashOnHand.getCashAmount()
-											.intValue();
-						}
-						log.info("Size : " + cashOnHand.size());
-						this.getManagedBean().setScQtPRPCashOnHand(cashOnHand);
-					}
-
-					this.getManagedBean().setTotalcashHand(
-							new BigDecimal(totalCashOnHand));
-
-					System.out
-							.println("CH ***** NAV_TO_CASH_ON_HAND_PAGES *****");
-
-					return NAV_TO_CASH_ON_HAND_PAGES + "?faces-redirect=true";
-
-				} else if ("BS".equalsIgnoreCase(financialChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					System.out
-							.println("******BS(FINANCE_BANK_STATEMENT_PAGE) defenition type parameter code is ******"
-									+ financialChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-
-					reqDTO.setScQtProposalChecklist(financialChecklist);
-					resDTO = proposalSO.retrieveBankStmtDtls(reqDTO);
-					this.getManagedBean().setScQtProposalScoreList(
-							resDTO.getProposalScores());
-
-					List<ScQtPRPBankStmt> bankStmtList = resDTO
-							.getBankStmtResultBean();
-
-					int totalAmount = 0;
-					List<ScQtPRPBankStmt> bankList = this.getManagedBean()
-							.getScQtPRPBankStmts();
-					if (bankList == null) {
-						bankList = new ArrayList<ScQtPRPBankStmt>();
-					}
-					for (ScQtPRPBankStmt scQtPRPBankStmt : bankStmtList) {
-						totalAmount = totalAmount
-								+ scQtPRPBankStmt.getBalanceAmt().intValue();
-
-						String monthvalue = "";
-						Date date = scQtPRPBankStmt.getStmtDate();
-						SimpleDateFormat dfFormat = new SimpleDateFormat(
-								"dd/MM/yyyy");
-						String convert = dfFormat.format(date);
-						String month = convert.substring(3, 5);
-
-						if ("01".equalsIgnoreCase(month)) {
-							monthvalue = "January ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("02".equalsIgnoreCase(month)) {
-							monthvalue = "February ".concat(convert.substring(
-									6, convert.length()));
-						}
-						if ("03".equalsIgnoreCase(month)) {
-							monthvalue = "March ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("04".equalsIgnoreCase(month)) {
-							monthvalue = "April ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("05".equalsIgnoreCase(month)) {
-							monthvalue = "May ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("06".equalsIgnoreCase(month)) {
-							monthvalue = "June ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("07".equalsIgnoreCase(month)) {
-							monthvalue = "July ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("08".equalsIgnoreCase(month)) {
-							monthvalue = "August ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("09".equalsIgnoreCase(month)) {
-							monthvalue = "September ".concat(convert.substring(
-									6, convert.length()));
-						}
-						if ("10".equalsIgnoreCase(month)) {
-							monthvalue = "October ".concat(convert.substring(6,
-									convert.length()));
-						}
-						if ("11".equalsIgnoreCase(month)) {
-							monthvalue = "November ".concat(convert.substring(
-									6, convert.length()));
-						}
-						if ("12".equalsIgnoreCase(month)) {
-							monthvalue = "December ".concat(convert.substring(
-									6, convert.length()));
-						}
-
-						scQtPRPBankStmt.setMonth(monthvalue);
-						bankList.add(scQtPRPBankStmt);
-					}
-					this.getManagedBean().setTotalAmount(
-							new BigDecimal(totalAmount));
-
-					BigDecimal amount = new BigDecimal(totalAmount);
-					BigDecimal divide = new BigDecimal(3);
-					MathContext mc = new MathContext(4);
-					if (amount.intValue() > 0 && divide.intValue() > 0) {
-						BigDecimal avg = amount.divide(divide, mc);
-						this.getManagedBean().setAvgAmount(avg);
-					}
-					log.info("Size : " + bankStmtList.size());
-					this.getManagedBean().setScQtPRPBankStmts(bankStmtList);
-
-					System.out
-							.println("BS ***** NAV_TO_FINANCE_BANK_STATEMENT_PAGE *****");
-
-					return NAV_TO_FINANCE_BANK_STATEMENT_PAGE
-							+ "?faces-redirect=true";
-
-				} else if ("AL".equalsIgnoreCase(financialChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					System.out
-							.println("******AL(ASSET_LIABILITY_PAGE) defenition type parameter code is ******"
-									+ financialChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-
-					reqDTO.setScQtProposalChecklist(financialChecklist);
-					resDTO = proposalSO.retrieveAssetLiabilityDtls(reqDTO);
-
-					ScQtPRPAssetLiability assetLiability = resDTO
-							.getScQtPRPAssetLiability();
-					if (null != resDTO.getProposalScores()
-							&& !resDTO.getProposalScores().isEmpty()) {
-						this.getManagedBean().setScQtProposalScoreList(
-								resDTO.getProposalScores());
-					}
-					if (null != assetLiability) {
-						BigDecimal asset = assetLiability.getCurrentAssets();
-						BigDecimal liabilities = assetLiability
-								.getCurrentLiabilities();
-						MathContext mc = new MathContext(4);
-						if (asset.intValue() > 0 && liabilities.intValue() > 0) {
-							BigDecimal ratio = asset.divide(liabilities, mc);
-							this.getManagedBean().setAcidRatio(ratio);
-						}
-						this.getManagedBean().setScQtPRPAssetLiability(
-								assetLiability);
-					}
-					System.out
-							.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
-					return NAV_TO_ASSET_LIABILITY_PAGE + "?faces-redirect=true";
-
-				}
+			} else if (SourcingConstants.DOC_DEF_KEY_ASSET_LIABILITY.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrieveAssetLiabilityDtls(scQtProposalChecklist);
+				
+			} else if (SourcingConstants.DOC_DEF_KEY_PAID_UP_CAPITAL.equalsIgnoreCase(docDefinitionKey)) {
+				
+				return retrievePaidUpCapitalDtls(scQtProposalChecklist);
 			}
 		}
-
-		finally {
-			proposalSO = null;
-		}
+		
 		return null;
 	}
 	
-	private String retrieveFinancialSpecDtls(ScQtProposalChecklist financialChecklist) {
+	private String retrieveFinancialSpecDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
-			ScQtCheckList scQtCheckList = financialChecklist.getScQtCheckList();
+			ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
 			ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 			this.getManagedBean().setScQtDoc(scQtDoc);
 			
@@ -1736,7 +1463,7 @@ public class SPDetailBackingBean extends
 			templateSpecBean.setSpecMaster(specMaster);
 			templateSpecBean
 					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			templateSpecBean.setSupplier(financialChecklist
+			templateSpecBean.setSupplier(scQtProposalChecklist
 					.getScQtProposal().getScQtSupplier()
 					.getSmSupplier());
 			templateSpecBackingBean
@@ -1771,62 +1498,270 @@ public class SPDetailBackingBean extends
 		}
 	}
 	
-	private String retrieveNonGovCompanyExpDtls1(ScQtProposalChecklist scQtProposalChecklist) {
+	private String retrieveFinNonGovCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
-			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			ProposalResDTO resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
-			this.getManagedBean().setScQtProposalScoreList(resDTO.getProposalScores());
+			System.out.println("******FN(NON_GOVT_COMPANY_EXPERIENCE_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
 
-			int totalYears = 0;
-			List<ScQtPRPExperience> qtPRPExperiences = resDTO.getPrpExperience();
-			if (null != qtPRPExperiences) {
-				log.info("Size : " + qtPRPExperiences.size());
-
-				for (ScQtPRPExperience experience : qtPRPExperiences) {
-					totalYears += (experience.getContractPeriod());
-				}
-				this.getManagedBean().setTotalContracts(qtPRPExperiences.size());
-			}
-			this.getManagedBean().setTotalYears((totalYears));
-			this.getManagedBean().setScQtPRPExperiences(qtPRPExperiences);
+			List<ScQtProposalChecklist> techinicalProposalCheckLists = this
+					.getManagedBean().getTecCheckDetailsList();
 			
-			return NAV_TO_NON_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			reqDTO.setDocDefinationKey(scQtProposalChecklist
+					.getScQtCheckList().getPmDocument()
+					.getDocDefinitionKey());
+			ProposalResDTO resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
+			
+			List<ScQtPRPExperienceNCheckList> prpExperienceNCheckLists = resDTO.getPrpExperienceNCheckLists();
+			List<ScQtPRPExperience> scQtPRPExperiences = resDTO.getPrpExperience();
+			
+			this.getManagedBean().setScQtProposalScoreList(resDTO.getProposalScores());
+			this.getManagedBean().setScQtPRPExperienceNCheckLists(prpExperienceNCheckLists);
+			
+			if (scQtPRPExperiences == null || scQtPRPExperiences.size() == 0) {
+				ScQtProposalChecklist tecProposalCheckList = findProposalChecklistByDocDefKey(
+						techinicalProposalCheckLists, 
+						SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_NON_FEDERAL_GOV);
+				
+				if (null != tecProposalCheckList && tecProposalCheckList.isSubmitted()) {
+					reqDTO.setScQtProposalChecklist(tecProposalCheckList);
+					reqDTO.setDocDefinationKey(tecProposalCheckList
+							.getScQtCheckList().getPmDocument()
+							.getDocDefinitionKey());
+					resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
+
+					scQtPRPExperiences = resDTO.getPrpExperience();
+				}
+			}
+			this.getManagedBean().setScQtPRPExperiences(scQtPRPExperiences);
+			
+			totalContractAmount();
+			
+			System.out.println("FN ***** NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE *****");
+			
+			return NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE + "?faces-redirect=true";
 			
 		} finally {
 			proposalSO = null;
 		}
 	}
 	
-	private String retrieveNonGovCompanyExpDtls2(ScQtProposalChecklist scQtProposalChecklist) {
+	private ScQtProposalChecklist findProposalChecklistByDocDefKey(List<ScQtProposalChecklist> proposalChecklists, String docDefKey) {
+		ScQtProposalChecklist proposalCheckList = null;
+		
+		if (null != proposalChecklists && StringUtils.isNotBlank(docDefKey)) {
+			for (ScQtProposalChecklist prChecklist : proposalChecklists) {
+				if (null != prChecklist.getScQtCheckList()
+						.getPmDocument()) {
+					if (docDefKey.equalsIgnoreCase(prChecklist
+									.getScQtCheckList()
+									.getPmDocument()
+									.getDocDefinitionKey())) {
+						proposalCheckList = prChecklist;
+						break;
+					}
+				}
+			}
+		}
+		
+		return proposalCheckList;
+	}
+	
+	private String retrieveCreditFacilitiesDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			
+			System.out.println("******CF(CREDIT_FACILITIES_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+
 			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
-			ProposalResDTO resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
-			this.getManagedBean().setScQtProposalScoreList(resDTO.getProposalScores());
+			// to retrieve credit facility details
+			ProposalResDTO resDTO = proposalSO.retrieveCreditFacilitiesDtls(reqDTO);
 
-			int totalYears = 0;
-			List<ScQtPRPExperience> qtPRPExperiences = resDTO.getPrpExperience();
-			if (null != qtPRPExperiences) {
-				log.info("Size : " + qtPRPExperiences.size());
+			this.getManagedBean().setScQtProposalScoreList(
+					resDTO.getProposalScores());
 
-				for (ScQtPRPExperience experience : qtPRPExperiences) {
-					totalYears += (experience.getContractPeriod());
-				}
-				this.getManagedBean().setTotalContracts(qtPRPExperiences.size());
-			}
-			this.getManagedBean().setTotalYears((totalYears));
-			this.getManagedBean().setScQtPRPExperiences(qtPRPExperiences);
+			List<ScQtPRPCreditFacility> facilitiesList = resDTO
+					.getCreditFacilityResultBean();
+
+			this.getManagedBean().setScQtPRPCreditFacilities(
+					facilitiesList);
 			
-			return NAV_TO_NON_FEDERAL_GOVT_PAGE + "?faces-redirect=true";
+			totalCreditFacilitiesSum();
+			
+			System.out.println("CF ***** NAV_TO_CREDIT_FACILITIES_PAGE *****");
+
+			return NAV_TO_CREDIT_FACILITIES_PAGE
+					+ "?faces-redirect=true";
+			
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	private String retrieveCashOnHandDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		IQTProposalSO proposalSO = null;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			System.out.println("******CH(CASH_ON_HAND_PAGES) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			ProposalResDTO resDTO = proposalSO.retrieveCashOnHandDtls(reqDTO);
+			this.getManagedBean().setScQtProposalScoreList(
+					resDTO.getProposalScores());
+
+			this.getManagedBean().setScQtPRPCashOnHand(resDTO
+					.getCashOnHandResultBean());
+			
+			totalCashOnHandSum();
+
+			System.out.println("CH ***** NAV_TO_CASH_ON_HAND_PAGES *****");
+
+			return NAV_TO_CASH_ON_HAND_PAGES + "?faces-redirect=true";
+			
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	private String retrieveBankStmtDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		IQTProposalSO proposalSO = null;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			System.out.println("******BS(FINANCE_BANK_STATEMENT_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			ProposalResDTO resDTO = proposalSO.retrieveBankStmtDtls(reqDTO);
+			this.getManagedBean().setScQtProposalScoreList(
+					resDTO.getProposalScores());
+
+			List<ScQtPRPBankStmt> bankStmtList = resDTO
+					.getBankStmtResultBean();
+			
+			for (ScQtPRPBankStmt scQtPRPBankStmt : bankStmtList) {
+				Date date = scQtPRPBankStmt.getStmtDate();
+
+				scQtPRPBankStmt.setMonth(BANK_STATEMENT_MONTH_FORMAT.format(date));
+			}
+			
+			log.info("Size : " + bankStmtList.size());
+			this.getManagedBean().setScQtPRPBankStmts(bankStmtList);
+			
+			totalAmountSum();
+
+			System.out.println("BS ***** NAV_TO_FINANCE_BANK_STATEMENT_PAGE *****");
+
+			return NAV_TO_FINANCE_BANK_STATEMENT_PAGE
+					+ "?faces-redirect=true";
+			
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	private String retrieveAssetLiabilityDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		IQTProposalSO proposalSO = null;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			System.out.println("******AL(ASSET_LIABILITY_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			ProposalResDTO resDTO = proposalSO.retrieveAssetLiabilityDtls(reqDTO);
+
+			ScQtPRPAssetLiability assetLiability = resDTO
+					.getScQtPRPAssetLiability();
+			if (null != resDTO.getProposalScores()
+					&& !resDTO.getProposalScores().isEmpty()) {
+				this.getManagedBean().setScQtProposalScoreList(
+						resDTO.getProposalScores());
+			}
+			if (null != assetLiability) {
+				BigDecimal asset = assetLiability.getCurrentAssets();
+				BigDecimal liabilities = assetLiability
+						.getCurrentLiabilities();
+				MathContext mc = new MathContext(4);
+				if (asset.intValue() > 0 && liabilities.intValue() > 0) {
+					BigDecimal ratio = asset.divide(liabilities, mc);
+					this.getManagedBean().setAcidRatio(ratio);
+				}
+				this.getManagedBean().setScQtPRPAssetLiability(
+						assetLiability);
+			}
+			System.out.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
+			
+			return NAV_TO_ASSET_LIABILITY_PAGE + "?faces-redirect=true";
+			
+		} finally {
+			proposalSO = null;
+		}
+	}
+	
+	private String retrievePaidUpCapitalDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		IQTProposalSO proposalSO = null;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			System.out.println("******PC(PAID_UP_CAPITAL_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+
+			reqDTO.setScQtProposalChecklist(scQtProposalChecklist);
+			ProposalResDTO resDTO = proposalSO.retrieveAssetLiabilityDtls(reqDTO);
+
+			ScQtPRPAssetLiability assetLiability = resDTO
+					.getScQtPRPAssetLiability();
+			if (null != resDTO.getProposalScores()
+					&& !resDTO.getProposalScores().isEmpty()) {
+				this.getManagedBean().setScQtProposalScoreList(
+						resDTO.getProposalScores());
+			}
+			if (null != assetLiability) {
+				BigDecimal asset = assetLiability.getCurrentAssets();
+				BigDecimal liabilities = assetLiability
+						.getCurrentLiabilities();
+				MathContext mc = new MathContext(4);
+				if (asset.intValue() > 0 && liabilities.intValue() > 0) {
+					BigDecimal ratio = asset.divide(liabilities, mc);
+					this.getManagedBean().setAcidRatio(ratio);
+				}
+				this.getManagedBean().setScQtPRPAssetLiability(
+						assetLiability);
+			}
+			System.out.println("PC ***** NAV_TO_PAID_UP_CAPITAL_PAGE *****");
+			
+			return NAV_TO_PAID_UP_CAPITAL_PAGE + "?faces-redirect=true";
 			
 		} finally {
 			proposalSO = null;
@@ -1836,228 +1771,221 @@ public class SPDetailBackingBean extends
 	public String prepareFinancialViewAction(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		debugLogger("prepareFinancialViewAction");
+		
+		String definationType = scQtProposalChecklist.getScQtCheckList()
+				.getDefinationType().getParameterCode();
+
+		// what's happening here
+		// TODO - check still valid or not
+		if ("SP".equalsIgnoreCase(definationType)) {
+			System.out
+					.println("******SP() defenition type parameter code is ******"
+							+ scQtProposalChecklist.getScQtCheckList()
+									.getDefinationType().getParameterCode());
+			ScQtCheckList scQtCheckList = scQtProposalChecklist
+					.getScQtCheckList();
+			this.getManagedBean().setScQtCheckList(scQtCheckList);
+
+			System.out.println("SP ***** null_SAME_PAGE *****");
+			return null;
+			
+		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equalsIgnoreCase(definationType)) {
+			String definitionKey = scQtProposalChecklist.getScQtCheckList()
+					.getPmDocument().getDocDefinitionKey();
+			
+			if (SourcingConstants.DOC_DEF_KEY_FIN_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV.equalsIgnoreCase(definitionKey)) {
+
+				return retrieveFinCompanyExpDtls(scQtProposalChecklist);
+
+			} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_DETAILS.equalsIgnoreCase(definitionKey)) {
+				
+				return retrieveSupplierDtls(scQtProposalChecklist);
+
+			}
+		}
+		
+		return null;
+	}
+	
+	private String retrieveFinCompanyExpDtls(ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
-		ProposalResDTO resDTO = null;
 		try {
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			String definitionKey = scQtProposalChecklist.getScQtCheckList()
-					.getPmDocument().getDocDefinitionKey();
+			
+			System.out.println("******FG(GOVT_COMPANY_EXPERIENCE_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+			
+			ScQtCheckList scQtCheckList = scQtProposalChecklist
+					.getScQtCheckList();
 
-			// what's happening here
-			if ("SP".equalsIgnoreCase(scQtProposalChecklist.getScQtCheckList()
-					.getDefinationType().getParameterCode())) {
-				System.out
-						.println("******SP() defenition type parameter code is ******"
-								+ scQtProposalChecklist.getScQtCheckList()
-										.getDefinationType().getParameterCode());
-				ScQtCheckList scQtCheckList = scQtProposalChecklist
-						.getScQtCheckList();
-				this.getManagedBean().setScQtCheckList(scQtCheckList);
-
-				System.out.println("SP ***** null_SAME_PAGE *****");
-				return null;
+			reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
+			reqDTO.setQtSupplierId(scQtProposalChecklist
+					.getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierId());
+			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
+			List<ScLoa> list = resDTO.getLoaResultBean()
+					.getResultList();
+			log.info(" List Size : " + list.size());
+			this.getManagedBean().setScLoaList(list);
+			int totalAmount = 0;
+			for (ScLoa scLoa : list) {
+				totalAmount = totalAmount
+						+ scLoa.getLoaAmt().intValue();
 			}
-			//
+			this.getManagedBean().setTotalContractAmount(
+					new BigDecimal(totalAmount));
+			
+			System.out.println("FG ***** NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE *****");
 
-			else {
-				if ("FG".equalsIgnoreCase(scQtProposalChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-
-					System.out
-							.println("******FG(GOVT_COMPANY_EXPERIENCE_PAGE) defenition type parameter code is ******"
-									+ scQtProposalChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-					ScQtCheckList scQtCheckList = scQtProposalChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-
-					reqDTO.setQtId(scQtCheckList.getScQt().getQtId());
-					reqDTO.setQtSupplierId(scQtProposalChecklist
-							.getScQtProposal().getScQtSupplier()
-							.getQtSupplierId());
-					resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
-					List<ScLoa> list = resDTO.getLoaResultBean()
-							.getResultList();
-					log.info(" List Size : " + list.size());
-					this.getManagedBean().setScLoaList(list);
-					int totalAmount = 0;
-					for (ScLoa scLoa : list) {
-						totalAmount = totalAmount
-								+ scLoa.getLoaAmt().intValue();
-					}
-					this.getManagedBean().setTotalContractAmount(
-							new BigDecimal(totalAmount));
-					System.out
-							.println("FG ***** NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE *****");
-
-					return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE
-							+ "?faces-redirect=true";
-
-				} else if ("SD".equalsIgnoreCase(scQtProposalChecklist
-						.getScQtCheckList().getPmDocument()
-						.getDocDefinitionKey())) {
-					// long qtId =
-					// scQtProposalChecklist.getScQtProposal().getScQtSupplier().getScQt().getQtId();
-
-					System.out
-							.println("******SD(SUPPLIER_DETAILS_PAGE) defenition type parameter code is ******"
-									+ scQtProposalChecklist.getScQtCheckList()
-											.getPmDocument()
-											.getDocDefinitionKey());
-					long supplierId = scQtProposalChecklist.getScQtProposal()
-							.getScQtSupplier().getSmSupplier().getSupplierId();
-					log.info("Supplier Id : " + supplierId);
-					ScQtCheckList scQtCheckList = scQtProposalChecklist
-							.getScQtCheckList();
-					this.getManagedBean().setScQtCheckList(scQtCheckList);
-					ProposalReqDTO reqDTO1 = new ProposalReqDTO();
-					reqDTO1.setSupplierId(supplierId);
-					ProposalResDTO resDTO1 = proposalSO
-							.retriveSupplierById(reqDTO1);
-					getManagedBean().setSmSupplier(resDTO1.getSmSupplier());
-					getManagedBean().setSmAppl(resDTO1.getSmAppl());
-					List<SmSupplierBank> smSupplierBanks = getManagedBean()
-							.getSmAppl().getSmSupplierBanks();
-					log.info("Paid up capital : "
-							+ getManagedBean().getSmAppl().getSmCompanyBasic()
-									.getPaidUpCapital());
-					log.info("Authorized capital : "
-							+ getManagedBean().getSmAppl().getSmCompanyBasic()
-									.getAuthorizedCapital());
-					log.info("Account Number : "
-							+ getManagedBean().getSmAppl().getSmSupplierBanks()
-									.get(0).getAccountNo());
-					System.out
-							.println("SD ***** NAV_TO_SUPPLIER_DETAILS_PAGE *****");
-
-					return NAV_TO_SUPPLIER_DETAILS_PAGE
-							+ "?faces-redirect=true";
-
-				}
-			}
+			return NAV_TO_GOVT_COMPANY_EXPERIENCE_PAGE
+					+ "?faces-redirect=true";
+			
 		} finally {
 			proposalSO = null;
 		}
-		return null;
+	}
+	
+	private String retrieveSupplierDtls(ScQtProposalChecklist scQtProposalChecklist) {
+		IQTProposalSO proposalSO = null;
+		try {
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
+			System.out.println("******SD(SUPPLIER_DETAILS_PAGE) defenition type parameter code is ******"
+					+ scQtProposalChecklist.getScQtCheckList()
+							.getPmDocument()
+							.getDocDefinitionKey());
+			long supplierId = scQtProposalChecklist.getScQtProposal()
+					.getScQtSupplier().getSmSupplier().getSupplierId();
+			log.info("Supplier Id : " + supplierId);
+			ScQtCheckList scQtCheckList = scQtProposalChecklist
+					.getScQtCheckList();
+			this.getManagedBean().setScQtCheckList(scQtCheckList);
+			ProposalReqDTO reqDTO1 = new ProposalReqDTO();
+			reqDTO1.setSupplierId(supplierId);
+			ProposalResDTO resDTO1 = proposalSO
+					.retriveSupplierById(reqDTO1);
+			getManagedBean().setSmSupplier(resDTO1.getSmSupplier());
+			getManagedBean().setSmAppl(resDTO1.getSmAppl());
+			List<SmSupplierBank> smSupplierBanks = getManagedBean()
+					.getSmAppl().getSmSupplierBanks();
+			log.info("Paid up capital : "
+					+ getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital());
+			log.info("Authorized capital : "
+					+ getManagedBean().getSmAppl().getSmCompanyBasic()
+							.getAuthorizedCapital());
+			log.info("Account Number : "
+					+ getManagedBean().getSmAppl().getSmSupplierBanks()
+							.get(0).getAccountNo());
+			
+			System.out.println("SD ***** NAV_TO_SUPPLIER_DETAILS_PAGE *****");
+
+			return NAV_TO_SUPPLIER_DETAILS_PAGE+ "?faces-redirect=true";
+			
+		} finally {
+			proposalSO = null;
+		}
 	}
 
-	public void totalCreditSum() {
-		debugLogger("totalCreditSum");
-		double total = 0;
-		double totalPaid = 0;
+	public void totalCreditFacilitiesSum() {
+		debugLogger("totalCreditFacilitiesSum");
+		
+		BigDecimal totalCredit = null;
+		BigDecimal totalPaid = null;
+		BigDecimal percentagePaid = null;
+		
 		List<ScQtPRPCreditFacility> creditFacilitiesList = this
 				.getManagedBean().getScQtPRPCreditFacilities();
 		if (creditFacilitiesList == null) {
 			creditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
 		}
-
-		// for (int i = 0; i < creditFacilitiesList.size(); i++)
-
 		for (ScQtPRPCreditFacility facility : creditFacilitiesList) {
-			// ScQtPRPCreditFacility facility = (ScQtPRPCreditFacility)
-			// creditFacilitiesList
-			// .get(i);
-			if (facility.getCreditAmt() == null) {
-				facility.setCreditAmt(new BigDecimal(0));
+			
+			if (facility.getCreditAmt() != null) {
+				if (totalCredit == null) {
+					totalCredit = BigDecimal.valueOf(0);
+				}
+				totalCredit = totalCredit.add(facility.getCreditAmt());
 			}
-			if (facility.getAmtPaid() == null) {
-				facility.setCreditAmt(new BigDecimal(0));
+			
+			if (facility.getAmtPaid() != null) {
+				if (totalPaid == null) {
+					totalPaid = BigDecimal.valueOf(0);
+				}
+				totalPaid = totalPaid.add(facility.getAmtPaid());
 			}
-			total += facility.getCreditAmt().doubleValue();
-			totalPaid += facility.getAmtPaid().doubleValue();
-
-			this.getManagedBean().setTotalAmountCredit(new BigDecimal(total));
-
-			this.getManagedBean().setTotalAmountPaid(new BigDecimal(totalPaid));
-
-			BigDecimal credit = new BigDecimal(total);
-			BigDecimal amountPaid = new BigDecimal(totalPaid);
+		}
+		
+		if (creditFacilitiesList.size() > 0 && totalPaid != null && totalPaid.intValue() > 0) {
 			MathContext mc = new MathContext(4);
-			BigDecimal paid = amountPaid.divide(credit, mc);
-			BigDecimal amt = new BigDecimal(100);
-			BigDecimal percentage = paid.multiply(amt);
-			this.getManagedBean().setTotalPercentagePaid(percentage);
+			
+			percentagePaid = totalPaid
+					.divide(totalCredit, mc)
+					.multiply(BigDecimal.valueOf(100));
+			
 		}
-	}
-
-	public void totalAmtPaidSum() {
-		debugLogger("totalAmtPaidSum");
-		int total = 0;
-		int totalCredit = 0;
-		List<ScQtPRPCreditFacility> creditFacilitiesList = this
-				.getManagedBean().getScQtPRPCreditFacilities();
-		if (creditFacilitiesList == null) {
-			creditFacilitiesList = new ArrayList<ScQtPRPCreditFacility>();
-		}
-		for (int i = 0; i < creditFacilitiesList.size(); i++) {
-			ScQtPRPCreditFacility facility = (ScQtPRPCreditFacility) creditFacilitiesList
-					.get(i);
-			if (facility.getAmtPaid() == null) {
-				facility.setAmtPaid(new BigDecimal(0));
-			}
-			totalCredit = totalCredit + facility.getCreditAmt().intValue();
-			total = total + facility.getAmtPaid().intValue();
-			this.getManagedBean().setTotalAmountPaid(new BigDecimal(total));
-			this.getManagedBean().setTotalAmountCredit(new BigDecimal(total));
-
-			BigDecimal credit = new BigDecimal(totalCredit);
-			BigDecimal amountPaid = new BigDecimal(total);
-			MathContext mc = new MathContext(4);
-			BigDecimal paid = amountPaid.divide(credit, mc);
-			System.out.println("paid : " + paid);
-			BigDecimal amt = new BigDecimal(100);
-			BigDecimal percentage = paid.multiply(amt);
-			this.getManagedBean().setTotalPercentagePaid(percentage);
-		}
+		
+		this.getManagedBean().setTotalAmountCredit(totalCredit);
+		this.getManagedBean().setTotalAmountPaid(totalPaid);
+		this.getManagedBean().setTotalPercentagePaid(percentagePaid);
 	}
 
 	public void totalCashOnHandSum() {
 		debugLogger("totalAmtPaidSum");
-		int total = 0;
+		
+		
+		BigDecimal totalCashOnHand = null;
 		List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
 				.getScQtPRPCashOnHand();
 		if (cashOnHandList == null) {
 			cashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 		}
-		for (int i = 0; i < cashOnHandList.size(); i++) {
-			ScQtPRPCashOnHand onHand = (ScQtPRPCashOnHand) cashOnHandList
-					.get(i);
-			if (onHand.getCashAmount() == null) {
-				onHand.setCashAmount(new BigDecimal(0));
+		
+		for (ScQtPRPCashOnHand cashOnHand : cashOnHandList) {
+			if (cashOnHand.getCashAmount() != null) {
+				if (totalCashOnHand == null) {
+					totalCashOnHand = BigDecimal.valueOf(0);
+				}
+				totalCashOnHand = totalCashOnHand.add(cashOnHand.getCashAmount());
 			}
-			total = total + onHand.getCashAmount().intValue();
-			this.getManagedBean().setTotalcashHand(new BigDecimal(total));
 		}
+		this.getManagedBean().setTotalcashHand(totalCashOnHand);
 	}
 
 	public void totalAmountSum() {
 		debugLogger("totalAmountSum");
-		int total = 0;
+		
+		BigDecimal totalAmount = null;
+		BigDecimal avgAmount = null;
 		List<ScQtPRPBankStmt> bankStmtList = this.getManagedBean()
 				.getScQtPRPBankStmts();
 		if (bankStmtList == null) {
 			bankStmtList = new ArrayList<ScQtPRPBankStmt>();
 		}
-		for (int i = 0; i < bankStmtList.size(); i++) {
-			ScQtPRPBankStmt stmt = (ScQtPRPBankStmt) bankStmtList.get(i);
-			if (stmt.getBalanceAmt() == null) {
-				stmt.setBalanceAmt(new BigDecimal(0));
+		
+		for (ScQtPRPBankStmt scQtPRPBankStmt : bankStmtList) {
+			if (scQtPRPBankStmt.getBalanceAmt() != null) {
+				if (totalAmount == null) {
+					totalAmount = BigDecimal.valueOf(0);
+				}
+				totalAmount = totalAmount.add(scQtPRPBankStmt.getBalanceAmt());
 			}
-			total = total + stmt.getBalanceAmt().intValue();
-			this.getManagedBean().setTotalAmount(new BigDecimal(total));
+		}		
 
-			BigDecimal amount = new BigDecimal(total);
-			BigDecimal divide = new BigDecimal(3);
+		if (bankStmtList.size() > 0 && totalAmount != null && totalAmount.intValue() > 0) {
 			MathContext mc = new MathContext(4);
-			if (amount.intValue() > 0 && divide.intValue() > 0) {
-				BigDecimal avg = amount.divide(divide, mc);
-				this.getManagedBean().setAvgAmount(avg);
-			}
+			
+			avgAmount = totalAmount.divide(
+					BigDecimal.valueOf(bankStmtList.size()), mc);
+			
 		}
+		this.getManagedBean().setTotalAmount(totalAmount);
+		this.getManagedBean().setAvgAmount(avgAmount);
 	}
 
 	public void effectiveDateSelectListener(ScQtPRPExperience prpExperience) {
@@ -2112,8 +2040,9 @@ public class SPDetailBackingBean extends
 	}
 
 	public void totalContractYears() {
-		debugLogger("totalAmountSum");
-		int total = 0;
+		debugLogger("totalContractYears");
+		
+		int totalYears = 0;
 		List<ScQtPRPExperience> experiencesList = this.getManagedBean()
 				.getScQtPRPExperiences();
 		if (experiencesList == null) {
@@ -2122,44 +2051,32 @@ public class SPDetailBackingBean extends
 		for (int i = 0; i < experiencesList.size(); i++) {
 			ScQtPRPExperience experience = (ScQtPRPExperience) experiencesList
 					.get(i);
-			/*
-			 * if (experience.getContractPeriod() < 0) {
-			 * experience.setContractPeriod(0); }
-			 */
-			total = total + experience.getContractPeriod();
-			this.getManagedBean().setTotalYears(total);
-			/*
-			 * this.getManagedBean().setTotalAmount(new BigDecimal(total));
-			 * 
-			 * BigDecimal amount = new BigDecimal(total); BigDecimal divide =
-			 * new BigDecimal(3); MathContext mc = new MathContext(4); if
-			 * (amount.intValue() > 0 && divide.intValue() > 0) { BigDecimal avg
-			 * = amount.divide(divide, mc); System.out.println("paid : " + avg);
-			 * this.getManagedBean().setAvgAmount(avg); }
-			 */
+			totalYears = totalYears + experience.getContractPeriod();
 		}
-		if (experiencesList.size() == 0) {
-			this.getManagedBean().setTotalYears(0);
-		}
+		
+		this.getManagedBean().setTotalYears(totalYears);
 	}
 
 	public void totalContractAmount() {
 		debugLogger("totalContractAmount");
-		int total = 0;
+		
+		BigDecimal totalContractAmount = null;
+		
 		List<ScQtPRPExperience> experiencesList = this.getManagedBean()
 				.getScQtPRPExperiences();
 		if (experiencesList == null) {
 			experiencesList = new ArrayList<ScQtPRPExperience>();
 		}
-		for (int i = 0; i < experiencesList.size(); i++) {
-			ScQtPRPExperience experience = (ScQtPRPExperience) experiencesList
-					.get(i);
-			if (experience.getContractAmt() == null) {
-				experience.setContractAmt(new BigDecimal(0));
+		for (ScQtPRPExperience experience : experiencesList) {
+			if (experience.getContractAmt() != null) {
+				if (totalContractAmount == null) {
+					totalContractAmount = BigDecimal.valueOf(0);
+				}
+				totalContractAmount = totalContractAmount.add(experience.getContractAmt());
 			}
-			total = total + experience.getContractAmt().intValue();
-			this.getManagedBean().setTotalContractAmount(new BigDecimal(total));
 		}
+		
+		this.getManagedBean().setTotalContractAmount(totalContractAmount);
 	}
 
 	public void totalAcidRatio() {
@@ -2262,29 +2179,25 @@ public class SPDetailBackingBean extends
 			getManagedBean().setToBeDeletedCreditFacilities(
 					toDeleteCreditFacilitiesList);
 		}
-		totalCreditSum();
+		totalCreditFacilitiesSum();
 	}
 
 	public void addCashOnHand() {
 		debugLogger("addCashOnHand");
 		ScQtPRPCashOnHand cashOnHand = new ScQtPRPCashOnHand();
-		try {
-			List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
-					.getScQtPRPCashOnHand();
-			if (null == cashOnHandList) {
-				cashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
-			}
-			cashOnHand.setAccountType(new PmParameter());
-			cashOnHand.setScQtProposalChecklist(this.getManagedBean()
-					.getQtProposalChecklist());
-			for (ScQtPRPCashOnHand hand : cashOnHandList) {
-				hand.setBrandNew(false);
-			}
-			cashOnHandList.add(cashOnHand);
-			this.getManagedBean().setScQtPRPCashOnHand(cashOnHandList);
-		} catch (Exception e) {
-			throw new IllegalArgumentException();
+		List<ScQtPRPCashOnHand> cashOnHandList = this.getManagedBean()
+				.getScQtPRPCashOnHand();
+		if (null == cashOnHandList) {
+			cashOnHandList = new ArrayList<ScQtPRPCashOnHand>();
 		}
+		cashOnHand.setAccountType(new PmParameter());
+		cashOnHand.setScQtProposalChecklist(this.getManagedBean()
+				.getQtProposalChecklist());
+		for (ScQtPRPCashOnHand hand : cashOnHandList) {
+			hand.setBrandNew(false);
+		}
+		cashOnHandList.add(cashOnHand);
+		this.getManagedBean().setScQtPRPCashOnHand(cashOnHandList);
 	}
 
 	public void deleteCashOnHand() {
@@ -2307,6 +2220,8 @@ public class SPDetailBackingBean extends
 			getManagedBean().setToBeDeletedCashOnHandList(
 					toDeleteCashOnHandList);
 		}
+		
+		totalCashOnHandSum();
 	}
 
 	public String supplierProposalBackAction() {
@@ -2369,17 +2284,95 @@ public class SPDetailBackingBean extends
 
 	}
 	
-	private void updateQtProposalCheckList(ScQtProposalChecklist newProposalChecklist) {
-		if (SourcingConstants.TECHNICAL_DOCTYPE.equals(newProposalChecklist.getScQtCheckList().getDocCategory())) {
-			updateQtTechProposalCheckList(newProposalChecklist);
+	public void creditTypeChange(ScQtPRPCreditFacility creditFacility) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = creditFacility.getCreditType().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			creditFacility.setCreditType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		
+	}
+	
+	public void accountTypeChange(ScQtPRPCashOnHand cashOnHand) {
+		IParameterSO parameterSO = null;
+		try {
+			Long parameterId = cashOnHand.getAccountType().getParameterId();
+			
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			cashOnHand.setAccountType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+		
+	}
+	
+	private String navigatePrepareTecProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
+		updateQtTechProposalCheckList(currProposalChecklist, newProposalChecklist);
+		
+		prepareTechnicalAction(newProposalChecklist);
+		
+		if (isCompleted) {
+			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
 		} else {
-			updateQtFinProposalCheckList(newProposalChecklist);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils.getMessage(
+							MessageConst.INFO_100002,
+							null,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			
+			return null;
 		}
 	}
 	
-	private void updateQtTechProposalCheckList(ScQtProposalChecklist newProposalChecklist) {
-		ScQtProposalChecklist currProposalChecklist = getManagedBean().getQtProposalChecklist();
+	private String navigatePrepareFinProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist, boolean isCompleted) {
+		updateQtFinProposalCheckList(currProposalChecklist, newProposalChecklist);
 		
+		prepareFinancialAction(newProposalChecklist);
+		
+		if (isCompleted) {
+			return NAV_TO_PROPOSAL_MAIN_PAGE + "?faces-redirect=true";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils.getMessage(
+							MessageConst.INFO_100002,
+							null,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+			
+			return null;
+		}
+	}
+	
+	private void updateQtProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist) {
+		if (SourcingConstants.TECHNICAL_DOCTYPE.equals(newProposalChecklist.getScQtCheckList().getDocCategory())) {
+			updateQtTechProposalCheckList(currProposalChecklist, newProposalChecklist);
+		} else {
+			updateQtFinProposalCheckList(currProposalChecklist, newProposalChecklist);
+		}
+	}
+	
+	private void updateQtTechProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist) {
 		int index = getManagedBean().getTecCheckDetailsList().indexOf(
 				currProposalChecklist);
 		if (index >= 0) {
@@ -2389,9 +2382,7 @@ public class SPDetailBackingBean extends
 		getManagedBean().setQtProposalChecklist(newProposalChecklist);
 	}
 	
-	private void updateQtFinProposalCheckList(ScQtProposalChecklist newProposalChecklist) {
-		ScQtProposalChecklist currProposalChecklist = getManagedBean().getQtProposalChecklist();
-		
+	private void updateQtFinProposalCheckList(ScQtProposalChecklist currProposalChecklist, ScQtProposalChecklist newProposalChecklist) {
 		int index = getManagedBean().getFinanceCheckDetailsList().indexOf(
 				currProposalChecklist);
 		if (index >= 0) {
