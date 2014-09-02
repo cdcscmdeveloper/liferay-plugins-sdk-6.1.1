@@ -21,10 +21,12 @@ import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -59,7 +61,11 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -410,6 +416,38 @@ public class PmCommonUtil {
 		return pmUserOrgs;
 	}
 	
+	/**
+	 * Get full attachment upload path
+	 * @return String
+	 */
+	public static String getFullUploadPath(){
+		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		return filePath.toString();
+	}
+
+	/**
+	 * Get full attachment upload path without base directory
+	 * @return String
+	 */
+	public static String getPmUploadPath(String fileName){
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat(); 
+		String formattedName = attachmentFormat.format(fileName, null);
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formattedName);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		return filePath.toString();
+	}
 	
 	
 }
