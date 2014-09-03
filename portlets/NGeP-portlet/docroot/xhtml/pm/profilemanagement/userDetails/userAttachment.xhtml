@@ -19,6 +19,17 @@
 	        <p:column headerText="#{lbl['lbl.pp.created.by']}" >
 	          	#{profileManagementBackingBean.getUsername(attachment.createdBy)}
 	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pp.created.date']}" >
+	        	<h:outputText value="#{attachment.createdDate}">
+					<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+				</h:outputText>
+			</p:column>
+	        <p:column headerText="#{lbl['lbl.pp.action']}" >
+	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" immediate="true">
+ 					  <p:graphicImage id="giEmail" library="ep/images/design" name="attach.png"
+		                   value="/css/images/design/attach.png" />
+ 				</p:commandLink>
+	        </p:column>
 	    </p:dataTable>
 		<div align="right">
 			<p:commandButton onclick="dlAttachment.show();return false;" update="dtAttachment"
