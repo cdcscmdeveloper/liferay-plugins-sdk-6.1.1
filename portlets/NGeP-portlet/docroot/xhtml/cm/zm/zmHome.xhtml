@@ -31,7 +31,7 @@
 			<p:dataTable id="zoneDetailsDataTable" 
 				        value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}" var="zoneTree"
 				        rowIndexVar="index">
-					<p:column headerText="Details">
+					<p:column headerText="#{lbl['lbl.cm.zm.details']}">
 					<p:tree id="treeZoneDetails"
 						value="#{zoneTree}"
 						var="zN" >
@@ -49,7 +49,7 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>	
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.cm.action']}">
 				
 				<p:commandLink 
 					     actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
@@ -94,7 +94,7 @@
 						</TD>
 					</TR>
 					<TR>
-						<TD width="20%" valign="top"><p:outputLabel value="Zone Details"></p:outputLabel>
+						<TD width="20%" valign="top"><p:outputLabel value="#{lbl['lbl.cm.zm.details']}"></p:outputLabel>
 						</TD>
 						<TD width="80%">
 							<div style="height: 340px; overflow-y: scroll;">
