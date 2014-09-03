@@ -214,12 +214,7 @@ public class PmCommonUtil {
 				
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null, 
-					new FacesMessage(
-							FacesMessage.SEVERITY_ERROR,
-							e.toString(),
-							e.getMessage()));
+			throw new EpException(MessageConst.ERROR_770057);
 		}
 		return languages;
 	}
@@ -397,7 +392,7 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770053 + id , new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
 		}		
 		return pmUser;
 	}
@@ -420,7 +415,7 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException(MessageConst.ERROR_770053 + id , new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
 		}		
 		return pmUserOrgs;
 	}
@@ -531,7 +526,7 @@ public class PmCommonUtil {
 		if(dir.exists()){
 			dir.delete();
 		}else{
-			throw new EpException("File not found.");
+			throw new EpException(MessageConst.ERROR_770056);
 		}
 	}
 	
