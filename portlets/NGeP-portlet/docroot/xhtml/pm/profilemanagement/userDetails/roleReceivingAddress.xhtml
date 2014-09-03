@@ -16,6 +16,7 @@
 				     value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmUserRoles}"
 				     selection="#{profileManagementBackingBean.managedBean.deleteUserRoles}"
 				     rowIndexVar="index" rowKey="#{role}">   
+				    <ac:paginator for="dtRoles"/>
 				    <p:ajax event="toggleSelect" update="@this" process="@this" />
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" disabledSelection="#{!role.brandNew}" style="width:2%" />
@@ -57,6 +58,7 @@
 						selection="#{profileManagementBackingBean.managedBean.deleteReceivingAddrTypes}"
 						emptyMessage="#{lbl['lbl.pp.no.record.found']}"  var="receivAddrType"
 						rowIndexVar="index" rowKey="#{receivAddrType}">	     
+					<ac:paginator for="dtReceiveAddr"/>
 					<p:ajax event="toggleSelect" update="@this" process="@this" />
 					<p:ajax event="rowSelectCheckbox" update="@this" />  
 					<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!receivAddrType.brandNew}" />

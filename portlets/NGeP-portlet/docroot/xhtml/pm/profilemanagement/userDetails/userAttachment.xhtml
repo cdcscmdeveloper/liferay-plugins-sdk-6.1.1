@@ -9,10 +9,11 @@
 
 	<p:panel id="pAttachment" header="#{lbl['lbl.pm.profiles.authorisation.attachment']}" toggleable="true"
 		>
-		<p:dataTable id="dtAttachment" var="attachment" 
+		<p:dataTable id="dtAttachment" var="attachment" rowKey="#{attachment}"
 	  		 emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
 		     value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserAttachments}"
 			    >   
+		    <ac:paginator for="dtAttachment"/>
 		    <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.filename']}" >
 	          	#{attachment.fileName}
 	        </p:column>
@@ -27,8 +28,13 @@
 	        <p:column headerText="#{lbl['lbl.pp.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
 	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
- 					  <p:graphicImage id="giEmail" library="ep/images/design" name="attach.png"
+ 					  <p:graphicImage library="ep/images/design" name="attach.png"
 		                   value="/css/images/design/attach.png" />
+ 				</p:commandLink>
+				<p:commandLink action="#{profileManagementBackingBean.deleteAttachment(attachment)}" 
+	          		immediate="true" update="dtAttachment">
+ 					  <p:graphicImage library="ep/images/design" name="icon_trash.png"
+		                   value="/css/images/design/icon_trash.png" />
  				</p:commandLink>
 	        </p:column>
 	    </p:dataTable>

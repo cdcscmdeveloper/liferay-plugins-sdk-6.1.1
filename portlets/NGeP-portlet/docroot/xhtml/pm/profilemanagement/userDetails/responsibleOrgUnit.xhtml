@@ -17,7 +17,7 @@
 			<p:ajax event="rowSelect" update=":form:tvRoleReceivingAddr" listener="#{profileManagementBackingBean.showReceivingAddress}" >
 				<f:param name="disableValidation" value="" />     
 			</p:ajax>
-			
+			<ac:paginator for="dtOrgUnit"/>
 		    <p:column>
 			    <f:facet name="header">
 			     	<h:outputText value="* " styleClass="mandatory" />
