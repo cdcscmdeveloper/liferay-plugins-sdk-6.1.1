@@ -594,6 +594,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					delAddressIterator.remove();
 				}
 			}
+				
+				
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()>0) {
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
 			} else {
@@ -651,52 +653,57 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					PurchaseRequestResDTO purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
 					itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 					itemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
+					PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByPmAddress(reqDTO);
+					itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
 				}
 				
 			}else if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
-				List<FlFulfilmentItemAddr> itemAddrList = null;
-				for(FlFulfilmentItemAddr itemAddr : itemsList){
-					reqDTO.setPriceType(getManagedBean().getPmPriceType());
-					if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
-						reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
-					}
-					
-					reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
-					PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByPmAddress(reqDTO);
-					itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
-					String key = zoneIdResDTO.getSpecZoneId() + " " + itemAddr.getScRequestItem().getRequestNoteItemId();
-					if(!getManagedBean().getZonalTierMap().containsKey(key)){
-						itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
-					} else {
-						itemAddrList = getManagedBean().getZonalTierMap().get(key);
-					}
-					if(!itemAddrList.contains(itemAddr)){
-						if(!itemAddrList.isEmpty()){
-							itemAddr.setUnitPrice(itemAddrList.get(0).getUnitPrice());
-						}
-						itemAddrList.add(itemAddr);
-					}
-					getManagedBean().getZonalTierMap().put(key, itemAddrList);
-				}
-			}else if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+				
+//				List<FlFulfilmentItemAddr> itemAddrList = null;
+//				for(FlFulfilmentItemAddr itemAddr : itemsList){
+//					reqDTO.setPriceType(getManagedBean().getPmPriceType());
+//					if(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null){
+//						reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(itemAddr.getScRequestItem().getRequestNoteItemId()));
+//					}
+//					
+//					reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
+//					PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByPmAddress(reqDTO);
+//					itemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
+//					
+//					String key = zoneIdResDTO.getSpecZoneId() + " " + itemAddr.getScRequestItem().getRequestNoteItemId();
+//					if(!getManagedBean().getZonalTierMap().containsKey(key)){
+//						itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
+//					} else {
+//						itemAddrList = getManagedBean().getZonalTierMap().get(key);
+//					}
+//					if(!itemAddrList.contains(itemAddr)){
+//						if(!itemAddrList.isEmpty()){
+//							itemAddr.setUnitPrice(itemAddrList.get(0).getUnitPrice());
+//						}
+//						itemAddrList.add(itemAddr);
+//					}
+//					getManagedBean().getZonalTierMap().put(key, itemAddrList);
+//				}
+			}
+			else if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
 					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
-				List<FlFulfilmentItemAddr> itemAddrList = null;
-				for(FlFulfilmentItemAddr itemAddr : itemsList){
-					Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
-					if(!getManagedBean().getTierMap().containsKey(key)){
-						itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
-					} else {
-						itemAddrList = getManagedBean().getTierMap().get(key);
-					}
-					if(!itemAddrList.contains(itemAddr)){
-						if(!itemAddrList.isEmpty()){
-							itemAddr.setUnitPrice(itemAddrList.get(0).getUnitPrice());
-						}
-						itemAddrList.add(itemAddr);
-					}
-					getManagedBean().getTierMap().put(key, itemAddrList);
-				}
+//				List<FlFulfilmentItemAddr> itemAddrList = null;
+//				for(FlFulfilmentItemAddr itemAddr : itemsList){
+//					Long key = itemAddr.getScRequestItem().getRequestNoteItemId();
+//					if(!getManagedBean().getTierMap().containsKey(key)){
+//						itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
+//					} else {
+//						itemAddrList = getManagedBean().getTierMap().get(key);
+//					}
+//					if(!itemAddrList.contains(itemAddr)){
+//						if(!itemAddrList.isEmpty()){
+//							itemAddr.setUnitPrice(itemAddrList.get(0).getUnitPrice());
+//						}
+//						itemAddrList.add(itemAddr);
+//					}
+//					getManagedBean().getTierMap().put(key, itemAddrList);
+//				}
 				
 			}
 		}
@@ -853,14 +860,39 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		// Tier only
 		if(flItemAddr.getScSupplierItemPrice() != null 
 				&& getManagedBean().getPmPriceType() != null 
-				&& getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
-				|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
+				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
+				|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER))){
+			
+			List<FlFulfilmentItemAddr> itemAddrList = null;
+			
+			Long key = flItemAddr.getScRequestItem().getRequestNoteItemId();
+			if(getManagedBean().getTierMap().get(key) == null){
+				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
+			}else{
+				itemAddrList = getManagedBean().getTierMap().get(key);
+			}
+			boolean isExist = false;
+			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+				if(itemAddr.getFlDeliveryAddress() == getManagedBean().getSelectedDelAddr() 
+						&& itemAddr.getScRequestItem().getRequestNoteItemId().longValue() == flItemAddr.getScRequestItem().getRequestNoteItemId()){
+					
+					isExist = true;
+					break;
+				}
+			}
+			if(!isExist){
+				itemAddrList.add(flItemAddr);
+			}
+			if(flItemAddr.getOrderedQty() == null || flItemAddr.getOrderedQty().doubleValue() == 0){
+				itemAddrList.remove(flItemAddr);
+			}
+			getManagedBean().getTierMap().put(key, itemAddrList);
 			
 			reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
 			reqDTO.setPriceType(flItemAddr.getScSupplierItemPrice().getPriceType());
 			reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
 			BigDecimal sumOrderQty = new BigDecimal(0);
-			List<FlFulfilmentItemAddr> itemAddrList = getManagedBean().getTierMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId());
+//			itemAddrList = getManagedBean().getTierMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId());
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				if(itemAddr.getOrderedQty() == null){
 					itemAddr.setOrderedQty(new BigDecimal(0));
@@ -875,17 +907,59 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()));
 				}
+				if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+					throw new EpException("this item is out of the tier range.");
+				}
 			
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			injectFulfilmentItemDataWithZonalTier(itemAddrList,flItemAddr);
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}else if(getManagedBean().getPmPriceType() != null 
-				&& getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-				|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
+				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+				|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER))){
+			List<FlFulfilmentItemAddr> itemAddrList = null;
 			BigDecimal sumOrderQty = new BigDecimal(0);
-			List<FlFulfilmentItemAddr> itemAddrList = getManagedBean().getZonalTierMap().get(flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId());
+			reqDTO.setPriceType(getManagedBean().getPmPriceType());
+			if(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()) != null){
+				reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+			}
+			
+			reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
+			PurchaseRequestResDTO zoneIdResDTO = purchaseRequestSO.getSupplierItemZoneIdByPmAddress(reqDTO);
+			flItemAddr.setZoneId(zoneIdResDTO.getSpecZoneId());
+			
+			String key = flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId();
+			if(getManagedBean().getZonalTierMap().get(key) == null){
+				itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
+			}else{
+				itemAddrList = getManagedBean().getZonalTierMap().get(key);
+			}
+			boolean isExist = false;
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+				if(itemAddr.getFlDeliveryAddress() == getManagedBean().getSelectedDelAddr() 
+						&& itemAddr.getScRequestItem().getRequestNoteItemId().longValue() == flItemAddr.getScRequestItem().getRequestNoteItemId()){
+					
+					isExist = true;
+					break;
+				}
+			}
+			if(!isExist){
+				itemAddrList.add(flItemAddr);
+			}
+			if(flItemAddr.getOrderedQty() == null || flItemAddr.getOrderedQty().doubleValue() == 0){
+				itemAddrList.remove(flItemAddr);
+			}
+			
+			getManagedBean().getZonalTierMap().put(key, itemAddrList);
+			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+			
+				if(itemAddr.getZoneId() == null){
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+					throw new EpException("this item is not within the zone.");
+					
+				}
 				if(itemAddr.getOrderedQty() == null){
 					itemAddr.setOrderedQty(new BigDecimal(0));
 				}else{
@@ -904,12 +978,40 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 				itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()));
 			}
+			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
+				BigDecimal reCalSumOrderQty = new BigDecimal(0);
+				flItemAddr.setOrderedQty(new BigDecimal(0));
+				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+					reCalSumOrderQty = reCalSumOrderQty.add(itemAddr.getOrderedQty());	
+				}
+				if(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()) != null){
+					reqDTO.setRequestSupplierItemId(getManagedBean().getScRequestSupplierItemIdMap().get(flItemAddr.getScRequestItem().getRequestNoteItemId()));
+				}
+				reqDTO.setPriceType(getManagedBean().getPmPriceType());
+				reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
+				reqDTO.setOrderQuantity(reCalSumOrderQty);
+				PurchaseRequestResDTO reCalculateUnitPrice = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
+				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+					itemAddr.setUnitPrice(reCalculateUnitPrice.getUnitPrice());
+					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()));
+				}
+				itemAddrList.remove(flItemAddr);
+//				getManagedBean().getZonalTierMap().put(flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId(), itemAddrList);
+				throw new EpException("this item is out of the tier range.");
+			}
 			
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			injectFulfilmentItemDataWithZonalTier(itemAddrList,flItemAddr);
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}else{ // zonal & standard & zonal promo & standard promo
+			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
+					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
+				if(flItemAddr.getZoneId() == null){
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+					throw new EpException("this item is not within the zone.");
+				}
+			}
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
 			injectFulfilmentItemData(flItemAddr);
@@ -1867,6 +1969,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
+//		getManagedBean().getVotFundList().add(e);
 		
 		return resDTO;
 	}
