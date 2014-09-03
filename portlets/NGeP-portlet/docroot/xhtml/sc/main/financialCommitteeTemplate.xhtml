@@ -21,7 +21,10 @@
 				style="float:left;" icon="ui-icon-back"
 				action="#{specificationBackingBean.committeeBackAction}" />
 
-
+			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
+				style="float:right;" icon="ui-icon-check" update="@all"
+				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
@@ -70,7 +73,7 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:inputText
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq}"
+							 value="#{lbl[specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 							disabled="true" readonly="true">
 						</p:inputText></td>
 				</tr>
