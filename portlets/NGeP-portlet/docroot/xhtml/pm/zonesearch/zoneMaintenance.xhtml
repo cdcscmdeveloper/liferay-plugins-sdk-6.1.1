@@ -9,21 +9,15 @@
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			severity="error, info" />
-	
-		<table style="border: 0px; width: 100%">
-			<tr>
-				<td><ui:include
-						src="/xhtml/pm/zonesearch/zoneNavigationButton.xhtml"></ui:include></td>
-			</tr>
 
-			<tr>
-				<td><ui:include
-						src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include></td>
-			</tr>
-
-			<tr>
-				<td><ui:include src="/xhtml/pm/zonesearch/zoneStatePopUp.xhtml"></ui:include></td>
-			</tr>
-		</table>
+		<div class="ppLeftBtn">
+			<p:commandButton value="Back" icon="ui-icon-back"
+				action="#{zoneBackingBean.backToSearch}" immediate="true" />
+		</div>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Save" icon="ui-icon-save"
+				style="float:right;" action="#{zoneBackingBean.saveZone}"
+				update="@([id$=Msg])" /></div>
+			<ui:include src="/xhtml/pm/zonesearch/zoneMaintenanceDetails.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>

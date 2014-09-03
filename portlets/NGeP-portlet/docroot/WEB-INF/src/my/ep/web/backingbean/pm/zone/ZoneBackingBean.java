@@ -16,10 +16,12 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.common.PmZoneState;
@@ -59,14 +61,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	public String addZone() {
 
-		getManagedBean().getPmZone().setZoneCode(null);
-		getManagedBean().getPmZone().setZoneName(null);
+		getManagedBean().setPmZone(new PmZone());
+		getManagedBean().setZoneStateList(new ArrayList<PmZoneState>());
 		getManagedBean().getPmZone().setRecordStatusFlg(null);
-		getManagedBean().setSelectedZone(null);
-		
-		if (getManagedBean().getPmZone() == null) {
-			this.getManagedBean().setPmZone(new PmZone());
-		}		
+
 		getSelectionTypes();
 		return "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
 	}
@@ -81,33 +79,42 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public void saveZone() {
-		
-		if (this.getManagedBean().getPmZone().getZoneCode() == null) {
-			this.getManagedBean().setPmZone(new PmZone());
-		}
+		log.info("Save or Update method");
 
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-		PmZone zone = new PmZone();
-		zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
-		zone.setZoneName(getManagedBean().getPmZone().getZoneName());
-		zone.setRecordStatusFlg(getManagedBean().getPmZone()
-				.getRecordStatusFlg());
+		PmZone zone;
+		List<PmZoneState> zones;
+		if (getManagedBean().getPmZone().getZoneId() == null) {
 
-		List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
+			zone = new PmZone();
+			zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
+			zone.setZoneName(getManagedBean().getPmZone().getZoneName());
+			zone.setRecordStatusFlg(getManagedBean().getPmZone()
+					.getRecordStatusFlg());
+			zones = new ArrayList<PmZoneState>();
+		} else {
+			zone = getManagedBean().getPmZone();
+
+			zones = getManagedBean().getSelectedZones();
+		}
+
+		List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
 
 		for (PmZoneState addType : stateZones) {
+			getManagedBean().setSelectedZones(stateZones);
 
 			addType.setPmZone(zone);
+
 		}
-		// PmZoneState zoneState= getManagedBean().getSelectedZone();
-		// zoneState.setPmZone(zone);
-		List<PmZoneState> zones = new ArrayList<PmZoneState>();
-		// zones.add(zoneState);
+		if (getManagedBean().getSelectedZones().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_770051);
+		}
+
 		zones.addAll(stateZones);
 		zone.setPmZoneStates(zones);
 		reqDTO.setPmZone(zone);
@@ -121,6 +128,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 							"Zone submit successfully.", "Zone Name : "
 									+ this.getManagedBean().getPmZone()
 											.getZoneName()));
+
 		}
 	}
 
@@ -157,20 +165,20 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("zoneCode",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getZoneCode()));
+									getManagedBean().getZoneCode(), true));
 				}
 				if (getManagedBean().getZoneName() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("zoneName",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getZoneName()));
+									getManagedBean().getZoneName(), true));
 				}
 				if (getManagedBean().getStateName() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean(
 									"pmZoneStates.pmState.stateName",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getStateName()));
+									getManagedBean().getStateName(), true));
 				}
 				if (getManagedBean().getStatus() != null) {
 					searchBean.getDataFilterBeans().add(
@@ -178,7 +186,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getStatus()));
 				}
-				log.info("Status :" + getManagedBean().getStatus());
 				zoneReqDTO.setZoneSearchBean(searchBean);
 				zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -204,18 +211,18 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
 
-	public void addState() {		
-		
+	public void addState() {
+
 		if (getManagedBean().getPmState() == null) {
 			this.getManagedBean().setPmState(new PmState());
 		}
+		getManagedBean().setSelectedStates(null);
 
 		getSelectionTypes();
 	}
 
-	
 	public void deleteState() {
-		
+
 		List<PmZoneState> zoneList = getManagedBean().getZoneStateList();
 		List<PmZoneState> selectedList = getManagedBean().getSelectedZones();
 		for (PmZoneState zonelist : zoneList) {
@@ -231,6 +238,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 			}
 		}
 	}
+
 	public void selectAll(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<PmZoneState> pmZoneList = getManagedBean().getZoneStateList();
@@ -277,7 +285,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		List<SelectItem> selectionTypes = new ArrayList<SelectItem>();
 		for (SelectionType selectionType : type) {
 			selectionTypes.add(new SelectItem(selectionType.value(),
-					selectionType.name()));		}
+					selectionType.name()));
+		}
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 
@@ -302,7 +311,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	/**
-	 * @param flag the flag to set
+	 * @param flag
+	 *            the flag to set
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;

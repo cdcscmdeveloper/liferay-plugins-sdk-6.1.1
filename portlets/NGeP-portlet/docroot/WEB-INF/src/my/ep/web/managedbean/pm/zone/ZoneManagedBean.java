@@ -27,11 +27,11 @@ public class ZoneManagedBean extends BaseManagedBean {
 	private String status;
 	private String stateCode;
 	private PmZone pmZone;
-	private List<PmState> states = new ArrayList<PmState>();;
-	private List<PmState> selectedStates = new ArrayList<PmState>();;
+	private List<PmState> states = new ArrayList<PmState>();
+	private List<PmState> selectedStates = new ArrayList<PmState>();
 	private PmState pmState;
 	private List<PmZoneState> zoneStateList= new ArrayList<PmZoneState>();
-	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();;
+	private List<PmZoneState> selectedZones = new ArrayList<PmZoneState>();
 	private PmZoneState selectedZone;
 	private List<SelectItem> selections;
 

@@ -13,32 +13,38 @@
 		<table>
 			<tr>
 				<td class="TableFieldLeft"><h:outputLabel
-						value="#{lbl['lbl.pm.zone.code']}"></h:outputLabel></td>
+						value="#{lbl['lbl.pm.zone.code']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td class="TableFieldRight"><p:inputText
+						label="#{lbl['lbl.pm.zone.code']}"
 						value="#{zoneBackingBean.managedBean.pmZone.zoneCode}"
-						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="20"
-						required="true" /> <p:message id="zonecodeMsg" for="zonecode"
-						display="icon" /></td>
+						id="zonecode" lable="#{lbl['lbl.pm.zone.code']}" size="40"
+						required="true" /></td>
+				<td><p:message id="zonecodeMsg" for="zonecode" display="icon" /></td>
 			</tr>
 			<tr>
 				<td class="TableFieldLeft"><h:outputLabel
-						value="#{lbl['lbl.pm.zone.name']}"></h:outputLabel></td>
+						value="#{lbl['lbl.pm.zone.name']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td class="TableFieldRight"><p:inputText
 						value="#{zoneBackingBean.managedBean.pmZone.zoneName}"
-						id="zonename" lable="#{lbl['lbl.pm.zone.name']}" size="50"
-						required="true" /> <p:message id="zonenameMsg" for="zonename"
-						display="icon" /></td>
+						label="#{lbl['lbl.pm.zone.name']}" id="zonename"
+						lable="#{lbl['lbl.pm.zone.name']}" size="40" required="true" /></td>
+				<td><p:message id="zonenameMsg" for="zonename" display="icon" /></td>
 			</tr>
+
 			<tr>
-				<td class="TableFieldLeft"><h:outputLabel
-						value="#{lbl['lbl.pm.location.status']}"></h:outputLabel></td>
-				<td><p:selectOneMenu lable="#{lbl['lbl.pm.location.status']}"
+				<td><h:outputLabel value="#{lbl['lbl.pm.location.status']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu id="zonestatus"
+						label="#{lbl['lbl.pm.location.status']}"
 						value="#{zoneBackingBean.managedBean.pmZone.recordStatusFlg}"
-						id="zonestatus" required="true" style="margin-bottom: 5px;">
+						required="true" style="width: 235px;margin-bottom: 5px;">
 						<f:selectItems
-							value="#{zoneBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
-					</p:selectOneMenu>
-					<p:message id="zonestatusMsg" for="zonestatus" display="icon" /></td>
+							value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					</p:selectOneMenu></td>
+				<td><p:message id="zonestatusMsg" for="zonestatus"
+						display="icon" /></td>
 			</tr>
 		</table>
 
@@ -46,11 +52,16 @@
 	</p:panel>
 
 	<p:panel header="STATE LIST" toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.pm.state']}" />
+		</f:facet>
 		<p:dataTable id="selectedStateId"
 			value="#{zoneBackingBean.managedBean.zoneStateList}" var="state"
 			rowIndexVar="index" rowKey="#{state}"
 			selection="#{zoneBackingBean.managedBean.selectedZones}">
-			<ac:paginator for="selectedStateId"></ac:paginator>			
+			<ac:paginator for="selectedStateId"></ac:paginator>
+
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
 				<h:outputText value="#{state.pmState.stateCode}" />
@@ -58,6 +69,7 @@
 			<p:column headerText="#{lbl['lbl.pm.state.name']}" style="width :40%">
 				<h:outputText value="#{state.pmState.stateName}" />
 			</p:column>
+
 		</p:dataTable>
 		<br />
 		<div align="right">
@@ -66,11 +78,38 @@
 				action="#{zoneBackingBean.addState}"
 				oncomplete="statelistpopup.show();" icon="ui-icon-add" />
 
-			<p:commandButton value="Delete" icon="ui-icon-delete" 	
-			process="@this,selectedStateId" partialSubmit="true"		
+			<p:commandButton value="Delete" icon="ui-icon-delete"
+				process="@this,selectedStateId" partialSubmit="true"
 				action="#{zoneBackingBean.deleteState}" update="selectedStateId" />
-				
+
 
 		</div>
 	</p:panel>
+	<p:dialog id="stateSearch" header="SELECT STATE"
+		widgetVar="statelistpopup" modal="true" width="600" height="300"
+		resizable="false">
+		<p:dataTable id="searchStateId" var="state"
+			value="#{zoneBackingBean.managedBean.states}"
+			selection="#{zoneBackingBean.managedBean.selectedStates}"
+			rowKey="#{state.stateId}" rowIndexVar="index">
+			<p:column selectionMode="multiple" style="width:2%" />
+			<ac:paginator for="searchStateId"></ac:paginator>
+			<p:column headerText="#{lbl['lbl.pm.state.code']}" style="width :15%">
+				<h:outputText value="#{state.stateCode}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.state.name']}" style="width :40%">
+				<h:outputText value="#{state.stateName}" />
+			</p:column>
+		</p:dataTable>
+		<p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="OK" action="#{zoneBackingBean.okZoneAction}"
+				ajax="true" icon="ui-icon-check"
+				update="selectedStateId,searchStateId"
+				process="@this, searchStateId" onclick="statelistpopup.hide();" />
+
+			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+				onclick="statelistpopup.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

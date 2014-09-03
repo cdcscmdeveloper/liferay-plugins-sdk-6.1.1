@@ -100,7 +100,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		retrievePmCountryList();
 		retrievePmStateList();
 		retrievePmDistrictList();
-		
+
 		return "/xhtml/pm/location/createLocationMain";
 	}
 
@@ -231,7 +231,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						.getDistrictName());
 				reqDTO.setPmDistrict(district);
 				try {
-					DistrictResDTO resDTO = districtSO.saveOrUpdateDistrict(reqDTO);
+					DistrictResDTO resDTO = districtSO
+							.saveOrUpdateDistrict(reqDTO);
 					if (resDTO.isSuccessful()) {
 						result = resDTO.isSuccessful();
 						FacesContext.getCurrentInstance().addMessage(
@@ -252,7 +253,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 									.toString(), "Save Location failed."));
 					throw e;
 				}
-				
 
 			} else if (getManagedBean().getSelectedType().equalsIgnoreCase(
 					ParameterConst.LOCATION_LEVEL_CITY)) {
@@ -456,7 +456,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					FacesContext.getCurrentInstance().addMessage(
 							null,
 							new FacesMessage(FacesMessage.SEVERITY_INFO,
-									"City updated successfully.", "City Name : "
+									"City updated successfully.",
+									"City Name : "
 											+ this.getManagedBean().getCity()
 													.getCityName()));
 
@@ -504,14 +505,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("locationCode",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getLocationCode(),true));
+									getManagedBean().getLocationCode(), true));
 				}
 
 				if (getManagedBean().getLocationName() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("locationName",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getLocationName(),true));
+									getManagedBean().getLocationName(), true));
 				}
 				if (getManagedBean().getRecordStatus() != null) {
 					searchBean.getDataFilterBeans().add(
@@ -584,7 +585,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		StateResDTO resDTO = stateSO.retriveStateByID(reqDTO);		
+		StateResDTO resDTO = stateSO.retriveStateByID(reqDTO);
 		getManagedBean().setState(resDTO.getPmState());
 
 	}
