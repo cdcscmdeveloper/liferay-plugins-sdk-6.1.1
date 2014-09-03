@@ -3,12 +3,17 @@ package my.ep.web.backingbean.sm.applicationView;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -228,6 +233,28 @@ public class ViewSmApplBackingBean extends
 		return retVal;
 	}
 
+	private String getMessageResourceString(String bundleName, String key,
+			Object params[]) {
+
+		String text;
+		Locale locale = FacesContext.getCurrentInstance().getViewRoot()
+				.getLocale();
+		ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
+
+		try {
+			text = bundle.getString(key);
+		} catch (MissingResourceException e) {
+			text = "?? key " + key + " not found ??";
+		}
+
+		if (params != null) {
+			MessageFormat mf = new MessageFormat(text, locale);
+			text = mf.format(params, new StringBuffer(), null).toString();
+		}
+
+		return text;
+	}
+
 	private void setTabParam() {
 		String tabParam = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("tab");
@@ -337,7 +364,7 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
-		RequestContext.getCurrentInstance().execute("assocDialog.show()");
+		//RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
 	// temp change for testing
@@ -518,17 +545,6 @@ public class ViewSmApplBackingBean extends
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		System.out.println("** getSupplierType type ***"
-				+ getManagedBean().getSmAppl().getSupplierType());
-		System.out.println("** getApplCategoryType type ***"
-				+ getManagedBean().getSmAppl().getApplCategoryType());
-		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-		// .getSupplierType());
-		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-		// reqDTO.setIsSpecialCategory(false);
-		// } else {
-		// reqDTO.setIsSpecialCategory(true);
-		// }
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();
@@ -552,7 +568,6 @@ public class ViewSmApplBackingBean extends
 	}
 
 	public void backFromPersonnelPage() {
-		System.out.println("*** Back to perssonel page ******");
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 		}
@@ -960,16 +975,20 @@ public class ViewSmApplBackingBean extends
 
 	// temp added for testing
 	private void setCategoryTypeConfirm() {
-		StringBuffer sb = new StringBuffer();
-		String desc = null;
+		String[] params = { "" };
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			desc = "Normal";
+			params[0] = getMessageResourceString(
+					"messageprovider-config.bundles.labels.labels",
+					"lbl.sm.catCodes.norm", null);
 		} else {
-			desc = "Special";
+			params[0] = getMessageResourceString(
+					"messageprovider-config.bundles.labels.labels",
+					"lbl.sm.catCodes.spl", null);
 		}
-		sb.append("NOTE : '").append(desc)
-				.append("' categories can only be added in this applicaiton'");
-		getManagedBean().setCatTypeConfirm(sb.toString());
+		getManagedBean().setCatTypeConfirm(
+				getMessageResourceString(
+						"messageprovider-config.bundles.labels.labels",
+						"lbl.sm.catCodeNote", params));
 	}
 
 	// temp added for testing
