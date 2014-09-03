@@ -15,7 +15,7 @@
 			style="float:right;" icon="ui-icon-evaluate" update="@form"
 			rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
 			action="#{evaluationBackingBean.generateEvaluationStage}" />
-		
+
 		<ui:repeat var="bpmAction"
 			value="#{evaluationBackingBean.managedBean.outComes}">
 			<ui:param name="buttonLabel"
@@ -30,10 +30,9 @@
 			style="float:right;"
 			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
 		<p:spacer height="25"></p:spacer>
-		<ui:include src="/xhtml/sc/evaluation/evaluationstage1include.xhtml" />
+		<ui:include src="evaluationstage1include.xhtml" />
 
-		<ui:include
-			src="/xhtml/sc/confirmMeeting/evaluationMeetingHeader.xhtml" />
+		<ui:include src="evaluationHeader.xhtml" />
 
 
 

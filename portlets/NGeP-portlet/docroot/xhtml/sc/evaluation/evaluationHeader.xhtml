@@ -3,104 +3,27 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Header" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputLabel value="Qtn/Tender No." />  
-			</h:column>
-			<h:column>
-				<p:inputText  value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true"/>
-			</h:column>
-            <h:column>
-            	<h:outputLabel value="Ministry Code/Name" />
-            </h:column>
-            <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-            		<p:selectOneMenu 
-            			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgProfileId}"
-	            		styleClass="minstryclass"
-    	        		style="width: 220px;">
-        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-            			<f:selectItems value="#{qTDetailBB.managedBean.userMinistryList}"
-            				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
-            			<p:ajax event="change" listener="#{qTDetailBB.handleMinistryProfileChanged}"
-            				partialSubmit="true" process="@this" update="@(.minstryclass, .deptclass, .divisionclass)" />
-	            	</p:selectOneMenu>
-	            </c:if>
-	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-            		<p:inputText 
-            			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.ministryOrgProfile.orgName}" 
-            			disabled="true" 
-            			size="35" />
-            	</c:if>
-            </h:column>
-            <h:column>
-            	<h:outputLabel value="Status" />  
-            </h:column>
-            <h:column>
-            	<p:inputText  value="#{qTDetailBB.managedBean.qt.pmStatus}" disabled="true" />  
-            </h:column>
-            <h:column>
-             	<h:outputLabel value="Department Code/Name" />  
-            </h:column>
-            <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-            		<p:selectOneMenu
-            			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgProfileId}"
-	            		styleClass="deptclass"
-    	        		style="width: 220px;">
-        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-            			<f:selectItems value="#{qTDetailBB.managedBean.userDepartmentList}"
-            				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
-            			<p:ajax event="change" listener="#{qTDetailBB.handleDepartmentProfileChanged}"
-            				partialSubmit="true" process="@this" update="@(.deptclass, .divisionclass)" />
-	            	</p:selectOneMenu>
-	            </c:if>
-	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-            		<p:inputText 
-            			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.departmentOrgProfile.orgName}" 
-            			disabled="true"
-            			size="35" />
-            	</c:if>
-           	</h:column>
-           	<h:column>
-           		<h:outputLabel value="Created Date" /> 
-           	</h:column>
-           	<h:column>
-           		<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  disabled="true"/>  
- 			</h:column>
- 			<h:column>
-            	<h:outputLabel value="Divison Code/Name" />  
-            </h:column>
-            <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-            		<p:selectOneMenu 
-           				value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
-	           			styleClass="divisionclass"
-    	        		style="width: 220px;">
-        	   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-           				<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
-           					var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
-           				<p:ajax event="change" 
-            				partialSubmit="true" process="@this" update="@(.divisionclass)" />
-	           		</p:selectOneMenu>
-	           	</c:if>
-	           	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-            		<p:inputText 
-            			value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" 
-            			disabled="true"
-            			size="35" />
-            	</c:if>
-            </h:column>   
-            <h:column>
-           		<h:outputLabel value="Evaluation Status" /> 
-           	</h:column>
-           	<h:column>
-           		<p:inputText   disabled="true"/>  
- 			</h:column>    
-  		</h:panelGrid>
-	</p:panel>
+
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 15%"><h:outputLabel
+						value="#{lbl['lbl.sc.head.present.qt.num']}" /></td>
+				<td style="width: 15%" class="header-info-text">#{evaluationBackingBean.managedBean.scQt.qtNo}</td>
+
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.head.present.ptj.name']}" /></td>
+				<td style="width: 30%" class="header-info-text">#{evaluationBackingBean.managedBean.scQt.pmOrgProfile.orgName}</td>
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.head.present.status']}" /></td>
+				<td style="width: 20%" class="header-info-text">
+					#{evaluationBackingBean.getStatusDescById(evaluationBackingBean.managedBean.scQt.qtStatus.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+
 </ui:composition>
