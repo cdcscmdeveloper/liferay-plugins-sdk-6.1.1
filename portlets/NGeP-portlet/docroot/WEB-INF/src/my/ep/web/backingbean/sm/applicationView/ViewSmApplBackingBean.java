@@ -3,17 +3,13 @@ package my.ep.web.backingbean.sm.applicationView;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -67,6 +63,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSmApplManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -93,10 +91,7 @@ public class ViewSmApplBackingBean extends
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-	}
-
-	@PostConstruct
-	public void init() {
+		
 		if (reloadPreviousApplication()) {
 			initPreviousApplication();
 		}
@@ -195,9 +190,7 @@ public class ViewSmApplBackingBean extends
 
 	private boolean reloadPreviousApplication() {
 		boolean reload = false;
-		String applicationNo = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("applicationNo");
+		String applicationNo = new FacesScopes().getParameter("applicationNo");
 
 		if (applicationNo != null) {
 			if (getManagedBean().getApplicationNoParam() == null) {
@@ -233,31 +226,8 @@ public class ViewSmApplBackingBean extends
 		return retVal;
 	}
 
-	private String getMessageResourceString(String bundleName, String key,
-			Object params[]) {
-
-		String text;
-		Locale locale = FacesContext.getCurrentInstance().getViewRoot()
-				.getLocale();
-		ResourceBundle bundle = ResourceBundle.getBundle(bundleName, locale);
-
-		try {
-			text = bundle.getString(key);
-		} catch (MissingResourceException e) {
-			text = "?? key " + key + " not found ??";
-		}
-
-		if (params != null) {
-			MessageFormat mf = new MessageFormat(text, locale);
-			text = mf.format(params, new StringBuffer(), null).toString();
-		}
-
-		return text;
-	}
-
 	private void setTabParam() {
-		String tabParam = FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap().get("tab");
+		String tabParam = new FacesScopes().getParameter("tab");
 
 		try {
 			if (tabParam != null) {
@@ -975,20 +945,14 @@ public class ViewSmApplBackingBean extends
 
 	// temp added for testing
 	private void setCategoryTypeConfirm() {
+		Locale locale = new FacesScopes().getUserLocale();
 		String[] params = { "" };
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			params[0] = getMessageResourceString(
-					"messageprovider-config.bundles.labels.labels",
-					"lbl.sm.catCodes.norm", null);
+			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.norm", 1, locale);
 		} else {
-			params[0] = getMessageResourceString(
-					"messageprovider-config.bundles.labels.labels",
-					"lbl.sm.catCodes.spl", null);
+			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.spl", 1, locale);
 		}
-		getManagedBean().setCatTypeConfirm(
-				getMessageResourceString(
-						"messageprovider-config.bundles.labels.labels",
-						"lbl.sm.catCodeNote", params));
+		getManagedBean().setCatTypeConfirm(ResourceBundleUtils.getMessage("lbl.sm.catCodeNote", params, 1, locale));
 	}
 
 	// temp added for testing
