@@ -25,7 +25,7 @@
 				<td colspan="1"><p:inputText id="familyCode"
 						value="#{codificationBackingBean.managedBean.familyCode}"
 						size="25" disabled="true" />
-					<p:watermark for="familyCode" value="Please Select Family Code"></p:watermark></td>
+					<p:watermark for="familyCode" value="#{lbl['lbl.cm.select.family.code']}"></p:watermark></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
 				<td colspan="1"><p:inputText
 						value="#{codificationBackingBean.managedBean.familyTitle}"
@@ -36,7 +36,7 @@
 				<td colspan="1"><p:inputText id="classCode"
 						value="#{codificationBackingBean.managedBean.classCode}" size="25"
 						disabled="true" />
-					<p:watermark for="classCode" value="Please Select Class Code"></p:watermark>
+					<p:watermark for="classCode" value="#{lbl['lbl.cm.select.class.code']}"></p:watermark>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.doc.title']}"></p:outputLabel></td>
 				<td colspan="1"><p:inputText
