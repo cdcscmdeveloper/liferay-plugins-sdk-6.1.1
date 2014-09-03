@@ -201,14 +201,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	
 	public void cloneDocumentPopupAction() {
 		debugLogger("cloneDocumentPopupAction");
+		getManagedBean().getCloneDocumentDataModel().reloadData();
 		getManagedBean().getCloneDocumentSearchBean().setQtTitle(null);
 		getManagedBean().getCloneDocumentSearchBean().setQtNo(null);
 		getManagedBean().getCloneDocumentSearchBean().setProcurementMode(null);
 		getManagedBean().getCloneDocumentSearchBean().setFromCreatedDate(null);
 		getManagedBean().getCloneDocumentSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
-		getManagedBean().setCloneCommitteMemebers(null);
-		getManagedBean().setCloneBusinessTenderList(null);
+		getManagedBean().setCloneScQtDocReports(null);
 	}
 
 	public SelectItem[] getProcurementModeDropdownValues(){

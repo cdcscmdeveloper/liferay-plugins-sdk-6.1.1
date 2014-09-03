@@ -23,6 +23,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
@@ -39,6 +40,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
@@ -46,6 +48,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -68,6 +72,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -875,15 +880,18 @@ public class QTDetailBackingBean extends
 				if (sampleSubmissionList != null
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
+						scQtSampleSubmission.getAddress().setPmCountry(retrieveCountry());
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
 					}
 
 				}
 			} else {
 				sampleSubmissionList = new ArrayList<ScQtSampleSubmission>();
-				sampleSubmissionList.add(this.getManagedBean()
-						.getScQtSampleSubmission());
-
+				if (null != this.getManagedBean().getScQtSampleSubmission()) {
+					this.getManagedBean().getScQtSampleSubmission().getAddress().setPmCountry(retrieveCountry());
+					sampleSubmissionList.add(this.getManagedBean()
+							.getScQtSampleSubmission());
+				}
 			}
 			scQt.setScQtSampleSubmission(sampleSubmissionList);
 			// Setting the contact person to qtdetails.
@@ -1027,6 +1035,25 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 		return quationTenderReqDTO;
+	}
+
+	/**
+	 * @return
+	 */
+	private PmCountry retrieveCountry() {
+		ICountrySO countrySo = null;
+		PmCountry country  = null;
+		try {
+			countrySo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			country = countryResDTO.getPmCountry();
+		} finally {
+			countrySo = null;
+		}
+		return country;
 	}
 
 	/**
@@ -1329,7 +1356,7 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
 			qtCommitte = resDTO.getScQtCommittee();
-			if ("QCA".equalsIgnoreCase(commType)) {
+			if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(commType)) {
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
@@ -1337,7 +1364,7 @@ public class QTDetailBackingBean extends
 						.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
 				parameterResDTO = parameterSO
 						.retrieveParameterByTypeAndCode(parameterReqDTO);
-			} else if ("QCB".equalsIgnoreCase(commType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(commType)) {
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
@@ -1345,7 +1372,7 @@ public class QTDetailBackingBean extends
 						.setParameterCode(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
 				parameterResDTO = parameterSO
 						.retrieveParameterByTypeAndCode(parameterReqDTO);
-			} else if ("PBA".equalsIgnoreCase(commType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(commType)) {
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
@@ -1353,7 +1380,7 @@ public class QTDetailBackingBean extends
 						.setParameterCode(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
 				parameterResDTO = parameterSO
 						.retrieveParameterByTypeAndCode(parameterReqDTO);
-			} else if ("PBB".equalsIgnoreCase(commType)) {
+			} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(commType)) {
 				parameterReqDTO = new ParameterReqDTO();
 				parameterReqDTO
 						.setParameterType(ParameterTypeConst.SC_COMMITTEE_TYPE);
@@ -2414,6 +2441,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public String technicalSpecEditAction(ScQtCheckList checklist) {
+		this.getManagedBean().setQtCheckList(checklist);
 		this.getManagedBean().setQtDoc(checklist.getScQtDoc());
 		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean()
@@ -2456,6 +2484,7 @@ public class QTDetailBackingBean extends
 	}
 
 	public String financialSpecEditAction(ScQtCheckList checklist) {
+		this.getManagedBean().setQtCheckList(checklist);
 		this.getManagedBean().setQtDoc(checklist.getScQtDoc());
 		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 		TemplateSpecBean templateSpecBean = getManagedBean()
