@@ -59,6 +59,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -2538,15 +2539,17 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().setTypeRedundancy(false);
 		if (typeInput != null && !typeInput.equals("")) {
 			for (CmType type : this.getManagedBean().getTypeList()) {
-				if (type.getTypeName().toLowerCase()
-						.equals(typeInput.toLowerCase())) {
-					this.getManagedBean().setTypeRedundancy(true);
-
-					throw new EpException(MessageConst.ERROR_716009,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.cm.type",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
+				if(!StringUtils.isBlank(type.getTypeName())) {
+					if (type.getTypeName().toLowerCase()
+							.equals(typeInput.toLowerCase())) {
+						this.getManagedBean().setTypeRedundancy(true);
+	
+						throw new EpException(MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.cm.type",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
 				}
 			}
 		}
@@ -2557,16 +2560,18 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().setBarndRedundancy(false);
 		if (brandInput != null && !brandInput.equals("")) {
 			for (CmBrand brand : this.getManagedBean().getBrandList()) {
-				if (brand.getBrandName().toLowerCase()
-						.equals(brandInput.toLowerCase())) {
-
-					this.getManagedBean().setBarndRedundancy(true);
-
-					throw new EpException(MessageConst.ERROR_716009,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.cm.brand",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
+				if(!StringUtils.isBlank(brand.getBrandName())) {
+					if (brand.getBrandName().toLowerCase()
+							.equals(brandInput.toLowerCase())) {
+	
+						this.getManagedBean().setBarndRedundancy(true);
+	
+						throw new EpException(MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.cm.brand",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
 				}
 			}
 		}
@@ -2579,15 +2584,18 @@ public class UnspscCodeBackingBean extends
 		if (MeasurmentInput != null && !MeasurmentInput.equals("")) {
 			for (CmMeasurement measur : this.getManagedBean()
 					.getMeasurementList()) {
-				if (measur.getMeasurementName().toLowerCase()
-						.equals(MeasurmentInput.toLowerCase())) {
-					this.getManagedBean().setMeasurRedundancy(true);
-
-					throw new EpException(MessageConst.ERROR_716009,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.cm.measurement",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
+				
+				if(!StringUtils.isBlank(measur.getMeasurementName())) {
+					if (measur.getMeasurementName().toLowerCase()
+							.equals(MeasurmentInput.toLowerCase())) {
+						this.getManagedBean().setMeasurRedundancy(true);
+	
+						throw new EpException(MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.cm.measurement",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
 				}
 			}
 		}
@@ -2599,17 +2607,19 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().setColorRedundancy(false);
 		if (colorInput != null && !colorInput.equals("")) {
 			for (CmColor color : this.getManagedBean().getColorList()) {
-				if (color.getColorName().toLowerCase()
-						.equals(colorInput.toLowerCase())) {
-					this.getManagedBean().setColorRedundancy(true);
-					log.info("this.getManagedBean().isColorRedundancy()="
-							+ this.getManagedBean().isColorRedundancy());
-					throw new EpException(MessageConst.ERROR_716009,
-							new String[] { ResourceBundleUtils.getMessage(
-									"lbl.cm.color",
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									new FacesScopes().getUserLocale()) });
-
+				if(!StringUtils.isBlank(color.getColorName())) {
+					if (color.getColorName().toLowerCase()
+							.equals(colorInput.toLowerCase())) {
+						this.getManagedBean().setColorRedundancy(true);
+						log.info("this.getManagedBean().isColorRedundancy()="
+								+ this.getManagedBean().isColorRedundancy());
+						throw new EpException(MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils.getMessage(
+										"lbl.cm.color",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+	
+					}
 				}
 			}
 			log.info("end no exception");
