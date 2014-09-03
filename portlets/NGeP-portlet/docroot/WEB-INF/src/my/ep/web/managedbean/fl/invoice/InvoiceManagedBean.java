@@ -87,6 +87,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String contactPhoneNo;
 	private boolean modificationCancel;
 	private boolean docMaintainRemarks = false;
+	private String accountNoName;
 	
 	private FlFulfilmentRequest fulfilmentRequest;
 	
@@ -619,6 +620,20 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setStatusId(Long statusId) {
 		this.statusId = statusId;
+	}
+
+	/**
+	 * @return the accountNoName
+	 */
+	public String getAccountNoName() {
+		return accountNoName;
+	}
+
+	/**
+	 * @param accountNoName the accountNoName to set
+	 */
+	public void setAccountNoName(String accountNoName) {
+		this.accountNoName = accountNoName;
 	}
 
 
