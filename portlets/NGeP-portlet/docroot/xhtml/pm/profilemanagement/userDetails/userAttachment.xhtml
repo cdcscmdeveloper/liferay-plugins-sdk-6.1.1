@@ -22,7 +22,7 @@
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pp.created.date']}" >
 	        	<h:outputText value="#{attachment.createdDate}">
-					<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 	        <p:column headerText="#{lbl['lbl.pp.action']}" >
