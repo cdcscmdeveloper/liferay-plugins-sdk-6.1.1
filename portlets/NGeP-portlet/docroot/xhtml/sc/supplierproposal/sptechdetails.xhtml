@@ -35,7 +35,10 @@
 			<p:column style="width:2%">
 				<p:selectBooleanCheckbox id="selAllChk"
 					value="#{techList.submitted}" disabled="true" 
-					rendered="#{techList.scQtCheckList.definationType.parameterCode ne 'SP' and techList.scQtCheckList.definationType.parameterCode ne 'SD'}" />
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)
+						or techList.scQtCheckList.definationType.parameterCode eq 'UP'}" />
 			</p:column>
 
 			<p:column>
@@ -46,14 +49,17 @@
 
 			<p:column>
 				<ui:fragment
-					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' or techList.scQtCheckList.definationType.parameterCode eq 'WF'}">
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'TS' 
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey ne 'NE')
+						or (techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and !techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalAction(techList)}"
 						value="Prepare" />
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD'}">
+					rendered="#{techList.scQtCheckList.definationType.parameterCode eq 'SP' or techList.scQtCheckList.definationType.parameterCode eq 'SD' or
+						(techList.scQtCheckList.definationType.parameterCode eq 'WF' and techList.scQtCheckList.pmDocument.docDefinitionKey eq 'NE' and techList.scQtCheckList.scQtCheckListValue.allEmployee)}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareTechnicalViewAction(techList)}"
 						value="View" icon="ui-icon-agree" />

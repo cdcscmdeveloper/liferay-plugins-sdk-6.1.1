@@ -16,43 +16,60 @@
 		
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				process="@this" partialSubmit="true"
 				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
 				icon="ui-icon-back" />
-
+				
 			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
+				rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+				
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.completeTechEmployeesDtlAction}" />
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
+				rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 		</div>
 		
 		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
-			<table>
-				<tr>
-					<td><p:selectOneRadio id="allEmployees"
-							value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
-							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.employeesinvolve']}"
-								itemValue="false" />
-							<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
-								itemValue="true" />
-							<p:ajax event="change" process="@this,allEmployees"
-								partialSubmit="true"
-								update="@([id$=totalNoOfEmployeesInvolved])"></p:ajax>
-						</p:selectOneRadio></td>
-				</tr>
+			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td colspan="2">
+					<p:selectOneRadio id="allEmployees"
+						value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
+						disabled="true">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sp.employeesinvolve']}"
+							itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
+							itemValue="true" />
+						<p:ajax event="change" process="@this,allEmployees"
+							partialSubmit="true"
+							update="@([id$=totalNoOfEmployeesInvolved])"></p:ajax>
+					</p:selectOneRadio>
+				</td>
+			</tr>
+			<tr>
+				<td width="8%">
+					<h:outputText value="* " styleClass="mandatory"
+						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
+					<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}"  />
+				</td>
+				<td width="92%">
+					<h:panelGroup id="totalNoOfEmployeesInvolved">
+						<p:inputText id="totalEmployees" style="text-align:right" size="30" 
+							required="true" maxlength="6"
+							label="#{lbl['lbl.sc.sp.ttlemployees']}"
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
+							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
+						</p:inputText>
+						<p:message id="totalEmployeesMsg" for="totalEmployees" display="icon" />
+					</h:panelGroup>
+				</td>
+			</tr>
 			</table>
-
-			<h:panelGrid id="totalNoOfEmployeesInvolved" columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'false'}" />
-
-				<p:inputText style="text-align:right" size="30" required="true"
-					rendered="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee eq 'false'}"
-					value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}">
-				</p:inputText>
-			</h:panelGrid>
 		</p:panel>
 	</ui:define>
 </ui:composition>
