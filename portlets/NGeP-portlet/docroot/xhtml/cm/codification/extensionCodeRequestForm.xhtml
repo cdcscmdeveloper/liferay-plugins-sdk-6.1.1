@@ -19,7 +19,7 @@
 					action="#{unspscCodeBackingBean.submitToBPM}" update="@form"></p:commandButton>
 				
 				<div style="float: left; clear: both;">
-					<p:commandButton value="Back" icon="ui-icon-back"
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
 						action="#{unspscCodeBackingBean.backToExtensionSearch}" update="@form">
 					</p:commandButton>
 				</div>
@@ -73,14 +73,14 @@
 				
 			</p:dataTable>
 			<div style="text-align: right;">
-				<p:commandButton value="Add" icon="ui-icon-add"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 					action="#{unspscCodeBackingBean.addMoreRequest}"
 					update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
 			</div>
 
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
-				header="Request Extension Code" width="auto" height="auto">
+				header="#{lbl['lbl.cm.request.extension.code']}" width="auto" height="auto">
 
 				<ui:include src="requestExtensionPopUp.xhtml" />
 
