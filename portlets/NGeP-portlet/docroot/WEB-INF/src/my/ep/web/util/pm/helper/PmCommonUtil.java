@@ -1,8 +1,15 @@
 package my.ep.web.util.pm.helper;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +17,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -454,8 +463,48 @@ public class PmCommonUtil {
 		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formattedName);
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		return filePath.toString();
+	}
+	
+	public static void commonUploadFile(FileUploadEvent event, String path){
+		File dir = new File(path);
+		log.info(" dir.exists()"+ dir.exists());
+		  
+		if(dir.exists()){}
+		else{dir.mkdirs();}
+		
+		String uploadDir = "";
+		
+		UploadedFile file = event.getFile();
+		
+		uploadDir = path + file.getFileName();
+		
+		genFile(uploadDir, file.getContents());
+
+	}
+	
+	
+	public static void genFile(String uploadDir, byte[] content){
+
+
+		try {	
+			
+			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir));
+
+			bufferedOutputStream.write(content);
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+
+
+		}catch(Exception e) {
+			log.error(e);
+		}
+
+
 	}
 	
 	/**
@@ -482,6 +531,44 @@ public class PmCommonUtil {
 		}
 		
 		return userName;
+	}
+	
+	public static File downloadFile(String filePath, String fileName) throws IOException {
+		log.info("Inside downloadFile(..)");
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			    
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); 
+				buffer = new byte[4096]; 
+			}
+			input.close();	
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+		
+		//use to upload back to database
+		File file = new File(filePath);
+		return file;
 	}
 
 }
