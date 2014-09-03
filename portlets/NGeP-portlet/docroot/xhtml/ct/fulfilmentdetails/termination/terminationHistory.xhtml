@@ -34,23 +34,23 @@
 	  	<table style="width: 99%; margin-left: 0px;" class="header-info">
 	  	<tr style="margin-button: 0px;">
 			<td>
-				<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.contract.no']}" style="width:135px;" />
 			</td>
 			<td>
-				<p:inputText size="20" disabled="true" value="#{terminationBackingBean.managedBean.ctContract.contractNo}"  />
+				<p:inputText style="width:200px;" disabled="true" value="#{terminationBackingBean.managedBean.ctContract.contractNo}"  />
 			</td>
 			<td>
     			<p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" />
 			</td>
 			<td>
-				   <p:inputText size="30" disabled="true" value="#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
+				   <p:inputText style="width:400px;" disabled="true" value="#{terminationBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/>	
 			</td>
 		</tr>
 	</table>	 
 	</p:panel>
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		<h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+		<h:panelGrid columns="4" style="width:900px;" columnClasses="columnWidth15,columnWidth20,columnWidth15,columnWidth20">
 	    	<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 		  	<p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 		    	disabled="true" style="width:170px;" />
@@ -137,7 +137,7 @@
 			action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.ctContract.currentAgreement.filePath,
 						terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
     	</h:panelGrid>
-		<h:panelGrid  style="width:180px;">
+		<h:panelGrid  style="width:300px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
@@ -189,7 +189,7 @@
 						<f:param name="contractVerId" value="#{data.ctContractVer.contractVerId}" />
 						</p:commandLink>
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.tr.recom']}"  style="width:50%;">
+					<p:column headerText="#{lbl['lbl.ct.tr.recom']}"  style="width:55%;">
 						<h:outputText value="#{terminationBackingBean.getParameterDesc(data.decisionType)}" />
 					</p:column>
 				</p:dataTable>
