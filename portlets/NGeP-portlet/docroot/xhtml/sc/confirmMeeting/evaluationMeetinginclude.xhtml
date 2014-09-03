@@ -19,12 +19,14 @@
 
 		<ui:repeat var="bpmAction"
 			value="#{evaluationMeetingBackingBean.managedBean.outComes}">
-			<ui:param name="buttonLabel"
-				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-			<p:commandButton value="#{lbl[buttonLabel]}" 
-				styleClass="ui-button" style="float:right;" process="@all"
-				partialSubmit="true" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-				action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
+			<ui:fragment rendered="#{bpmAction ne '~'}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					style="float:right;" process="@all" partialSubmit="true"
+					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
+			</ui:fragment>
 		</ui:repeat>
 	</div>
 	<ui:include src="evaluationMeetingHeader.xhtml"></ui:include>
