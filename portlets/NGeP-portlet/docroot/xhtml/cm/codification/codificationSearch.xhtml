@@ -37,7 +37,7 @@
 			</table>
 		</h:panelGroup>
 		<br />
-		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
@@ -54,11 +54,11 @@
 			</table>
 
 			<div style="text-align: right;">
-				<p:commandButton icon="ui-icon-search" value="Search"
+				<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="cmUNSPSCsearchID" />
 					
-				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" icon="ui-icon-reset"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
 					action="#{codificationBackingBean.resetAction}"
 					update="cmUNSPSCsearchID">
 				</p:commandButton>
