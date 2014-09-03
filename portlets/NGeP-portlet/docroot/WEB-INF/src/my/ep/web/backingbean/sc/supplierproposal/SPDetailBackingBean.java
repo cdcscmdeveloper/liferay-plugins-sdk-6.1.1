@@ -1535,7 +1535,9 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore avgBankStatementScore = findProposalScoreByCriteriaType(
 					SourcingConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
 			
-			this.getManagedBean().setAvgAmount(avgBankStatementScore.getCriteriaValue());
+			if(avgBankStatementScore != null){
+				this.getManagedBean().setAvgAmount(avgBankStatementScore.getCriteriaValue());
+			}
 
 			System.out.println("BS ***** NAV_TO_FINANCE_BANK_STATEMENT_PAGE *****");
 
