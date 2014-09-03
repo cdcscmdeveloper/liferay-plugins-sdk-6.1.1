@@ -48,6 +48,9 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean receivingAddressFlag;
 	private Map<PmUserAttachment, FileUploadEvent> fileEventMapper;
 	private List<PmUserAttachment> deletePmUserAttachments;
+	private boolean deletePortrait;
+	
+	
 	/**
 	 * @return the fileEventMapper
 	 */
@@ -270,6 +273,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setDeletePmUserAttachments(
 			List<PmUserAttachment> deletePmUserAttachments) {
 		this.deletePmUserAttachments = deletePmUserAttachments;
+	}
+	/**
+	 * @return the deletePortrait
+	 */
+	public boolean isDeletePortrait() {
+		return deletePortrait;
+	}
+	/**
+	 * @param deletePortrait the deletePortrait to set
+	 */
+	public void setDeletePortrait(boolean deletePortrait) {
+		this.deletePortrait = deletePortrait;
 	}
 
 

@@ -160,7 +160,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		pmUser.setPassword(null);
 //		pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
-		
+		this.getManagedBean().setDeletePortrait(false);
 		this.getManagedBean().setSelectedUser(pmUser);
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
@@ -202,7 +202,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			pmUser.setPassword(null);
 //			pmUser.setOldPassword(null);
 			pmUser.setConfirmPassword(null);
-			
+			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setSelectedUser(pmUser);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -494,6 +494,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		logger.info("deletePortrait - START");
 		this.getManagedBean().getSelectedUser().setPortrait(null);
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		this.getManagedBean().setDeletePortrait(true);
 		/*
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = new UserReqDTO();

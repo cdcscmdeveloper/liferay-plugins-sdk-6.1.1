@@ -27,15 +27,18 @@
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
-							<h:graphicImage
-								value="#{profileManagementBackingBean.userImagePath(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+							<h:graphicImage id="giUserImage"
+								value="#{profileManagementBackingBean.userImagePath(
+									profileManagementBackingBean.managedBean.deletePortrait?
+									null :
+									profileManagementBackingBean.managedBean.selectedUser.loginId)}"
 								style="margin-left:25px;" width="140" height="160" />
 										
 							<div align="left">
 								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
 									oncomplete="dlImageUpload.show();" immediate="true" />
 								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
-									action="#{profileManagementBackingBean.deletePortrait}" immediate="true" />
+									action="#{profileManagementBackingBean.deletePortrait}" immediate="true" update="giUserImage" />
 							</div>
 						</td>
 					</tr>

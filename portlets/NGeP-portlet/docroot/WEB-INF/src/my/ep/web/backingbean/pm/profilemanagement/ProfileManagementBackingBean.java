@@ -281,6 +281,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().setSelectedReceivingAddrTypes(null);
 			this.getManagedBean().setReceivingAddressFlag(false);
 			this.getManagedBean().setDeletePmUserAttachments(null);
+			this.getManagedBean().setDeletePortrait(false);
 			this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
 			//for the initial load
 			if(pmUser.getPmUserOrgs()!=null && !pmUser.getPmUserOrgs().isEmpty()){
@@ -333,6 +334,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().setSelectedDeliveringAddrTypes(null);
 		this.getManagedBean().setSelectedReceivingAddrTypes(null);
 		this.getManagedBean().setDeletePmUserAttachments(null);
+		this.getManagedBean().setDeletePortrait(false);
 		this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
@@ -1740,7 +1742,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
-//			throw new EpException(MessageConst.ERROR_770050, new String[]{e.getMessage()});
+//			throw new EpException(MessageConst.ERROR_770059, new String[]{e.getMessage(),e.getMessage()});
 		} finally {
 			userSO = null;
 		}
@@ -1828,6 +1830,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("deletePortrait - START");
 		this.getManagedBean().getSelectedUser().setPortrait(null);
 		this.getManagedBean().getSelectedUser().setReplacePortrait(true);
+		this.getManagedBean().setDeletePortrait(true);
 		logger.info("deletePortrait - END");
 	}
 	
