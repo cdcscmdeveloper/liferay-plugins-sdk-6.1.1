@@ -2298,15 +2298,15 @@ public class CodificationBackingBean extends
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		supplierReqDTO.setUserId(pmUser.getUserId());
 
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveSupplierProfiles(supplierReqDTO);
+//		SupplierSearchResDTO smResDTO = supplierSearchSO
+//				.retriveSupplierProfiles(supplierReqDTO);
+//
+//		System.out.println("getSmSupplier"
+//				+ smResDTO.getResultBean().getResultList().get(0));
 
-		System.out.println("getSmSupplier"
-				+ smResDTO.getResultBean().getResultList().get(0));
-
-		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
-			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
-		}
+//		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
+//			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
+//		}
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
