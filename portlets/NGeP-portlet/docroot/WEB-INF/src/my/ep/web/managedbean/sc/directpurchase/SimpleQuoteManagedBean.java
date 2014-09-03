@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -163,6 +164,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private String selectedAction;
 	
 	private List<CtPanelItem> panelItems = new ArrayList<CtPanelItem>();
+	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1385,4 +1387,16 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 		this.panelItems = panelItems;
 	}
 	
+	/**
+	 * @return the beans
+	 */
+	public List<ZonesBean> getBeans() {
+		return beans;
+	}
+	/**
+	 * @param beans the beans to set
+	 */
+	public void setBeans(List<ZonesBean> beans) {
+		this.beans = beans;
+	}
 }

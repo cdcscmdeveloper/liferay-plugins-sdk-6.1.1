@@ -216,6 +216,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 							// for panel zone
 							if(selectedPanelItem.getPanelCoverageId().getParameterCode().equals(ParameterConst.SQ_PANEL_ITEM_ZONE)){
 								preparePanelZones(selectedPanelItem, scQuote);
+								 zoneEvent();
 
 							} else{
 								// copy suppliers from compare screen to the panel item supplier list
@@ -246,7 +247,6 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 						}
 						   //adding selected item to item List
 					       prepareQuestions(selectedPanelItem , null);
-					       zoneEvent();
 					       scQuote.setPanelItem(selectedPanelItem);   
 					       getManagedBean().getPanelItems().add(selectedPanelItem);
 						getManagedBean().setPanelItemBtnFlag(Boolean.FALSE);
@@ -1336,7 +1336,10 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	/**
 	 * updateZone for zone selection  in simple quote
     */
-	public void updateZone() {
+	public void updateZone(){
+		List<ZonesBean> beans = getManagedBean().getBeans();
+		ZonesBean zonesBean = new ZonesBean();
+		String locationLevel = this.getManagedBean().getLocationLevel();
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
@@ -1349,9 +1352,8 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 				}
 			}
 		}
-		
-		if(locationDTOs != null && !locationDTOs.isEmpty()){
 
+		if(locationDTOs != null && !locationDTOs.isEmpty()){
 			TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 			ScQuoteZone quoteZone = getManagedBean().getScQuote().getQuoteZone();
 			quoteZone.setScQuote(getManagedBean().getScQuote());
@@ -1368,11 +1370,39 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			List<PmCity> cities = SourcingLocationHelper
 					.getCityFromLocationDTO(locationDTOs);
 
+			zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
+			if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)){
+				// check whether state exists or not
+				if(!getManagedBean().getBeans().isEmpty()){
+					checkDuplicateStateOrDivOrDist(tplSpecZoneDtl ,locationDTOs);
+				}
+				zonesBean.setTplSpecZoneLocs(locationDTOs);
+			}
+
+			if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
+				// check whether division exists or not
+				if(!getManagedBean().getBeans().isEmpty()){
+					checkDuplicateStateOrDivOrDist(tplSpecZoneDtl ,locationDTOs);
+				}
+				zonesBean.setTplSpecZoneLocs(locationDTOs);
+			}
+
+			if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)){
+				// check whether district exists or not
+				if(!getManagedBean().getBeans().isEmpty()){
+					checkDuplicateStateOrDivOrDist(tplSpecZoneDtl ,locationDTOs);
+				}
+				zonesBean.setTplSpecZoneLocs(locationDTOs);
+			}
+
+			beans.add(zonesBean);
+			getManagedBean().setBeans(beans);
 
 			if (getManagedBean().getZoneIndex() == -1) {
 				getManagedBean().getZoneTrees().add(
 						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
 								districts, divisions, cities,TplSpecZoneLoc.class));
+
 
 			} else if (getManagedBean().getZoneIndex() >= 0) {
 
@@ -1385,13 +1415,16 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			this.getManagedBean().setZoneIndex(-1);
 
 			// zone details
-			if(!getManagedBean().getZoneTrees().isEmpty()){
-				getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			if(getManagedBean().getScQuote().isZonal()){
+				if(!getManagedBean().getZoneTrees().isEmpty()){
+					getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+				}
 			}
+
 		} else{
 			throw new EpException("Please select At least one Zone Location");
 		}
-		
+
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
@@ -1694,13 +1727,14 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 */
 	public void deleteZoneTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
-		
-		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+	    deleteTreeNodes(rootTrees);
 		
 		// zone details
 		if(!getManagedBean().getZoneTrees().isEmpty()){
 			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 		}
+		
+		this.getManagedBean().setZoneIndex(-1);
 	}
 	
 	
@@ -1715,6 +1749,67 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		
 		selectedTreeNode.setSelected(false);
 	}
+	
+	public List<TreeNode> deleteTreeNodes(List<TreeNode> rootTrees) {
+		TplSpecZoneDtl tplSpecZoneDtl = null;
+		List<TreeNode>  removedList = new ArrayList<TreeNode>();
+		if (rootTrees != null) {
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+						 tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
+						 deleteStateOrDivOrDist(tplSpecZoneDtl, null);
+						rootTrees.remove(row--);
+					} else {
+						
+						removedList  = deleteChildTreeNodes(zoneTree.getChildren());
+
+						if (removedList != null) {
+							for (TreeNode treeNode : removedList) {
+								List<TplSpecZoneLoc> locationDTOs = getLocations(treeNode);
+								
+								deleteStateOrDivOrDist(tplSpecZoneDtl, locationDTOs);
+							}
+						}
+
+						if (zoneTree.getChildren().size() == 0) {
+							rootTrees.remove(row--);
+						}
+					}
+					
+				}
+			}
+		}
+		return removedList;
+	}
+	
+	private List<TreeNode>  deleteChildTreeNodes(List<TreeNode> treeNodes) {
+		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+		if (treeNodes != null) {
+
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+					nodesToRemoved.add(treeNode);
+				} else {
+					if (treeNode.getChildren() != null && treeNode.getChildren().size() > 0) {
+						deleteChildTreeNodes(treeNode.getChildren());
+
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}	
+		}
+		return nodesToRemoved;
+	}
+	
 
 	/**
 	 * To delete the selected TreeNode from the panel item zone
@@ -2141,6 +2236,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		}
 		
 		getManagedBean().searchCloneItemSpec();
+		RequestContext.getCurrentInstance().execute("cloneItemSpec.show()");
 	}
 	
 	public void supplierListListener(List<SmSupplier> suppliers, ScQuote quote){
@@ -2962,6 +3058,171 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 		if(event.getTab().getTitle().equalsIgnoreCase("Supplier List")){
 			//call supplier criteria 
 			getSupplierListCriteria();
+		}
+	}
+	
+	private List<Long> getPmStateIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if(TplSpecZoneLoc.getPmState() != null){
+					results.add(TplSpecZoneLoc.getPmState().getStateId());
+				}
+			}
+		}
+		return results;
+	}
+
+	private List<Long> getPmDivisionIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if(TplSpecZoneLoc.getPmDivision() != null){
+					results.add(TplSpecZoneLoc.getPmDivision().getDivisionId());
+				}
+			}
+		}
+		return results;
+	}
+
+	private List<Long> getPmDistrictsIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if(TplSpecZoneLoc.getPmDistrict() != null){
+					results.add(TplSpecZoneLoc.getPmDistrict().getDistrictId());
+				}
+			}
+		}
+		return results;
+	}
+	
+	private void deleteStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl , List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> stateIds = null;
+		List<Long> divIds = null;
+		List<Long> distIds = null;
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size() >0){
+			stateIds =  getPmStateIds(tplSpecZoneLocs);
+
+			divIds =  getPmDivisionIds(tplSpecZoneLocs);
+
+			distIds =  getPmDistrictsIds(tplSpecZoneLocs);
+		}
+		
+		List<ZonesBean> results  =  new ArrayList<ZonesBean>();
+		List<ZonesBean> list  = getManagedBean().getBeans();
+		if(list != null && list.size()>0){
+			for (ZonesBean zonesBean : list) {
+				ZonesBean bean = new ZonesBean();
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+				if(zone != null){
+
+					if(tplSpecZoneDtl != null){
+						if(!zone.getZoneName().equalsIgnoreCase(tplSpecZoneDtl.getZoneName())){
+							bean = zonesBean;
+							results.add(bean);
+						}
+						
+					} else {
+					       if(zonesBean.getTplSpecZoneLocs() != null && zonesBean.getTplSpecZoneLocs().size()>0){
+						   List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+						   for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean.getTplSpecZoneLocs()) {
+
+							if(TplSpecZoneLoc.getPmState() != null){
+
+								if(stateIds != null && stateIds.size()>0){
+
+									if(!stateIds.contains(TplSpecZoneLoc.getPmState().getStateId())){
+										specZoneLocs.add(TplSpecZoneLoc);
+									}
+								}
+
+							} else if(TplSpecZoneLoc.getPmDivision() != null){
+								if(divIds != null && divIds.size()>0){
+									if(!divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
+										specZoneLocs.add(TplSpecZoneLoc);
+									}
+								}
+							} else if(TplSpecZoneLoc.getPmDistrict() != null){
+								if(distIds != null && distIds.size()>0){
+									if(!distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
+										specZoneLocs.add(TplSpecZoneLoc);
+									}
+								}
+							}
+						}
+						bean.setTplSpecZoneLocs(specZoneLocs);
+					}
+					results.add(bean);
+				}
+			}
+		  }
+			getManagedBean().setBeans(results);
+		}
+	}
+	
+
+	private void  checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl , List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> stateIds = null;
+		List<Long> divIds = null;
+		List<Long> distIds = null;
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
+			stateIds =  getPmStateIds(tplSpecZoneLocs);
+			divIds =  getPmDivisionIds(tplSpecZoneLocs);
+			distIds =  getPmDistrictsIds(tplSpecZoneLocs);
+		}
+
+		List<ZonesBean> list  = getManagedBean().getBeans();
+
+		if(list != null && list.size() >0){
+
+			for (ZonesBean zonesBean : list) {
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+				if(zone != null){
+
+					if(!zone.getZoneName().equalsIgnoreCase(tplSpecZoneDtl.getZoneName())){
+
+						if(zonesBean.getTplSpecZoneLocs() != null && zonesBean.getTplSpecZoneLocs().size() >0){
+
+							for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean.getTplSpecZoneLocs()) {
+
+								if(TplSpecZoneLoc.getPmState() != null){
+
+									if(stateIds != null && stateIds.size()>0){
+
+										if(stateIds.contains(TplSpecZoneLoc.getPmState().getStateId())){
+											throw new EpException(TplSpecZoneLoc.getPmState().getStateName() +" State already Exists in "+ zone.getZoneName());
+										}
+									}
+
+								} else if(TplSpecZoneLoc.getPmDivision() != null){
+									if(divIds != null && divIds.size()>0){
+										if(divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
+											throw new EpException(TplSpecZoneLoc.getPmDivision().getDivisionName() +" Division already Exists in "+ zone.getZoneName());
+										}
+									}
+								} else if(TplSpecZoneLoc.getPmDistrict() != null){
+									if(distIds != null && distIds.size()>0){
+										if(distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
+											throw new EpException(TplSpecZoneLoc.getPmDistrict().getDistrictName() +" Division already Exists in "+ zone.getZoneName());
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
