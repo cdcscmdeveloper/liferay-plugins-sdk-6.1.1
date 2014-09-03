@@ -80,13 +80,14 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 public class PmCommonUtil {
 	private static Logger log = Logger.getLogger(PmCommonUtil.class);
-
+	private static final String FILE_DATETIME_FORMAT = "ddMMyyyyHHmmss";
 	
 	/**
 	 * initialize a complete Pm Address
@@ -434,37 +435,33 @@ public class PmCommonUtil {
 	 * Get full attachment upload path
 	 * @return String
 	 */
-	public static String getFullUploadPath(String fileName){
+	public static String getUploadPath(String fileName){
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat(); 
-		String formattedName = attachmentFormat.format(fileName, null);
 		StringBuilder filePath = new StringBuilder(docRepoBaseDir);
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(DateUtils.getLast2DigitOfYear());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(formattedName);
+		filePath.append(DateUtils.dateToString(FILE_DATETIME_FORMAT, DateUtils.getCurrentDate()));
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(fileName);
 		return filePath.toString();
 	}
 
 	/**
-	 * Get full attachment upload path without base directory
+	 * Get attachment upload path
 	 * @return String
 	 */
-	public static String getPmUploadPath(String fileName){
-		AttachmentFormat attachmentFormat = new AttachmentDateFormat(); 
-		String formattedName = attachmentFormat.format(fileName, null);
-		StringBuilder filePath = new StringBuilder();
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(DateUtils.getLast2DigitOfYear());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(ModuleCodeConst.PROFILE_MANAGEMENT.toUpperCase());
-		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
-		filePath.append(formattedName);
-		return filePath.toString();
+	public static String getAttachmentPath(String fullPath){
+		String path = "";
+		if(!StringUtils.isBlank(fullPath)){
+			int index = fullPath.lastIndexOf("/");
+			path = fullPath.substring(0, index);
+		}
+		return path;
 	}
+
 	
 	public static void commonUploadFile(FileUploadEvent event, String path){
 		File dir = new File(path);
@@ -477,7 +474,7 @@ public class PmCommonUtil {
 		
 		UploadedFile file = event.getFile();
 		
-		uploadDir = path + file.getFileName();
+		uploadDir = path + CommonConstants.DOC_REPO_PATH_SEPARATOR + file.getFileName();
 		
 		genFile(uploadDir, file.getContents());
 
@@ -534,7 +531,7 @@ public class PmCommonUtil {
 	}
 	
 	public static File downloadFile(String filePath, String fileName) throws IOException {
-		log.info("Inside downloadFile(..)");
+		log.info("Inside downloadFile start");
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
@@ -568,6 +565,7 @@ public class PmCommonUtil {
 		
 		//use to upload back to database
 		File file = new File(filePath);
+		log.info("Inside downloadFile end");
 		return file;
 	}
 

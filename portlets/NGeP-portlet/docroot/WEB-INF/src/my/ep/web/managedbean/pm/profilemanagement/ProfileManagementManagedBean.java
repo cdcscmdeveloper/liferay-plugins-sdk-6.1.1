@@ -46,7 +46,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> selectedDeliveringAddrTypes; //Address Type - D
 	private List<PmAddressType> deleteReceivingAddrTypes; //Address Type - D
 	private boolean receivingAddressFlag;
-	private List<FileUploadEvent> fileUploadEvents;
 	private Map<PmUserAttachment, FileUploadEvent> fileEventMapper;
 
 	/**
@@ -259,20 +258,6 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
-	/**
-	 * @return the fileUploadEvents
-	 */
-	public List<FileUploadEvent> getFileUploadEvents() {
-		return fileUploadEvents;
-	}
-	/**
-	 * @param fileUploadEvents the fileUploadEvents to set
-	 */
-	public void setFileUploadEvents(List<FileUploadEvent> fileUploadEvents) {
-		this.fileUploadEvents = fileUploadEvents;
-	}
-	
-	
 
 }	
 	
