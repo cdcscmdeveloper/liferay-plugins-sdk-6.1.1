@@ -1237,6 +1237,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("+ userName "  +upSearchBean.getUserName());
 			SearchFilterBean userSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setCaseInsensitive(true);
 			userSearchBean.setSearchField("userName");
 			userSearchBean.setSearchValue(upSearchBean.getUserName());
 			searchBean.getDataFilterBeans().add(userSearchBean);
@@ -1247,6 +1248,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("+ userOrganizationName "  +upSearchBean.getUserOrganizationName());
 			SearchFilterBean userSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setCaseInsensitive(true);
 			userSearchBean.setSearchField("pmUserOrgs.pmOrgProfile.pmOrgValidity.orgName");
 			userSearchBean.setSearchValue(upSearchBean.getUserOrganizationName());
 			searchBean.getDataFilterBeans().add(userSearchBean);
@@ -1258,6 +1260,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			logger.info("+ userRole "  +upSearchBean.getUserRole());
 			SearchFilterBean userSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_LIKE.value());
+			userSearchBean.setCaseInsensitive(true);
 			userSearchBean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.pmRoleDescs.roleName");
 			userSearchBean.setSearchValue(upSearchBean.getUserRole());
 			searchBean.getDataFilterBeans().add(userSearchBean);
