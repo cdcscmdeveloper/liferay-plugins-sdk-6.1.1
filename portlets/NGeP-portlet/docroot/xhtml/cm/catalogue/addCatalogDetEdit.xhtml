@@ -227,6 +227,7 @@
 
 			<p:fileUpload
 				fileUploadListener="#{catalogueBackingBean.imageUpload}"
+				cancelLabel="#{lbl['lbl.btn.cancel']}" uploadLabel="#{lbl['lbl.btn.upload']}" label="#{lbl['lbl.btn.choose']}"
 				mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
