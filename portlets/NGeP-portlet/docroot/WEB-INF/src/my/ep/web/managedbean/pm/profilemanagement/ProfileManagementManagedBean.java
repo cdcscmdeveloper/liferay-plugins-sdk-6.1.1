@@ -47,7 +47,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> deleteReceivingAddrTypes; //Address Type - D
 	private boolean receivingAddressFlag;
 	private Map<PmUserAttachment, FileUploadEvent> fileEventMapper;
-
+	private List<PmUserAttachment> deletePmUserAttachments;
 	/**
 	 * @return the fileEventMapper
 	 */
@@ -258,6 +258,20 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
+	/**
+	 * @return the deletePmUserAttachments
+	 */
+	public List<PmUserAttachment> getDeletePmUserAttachments() {
+		return deletePmUserAttachments;
+	}
+	/**
+	 * @param deletePmUserAttachments the deletePmUserAttachments to set
+	 */
+	public void setDeletePmUserAttachments(
+			List<PmUserAttachment> deletePmUserAttachments) {
+		this.deletePmUserAttachments = deletePmUserAttachments;
+	}
+
 
 }	
 	

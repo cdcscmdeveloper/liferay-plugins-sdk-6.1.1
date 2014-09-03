@@ -280,6 +280,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			this.getManagedBean().setSelectedRoles(null);
 			this.getManagedBean().setSelectedReceivingAddrTypes(null);
 			this.getManagedBean().setReceivingAddressFlag(false);
+			this.getManagedBean().setDeletePmUserAttachments(null);
 			this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
 			//for the initial load
 			if(pmUser.getPmUserOrgs()!=null && !pmUser.getPmUserOrgs().isEmpty()){
@@ -331,6 +332,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		this.getManagedBean().setDeleteReceivingAddrTypes(null);
 		this.getManagedBean().setSelectedDeliveringAddrTypes(null);
 		this.getManagedBean().setSelectedReceivingAddrTypes(null);
+		this.getManagedBean().setDeletePmUserAttachments(null);
 		this.getManagedBean().setFileEventMapper(new HashMap<PmUserAttachment, FileUploadEvent>());
 		System.out.println("login " + this.getManagedBean().getSelectedUser().getLoginId());
 	}
@@ -946,6 +948,32 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		logger.info("handleFileUpload - END");
 	}
 	
+
+	/**
+	 * Delete attachment
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void deleteAttachment(PmUserAttachment attachment) throws FileNotFoundException, IOException {
+		logger.info("deleteAttachment - START");
+		try{
+			if(attachment!=null){
+				if(this.getManagedBean().getDeletePmUserAttachments()==null){
+					this.getManagedBean().setDeletePmUserAttachments(new ArrayList<PmUserAttachment>());
+				}
+				if(!attachment.isBrandNew()){
+					this.getManagedBean().getDeletePmUserAttachments().add(attachment);
+				}
+				this.getManagedBean().getSelectedUser().getPmUserAttachments().remove(attachment);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new EpException("Failed to delete attachement: {0}", new String[]{e.getMessage()});
+			
+		}
+		logger.info("deleteAttachment - END");
+	}
 
 
 	/**
@@ -1688,6 +1716,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			if (resDTO.isSuccessful()) {
 				
 				uploadAttachments();
+				deleteAttachments();
 				/*
 				if(user.getPortrait()!=null){
 					uploadPortrait(resDTO.getPmUser());
@@ -1740,6 +1769,33 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		logger.info("uploadAttachments - END");
 	}
+
+	/**
+	 * Delete attachment
+	 * @param attachment
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public void deleteAttachments() throws FileNotFoundException, IOException {
+		logger.info("deleteAttachment - START");
+		try{
+			if(this.getManagedBean().getDeletePmUserAttachments()!=null && !this.getManagedBean().getDeletePmUserAttachments().isEmpty()){
+				for(PmUserAttachment pmUserAttachment:this.getManagedBean().getDeletePmUserAttachments()){
+					if(!pmUserAttachment.isBrandNew()){
+						PmCommonUtil.deleteUploadFile(pmUserAttachment.getFilePath());
+					}
+				}
+				PmCommonUtil.deleteUserAttachment(this.getManagedBean().getDeletePmUserAttachments());
+				this.getManagedBean().getDeletePmUserAttachments().clear();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			throw new EpException("Failed to delete attachement: " +e.getMessage()); //TODO
+			
+		}
+		logger.info("deleteAttachment - END");
+	}
+
 
 	/*
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{

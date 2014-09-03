@@ -1,15 +1,8 @@
 package my.ep.web.util.pm.helper;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +10,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -33,6 +24,7 @@ import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -58,8 +50,11 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
+import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
@@ -76,8 +71,6 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
-import my.ep.web.format.AttachmentDateFormat;
-import my.ep.web.format.AttachmentFormat;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -531,43 +524,34 @@ public class PmCommonUtil {
 		return userName;
 	}
 	
-	public static File downloadFile(String filePath, String fileName) throws IOException {
-		log.info("Inside downloadFile start");
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-
-		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
-		res.setContentType("application/octet-stream");
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();   
-		
-		if(filePath!=null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream()); 
-			    
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read( buffer )) != -1){ 
-				out.write( buffer, 0, bytesRead ); 
-				buffer = new byte[4096]; 
-			}
-			input.close();	
+	public static void deleteUploadFile(String path){
+		File dir = new File(path);
+		System.out.println(path);
+		log.info(" dir.exists()"+ dir.exists());
+		if(dir.exists()){
+			dir.delete();
+		}else{
+			throw new EpException("File not found.");
 		}
-		out.flush();
-		out.close(); 
-		FacesContext.getCurrentInstance().responseComplete();
-		
-		//use to upload back to database
-		File file = new File(filePath);
-		log.info("Inside downloadFile end");
-		return file;
+	}
+	
+
+/**
+	 * Delete attachment status
+	 * @return boolean
+	 */
+	public static boolean deleteUserAttachment(List<PmUserAttachment> pmUserAttachments) {
+		UserAttachmentReqDTO reqDTO = null;
+		IUserAttachmentSO reqSO = null;
+		UserAttachmentResDTO resDTO = null;
+		if(pmUserAttachments!=null && !pmUserAttachments.isEmpty()){
+			reqDTO = new UserAttachmentReqDTO();
+			reqDTO.setPmUserAttachments(pmUserAttachments);
+			reqSO = (IUserAttachmentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserAttachmentSO.class);
+			resDTO = reqSO.deleteUserAttachment(reqDTO);
+		}
+		return resDTO!=null? resDTO.isSuccessful() : false;
 	}
 
 }
