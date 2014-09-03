@@ -2,6 +2,7 @@ package my.ep.web.managedbean.pm.profilemanagement;
 
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -9,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -45,8 +47,21 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmAddressType> deleteReceivingAddrTypes; //Address Type - D
 	private boolean receivingAddressFlag;
 	private List<FileUploadEvent> fileUploadEvents;
-	
+	private Map<PmUserAttachment, FileUploadEvent> fileEventMapper;
 
+	/**
+	 * @return the fileEventMapper
+	 */
+	public Map<PmUserAttachment, FileUploadEvent> getFileEventMapper() {
+		return fileEventMapper;
+	}
+	/**
+	 * @param fileEventMapper the fileEventMapper to set
+	 */
+	public void setFileEventMapper(
+			Map<PmUserAttachment, FileUploadEvent> fileEventMapper) {
+		this.fileEventMapper = fileEventMapper;
+	}
 	/**
 	 * @return the receivingAddressFlag
 	 */
