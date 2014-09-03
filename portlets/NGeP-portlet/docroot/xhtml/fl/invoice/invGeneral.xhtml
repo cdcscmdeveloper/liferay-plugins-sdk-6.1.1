@@ -15,7 +15,7 @@
 						disabled="true" /></td>
 				<td rowspan="2" valign="top" style="width: 165px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="2" colspan="3"><p:inputTextarea cols="40" rows="2"
+				<td rowspan="2" colspan="3"><p:inputTextarea cols="60" rows="2"
 						style=" margin-bottom:5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						disabled="true" /></td>
@@ -66,7 +66,7 @@
 				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel'}"
-						style="width:250px;margin-bottom: 5px;"
+						style="width:300px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
@@ -141,14 +141,12 @@
 				<td style="width: 141px;"><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 170px;"><p:outputLabel
-						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" /></td>
+						value="#{lbl['lbl.fl.bank.acc.no.name']}" /></td>
+				<td><p:inputText size="70" disabled="true" value="#{invoiceBackingBean.managedBean.accountNoName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
 				<td><p:inputText size="45" disabled="true" value="#{invoiceBackingBean.managedBean.branchName}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.accountNo}" /></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
