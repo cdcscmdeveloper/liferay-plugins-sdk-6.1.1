@@ -47,7 +47,7 @@
 						#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}
 					</td>		
 				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
 					#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}
@@ -92,15 +92,15 @@
 	           </p:inputText> 
 	  </h:panelGrid>
    </p:panel>
-    <p:panel id="factoringPanel" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
+    <p:panel id="factoringPanel" header="#{lbl['lbl.ct.panel.factoring]}"    toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="4" style="width:100%;" columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
         <h:panelGrid columns="2" style="float:right;">
 	     <p:outputLabel value="*" styleClass="mandatory" />
-            <p:outputLabel  value="Factoring Company"/> 
+            <p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/> 
          </h:panelGrid>
           <h:panelGrid columns="2">
 		      <p:selectOneMenu id="factoringId" disabled="#{supplierBackingBean.managedBean.removeFactoring}" required="true"
-		        style="width:260px;"  label="Factoring Company"  value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
+		        style="width:260px;"  label="#{lbl['lbl.ct.factoring.company']}"  value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
                    <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
                   <p:ajax event="change" process="@this" update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
                </p:selectOneMenu>
@@ -109,14 +109,14 @@
 		  
 		  <h:panelGrid columns="2" style="float:right;">
 			 <p:outputLabel value="*" styleClass="mandatory" />
-				 <p:outputLabel value="Authorization Ref No." />
+				 <p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}" />
 		  </h:panelGrid>
 		  <h:panelGrid columns="2">
 			 <p:inputText id="authRefNo" value="#{supplierBackingBean.managedBean.factoring.authRefNo}" maxlength="50"
-				style="width:200px;" label="Authorization Ref No." required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+				style="width:200px;" label="#{lbl['lbl.ct.factoring.agreement.ref']}" required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
 				<p:message for="authRefNo" display="icon" />				
 		  </h:panelGrid>
-         <p:outputLabel  value="Factoring Branch"/> 
+         <p:outputLabel value="#{lbl['lbl.ct.factoring.branch']}"/> 
 		     <p:selectOneMenu id="branchId" style="width:210px;" disabled="#{supplierBackingBean.managedBean.removeFactoring or
 		        supplierBackingBean.managedBean.financialBankBranch == null}" 
 		        value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
@@ -133,7 +133,7 @@
 		    			disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true"/>
 					 <p:message for="effdateCal" display="icon" />				
 				</h:panelGrid>		    			
-            <p:outputLabel  value="Payment Bank Name"/> 
+            <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/> 
              <p:inputText id="bankName" value="#{supplierBackingBean.managedBean.factoringBankName}" 
                style="width:200px;" disabled="true"/>
 				<h:panelGrid columns="2" style="float:right;">
@@ -146,15 +146,15 @@
 		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" />
 					 <p:message for="expdateCal" display="icon" />				
 				</h:panelGrid>		  		    			 
-		 <p:outputLabel value="Account No."/> 
+		 <p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}"/> 
          <p:inputText id="accNo" style="width:200px;"  disabled="true" value="#{supplierBackingBean.managedBean.accountNo}"/>
 				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				<p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
 				<p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}" disabled="true"
 					value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
-					<f:selectItem itemValue="0" itemLabel="Inactive" />
-					<f:selectItem itemValue="1" itemLabel="Active" />
+					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				</p:selectOneMenu>
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />

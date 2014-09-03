@@ -5,11 +5,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="amend" header="#{lbl['lbl.ct.amend.panel.header']}" toggleable="true" toggleSpeed="500">	
+	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">	
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.amendtype']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
@@ -18,7 +18,7 @@
 					<p:ajax event="change" update=":form:amend" process="@form" listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.conExtension']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -28,7 +28,7 @@
 					 <p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.chItemPrice']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 		    <h:panelGrid columns="3">
@@ -38,7 +38,7 @@
 					<p:ajax event="change" update=":form" process="@form" listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.chQuantity']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -49,7 +49,7 @@
 					<p:ajax event="change"  update=":form:amend" process="@form" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -58,25 +58,25 @@
 					<p:ajax event="change"  update=":form:amend" process="@form"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}"  />
+				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}"  />
 			</h:panelGrid>
 	     </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.frno']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:inputText id="txtfrno" style="width:170px;" required="true" label="#{lbl['lbl.ct.amend.txt.frno']}"
+				<p:inputText id="txtfrno" style="width:170px;" required="true" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" />
 				<p:message for="txtfrno" display="icon" />
 			</h:panelGrid>
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />				
-				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.name']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<p:inputText id="txtname" style="width:530px;" required="true" label="#{lbl['lbl.ct.amend.txt.name']}"
+				<p:inputText id="txtname" style="width:530px;" required="true" label="#{lbl['lbl.ct.amendment.title']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
@@ -86,19 +86,19 @@
 				<div style="float: right; vertical-align: top;">
 					<h:panelGrid columns="2">
 						<p:outputLabel value="*" styleClass="mandatory" />
-						<p:outputLabel value="#{lbl['lbl.ct.amend.txt.desc']}" />
+						<p:outputLabel value="#{lbl['lbl.ct.amendment.desc']}" />
 					</h:panelGrid>
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2">
-				<p:inputTextarea id="txtdesc" rows="5"  required="true" label="#{lbl['lbl.ct.amend.txt.desc']}"
+				<p:inputTextarea id="txtdesc" rows="5"  required="true" label="#{lbl['lbl.ct.amendment.desc']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
 					style="width:530px;margin-bottom: 5px;" />
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
 		<h:panelGrid columns="6" style="width:100%" columnClasses="columnWidth225">
-			<h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}"
+			<h:outputLabel value="#{lbl['lbl.ct.extension.period']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
@@ -113,15 +113,15 @@
 					<f:selectItem itemLabel="36" itemValue="36" />
 				</p:selectOneMenu>
 				<p:spacer width="1" />
-				<p:outputLabel value="Months" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"
+			<p:outputLabel value="#{lbl['lbl.ct.extension.start']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extStartDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}" 
 			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
-			<p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}"
+			<p:outputLabel value="#{lbl['lbl.ct.extension.end']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<p:inputText id="extEndDate" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}" 
 			    disabled="true" style="width:100px;" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
@@ -131,19 +131,19 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" style="float:right;" >
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 			          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 			          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" >
-				<p:inputText id="addValueTxt" style="width:70px;" styleClass="ppRightBtn" required="true" label="#{lbl['lbl.ct.amend.txt.avalue']}"
+				<p:inputText id="addValueTxt" style="width:70px;" styleClass="ppRightBtn" required="true" label="#{lbl['lbl.ct.additional.contract.amt']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="addValueTxt, addValue" process="@this" listener="#{amendmentBackingBean.addContractValue}" />
 				</p:inputText>
 				<p:message for="addValueTxt" display="icon" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.amend.newConValue']}"
+			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
@@ -161,7 +161,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange) and 
 		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"  style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" style="float:left;" />
+				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
 			<h:panelGrid columns="2" rendered="#{(amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
@@ -170,7 +170,7 @@
 		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
 				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-				    label="#{lbl['lbl.ct.amend.txt.effdate']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
+				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 				    mindate="#{amendmentBackingBean.currentDate}">
 				        <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
@@ -184,7 +184,7 @@
 			<h:panelGroup>
 				<div style="height: 35px; vertical-align: top;">
 					<p:outputLabel for="contractHistory"
-						value="#{lbl['lbl.ct.amend.txt.history']}" style="text-align:right;" />
+						value="#{lbl['lbl.ct.extension.history']}" style="text-align:right;" />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid id="contractHistory" columns="1">
@@ -193,10 +193,10 @@
 	                <ac:paginator for="dataTableHistory" />
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column headerText="#{lbl['lbl.ct.amend.tbl.rno']}" />
-							<p:column headerText="#{lbl['lbl.ct.amend.tbl.eperiod']}" />
-							<p:column headerText="#{lbl['lbl.ct.amend.tbl.sdate']}" />
-							<p:column headerText="#{lbl['lbl.ct.amend.tbl.edate']}" />
+							<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" />
+							<p:column headerText="#{lbl['lbl.ct.extension.period.month']}" />
+							<p:column headerText="#{lbl['lbl.ct.extension.start.date']}" />
+							<p:column headerText="#{lbl['lbl.ct.extension.end.date']}" />
 						</p:row>
 					</p:columnGroup>
 						<p:column> <p:outputLabel value="#{data.ctAmendment.fileRefNo}"/></p:column>

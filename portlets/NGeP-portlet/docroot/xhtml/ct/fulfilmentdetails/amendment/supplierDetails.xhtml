@@ -7,26 +7,26 @@
    <p:panel id="sbd" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
-          <p:outputLabel value="Business Reg. No." />  
+          <p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" />  
           <h:panelGrid columns="4" style="width:240px;">
              <p:inputText disabled="true" style="width:60px;" 
                 value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
              <p:spacer width="2"/>
-             <p:outputLabel value="MOF No." />  
+             <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />  
              <p:inputText disabled="true" style="width:78px;" 
              	value="#{amendmentBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
           </h:panelGrid>
-           <p:outputLabel value="Contact Person" />  
+           <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  
            <p:inputText disabled="true" style="width:170px;" 
               value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
-          <p:outputLabel value="Supplier Name" />
+          <p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
           	 <p:inputText disabled="true" style="width:220px;" id="supplierCompanyName"
              	value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
              	
            <p:outputLabel  value="#{lbl['lbl.ct.tel']}"/>  
            <p:inputText  value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  disabled="true" style="width:170px;" />
           
-          <p:outputLabel value="Branch Name" />
+          <p:outputLabel value="#{lbl['lbl.ct.branch.name']}"/>
           <p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" /> 
            <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
            <p:inputText  disabled="true" style="width:170px;"  
@@ -55,7 +55,7 @@
                    <p:inputText disabled="true" style="width:170px;" 
                        value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
           
-                   <p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}" />  
+                   <p:outputLabel  value="#{lbl['lbl.ct.account.no']}" />  
                    <p:inputText  disabled="true" style="width:170px;"
                        value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
                    <h:panelGroup>

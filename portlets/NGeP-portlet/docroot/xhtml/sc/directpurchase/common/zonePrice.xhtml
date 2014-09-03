@@ -23,7 +23,7 @@
 			</p:dataTable>
 		</h:panelGrid>
 		<div align="right" style="width: 100%">
-			<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();" actionListener="#{simpleQuoteBidBackingBean.showZoneLocationPopup}" icon="ui-icon-add"/>
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();" actionListener="#{simpleQuoteBidBackingBean.showZoneLocationPopup}" icon="ui-icon-add"/>
 		</div>
 	</p:panel>
 	<ui:include src="/xhtml/sc/directpurchase/common/zonePricePopup.xhtml" />

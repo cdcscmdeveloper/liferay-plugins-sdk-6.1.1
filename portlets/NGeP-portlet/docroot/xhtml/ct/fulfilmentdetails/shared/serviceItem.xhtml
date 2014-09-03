@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-    <p:panel id="serviceId" header="#{lbl['lbl.ct.service.panel.name']}"
+    <p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}"
          rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
   	     <h:panelGrid  style="width:100%;">
   	       
@@ -16,29 +16,29 @@
                <ac:paginator for="serviceTable"/>
               <p:ajax event="rowSelect" update=":form:showServicePrice"/>
 		      
-		      <p:column headerText="#{lbl['lbl.ct.item.table.name']}"  
+		      <p:column headerText="#{lbl['lbl.ct.item.name']}"   
 		             filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">
 		         <p:outputLabel value="#{data.itemName}" style="float:left;"/>
 		      </p:column>       
 		    
-		      <p:column headerText="#{lbl['lbl.ct.item.table.uom']}" style="width:15%;">
+		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:15%;">
 		        <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/>
 		      </p:column>        
 		      
-		      <p:column headerText="#{lbl['lbl.ct.item.service.qty']}"  style="text-align: right; width:20%;">
+		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:20%;">
 		          <h:outputText value="#{data.minimumOrderQty}">
      		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		          </h:outputText>		        
 		      </p:column>               
 		      
-		      <p:column headerText="#{lbl['lbl.ct.item.uompermonth']}"  style="text-align: right;width:15%;">
+		      <p:column headerText="#{lbl['lbl.ct.uom.per.month']}"  style="text-align: right;width:15%;">
 		          <h:outputText value="#{data.uomPerMonth}">
      		           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		          </h:outputText>		     	
 		      </p:column>
 		      
-		       <p:column headerText="Status" style="width:10%;">
-		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  'Active' : 'Inactive' }"/>
+		       <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		        </p:column>   
     	   </p:dataTable> 
         </h:panelGrid>
@@ -53,18 +53,18 @@
 			      <ac:paginator for="servicePriceTable"/>
 			     
 			      <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
-			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
+			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			               <h:outputText value="#{itemPricesVar.unitPrice}">
 			                   <f:convertNumber
 						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			                </h:outputText>			                   
 			            </p:column>            
-			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}">
 			                <h:outputText value="#{itemPricesVar.effDate}" style="float:left;">
                               <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                             </h:outputText>			            
 			            </p:column>       
-			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
+			            <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
 			                <h:outputText value="#{itemPricesVar.expDate}" style="float:left;">
                               <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                             </h:outputText>			            
@@ -72,21 +72,21 @@
 			     </c:if>
 			   
 			     <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
-			           <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}">
+			           <p:column headerText="#{lbl['lbl.ct.zone']}">
 			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column>    
-			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.price']}" style="text-align: right;">
+			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			               <h:outputText value="#{itemPricesVar.unitPrice}">
 			                   <f:convertNumber
 						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			                </h:outputText>
 			            </p:column>
-			            <p:column headerText="#{lbl['lbl.ct.item.table1.price.efdate']}">
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}">
 			                <h:outputText value="#{itemPricesVar.effDate}" style="float:left;">
                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                            </h:outputText>
 			             </p:column>       
-			             <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}">
+			             <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
 			                <h:outputText value="#{itemPricesVar.expDate}" style="float:left;">
                               <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                             </h:outputText>
@@ -97,13 +97,13 @@
 	    </h:panelGrid>
 	 </p:outputPanel>
    </p:panel>
-	<p:panel header="Remarks" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -115,7 +115,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

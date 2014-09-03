@@ -14,7 +14,7 @@
 			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.quantityChange}" >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="#{lbl['lbl.ct.amend.chQuantity']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" />
 		</h:panelGrid>
 		
 		 <f:verbatim/>
@@ -23,7 +23,7 @@
 			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.valueChange}"  >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="#{lbl['lbl.ct.amend.chConValue']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" />
 		</h:panelGrid>
 		
 		<f:verbatim/>
@@ -32,7 +32,7 @@
 			   value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.itemPriceChange}" >
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="#{lbl['lbl.ct.amend.chItemPrice']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
 		</h:panelGrid>
 		
 		<f:verbatim/>
@@ -41,7 +41,7 @@
 			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.contractExtend}">
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="#{lbl['lbl.ct.amend.conExtension']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
 		</h:panelGrid>
 		
 		<f:verbatim/>
@@ -50,15 +50,15 @@
 			    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.clauseChange}">
 			</p:selectBooleanCheckbox>
 		    <p:spacer width="2" />				
-		    <p:outputLabel value="#{lbl['lbl.ct.amend.chClause']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
 		</h:panelGrid>		
 	  </h:panelGrid>
 	  
 	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15">
 	     
-         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.name']}" />  
+         <p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />  
          <p:inputText  value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.title}" style="width:170px;" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.frno']}"/>  
+         <p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}"/>  
          <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.fileRefNo}" style="width:170px;" disabled="true" /> 
       
 	     <h:panelGroup>

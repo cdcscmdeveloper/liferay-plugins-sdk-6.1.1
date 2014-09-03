@@ -86,11 +86,11 @@
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/centralItem.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.dedu'] }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.deduction'] }">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.sched'] }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.schedule'] }">
 					 <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />
 				</p:outputPanel>
 				
@@ -102,7 +102,7 @@
 				             	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
-				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.sett'] }">
+				<p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.finalListOfSideMenu.get(contractDetailsBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.setting'] }">
 					<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				   <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 				</p:outputPanel>

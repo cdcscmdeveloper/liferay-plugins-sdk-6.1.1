@@ -6,13 +6,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel id="settingId" header="#{lbl['lbl.ct.set.aprsetting']}" toggleable="true" toggleSpeed="500">
+	<p:panel id="settingId" header="#{lbl['lbl.ct.panel.approver.list']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="1">
 				<p:pickList id="approverpickList" value="#{centralContractBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
 					showTargetControls="true" filterMatchMode="contains">
-					<f:facet name="sourceCaption">Available</f:facet>  
-        			<f:facet name="targetCaption">Selected</f:facet> 
+					<f:facet name="sourceCaption">#{lbl['lbl.ct.available.approver']}</f:facet>  
+        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet> 
 					<p:column style="width:75%;">
 						<h:outputText value="#{data}" />
 					</p:column>

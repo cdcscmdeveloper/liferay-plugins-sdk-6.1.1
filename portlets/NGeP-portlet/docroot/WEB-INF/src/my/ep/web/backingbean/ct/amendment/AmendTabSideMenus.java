@@ -26,7 +26,7 @@ public class AmendTabSideMenus {
 		   if(menuWithAmendFulfilment == null){
 			   menuWithAmendFulfilment =  new ArrayList<String>(Arrays.asList(
 						ResourceBundleUtils.getMessage("lbl.ct.menu.fd", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-						ResourceBundleUtils.getMessage("lbl.ct.amend.panel.header", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.amendment", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
 		  if(menuWithZone == null){
@@ -41,36 +41,36 @@ public class AmendTabSideMenus {
 		  
 		  if(menuWithSpAprlAP201 == null){
 			  menuWithSpAprlAP201 =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.spAprlAP201", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.special.ap201", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithPrepareLoa ==  null){
 			  menuWithPrepareLoa =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.loaDtl", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-						ResourceBundleUtils.getMessage("lbl.ct.amend.perfBond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-						ResourceBundleUtils.getMessage("lbl.ct.amend.letterOfAcc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.ct.menu.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithDecision == null){
 			  menuWithDecision =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.decision", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithMeetings == null){
 			  menuWithMeetings =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.meetingDtl", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.meeting.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithDeclaration == null){
 			  menuWithDeclaration =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithAmendSupplier == null){
 			  menuWithAmendSupplier =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.amend.loaDtl", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-						ResourceBundleUtils.getMessage("lbl.ct.amend.letterOfAcc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
-						ResourceBundleUtils.getMessage("lbl.ct.amend.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.loa.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.ct.menu.loa", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()),
+						ResourceBundleUtils.getMessage("lbl.ct.menu.declaration", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 	}
 }

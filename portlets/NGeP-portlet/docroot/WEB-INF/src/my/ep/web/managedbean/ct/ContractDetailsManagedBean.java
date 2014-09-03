@@ -35,6 +35,8 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.MenuModel;
@@ -817,8 +819,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public Map<String, Object> getRadioButtonSchedule() {
 		if(radioButtonSchedule == null){
 			radioButtonSchedule = new LinkedHashMap<String,Object>();
-			radioButtonSchedule.put("Frequency Schedule", "S");
-			radioButtonSchedule.put("Progressive Payment", "P");
+			FacesScopes face = new FacesScopes();
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.frequency.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "S");
+			radioButtonSchedule.put(ResourceBundleUtils.getMessage("lbl.ct.progressive.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()), "P");
 		}
 		return radioButtonSchedule;
 	}

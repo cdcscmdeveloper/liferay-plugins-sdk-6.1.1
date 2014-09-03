@@ -68,7 +68,7 @@
 				    <ui:include src="performanceBond.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.panel.header'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.amendment'] }">
 					<ui:include src="amendmentDetails.xhtml" />
 					<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 				</p:outputPanel>
@@ -81,11 +81,11 @@
 					<ui:include src="item.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.spAprlAP201'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.special.ap201'] }">
 					<ui:include src="bpk/approvalOfAP201.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.loaDtl'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa.details'] }">
 					<ui:include src="supplier/supplierforloa.xhtml" />
 				    <ui:include src="supplier/paymentdetails.xhtml" />
 				    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.prepareLOA}">
@@ -94,35 +94,35 @@
 				    <ui:include src="witnessDetails.xhtml" />
 			    </p:outputPanel>
 			    
-			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.perfBond'] }">
+			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.performance.bond'] }">
 					<ui:include src="loaBondDetails.xhtml" />
 			    </p:outputPanel>
 			    
-			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.letterOfAcc'] 
+			    <p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa'] 
 			    	and amendmentBackingBean.managedBean.ackFA != CtConst.supplierAckLoa }">
 					<ui:include src="letterOfAcceptance.xhtml" />
 			    </p:outputPanel>
 			    
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.letterOfAcc']
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.loa']
 				        and amendmentBackingBean.managedBean.ackFA == CtConst.supplierAckLoa}">
 					<ui:include src="supplier/supplierLoa.xhtml"  />
 				</p:outputPanel>
 	
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.declaration'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.declaration'] }">
 					<ui:include src="supplier/supplierDeclaration.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.meetingDtl'] }">
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.meeting.details'] }">
 					<ui:include src="pbqcc/meeting.xhtml"/>
 					<ui:include src="pbqcc/committe.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.decision'] 
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.decision'] 
 				and !amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffpbqcc.xhtml"/>
 				</p:outputPanel>
 				
-				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.amend.decision']
+				<p:outputPanel rendered="#{amendmentBackingBean.managedBean.finalListOfSideMenu.get(amendmentBackingBean.managedBean.selectedTabIndex) == lbl['lbl.ct.menu.decision']
 				     and amendmentBackingBean.managedBean.signOffDecision}">
 					<ui:include src="pbqcc/signOffMember.xhtml"/>
 				</p:outputPanel>

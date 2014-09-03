@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500">
+    <p:panel id="scheduleId" header="#{lbl['lbl.ct.panel.schedule']}"  toggleable="true"  toggleSpeed="500">
 	   
 	   <h:panelGrid columns="4">
            <p:selectOneRadio id="radiOptions"  required="true"
@@ -27,11 +27,11 @@
 	                 <ac:paginator for="tableSchedule" />
 	                 <p:column selectionMode="multiple" style="width:1%;"/>
 		       
-		             <p:column style="width:9%;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
+		             <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
 		                <p:inputText value="#{schedVar.scheduleNo}"  style="width:60px;" maxlength="4" styleClass="ppRightBtn" />
 		             </p:column> 
 		      
-		             <p:column style="width:35%;" headerText="#{lbl['lbl.ct.sched.speriod']}">
+		             <p:column style="width:35%;" headerText="#{lbl['lbl.ct.start.period']}">
 		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:120px;">
                              <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
                              <p:ajax event="change" update=":form:tableSchedule" 
@@ -45,7 +45,7 @@
                          </p:selectOneMenu> 
 		            </p:column> 	
 		       
-		            <p:column style="width:40%;" headerText="#{lbl['lbl.ct.sched.eperiod']}">
+		            <p:column style="width:40%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                  <h:panelGroup>
 		                    <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:120px;" >
                                 <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
@@ -61,11 +61,11 @@
                             <p:spacer width="5"/>
 		                      <p:graphicImage id="schedValidation" library="ep/images/design"  value="/css/images/design/reject.png"  
 		                          name="reject.png"  rendered="#{schedVar.validateScheduleDate}" styleClass="ui-icon-reject" style="margin-bottom: -5px;" />
-			                     <p:tooltip for="schedValidation" showEffect="fade" value="#{lbl['lbl.ct.sched.date.validation']}"/> 
+			                     <p:tooltip for="schedValidation" showEffect="fade" value="#{lbl['lbl.ct.schedule.date.validation']}"/> 
 		                 </h:panelGroup>
 		            </p:column> 
 		           
-		            <p:column headerText="#{lbl['lbl.ct.sched.stype']}" style="width:15%;">
+		            <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;">
 		               <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}" style="width:130px;"> 
                             <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
                             <p:ajax process="@this"/>
@@ -75,13 +75,13 @@
 		     </p:dataTable>  
 	         <p:spacer height="2"  />
 		        <div class="ppRightBtn"> 
-		            <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add" 
+		            <p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
 		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule"/>
-		 	        <p:commandButton value="Delete" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
+		 	        <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
 	           </div>
 	         
 	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="350"
-	             header="Delete Confirmation" styleClass="screen-title" resizable="false" height="95">  
+	             header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title" resizable="false" height="95">  
                 
                    <h:panelGrid columns="3">
                      <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -91,9 +91,9 @@
                   </h:panelGrid>
                  
                   <div class="ppRightBtn">
-		            <p:commandButton value="Yes" icon="ui-icon-accept" update="tableSchedule" process="@form" 
+		            <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="tableSchedule" process="@form" 
 			           action="#{contractDetailsBackingBean.deleteScheduleDetails}" onclick="dlgSchedule.hide();"/>
-			        <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
+			        <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
 		         </div>
                </p:dialog>
            </h:panelGroup>
@@ -106,17 +106,17 @@
 		           <ac:paginator for="tableProgress" />
 		           <p:column selectionMode="multiple" style="width:1%;"/> 
                   
-                   <p:column style="width:5%;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
+                   <p:column style="width:5%;" headerText="#{lbl['lbl.ct.phase']}">
                         <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" style="width:25px;"
-                           required="true" label="#{lbl['lbl.ct.sched.table1.phase']}" styleClass="ppRightBtn" />
+                           required="true" label="#{lbl['lbl.ct.phase']}" styleClass="ppRightBtn" />
                    </p:column>
 		      
-		           <p:column style="width:30%;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
+		           <p:column style="width:30%;" headerText="#{lbl['lbl.ct.description']}">
 		               <p:inputText value="#{ProgVar.phaseDesc}" maxlength="50" 
-		                   style="width:200px;" required="true" label="#{lbl['lbl.ct.sched.table1.desc']}" />
+		                   style="width:200px;" required="true" label="#{lbl['lbl.ct.description']}" />
 		           </p:column>
               
-                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.sched.speriod']}" >
+                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.start.period']}" >
 		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:120px;">
                            <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                            <p:ajax event="change" update=":form:tableProgress"
@@ -130,7 +130,7 @@
                       </p:selectOneMenu> 
 		          </p:column> 	
 		        
-		          <p:column style="width:30%;" headerText="#{lbl['lbl.ct.sched.eperiod']}">
+		          <p:column style="width:30%;" headerText="#{lbl['lbl.ct.end.period']}">
 		             <h:panelGroup columns="5">
 		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:120px;" >
                             <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
@@ -146,12 +146,12 @@
                          <p:spacer width="5"/>
 		                 <p:graphicImage id="validateProAction" library="ep/images/design" rendered="#{ProgVar.validateProgressiveDate}"
 		                     name="reject.png" value="/css/images/design/reject.png" style="margin-bottom: -5px;" styleClass="ui-icon-reject" />
-			              <p:tooltip for="validateProAction" showEffect="fade" value="#{lbl['lbl.ct.progr.date.validation']}"/> 
+			              <p:tooltip for="validateProAction" showEffect="fade" value="#{lbl['lbl.ct.progressive.date.validation']}"/> 
 		            </h:panelGroup>
 		         </p:column>       
                
-                   <p:column style="width:9%;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
-                       <p:inputText value="#{ProgVar.percentage}" style="width:70px;" styleClass="ppRightBtn" label="#{lbl['lbl.ct.sched.table1.per']}">
+                   <p:column style="width:9%;" headerText="#{lbl['lbl.ct.percentage']}">
+                       <p:inputText value="#{ProgVar.percentage}" style="width:70px;" styleClass="ppRightBtn" label="#{lbl['lbl.ct.percentage']}">
                        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText> 
                   </p:column>
 		       </p:dataTable>  
@@ -159,14 +159,14 @@
 			    <p:spacer height="2" />
 		       
 		        <div class="ppRightBtn"> 
-		           <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" partialSubmit="true"
+		           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true"
 		            icon="ui-icon-add" update="tableProgress" action="#{contractDetailsBackingBean.addFrequencyDetails()}"/>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="Delete" partialSubmit="true" process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
+		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
 		        </div>
 		       
 		       <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" width="350" height="95"
-		            header="Delete Confirmation" styleClass="screen-title"  resizable="false" modal="true">  
+		            header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  resizable="false" modal="true">  
                     <h:panelGrid columns="3">
                       <p:graphicImage library="ep/images/design" name="exclamation.png"
 			             value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -175,9 +175,9 @@
                     </h:panelGrid>
                    
                     <div class="ppRightBtn">
-		               <p:commandButton value="Yes" icon="ui-icon-accept" update="tableProgress" process="@form" 
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="tableProgress" process="@form" 
 				           action="#{contractDetailsBackingBean.deleteFrequencyDetails}" onclick="dlgProgressive.hide();"/>
-			           <p:commandButton value="No" icon="ui-icon-reject" onclick="dlgProgressive.hide();" type="button" />
+			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgProgressive.hide();" type="button" />
 		             </div>
                </p:dialog>
 	       </h:panelGroup>    
@@ -189,7 +189,7 @@
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.scheduleRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -201,7 +201,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

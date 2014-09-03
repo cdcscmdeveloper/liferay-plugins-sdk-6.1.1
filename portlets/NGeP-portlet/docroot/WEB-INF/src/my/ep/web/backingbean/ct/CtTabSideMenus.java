@@ -46,12 +46,12 @@ public  class CtTabSideMenus {
 		   
 		   if(menuDeduction == null){
 			   menuDeduction =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.menu.dedu", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.deduction", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
 		   if(menuSchedule == null){
 			   menuSchedule =  new ArrayList<String>(Arrays.asList(
-					   ResourceBundleUtils.getMessage("lbl.ct.menu.sched", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					   ResourceBundleUtils.getMessage("lbl.ct.menu.schedule", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		   
 		   if(menuFactoring == null){
@@ -66,7 +66,7 @@ public  class CtTabSideMenus {
 		   
 		   if(menuSetting == null){
 			   menuSetting =  new ArrayList<String>(Arrays.asList(
-					   ResourceBundleUtils.getMessage("lbl.ct.menu.sett", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+					   ResourceBundleUtils.getMessage("lbl.ct.menu.setting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 	}
 }

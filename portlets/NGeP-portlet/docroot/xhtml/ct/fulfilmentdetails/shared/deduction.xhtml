@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="deductionId" header="#{lbl['lbl.ct.ded.panel.name']}"   toggleable="true"  toggleSpeed="500">
+    <p:panel id="deductionId" header="#{lbl['lbl.ct.panel.deduction']}"   toggleable="true"  toggleSpeed="500">
 	
 		<p:dataTable id="tableDeduction" var="datas" 
 		    value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
@@ -15,11 +15,11 @@
 		       	<ac:paginator for="tableDeduction" />
 		   	    <p:ajax event="rowSelect" update=":form:clauseDescp"  />
 		         
-		          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:650px;">
+		          <p:column headerText="#{lbl['lbl.ct.deduction.type']}" style="width:650px;">
 	        	     <p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(datas.deductionType)}" style="float:left;" />
 	              </p:column> 
 		       
-		          <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:150px;text-align:right;">
+		          <p:column headerText="#{lbl['lbl.ct.amount']}" style="width:150px;text-align:right;">
 	                 <h:outputText value="#{datas.amount}" rendered="#{datas.deductionType.parameterCode eq ParameterConst.deductionTypeFixedDeposit
 		                   or datas.deductionType.parameterCode eq ParameterConst.deductionTypeAdvancePayment}">
 		                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -42,7 +42,7 @@
                                disabledSelection="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                       ParameterConst.deductionTypeAdvancePayment}"/>
                            
-                            <p:column headerText="#{lbl['lbl.ct.ded.table1.desc']}" style="white-space:normal;width:98%;">
+                            <p:column headerText="#{lbl['lbl.ct.deduction.clause.desc']}" style="white-space:normal;width:98%;">
                                 <p:outputLabel value="#{data.clauseDescription}" 
                                    rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
         	                       ParameterConst.deductionTypeAdvancePayment}" style="float:left;"/>
@@ -60,7 +60,7 @@
                           <c:if test="#{contractDetailsBackingBean.managedBean.selectedDeduction != null and 
                                 contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode eq 
         	                    ParameterConst.deductionTypeAdvancePayment}">
-        	                <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" 
+        	                <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
         	                    icon="ui-icon-add" action="#{contractDetailsBackingBean.addDeductionClause()}" update=":form:tableClause"/>
 		  	                <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDeduction.show()" />
                          </c:if>
@@ -69,7 +69,7 @@
              </p:outputPanel>
          </p:panel>      
 	     <p:dialog id="dlgDeduction" widgetVar="dlgDeduction" modal="true" width="350"
-	         header="#{lbl['lbl.ct.dialog.cofirm.header']}"  styleClass="screen-title"  resizable="false"  height="95">  
+	         header="#{lbl['lbl.ct.dialog.confirm.header']}"  styleClass="screen-title"  resizable="false"  height="95">  
              <h:panelGrid columns="3">
                   <p:graphicImage library="ep/images/design" name="exclamation.png"
 			          value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -88,7 +88,7 @@
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.deductionRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -100,7 +100,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>
