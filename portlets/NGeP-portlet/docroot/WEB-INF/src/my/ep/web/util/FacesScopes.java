@@ -174,7 +174,7 @@ public class FacesScopes {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = (PmUser) facesScopes
 				.getSessionScope(SESS_USER_SESSION_BEAN);
-		System.out.println("user:" + user);
+		
 		if (user == null) {
 			try {
 				String loginId = getUserScreenName();
@@ -191,6 +191,7 @@ public class FacesScopes {
 						UserResDTO resDTO = userSO.retrieveUserByLoginId(reqDTO);
 
 						user = resDTO.getPmUser();
+					
 					} catch (Exception e) {
 						e.printStackTrace();
 						throw new EpException(e.getMessage());
@@ -198,6 +199,8 @@ public class FacesScopes {
 						userSO = null;
 					}
 				}
+				
+				log.info("stored in user session:" + (user != null ? user.getUserId() : null));
 				
 				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
