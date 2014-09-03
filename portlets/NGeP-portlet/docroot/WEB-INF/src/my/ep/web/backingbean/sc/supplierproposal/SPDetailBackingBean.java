@@ -1394,7 +1394,9 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore contractAmountScore = findProposalScoreByCriteriaType(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
 			
-			this.getManagedBean().setTotalContractAmount(contractAmountScore.getCriteriaValue());
+			if(contractAmountScore != null){
+				this.getManagedBean().setTotalContractAmount(contractAmountScore.getCriteriaValue());
+			}
 			
 			System.out.println("FN ***** NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE *****");
 			
