@@ -1456,7 +1456,9 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore creditFacilitiesScore = findProposalScoreByCriteriaType(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
 			
-			this.getManagedBean().setTotalAmountCredit(creditFacilitiesScore.getCriteriaValue());
+			if(creditFacilitiesScore != null){
+				this.getManagedBean().setTotalAmountCredit(creditFacilitiesScore.getCriteriaValue());
+			}
 			
 			System.out.println("CF ***** NAV_TO_CREDIT_FACILITIES_PAGE *****");
 
