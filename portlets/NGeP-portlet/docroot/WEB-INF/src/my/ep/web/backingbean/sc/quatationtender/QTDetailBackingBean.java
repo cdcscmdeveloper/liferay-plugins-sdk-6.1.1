@@ -1556,6 +1556,13 @@ public class QTDetailBackingBean extends
 	}
 
 	public void retrieveApprovalTabDtl() {
+		
+		//Added by Fara on 03092014 - Fix for Approval tab if user dint visit the Committee Appointment tab
+		List<TabBean> tabList = this.getManagedBean().getScCommitteeMemberTabList();
+		if(tabList == null || tabList.size() == 0){
+			retrieveCommitteeAppointmentTabDtl();
+		}
+		
 		updateQtDtls();
 		debugLogger("retrieveApprovalTabDtl");
 		// this.getManagedBean().setActiveIndex(3);
@@ -1665,8 +1672,12 @@ public class QTDetailBackingBean extends
 				approvalTabIndex++;
 			}
 			this.getManagedBean().setApprovalMenuModel(menuModel);
-			this.getManagedBean().setSelectedApprovalTabBean(tabBeans.get(0));
-			this.getManagedBean().setTabList(tabBeans);
+			
+			//Added by Fara on 03092014 - Fix for Approval tab if no data for approval
+			if( menuModel.getContents() != null && menuModel.getContents().size() > 0){
+				this.getManagedBean().setSelectedApprovalTabBean(tabBeans.get(0));
+				this.getManagedBean().setTabList(tabBeans);
+			}
 		} finally {
 			detailSO = null;
 		}
