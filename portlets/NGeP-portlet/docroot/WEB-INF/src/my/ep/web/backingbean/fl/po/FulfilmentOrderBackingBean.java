@@ -179,6 +179,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					} else {
 						messageId = MessageConst.INFO_700005;
 					}
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_700010;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, null,
