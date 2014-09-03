@@ -34,6 +34,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -175,7 +176,7 @@ public class PmCommonUtil {
 			configGeneral = configGeneralResDTO.getPmConfigGeneral();
 		}
 		if(configGeneral==null){
-			throw new IllegalArgumentException("Pm Config General is null.");
+			throw new IllegalArgumentException(MessageConst.ERROR_770052);
 		}
 		if(pmUserPreference == null){
 			pmUserPreference= new PmUserPreference();
@@ -403,7 +404,7 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException("Unable to retrieve user:" + id , new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770053 + id , new String[]{e.getMessage()}); //TODO exception
 		}		
 		return pmUser;
 	}
@@ -426,7 +427,7 @@ public class PmCommonUtil {
 			}
 				
 		} catch (Exception e) {
-			throw new EpException("Unable to retrieve user:" + id , new String[]{e.getMessage()}); //TODO exception
+			throw new EpException(MessageConst.ERROR_770053 + id , new String[]{e.getMessage()}); //TODO exception
 		}		
 		return pmUserOrgs;
 	}
