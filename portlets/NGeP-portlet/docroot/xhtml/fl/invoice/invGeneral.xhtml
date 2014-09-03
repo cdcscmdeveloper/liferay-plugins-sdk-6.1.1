@@ -58,19 +58,19 @@
 							<td><p:inputText size="9" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.smMofAccounts[0].mofNo}" disabled="true" /></td>
 						</tr>
 					</table></td>
-				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.bank.acc.no']}"
+				<td style="width: 144px;"><p:outputLabel
+						value="#{lbl['lbl.fl.bank.acc.no.name']}"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
 				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel'}"
-						style="width:210px;margin-bottom: 5px;"
+						style="width:250px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 						<f:selectItems value="#{invoiceBackingBean.populateBankAccountList}" />
-						<p:ajax event="change" update="suppBankName"
+						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" />
 					 <p:inputText disabled="true" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
@@ -80,16 +80,6 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppName"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td style="width: 148px;"><p:outputLabel
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
-						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" id="suppBankName"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
-						value="#{invoiceBackingBean.managedBean.invoice.paymentBank.finOrgName}" />
-						<p:inputText size="45" disabled="true"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO'}"
-						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.bankName}" />
-						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>

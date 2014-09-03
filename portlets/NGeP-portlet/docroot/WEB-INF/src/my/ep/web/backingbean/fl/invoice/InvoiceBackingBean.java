@@ -466,10 +466,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchName (supplierSearchReqDTO);
 				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						String account = obj.getAccountNo();
+						if (obj.getPmFinancialOrg() != null)
+							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 						}
+						
 					}
 				}
 			}
@@ -480,7 +485,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				for (SmSupplierBank obj : supplierBank) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						String account = obj.getAccountNo();
+						if (obj.getPmFinancialOrg() != null)
+							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
+						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
 						}
