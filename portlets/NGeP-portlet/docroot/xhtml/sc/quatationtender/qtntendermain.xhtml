@@ -44,13 +44,13 @@
 						</p:calendar></td>
 					<td><h:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
 					<td><p:calendar id="crdateTo" showOn="button"
+							label="#{lbl['lbl.so.creatdtto']}"
 							value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toCreatedDate}"
 							mindate="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
-							size="29" readonlyInput="true"
+							size="29" readonlyInput="true" required="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate ne null or !qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate eq ''}"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<f:attribute name="startDate"
 								value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}" />
-							<f:validator validatorId="dateRangeValidator" />
 						</p:calendar></td>
 				</tr>
 				<tr>
