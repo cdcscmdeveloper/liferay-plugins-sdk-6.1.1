@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<c:if
-		test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
+		test="${specificationBackingBean.managedBean.scQt.evaluationType eq '2' or(specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true')}">
+
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="20%;" class="sidemenutd"
@@ -21,19 +22,13 @@
 							action="#{specificationBackingBean.qtChecklistTabChange(1)}"
 							update="@form" />
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-							<p:menuitem value="#{lbl['lbl.sc.spec.prepare.specification']}"
-								actionListener="#{specificationBackingBean.retriveTechnicalSpecification}"
-								update="@form" />
-						</c:if>
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-							<p:menuitem value="#{lbl['lbl.sc.spec.tech.check.list']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
-								update="@form" />
-						</c:if>
+
+
+						<p:menuitem value="#{lbl['lbl.sc.spec.tech.check.list']}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(2)}"
+							update="@form" />
+
 
 
 
@@ -42,12 +37,11 @@
 							update="@form" />
 
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-							<p:menuitem value="#{lbl['lbl.sc.spec.tech.scoring']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(4)}"
-								update="@form" />
-						</c:if>
+
+						<p:menuitem value="#{lbl['lbl.sc.spec.tech.scoring']}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(4)}"
+							update="@form" />
+
 
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.financial.scoring']}"
@@ -94,18 +88,10 @@
 
 						<ui:include src="SupplierCommitteeQualificationCriteria.xhtml"></ui:include>
 					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '10'}">
-						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-							<ui:include src="prepareSpecification.xhtml"></ui:include>
-						</ui:fragment>
-
-					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '2'}">
-						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-							<ui:include src="technicalChecklist.xhtml"></ui:include>
-						</ui:fragment>
+
+						<ui:include src="technicalChecklist.xhtml"></ui:include>
+
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '3'}">
@@ -113,10 +99,9 @@
 						<ui:include src="financialChecklist.xhtml"></ui:include>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '4'}">
-						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '2'}">
-							<ui:include src="weightageGroup.xhtml" />
-						</ui:fragment>
+
+						<ui:include src="weightageGroup.xhtml" />
+
 
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '5'}">
@@ -157,7 +142,7 @@
 
 
 	<c:if
-		test="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+		test="${specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq ne 'true'}">
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
