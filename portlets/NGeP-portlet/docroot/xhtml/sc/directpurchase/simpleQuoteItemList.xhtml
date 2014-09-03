@@ -8,33 +8,38 @@
 
 	<p:spacer height="5px" />
 	<p:panel id="itemListMainId">
-	  <h:panelGroup style="width: 100%;">
+	  <h:panelGroup id="productListId" style="width: 100%;">
 		<ac:templateSpec 
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 			editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			title="#{lbl['lbl.ss.simple.quote.product.list']}" />
-		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
-		   action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
-			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
-			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
-		</p:commandButton>
+		
     </h:panelGroup>
+		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
+			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
+			icon="ui-icon-clone" process="@this productListId"
+			update="@([id$=cloneItemSpec])"
+			rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+			partialSubmit="true">
+		</p:commandButton>
 
-	  <p:spacer height="35px" />
-	  <h:panelGroup style="width: 100%;">
+		<p:spacer height="35px" />
+	  <h:panelGroup  id="serviceListId" style="width: 100%;">
 		 <ac:templateSpec
 		    editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
 			title="#{lbl['lbl.ss.simple.quote.service.list']}" />
-
-		 <p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
-		     action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
-			icon="ui-icon-clone" process="@this"
-			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
-			oncomplete="cloneItemSpec.show();return false;" partialSubmit="true">
-		</p:commandButton>
+		
       </h:panelGroup>
+
+		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
+			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
+			icon="ui-icon-clone" process="@this serviceListId"
+			update="@([id$=cloneItemSpec])"
+			rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+			partialSubmit="true">
+		</p:commandButton>
+
 		<ui:include src="/xhtml/sc/directpurchase/common/cloneItemSpecSearch.xhtml" />
 
 	</p:panel>
