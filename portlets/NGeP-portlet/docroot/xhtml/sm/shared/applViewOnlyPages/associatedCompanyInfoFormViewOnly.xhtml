@@ -25,7 +25,6 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink update=":form:tt:asDisp"
 						action="#{viewSmApplBackingBean.assignSelAssoc(assocBean)}" oncomplete="assocDialog.show()" 
-						update=":form:tt:assocDialog"
 						partialSubmit="true" process="@this">
 						<p:graphicImage library="ep/images/design" name="document.png"
 							value="/resources/ep/images/design/document.png"
