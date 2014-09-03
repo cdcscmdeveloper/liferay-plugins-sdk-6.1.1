@@ -200,8 +200,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     	
     	scRequestNoteDtls = this.getManagedBean().getRequestNoteDtls();
     	// adding request note delete list
-    	if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
-    		scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+    	if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+    		if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
+    			scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+    		}
     	}
     	requestNote.setRequestNoteDtls(scRequestNoteDtls);
     	
@@ -299,11 +301,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtls.add(requestNoteDtl);
 				}	
 			}
+			
 			// adding request note delete list
-			if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
-				scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+			if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
+					scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
+				}
 			}
-
 			requestNote.setRequestNoteDtls(scRequestNoteDtls);
 			
 			// Target Approver
@@ -1234,11 +1238,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 	    scRequestNoteDtl.setFulfilmentType(resDTO.getPmParameter());
 	    
-	    reqDTO = new ParameterReqDTO();
-	    reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-	    reqDTO.setParameterCode(getManagedBean().getPriceType());
-	    resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-	    scRequestNoteDtl.setPriceType(resDTO.getPmParameter());
+	    if(getManagedBean().getPriceType() != null){
+	    	reqDTO = new ParameterReqDTO();
+	    	reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
+	    	reqDTO.setParameterCode(getManagedBean().getPriceType());
+	    	resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+	    	scRequestNoteDtl.setPriceType(resDTO.getPmParameter());
+	    }
 	    
 	    if(selectedSupplierItem.getLeadTime() != null){
 	    	 scRequestNoteDtl.setDeliverTerm(selectedSupplierItem.getLeadTime().intValue());
