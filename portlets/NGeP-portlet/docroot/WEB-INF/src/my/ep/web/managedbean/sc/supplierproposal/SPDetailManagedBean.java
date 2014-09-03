@@ -143,6 +143,11 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	private int technicalTableRow;
 	private int financialTableRow;
+	
+	private boolean agreeWithIntegrityPact;
+	private boolean agreeWithOthersTermsConditions;
+	private String integrityPact;
+	private String othersTermsConditions;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -739,6 +744,63 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialTableRow(int financialTableRow) {
 		this.financialTableRow = financialTableRow;
+	}
+
+	/**
+	 * @return the agreeWithIntegrityPact
+	 */
+	public boolean isAgreeWithIntegrityPact() {
+		return agreeWithIntegrityPact;
+	}
+
+	/**
+	 * @param agreeWithIntegrityPact the agreeWithIntegrityPact to set
+	 */
+	public void setAgreeWithIntegrityPact(boolean agreeWithIntegrityPact) {
+		this.agreeWithIntegrityPact = agreeWithIntegrityPact;
+	}
+
+	/**
+	 * @return the agreeWithOthersTermsConditions
+	 */
+	public boolean isAgreeWithOthersTermsConditions() {
+		return agreeWithOthersTermsConditions;
+	}
+
+	/**
+	 * @param agreeWithOthersTermsConditions the agreeWithOthersTermsConditions to set
+	 */
+	public void setAgreeWithOthersTermsConditions(
+			boolean agreeWithOthersTermsConditions) {
+		this.agreeWithOthersTermsConditions = agreeWithOthersTermsConditions;
+	}
+
+	/**
+	 * @return the integrityPact
+	 */
+	public String getIntegrityPact() {
+		return integrityPact;
+	}
+
+	/**
+	 * @param integrityPact the integrityPact to set
+	 */
+	public void setIntegrityPact(String integrityPact) {
+		this.integrityPact = integrityPact;
+	}
+
+	/**
+	 * @return the othersTermsConditions
+	 */
+	public String getOthersTermsConditions() {
+		return othersTermsConditions;
+	}
+
+	/**
+	 * @param othersTermsConditions the othersTermsConditions to set
+	 */
+	public void setOthersTermsConditions(String othersTermsConditions) {
+		this.othersTermsConditions = othersTermsConditions;
 	}
 	
 }

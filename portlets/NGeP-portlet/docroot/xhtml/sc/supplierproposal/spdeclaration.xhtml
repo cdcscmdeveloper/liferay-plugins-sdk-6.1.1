@@ -6,13 +6,42 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" toggleable="true">
-		<p:inputTextarea disabled="true" value="declaration text from velocity goes here"></p:inputTextarea>
-		<p:selectBooleanCheckbox style="margin-right: 5px;" />
-		<h:outputText value="#{lbl['lbl.sc.integrity.note']}" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:editor controls="" id="integrityPactEditor" value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}" disabled="true" width="955" height="430" />
+			</td>
+		</tr>
+		<tr height="10">
+			<td></td>
+		</tr>
+		<tr>
+			<td>
+				<p:selectBooleanCheckbox value="#{supplierProposalDetailBackingBean.managedBean.agreeWithIntegrityPact}" />
+				<p:spacer width="2" />
+				<h:outputLabel value="#{lbl['lbl.sc.integrity.note']}" style="vertical-align:top; float: none;" />
+			</td>
+		</tr>
+		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.others']}" toggleable="true">
-		<p:selectBooleanCheckbox style="margin-right: 5px;" />
-		<h:outputText value="#{lbl['lbl.sc.others.note']}" />
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td>
+				<p:editor controls="" id="othersEditor" value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}" disabled="true" width="955" height="430" />
+			</td>
+		</tr>
+		<tr height="10">
+			<td></td>
+		</tr>
+		<tr>
+			<td>
+				<p:selectBooleanCheckbox value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}" />
+				<p:spacer width="2" />
+				<h:outputLabel value="#{lbl['lbl.sc.others.note']}" style="vertical-align:top; float: none;" />
+			</td>
+		</tr>
+		</table>
 	</p:panel>
 
 </ui:composition>

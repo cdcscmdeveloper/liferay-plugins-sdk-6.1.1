@@ -37,6 +37,7 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -74,9 +75,11 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
 
@@ -190,9 +193,11 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(1);
 	}
 
-	public void retrieveDeclarationList() {
+	public void retrieveDeclarationList()throws Exception {
 		debugLogger("retrieveDeclarationList");
 		this.getManagedBean().setPrepareActiveIndex(2);
+		
+		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
 
 	/**
@@ -2169,6 +2174,32 @@ public class SPDetailBackingBean extends
 			parameterSO = null;
 		}
 		
+	}
+	
+	private String generateDeclarationFromVelocity(ScQt scQt)
+			throws Exception {
+		
+		retrieveSupplierDtls(getManagedBean().getTecCheckDetailsList().get(0));
+		
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+		SmSupplier smSupplier = getManagedBean().getSmSupplier();
+		VelocityContext context = new VelocityContext();
+
+		context.put("title", scQt.getQtTitle());
+		context.put("userName", pmUser.getUserName());
+		context.put("icNo", pmUser.getIdentificationNo());
+		context.put("supplierName", smSupplier.getCompanyName());
+		context.put("mofNo", ""); // TODO
+		context.put("agency", pmOrgProfile.getOrgName());
+
+		String integrityPact = DocumentGenerator
+				.getInstance()
+				.getHtmlFromVelocity(SourcingConstants.LOA_DECLARATION, context);
+
+		getManagedBean().setIntegrityPact(integrityPact);
+
+		return integrityPact;
 	}
 	
 	private List<ScQtProposalScore> updateProposalScoresValue(ScQtProposalChecklist proposalChecklist, 

@@ -31,10 +31,9 @@
 						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '1'}">
 						<ui:include src="spfinancedetails.xhtml" />
 					</c:if>
-					<c:if
-						test="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
+					<h:panelGroup rendered="#{supplierProposalDetailBackingBean.managedBean.prepareActiveIndex eq '2'}">
 						<ui:include src="spdeclaration.xhtml" />
-					</c:if>
+					</h:panelGroup>
 				</h:panelGroup></td>
 		</tr>
 	</table>
