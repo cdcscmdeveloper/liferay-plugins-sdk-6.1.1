@@ -16,7 +16,7 @@
 			
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="Back" icon="ui-icon-back" action="#{codificationBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back" action="#{codificationBackingBean.backToPrev}" />
 			</div>
 		</div>
 						
@@ -26,13 +26,13 @@
 					<td><div class="navDiv" id="menuDiv" align="center">
 							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
 								<li style="width: 210px;"><h:outputText
-										value="Choose UNSPSC" /></li>
+										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
 
 								<li style="width: 210px;"><h:outputText
-										value="Choose Product" /></li>
+										value="#{lbl['lbl.cm.choose.product']}" /></li>
 
 								<li style="width: 210px;"><h:outputText
-										value="Complete Product Details" /></li>
+										value="#{lbl['lbl.cm.complete.product.details']}" /></li>
 							</ul>
 							<ul id="tripMeter" class="menu-line">
 								<li class="green-dot" style="margin-right: 200px;" />
@@ -49,7 +49,7 @@
 
 		<h:panelGroup id="cmExtensionSearchID">
 
-			<p:panel header="SEARCH" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -94,7 +94,7 @@
 					</tr>
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
-								value="Extension Attribute"></h:outputText></td>
+								value="#{lbl['lbl.cm.extension.attr']}"></h:outputText></td>
 					</tr>
 
 					<tr>
@@ -102,7 +102,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.typeFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.typeCriteria}" />
 							</p:selectOneMenu></td>
@@ -110,7 +110,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.brandFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.brandCriteria}" />
 							</p:selectOneMenu></td>
@@ -121,7 +121,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
 							</p:selectOneMenu></td>
@@ -129,7 +129,7 @@
 						<td><p:selectOneMenu
 								value="#{codificationBackingBean.colorFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.colorCriteria}" />
 							</p:selectOneMenu></td>
@@ -137,7 +137,7 @@
 				</table>
 
 				<div style="text-align: right;">
-					<p:commandButton value="Search" icon="ui-icon-search" id="searchButtonId"
+					<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" id="searchButtonId"
 						action="#{codificationBackingBean.extensionCodeSearch}"
 						update="itemTableID" />
 				</div>
@@ -154,7 +154,7 @@
 
 
 
-			<p:panel header="SEARCH RESULTS" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
@@ -201,10 +201,10 @@
 
 				<div class="clear"></div>
 				<div style="text-align: right;">
-					<p:commandButton value="Request Extension"
+					<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{unspscCodeBackingBean.requestExtensionCode}" />
-					<p:commandButton value="Add" icon="ui-icon-add"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 						rendered="#{unspscCodeBackingBean.allSupplier}"
 						action="#{catalogueBackingBean.addToMaintain()}" />
 				</div>
