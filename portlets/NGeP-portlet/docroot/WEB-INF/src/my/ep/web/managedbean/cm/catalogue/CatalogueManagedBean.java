@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -37,6 +38,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -482,15 +484,17 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public List<String> getCompareLabel() {
 		compareLabel = new ArrayList<String>();
-		compareLabel.add("Action");
-		compareLabel.add("Item Name");
-		compareLabel.add("Item Code");
-		compareLabel.add("Price");
-		compareLabel.add("Supplier Name");
-		compareLabel.add("SKU No");
-		compareLabel.add("Min Order");
-		compareLabel.add("Delivery Term");
-		compareLabel.add("Additional Desc");
+		
+		Locale locale = new FacesScopes().getUserLocale();
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.action",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.normal.price",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.supplier.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.sku",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.min.order",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.additional.item.description",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
 
 
 
