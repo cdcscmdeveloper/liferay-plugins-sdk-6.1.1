@@ -53,103 +53,33 @@
 						Extension
 					</f:facet>
 
-						<table style="height: 140px;">
-							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
-							</tr>
-						</table>
-
-
-
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
+						
 					</p:column>
-
-
 
 					<p:column width="10%">
 						<f:facet name="header">
 							Supplier
 						</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
-
-
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
-
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
-										
-
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
-				
-
-									</h:panelGrid></td>
-							</tr>
-						</table>
+						<div style="width:100%; "><p:inputText value="#{review.typeName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.brandName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.measurementName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.colorName}" disabled="true" /></div>
 
 					</p:column>
 					<p:column width="10%">
 						<f:facet name="header">
 						Review By
 					</f:facet>
-
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedTypeName}"
-											disabled="true"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedBrandName}"
-											disabled="true"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedMeasurementName}"
-											disabled="true"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedColorName}"
-											disabled="true"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-						</table>
-
+					
+						<div style="width:100%; "><p:inputText value="#{review.reviewedTypeName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedBrandName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedMeasurementName}" disabled="true" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedColorName}" disabled="true" /></div>
 
 					</p:column>
 
@@ -158,89 +88,45 @@
 						Remark
 					</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.typeRemark}" disabled="true"
-											size="30"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.brandRemark}" disabled="true"
-											size="30"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.measurementRemark}"
-											disabled="true" size="30"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.colorRemark}" disabled="true"
-											size="30"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-						</table>
+						<div style="width:100%; "><p:inputText value="#{review.typeRemark}" disabled="true"	size="30" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.brandRemark}" disabled="true"	size="30" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.measurementRemark}" disabled="true"	size="30" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.colorRemark}" disabled="true"	size="30" /></div>
 
 					</p:column>
-
-
 
 					<p:column width="10%">
 						<f:facet name="header">
 						Endorse By
 					</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedTypeNameII}"
-											disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.type']}">
-											<p:ajax event="blur"
-												update=":form:dt:typeremark2 :form:dt:typeremarkmsg"></p:ajax>
-
-										</p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedBrandNameII}"
-											disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.brand']}">
-											<p:ajax event="blur"
-												update=":form:dt:brandRemark2 :form:dt:brandremarkmsg"></p:ajax>
-										</p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedMeasurementNameII}"
-											disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.measurement']}">
-											<p:ajax event="blur"
-												update=":form:dt:measurementRemark2 :form:dt:measurementremarkmsg"></p:ajax>
-										</p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedColorNameII}"
-											disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.color']}">
-											<p:ajax event="blur"
-												update=":form:dt:colorRemark2 :form:dt:colorremarkmsg"></p:ajax>
-										</p:inputText>
-									</h:panelGrid></td>
-							</tr>
-						</table>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.reviewedTypeNameII}"
+								disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.type']}">
+								<p:ajax event="blur" update=":form:dt:typeremark2 :form:dt:typeremarkmsg"></p:ajax>
+							</p:inputText>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.reviewedBrandNameII}"
+								disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.brand']}">
+								<p:ajax event="blur"
+									update=":form:dt:brandRemark2 :form:dt:brandremarkmsg"></p:ajax>
+							</p:inputText>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.reviewedMeasurementNameII}"
+								disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.measurement']}">
+								<p:ajax event="blur"
+									update=":form:dt:measurementRemark2 :form:dt:measurementremarkmsg"></p:ajax>
+							</p:inputText>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.reviewedColorNameII}"
+								disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.color']}">
+								<p:ajax event="blur"
+									update=":form:dt:colorRemark2 :form:dt:colorremarkmsg"></p:ajax>
+							</p:inputText>
+						</div>
 
 					</p:column>
 
@@ -249,50 +135,35 @@
 						Remark
 					</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.typeRemarkII}" size="30"
-											requiredMessage="Type Remark is required!"
-											disabled="#{unspscCodeBackingBean.codeAdmin}"
-											required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
-											id="typeremark2"></p:inputText>
-
-										<p:message id="typeremarkmsg" for="typeremark2"></p:message>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.brandRemarkII}" size="30"
-											id="brandRemark2" requiredMessage="Brand Remark is required!"
-											required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
-											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
-										<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.measurementRemarkII}" size="30"
-											id="measurementRemark2" requiredMessage="Measurement Remark is required!"
-											required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
-											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
-										<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.colorRemarkII}" size="30"
-											id="colorRemark2" requiredMessage="Color Remark is required!"
-											required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
-											disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
-										<p:message id="colorremarkmsg" for="colorRemark2"></p:message>
-									</h:panelGrid></td>
-							</tr>
-						</table>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.typeRemarkII}" size="30"
+								requiredMessage="Type Remark is required!"
+								disabled="#{unspscCodeBackingBean.codeAdmin}"
+								required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
+								id="typeremark2" />
+							<p:message id="typeremarkmsg" for="typeremark2"></p:message>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.brandRemarkII}" size="30"
+								id="brandRemark2" requiredMessage="Brand Remark is required!"
+								required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
+								disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+							<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.measurementRemarkII}" size="30"
+								id="measurementRemark2" requiredMessage="Measurement Remark is required!"
+								required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
+								disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+							<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
+						</div>
+						<div style="width:100%; ">
+							<p:inputText value="#{review.colorRemarkII}" size="30"
+								id="colorRemark2" requiredMessage="Color Remark is required!"
+								required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
+								disabled="#{unspscCodeBackingBean.codeAdmin}"></p:inputText>
+							<p:message id="colorremarkmsg" for="colorRemark2"></p:message>
+						</div>
 
 					</p:column>
 

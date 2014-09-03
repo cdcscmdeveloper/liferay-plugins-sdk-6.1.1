@@ -49,23 +49,10 @@
 						Extension
 					</f:facet>
 
-						<table style="height: 140px;border:none;">
-							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
-							</tr>
-						</table>
-
-
-
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
 					</p:column>
 
 
@@ -74,39 +61,11 @@
 							Supplier
 						</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedTypeNameII}"
-											disabled="#{!review.requestType}"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedBrandNameII}"
-											disabled="#{!review.requestBrand}"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedMeasurementNameII}"
-											disabled="#{!review.requestMeasurement}"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
-										<p:inputText value="#{review.reviewedColorNameII}"
-											disabled="#{!review.requestColor}"></p:inputText>
-									</h:panelGrid></td>
-							</tr>
-						</table>
-
+						<div style="width:100%; "><p:inputText value="#{review.reviewedTypeNameII}"	disabled="#{!review.requestType}" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedBrandNameII}" disabled="#{!review.requestBrand}" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedMeasurementNameII}" disabled="#{!review.requestMeasurement}" /></div>
+						<div style="width:100%; "><p:inputText value="#{review.reviewedColorNameII}" disabled="#{!review.requestColor}" /></div>
+						
 					</p:column>
 
 

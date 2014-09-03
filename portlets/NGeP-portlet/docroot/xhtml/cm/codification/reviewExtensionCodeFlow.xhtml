@@ -48,10 +48,10 @@
 						<f:facet name="header">
 						Extension
 					</f:facet>
-						<div style="width:100%; display: table;">#{lbl['lbl.cm.type']}</div>
-						<div style="width:100%; display: table;">#{lbl['lbl.cm.brand']}</div>
-						<div style="width:100%; display: table;">#{lbl['lbl.cm.measurement']}</div>
-						<div style="width:100%; display: table;">#{lbl['lbl.cm.color']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
 					</p:column>
 
 
@@ -60,7 +60,7 @@
 							Supplier
 						</f:facet>
 
-						<div style="width:100%; display: table;">
+						<div style="width:100%; ">
 								<p:inputText value="#{review.typeName}"
 									disabled="#{!review.requestType}"></p:inputText>
 								<p:selectOneMenu rendered="#{review.requestType}"
@@ -72,7 +72,7 @@
 										itemValue="#{type.typeId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; display: table;">
+						<div style="width:100%; ">
 								<p:inputText value="#{review.brandName}"
 									disabled="#{!review.requestBrand}"></p:inputText>
 								<p:selectOneMenu rendered="#{review.requestBrand}"
@@ -84,7 +84,7 @@
 										itemValue="#{brand.brandId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; display: table;">
+						<div style="width:100%; ">
 								<p:inputText value="#{review.measurementName}"
 									disabled="#{!review.requestMeasurement}"></p:inputText>
 								<p:selectOneMenu rendered="#{review.requestMeasurement}"
@@ -96,7 +96,7 @@
 										itemValue="#{measurement.measurementId}"></f:selectItems>
 								</p:selectOneMenu>
 						</div>
-						<div style="width:100%; display: table;">
+						<div style="width:100%; ">
 								<p:inputText value="#{review.colorName}"
 									disabled="#{!review.requestColor}"></p:inputText>
 								<p:selectOneMenu rendered="#{review.requestColor}"

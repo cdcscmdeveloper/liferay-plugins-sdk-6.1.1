@@ -49,22 +49,10 @@
 						Extension
 					</f:facet>
 
-						<table style="height: 140px;">
-							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
-							</tr>
-							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
-							</tr>
-						</table>
-
-
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.brand']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.measurement']}</div>
+						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.color']}</div>
 
 					</p:column>
 
@@ -74,10 +62,7 @@
 							Supplier
 						</f:facet>
 
-						<table>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
+						<div style="width:100%; ">
 										<p:inputText value="#{review.typeName}"
 											disabled="#{!review.requestType}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestType}"
@@ -88,11 +73,8 @@
 												var="type" itemLabel="#{type.typeName}"
 												itemValue="#{type.typeId}"></f:selectItems>
 										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
+						</div>
+						<div style="width:100%; ">
 										<p:inputText value="#{review.brandName}"
 											disabled="#{!review.requestBrand}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestBrand}"
@@ -103,12 +85,8 @@
 												var="brand" itemLabel="#{brand.brandName}"
 												itemValue="#{brand.brandId}"></f:selectItems>
 										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
+							</div>
+							<div style="width:100%; ">
 										<p:inputText value="#{review.measurementName}"
 											disabled="#{!review.requestMeasurement}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestMeasurement}"
@@ -119,12 +97,8 @@
 												var="measurement" itemLabel="#{measurement.measurementName}"
 												itemValue="#{measurement.measurementId}"></f:selectItems>
 										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-							<tr>
-
-								<td><h:panelGrid columns="2"
-										columnClasses="cmColumnWidth">
+							</div>
+							<div style="width:100%; ">
 										<p:inputText value="#{review.colorName}"
 											disabled="#{!review.requestColor}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestColor}"
@@ -135,9 +109,7 @@
 												var="color" itemLabel="#{color.colorName}"
 												itemValue="#{color.colorId}"></f:selectItems>
 										</p:selectOneMenu>
-									</h:panelGrid></td>
-							</tr>
-						</table>
+							</div>
 
 					</p:column>
 
