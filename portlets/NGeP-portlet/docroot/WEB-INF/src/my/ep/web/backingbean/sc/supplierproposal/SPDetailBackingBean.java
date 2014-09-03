@@ -1578,8 +1578,10 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore assetLiabilityScore = findProposalScoreByCriteriaType(
 					SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
 			
-			getManagedBean().getScQtPRPAssetLiability().setAcidRatio(
-					assetLiabilityScore.getCriteriaValue());
+			if(assetLiabilityScore != null){
+				getManagedBean().getScQtPRPAssetLiability().setAcidRatio(
+						assetLiabilityScore.getCriteriaValue());
+			}
 			
 			System.out.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
 			
