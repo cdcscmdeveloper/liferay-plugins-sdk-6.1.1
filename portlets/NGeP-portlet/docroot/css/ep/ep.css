@@ -3336,6 +3336,6 @@ table.rptTbl {
 	border: none;
 }
 
-.aui input, .aui textarea, .aui .uneditable-input {
-    width: auto;
+.width-auto {
+    width: auto !important;
 }
