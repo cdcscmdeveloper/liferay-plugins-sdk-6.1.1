@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="supplierlist" header="Supplier List" toggleable="true">
+	<p:panel id="supplierlist" header="#{lbl['lbl.sc.supplier.list']}"
+		toggleable="true">
 		<c:if
 			test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal 
 					or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
@@ -52,11 +53,8 @@
 						oncomplete="suppDetails.show();">
 						<f:setPropertyActionListener value="#{qtSupplier}"
 							target="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier}" />
-
 						<h:outputText value="#{qtSupplier.smSupplier.companyName}" />
 					</p:commandLink>
-
-
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
 					<h:outputText
@@ -75,7 +73,6 @@
 				</p:column>
 			</p:dataTable>
 		</c:if>
-
 		<br />
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
 		<p:spacer width="5" />

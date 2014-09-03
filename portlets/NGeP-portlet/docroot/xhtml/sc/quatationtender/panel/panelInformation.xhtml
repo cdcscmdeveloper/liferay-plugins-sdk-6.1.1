@@ -50,7 +50,7 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.selectpanelItem}"
 			rowKey="#{panelItem}">
 
-			<ac:paginator for="panelDataItemList"></ac:paginator>
+			<ac:paginator for="panelDataItemList" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
 				style="width:15%;">
@@ -87,8 +87,6 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.luar.contract']}"
 				style="width:10%;">
 			</p:column>
-
 		</p:dataTable>
-
 	</p:panel>
 </ui:composition>

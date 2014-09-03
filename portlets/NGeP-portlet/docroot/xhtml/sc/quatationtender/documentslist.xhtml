@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Document List" toggleable="true">
+	<p:panel header="#{lbl['lbl.so.document.list']}" toggleable="true">
 		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
 			selection="#{qTDocumentsBackingBean.managedBean.selectedScQtDocReports}"
@@ -55,7 +55,7 @@
 		<p:spacer height="2"/>
 		<div class="ppRightBtn">
 			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}" ajax="false" action="#{qTDocumentsBackingBean.downloadAllReports}" />
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}" actionListener="#{qTDocumentsBackingBean.cloneDocumentPopupAction}" oncomplete="screen2.show();" process="@this" icon="ui-icon-clone" update="@(.clonedocument)"/>
+			<p:commandButton value="#{lbl['lbl.btn.clone']}" actionListener="#{qTDocumentsBackingBean.cloneDocumentPopupAction}" oncomplete="screen2.show();" process="@this" icon="ui-icon-clone" update="@(.clonedocument)"/>
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this, doctbl" partialSubmit="true" action="#{qTDocumentsBackingBean.addDocumentList}"
 				oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this, doctbl" partialSubmit="true" icon="ui-icon-delete"

@@ -7,12 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="popupSuppDtl" widgetVar="suppDetails"
-		styleClass="pop_up_top" header="Supplier Details" width="450"
-		height="600" position="true">
+		styleClass="pop_up_top" header="#{lbl['lbl.sc.supplier.details']}"
+		width="450" height="600" position="true">
 		<p:panel>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 180px;"><p:outputLabel value="EP No" /></td>
+					<td style="width: 180px;"><p:outputLabel
+							value="#{lbl['lbl.sc.ep.no']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.epNo}"
 							size="30" readonly="true" disabled="true" /></td>
@@ -24,11 +25,11 @@
 							readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Registration Type" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.registration.type']}" /></td>
 					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Registration No" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.registration.no']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.regNo}"
 							size="30" readonly="true" disabled="true" /></td>
@@ -40,13 +41,13 @@
 							size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Income Tax Reference No" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.income.tax.ref.no']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.smAppl.smCompanyBasic.incomeTaxNo}"
 							size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Establishment Date" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.establishment.date']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.scQtSupplier.smSupplier.establishDate}"
 							size="30" readonly="true" disabled="true">
@@ -55,7 +56,7 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Type of Company" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.type.of.company']}" /></td>
 					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
@@ -68,43 +69,44 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Disciplinary Rating" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.disciplinary.rating']}" /></td>
 					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Branch" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.branch']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierBranch}"
 							size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td valign="top"><p:outputLabel value="Address" /></td>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.address']}" /></td>
 					<td><p:inputTextarea
 							value="#{qTSupplierQulCriteriaBackingBean.getFullAddress(qTSupplierQulCriteriaBackingBean.managedBean.supplierAddress)}"
 							rows="3" cols="32" readonly="true" disabled="true"
 							style=" margin-bottom:5px;" /></td>
 				</tr>
-
 				<tr>
-					<td><p:outputLabel value="Contact Person" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.contact.person']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierContact}"
 							size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Designation" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.designation']}" /></td>
 					<td><p:inputText size="30" readonly="true" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Email" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.email']}" /></td>
 					<td><p:inputText
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierEmail}"
 							size="30" readonly="true" disabled="true" /></td>
 				</tr>
 			</table>
 			<div class="ppRightBtn">
-				<p:commandButton value="Cancel" icon="ui-icon-back"
-					onclick="suppDetails.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+					icon="ui-icon-back" onclick="suppDetails.hide();" />
 			</div>
 		</p:panel>
 	</p:dialog>

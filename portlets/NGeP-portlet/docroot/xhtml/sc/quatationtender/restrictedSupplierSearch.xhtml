@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="searchrestrictedsupp" header="Search" toggleable="true">
+	<p:panel id="searchrestrictedsupp" header="#{lbl['lbl.btn.search']}"
+		toggleable="true">
 
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2" columnClasses="columnWidth20AlignTop">
@@ -25,7 +26,6 @@
 					<h:outputText
 						value="#{scQtCategory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
 				</p:column>
-
 				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 					style="width:15%; white-space: normal;">
 					<h:outputText
@@ -42,7 +42,8 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mandatory']}"
 					style="width: 150px;">
-					<h:outputText value="#{scQtCategory.mandatory ? 'Yes' : 'No'}" />
+					<h:outputText
+						value="#{lbl[scQtCategory.mandatory ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -50,7 +51,7 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2" columnClasses="columnWidth20,columnWidth50">
 			<h:column>
-				<h:outputLabel value="Supplier Name" />
+				<h:outputLabel value="#{lbl['lbl.so.suppliername']}" />
 			</h:column>
 			<h:column>
 				<p:inputText
@@ -73,21 +74,20 @@
 		</h:panelGrid>
 	</p:panel>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+		<p:commandButton value="#{lbl['lbl.btn.search']}"
 			styleClass="apply_button" id="restrictSupplier" icon="ui-icon-search"
 			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
 			update="restrictedsupplierPnl" />
-		<p:commandButton value="#{lbl['lbl.so.reset']}"
+		<p:commandButton value="#{lbl['lbl.btn.reset']}"
 			action="#{qTSupplierQulCriteriaBackingBean.reset}"
 			update="searchrestrictedsupp" icon="ui-icon-reset" resetValues="true"
 			partialSubmit="true" process="@this" />
 	</div>
 	<p:spacer height="5" />
-	<p:panel id="restrictedsupplierPnl" header="Supplier List"
-		toggleable="true">
-		<p:dataTable
+	<p:panel id="restrictedsupplierPnl"
+		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+		<p:dataTable var="smSupplier" id="ressupplier"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierList}"
-			var="smSupplier" id="ressupplier"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
 			rowKey="#{smSupplier.supplierId}" rows="10">
 

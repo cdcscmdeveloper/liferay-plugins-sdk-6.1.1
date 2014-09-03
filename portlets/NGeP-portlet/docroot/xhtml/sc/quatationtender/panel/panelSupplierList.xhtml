@@ -8,9 +8,7 @@
 
 	<ui:fragment
 		rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.ctzones eq 'true'}">
-
 		<p:panel id="ctZonepnlid" header="Location Details" toggleable="true">
-
 			<p:dataTable id="ctSupplierTreeZones"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSuppliers}"
 				var="ctZones" rowIndexVar="index" dynamic="true">
@@ -31,13 +29,10 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-
 			</p:dataTable>
-
 		</p:panel>
 	</ui:fragment>
 	<br />
 	<ui:include src="supplierlist.xhtml" />
-
 
 </ui:composition>

@@ -8,7 +8,6 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-
 		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList}"
 			rowIndexVar="index" styleClass="restrictedPnlId"
@@ -55,20 +54,16 @@
 				<p:selectBooleanCheckbox value="#{restrcitedCateGory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
 			</p:column>
-
 		</p:dataTable>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 				partialSubmit="true" update="restrictedPnlId" icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				icon="ui-icon-delete"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction}"
 				update="restrictedPnlId" />
 		</div>
 		<ac:lovPopup />
-
 	</p:panel>
 </ui:composition>

@@ -7,9 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="totalSupplierid">
-		<p:panel id="panlesupplierlist" header="Supplier List"
-			toggleable="true">
-
+		<p:panel id="panlesupplierlist"
+			header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 			<p:dataTable id="panelsuppliersTbl" var="qtSupplier"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSupplierList}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
@@ -35,7 +34,6 @@
 						value="#{qTSupplierQulCriteriaBackingBean.getStatusDescById(qtSupplier.supplier.pmStatus.statusId)}" />
 				</p:column>
 			</p:dataTable>
-
 		</p:panel>
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />
 		<p:spacer width="5" />
@@ -43,6 +41,4 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
 			disabled="true" />
 	</h:panelGroup>
-
-
 </ui:composition>

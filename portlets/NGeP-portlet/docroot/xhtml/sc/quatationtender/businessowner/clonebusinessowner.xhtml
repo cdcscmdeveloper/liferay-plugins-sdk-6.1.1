@@ -9,7 +9,7 @@
 	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
 		widgetVar="cloneBusinessOwner" width="950" height="600" position="top"
 		styleClass="cloneAddMember">
-		<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
 			id="searchpnlid">
 			<table>
 				<tr>
@@ -131,7 +131,8 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<h:outputText value="#{member.memberName}" style="white-space: normal;" />
+					<h:outputText value="#{member.memberName}"
+						style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
@@ -139,12 +140,14 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-					<h:outputText value="#{member.designation}" style="white-space: normal;" />
+					<h:outputText value="#{member.designation}"
+						style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.email']}">
 					<h:outputText
-						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}" style="white-space: normal;" />
+						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}"
+						style="white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
@@ -163,11 +166,11 @@
 
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
 					oncomplete="cloneBusinessOwner.hide();" update="businessownerId"
 					icon="ui-icon-check" />
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					icon="ui-icon-cancel" onclick="cloneBusinessOwner.hide()" />
 			</div>
 		</p:panel>

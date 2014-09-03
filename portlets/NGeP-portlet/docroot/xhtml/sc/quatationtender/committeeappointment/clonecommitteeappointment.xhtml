@@ -7,10 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog id="cloneid" header="Clone Committee" widgetVar="screen2"
-		width="950" height="600" position="top"
-		styleClass="cloneCommitteMember">
+		width="950" height="600" styleClass="cloneCommitteMember"
+		position="top">
 		<p:panel id="pnlid">
-			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.so.searchbtn']}"
+			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
 				<table>
 					<tr>
@@ -82,7 +82,7 @@
 						icon="ui-icon-search"
 						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
 						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
-					<p:commandButton value="#{lbl['lbl.so.reset']}"
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
 						icon="ui-icon-reset" resetValues="true" partialSubmit="true"
 						process="@this" />
@@ -182,11 +182,11 @@
 				<br />
 				<p:spacer height="3" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
 						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
 						oncomplete="screen2.hide();" icon="ui-icon-check"
 						update="@(.scMemberDtl)" />
-					<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						icon="ui-icon-cancel" onclick="screen2.hide();" />
 				</div>
 			</p:panel>

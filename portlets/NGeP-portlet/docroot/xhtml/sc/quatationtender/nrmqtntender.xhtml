@@ -49,18 +49,18 @@
 					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.so.mandatory']}" style="text-align: center;">
+			<p:column headerText="#{lbl['lbl.so.mandatory']}"
+				style="text-align: center;">
 				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
 					disabled="#{!qTDetailBB.managedBean.editable}" />
 			</p:column>
 
 		</p:dataTable>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 				update="openPnlId" icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
 				update="openPnlId" />
@@ -68,11 +68,10 @@
 		<ac:lovPopup />
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}" toggleable="true"
+	<p:panel header="#{lbl['lbl.sc.spec.location.list.paidup.capital']}"
+		toggleable="true"
 		rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
-
 		<table style="width: 100%">
-
 			<tr>
 				<td style="width: 100px"><h:panelGroup id="allstate">
 						<h:panelGrid border="0" cellpadding="0" cellspacing="0"
@@ -105,18 +104,15 @@
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"></f:convertNumber>
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
 					</tr>
 				</ui:fragment>
 			</p:outputPanel>
 		</table>
 	</p:panel>
-
 	<p:panel>
 		<h:panelGroup id="supplierallStae">
-
-
 			<p:panel
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
@@ -143,9 +139,8 @@
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
-									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}"></p:ajax>
-							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
-						</td>
+									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
+							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon" /></td>
 					</tr>
 				</table>
 			</p:panel>
@@ -189,12 +184,11 @@
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
-						process="@this" update="@([id$=zonePopupPanel])"
-						oncomplete="ZoneLocation.show();"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+						update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
-					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, zoneLocationDataTable" partialSubmit="true"
 						update="@([id$=zoneLocationDataTable])" icon="ui-icon-delete"
 						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
@@ -226,7 +220,7 @@
 								<f:selectItems
 									value="#{qTSupplierQulCriteriaBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change"
-									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}"></p:ajax>
+									listener="#{qTSupplierQulCriteriaBackingBean.selectLocation}" />
 							</p:selectOneMenu></td>
 					</tr>
 				</table>
@@ -290,20 +284,17 @@
 						</TR>
 					</table>
 				</p:panel>
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					style="float:right;" onclick="ZoneLocation.hide();"
 					icon="ui-icon-cancel" />
 					&#160;&#160;
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-					style="float:right;" onclick="ZoneLocation.hide();" process="@all"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+					onclick="ZoneLocation.hide();" process="@all"
 					update="@this, zoneLocationDataTable,zonePopupPanel"
 					action="#{qTSupplierQulCriteriaBackingBean.updateZoneLocation}"
 					icon="ui-icon-accept">
 				</p:commandButton>
 			</p:dialog>
-
 		</h:panelGroup>
 	</p:panel>
 	<p:panel
@@ -315,7 +306,7 @@
 						value="#{lbl['lbl.so.totalsup']}" /></td>
 				<td style="width: 150px"><p:inputText style="margin-right:5px;"
 						disabled="true" /></td>
-				<td><p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
 						icon="ui-icon-search" partialSubmit="true" /></td>
 				<td />
 			</tr>

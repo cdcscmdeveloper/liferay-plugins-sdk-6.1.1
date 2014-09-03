@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="documentcloneid" header="Clone Document"
+	<p:dialog id="documentcloneid" header="#{lbl['lbl.so.clone.document']}"
 		widgetVar="screen2" width="950" height="600" position="top"
 		styleClass="clonedocument">
-		<p:panel header="#{lbl['lbl.so.searchbtn']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
 			id="clonedocid">
 			<table>
 				<tr>
@@ -50,7 +50,7 @@
 					<td><p:calendar id="createdtTo" showOn="button"
 							value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.toCreatedDate}"
 							mindate="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}"
-							size="30" readonlyInput="true" 
+							size="30" readonlyInput="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 							<f:attribute name="startDate"
 								value="#{qTDocumentsBackingBean.managedBean.cloneDocumentSearchBean.fromCreatedDate}" />
@@ -81,11 +81,11 @@
 			</div>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
-			<p:dataTable id="clonesearchdocid"
+			<p:dataTable id="clonesearchdocid" styleClass="cloneResults"
 				value="#{qTDocumentsBackingBean.managedBean.cloneDocumentDataModel}"
 				selection="#{qTDocumentsBackingBean.managedBean.selectedDocumentCloneTender}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
-				styleClass="cloneResults">
+				rows="10">
 
 				<ac:paginator for="clonesearchdocid" />
 
@@ -119,8 +119,8 @@
 			</p:dataTable>
 		</p:panel>
 		<p:spacer height="3" />
-		<p:panel id="cloneDocumentList" header="Document List"
-			toggleable="true">
+		<p:panel id="cloneDocumentList"
+			header="#{lbl['lbl.so.document.list']}" toggleable="true">
 			<p:dataTable id="documentlistid"
 				value="#{qTDocumentsBackingBean.managedBean.cloneScQtDocReports}"
 				var="doclist" rowKey="#{doclist}"
@@ -129,18 +129,18 @@
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
-				<p:column headerText="Document">
+				<p:column headerText="#{lbl['lbl.so.document']}">
 					<h:outputText value="#{doclist.title}" />
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					action="#{qTDocumentsBackingBean.addDocumentCloneAction}"
 					onclick="screen2.hide();"
 					oncomplete="documentWidget.paginator.endLink.click();"
 					update="doctbl" icon="ui-icon-check" />
-					
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					icon="ui-icon-cancel" onclick="screen2.hide();" />
 			</div>
 		</p:panel>
