@@ -468,7 +468,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
-							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
 						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
 						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
@@ -487,7 +487,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
-							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
 						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
 						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
@@ -539,6 +539,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
 					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
 					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
+					getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 					break;
 				}
 	        }
@@ -564,6 +565,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
 					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
 					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
+					getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
 					break;
 				}
 	        }
