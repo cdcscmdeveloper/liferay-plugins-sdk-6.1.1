@@ -69,6 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -103,8 +104,6 @@ public class EvaluationMeetingBackingBean extends
 	private IPagingDataModel<ScQt> searchQuotatioTender = new clonePagingDataModel();
 	private IPagingDataModel<PmUser> searchExistingUser = new existingUserPagingDataModel();
 
-	
-	
 	public EvaluationMeetingBackingBean() {
 
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
@@ -239,9 +238,6 @@ public class EvaluationMeetingBackingBean extends
 
 					List<ScQtCommitteRemarks> remarks = this.getManagedBean()
 							.getScQtCommittee().getQtCommitteRemarks();
-					if (null == remarks) {
-						remarks = new ArrayList<ScQtCommitteRemarks>();
-					}
 
 					if (null != remarks && !remarks.isEmpty()) {
 						for (ScRemark remark : remarks) {
@@ -251,9 +247,11 @@ public class EvaluationMeetingBackingBean extends
 						this.getManagedBean().setQtCommitteeRemarks(
 								qtRemarkList);
 					}
-					initializeRemarks(this.getManagedBean().getScQtCommittee(),
-							this.getManagedBean().getQtCommitteeRemarks(),
+					List<ScQtCommitteRemarks> remark = initializeRemarks(this
+							.getManagedBean().getScQtCommittee(), this
+							.getManagedBean().getQtCommitteeRemarks(),
 							ScQtCommitteRemarks.class);
+
 				}
 
 			}
@@ -593,9 +591,15 @@ public class EvaluationMeetingBackingBean extends
 			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
-
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
+			Long qtId = this.getManagedBean().getQt().getQtId();
+			String committeeType = this.getManagedBean().getCommitteeType();
 			meetingso.saveQTDtl(metReqDtO);
-
+			renewSesionObject();
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setOutComes(outComes);
+			retriveMeetingDetails(qtId, committeeType);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -1032,6 +1036,7 @@ public class EvaluationMeetingBackingBean extends
 
 	public String submitMettingDetails(String outCome) {
 		try {
+		
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
@@ -1107,7 +1112,5 @@ public class EvaluationMeetingBackingBean extends
 							"/xhtml/sc/evaluation/xhtml/sc/evaluation/evaluationstage1view.xhtml");
 		}
 	}
-
-	
 
 }
