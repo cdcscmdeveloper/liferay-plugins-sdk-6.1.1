@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -169,7 +167,7 @@ public class PmCommonUtil {
 			configGeneral = configGeneralResDTO.getPmConfigGeneral();
 		}
 		if(configGeneral==null){
-			throw new IllegalArgumentException(MessageConst.ERROR_770052);
+			throw new EpException(MessageConst.ERROR_770052);
 		}
 		if(pmUserPreference == null){
 			pmUserPreference= new PmUserPreference();

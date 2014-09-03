@@ -969,7 +969,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException("Failed to delete attachement: {0}", new String[]{e.getMessage()});
+			throw new EpException(MessageConst.ERROR_770054, new String[]{e.getMessage()});
 			
 		}
 		logger.info("deleteAttachment - END");
@@ -990,7 +990,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException("Failed to download attachement: {0}", new String[]{e.getMessage()});
+			throw new EpException(MessageConst.ERROR_770055, new String[]{e.getMessage()});
 			
 		}
 		logger.info("downloadAttachment - END");
@@ -1764,7 +1764,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException("Failed to upload attachement: {0}", new String[]{e.getMessage()});
+			throw new EpException(MessageConst.ERROR_770060, new String[]{e.getMessage()});
 			
 		}
 		logger.info("uploadAttachments - END");
@@ -1790,7 +1790,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException("Failed to delete attachement: " +e.getMessage()); //TODO
+			throw new EpException(MessageConst.ERROR_770054, new String[]{e.getMessage()});
 			
 		}
 		logger.info("deleteAttachment - END");
