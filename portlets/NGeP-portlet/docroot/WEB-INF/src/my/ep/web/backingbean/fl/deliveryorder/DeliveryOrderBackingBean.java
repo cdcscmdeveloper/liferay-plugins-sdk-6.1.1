@@ -204,6 +204,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					reqDTO.setTaskId(getManagedBean().getTaskId());
 				}
 				reqDTO.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+				if(flBB.getManagedBean().getRemarkList().size() >0){
+					reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+				}
 				resDTO = deliveryOrderSO.deliveryOrderModification(reqDTO);
 			}
 			else{
@@ -456,7 +460,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setTaskId(taskId);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		}
 	}
 
