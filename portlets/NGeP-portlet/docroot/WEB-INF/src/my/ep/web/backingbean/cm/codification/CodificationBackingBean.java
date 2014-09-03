@@ -2308,6 +2308,7 @@ public class CodificationBackingBean extends
 //			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
 //		}
 
+		reqDTO.setCatalogueAdminRequest(true);
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
 
