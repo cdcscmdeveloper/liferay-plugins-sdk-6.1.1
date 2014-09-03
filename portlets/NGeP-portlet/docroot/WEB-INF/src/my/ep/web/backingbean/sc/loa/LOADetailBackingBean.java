@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.loa;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,6 +25,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -38,6 +41,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
+import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -55,6 +60,8 @@ import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -71,6 +78,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -87,6 +95,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
@@ -99,9 +108,13 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author Viswanath
@@ -755,6 +768,10 @@ public class LOADetailBackingBean extends
 						.equals(docDefinitionKey)) {
 					saveScheduleList();
 					generateFrequencySchedulePdfFromVelocity(
+							(ScAttachment) scLoaReportAttachment,getManagedBean().getScLoa());
+				}else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+						.equals(docDefinitionKey)) {
+					formJadualHarga(
 							(ScAttachment) scLoaReportAttachment,getManagedBean().getScLoa());
 				}
 				// TODO - generate documents
@@ -1941,10 +1958,9 @@ public class LOADetailBackingBean extends
 			if(endYear != startYear){
 			   diffYear = endYear - startYear;
 			}
-			for (int i = startMonth + 1; i <= endMonth + 1; i++) {
+			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
 				count++;
 			}
-			count = count + (diffYear * 12);
 			schedule.setTotalMonths(new BigDecimal(count));
 		}else{
 			schedule.setTotalMonths(BigDecimal.ZERO);
@@ -2116,4 +2132,132 @@ public class LOADetailBackingBean extends
 				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	public void formJadualHarga(ScAttachment attachment,ScLoa scLoa) throws Exception{
+		attachment.setFileName("JadualHarga.xlsx");
+		populateAttachmentDetails(attachment);
+		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
+		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
+		JadualHargaBean jadualHarga = null;
+			        	
+		for(ScLoiLoaItem item : scLoa.getScLoiLoaItems()){
+			jadualHarga = mappingJadualHarga(item);
+			if(getParameterDesc(item.getScRequestItem().getItemType()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)){
+				productJadualHargaList.add(jadualHarga);
+			}else if(getParameterDesc(item.getScRequestItem().getItemType()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)){
+				serviceJadualHargaList.add(jadualHarga);
+			}
+			
+		}
+		
+		generateJadualHarga(attachment,productJadualHargaList,serviceJadualHargaList);
+
+	}
+		private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item){
+			JadualHargaBean jadualHarga = new JadualHargaBean();
+			CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "N/A");
+			jadualHarga.setItem(item.getScRequestItem().getItemName());
+			jadualHarga.setUnitPrice(nf.format(item.getUnitPrice().longValue()));
+			jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
+			jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
+					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
+		    jadualHarga.setUomPerDay(null == item.getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
+		    		"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString());
+		    jadualHarga.setUomPerMonth(null == item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
+					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString());
+		    jadualHarga.setUomPerYear(null == item.getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
+					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
+		    jadualHarga.setQuantity(null == item.getScRequestItem().getTplSpecQuestion().getClQuantity() ?
+					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
+		    jadualHarga.setTotalAmount(item.getUnitPrice().multiply(item.getScRequestItem().getTplSpecQuestion().getClQuantity()).toString());
+			
+
+			return jadualHarga;
+			
+		}
+		
+		private void generateJadualHarga(ScAttachment attachment,List<JadualHargaBean> productList,List<JadualHargaBean> serviceList) throws Exception{
+			if(serviceList.size()>0 || productList.size()>0){
+				try {
+					FileInputStream inputStream = new FileInputStream(new File(
+							FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + "/sc/loa/jadual-harga.xlsx"));	
+					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+					boolean emptyProductList = false;
+			        Sheet productSheet =null;
+			        Sheet serviceSheet = null;
+			        Row row = null;
+			        int rowIndex = 0;
+			        int cellIndex = 0;
+			        if(productList.size() > 0){
+			        	rowIndex = 0;
+			        	productSheet = wb.getSheetAt(0);
+			        	wb.setSheetName(0, "ProductSheet");
+			        	for(JadualHargaBean product : productList){
+			        		rowIndex ++;
+			        		cellIndex =0;
+			        		row = productSheet.createRow(rowIndex);
+			        		row.createCell(cellIndex++).setCellValue(product.getZone());
+			        		row.createCell(cellIndex++).setCellValue(product.getItem());
+			        		row.createCell(cellIndex++).setCellValue(product.getUom());
+			        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
+			        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
+			        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
+			        		row.createCell(cellIndex++).setCellValue(product.getTotalAmount()); 
+			        	}
+			        	//Auto size all the columns
+				        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+				        	productSheet.autoSizeColumn(x);
+				        }
+			        }else{
+			        	wb.removeSheetAt(0);
+			        	emptyProductList = true;
+			        }
+			        
+			        if(serviceList.size() > 0){
+			        	rowIndex = 0;
+			        	if(emptyProductList){
+			        		serviceSheet = wb.getSheetAt(0);
+			        		wb.setSheetName(0, "ServiceSheet");
+			        	}else{
+			        		serviceSheet = wb.getSheetAt(1);
+			        		wb.setSheetName(1, "ServiceSheet");
+			        	}
+			        	
+			        	for(JadualHargaBean service : serviceList){
+			        		rowIndex ++;
+			        		cellIndex =0;
+			        		row = serviceSheet.createRow(rowIndex);
+			        		row.createCell(cellIndex++).setCellValue(service.getZone());
+			        		row.createCell(cellIndex++).setCellValue(service.getItem());
+			        		row.createCell(cellIndex++).setCellValue(service.getUom());
+			        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
+			        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
+			        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
+			        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
+			        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
+			        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
+			        		row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
+			        		
+			        	}
+			        	
+			            for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+				        	serviceSheet.autoSizeColumn(x);
+				        }
+			        }else{
+			        	wb.removeSheetAt(1);
+			        }
+			        
+			        wb.setActiveSheet(0);
+			        FileOutputStream os = new FileOutputStream(getActualFilePath(attachment));
+			        wb.write(os);
+			        os.flush();
+			        os.close();
+			      
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 }

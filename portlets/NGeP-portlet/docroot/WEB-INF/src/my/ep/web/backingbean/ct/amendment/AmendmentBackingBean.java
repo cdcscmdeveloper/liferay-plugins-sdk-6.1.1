@@ -38,14 +38,6 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jxl.Workbook;
-import jxl.format.Alignment;
-import jxl.write.Label;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
-import jxl.write.WriteException;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -151,6 +143,9 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
@@ -168,6 +163,7 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+import org.springframework.util.CollectionUtils;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -1032,9 +1028,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 */
 	private void formJadualHargaExcel(String filePath){
 		log.debug("Enter formJadualHargaExcel()");
-		CommonUtils commonUtils = new CommonUtils();
-		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		File file = new File(filePath);
 		
 		ContractAmendmentReqDTO reqDto = new ContractAmendmentReqDTO();
 		reqDto.setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
@@ -1052,148 +1045,171 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		resDto = amendSO.getServiceList(reqDto, resDTO.getPmParameter().getParameterId());
 		List<CtItemPrice> serviceList = resDto.getItemPrices();
 		
-		try {
-			WritableWorkbook itemExcel = Workbook.createWorkbook(file);
-			WritableSheet productSheet = null;
-			WritableSheet ServiceSheet = null;
-			WritableFont timesfontbold = new WritableFont(WritableFont.TIMES, 12, WritableFont.BOLD);
-			WritableFont timesfont = new WritableFont(WritableFont.TIMES, 12);
-			WritableCellFormat formatLeftBold = new WritableCellFormat(timesfontbold);
-			WritableCellFormat formatRightBold = new WritableCellFormat(timesfontbold);
-			WritableCellFormat formatLeft = new WritableCellFormat(timesfont);
-			WritableCellFormat formatRight = new WritableCellFormat(timesfont);
-			
-			formatLeft.setWrap(true);
-			formatLeft.setAlignment(Alignment.LEFT);
-			formatRight.setWrap(true);
-			formatLeft.setAlignment(Alignment.RIGHT);
-			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			
-			if(productList.size() > 0){
-				productSheet = itemExcel.createSheet("ProductSheet", 1);
-				int indexRow=0, indexCol=0;
-				productSheet.setColumnView(indexCol, 10);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Zone", formatLeftBold));
-				productSheet.setColumnView(indexCol, 35);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Item", formatLeftBold));
-				productSheet.setColumnView(indexCol, 35);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Specification", formatLeftBold));
-				productSheet.setColumnView(indexCol, 10);
-				productSheet.addCell(new Label(indexCol++, indexRow, "UOM", formatLeftBold));
-				productSheet.setColumnView(indexCol, 10);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Quantity", formatRightBold));
-				productSheet.setColumnView(indexCol, 10);
-				productSheet.addCell(new Label(indexCol++, indexRow, "From Qty.", formatRightBold));
-				productSheet.setColumnView(indexCol, 10);
-				productSheet.addCell(new Label(indexCol++, indexRow, "To Qty.", formatRightBold));
-				productSheet.setColumnView(indexCol, 15);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Sub Sequence", formatRightBold));
-				//Label header8 = new Label(indexCol++, indexRow, "Delivery Term");
-				productSheet.setColumnView(indexCol, 16);
-				productSheet.addCell(new Label(indexCol++, indexRow, "Unit Price(RM)", formatRightBold));
-				productSheet.setColumnView(indexCol, 20);
-				productSheet.addCell( new Label(indexCol++, indexRow, "Total Amount(RM)", formatRightBold));
-				productSheet.setColumnView(indexCol, 15);
-				productSheet.addCell( new Label(indexCol++, indexRow, "Effective Date", formatLeftBold));
-				productSheet.setColumnView(indexCol, 15);
-				productSheet.addCell( new Label(indexCol++, indexRow, "Expire Date", formatLeftBold));
-				
-				for(CtItemPrice price : productList){
-					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
-					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-					reqDTO.setContractItemId(price.getCtContractItem().getContractItemId());
-					reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
-					ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
-					CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
-					
-					indexRow++; indexCol=0;
-					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getItemName(), formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion() ? 
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getUom().getUomName(), formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, ctItemMaxQty.getMaxQuantity()+"", formatLeft));
-					
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", formatLeft));
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", formatLeft));
-					productSheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", formatLeft));
-					/*String delveryTerm = "";
-					for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
-						delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
-					}
-					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
-					productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
-					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
-						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity()).toString(), formatLeft));
-					} else {
-						productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
-					}
-					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getEffDate()), formatRight));
-					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getExpDate()), formatRight));
-				}
-			}
-			
-			if(serviceList.size() > 0){
-				ServiceSheet = itemExcel.createSheet("ServiceSheet", 2);
-				int indexRow2=0, indexCol2=0;
-				ServiceSheet.setColumnView(indexCol2, 25);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Item", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 25);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Specification", formatLeftBold));
-				//ServiceSheet.setColumnView(indexCol2, 10);
-				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Fulfilment Type", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "UOM", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Frequency per UOM", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per day", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per month", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Duration (Month)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 10);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Quantity", formatLeftBold));
-				//ServiceSheet.setColumnView(indexCol2, 10);
-				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Estimated Value (RM)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Unit Price (RM)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Total Amount (RM)", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Effective Date", formatLeftBold));
-				ServiceSheet.setColumnView(indexCol2, 15);
-				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Expire Date", formatLeftBold));
-				
-				for(CtItemPrice price : serviceList){
-					indexRow2++; indexCol2=0;
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getItemName(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
-							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatLeft));
-								ServiceSheet.addCell(new Label(indexCol2++, indexRow2,  price.getUnitPrice().toString(), formatLeft));
-						//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString(), formatLeft));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getEffDate()), formatLeft));
-					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getExpDate()), formatLeft));
-				}
-			}
-			
-			itemExcel.write();
-			itemExcel.close();
-		} catch (IOException | WriteException e) {
-			e.printStackTrace();
+		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
+		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
+		JadualHargaBean jadualHarga = null;
+			        	
+		for(CtItemPrice productItemPrice : productList){
+		    IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+			reqDTO.setContractItemId(productItemPrice.getCtContractItem().getContractItemId());
+			reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
+			CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
+			productItemPrice.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
+			jadualHarga = mappingJadualHarga(productItemPrice,1);
+			productJadualHargaList.add(jadualHarga);
 		}
-		log.debug("Exit formJadualHargaExcel()");
+		
+		for(CtItemPrice serviceItemPrice : serviceList){
+			jadualHarga = mappingJadualHarga(serviceItemPrice,2);
+			serviceJadualHargaList.add(jadualHarga);
+		}  
+		
+		generateJadualHarga(filePath,productJadualHargaList,serviceJadualHargaList);
+		
+//		try {
+//			WritableWorkbook itemExcel = Workbook.createWorkbook(file);
+//			WritableSheet productSheet = null;
+//			WritableSheet ServiceSheet = null;
+//			WritableFont timesfontbold = new WritableFont(WritableFont.TIMES, 12, WritableFont.BOLD);
+//			WritableFont timesfont = new WritableFont(WritableFont.TIMES, 12);
+//			WritableCellFormat formatLeftBold = new WritableCellFormat(timesfontbold);
+//			WritableCellFormat formatRightBold = new WritableCellFormat(timesfontbold);
+//			WritableCellFormat formatLeft = new WritableCellFormat(timesfont);
+//			WritableCellFormat formatRight = new WritableCellFormat(timesfont);
+//			
+//			formatLeft.setWrap(true);
+//			formatLeft.setAlignment(Alignment.LEFT);
+//			formatRight.setWrap(true);
+//			formatLeft.setAlignment(Alignment.RIGHT);
+//			SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+//			
+//			if(productList.size() > 0){
+//				productSheet = itemExcel.createSheet("ProductSheet", 1);
+//				int indexRow=0, indexCol=0;
+//				productSheet.setColumnView(indexCol, 10);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Zone", formatLeftBold));
+//				productSheet.setColumnView(indexCol, 35);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Item", formatLeftBold));
+//				productSheet.setColumnView(indexCol, 35);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Specification", formatLeftBold));
+//				productSheet.setColumnView(indexCol, 10);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "UOM", formatLeftBold));
+//				productSheet.setColumnView(indexCol, 10);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Quantity", formatRightBold));
+//				productSheet.setColumnView(indexCol, 10);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "From Qty.", formatRightBold));
+//				productSheet.setColumnView(indexCol, 10);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "To Qty.", formatRightBold));
+//				productSheet.setColumnView(indexCol, 15);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Sub Sequence", formatRightBold));
+//				//Label header8 = new Label(indexCol++, indexRow, "Delivery Term");
+//				productSheet.setColumnView(indexCol, 16);
+//				productSheet.addCell(new Label(indexCol++, indexRow, "Unit Price(RM)", formatRightBold));
+//				productSheet.setColumnView(indexCol, 20);
+//				productSheet.addCell( new Label(indexCol++, indexRow, "Total Amount(RM)", formatRightBold));
+//				productSheet.setColumnView(indexCol, 15);
+//				productSheet.addCell( new Label(indexCol++, indexRow, "Effective Date", formatLeftBold));
+//				productSheet.setColumnView(indexCol, 15);
+//				productSheet.addCell( new Label(indexCol++, indexRow, "Expire Date", formatLeftBold));
+//				
+//				for(CtItemPrice price : productList){
+//					IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractItemSO.class);
+//					ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+//					reqDTO.setContractItemId(price.getCtContractItem().getContractItemId());
+//					reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+//					ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
+//					CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
+//					
+//					indexRow++; indexCol=0;
+//					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractZone() ? "N/A" : price.getCtContractZone().getZoneName(), formatRight));
+//					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getItemName(), formatRight));
+//					productSheet.addCell(new Label(indexCol++, indexRow, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion() ? 
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
+//					productSheet.addCell(new Label(indexCol++, indexRow, price.getCtContractItem().getUom().getUomName(), formatRight));
+//					productSheet.addCell(new Label(indexCol++, indexRow, ctItemMaxQty.getMaxQuantity()+"", formatLeft));
+//					
+//					productSheet.addCell(new Label(indexCol++, indexRow, price.getFromQty() == null ? "N/A": price.getFromQty() + "", formatLeft));
+//					productSheet.addCell(new Label(indexCol++, indexRow, price.getToQty() == null ? "N/A" : price.getToQty() + "", formatLeft));
+//					productSheet.addCell(new Label(indexCol++, indexRow, price.getSubSequence() == null ? "N/A" : price.getSubSequence() + "", formatLeft));
+//					/*String delveryTerm = "";
+//					for(CtContractZone zone : item.getCtContractVer().getCtContractZones()){
+//						delveryTerm = delveryTerm + zone.getDeliveryTerm() + " ";
+//					}
+//					sheet.addCell(new Label(indexCol++, indexRow, delveryTerm));*/
+//					productSheet.addCell(new Label(indexCol++, indexRow, nf.format(price.getUnitPrice().longValue()) + "", formatLeft));
+//					if(null != price.getUnitPrice() && null != ctItemMaxQty.getMaxQuantity()){
+//						productSheet.addCell(new Label(indexCol++, indexRow, price.getUnitPrice().multiply(ctItemMaxQty.getMaxQuantity()).toString(), formatLeft));
+//					} else {
+//						productSheet.addCell(new Label(indexCol++, indexRow, "N/A"));
+//					}
+//					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getEffDate()), formatRight));
+//					productSheet.addCell(new Label(indexCol++, indexRow, df.format(price.getExpDate()), formatRight));
+//				}
+//			}
+//			
+//			if(serviceList.size() > 0){
+//				ServiceSheet = itemExcel.createSheet("ServiceSheet", 2);
+//				int indexRow2=0, indexCol2=0;
+//				ServiceSheet.setColumnView(indexCol2, 25);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Item", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 25);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Specification", formatLeftBold));
+//				//ServiceSheet.setColumnView(indexCol2, 10);
+//				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Fulfilment Type", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 10);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "UOM", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Frequency per UOM", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per day", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "No. UOM per month", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Duration (Month)", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 10);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Quantity", formatLeftBold));
+//				//ServiceSheet.setColumnView(indexCol2, 10);
+//				//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Estimated Value (RM)", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Unit Price (RM)", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell(new Label(indexCol2++, indexRow2, "Total Amount (RM)", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Effective Date", formatLeftBold));
+//				ServiceSheet.setColumnView(indexCol2, 15);
+//				ServiceSheet.addCell( new Label(indexCol2++, indexRow2, "Expire Date", formatLeftBold));
+//				
+//				for(CtItemPrice price : serviceList){
+//					indexRow2++; indexCol2=0;
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getItemName(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClSpecDetail(), formatRight));//specification
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, null == price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
+//							"N/A" : price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString(), formatLeft));
+//								ServiceSheet.addCell(new Label(indexCol2++, indexRow2,  price.getUnitPrice().toString(), formatLeft));
+//						//ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().toString(), formatRight));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, price.getUnitPrice().multiply(price.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString(), formatLeft));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getEffDate()), formatLeft));
+//					ServiceSheet.addCell(new Label(indexCol2++, indexRow2, df.format(price.getExpDate()), formatLeft));
+//				}
+//			}
+//			
+//			itemExcel.write();
+//			itemExcel.close();
+//		} catch (IOException | WriteException e) {
+//			e.printStackTrace();
+//		}
+//		log.debug("Exit formJadualHargaExcel()");
 	}
 	
 	private String getContent(String content, String parameterCode) {
@@ -2352,5 +2368,121 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			}
 			return null;
 		}
-	}	
+	}
+	
+	public void generateJadualHarga(String filePath,List<JadualHargaBean> productList,List<JadualHargaBean> serviceList){
+		try {
+			FileInputStream inputStream = new FileInputStream(new File(
+					FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + "/ct/loaContent/jadual-harga.xlsx"));	
+			XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+	     
+	        Sheet productSheet =null;
+	        Sheet serviceSheet = null;
+	        boolean emptyProductList = false;
+	        Row row = null;
+	        int rowIndex = 0;
+	        int cellIndex = 0;
+	        if(!CollectionUtils.isEmpty(productList)){
+	        	rowIndex = 0;
+	        	productSheet = wb.getSheetAt(0);
+	        	wb.setSheetName(0, "ProductSheet");
+	        	for(JadualHargaBean product : productList){
+	        		rowIndex ++;
+	        		cellIndex =0;
+	        		row = productSheet.createRow(rowIndex);
+	        		row.createCell(cellIndex++).setCellValue(product.getZone());
+	        		row.createCell(cellIndex++).setCellValue(product.getItem());
+	        		row.createCell(cellIndex++).setCellValue(product.getUom());
+	        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
+	        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
+	        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
+	        		row.createCell(cellIndex++).setCellValue(product.getTotalAmount());	 
+	        	}
+	            //Auto size all the columns
+		        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+		        	productSheet.autoSizeColumn(x);
+		        }
+	        }else{
+	        	wb.removeSheetAt(0);
+	        	emptyProductList = true;
+	        }
+	        
+	        if(!CollectionUtils.isEmpty(serviceList)){
+	        	rowIndex = 0;
+	        	if(emptyProductList){
+	        		serviceSheet = wb.getSheetAt(0);
+	        		wb.setSheetName(0, "ServiceSheet");
+	        	}else{
+	        		serviceSheet = wb.getSheetAt(1);
+	        		wb.setSheetName(1, "ServiceSheet");
+	        	}
+	        	for(JadualHargaBean service : serviceList){
+	        		rowIndex ++;
+	        		cellIndex =0;
+	        		row = serviceSheet.createRow(rowIndex);
+	        		row.createCell(cellIndex++).setCellValue(service.getZone());
+	        		row.createCell(cellIndex++).setCellValue(service.getItem());
+	        		row.createCell(cellIndex++).setCellValue(service.getUom());
+	        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
+	        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
+	        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
+	        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
+	        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
+	        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
+	        		row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
+	        	}
+	        	 for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
+	 	        	serviceSheet.autoSizeColumn(x);
+	 	        }
+	        }else{
+	        	wb.removeSheetAt(1);
+	        }
+	        wb.setActiveSheet(0);
+	        // Write the output to a file
+	        FileOutputStream fileOut = new FileOutputStream(filePath);
+	        wb.write(fileOut);
+	        fileOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//type 1 - product, type 2 - service
+	private JadualHargaBean mappingJadualHarga(CtItemPrice itemPrice,int type){
+		JadualHargaBean jadualHarga = new JadualHargaBean();
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		jadualHarga.setZone(itemPrice.getCtContractZone() != null ? itemPrice.getCtContractZone().getZoneName() : "N/A");
+		jadualHarga.setItem(itemPrice.getCtContractItem().getItemName());
+		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
+		
+		if(type == 1){
+			jadualHarga.setUom(itemPrice.getCtContractItem().getUom().getUomName());
+			jadualHarga.setQuantity(itemPrice.getFromQty() != null && itemPrice.getToQty() !=null ? itemPrice.getFromQty() + " To " + itemPrice.getToQty() : 
+					itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
+			jadualHarga.setSubSequence(itemPrice.getSubSequence() != null ? itemPrice.getSubSequence() + "" : "N/A");
+			
+	    	if(null != itemPrice.getUnitPrice() && null != itemPrice.getMaxQuantity()){
+	    		jadualHarga.setTotalAmount(itemPrice.getUnitPrice().multiply(itemPrice.getMaxQuantity()).toString());
+			} else {
+				jadualHarga.setTotalAmount("N/A");
+			}
+		}else if(type == 2){
+			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
+			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
+					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
+	    	jadualHarga.setUomPerDay(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
+					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString());
+	    	jadualHarga.setUomPerMonth(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
+					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString());
+	    	jadualHarga.setUomPerYear(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
+					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
+	    	jadualHarga.setQuantity(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity() ?
+				"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
+	    	jadualHarga.setTotalAmount(itemPrice.getUnitPrice().multiply(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClQuantity()).toString());
+		}
+
+		return jadualHarga;
+		
+	}
 }
