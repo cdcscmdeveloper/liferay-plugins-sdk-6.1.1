@@ -32,16 +32,16 @@
 		</table>
 	</div>
 	
-	<p:panel id="suppViewDtl" header="SUPPLIER DETAILS"
+	<p:panel id="suppViewDtl" header="#{lbl['lbl.sc.supplier.details']}"
 		toggleable="true">
 		<p:spacer height="10px" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.ep.no']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.criteria.ep.no']}" /></td>
 				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.smSupplier.epNo}"/></td>
 
 				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sq.supp.view.supp.name']}" /></td>
+						value="#{lbl['lbl.sc.sq.supp.criteria.supp.name']}" /></td>
 				<td><p:inputText disabled="true"  size="55" value="#{simpleQuoteBackingBean.managedBean.smSupplier.companyName}"/></td>
 			</tr>
 			<tr>
@@ -53,50 +53,50 @@
 	  </table>
 	</p:panel>
 
-	<p:panel id="tplSpecId" header="ITEM SPECS" toggleable="true">
+	<p:panel id="tplSpecId" header="#{lbl['lbl.ss.simple.quote.details']}" toggleable="true">
 		<p:spacer height="5px" />
 		<table style="width: 100%;">
 		   <tr>
 				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sq.supp.view.panel']}" /></td>
+						value="#{lbl['lbl.sc.panel']}" /></td>
 				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" disabled="true">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.yes']}" itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.no']}" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
 					</p:selectOneRadio></td>
 		   </tr>
 		
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.title']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td><p:inputText disabled="true" size="91"  value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"/></td>
 		   </tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.desc']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td colspan="3"><p:inputTextarea disabled="true" rows="3"
 						cols="93" style="margin-bottom: 5px;" /></td>
 			</tr>
 			<tr>
 				<td style="width: 200px;">
-				<p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.zonal']}" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /></td>
 				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" disabled="true">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.yes']}"
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
 							itemValue="true" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.no']}"
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
 							itemValue="false" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.start.date']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /></td>
 			    <td><p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}" disabled="true"/></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.end.date']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /></td>
 				<td><p:calendar  pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}" disabled="true"/></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.view.no.of.quote']}" /></td>
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /></td>
 				<td><p:selectOneRadio value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}" disabled="true">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.single']}" itemValue="false" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.supp.view.multiple']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}" itemValue="false" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}" itemValue="true" />
 					</p:selectOneRadio></td>
 			</tr>
 
@@ -106,18 +106,18 @@
       <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
-			title="PRODUCT LIST" />
+			title="#{lbl['lbl.ss.simple.quote.product.list']}" />
       </h:panelGroup>
       
 	<p:spacer height="25px" />
 	 <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) ne '0'}">
 		<ac:templateSpec
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
-			title="SERVICE LIST" />
+			title="#{lbl['lbl.ss.simple.quote.service.list']}" />
        </h:panelGroup>
 	</p:panel>
 	
-	<p:panel label="REMARKs" header="REMARKS" id="suppRmkId" toggleable="true" toggleSpeed="500">
+	<p:panel label="#{lbl['lbl.ss.simple.quote.remark']}" header="#{lbl['lbl.ss.simple.quote.remark']}" id="suppRmkId" toggleable="true" toggleSpeed="500">
 	 <table style="width: 100%">
 		<tr>
 			<td class="TableFieldLeft" width="12%"></td>

@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
     xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="suppCriteria" header="SUPPLIER CRITERIA" toggleable="true">
+	<p:panel id="suppCriteria" header="#{lbl['lbl.sc.sq.supp.criteria']}" toggleable="true">
 		<ac:lovPopup />
 		
 		<h:panelGroup
@@ -40,7 +40,7 @@
 						<table style="width: 100%">
 							<tr>
 								<td style="width: 160px"><p:outputLabel
-										value="Location Level" /></td>
+										value="#{lbl['lbl.sc.location.level']}" /></td>
 								<td><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
 										style="width: 140px;">
@@ -55,7 +55,7 @@
 								value="#{simpleQuoteBackingBean.managedBean.locationTrees}"
 								var="locationTree" rowIndexVar="index">
 
-								<p:column headerText="Location">
+								<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.loc.name']}">
 									<p:tree value="#{locationTree}" var="location"
 										selectionMode="checkbox">
 										<p:ajax event="select"
@@ -75,7 +75,7 @@
 
 									</p:tree>
 								</p:column>
-								<p:column headerText="Action">
+								<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.action']}">
 									<p:commandLink
 										actionListener="#{simpleQuoteBackingBean.editLocation(locationTree,index)}"
 										rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
@@ -90,7 +90,7 @@
 						</h:panelGrid>
 						<div align="right" style="width: 100%">
 						 <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
-							<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}"
+							<p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 								process="@this ,locLevels" update="@([id$=locPopupPanel])"
 								partialSubmit="true" oncomplete="locationPopup.show();"
 								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"
@@ -321,7 +321,7 @@
 							       <c:if test="#{simpleQuoteBackingBean.managedBean.panelItemBtnFlag}">	
 								     <ac:lov id="panelSupplierId" lovId="CT_PANEL_SUPPLIER"
 										postUpdateListener="simpleQuoteBackingBean.panelItemListener(simpleQuoteBackingBean.managedBean.ctPanelSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
-										headerText="Panel Supplier" buttonLabel="Add"
+										headerText="Panel Supplier" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.ctPanelSuppliers"
 										conditionField="recordStatus^1" update="@form" />

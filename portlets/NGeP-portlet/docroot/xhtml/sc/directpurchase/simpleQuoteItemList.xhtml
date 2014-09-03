@@ -12,8 +12,8 @@
 		<ac:templateSpec 
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
 			editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
-			title="PRODUCT LIST" />
-		<p:commandButton value="Clone" style="float:right;"
+			title="#{lbl['lbl.ss.simple.quote.product.list']}" />
+		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
 		   action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 			icon="ui-icon-clone" process="@this"
 			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
@@ -26,9 +26,9 @@
 		 <ac:templateSpec
 		    editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
-			title="SERVICE LIST" />
+			title="#{lbl['lbl.ss.simple.quote.service.list']}" />
 
-		 <p:commandButton value="Clone" style="float:right;"
+		 <p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
 		     action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 			icon="ui-icon-clone" process="@this"
 			update="@([id$=cloneItemSpec])" rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"

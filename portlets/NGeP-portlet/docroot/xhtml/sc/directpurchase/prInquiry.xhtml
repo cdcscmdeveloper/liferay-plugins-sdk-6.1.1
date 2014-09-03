@@ -30,7 +30,7 @@
 		</table>
 	</div>
 	
-	<p:panel header=" INQUIRY DETAIL" toggleable="true" id="addToCartId">
+	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -180,7 +180,7 @@
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 							 <td style="width: 250px">
-							     <p:outputLabel value="#{lbl['lbl.sc.justification']}" /></td>
+							     <p:outputLabel value="#{lbl['lbl.sc.reason']}" /></td>
 							 <td> <p:selectOneMenu style="width: 185px; margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.justification']}"
 							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
 						              purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"
@@ -213,7 +213,7 @@
 		</table>
 
 	</p:panel>
-	<p:panel header="RESPONSE DETAIL" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 250px;">
@@ -278,7 +278,7 @@
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Remarks" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 
 	<table style="width: 100%">
 		<tr>

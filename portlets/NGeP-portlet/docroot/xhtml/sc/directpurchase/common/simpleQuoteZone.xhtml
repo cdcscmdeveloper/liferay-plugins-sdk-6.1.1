@@ -4,10 +4,10 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="zonePanel" header="LOCATION NAME" toggleable="true">
+	<p:panel id="zonePanel" header="#{lbl['lbl.ss.simple.quote.delivery.location']}" toggleable="true">
 	 <table style="width: 100%">
 				<tr>
-					<td style="width: 160px"><p:outputLabel value="Location Level" /></td>
+					<td style="width: 160px"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.criteria.location.level']}" /></td>
 					<td><p:selectOneMenu id="locLevels"
 							value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
 							style="width: 178px;margin-bottom: 5px;">
@@ -21,7 +21,7 @@
 			<p:dataTable id="zoneLocationDataTable" 
 			        value="#{simpleQuoteBackingBean.managedBean.zoneTrees}" var="zoneTree"
 			        rowIndexVar="index">
-				 <p:column headerText="Location">
+				 <p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.loc.name']}">
 				 
 					<p:tree value="#{zoneTree}" var="location" id="treeid"  
 					   selectionMode="checkbox">
@@ -43,7 +43,7 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.action']}">
 					<p:commandLink
 						actionListener="#{simpleQuoteBackingBean.editZone(zoneTree,index)}"
 						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
@@ -59,7 +59,7 @@
 		</h:panelGrid>
 		<div align="right" style="width: 100%">
 		 <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
-		    <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this,locLevels" 
+		    <p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}" process="@this,locLevels" 
 		     update="@([id$=zonePopupPanel])" partialSubmit="true" 
 			 oncomplete="ZoneLocation.show();" 
 			 actionListener="#{simpleQuoteBackingBean.showZonePopup}" icon="ui-icon-add"/>

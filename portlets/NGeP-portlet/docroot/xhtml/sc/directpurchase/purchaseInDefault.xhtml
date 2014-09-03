@@ -270,7 +270,7 @@
 	 <h:panelGroup id="rmkId">   
 		   <table style="width: 90%">
 			 <tr>
-			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="Remark"/><p:outputLabel value="*" styleClass="mandatory" /></td>
+			    <td  width="23.4%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
@@ -308,7 +308,7 @@
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
-				   disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}" value="Attach file(s)" />
+				   disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}" value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" />
 		  </td>
 		</tr>
 		 <tr><td/>
@@ -359,8 +359,8 @@
 						var="approverUser" showTargetControls="true" required="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
 						converter="approverPickListConverter">
-						<f:facet name="sourceCaption">Available Approver </f:facet>
-						<f:facet name="targetCaption">Approver List Name</f:facet>
+						<f:facet name="sourceCaption">#{lbl['lbl.sc.available.approver']}</f:facet>
+						<f:facet name="targetCaption">#{lbl['lbl.sc.selected.approvers']}</f:facet>
 					</p:pickList></td>
 				<td style="vertical-align: top;padding-right: 1px;text-align: right;"><p:message id="approverMsg" for="approver" display="icon" />
 
