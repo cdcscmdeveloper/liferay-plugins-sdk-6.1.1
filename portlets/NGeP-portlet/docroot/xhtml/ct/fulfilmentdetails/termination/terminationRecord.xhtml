@@ -15,7 +15,7 @@
 		    	   <p:outputLabel value="Notice Date" />
 		  	</h:panelGrid>
           	<h:panelGrid columns="2">
-             	<p:calendar id="nDate"   readonlyInput="true" required="true" label="Notice Date"
+             	<p:calendar id="nDate"   readonlyInput="true" required="true" label="Notice Date" navigator="true"
              	    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.noticeDate}"  size="24" 
           		    showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
           		</p:calendar>

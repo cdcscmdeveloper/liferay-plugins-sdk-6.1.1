@@ -45,27 +45,32 @@
            <p:outputLabel  value="#{lbl['lbl.ct.email']}"/>  
            <p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}"/>
         </h:panelGrid>
-     <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
-         columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200"
-       rendered="#{!amendmentBackingBean.managedBean.ctContract.factored}">
-      <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-   <p:inputText disabled="true" style="width:170px;" 
-      value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
-   <p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}" />  
-   <p:inputText  disabled="true" style="width:170px;"
-         value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
-    <h:panelGroup>
-           <div style="height: 60px; vertical-align: top;">
-                <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
-           </div>
-     </h:panelGroup>
-	 <h:panelGrid>
-           <p:inputTextarea id="bankAddress" value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" 
-              disabled="true" rows="4"  autoResize="false" style="width:170px; margin-bottom: 5px;"/>
-	 </h:panelGrid>
-	 <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
-     <p:inputText  disabled="true" style="width:170px;"
-        value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankBranch}"  />
-    </h:panelGrid>
-    </p:panel>
+      </p:panel>
+      <p:panel id="BankInfoPanel" header="#{lbl['lbl.ct.panel.bank.info']}"  toggleable="true"  
+            toggleSpeed="500" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.factored}">
+            <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
+                   columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
+     
+                   <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
+                   <p:inputText disabled="true" style="width:170px;" 
+                       value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankName}"/>
+          
+                   <p:outputLabel  value="#{lbl['lbl.ct.bank.account.no']}" />  
+                   <p:inputText  disabled="true" style="width:170px;"
+                       value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}"/> 
+                   <h:panelGroup>
+                      <div style="height: 60px; vertical-align: top;">
+                             <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
+                     </div>
+                  </h:panelGroup>
+	              <h:panelGrid>
+                       <p:inputTextarea id="bankAddress"  disabled="true" rows="4"  autoResize="false" style="width:170px; margin-bottom: 5px;"
+                          value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
+	             </h:panelGrid>
+	 
+	           <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
+               <p:inputText  disabled="true" style="width:170px;"
+                    value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.bankBranch}"  />
+         </h:panelGrid>
+      </p:panel>
 </ui:composition>

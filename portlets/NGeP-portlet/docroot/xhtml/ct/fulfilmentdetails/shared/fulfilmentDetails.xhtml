@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		    <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
+		    <h:panelGrid columns="4" style="width:770px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 			  <p:inputText for="cno"  disabled="true" style="width:170px;" 
 			     maxlength="17" value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
@@ -108,7 +108,7 @@
 				action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.filePath,
 							contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
-		<h:panelGrid  style="width:170px;">
+		<h:panelGrid  style="width:230px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
@@ -150,7 +150,7 @@
 	    </h:panelGrid>
 	</h:panelGrid>
 	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:800px;" 
+	 <h:panelGrid columns="2" style="width:740px;" 
 	 rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>

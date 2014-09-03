@@ -168,7 +168,7 @@
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange or 
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange) and 
 		          !amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
-				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true"
+				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.amend.txt.effdate']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}"

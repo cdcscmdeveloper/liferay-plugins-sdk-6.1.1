@@ -17,11 +17,11 @@
 			<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			<p:inputText style="width:170px;" disabled="true"/>				
 			<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
-			<p:calendar style="width:170px;"
+			<p:calendar style="width:170px;" navigator="true"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"
 				id="popupCal1" showOn="button" />
 			<p:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
-			<p:calendar style="width:170px;"
+			<p:calendar style="width:170px;" navigator="true"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"
 				id="popupCal" showOn="button" />							
 			<p:outputLabel value="#{lbl['lbl.ct.contract.amount']}" />

@@ -14,7 +14,7 @@
                 <p:column selectionMode="multiple" style="width:2%;"/>
                 
                 <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
-			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting"
+			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 			          </p:calendar>
 			    </p:column> 

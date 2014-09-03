@@ -44,7 +44,7 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			       		size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
+			       		navigator="true" size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
 			       	 <p:ajax event="dateSelect" update="popupButtonCal1" />
 			       	</p:calendar> 
 			   </td>
@@ -58,7 +58,7 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="22" 
+			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="22" navigator="true"
 			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}">
 			         	 <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                          <f:validator validatorId="primeDateRangeValidator" />

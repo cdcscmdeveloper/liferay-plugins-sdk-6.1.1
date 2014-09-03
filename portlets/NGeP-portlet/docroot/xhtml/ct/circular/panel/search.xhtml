@@ -24,10 +24,10 @@
 				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:170px;" maxlength="50" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
-					value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
+					navigator="true" value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.cc.cenddt']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
-					value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
+					navigator="true" value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
 				<h:outputLabel value="#{lbl['lbl.ct.pc.item.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchItemName}" style="width:170px;margin-top:3px;" maxlength="100" />						
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
