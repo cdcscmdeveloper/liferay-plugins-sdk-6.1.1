@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel
-		header="#{lbl['lbl.sm.suppDoc.online.checklist.application.no'] viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		header="#{lbl['lbl.sm.suppDoc.online.checklist.application.no']} #{viewSmApplBackingBean.managedBean.smAppl.applNo}"
 		toggleable="true" id="onSupTblPan">
 		<table style="width: 30%">
 			<tr>
@@ -67,7 +67,7 @@
 					style="float: left;white-space: normal;" />
 			</p:column>
 			
-			<p:column headerText="#{lbl.qt.nb.downloadDoc']}" style="width : 10%;">
+			<p:column headerText="#{lbl['lbl.qt.nb.downloadDoc']}" style="width : 10%;">
 				<p:commandButton value="#{lbl['lbl.cm.download']}"
 					action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].filePath)}"
 					update=":form" icon="ui-icon-download" ajax="false">
