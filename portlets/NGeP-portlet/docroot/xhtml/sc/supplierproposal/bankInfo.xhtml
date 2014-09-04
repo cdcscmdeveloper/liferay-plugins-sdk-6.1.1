@@ -17,13 +17,13 @@
 				update="@([id$=cheque])" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.act.no']}">
-				<h:outputText value="#{bankDtls.accountNo}" />
+				<p:outputLabel value="#{bankDtls.accountNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
-				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
+				<p:outputLabel value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
-				<h:outputText value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
+				<p:outputLabel value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -35,7 +35,7 @@
 			rowKey="#{chequesignatories}">
 			<ac:paginator for="cheque"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}">
-				<p:outputLabel value="#{cheque.smPersonnel.personnelId}"></p:outputLabel>
+				<p:outputLabel value="#{cheque.smPersonnel.name}"></p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}">
 				<p:outputLabel value="#{cheque.smPersonnel.identificationNo}" ></p:outputLabel>

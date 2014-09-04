@@ -7,35 +7,29 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-		
-
-		
-
 
 		<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true" >
-			<p:dataTable id="SupplierCategoryCodes" rowIndexVar="index"
-				var="factory" rowKey="#{factory}">
-				<ac:paginator for="SupplierCategoryCodes"></ac:paginator>
-				<p:column  selectionMode="multiple" style="width:2px;"></p:column>
+			<p:dataTable id="supplierCategory"  value="smAppl.smSupplierCategories"
+				var="supplierCategory" >
+				<ac:paginator for="supplierCategory"></ac:paginator>
+				
 				<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{supplierCategory.pmCategoryL1.categoryL1Code}"></p:outputLabel>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{supplierCategory.pmCategoryL1.categoryName}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{supplierCategory.pmCategoryL2.categoryName}"></p:outputLabel>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{supplierCategory.pmCategoryL3.categoryName}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{(supplierCategory.specialCategory) ? 'Special' : 'Normal'}"></p:outputLabel>
 				</p:column>
-
-
 			</p:dataTable>
 
 		</p:panel>
