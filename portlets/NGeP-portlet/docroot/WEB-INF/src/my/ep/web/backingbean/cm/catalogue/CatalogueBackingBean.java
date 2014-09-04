@@ -2916,11 +2916,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			catalogueSO.updateSupplierItem(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_710001,
-									MessageUtils.BUNDLE_COMMON_MESSAGES,
-									new FacesScopes().getUserLocale())));
+			
+			if(this.getManagedBean().getSelectedMaintainItem().getItemStatus().equals("P")){
+				facesContext.addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715059,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}else{
+				facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_710001,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+			}
 
 			supplierReqDTO = new SupplierSearchReqDTO();
 
