@@ -27,9 +27,20 @@
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
-							<h:graphicImage id="giUserImage"
-								value="#{profileManagementBackingBean.userImagePath(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
-								style="margin-left:25px;" width="140" height="160" />	
+							<c:choose>
+								<c:when test="#{!profileManagementBackingBean.managedBean.deletePortrait}">
+									<h:graphicImage id="giUserImage"
+										value="#{profileManagementBackingBean.userImagePath(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+										style="margin-left:25px;" width="140" height="160" />				
+								</c:when>
+								<c:otherwise>
+									<h:graphicImage id="giUserImage"
+										value="/css/images/design/user_male_portrait.png"
+										style="margin-left:25px;" width="140" height="160" />							
+								</c:otherwise>
+							</c:choose>
+							
+							
 							<div align="left">
 								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
 									oncomplete="dlImageUpload.show();" immediate="true" />
@@ -198,7 +209,7 @@
 								<f:selectItems value="#{profileManagementBackingBean.getStatusOptions()}" />
 							</p:selectOneMenu>
 							&#160;&#160;   
-			                <p:graphicImage id="giUserStatus" library="ep/images/design" name="tooltips.png"
+			                <p:graphicImage id="giUserStatus"
 				                   value="/css/images/design/tooltips.png" />
 							<p:tooltip for="giUserStatus" value="#{lbl['lbl.pm.profiles.userdetails.status.tooltip']}" showEffect="fade" hideEffect="fade" />
 						</td>
@@ -384,8 +395,7 @@
 					</p:inputText> 
 			    		
 			    	&#160;&#160;   
-	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
-		                   value="/css/images/design/tooltips.png" />
+	                <p:graphicImage id="giEmail" value="/css/images/design/tooltips.png" />
 					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="itEmailMsg" for="itEmail" display="icon" />
 			    </td>

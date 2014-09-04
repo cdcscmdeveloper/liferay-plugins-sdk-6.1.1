@@ -525,34 +525,34 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		logger.info("deletePortrait - END");
 	}
 	
-	/**
-	 * TODO: fix the remote updatePortrait
-	 * @param pmUser
-	 * @throws Exception
-	 */
-	private void uploadPortrait(PmUser pmUser) throws Exception{
-		logger.info("uploadPortrait - START");
-		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
-		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
-		byte[] bytes = pmUser.getPortrait();
-		long userId;
-		logger.debug("imageMaxSize: " + imageMaxSize);
-		logger.debug("companyId: " + companyId);
-		logger.debug("bytes: " + bytes);
-		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
-		if(bytes!=null){
-			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
-			if(user!=null){
-				System.out.println("user id" + user.getUserId());
-			}else{
-				System.out.println("user null");
-			}
-			userId = user.getUserId();
-			logger.debug("userId: " + userId);
-			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
-		}
-		logger.info("uploadPortrait - END");
-	}
+//	/**
+//	 * TODO: fix the remote updatePortrait
+//	 * @param pmUser
+//	 * @throws Exception
+//	 */
+//	private void uploadPortrait(PmUser pmUser) throws Exception{
+//		logger.info("uploadPortrait - START");
+//		long imageMaxSize = PrefsPropsUtil.getLong(PropsKeys.USERS_IMAGE_MAX_SIZE);
+//		long companyId = Long.parseLong(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.PORTAL_COMPANY_ID));
+//		byte[] bytes = pmUser.getPortrait();
+//		long userId;
+//		logger.debug("imageMaxSize: " + imageMaxSize);
+//		logger.debug("companyId: " + companyId);
+//		logger.debug("bytes: " + bytes);
+//		logger.debug("pmUser.getLoginId(): " + pmUser.getLoginId());
+//		if(bytes!=null){
+//			User user = UserServiceUtil.getUserByScreenName(companyId, pmUser.getLoginId());
+//			if(user!=null){
+//				System.out.println("user id" + user.getUserId());
+//			}else{
+//				System.out.println("user null");
+//			}
+//			userId = user.getUserId();
+//			logger.debug("userId: " + userId);
+//			UserServiceUtil.updatePortrait(user.getUserId(), bytes);
+//		}
+//		logger.info("uploadPortrait - END");
+//	}
 	/**
 	 * Get user portrait 
 	 * @param event

@@ -236,6 +236,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * @param id
 	 */
 	private void loadUserProfile(Long id){
+		logger.info("loadUserProfile - Start");
 		try {
 			initialUserProfile();
 			if(id==null){
@@ -293,6 +294,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770016, new String[]{e.getMessage()}); 
 		}	
+		logger.info("loadUserProfile - End");
 	}
 	
 	/**

@@ -22,14 +22,23 @@
 						</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
-							<h:graphicImage
-								value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
-								style="margin-left:25px;" width="140" height="160" />	
+							<c:choose>
+								<c:when test="#{!profilePersonalizationBackingBean.managedBean.deletePortrait}">
+									<h:graphicImage id="giUserImage"
+										value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
+										style="margin-left:25px;" width="140" height="160" />				
+								</c:when>
+								<c:otherwise>
+									<h:graphicImage id="giUserImage"
+										value="/css/images/design/user_male_portrait.png"
+										style="margin-left:25px;" width="140" height="160" />							
+								</c:otherwise>
+							</c:choose>	
 							<div align="left">
 								<p:commandButton icon="ui-icon-image" value="#{lbl['lbl.pm.profiles.userdetails.changepic']}" 
-									immediate="true" />
+									immediate="true" oncomplete="dlImageUpload.show();"  />
 								<p:commandButton icon="ui-icon-delete" value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}" 
-									immediate="true" />
+									immediate="true" update="giUserImage" action="#{profilePersonalizationBackingBean.deletePortrait}" />
 							</div>
 						</td>
 					</tr>
@@ -313,7 +322,7 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 		    		</p:inputText>
 		    		&#160;&#160;   
-	                <p:graphicImage id="giEmail" library="ep/images/design" name="tooltips.png"
+	                <p:graphicImage id="giEmail" 
 		                   value="/css/images/design/tooltips.png" />
 					<p:tooltip for="giEmail" value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="itEmailMsg" for="itEmail" display="icon" />
