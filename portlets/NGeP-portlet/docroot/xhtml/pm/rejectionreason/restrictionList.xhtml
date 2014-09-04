@@ -36,11 +36,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				   	</p:dataTable>
 				   	<br/>
 			   		<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"  update="dtAppType"
+						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtAppType"
 							action="#{rejectionReasonBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
 							immediate="true"/>
 						&#160;
-						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" update="dtAppType"
+						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
 							immediate="true" 
 							action="#{rejectionReasonBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
 					</div>
