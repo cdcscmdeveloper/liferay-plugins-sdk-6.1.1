@@ -2449,7 +2449,8 @@ public class CodificationBackingBean extends
 	
 	public void preRenderCodificationView(){
 		  log.info(".................preRenderCodificationView................");
-		  this.renewSesionObject();
+//		  this.renewSesionObject();
+		  resetAction();
 		  FacesContext fc = FacesContext.getCurrentInstance();
 		  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "codificationView");
 	}
