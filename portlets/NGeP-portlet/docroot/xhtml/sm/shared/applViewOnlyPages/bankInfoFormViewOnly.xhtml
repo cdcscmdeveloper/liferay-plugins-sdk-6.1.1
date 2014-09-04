@@ -22,11 +22,11 @@
 
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 					style="text-align: center;width: 15%">
-					<h:outputText value="Payment"
+					<h:outputText value="#{lbl['lbl.sm.paymentLbl']}"
 						rendered="#{bankBean.accountPurpose eq 'P'}" />
-					<h:outputText value="Registration"
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.registration']}"
 						rendered="#{bankBean.accountPurpose eq 'R'}" />
-					<h:outputText value="Both (Payment,Registration)"
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
 						rendered="#{bankBean.accountPurpose eq 'B'}" />
 				</p:column>
 

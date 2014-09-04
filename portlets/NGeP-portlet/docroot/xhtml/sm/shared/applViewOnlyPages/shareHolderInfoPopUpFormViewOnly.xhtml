@@ -49,12 +49,12 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']} :" title="For Malaysian Only" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']} :" /></td>
 				<td style="float:left;">
 					<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
 					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
 				</td>
-				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']} :" title="For Malaysian Only" /></td>
+				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']} :" /></td>
 				<td style="float:left;">
 					<p:outputLabel value="Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
 					<p:outputLabel value="Non-Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
@@ -63,7 +63,7 @@
 
 		</table>
 	</p:panel>
-	<p:panel header="User Roles" toggleable="true" id="shrRolesPanel">
+	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel">
 		<ui:include src="personnelRolesPanelViewOnly.xhtml" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
@@ -113,12 +113,12 @@
 				<td style="width: 13%;"><p:outputLabel value="#{lbl['lbl.sm.person.shrAmt']}" /></td>
 				<td style="padding-right: 42px;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
 
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sm.person.addrDtls']} " toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.person.addrDtls']}" toggleable="true"
 		id="shareHolderAddrDialog">
 		<ui:include
 			src="/xhtml/sm/shared/applViewOnlyPages/shareHolderAddressInfoPopUpFormViewOnly.xhtml" />
@@ -132,27 +132,27 @@
 			<ac:paginator for="shrJfdt" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Company" />
+					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Designation" />
+					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year From" />
+					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
-				<h:outputText value="#{jf.fromYear}" maxlength="4" label="Year From" />
+				<h:outputText value="#{jf.fromYear}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year To" />
+					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
-				<h:outputText value="#{jf.toYear}" maxlength="4" label="Year To" />
+				<h:outputText value="#{jf.toYear}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
 				<p:commandLink update=":form:tt:equiJobFunctionInfo"
@@ -167,7 +167,7 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="500px" height="200px" header="Job Function Details "
+	<p:dialog width="500px" height="200px" header="#{lbl['lbl.sm.job.function.details']}"
 		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		<table style="width: 100%">
@@ -180,16 +180,16 @@
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Year From :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.year.from']} :" /></td>
 				<td><p:outputLabel style="float:left; margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Year To :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.year.to']} :" /></td>
 				<td><p:outputLabel style="float:left;" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"/></td>
 			</tr>
 		</table>
 	</p:dialog>
-	<p:panel header="Related Companies" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.related.company.details']}" toggleable="true"
 		id="equiShrHldrRelComp">
 
 		<p:dataTable id="shrRelCom"
@@ -205,19 +205,19 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="ROC/ROB/ROS NO." />
+					<h:outputText value="#{lbl['lbl.sc.spec.roc.no']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.regNo}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Shareholding Total(RM.)" />
+					<h:outputText value="#{lbl['lbl.sm.shareholding.total.rm']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.shareAmt}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="MOF Reg NO." />
+					<h:outputText value="#{lbl['lbl.sm.mof.reg.no']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
@@ -232,7 +232,7 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="500px" height="300px" header="Related Company Details " id="equiRelCompInfo"
+	<p:dialog width="500px" height="300px" header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
 		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"	hideEffect="fade" modal="true">
 		<table style="width: 100%">
 			<tr>
@@ -240,7 +240,7 @@
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Reg NO. :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/></td>
 			</tr>
 			<tr>
@@ -252,11 +252,11 @@
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="MOF Reg NO :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/></td>
 			</tr>
 		</table>
@@ -291,7 +291,7 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="500px" height="300px" header="Professional Body Details" id="equiShrProfBeanInfo"
+	<p:dialog width="500px" height="300px" header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<table style="width: 100%">
@@ -314,7 +314,7 @@
 
 		</table>
 	</p:dialog>
-	<p:panel header="Academic Qualification" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
 		id="equiShrHldrAcadPan">
 
 		<p:dataTable id="shrAqdt"
@@ -324,26 +324,26 @@
 			<ac:paginator for="shrAqdt" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year" />
+					<h:outputText value="#{lbl['lbl.sc.spec.contrat.year']}" />
 				</f:facet>
 				<h:outputText value="#{aq.year}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Institute" />
+					<h:outputText value="#{lbl['lbl.sm.institute']}" />
 				</f:facet>
 				<h:outputText value="#{aq.instituteName}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Education Field" />
+					<h:outputText value="#{lbl['lbl.sm.education.field']}" />
 				</f:facet>
 				<h:outputText value="#{aq.pmEduField.fieldName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Major In" />
+					<h:outputText value="#{lbl['lbl.sm.major.in']}" />
 				</f:facet>
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
@@ -358,29 +358,29 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="450px" height="300px" header="Staff Academics Details" id="equiAcadInfo"
+	<p:dialog width="450px" height="300px" header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Year :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']} :" /></td>
 				<td><p:outputLabel style="float:left; margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.year}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Institute :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.institute']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Qualification Level :" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationLevelId}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Education Field" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Major In" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/></td>
 			</tr>
 		</table>

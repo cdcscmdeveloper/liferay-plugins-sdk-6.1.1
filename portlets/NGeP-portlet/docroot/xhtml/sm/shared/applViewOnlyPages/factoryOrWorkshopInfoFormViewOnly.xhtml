@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Factory Details" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.factoryStepLbl']}" toggleable="true"
 		id="smFacilityFactoryDtPanel">
 
 		<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
@@ -14,15 +14,15 @@
 			rowKey="#{fac}" rowIndexVar="index" id="facDt">
 			<ac:paginator for="facDt" />
 
-			<p:column headerText="Factory Name">
+			<p:column headerText="#{lbl['lbl.sm.factory.name']}">
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column headerText="Factory Address">
+			<p:column headerText="#{lbl['lbl.sm.factory.address']}">
 				<h:outputText
 					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
 			</p:column>
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink action="#{viewSmApplBackingBean.assignSelFactory(fac)}"
 					partialSubmit="true" process="@this" oncomplete="factoryDialog.show()"
 					update=":form:tt:factoryDialog" style="padding-right:5px">
@@ -34,70 +34,69 @@
 		</p:dataTable>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="500px" header="Factory Information"
+	<p:dialog width="500px" height="500px" header="#{lbl['lbl.sm.factory.information']}"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="factoryDialog">
 		
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Facility Type" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Name" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.facilityName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.facilityName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Address" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address1}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address1}" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address2}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address2}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address3}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address3}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address4}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.address4}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.postcode}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.smAddress.postcode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.phoneNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.faxNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Area(Sq Ft)" /></td>
-				<td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.area']} :" /></td>
+				<td style="float:left;">
 					<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.areaSquareFeet}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -105,20 +104,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /></td>
-				<td>
-					<p:outputLabel value="Own"
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
+				<td style="float:left;">
+					<p:outputLabel value="#{lbl['lbl.sm.facility.own']}"
 							rendered="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"/>
-					<p:outputLabel value="Rent"
+					<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}"
 						rendered="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="facPanLbl">
-						<p:outputLabel value="Price (RM.)"
+						<p:outputLabel value="#{lbl['lbl.cm.price']}"
 							rendered="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
 							id="oid" />
-						<p:outputLabel value="Rent (RM.)"
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
 							id="rid" />
 					</p:outputPanel></td>
@@ -141,8 +140,8 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Owner Name" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownerName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.ownername']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedFactoryFacility.ownerName}" /></td>
 			</tr>
 
 		</table>

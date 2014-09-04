@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<p:panel id="bankDetailsPanel">
+	<p:outputPanel id="bankDetailsPanel">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']} :" /></td>
@@ -60,5 +60,5 @@
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedBranch.faxNo}"/></td>
 			</tr>
 		</table>
-	</p:panel>
+	</p:outputPanel>
 </ui:composition>

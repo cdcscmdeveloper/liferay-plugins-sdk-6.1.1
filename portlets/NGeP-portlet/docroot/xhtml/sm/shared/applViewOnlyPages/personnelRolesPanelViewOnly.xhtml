@@ -10,7 +10,7 @@
 		<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K'}">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 18%"><p:outputLabel value="Role(s) : " /></td>
+					<td style="width: 18%"><p:outputLabel value="#{lbl['lbl.sm.roles']} : " /></td>
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
@@ -29,12 +29,12 @@
 										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}">
 											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left" value="Director" /></td>
+										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
 										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}">
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left"
-												value="Higher Management" /></td>
+												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
 									</c:if>
 								</c:if>
 							</tr>
@@ -44,10 +44,10 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}">
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left" value="Management" /></td>
+									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td>
-									<td><p:outputLabel style="float: left" value="Staff" /></td>
+									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" /></td>
 								</tr>
 							</c:if>
 						</table>
@@ -58,7 +58,7 @@
 		<c:otherwise>
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 18%"><p:outputLabel value="Role(s) : " /></td>
+					<td style="width: 18%"><p:outputLabel value="#{lbl['lbl.sm.roles']} : " /></td>
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
@@ -77,17 +77,17 @@
 										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.director}">
 											</p:selectBooleanCheckbox></td>
-										<td><p:outputLabel style="float: left" value="Director" /></td>
+										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
 										<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 												value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.higherManagement}">
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left"
-												value="Higher Management" /></td>
+												value="#{lbl['lbl.sm.person.hghMngmt']}" /></td>
 									</c:if>
 									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.management}">
 										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left" value="Management" /></td>
+									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.mngmt']}" /></td>
 								</c:if>
 							</tr>
 							<c:if
@@ -97,15 +97,15 @@
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.prof}">
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
-											value="Professional" /></td>
+											value="#{lbl['lbl.sm.professional']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.semiProf}">
 										</p:selectBooleanCheckbox></td>
 									<td><p:outputLabel style="float: left"
-											value="Semi-Professional" /></td>
+											value="#{lbl['lbl.sm.professional.semi']}" /></td>
 									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
 											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.clerical}" /></td>
-									<td><p:outputLabel style="float: left" value="Clerical-Staff" /></td>
+									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" /></td>
 								</tr>
 							</c:if>
 						</table>

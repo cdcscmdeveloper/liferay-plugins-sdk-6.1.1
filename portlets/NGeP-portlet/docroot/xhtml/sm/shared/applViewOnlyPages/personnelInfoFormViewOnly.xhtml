@@ -115,7 +115,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Total / Summary</p:column>
+										<p:column>#{lbl['lbl.sm.total.summary']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{viewSmApplBackingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
@@ -303,7 +303,7 @@
 										</p:column>
 									</p:row>
 									<p:row>
-										<p:column>Total / Summary</p:column>
+										<p:column>#{lbl['lbl.sm.total.summary']}</p:column>
 										<p:column>
 											<h:outputText
 												value="#{viewSmApplBackingBean.managedBean.personCalc.equityOwnerTotalCnt}" />
@@ -405,22 +405,22 @@
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
-							<h:outputText value="Yes" rendered="#{person.equityOwner}" />
-							<h:outputText value="No" rendered="#{!person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{!person.equityOwner}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
-							<h:outputText value="Yes"
+							<h:outputText value="#{lbl['lbl.txt.yes']}"
 								rendered="#{person.authorizedFlg eq '1'}" />
-							<h:outputText value="No"
+							<h:outputText value="#{lbl['lbl.txt.no']}"
 								rendered="#{person.authorizedFlg eq '0'}" />
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
-							<h:outputText value="Requested"
+							<h:outputText value="#{lbl['lbl.sm.person.composition.requested']}"
 								rendered="#{person.softcertFlg eq '2'}" />
-							<h:outputText value="Issued"
+							<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
 								rendered="#{person.softcertFlg eq '1'}" />
-							<h:outputText value="Not Applied"
+							<h:outputText value="#{lbl['lbl.sm.person.composition.notapplied']}"
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">

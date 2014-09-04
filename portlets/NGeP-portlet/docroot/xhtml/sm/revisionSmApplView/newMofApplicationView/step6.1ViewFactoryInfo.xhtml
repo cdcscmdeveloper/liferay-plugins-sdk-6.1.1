@@ -61,10 +61,8 @@
 						<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 							<table style="width: 50%">
 								<tr>
-									<td style="padding-left: 38px;"><p:outputLabel
-											value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-									<td><p:inputTextarea autoResize="true" cols="41"
-											value="#{viewSmApplBackingBean.managedBean.poSecReview.factoryRemark}" /></td>
+									<td style="padding-left: 38px;"><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.factoryRemark}" /></td>
 								</tr>
 							</table>
 						</p:outputPanel>
@@ -73,13 +71,10 @@
 								<tr>
 									<td style="padding-left: 38px;"><p:outputLabel
 											value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-									<td><p:inputTextarea autoResize="true" readonly="true"
-											disabled="true" cols="41"
-											value="#{viewSmApplBackingBean.managedBean.poSecReview.factoryRemark}" /></td>
+									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.factoryRemark}" /></td>
 									<td style="padding-left: 22px;"><p:outputLabel
 											value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-									<td><p:inputTextarea autoResize="true" cols="41"
-											value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.factoryRemark}" /></td>
+									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.factoryRemark}" /></td>
 
 								</tr>
 							</table>
