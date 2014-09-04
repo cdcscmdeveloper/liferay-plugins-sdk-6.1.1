@@ -99,6 +99,7 @@ public class ReviewCatalogueBackingBean extends
 
 		System.out.println("size:" + catResDTO.getSupplierZoneLs().size());
 
+		bb.getManagedBean().setRejectReason(null);
 		bb.getManagedBean().setSupplierZoneList(catResDTO.getSupplierZoneLs());
 
 		bb.getManagedBean().setSelectedMaintainItem(
