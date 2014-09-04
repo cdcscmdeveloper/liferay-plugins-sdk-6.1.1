@@ -2446,4 +2446,11 @@ public class CodificationBackingBean extends
 				|| fs.hasRoleUser("CM_USER");
 	}
 
+	
+	public void preRenderCodificationView(){
+		  log.info(".................preRenderCodificationView................");
+		  this.renewSesionObject();
+		  FacesContext fc = FacesContext.getCurrentInstance();
+		  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "codificationView");
+	}
 }
