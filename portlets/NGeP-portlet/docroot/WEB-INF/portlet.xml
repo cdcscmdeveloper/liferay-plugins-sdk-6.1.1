@@ -2260,7 +2260,7 @@
 			<init-param>
 				<name>javax.portlet.faces.defaultViewId.view</name>
 				<value>
-					/xhtml/cm/catalogue/catalogueTaskList.xhtml
+					/xhtml/cm/catalogue/prerenderCatalogueTaskList.xhtml
 				</value>
 			</init-param>
 			<expiration-cache>0</expiration-cache>

@@ -36,7 +36,7 @@ public class ReviewCatalogueBackingBean extends
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
 
-	public ReviewCatalogueBackingBean() {
+/*	public ReviewCatalogueBackingBean() {
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -49,7 +49,7 @@ public class ReviewCatalogueBackingBean extends
 		this.getManagedBean().setReviewSupplierItems(
 				resDTO.getSupplierItemList());
 
-	}
+	}*/
 
 	public void refreshCatalogueList() {
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
@@ -245,6 +245,27 @@ public class ReviewCatalogueBackingBean extends
 	public String cancelToPendingApprovalItem() {
     
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
+	}
+
+	public void preRenderCatalogueTaskList() {
+		
+		renewSesionObject();
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+		reqDTO.setItemStatus("P");
+		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+		this.getManagedBean().setReviewSupplierItems(
+				resDTO.getSupplierItemList());
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "catalogueTaskList");
+		
 	}
 
 }
