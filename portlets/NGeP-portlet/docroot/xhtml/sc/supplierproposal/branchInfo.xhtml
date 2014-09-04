@@ -8,26 +8,26 @@
 
 	
 	<p:panel header="#{lbl['lbl.sc.spec.company.branches']}" toggleable="true" >
-			<p:dataTable id="companyBranch" rowIndexVar="index" var="factory"
+			<p:dataTable id="companyBranch" rowIndexVar="index" var="factory" value="smAppl.smSupplierBranches"
 				rowKey="#{factory}">
 				<ac:paginator for="companyBranch"></ac:paginator>
-				<p:column  selectionMode="multiple" style="width:2px;"></p:column>
+				
 				<p:column headerText="#{lbl['lbl.sc.spec.branch.name']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{companyBranch.branchName}"></p:outputLabel>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{supplierProposalDetailBackingBean.getFullAddress(companyBranch.smAddress)}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contact.person']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{companyBranch.smPersonnel.name}"></p:outputLabel>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.spec.phn.no']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{companyBranch.phoneNo}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.fax.no']}">
-					<p:inputText></p:inputText>
+					<p:outputLabel value="#{companyBranch.faxNo}"></p:outputLabel>
 				</p:column>
 
 
