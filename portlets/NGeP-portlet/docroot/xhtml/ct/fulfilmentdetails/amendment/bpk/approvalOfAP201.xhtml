@@ -4,50 +4,50 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="approvalForAP201" header="Special Approval for AP201" toggleable="true" toggleSpeed="500">
+	<p:panel id="approvalForAP201" header="#{lbl['lbl.ct.menu.special.ap201']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel style="float:left;font:bold;"
-				value="Referring to AP201, the followings are the reasons where contract needs special approval:-" />
+				value="#{lbl['lbl.ct.special.ap201.content']}" />
 			<p:spacer height="10" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Contract is not active" />
+				<p:outputLabel value="#{lbl['lbl.ct.contract.not.active']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Changes of Unit Price" />
+				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Change of Term and Condition of Contract" />
+				<p:outputLabel value="#{lbl['lbl.ct.change.contract.clause']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.breachAP201Rules(1)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Extension is done more than once and period of extension exceed 2 years" />
+				<p:outputLabel value="#{lbl['lbl.ct.extension.exceed.2years']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.breachAP201Rules(2)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Additional Quantity exceed the 50% of the original quantity and additional contract value exceeded RM7.5M and Total Contract Value exceed RM25M (Product)" />
+				<p:outputLabel value="#{lbl['lbl.ct.additional.qty.exceed']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.breachAP201Rules(3)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="Additional contract value exceeded RM7.5M and Total Contract Value exceed RM25M" />
+				<p:outputLabel value="#{lbl['lbl.ct.additional.contract.value.exceed']}" />
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel header="Remarks" toggleable="true">
+	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{amendmentBackingBean.managedBean.contractVer.ap201Remark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -59,7 +59,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

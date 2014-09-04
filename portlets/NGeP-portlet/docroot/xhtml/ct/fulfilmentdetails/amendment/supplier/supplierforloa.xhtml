@@ -4,17 +4,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="panelSupplier" header="SUPPLIER DETAILS" toggleable="true"	toggleSpeed="500">
+	<p:panel id="panelSupplier" header="#{lbl['lbl.ct.panel.supplier']}" toggleable="true"	toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
-			<p:outputLabel value="MOF No" />
+			<p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.smMofAccounts[0].mofNo}" />
-			<p:outputLabel value="Supplier Name" />
+			<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-			<p:outputLabel value="Branch" />
+			<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
 			<h:panelGroup>
 				<div style="height: 70px; vertical-align: top;">
-					<p:outputLabel for="address" value="Address " />
+					<p:outputLabel for="address" value="#{lbl['lbl.ct.address']}" />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid>
@@ -22,17 +22,17 @@
 					value="#{amendmentBackingBean.getFullAddress(amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"
 					rows="4" style="width:170px;margin-bottom: 5px;" maxlength="200" autoResize="false"/>
 			</h:panelGrid>
-			<p:outputLabel value="Contact Person" />
+			<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
-			<p:outputLabel value="Tel No" />
+			<p:outputLabel value="#{lbl['lbl.ct.tel']}" />
 			<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
-			<p:outputLabel value="Mobile No" />
+			<p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
 			<h:panelGrid columns="3" columnClasses="columnWidth30,columnWidth30">
 				<p:inputText style="width:170px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierMobileNo}" />
-				<p:outputLabel value="Fax No" />
+				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 				<p:inputText style="width:140px;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
 			</h:panelGrid>
-			<p:outputLabel value="Email Id" />
+			<p:outputLabel value="#{lbl['lbl.ct.email']}" />
 			<p:inputText style="width:95%;" disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
 		</h:panelGrid>
 	</p:panel>

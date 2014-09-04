@@ -14,7 +14,7 @@
 	</style>
 	<p:panel id="panelLOA" header="#{lbl['lbl.ct.menu.loa.details']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
-			<p:outputLabel value="#{lbl['ct.lbl.amend.fileno']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.file.no']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:170px;" disabled="true"
 					value="#{amendmentBackingBean.managedBean.ctContract.quotationTender.fileNo}"  />
@@ -22,12 +22,12 @@
 				<p:inputText style="width:20px;"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.fileExtNo}" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['ct.lbl.amend.reqinswarrty']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.insurance.warranty']}" />
 			<h:panelGrid columns="4">
 				<p:selectOneRadio id="radiOptions" required="true" disabled="true"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.insWarrantyReq}">
-					<f:selectItem itemLabel="Yes" itemValue="true" />
-					<f:selectItem itemLabel="No" itemValue="false" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" />
 				</p:selectOneRadio>
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.contract.type']}" />
@@ -38,55 +38,55 @@
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmOrgProfile.orgName}" />
 			<p:inputText style="width:170px;" disabled="true" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}"
 				value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.pmParameter)}" />				
-			<p:outputLabel value="#{lbl['lbl.ct.contractadmin']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.admin']}" />
 			<p:inputText style="width:170px;" disabled="true"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractAdmin.userName}" />				
-			<p:outputLabel value="Completion/Contract Period" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.period']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:75px;" disabled="true"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPeriod}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="months" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
-			<p:outputLabel value="Completion/Contract Effective Date" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.effective.date']}" />
 			<p:calendar id="popupButtonCal1" showOn="button" styleClass="calanderWidth" disabled="true"
 			    	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 			        value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractEffDate}"/>
-			<p:outputLabel value="Completion/Contract Expiry Date" />
+			<p:outputLabel value="#{lbl['lbl.ct.contract.expiry.date']}" />
 			<p:calendar id="popupButtonCal2" showOn="button"  disabled="true"  styleClass="calanderWidth"
 			    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 			    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractExpDate}" />
-			<p:outputLabel value="Amendment Effective Date" />
+			<p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />
 			<p:calendar id="popupButtonCal3" showOn="button" disabled="true" styleClass="calanderWidth"
 			     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 		         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			<p:outputLabel value="Extension Period" />
+			<p:outputLabel value="#{lbl['lbl.ct.extension.period']}" />
 			<h:panelGrid columns="3">
 				<p:inputText style="width:75px;"  disabled="true"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="months" />
+				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>
-			<p:outputLabel value="Extension Effective Date" />
+			<p:outputLabel value="#{lbl['lbl.ct.extension.effective.date']}" />
 			<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth20,columnWidth30,columnWidth30">
 				<p:calendar id="popupButtonCal4" showOn="button" disabled="true" styleClass="calanderWidth1"
 				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendStartDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				<h:outputLabel value="Extension Expiry Date" />
+				<h:outputLabel value="#{lbl['lbl.ct.extension.expiry.date']}" />
 				<p:calendar id="popupButtonCal5" showOn="button"  disabled="true" styleClass="calanderWidth1"
 				    value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendEndDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel id="contractSigner" header="#{lbl['lbl.ct.ag.csigner']}" toggleable="true" toggleSpeed="500">
+	<p:panel id="contractSigner" header="#{lbl['lbl.ct.contract.signer']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 		    <h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="#{lbl['lbl.ct.ag.csigner']}" />
+			    <p:outputLabel value="#{lbl['lbl.ct.contract.signer']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-			   <p:selectOneMenu id="signer" style="width:180px" required="true" label="Contract Signer"
+			   <p:selectOneMenu id="signer" style="width:180px" required="true" label="#{lbl['lbl.ct.contract.signer']}"
 			       value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.contractSigner.userId}">
 				   <f:selectItems value="#{amendmentBackingBean.getcontractSignerDropdown()}" />
 		     	</p:selectOneMenu>

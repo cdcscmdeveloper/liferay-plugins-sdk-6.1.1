@@ -138,6 +138,7 @@ import my.ep.web.util.AddressUtils;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -267,7 +268,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	            } else if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME) ||  res.getTaskName().equalsIgnoreCase(CTProcessNameConst.VERIFY_FA_HT_NAME)) {
 				             this.getManagedBean().setLetterOfAcceptance(true);
 				             this.getManagedBean().setPrepareLOA(true);
-				             this.getManagedBean().setWitnessHeader(ContractConst.AGENCY_WITNES_HEADER);
+				             this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				             if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
 					             this.getManagedBean().setDecisionPbQcLOA(true);
 			                 } 
@@ -289,7 +290,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	             } else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 				   
 	            	      this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
-				          this.getManagedBean().setWitnessHeader(ContractConst.SUPPLIER_WITNES_HEADER);
+				          this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.supplier.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				
 				          contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 				          ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();

@@ -29,9 +29,9 @@
             	rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null or
             		agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId == null}" />
          </p:column>
-         <p:column style="width:15%;" headerText="#{lbl['lbl.ct.ag.csigner']}" styleClass="companyHeaderGrid">
+         <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="companyHeaderGrid">
            <p:selectOneMenu id="contractSigner"
-              value="#{agSignerVar.officer.userId}"  style="width:180px;" label="#{lbl['lbl.ct.ag.csigner']}">
+              value="#{agSignerVar.officer.userId}"  style="width:180px;" label="#{lbl['lbl.ct.contract.signer']}">
               <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
               <p:ajax event="change" update="agOfId,agOfPosition" process="@this" 
                  listener="#{agreementBackingBean.setUserValueAgency(agSignerVar,agSignerVar.officer.userId)}"/> 

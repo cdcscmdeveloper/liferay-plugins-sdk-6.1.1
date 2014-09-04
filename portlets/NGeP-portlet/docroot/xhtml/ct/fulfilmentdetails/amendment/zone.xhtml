@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="Zone Details" toggleable="true">
 		<h:panelGrid columns="3">
-			<p:outputLabel value="Location Level" />
+			<p:outputLabel value="#{lbl['lbl.ct.location.level']}" />
 			<p:outputLabel value=": " />
 			<p:outputLabel value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.locationLevel)}" />
 		</h:panelGrid>
@@ -15,7 +15,7 @@
  		  <p:treeTable id="zoneLocationDataTable"  value="#{amendmentBackingBean.managedBean.ctZoneTrees}"
  		    var="zoneTree">
  		    <p:column style="width:70%;">
-            <f:facet name="header">  Location Name </f:facet>
+            <f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
               <p:treeNode type="zone">
                   <h:outputText value="#{zoneTree.zone}"/>
               </p:treeNode>
@@ -27,7 +27,7 @@
               </p:treeNode>
         </p:column>
         <p:column style="width:30%;">
-            <f:facet name="header"> * Delivery Term </f:facet>
+            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />#{lbl['lbl.ct.delivery.term']}</f:facet>
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}" disabled="true" rendered="#{zoneTree.zone != null}"  style="width:40px;" />
                 <p:spacer width="2" />

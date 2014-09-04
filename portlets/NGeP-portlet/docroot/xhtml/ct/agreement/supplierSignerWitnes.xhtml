@@ -17,7 +17,7 @@
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.company']}">
                      <p:outputLabel value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" style="float:left;"/>
                 </p:column> 
-                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.csigner']}">
+                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.contract.signer']}">
                   <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
                    <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown(signSupplierVar)}"/>
                      <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar,signSupplierVar.officerName)}"/> 

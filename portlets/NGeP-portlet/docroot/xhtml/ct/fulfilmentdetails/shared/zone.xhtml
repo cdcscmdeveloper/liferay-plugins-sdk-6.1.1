@@ -41,7 +41,7 @@
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="Delivery Term" />
                 <p:spacer width="2" />
                 <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}"
-                  required="true" rendered="#{zoneTree.zone != null}"  style="width:100px;" label="Delivery Term">
+                  required="true" rendered="#{zoneTree.zone != null}" style="width:100px;" label="#{lbl['lbl.ct.delivery.term']}">
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			    </p:selectOneMenu>
              </p:treeNode>

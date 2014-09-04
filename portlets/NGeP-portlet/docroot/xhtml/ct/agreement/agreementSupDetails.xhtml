@@ -70,7 +70,7 @@
 		    <p:inputTextarea id="amendmentD" value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  disabled="true" rows="3" cols="31"  autoResize="false" />
 		 </h:panelGrid>
 
-         <p:outputLabel value="#{lbl['ct.lbl.amend.amendeffdate']}" />  
+         <p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />  
          <p:inputText value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.amendmentEffDate}" style="width:170px;"  disabled="true" >
          	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
          </p:inputText>

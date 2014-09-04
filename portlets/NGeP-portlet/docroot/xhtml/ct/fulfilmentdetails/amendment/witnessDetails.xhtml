@@ -10,37 +10,37 @@
 		   
 		    <h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="Full Name" />
+			    <p:outputLabel value="#{lbl['lbl.ct.full.name']}" />
 		    </h:panelGrid>
 		    <h:panelGrid columns="2">
-			   <p:inputText id="fullName"  required="true" label="Full Name" style="width:170px;"
+			   <p:inputText id="fullName"  required="true" label="#{lbl['lbl.ct.full.name']}" style="width:170px;"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.witnessName}" validator="#{webappBean.checkInputField}"  />
 			    <p:message for="fullName" display="icon"/>
 			</h:panelGrid>
 		    
 		    <h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="IC No." />
+			    <p:outputLabel value="#{lbl['lbl.ct.ic.no']}" />
             </h:panelGrid>
             <h:panelGrid columns="2">
-			   <p:inputText id="icNo"  style="width:170px;" required="true" label="IC No"
+			   <p:inputText id="icNo"  style="width:170px;" required="true" label="#{lbl['lbl.ct.ic.no']}"
 			       value="#{amendmentBackingBean.managedBean.scLoaWitness.identificationNo}" />
 			   <p:message for="icNo"  display="icon"/>
 			</h:panelGrid>
 			
 			<h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="Designation" />
+			    <p:outputLabel value="#{lbl['lbl.ct.designation']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 			    <p:inputText id="designation" style="width:170px;"  required="true"
-			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="Designation"/>
+			        value="#{amendmentBackingBean.managedBean.scLoaWitness.designation}"  label="#{lbl['lbl.ct.designation']}"/>
 			    <p:message for="designation" display="icon"/>
 			</h:panelGrid>
 			
 			<h:panelGroup>
 				<div style="height: 80px; vertical-align: top;">
-					<p:outputLabel for="agencyAddress" value="Address " />
+					<p:outputLabel for="agencyAddress" value="#{lbl['lbl.ct.address']}" />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20,columnWidth20">
@@ -50,30 +50,30 @@
 				  
 				        <h:panelGrid columns="2" style="float:right;">
 			                 <p:outputLabel value="*" styleClass="mandatory" />
-				         	 <p:outputLabel value="Tell No" />
+				         	 <p:outputLabel value="#{lbl['lbl.ct.tel']}" />
 				        </h:panelGrid>
 				        <h:panelGrid columns="2">
-					         <p:inputText id="tellNo" style="width:150px;" required="true"   label="Tell No"
+					         <p:inputText id="tellNo" style="width:150px;" required="true"   label="#{lbl['lbl.ct.tel']}"
 					             value="#{amendmentBackingBean.managedBean.scLoaWitness.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"/>
 					         <p:message for="tellNo" display="icon"/>
 					    </h:panelGrid>
 					    
 			  	       <h:panelGrid columns="2" style="float:right;">
 			                <p:outputLabel value="*" styleClass="mandatory" />
-					        <p:outputLabel value="Fax No." />
+					        <p:outputLabel value="#{lbl['lbl.ct.fax']}" />
 			           </h:panelGrid>
 			           <h:panelGrid columns="2">
-					        <p:inputText id="faxNo" style="width:150px;" required="true"  label="Fax No"
+					        <p:inputText id="faxNo" style="width:150px;" required="true"  label="#{lbl['lbl.ct.fax']}"
 					            value="#{amendmentBackingBean.managedBean.scLoaWitness.faxNo}" validator="#{webappBean.checkFaxNumber}"   />
 					        <p:message for="faxNo" display="icon"/>
 					   </h:panelGrid>
 					   
 				       <h:panelGrid columns="2" style="float:right;">
 			              <p:outputLabel value="*" styleClass="mandatory" />
-				  	      <p:outputLabel value="Mobile No" />
+				  	      <p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
 				  	   </h:panelGrid>
 				        <h:panelGrid columns="2">
-					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="Mobile No" 
+					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="#{lbl['lbl.ct.mobile']}"
 					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
 					   </h:panelGrid>
@@ -81,10 +81,10 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2" style="float:right;">
 			    <p:outputLabel value="*" styleClass="mandatory" />
-			      <p:outputLabel value="Email" />
+			      <p:outputLabel value="#{lbl['lbl.ct.email']}" />
 			 </h:panelGrid>
 			 <h:panelGrid columns="2">
-			     <p:inputText  id="email" style="width:170px;" required="true"   label="Email" 
+			     <p:inputText  id="email" style="width:170px;" required="true"   label="#{lbl['lbl.ct.email']}"
 			        value="#{amendmentBackingBean.managedBean.scLoaWitness.email}" validator="#{webappBean.checkEmail}"/>
 			      <p:message for="email" display="icon"/>
 		     </h:panelGrid>
