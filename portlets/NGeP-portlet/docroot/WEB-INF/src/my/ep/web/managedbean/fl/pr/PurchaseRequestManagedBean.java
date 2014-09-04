@@ -236,6 +236,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean standardPrice = false;
 	private boolean zonalPrice = false;
 	private boolean zonalTierPrice = false;
+	private boolean emailValidate = false;
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -1948,6 +1949,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setStandardUnitPrice(Long standardUnitPrice) {
 		this.standardUnitPrice = standardUnitPrice;
+	}
+
+	/**
+	 * @return the emailValidate
+	 */
+	public boolean isEmailValidate() {
+		return emailValidate;
+	}
+
+	/**
+	 * @param emailValidate the emailValidate to set
+	 */
+	public void setEmailValidate(boolean emailValidate) {
+		this.emailValidate = emailValidate;
 	}
 
 	
