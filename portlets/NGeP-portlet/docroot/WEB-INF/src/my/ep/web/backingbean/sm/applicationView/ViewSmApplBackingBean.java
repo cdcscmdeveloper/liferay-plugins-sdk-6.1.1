@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -91,7 +90,7 @@ public class ViewSmApplBackingBean extends
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
+
 		if (reloadPreviousApplication()) {
 			initPreviousApplication();
 		}
@@ -114,7 +113,8 @@ public class ViewSmApplBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
 			setSupplierBusinessType(getManagedBean().getSmSupplier());
-			getManagedBean().setSupplierBusinessTypeVal(
+			getManagedBean()
+					.setSupplierBusinessTypeVal(
 							getDropDownViewOnlyValueByCode(
 									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 									getManagedBean().getSmSupplier()
@@ -237,10 +237,13 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	public void setTabValue(int currentTab, int outputTab) {
+	public void setTabValue(int currentTab, int outputTab, String outputPageType) {
 		getManagedBean().setTabActiveIndex(outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
+		getManagedBean().setRedirectToPersonPage(false);
+		getManagedBean().setCurrentPageType(outputPageType);
+		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 	}
 
 	private void retrievePmCertBodyList() {
@@ -248,14 +251,6 @@ public class ViewSmApplBackingBean extends
 				.getServiceObject("pm", ICertBodySO.class);
 		CertBodyResDTO resDTO = reqSO.retrieveCertifiedBodyList();
 		this.getManagedBean().setCertBodyLs(resDTO.getCertBodyList());
-	}
-
-	public void updateSmAppl(String outputPageType) {
-		getManagedBean().setRedirectToPersonPage(false);
-		getManagedBean().setCurrentPageType(outputPageType);
-		getManagedBean().setTabActiveIndex(outputTab);
-		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
-
 	}
 
 	// temp added for testing
@@ -333,7 +328,7 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
-		//RequestContext.getCurrentInstance().execute("assocDialog.show()");
+		// RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
 	// temp change for testing
@@ -415,6 +410,34 @@ public class ViewSmApplBackingBean extends
 	// temp added for testing
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
+
+		Locale locale = new FacesScopes().getUserLocale();
+
+		switch (getManagedBean().getSelectedMachine().getPurchaseMethod()) {
+		case "A":
+			getManagedBean().setSelectedMachineryPurchaseMethod(
+					ResourceBundleUtils.getMessage("lbl.sm.machine.cash", 1,
+							locale));
+			break;
+		case "B":
+			getManagedBean().setSelectedMachineryPurchaseMethod(
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.machine.credit.card", 1, locale));
+			break;
+		case "C":
+			getManagedBean().setSelectedMachineryPurchaseMethod(
+					ResourceBundleUtils.getMessage("lbl.sm.machine.debit.card",
+							1, locale));
+			break;
+		case "D":
+			getManagedBean().setSelectedMachineryPurchaseMethod(
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.machine.online.banking", 1, locale));
+			break;
+		default:
+			break;
+
+		}
 	}
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
@@ -429,10 +452,10 @@ public class ViewSmApplBackingBean extends
 					.getCategoryL2Id(), new PmCategoryL3());
 		}
 	}
-	
+
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
-//		RequestContext.getCurrentInstance().execute("profDialog.show()");
+		// RequestContext.getCurrentInstance().execute("profDialog.show()");
 	}
 
 	// temp added for testing
@@ -588,16 +611,22 @@ public class ViewSmApplBackingBean extends
 
 	// temp added for testing
 	private void setSelectedBankAccountPurpose() {
+		Locale locale = new FacesScopes().getUserLocale();
 		switch (getManagedBean().getSelectedBank().getAccountPurpose()) {
 		case "P":
-			getManagedBean().setSelectedBankAccountPurpose("Payment");
+			getManagedBean().setSelectedBankAccountPurpose(
+					ResourceBundleUtils.getMessage("lbl.sm.paymentLbl", 1,
+							locale));
 			break;
 		case "R":
-			getManagedBean().setSelectedBankAccountPurpose("Registration");
+			getManagedBean().setSelectedBankAccountPurpose(
+					ResourceBundleUtils.getMessage("lbl.sm.bankDtls.registration", 1,
+							locale));
 			break;
 		case "B":
 			getManagedBean().setSelectedBankAccountPurpose(
-					"Both (Payment,Registration)");
+					ResourceBundleUtils.getMessage("lbl.sm.bankDtls.both.regandpay", 1,
+							locale));
 			break;
 		default:
 			break;
@@ -952,11 +981,15 @@ public class ViewSmApplBackingBean extends
 		Locale locale = new FacesScopes().getUserLocale();
 		String[] params = { "" };
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.norm", 1, locale);
+			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.norm",
+					1, locale);
 		} else {
-			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.spl", 1, locale);
+			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.spl",
+					1, locale);
 		}
-		getManagedBean().setCatTypeConfirm(ResourceBundleUtils.getMessage("lbl.sm.catCodeNote", params, 1, locale));
+		getManagedBean().setCatTypeConfirm(
+				ResourceBundleUtils.getMessage("lbl.sm.catCodeNote", params, 1,
+						locale));
 	}
 
 	// temp added for testing
@@ -995,8 +1028,8 @@ public class ViewSmApplBackingBean extends
 		}
 
 	}
-	
-	private void setDefaultApproverReviewSection(){
+
+	private void setDefaultApproverReviewSection() {
 		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
@@ -1013,12 +1046,17 @@ public class ViewSmApplBackingBean extends
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
-			getManagedBean().setPersonnelInfoHeader("Equity Owner Information");
+			getManagedBean().setPersonnelInfoHeader(
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.equity.owner.information", 1, locale));
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-			getManagedBean().setPersonnelInfoHeader("Personnel Information");
+			getManagedBean().setPersonnelInfoHeader(
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.personnel.information", 1, locale));
 		}
 
 		if (shareHolderBean.getEpRole() != null

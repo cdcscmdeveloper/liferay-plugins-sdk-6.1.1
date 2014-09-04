@@ -3,10 +3,8 @@ package my.ep.web.backingbean.cm.catalogue;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
@@ -45,7 +43,6 @@ import my.ep.web.managedbean.cm.catalogue.ZoneMaintenanceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.cm.helper.CmSupplierZoneSingleton;
 import my.ep.web.util.cm.helper.CmSupplierZoneStateDistrictDTO;
-import my.ep.web.util.cm.helper.SourcingZoneDetailHelper;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name = "zoneMaintenanceBackingBean")
@@ -166,32 +163,47 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			resDTO = zoneMaintenanceSO.save(reqDTO);
 		else 
 			resDTO.setSuccessful(true);
-		if (resDTO.isSuccessful()) {
-			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
-			showZonePopup();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-					FacesMessage.SEVERITY_INFO, null, 
-					MessageUtils.getMessage(MessageConst.INFO_711001, 
-							new String[]{""+1}, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-			return null;
-		} else {
-			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
-			zoneMaintenanceSO = null;
-			throw new EpException(MessageConst.ERROR_716002);
+		
+		if(resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_INFO,
+					null,
+					MessageUtils.getMessage(MessageConst.INFO_711001, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			return "outputMsg";
 		}
+		else 
+			return null;
+		
+//		if (resDTO.isSuccessful()) {
+//			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
+//			showZonePopup();
+//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+//					FacesMessage.SEVERITY_INFO, null, 
+//					MessageUtils.getMessage(MessageConst.INFO_711001, 
+//							new String[]{""+1}, 
+//							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+//			return null;
+//		} else {
+//			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
+//			zoneMaintenanceSO = null;
+//			throw new EpException(MessageConst.ERROR_716002);
+//		}
 	}
 	
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {
 		getManagedBean().setEditMode(true);
-		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
+//		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
 		CmSupplierZone zone = getZone(rootZoneLocation);
-		List<PmState> states = SourcingZoneDetailHelper
-				.getStateFromDetailDTOs(detailDTOs);
-		List<PmDivision> divisions = SourcingZoneDetailHelper
-				.getDivisionFromDetailDTOs(detailDTOs);
-		List<PmDistrict> districts = SourcingZoneDetailHelper
-				.getDistrictFromDetailDTOs(detailDTOs);
+//		List<PmState> states = SourcingZoneDetailHelper
+//				.getStateFromDetailDTOs(detailDTOs);
+//		List<PmDivision> divisions = SourcingZoneDetailHelper
+//				.getDivisionFromDetailDTOs(detailDTOs);
+//		List<PmDistrict> districts = SourcingZoneDetailHelper
+//				.getDistrictFromDetailDTOs(detailDTOs);
+
+		List<PmState> states = getPmStates(rootZoneLocation.getChildren());
+		List<PmDivision> divisions = getPmDivisions(rootZoneLocation.getChildren());
+		List<PmDistrict> districts = getPmDistricts(rootZoneLocation.getChildren());
 		getManagedBean().setRootZoneTree(
 				CmSupplierZoneSingleton.getInstance().buildTree(getManagedBean().getDefaultCountryId(),	states, districts, divisions));
 		int i = zoneIndex;
@@ -257,7 +269,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		return smSupp;
 	}
 	
-	private List<CmSupplierZoneStateDistrictDTO> getDetails(TreeNode zoneDetail) {
+/*	private List<CmSupplierZoneStateDistrictDTO> getDetails(TreeNode zoneDetail) {
 		List<CmSupplierZoneStateDistrictDTO> results = new ArrayList<CmSupplierZoneStateDistrictDTO>();
 		if (zoneDetail.isLeaf()) {
 			CmSupplierZoneStateDistrictDTO cmSupplierZoneStateDistrictDTO = (CmSupplierZoneStateDistrictDTO) zoneDetail.getData();
@@ -269,6 +281,56 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 		return results;
 	}
+*/	
+	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
+		List<PmState> results = new ArrayList<PmState>();
+		for (TreeNode rootNode : treeNodes) {
+			for (TreeNode treeNode : rootNode.getChildren()) {
+					if (treeNode.getType().equals("state")) {
+						CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) treeNode.getData();
+						if (locationDTO.getState() != null) {
+							results.add(locationDTO.getState());
+						}
+					}
+			}
+		}
+		return results;
+	}
+	
+	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
+		List<PmDivision> results = new ArrayList<PmDivision>();
+		for (TreeNode rootNode : treeNodes) {
+		for (TreeNode treeNode : rootNode.getChildren()) {
+			for (TreeNode childNode : treeNode.getChildren()) {
+					if (childNode.getType().equals("division")) {
+						CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) childNode.getData();
+						if (locationDTO.getDivision() != null) {
+							results.add(locationDTO.getDivision());
+						}
+					}
+				}
+		}
+		}
+		return results;
+	}
+	
+	private List<PmDistrict> getPmDistricts(List<TreeNode> treeNodes) {
+		List<PmDistrict> results = new ArrayList<PmDistrict>();
+		for (TreeNode treeNode : treeNodes) {
+			if (treeNode.isLeaf()) {
+				CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) treeNode.getData();
+				if (locationDTO.getDistrict() != null) {
+					results.add(locationDTO.getDistrict());
+				}
+			} else {
+				if (treeNode.getChildren() != null) {
+					results.addAll(getPmDistricts(treeNode.getChildren()));
+				}
+			}
+		}
+		return results;
+	}
+
 	
 	public void updateZoneListOnPopUpClose(){
 		System.out.println("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");

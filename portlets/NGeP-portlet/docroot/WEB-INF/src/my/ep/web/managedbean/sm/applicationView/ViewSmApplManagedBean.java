@@ -102,6 +102,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private String chequeSignPersonnelName;
 	private String applicationNoParam;
 	private String supplierBusinessTypeVal;
+	private String selectedMachineryPurchaseMethod;
 	
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -769,5 +770,14 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setSelectedAssocBody(SmAssociationBody selectedAssocBody) {
 		this.selectedAssocBody = selectedAssocBody;
+	}
+
+	public String getSelectedMachineryPurchaseMethod() {
+		return selectedMachineryPurchaseMethod;
+	}
+
+	public void setSelectedMachineryPurchaseMethod(
+			String selectedMachineryPurchaseMethod) {
+		this.selectedMachineryPurchaseMethod = selectedMachineryPurchaseMethod;
 	}
 }
