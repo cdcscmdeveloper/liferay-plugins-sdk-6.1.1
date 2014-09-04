@@ -4141,7 +4141,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String navigateToSearchCode() {
 
-		return "codificationView";
+		return "preRenderCodificationView";
+		
 	}
 
 	public String cancelToSupplierItemSearch() {
