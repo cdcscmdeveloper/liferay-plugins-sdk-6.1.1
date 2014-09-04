@@ -4149,8 +4149,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String navigateToSearchCode() {
-
-		return "preRenderCodificationView";
+//		CodificationBackingBean bb = new CodificationBackingBean();
+//		bb.titleFilterBean = null;
+//		bb.codeFilterBean = null;
+//
+//		bb.titleFilterBean = new SearchFilterBean(
+//				SearchOperator.OPERATOR_LIKE.value());
+//		bb.codeFilterBean = new SearchFilterBean(
+//				SearchOperator.OPERATOR_LIKE.value());
+//		bb.setSearchDataModel(new SearchPagingDataModel());
+//		this.getManagedBean().setAutoCompleteUnspscCode(null);
+		return "codificationView";
 		
 	}
 
