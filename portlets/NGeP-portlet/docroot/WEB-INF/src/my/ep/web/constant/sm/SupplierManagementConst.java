@@ -62,6 +62,7 @@ public class SupplierManagementConst {
 	public static final int ADDLN_CATCODES_APPL_SPLCAT_REVIEW_MAXCOUNT = 17;
 	public static final int RECORD_DELETED = 1;
 	public static final String COUNTRY_MALAYSIA_CODE = "MY";
+	public static final String ICT_CATEGORY_L1_CODE = "21";
 
 	// Panel Names
 	public static final String SM_BASIC_INFO_PANEL = "BasicInfoPanel";
@@ -555,15 +556,15 @@ public class SupplierManagementConst {
 	public String getCAT_TYPE_TRAVEL() {
 		return CAT_TYPE_TRAVEL;
 	}
-	
+
 	public String getCAT_TYPE_BUMIPUTERA() {
 		return CAT_TYPE_BUMIPUTERA;
 	}
-	
+
 	public String getCAT_TYPE_READING_MATERIAL_FROM_OVERSEA() {
 		return CAT_TYPE_READING_MATERIAL_FROM_OVERSEA;
 	}
-	
+
 	public String getACC_BASIC() {
 		return ACC_BASIC;
 	}
@@ -662,6 +663,10 @@ public class SupplierManagementConst {
 
 	public int getAPPROVED_RECORD_STATUS() {
 		return APPROVED_RECORD_STATUS;
+	}
+
+	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
+		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
 	}
 
 }
