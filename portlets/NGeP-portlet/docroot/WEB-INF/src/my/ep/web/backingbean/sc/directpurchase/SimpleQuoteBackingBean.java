@@ -1448,13 +1448,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		//List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(locationDTOs);
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(locationDTOs);
 		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(locationDTOs);
 		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(locationDTOs);
 
 		if (getManagedBean().getLocIndex() == -1) {
 
-			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(null,
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(states,
 					districts, divisions, null,TplSpecZoneLoc.class));
 			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
 
@@ -1855,6 +1855,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<TreeNode> rootTrees = getManagedBean().getLocationTrees();
 		
 		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+		this.getManagedBean().setLocIndex(-1);
 	}
 	
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,

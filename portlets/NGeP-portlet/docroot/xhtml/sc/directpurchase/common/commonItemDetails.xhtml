@@ -14,12 +14,19 @@
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl" style="white-space: normal;"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
 				rows="10"
-				selection="#{requestNoteBackingBean.managedBean.selectedRequestNoteDtls}"
 				rowKey="#{requestNoteDtl}" rowIndexVar="rowIndex">
-				
-				<ui:include src="/xhtml/cc/rowSelectionEvent.xhtml" />
-				
-				<p:column selectionMode="multiple" style="width:2%" /> 
+
+				<p:column style="width:2%">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selAllChk"
+							value="#{requestNoteBackingBean.flag}">
+							<p:ajax partialSubmit="true" process="@this" update="requestListDataTable"  listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
+					</p:selectBooleanCheckbox>
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.request.note.item.name']}" style="white-space: normal;">
 					<p:commandLink
@@ -192,6 +199,7 @@
 					   size="6" maxlength="4"
 					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
+					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="Delivery Term Type"
@@ -253,7 +261,7 @@
 					</p:selectOneMenu>
 					<p:spacer width="5px;"/>
 					<p:commandButton value="#{lbl['lbl.sc.action.apply.btn']}"
-					    partialSubmit="true" icon="ui-icon-submit" process="@this glb_panel_request_list"
+					    partialSubmit="true" icon="ui-icon-submit" process="@this prepareBy"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
               </p:column>
@@ -262,7 +270,7 @@
 				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission'}">
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
-						process="@this,requestListDataTable" partialSubmit="true"
+						process="@this" partialSubmit="true"
 						action="#{requestNoteBackingBean.deleteRequestNoteDtl}"
 						update="@([id$=requestListDataTable])" icon="ui-icon-delete" />
 				</c:if>
