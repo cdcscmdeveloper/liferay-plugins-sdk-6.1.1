@@ -2500,14 +2500,23 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			
 			// zone details
 			if(scQuote.getQuoteZone() != null){
-				 List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+				List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+				List<ZonesBean> beans = getManagedBean().getBeans();
+				
 				if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
 					for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone().getTplSpecZoneDtls() ) {
+						ZonesBean zonesBean = new ZonesBean();
 						if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
+							zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
+							zonesBean.setTplSpecZoneLocs(tplSpecZoneDtl.getTplSpecZoneLocs());
+							beans.add(zonesBean);
 							zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
 						}
 					}
 					getManagedBean().setZoneTrees(zoneTrees);
+					
+					// to check duplicate state or division or district in multiple zones
+					getManagedBean().setBeans(beans);
 				}
 			}
 
@@ -3205,16 +3214,20 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 										}
 									}
 
-								} else if(TplSpecZoneLoc.getPmDivision() != null){
+								}
+								
+								if(TplSpecZoneLoc.getPmDivision() != null){
 									if(divIds != null && divIds.size()>0){
 										if(divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
 											throw new EpException(TplSpecZoneLoc.getPmDivision().getDivisionName() +" Division already Exists in "+ zone.getZoneName());
 										}
 									}
-								} else if(TplSpecZoneLoc.getPmDistrict() != null){
+								} 
+								
+								if(TplSpecZoneLoc.getPmDistrict() != null){
 									if(distIds != null && distIds.size()>0){
 										if(distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
-											throw new EpException(TplSpecZoneLoc.getPmDistrict().getDistrictName() +" Division already Exists in "+ zone.getZoneName());
+											throw new EpException(TplSpecZoneLoc.getPmDistrict().getDistrictName() +" District already Exists in "+ zone.getZoneName());
 										}
 									}
 								}
