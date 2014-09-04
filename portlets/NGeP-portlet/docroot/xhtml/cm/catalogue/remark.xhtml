@@ -10,7 +10,13 @@
 	<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 		<table style="width: 100%; margin-left: 22px;">
 			<tr>
-				<td width="30%"><p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
+			<td colspan="2">
+			<p:outputLabel>#{lbl['lbl.cm.select.reject.reason']}</p:outputLabel>
+			</td>
+			</tr>
+			<tr>
+				<td width="30%">
+				<p:selectManyCheckbox layout="pageDirection" styleClass="float-left"
 						disabled="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
 						value="#{catalogueBackingBean.managedBean.rejectReasonIds}">
 						<f:selectItems
