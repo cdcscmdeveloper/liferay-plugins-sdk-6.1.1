@@ -28,7 +28,7 @@
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
 							<c:choose>
-								<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.identificationCode.parameterCode == ProfileManagementConst.newIc}">
+								<c:when test="#{profileManagementBackingBean.managedBean.deletePortrait}">
 									<p:graphicImage id="giUserImage" library="ep/images/design"
 										value="/css/images/design/user_male_portrait.png" name="user_male_portrait.png"
 										style="margin-left:25px;" width="140" height="160" />
