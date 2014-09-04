@@ -1227,7 +1227,10 @@ public void ConstructSideTabMenu(){
 		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
 	    ctPerformanceBond.setFinancialOrg(new PmFinancialOrg());
 	    ctPerformanceBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-	    ctPerformanceBond.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+	    Calendar cal = Calendar.getInstance();
+        cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
+        cal.add(Calendar.YEAR, 1); 
+	    ctPerformanceBond.setExpDate(cal.getTime());
 		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
 	}
     

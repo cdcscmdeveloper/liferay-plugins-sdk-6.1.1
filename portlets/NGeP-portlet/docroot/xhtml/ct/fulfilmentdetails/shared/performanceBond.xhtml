@@ -55,16 +55,18 @@
 			</p:column>
 			
 			<p:column style="width:8%;">
-				<p:calendar value="#{varBond.effDate}" id="popupButtonCal4" styleClass="calendarDateField" size="9" 
+				<p:calendar id="popupButtonCal4" value="#{varBond.effDate}"  styleClass="calendarDateField" size="9" 
 					showOn="button" readonlyInput="true"  disabled="#{varBond.performanceBondId != null}" navigator="true"
+					mindate="#{varBond.effDate}" maxdate="#{varBond.expDate}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
-					 <p:ajax event="dateSelect" update="popupButtonCal5" />
+					 <p:ajax event="dateSelect" update="@([id$=bondExpDateCalId])" process="@this" />
 					</p:calendar>
 			</p:column>
 			
 			<p:column style="width:8%;">
-				<p:calendar id="popupButtonCal5"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
-				    readonlyInput="true" disabled="#{varBond.performanceBondId != null}" mindate="#{varBond.effDate}" navigator="true"
+				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
+				    readonlyInput="true" disabled="#{varBond.performanceBondId != null}" mindate="#{varBond.effDate}" 
+				    maxdate="#{varBond.expDate}"  navigator="true"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
                     <f:validator validatorId="primeDateRangeValidator" />
