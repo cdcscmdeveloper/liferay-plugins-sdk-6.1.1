@@ -23,7 +23,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true"
-						icon="ui-icon-back" oncomplete="window.history.back();"
+						icon="ui-icon-back" oncomplete="location.replace(document.referrer);"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">

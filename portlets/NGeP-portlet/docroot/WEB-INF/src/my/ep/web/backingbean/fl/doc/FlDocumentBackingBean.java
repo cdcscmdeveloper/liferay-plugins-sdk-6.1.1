@@ -333,6 +333,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
+			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+			}
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
