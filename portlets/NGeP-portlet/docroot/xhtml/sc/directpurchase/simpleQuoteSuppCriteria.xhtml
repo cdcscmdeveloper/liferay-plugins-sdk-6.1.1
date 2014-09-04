@@ -143,7 +143,7 @@
 							     <td class="TableFieldLeft">
 								    <ac:lov id="busiNatureId" lovId="PM_BUSINESS_NATURE"
 										postUpdateListener="simpleQuoteBackingBean.businessNatureListener(simpleQuoteBackingBean.managedBean.businessNatures)"
-										headerText="Business Nature" buttonLabel="Add"
+										headerText="Business Nature" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.businessNatures"
 										conditionField="recordStatus^1|businessLevel^#{ParameterConst.businessNatureLevel}" update="@form"/>
@@ -199,7 +199,7 @@
 							     <td class="TableFieldLeft">
 								     <ac:lov id="supplier" lovId="SM_SUPPLIER"
 									    postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
-										headerText="Supplier List" buttonLabel="Add"
+										headerText="Supplier List" buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 										buttonIcon="ui-icon-add" selectionMode="multiple"
 										update="@form"
 										saveObject="simpleQuoteBackingBean.managedBean.smSuppliers"
@@ -258,7 +258,7 @@
 								    <ac:lov id="govtSeller" lovId="PM_ORG_PROFILE"
 										postUpdateListener="simpleQuoteBackingBean.govtSellerListener(simpleQuoteBackingBean.managedBean.orgProfiles)"
 										headerText="Government Seller" 
-										buttonLabel="Add"
+										buttonLabel="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
 										buttonIcon="ui-icon-add" 
 										selectionMode="multiple"
 										saveObject="simpleQuoteBackingBean.managedBean.orgProfiles"
