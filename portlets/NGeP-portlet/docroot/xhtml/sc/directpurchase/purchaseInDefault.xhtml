@@ -46,7 +46,7 @@
 	</div>
 	
 	<!-- Contract Item  details -->
-	<p:panel header="CONTRACT DETAIL" toggleable="true" 
+	<p:panel header="#{lbl['lbl.sc.purchase.in.default.contract.detail']}" toggleable="true" 
 	 rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 	<p:spacer height="4px" />
 	 <table>
@@ -144,7 +144,7 @@
 	
 	
 	<!-- Panel Item details -->
-	<p:panel header="PANEL ITEM DETAIL" toggleable="true" rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
+	<p:panel header="#{lbl['lbl.sc.purchase.in.default.panel.item.detail']}" toggleable="true" rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 	<p:spacer height="4px" />
 	  	 <table>
 			<tr>
@@ -186,7 +186,7 @@
       </table>
       </p:panel>
 
-	<p:panel toggleable="true" header="SUPPLIER DETAILS"
+	<p:panel toggleable="true" header="#{lbl['lbl.sc.companyinfo']}"
 		rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 		<p:dataTable id="panelSuppId" var="panelSupplier"
 			value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctPanelSuppliers}"
