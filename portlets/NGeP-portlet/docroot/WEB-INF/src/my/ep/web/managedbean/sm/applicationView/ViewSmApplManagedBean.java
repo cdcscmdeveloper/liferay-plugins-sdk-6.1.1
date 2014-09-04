@@ -101,6 +101,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private String selBankBranchName;
 	private String chequeSignPersonnelName;
 	private String applicationNoParam;
+	private String supplierBusinessTypeVal;
 	
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -118,6 +119,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private SmFacility selectedStoreFacility;
 	private SmManufacturingDtl selectedManufacturer;
 	private SmMachineDtl selectedMachine;
+	private SmAssociationBody selectedAssocBody;
 	private List<SmFacility> applFactoryFacilities;
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
@@ -143,6 +145,8 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 		selectedCompanyExperience = new SmCompanyExperience();
 		selectedEquityCompany = new SmEquityCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
+		selectedAssocBody = new SmAssociationBody();
+		selectedAssocBody.setPmCertBody(new PmCertBody());
 		apprvrSecReview = new SmApplSectionReview();
 		poSecReview = new SmApplSectionReview();
 		equiCompCapTotal = new BigDecimal(0);
@@ -749,5 +753,21 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setApplicationNoParam(String applicationNoParam) {
 		this.applicationNoParam = applicationNoParam;
+	}
+
+	public String getSupplierBusinessTypeVal() {
+		return supplierBusinessTypeVal;
+	}
+
+	public void setSupplierBusinessTypeVal(String supplierBusinessTypeVal) {
+		this.supplierBusinessTypeVal = supplierBusinessTypeVal;
+	}
+
+	public SmAssociationBody getSelectedAssocBody() {
+		return selectedAssocBody;
+	}
+
+	public void setSelectedAssocBody(SmAssociationBody selectedAssocBody) {
+		this.selectedAssocBody = selectedAssocBody;
 	}
 }

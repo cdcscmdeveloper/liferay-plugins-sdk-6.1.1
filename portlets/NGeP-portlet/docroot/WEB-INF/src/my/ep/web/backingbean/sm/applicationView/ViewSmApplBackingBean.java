@@ -114,9 +114,7 @@ public class ViewSmApplBackingBean extends
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
 			getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
 			setSupplierBusinessType(getManagedBean().getSmSupplier());
-			getManagedBean()
-					.getSmSupplier()
-					.setBusinessType(
+			getManagedBean().setSupplierBusinessTypeVal(
 							getDropDownViewOnlyValueByCode(
 									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 									getManagedBean().getSmSupplier()
@@ -128,6 +126,7 @@ public class ViewSmApplBackingBean extends
 			setApplicationFacilities(getManagedBean().getSmAppl()
 					.getSmFacilities());
 			setPersonnelInfoCalculationSummary();
+			setDefaultApproverReviewSection();
 			retrievePmCertBodyList();
 
 		} finally {
@@ -429,6 +428,11 @@ public class ViewSmApplBackingBean extends
 					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
 					.getCategoryL2Id(), new PmCategoryL3());
 		}
+	}
+	
+	public void assignSelAssocBody(SmAssociationBody assocBean) {
+		getManagedBean().setSelectedAssocBody(assocBean);
+//		RequestContext.getCurrentInstance().execute("profDialog.show()");
 	}
 
 	// temp added for testing
@@ -990,6 +994,22 @@ public class ViewSmApplBackingBean extends
 			}
 		}
 
+	}
+	
+	private void setDefaultApproverReviewSection(){
+		if (!getManagedBean().getSmAppl().getSmApplSectionReviews().isEmpty()) {
+			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+					.getSmApplSectionReviews()) {
+				if (rev.getRoleType().equalsIgnoreCase(
+						SupplierManagementConst.SECTION_REV_ROLE_APP)) {
+					getManagedBean().setApprvrSecReview(rev);
+				}
+				if (rev.getRoleType().equalsIgnoreCase(
+						SupplierManagementConst.SECTION_REV_ROLE_PO)) {
+					getManagedBean().setPoSecReview(rev);
+				}
+			}
+		}
 	}
 
 	public void assignSelShareHolder(SmPersonnel shareHolderBean) {
