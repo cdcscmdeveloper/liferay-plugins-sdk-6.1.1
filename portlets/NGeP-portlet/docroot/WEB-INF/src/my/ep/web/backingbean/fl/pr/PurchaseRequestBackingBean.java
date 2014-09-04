@@ -265,6 +265,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 		getManagedBean().setDeleteButtonHide(true);
+		
 	}
 
 	public String fulfillmentRequestAction(String action) throws Exception {
@@ -430,6 +431,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void flManualDeliveryAddr() {
+		getManagedBean().setEmailValidate(false);
 		retrieveCountryList();
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -503,6 +505,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		selectAddrEvent();
 	}
 	public void updateManualDeliveryAddrDt() {
+		getManagedBean().setEmailValidate(true);
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			// add to cart validation
 			RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
@@ -544,6 +547,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void closeListener() {
 		log.info("closeListener");
+		getManagedBean().setEmailValidate(true);
 		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
@@ -2286,6 +2290,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				addPurchsedItems();
 			}
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+			getManagedBean().setEmailValidate(true);
 		}
 		if(selectedTabIndex==2){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) { 

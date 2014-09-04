@@ -134,6 +134,13 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Ordered Qty." style="text-align:right">
+					<p:commandLink oncomplete="reqItemInfo.show();"
+					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
+					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
+					<p:graphicImage library="ep/images/design" name="tooltips.png"
+						value="/resources/ep/images/design/tooltips.png"
+						title="Request Item Information" />
+					</p:commandLink>
 					<p:inputText value="#{flItem.orderedQty}" size="5" id="orderedQty"
 						styleClass="colFloatRight" maxlength="14"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
@@ -313,7 +320,8 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
-							size="34" /></td>
+							 validatorMessage="Postal Code - must be a number Example: 0-9"
+							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
@@ -323,7 +331,11 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Email" maxlength="80"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
-							size="35" /></td>
+							validatorMessage="Email - Invalid Email Format"
+							size="35" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
+       						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+       					</p:inputText>	
+       				</td>
 					<td><p:message for="email" display="icon" /></td>
 					<td><p:outputLabel value="Delivery Address" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -345,20 +357,23 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Tel No" maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
-							size="35" /></td>
+							validatorMessage="Fax.No. - must be a number Example: 0-9"
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="telNo" display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax.No." /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
-							size="35" /></td>
+							 validatorMessage="Tel.No. - must be a number Example: 0-9"
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Mobile.No." /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
-							size="35" required="false" /></td>
+							 validatorMessage="Mobile.No. - must be a number Example: 0-9"
+							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -444,5 +459,69 @@
 				process="@this,receivingOfficerDt">
 			</p:commandButton>
 		</div>
+	</p:dialog>
+	<p:dialog id="reqItemInfoDialog" header="REQUEST ITEM INFORMATION"
+		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
+		modal="true" width="600" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:inputText disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.itemName}"
+						size="60" /></td>
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="Requested Qty." style="text-align:right"/></td>
+				<td><p:inputText disabled="true" 
+						value="#{purchaseRequestBackingBean.managedBean.quantity}"
+						size="35" ><f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" /></p:inputText></td>
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="Price Type" /></td>
+				<td><p:inputText disabled="true" rendered="#{purchaseRequestBackingBean.managedBean.priceType != null}"
+						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.priceType)}" 
+						size="35" /></td>					
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="Standard Price" rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"/></td>
+				<td><p:inputText disabled="true"  rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"
+						value="#{purchaseRequestBackingBean.managedBean.standardUnitPrice}" 
+						size="35" >
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>					
+			</tr>
+		</table> 
+		<h:panelGroup rendered="#{!purchaseRequestBackingBean.managedBean.standardPrice}">
+		<p:panel id="reqItemInfoPanel" header="ZONE/TIER PRICE DETAIL" toggleable="false" >
+		<p:dataTable id="reqItemInfoDt" var="reqItemInfoList"
+			value="#{purchaseRequestBackingBean.managedBean.reqItemInfoList}"
+			rowKey="#{purchasedItem}">
+			<ac:paginator for="reqItemInfoDt" />
+			<p:column headerText="Zone" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
+				<h:outputText value="#{reqItemInfoList.tplSpecZone.zoneName}" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}"/>
+			</p:column>
+			<p:column headerText="From Qty." style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice }">
+				<h:outputText value="#{reqItemInfoList.fromQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+				</h:outputText>			
+			</p:column>
+			<p:column headerText="To Qty" style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<h:outputText value="#{reqItemInfoList.toQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+				</h:outputText>			
+			</p:column>
+			<p:column headerText="Price Offered(RM)" style="text-align:right" >
+				<h:outputText value="#{reqItemInfoList.itemPrice}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</h:outputText>
+			</p:column>
+		</p:dataTable>
+		</p:panel>
+		</h:panelGroup>
 	</p:dialog>
 </ui:composition>
