@@ -8,15 +8,13 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.bank.act.details']}"
 		toggleable="true">
-		<p:dataTable id="bankdetails" value="#{smAppl.smSupplierBanks}"
-			rowIndexVar="index" var="bankDtls" rowKey="#{bankDtls}"
-			selectionMode="single"
-			selection="">
-
+		<p:dataTable id="bankdetails" selectionMode="single"
+			value="#{smAppl.smSupplierBanks}" rowIndexVar="index" var="bankDtls"
+			rowKey="#{bankDtls}">
 			<ac:paginator for="bankdetails" />
-
-			<p:ajax event="rowSelect" update=":form:cheque"
-				listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
+			<p:ajax event="rowSelect"
+				listener="#{supplierProposalDetailBackingBean.onRowSelectionListener}"
+				update="@([id$=cheque])" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.act.no']}">
 				<h:outputText value="#{bankDtls.accountNo}" />
@@ -25,29 +23,28 @@
 				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
-				<h:outputText value="#{bankDtls.smAddress.address1}" />
+				<h:outputText value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.spec.cheque.sign.composition']}"
 		toggleable="true">
 		<p:dataTable id="cheque"
-			value="#{smAppl.smSupplierBanks.smChequeSignatories}"
-			rowIndexVar="index" var="chequesignatories"
+			value="#{supplierProposalDetailBackingBean.managedBean.smChequeSignatories}"
+			rowIndexVar="index" var="cheque"
 			rowKey="#{chequesignatories}">
 			<ac:paginator for="cheque"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}">
-				<h:outputText />
+				<p:outputLabel value="#{cheque.smPersonnel.personnelId}"></p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}">
-				<h:outputText
-					value="#{chequesignatories.smPersonnel.identificationNo}" />
+				<p:outputLabel value="#{cheque.smPersonnel.identificationNo}" ></p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.bumi.status']}">
-				<h:outputText />
+				<p:outputLabel value="#{(cheque.smPersonnel.bumi) ? 'Yes' : 'No'}" ></p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
-				<h:outputText />
+				<p:outputLabel value="#{cheque.smPersonnel.designation}" ></p:outputLabel>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
