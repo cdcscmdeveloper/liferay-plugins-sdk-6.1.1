@@ -364,6 +364,10 @@ public class LocationSingleton {
 										// cityNode.setSelected(Boolean.TRUE);
 									}
 								}
+								if (districtIds.contains(district.getDistrictId())) {
+									districtNode.setSelected(Boolean.TRUE);
+								}
+								
 							}
 							if (divisionIds.contains(division.getDivisionId())) {
 								divisionNode.setSelected(Boolean.TRUE);
@@ -934,6 +938,12 @@ public class LocationSingleton {
 									.newInstance();
 							divisionLocation.setPmDivision(division);
 							divisionLocation.setPmState(state);
+							
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) divisionLocation)
+										.setTplSpecZoneDtl(zone);
+							}
+							
 							TreeNode divisionNode = new DefaultTreeNode(
 									QTConstants.NODE_DIVISION, divisionLocation, stateNode);
 						}
