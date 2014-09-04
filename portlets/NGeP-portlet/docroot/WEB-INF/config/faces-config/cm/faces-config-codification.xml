@@ -39,6 +39,12 @@
 			<to-view-id>/xhtml/cm/codification/codificationView.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>preRenderCodificationView</from-outcome>
+			<to-view-id>/xhtml/cm/codification/preRenderCodificationView.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 
 		<navigation-case>
 			<from-outcome>addCatalogItem</from-outcome>
