@@ -158,7 +158,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		this.getManagedBean().setAppTypeRestrictions(null);
 		this.getManagedBean().setComTypeRestrictions(null);
 		this.getManagedBean().setSuppTypeRestrictions(null);
-		this.getManagedBean().setSuppReason(false);
+		this.getManagedBean().setDeleteAppTypeRestrictions(null);
+		this.getManagedBean().setDeleteComTypeRestrictions(null);
+		this.getManagedBean().setDeleteSuppTypeRestrictions(null);
 		log.info("initialRejectReason - End");
 	}
 	
@@ -168,6 +170,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void loadRejectReason(Long id){
 		log.info("loadRejectReason - Start");
 		try{
+//			initialRejectReason();
 			PmReason pmReason = retrieveReasonObjById(id);
 			//set supplier type flag
 			this.getManagedBean().setSuppReason( 
@@ -194,6 +197,9 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			}
 			this.getManagedBean().setSelectedReason(pmReason);
 			loadRestriction(pmReason);
+			this.getManagedBean().setDeleteAppTypeRestrictions(null);
+			this.getManagedBean().setDeleteComTypeRestrictions(null);
+			this.getManagedBean().setDeleteSuppTypeRestrictions(null);
 //			this.getManagedBean().setAppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES, id));
 //			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.COMPANY_TYPES, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));

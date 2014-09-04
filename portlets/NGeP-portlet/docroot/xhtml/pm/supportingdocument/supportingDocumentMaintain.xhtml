@@ -16,30 +16,35 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<ui:include src="headerSection.xhtml"/>
 			
 			<table class="ppOneTable">
-			<tr>
-				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.document.category']}"/>
-				</th>
-				<td>
-					<p:selectOneMenu id="somDocCategory"  
-						label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
-						>
-						<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions()}"/>
-						<p:ajax event="change" 
-							update="pSupportDocDet"/>
-					</p:selectOneMenu>
-					<p:message id="somDocCategoryMsg" for="somDocCategory" display="icon" />
-				</td>
-			</tr>
-		</table>
-		<br/>
-			
-			
-		<!-- Supplier Registration Details -->
-		<ui:include src="supplierRegistration.xhtml"/>
-		
-		<!-- Checklist Details -->
-		<ui:include src="checklist.xhtml"/>
+				<tr>
+					<th>
+						<p:outputLabel value="#{lbl['lbl.pm.document.category']}"/>
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</th>
+					<td>
+						<p:selectOneMenu id="somDocCategory" 
+							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
+							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  >
+							<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions()}"/>
+							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
+						</p:selectOneMenu>
+						<p:message id="somDocCategoryMsg" for="somDocCategory" display="icon" />
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<p:outputPanel id="opDocDetails">
+				<c:choose>
+					<c:when test="#{!supportDocBackingBean.managedBean.checkList}">
+						<!-- Supplier Registration Details -->
+						<ui:include src="supplierRegistration.xhtml"/>		
+					</c:when>
+					<c:otherwise>
+						<!-- Checklist Details -->
+						<ui:include src="checklist.xhtml"/>					
+					</c:otherwise>
+				</c:choose>
+			</p:outputPanel>
 		</p:outputPanel>
  	</ui:define>
 </ui:composition>

@@ -87,9 +87,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<br/>
 		<p:dataTable id="dtCatResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			>
-			<p:ajax event="toggleSelect" update="@this" process="@this" />
+			
 			<p:ajax event="rowSelectCheckbox" update="@this" />
-			<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+			
 
 	        <p:column headerText="* #{lbl['lbl.pm.sub.div.category']}">  
 		    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"

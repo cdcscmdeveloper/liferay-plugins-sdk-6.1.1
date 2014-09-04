@@ -5,6 +5,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 
 	<p:outputPanel id="opRestriction">
@@ -12,23 +13,32 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		>
 			<p:tabView widgetVar="tvDocRestriction" id="tvDocRestriction" dynamic="false" cache="false" orientation="top">
 				<!-- Application Type -->
-				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}">  
+				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byAppType}">  
 					<br/>
-					<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-						
-						
+					<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+						 selection="#{supportDocBackingBean.managedBean.deleteAppTypeRestrictions}" rowKey="#{restrict}"
+						 value="#{supportDocBackingBean.managedBean.appTypeRestrictions}" var="restrict" 
 						>
+						<ac:paginator for="dtAppType" />
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="* #{lbl['lbl.pm.application.type']}">
+				        <p:column>
+			        	    <f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
+						    </f:facet>
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 								<p:ajax event="change" update="somAppType"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				        <p:column>  
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
 				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -37,30 +47,42 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				   	<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
-							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_APP)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_APP)}"
 							immediate="true" 
-							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
+							/> 
 					</div>
 				</p:tab>
 				<!-- Company Type -->
-				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}">  
+				<p:tab id="tComType" title="#{lbl['lbl.pm.company.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCompType}">  
 					<br/>
 					<p:dataTable id="dtComType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						selection="#{supportDocBackingBean.managedBean.deleteComTypeRestrictions}" rowKey="#{restrict}"
+						value="#{supportDocBackingBean.managedBean.comTypeRestrictions}" var="restrict" 
 						>
+						<ac:paginator for="dtComType" />
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="* #{lbl['lbl.pm.company.type']}">  
+				        <p:column>  
+			        	 	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
+						    </f:facet>
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				        <p:column>  
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
 				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -69,30 +91,41 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   		<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtComType"
-							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.companyTypes)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_COMP)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbComDelete" value="#{lbl['lbl.btn.delete']}"  update="dtComType"
-							immediate="true"
-							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.companyTypes)}" /> 
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_COMP)}"
+							immediate="true" /> 
 					</div>
 				</p:tab>
 				<!-- Supplier Type -->
-				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}">  
+				<p:tab id="tSuppType" title="#{lbl['lbl.pm.supplier.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">  
 					<br/>
 					<p:dataTable id="dtSuppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						selection="#{supportDocBackingBean.managedBean.deleteSuppTypeRestrictions}" rowKey="#{restrict}"
+						value="#{supportDocBackingBean.managedBean.suppTypeRestrictions}" var="restrict" 
 						>
+						<ac:paginator for="dtSuppType" />
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
 
-				        <p:column headerText="* #{lbl['lbl.pm.supplier.type']}">  
+				        <p:column> 
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
+						    </f:facet> 
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				        <p:column>  
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
 					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -101,19 +134,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				   	<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"   update="dtSuppType"
-							action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierTypes)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_SUPP)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}"  update="dtSuppType"
-							immediate="true"
-							action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierTypes)}" /> 
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_SUPP)}"
+							immediate="true" />
 					</div>
 				</p:tab>
 				<!-- Category -->
-				<p:tab id="tCat" title="#{lbl['lbl.pm.category']}">  
+				<p:tab id="tCat" title="#{lbl['lbl.pm.category']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byCategory}">  
 					<br/>
 					<p:dataTable id="dtCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						selection="#{supportDocBackingBean.managedBean.deleteCategoryRestrictions}" rowKey="#{restrict}"
+						value="#{supportDocBackingBean.managedBean.categoryRestrictions}" var="restrict"
 						>
+						<ac:paginator for="dtCat" />
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
@@ -127,7 +163,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				        <p:column headerText="#{lbl['lbl.pm.category.l3']}">  
 					    	category3
 				        </p:column>   
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				        <p:column>  
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
 					      	status
 				        </p:column>  
 				   	</p:dataTable>

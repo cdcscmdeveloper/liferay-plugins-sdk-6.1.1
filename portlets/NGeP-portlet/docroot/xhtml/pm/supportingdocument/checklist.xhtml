@@ -12,7 +12,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<table class="ppTwoTable">
 			<tr>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.document.name']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.document.name']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td colspan="3">
 					<p:inputTextarea
@@ -21,16 +22,18 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.document.definition']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.document.definition']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
 					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
 					>
-						<f:selectItem  itemLabel="Select" itemValue="0" />
+						<f:selectItem  itemLabel="Upload" itemValue="0" />
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.display.sequence']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.display.sequence']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
 					<p:inputText styleClass="ppDisplayTextS"/>
@@ -38,16 +41,18 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.supplier.action']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.supplier.action']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
 					<p:selectOneMenu disabled="true"  styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
 					>
-						<f:selectItem  itemLabel="Select" itemValue="0" />
+						<f:selectItem  itemLabel="Upload" itemValue="0" />
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.scoring.required']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.scoring.required']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
 					<p:selectOneRadio>
@@ -58,6 +63,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<tr>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.status']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM" >
@@ -83,19 +89,31 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:ajax event="toggleSelect" update="@this" process="@this" />
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-			        <p:column headerText="* #{lbl['lbl.pm.procurement.category']}">
+			        <p:column>
+			          	<f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pm.procurement.category']}" />
+					    </f:facet>
 				    	<p:selectOneMenu styleClass="ppDropDownWidthM"
 							value="#{restrict.restrType.parameterId}">
 							<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 							<p:ajax event="change" update="somAppType"/>
 						</p:selectOneMenu>
 			        </p:column>  
-			        <p:column headerText="* #{lbl['lbl.pm.mandatory']}">  
+			        <p:column>  
+			        	<f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pm.mandatory']}" />
+					    </f:facet>
 			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
 			        </p:column>   
-			        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+			        <p:column>  
+			        	<f:facet name="header">
+					     	<h:outputText value="* " styleClass="mandatory" />
+					     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+					    </f:facet>
 			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
@@ -104,12 +122,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			   	<br/>
 		   		<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtProcureCat"
-						action="#{supportDocBackingBean.addRestriction(ParameterTypeConst.supplierApplicationTypes)}"
 						immediate="true"/>
 					&#160;
 					<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}"  update="dtProcureCat"
 						immediate="true" 
-						action="#{supportDocBackingBean.deleteRestrictions(ParameterTypeConst.supplierApplicationTypes)}" /> 
+						/> 
 				</div>
 			</p:tab>
 		</p:tabView>
