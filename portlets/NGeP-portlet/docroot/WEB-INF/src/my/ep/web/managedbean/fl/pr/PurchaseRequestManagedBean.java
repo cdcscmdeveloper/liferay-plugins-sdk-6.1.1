@@ -43,7 +43,6 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -93,6 +92,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean checkPtjFlg = true;
 	private ScRequestNote selectedRequestNote;
 	private List<PmAddressType> manualAddressList;
+	private List<FlFulfilmentItemAddr> requestNoteItemList;
 	
 	private String fulfillmentReqId;
 	private String taskName;
@@ -1950,6 +1950,23 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setStandardUnitPrice(Long standardUnitPrice) {
 		this.standardUnitPrice = standardUnitPrice;
 	}
+	
+	/**
+	 * @return the requestNoteItemList
+	 */
+	public List<FlFulfilmentItemAddr> getRequestNoteItemList() {
+		return requestNoteItemList;
+	}
+
+	/**
+	 * @param requestNoteItemList the requestNoteItemList to set
+	 */
+	public void setRequestNoteItemList(
+			List<FlFulfilmentItemAddr> requestNoteItemList) {
+		this.requestNoteItemList = requestNoteItemList;
+	}
+
+
 
 	/**
 	 * @return the emailValidate
