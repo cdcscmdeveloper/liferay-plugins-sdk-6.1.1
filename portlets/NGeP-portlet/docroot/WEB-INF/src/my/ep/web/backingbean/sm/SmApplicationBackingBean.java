@@ -993,19 +993,25 @@ public class SmApplicationBackingBean extends
 		svTask.setSmSvCategories(smSvCategories);
 		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
 		for (PmParameter param : catParam) {
-			if(param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP ||
-					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE || param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD || 
-					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING || 
-					param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA){
+			if (param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) {
 				SmSvTemplate temp = new SmSvTemplate();
 				temp.setPmParameter(param);
 				temp.setSmSvTask(svTask);
 				templates.add(temp);
 			}
 		}
-		
-		if(getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
-			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(ParameterTypeConst.CATEGORY_TYPE, SupplierManagementConst.CAT_TYPE_BUMIPUTERA, new FacesScopes().getUserLocale().getLanguage());
+
+		if (getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(
+					ParameterTypeConst.CATEGORY_TYPE,
+					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
+					new FacesScopes().getUserLocale().getLanguage());
 			SmSvTemplate temp = new SmSvTemplate();
 			temp.setPmParameter(applType);
 			temp.setSmSvTask(svTask);
@@ -2077,11 +2083,34 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void checkDuplicateCategoryForProject(SmCompanyExperienceCat expCat,
+			SmCompanyExperience exp) {
+		System.out.println("**** Validate the category Codes ********** ");
+		for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
+			if (expCat.equals(cat)) {
+				System.out.println(" *** Same Obj ****"
+						+ cat.getPmCategoryL1().getCategoryL1Code() + " -- --"
+						+ expCat.getPmCategoryL1().getCategoryL1Code());
+
+			} else if (cat.getPmCategoryL1().getCategoryL1Id()
+					.equals(expCat.getPmCategoryL1().getCategoryL1Id())
+					&& cat.getPmCategoryL2().getCategoryL2Id()
+							.equals(expCat.getPmCategoryL2().getCategoryL2Id())
+					&& cat.getPmCategoryL3().getCategoryL3Id()
+							.equals(expCat.getPmCategoryL3().getCategoryL3Id())) {
+				expCat.getPmCategoryL3().setCategoryL3Id(null);
+				throw new EpException(MessageConst.ERROR_722533);
+			}
+		}
+
+	}
+
 	public void deleteSelectedCategoryFromCompanyExperience(
 			SmCompanyExperience exp) {
 		if (getManagedBean().getSelectedCompExpCats().size() == exp
 				.getSmCompanyExperienceCats().size()) {
-			throw new EpException("All category codes cannot be removed.At least one category is required.");
+			throw new EpException(
+					"All category codes cannot be removed.At least one category is required.");
 		}
 		if (getManagedBean().getSelectedCompExpCats().size() > 0) {
 			for (SmCompanyExperienceCat cat : getManagedBean()
@@ -2390,8 +2419,12 @@ public class SmApplicationBackingBean extends
 	public void saveSelectedCategory() {
 		boolean validCat = true;
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
-				&& getManagedBean().getSelectedCategory().getPmCategoryL1()
-						.getCategoryL1Id() == 21) {
+				&& getManagedBean()
+						.getSelectedCategory()
+						.getPmCategoryL1()
+						.getCategoryL1Code()
+						.equalsIgnoreCase(
+								SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
 			validCat = validateIctCatCode();
 		}
 		validCat = validL3CategoryCode(getManagedBean().getSelectedCategory()
@@ -5084,13 +5117,13 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getSupplierType());
 		System.out.println("** getApplCategoryType type ***"
 				+ getManagedBean().getSmAppl().getApplCategoryType());
-		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-		// .getSupplierType());
-		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
-		// reqDTO.setIsSpecialCategory(false);
-		// } else {
-		// reqDTO.setIsSpecialCategory(true);
-		// }
+		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+				.getSupplierType());
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+			reqDTO.setIsSpecialCategory(false);
+		} else {
+			reqDTO.setIsSpecialCategory(true);
+		}
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();
@@ -6763,6 +6796,11 @@ public class SmApplicationBackingBean extends
 										.getSemiNonBumiActCnt());
 			}
 		}
+	}
+
+	public SmPersonnleCalcVO getPersonnelCalculationVO(){
+		calcPersonnelListCount();
+		return getManagedBean().getPersonCalc();
 	}
 
 	private void calcPersonnelListCount() {
