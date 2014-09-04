@@ -355,9 +355,11 @@ public class TemplateSpecHelper {
 	
 	private void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
+		
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(user.getUserId());
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
 		baseObject.setChangedBy(user.getUserId());
-		baseObject.setCreatedBy(user.getUserId());
-		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-
 	}
 }

@@ -502,10 +502,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
+		
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(user.getUserId());
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
 		baseObject.setChangedBy(user.getUserId());
-		baseObject.setCreatedBy(user.getUserId());
-		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-
 	}
 
 	public String getMessgeConstant(String outCome) {
