@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Workshop Details" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel">
 
 		<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
@@ -15,15 +15,15 @@
 			<ac:paginator for="workDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Workshop Name">
+			<p:column headerText="#{lbl['lbl.sm.workshop.name']}">
 				<h:outputText value="#{work.facilityName}" />
 			</p:column>
 
-			<p:column headerText="Workshop Address">
+			<p:column headerText="#{lbl['lbl.sm.workshop.address']}">
 				<h:outputText
 					value="#{work.smAddress.address1},#{work.smAddress.address2},#{work.smAddress.address3}" />
 			</p:column>
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink partialSubmit="true" process="@this"
 					action="#{viewSmApplBackingBean.assignSelWorkshop(work)}" oncomplete="workShopDialog.show()"
 					update=":form:tt:workShopDialog" style="padding-right:5px">
@@ -35,87 +35,86 @@
 		</p:dataTable>
 	</p:panel>
 	
-	<p:dialog width="500px" height="500px" header="Workshop Information"
+	<p:dialog width="500px" height="500px" header="#{lbl['lbl.sm.workshop.information']}"
 		widgetVar="workShopDialog" resizable="false" showEffect="fade"
 		closable="true" hideEffect="fade" modal="true" id="workShopDialog">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Facility Type" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.facilityType}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Name" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.facilityName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.namec]} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.facilityName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Address" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address1}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address1}" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address2}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address2}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address3}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address3}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address4}" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.address4}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmState.stateName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmCountry.countryName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict.districtName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmState.stateName}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmDistrict.districtName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity.cityName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.pmCity.cityName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.smAddress.postcode}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.phoneNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.phoneNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.faxNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.faxNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Area(Sq Ft)" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}">
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.area.feat']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.areaSquareFeet}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:outputLabel>
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td>
-					<p:outputLabel value="Own" rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
-					<p:outputLabel value="Rent" rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
+				<td style="float:left;">
+					<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
+					<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputPanel id="workPanLbl">
-						<p:outputLabel value="Price (RM.)"
+						<p:outputLabel value="#{lbl['lbl.cm.price']}"
 							rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'O'}" />
-						<p:outputLabel value="Rent (RM.)"
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="workPan">
@@ -138,8 +137,8 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Owner Name" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownerName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedWorkShopFacility.ownerName}" /></td>
 			</tr>
 
 		</table>

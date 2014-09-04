@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel
-		header=" Supporting Document Offline Check List - Application No. - #{viewSmApplBackingBean.managedBean.smAppl.applNo}"
+		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no'] viewSmApplBackingBean.managedBean.smAppl.applNo}"
 		toggleable="true">
 		<table style="width: 30%">
 			<tr>
@@ -110,7 +110,7 @@
 			value="#{viewSmApplBackingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="offSdList" />
 
-			<p:column headerText="Document Description">
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}">
 				<p:outputLabel value="#{table.pmDocument.docName}"
 					style="float: left;white-space: normal;" />
 			</p:column>

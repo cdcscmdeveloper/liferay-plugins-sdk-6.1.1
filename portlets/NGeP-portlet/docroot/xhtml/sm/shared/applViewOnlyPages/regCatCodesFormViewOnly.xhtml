@@ -45,7 +45,7 @@
 				blocked="#{viewSmApplBackingBean.managedBean.poUser ? viewSmApplBackingBean.managedBean.poSecReview.categoryVerified : (viewSmApplBackingBean.managedBean.approverUser ? viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
 			<table>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}: " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']} :" /></td>
 					<td>
 						<p:outputLabel value="#{lbl['lbl.sm.catCodes.norm']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'N'}"/>
 						<p:outputLabel value="#{lbl['lbl.sm.catCodes.spl']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}"/>
@@ -205,8 +205,7 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -214,12 +213,9 @@
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryRemark}" /></td>
 
 					</tr>
 				</table>

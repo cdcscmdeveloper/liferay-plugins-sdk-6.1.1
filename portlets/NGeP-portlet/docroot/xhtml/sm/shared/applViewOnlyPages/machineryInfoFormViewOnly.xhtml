@@ -84,8 +84,7 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -93,12 +92,9 @@
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" /></td>
 
 					</tr>
 				</table>
@@ -112,45 +108,38 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.brandName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.brandName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineFunction}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineFunction}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.qty}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.qty}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.value}">
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.value}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']}" /></td>
-				<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedMachine.purchaseMethod}" disabled="true"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Cash" itemValue="A" />
-						<f:selectItem itemLabel="Credit Card" itemValue="B" />
-						<f:selectItem itemLabel="Debit Card" itemValue="C" />
-						<f:selectItem itemLabel="Online Banking" itemValue="D" />
-					</p:selectOneMenu>
+					</p:outputLabel>
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.guarantorName}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachineryPurchaseMethod}" ></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedMachine.guarantorName}"/></td>
 			</tr>
 
 

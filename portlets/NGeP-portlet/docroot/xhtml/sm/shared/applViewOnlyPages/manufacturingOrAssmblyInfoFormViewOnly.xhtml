@@ -79,22 +79,18 @@
 			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" 
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
 			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
-								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.manufacturingRemark}" /></td>
 
 					</tr>
 				</table>
@@ -108,22 +104,22 @@
 		
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.goodsType}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prdType']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.goodsType}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.brand}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.brand}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCap']}" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.productionCapacity}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.prodCap']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.productionCapacity}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']}" /></td>
-				<td valign="top"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.pmUom.uomName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.mesUnit']} :" /></td>
+				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedManufacturer.pmUom.uomName}" /></td>
 			</tr>
 
 		</table>
