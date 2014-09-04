@@ -158,6 +158,23 @@
 						<th></th>
 						<td></td>
 					</tr>
+					<tr>
+						<th width="20%">
+							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.status']}"/>
+						</th>
+						<td>
+							<p:selectOneMenu value="#{profilePersonalizationBackingBean.managedBean.selectedUser.recordStatusFlg}" 
+								disabled="true" styleClass="ppDropDownWidthM">
+								<f:selectItems value="#{profilePersonalizationBackingBean.getStatusOptions()}" />
+							</p:selectOneMenu>
+							&#160;&#160;   
+			                <p:graphicImage id="giUserStatus"
+				                   value="/css/images/design/tooltips.png" />
+							<p:tooltip for="giUserStatus" value="#{lbl['lbl.pm.profiles.userdetails.status.tooltip']}" showEffect="fade" hideEffect="fade" />
+						</td>
+						<th></th>
+						<td></td>
+					</tr>
 				</table>
 			</p:outputPanel>
 		</h:panelGrid> 
