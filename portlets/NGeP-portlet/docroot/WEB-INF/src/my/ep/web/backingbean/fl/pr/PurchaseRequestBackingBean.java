@@ -2460,7 +2460,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}else{
 			getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().longValue());
 		}
-		
+		flItemAddr.setPriceType(getManagedBean().getPmPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
 		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().longValue());
 		getManagedBean().setStandardPrice(false);
