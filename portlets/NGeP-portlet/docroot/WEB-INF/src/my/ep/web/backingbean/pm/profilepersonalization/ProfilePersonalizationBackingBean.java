@@ -22,7 +22,9 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -422,6 +424,49 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	
 	}	
 	
+	/**
+	 * Validation for PmUserPreference
+	 * @param PmUserPreference
+	 */
+	private void validatePreference(PmUserPreference pmUserPreference){
+		logger.info("validatePreferences");
+		if(pmUserPreference!=null){
+			if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserPreference.getRecordStatusFlg()){
+				if(StringUtils.isBlank(pmUserPreference.getPreferredLanguage())){
+					throw new EpException(MessageConst.ERROR_770046);
+
+				}
+				
+				if(pmUserPreference.getNotifyRemovalDay()==null || pmUserPreference.getNotifyRemovalDay()<=0){
+					throw new EpException(MessageConst.ERROR_770047);
+
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Validation for PmUserNotification
+	 * @param PmUserNotification
+	 */
+	private void validateNotification(List <PmUserNotification> pmUserNotifications){
+		logger.info("validateNotification");
+		int selected = 0;
+		if(pmUserNotifications!=null && !pmUserNotifications.isEmpty()){
+			for(PmUserNotification pmUserNotification:pmUserNotifications){
+				if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserNotification.getRecordStatusFlg()){
+					if(pmUserNotification.isPreferred()){
+						selected++;
+						break;
+					}
+				}
+			}
+		}
+		if(selected==0){
+			throw new EpException(MessageConst.ERROR_770048);
+		}
+	}
+
 	
 	/**
 	 * Method to update the user details
@@ -433,6 +478,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		//validation
 		validateUser(user);	
 		validateUserAddress(this.getManagedBean().getUserAddress());		
+		validatePreference(user.getPmUserPreference());
+		validateNotification(user.getPmUserNotifications());
 		
 		//update contact address
 		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
@@ -479,6 +526,13 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	}
 	
+	/**
+	 * get record status options //TODO: to load dynamically
+	 * @return SelectItem[] 
+	 */
+	public static SelectItem[] getStatusOptions() {
+		return PmCommonUtil.getStatusOptions();
+	}
 	/**
 	 * login id = identification no.
 	 */
