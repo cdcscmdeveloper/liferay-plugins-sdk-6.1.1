@@ -66,7 +66,7 @@
 			<p:column style="width:8%;">
 				<p:calendar id="bondExpDateCalId"  value="#{varBond.expDate}" styleClass="calendarDateField" showOn="button"
 				    readonlyInput="true" disabled="#{varBond.performanceBondId != null}" mindate="#{varBond.effDate}" 
-				    maxdate="#{varBond.expDate}"  navigator="true"
+				     navigator="true"
 					size="9"  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 				    <f:attribute name="startDate" value="#{varBond.effDate}" />
                     <f:validator validatorId="primeDateRangeValidator" />

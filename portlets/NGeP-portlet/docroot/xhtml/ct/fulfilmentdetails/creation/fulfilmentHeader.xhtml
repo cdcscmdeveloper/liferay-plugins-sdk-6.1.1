@@ -7,11 +7,11 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 10%">
+				<td style="width: 15%">
 					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-					#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}
+					#{contractDetailsBackingBean.managedBean.ctContract.loa.loaNo}
 				</td>
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
@@ -25,10 +25,10 @@
 				<td style="width: 25%" class="header-info-text">
 					#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}
 				</td>
-				<td style="width: 10%">
+				<td style="width: 5%">
 					<h:outputLabel value="#{lbl['lbl.ct.status']}" />
 				</td>
-				<td style="width: 25%" class="header-info-text">
+				<td style="width: 15%" class="header-info-text">
 					#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.status.statusId)}
 				</td>
 			</tr>
