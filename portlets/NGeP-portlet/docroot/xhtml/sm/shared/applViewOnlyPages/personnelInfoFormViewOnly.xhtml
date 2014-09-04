@@ -361,7 +361,7 @@
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{viewSmApplBackingBean.managedBean.poSecReview.personnelVerified}"
 								id="poPersVer">
-								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+								<p:ajax update=":form:tt:persInfPan"
 									event="change"
 									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>
@@ -376,7 +376,7 @@
 						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified}"
 								id="apprPersVer">
-								<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+								<p:ajax update=":form:tt:persInfPan"
 									event="change"
 									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>

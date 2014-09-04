@@ -1153,11 +1153,8 @@ public class ViewSmApplBackingBean extends
 	}
 
 	public void managePersonnelRoles() {
-		System.out.println("**** Enter Manage Roles  ******");
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			System.out
-					.println(" **** Role management for contractor ***********");
 			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 					|| getManagedBean().getSelectedShareHolder().isDirector()
 					|| getManagedBean().getSelectedShareHolder()
@@ -1172,8 +1169,6 @@ public class ViewSmApplBackingBean extends
 
 		} else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			System.out
-					.println(" **** Role management for consultant ***********");
 			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 					|| getManagedBean().getSelectedShareHolder().isDirector()
 					|| getManagedBean().getSelectedShareHolder()

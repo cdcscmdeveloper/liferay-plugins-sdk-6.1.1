@@ -13,7 +13,7 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{viewSmApplBackingBean.managedBean.poSecReview.categoryVerified}"
 							id="poCatCodeVer">
-							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
+							<p:ajax update=":form:tt:catCodeInfPan"
 								event="change"
 								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
@@ -28,7 +28,7 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified}"
 							id="apprCatCodeVer">
-							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
+							<p:ajax update=":form:tt:catCodeInfPan"
 								event="change"
 								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.categoryVerified)}" />
 						</p:selectBooleanCheckbox></td>
