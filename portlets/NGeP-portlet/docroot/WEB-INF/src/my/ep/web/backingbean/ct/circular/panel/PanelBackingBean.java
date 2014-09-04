@@ -848,6 +848,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				for (SmSupplier smSupplier : supplierList) {
 					CtPanelSupplier panelSupplier = new CtPanelSupplier();
 					panelSupplier.setSupplier(smSupplier);
+					panelSupplier.setCtPanelItem( this.getManagedBean().getSelectedPanelItems());
+					panelSupplier.setCtPanelZone(this.getManagedBean().getSelectedPanelZone());					
 					panelSupplierList.add(panelSupplier);
 				   
 					//Remove if already exist, avoid duplicate

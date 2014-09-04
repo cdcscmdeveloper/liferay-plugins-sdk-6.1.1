@@ -986,6 +986,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				for (PmOrgProfile orgProfile : orgProfiles) {
 					CtExemptedOrg ctExemptedOrg = new CtExemptedOrg();
 					ctExemptedOrg.setOrgProfile(orgProfile);
+					ctExemptedOrg.setCtCircularVer(getManagedBean().getCircularVer());
 					exemptedOrgList.add(ctExemptedOrg);
 					
 					//Remove if already exist, avoid duplicate

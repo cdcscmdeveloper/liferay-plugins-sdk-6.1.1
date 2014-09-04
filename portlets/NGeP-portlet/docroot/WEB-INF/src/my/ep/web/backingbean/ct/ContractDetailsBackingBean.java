@@ -1251,6 +1251,7 @@ public void ConstructSideTabMenu(){
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			ctAgency.setCeilingAmount(new BigDecimal(0));
 		  	ctAgency.setOrgProfile(pmOrgProfile);
+		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
 		  
 		  	//Remove if already exist, avoid duplicate
