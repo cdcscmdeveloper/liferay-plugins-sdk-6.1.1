@@ -227,7 +227,15 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private Date maxDate;
 	
-	
+	//RequestItemInfo List
+	private List<ScSupplierItemPrice> reqItemInfoList;
+	private String itemName;
+	private Long quantity;
+	private Long standardUnitPrice;
+	private PmParameter priceType;
+	private boolean standardPrice = false;
+	private boolean zonalPrice = false;
+	private boolean zonalTierPrice = false;
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -1830,4 +1838,117 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.tierMap = tierMap;
 	}
 
+	/**
+	 * @return the reqItemInfoList
+	 */
+	public List<ScSupplierItemPrice> getReqItemInfoList() {
+		return reqItemInfoList;
+	}
+
+	/**
+	 * @param reqItemInfoList the reqItemInfoList to set
+	 */
+	public void setReqItemInfoList(List<ScSupplierItemPrice> reqItemInfoList) {
+		this.reqItemInfoList = reqItemInfoList;
+	}
+
+	/**
+	 * @return the itemName
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+	/**
+	 * @return the quantity
+	 */
+	public Long getQuantity() {
+		return quantity;
+	}
+
+	/**
+	 * @param itemName the itemName to set
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	/**
+	 * @param quantity the quantity to set
+	 */
+	public void setQuantity(Long quantity) {
+		this.quantity = quantity;
+	}
+
+	/**
+	 * @return the priceType
+	 */
+	public PmParameter getPriceType() {
+		return priceType;
+	}
+
+	/**
+	 * @param priceType the priceType to set
+	 */
+	public void setPriceType(PmParameter priceType) {
+		this.priceType = priceType;
+	}
+
+	/**
+	 * @return the standardPrice
+	 */
+	public boolean isStandardPrice() {
+		return standardPrice;
+	}
+
+	/**
+	 * @return the zonalPrice
+	 */
+	public boolean isZonalPrice() {
+		return zonalPrice;
+	}
+
+	/**
+	 * @return the zonalTierPrice
+	 */
+	public boolean isZonalTierPrice() {
+		return zonalTierPrice;
+	}
+
+	/**
+	 * @param standardPrice the standardPrice to set
+	 */
+	public void setStandardPrice(boolean standardPrice) {
+		this.standardPrice = standardPrice;
+	}
+
+	/**
+	 * @param zonalPrice the zonalPrice to set
+	 */
+	public void setZonalPrice(boolean zonalPrice) {
+		this.zonalPrice = zonalPrice;
+	}
+
+	/**
+	 * @param zonalTierPrice the zonalTierPrice to set
+	 */
+	public void setZonalTierPrice(boolean zonalTierPrice) {
+		this.zonalTierPrice = zonalTierPrice;
+	}
+
+	/**
+	 * @return the standardUnitPrice
+	 */
+	public Long getStandardUnitPrice() {
+		return standardUnitPrice;
+	}
+
+	/**
+	 * @param standardUnitPrice the standardUnitPrice to set
+	 */
+	public void setStandardUnitPrice(Long standardUnitPrice) {
+		this.standardUnitPrice = standardUnitPrice;
+	}
+
+	
 }
