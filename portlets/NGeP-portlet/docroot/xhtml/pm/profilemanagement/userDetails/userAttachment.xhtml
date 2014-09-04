@@ -28,13 +28,11 @@
 	        <p:column headerText="#{lbl['lbl.pp.action']}" >
 	          	<p:commandLink action="#{profileManagementBackingBean.downloadAttachment(attachment)}" 
 	          		immediate="true" ajax="false" disabled="#{attachment.brandNew}">
- 					  <p:graphicImage library="ep/images/design" name="attach.png"
-		                   value="/css/images/design/attach.png" />
+ 					  <p:graphicImage value="/css/images/design/attach.png" />
  				</p:commandLink>
 				<p:commandLink action="#{profileManagementBackingBean.deleteAttachment(attachment)}" 
 	          		immediate="true" update="dtAttachment">
- 					  <p:graphicImage library="ep/images/design" name="icon_trash.png"
-		                   value="/css/images/design/icon_trash.png" />
+ 					  <p:graphicImage value="/css/images/design/icon_trash.png" />
  				</p:commandLink>
 	        </p:column>
 	    </p:dataTable>
