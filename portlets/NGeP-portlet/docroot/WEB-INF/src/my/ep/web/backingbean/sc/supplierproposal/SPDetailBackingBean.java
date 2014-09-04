@@ -1499,7 +1499,9 @@ public class SPDetailBackingBean extends
 			ScQtProposalScore cashOnHandScore = findProposalScoreByCriteriaType(
 					SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND);
 			
-			this.getManagedBean().setTotalcashHand(cashOnHandScore.getCriteriaValue());
+			if(cashOnHandScore != null){
+				this.getManagedBean().setTotalcashHand(cashOnHandScore.getCriteriaValue());
+			}
 
 			System.out.println("CH ***** NAV_TO_CASH_ON_HAND_PAGES *****");
 
