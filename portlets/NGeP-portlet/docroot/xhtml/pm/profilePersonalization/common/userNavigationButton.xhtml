@@ -12,7 +12,7 @@
 				   <c:choose>
 				  		<c:when test="#{profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}">
 				  			<p:commandButton value="#{lbl['lbl.btn.save']}" update="@form"
-				  				widgetVar="cbSaveAcc" id="cbSaveAcc" disabled="true"
+				  				widgetVar="cbSaveAcc" id="cbSaveAcc" 
 				  				onclick="cbSaveAcc.disable()"  oncomplete="cbSaveAcc.enable()"
 				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}">
 			  					<f:param name="disableValidation" value="true" />     
@@ -20,7 +20,7 @@
 				  		</c:when>
 				  		<c:otherwise>
 				  			<p:commandButton  value="#{lbl['lbl.btn.update']}" update="@form"
-				  				widgetVar="cbSaveAcc" id="cbSaveAcc" disabled="true"
+				  				widgetVar="cbSaveAcc" id="cbSaveAcc" 
 				  				onclick="cbSaveAcc.disable()"  oncomplete="cbSaveAcc.enable()"
 				  				action="#{profilePersonalizationBackingBean.saveUserProfile()}">
 				  				<f:param name="disableValidation" value="true" />     
