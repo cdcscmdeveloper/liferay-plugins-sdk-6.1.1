@@ -10,6 +10,7 @@
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
 			<td>
+				<p:dialog />
 				<c:choose>
 					<c:when test="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
 						<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
