@@ -73,9 +73,9 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.directpurchase.RequestNoteBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
@@ -96,7 +96,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "purchaseInquiryBackingBean")
 @RequestScoped
-public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryManagedBean> {
+public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<PurchaseInquiryManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseInquiryBackingBean.class);
     public PurchaseInquiryBackingBean() {
 		super();
@@ -394,6 +394,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		    	ScRequestNote	requestNote	=	new ScRequestNote();
 		    	requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 		    	requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+		    	setUserDetails(requestNote);
 		    	requestNoteDtl.setScRequestNote(requestNote);
 		    	requestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 		    	

@@ -112,8 +112,8 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
@@ -146,7 +146,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "simpleQuoteBackingBean")
 @RequestScoped
-public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBean> {
+public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteManagedBean> {
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
 
 	public SimpleQuoteBackingBean() {
@@ -647,6 +647,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			
 			if(quote.getRequestNote() == null){
 				requestNote = getManagedBean().getRequestNote();
+				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
@@ -872,6 +873,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 			}
 			if(quote.getRequestNote() == null){
 				ScRequestNote requestNote = getManagedBean().getRequestNote();
+				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
@@ -1977,7 +1979,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 */
 	 
 	 
-	 public void dateListener() throws Exception {
+	 public void dateListener() {
 		 ScQuote quote = getManagedBean().getScQuote();
 		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
 
@@ -2443,7 +2445,7 @@ public class SimpleQuoteBackingBean extends BaseBackingBean<SimpleQuoteManagedBe
 	 * page nav. to simple quote and request note
 	 * @throws Exception 
 	 */
-	public void preRenderView() throws Exception {
+	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
