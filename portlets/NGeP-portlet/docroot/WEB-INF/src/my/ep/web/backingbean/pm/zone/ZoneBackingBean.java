@@ -85,23 +85,15 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-		PmZone zone;
-		List<PmZoneState> zones;
-		if (getManagedBean().getPmZone().getZoneId() == null) {
 
-			zone = new PmZone();
-			zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
-			zone.setZoneName(getManagedBean().getPmZone().getZoneName());
-			zone.setRecordStatusFlg(getManagedBean().getPmZone()
-					.getRecordStatusFlg());
-			zones = new ArrayList<PmZoneState>();
-		} else {
-			zone = getManagedBean().getPmZone();
-
-			zones = getManagedBean().getSelectedZones();
-		}
+		PmZone zone = getManagedBean().getPmZone();
+		zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
+		zone.setZoneName(getManagedBean().getPmZone().getZoneName());
+		zone.setRecordStatusFlg(getManagedBean().getPmZone()
+				.getRecordStatusFlg());
+		List<PmZoneState> zones = getManagedBean().getSelectedZones();
 
 		List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
 

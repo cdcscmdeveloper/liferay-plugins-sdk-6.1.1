@@ -115,7 +115,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
-				PmState state = new PmState();
+				PmState state = getManagedBean().getState();
 				ICountrySO countrySO = (ICountrySO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -157,7 +157,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDivisionSO.class);
 
-				PmDivision division = new PmDivision();
+				PmDivision division = getManagedBean().getDivision();
 				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
@@ -210,7 +210,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDistrictSO.class);
 
-				PmDistrict district = new PmDistrict();
+				PmDistrict district = getManagedBean().getDistrict();
 				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
@@ -263,7 +263,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								ICitySO.class);
 
-				PmCity city = new PmCity();
+				PmCity city = getManagedBean().getCity();
 				IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
 						.getInstance().getServiceObject(
 								ModuleCodeConst.PROFILE_MANAGEMENT,
