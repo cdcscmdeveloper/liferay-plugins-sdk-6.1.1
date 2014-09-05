@@ -5674,7 +5674,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if (cmPricing.getToQty() == null
 						|| (cmPricing.getStand_group_id() == cmPricings.get(index-1).getStand_group_id() && cmPricing.getFromQty() <= cmPricings.get(index - 1)
 								.getToQty())
-						|| cmPricing.getToQty() <= cmPricing.getFromQty()) {
+						|| cmPricing.getToQty() <= cmPricing.getFromQty() || cmPricing.getPrice() == null) {
 					valid = false;
 					break;
 				}
@@ -5693,7 +5693,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				if (cmPricing.getToQty() == null
 						|| cmPricing.getFromQty() <= cmPricings.get(index - 1)
 								.getToQty()
-						|| cmPricing.getToQty() <= cmPricing.getFromQty()) {
+						|| cmPricing.getToQty() <= cmPricing.getFromQty() || cmPricing.getPrice() == null) {
 					valid = false;
 					break;
 				}
