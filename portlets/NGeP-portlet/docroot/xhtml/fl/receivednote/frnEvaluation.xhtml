@@ -46,7 +46,7 @@
 					<h:outputText value="Score" />
 				</f:facet>
 				<p:inputText validatorMessage="Maximum score is 5" 
-				 value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" required="true" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
+				 value="#{suppEvalution.score}" style="text-align:right" maxlength="1"  id="score" label="Score" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
 				<p:ajax update="score" listener="#{receivedNoteBackingBean.checkScore(suppEvalution)}"></p:ajax>
 				</p:inputText>
 				<p:message for="score" display="icon" />
