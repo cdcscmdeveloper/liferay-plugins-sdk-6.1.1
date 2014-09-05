@@ -25,7 +25,7 @@
 		</p:commandButton>
 
 
-		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}" icon="ui-icon-submit" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 

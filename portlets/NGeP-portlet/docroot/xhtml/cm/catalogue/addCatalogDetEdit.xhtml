@@ -50,7 +50,7 @@
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
+				<p:commandButton value="#{lbl['lbl.cm.publish']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					icon="ui-icon-submit"
 					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
