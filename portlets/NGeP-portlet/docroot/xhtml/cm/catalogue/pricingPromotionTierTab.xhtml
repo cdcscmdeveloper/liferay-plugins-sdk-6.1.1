@@ -102,15 +102,20 @@
 								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
-						<td style="text-align: right;"><p:commandLink
-								id="pTErrorLink" title="Error" process="@this"
-								actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
-								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
-								oncomplete="errorDialog.show();"
-								disabled="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}">
-								<p:graphicImage
-									value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>
+						<td style="text-align: right;">
+							<p:panel id="pTErrorLink" styleClass="noBorders tr,noBorders td">
+								<p:commandLink title="Error" process="@this"
+									actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
+									update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
+									oncomplete="errorDialog.show();"
+									rendered="#{(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}">
+									<p:graphicImage
+										value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" 
+									rendered="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}"/>
+							</p:panel>	
+						</td>
 					</tr>
 
 				</table>

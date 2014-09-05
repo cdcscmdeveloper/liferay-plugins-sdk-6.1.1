@@ -97,12 +97,16 @@
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
-							<p:commandLink id="errorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
-								oncomplete="errorDialog.show();" 
-								disabled="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}" >
-								<f:param name="index" value="#{rowIndex}"></f:param>
-								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>
+							<p:panel id="errorLink" styleClass="noBorders tr,noBorders td">
+								<p:commandLink title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
+									oncomplete="errorDialog.show();" 
+									rendered="#{(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}" >
+									<f:param name="index" value="#{rowIndex}"></f:param>
+									<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" rendered="#{!(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}"></p:graphicImage>
+							</p:panel>
+						</td>
 					</tr>
 				</table>
 			</p:column>

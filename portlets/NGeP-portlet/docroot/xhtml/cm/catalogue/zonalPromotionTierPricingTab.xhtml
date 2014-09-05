@@ -102,14 +102,20 @@
 								update=":form">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
-						<td style="text-align: right;"><p:commandLink
-								id="zPromoTierPriceId" title="Error" process="@this"
-								actionListener="#{catalogueBackingBean.updateZonalPromotionTierErrorDialog(rowIndex)}"
-								update=":form" oncomplete="errorDialog.show();"
-								disabled="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction or !tier.checkOk)}">
-								<p:graphicImage
-									value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>
+						<td style="text-align: right;">
+							<p:panel id="zPromoTierPriceId" styleClass="noBorders tr,noBorders td">
+								<p:commandLink
+									title="Error" process="@this"
+									actionListener="#{catalogueBackingBean.updateZonalPromotionTierErrorDialog(rowIndex)}"
+									update=":form" oncomplete="errorDialog.show();"
+									rendered="#{(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction or !tier.checkOk)}">
+									<p:graphicImage
+										value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" 
+									rendered="#{!(tier.price eq null || tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate || !tier.displayAction or !tier.checkOk)}"></p:graphicImage>
+							</p:panel>
+						</td>
 					</tr>
 				</table>
 

@@ -117,12 +117,17 @@
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
-							<p:commandLink id="zTErrorLink" title="Error" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
-								disabled="#{!(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"
-								oncomplete="errorDialog.show();">
-								<f:param name="index" value="#{rowIndex}"></f:param>
-								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>	
+							<p:panel id="zTErrorLink" styleClass="noBorders tr,noBorders td">
+								<p:commandLink title="Error" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
+									rendered="#{(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"
+									oncomplete="errorDialog.show();">
+									<f:param name="index" value="#{rowIndex}"></f:param>
+									<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" 
+									rendered="#{!(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"></p:graphicImage>
+							</p:panel>		
+						</td>	
 					</tr>
 				</table>
 				
