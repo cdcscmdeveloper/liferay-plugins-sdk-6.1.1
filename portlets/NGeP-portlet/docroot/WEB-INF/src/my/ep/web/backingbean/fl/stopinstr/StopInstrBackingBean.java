@@ -75,11 +75,17 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	public String saveStopInstruction(String action) {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		if(FulfilmentConst.REASON_CODE.equalsIgnoreCase(getManagedBean().getStopInstr().getPmReason().getReasonCode())) {
 			if(null == getManagedBean().getStopInstr().getReasonDesc() || getManagedBean().getStopInstr().getReasonDesc().isEmpty()){
 				throw new EpException(MessageConst.ERROR_740026);
 			}
-		}	
+		}
+		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+			if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			}
+		}
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FlStopInstr flStopInstr = getManagedBean().getStopInstr();
@@ -91,7 +97,6 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		reqDTO.setUserRole(getUserRole());
 		
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 		reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 	
