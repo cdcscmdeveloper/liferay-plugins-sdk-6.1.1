@@ -83,6 +83,8 @@
 			<portlet id="scNoticeBoard" />
 			<portlet id="scProposal" />
 			<portlet id="scLoiList" />
+			<portlet id="scLoiReview" />
+			<portlet id="scLoiSupplierResponse" />
 			<portlet id="scDpLoaList" />
 			<portlet id="scLoaReview" />
 			<portlet id="scLoaSupplierResponse" />

@@ -51,12 +51,14 @@ public interface QTConstants {
 
 	public static final String PP_MODULE = "pp";
 
-	public static final String LOI_PAGE = "loidetailspage";
 	public static final String DP_LOA_LIST_PAGE = "dpLoaList";
 	public static final String LOA_PAGE = "/xhtml/sc/loa/loarequest/loaDetailsMaint.xhtml";
 	public static final String SUPPLIER_LOA_PAGE = "loaSupplierMaint.xhtml";
 	public static final String FC_COORDINATE_MEETING_PAGE = "/xhtml/sc/supplierFinalization/confirmMeeting/confirmMeeting.xhtml";
 	public static final String FC_SUPPLIER_FINALIZATION_PAGE = "/xhtml/sc/supplierFinalization/suppFinalizationMenu.xhtml";
+	public static final String LOI_LIST_PAGE = "/xhtml/sc/loi/loiList.xhtml";
+	public static final String LOI_PAGE = "/xhtml/sc/loi/loiDetailsMain.xhtml";
+	public static final String SUPPLIER_LOI_PAGE = "loiSupplierMaint.xhtml";
 
 	public static final String SC_LOI_TAB = "LOI";
 	public static final String SC_AWARD_TAB = "Award Details";

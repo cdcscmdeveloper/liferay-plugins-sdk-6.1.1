@@ -32,11 +32,13 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
@@ -72,14 +74,79 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
-		loiDetailsAction();
-		populateUserMinistryList();
-		initializeRemarks(new ScLoi());
-		getApproverNames();
 	}
 	
-	public void loiDetailsAction() {
-		debugLogger("loiDetailsAction");
+	public void preRenderLoiListView() {
+		debugLogger("preRenderLoiListView");
+		
+		try {
+			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			
+			Long sourceId = Long.valueOf(dpDataType.getSourceId());
+			
+			getManagedBean().setSourceId(sourceId);*/
+			
+			Long sourceId = 1450L;
+			
+			retrieveLOIList(sourceId);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);	
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
+	public void preRenderView() {
+		debugLogger("preRenderView");
+
+		try {
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+
+			Long sourceId = Long.valueOf(dpDataType.getSourceId());
+			Long loiId = Long.valueOf(dpDataType.getAwardId());
+
+			getManagedBean().setSourceId(sourceId);
+
+			// Long loiId = 299L;
+
+			ScLoi scLoi = new ScLoi();
+			scLoi.setLoiId(loiId);
+			//editLOIAction(scLoi);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
+	public void preRenderSupplierView() {
+		debugLogger("preRenderSupplierView");
+
+		try {
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+
+			Long sourceId = Long.valueOf(dpDataType.getSourceId());
+			Long loiId = Long.valueOf(dpDataType.getAwardId());
+			
+			getManagedBean().setSourceId(sourceId);
+
+			//editSupplierLOIAction(loiId);
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.SUPPLIER_LOI_PAGE);
+
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
+	public void retrieveLOIList(Long qtId) {
+		debugLogger("retrieveLOIList");
 		IQTAwardSO qtAwardSO = null;
 		try {
 			
@@ -87,8 +154,8 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			reqDTO.setDocId(1450L);
-			reqDTO.setOrgProfileId(32950L);
+			reqDTO.setDocId(qtId);
+			reqDTO.setOrgProfileId(32950L);	// TODO - change in SO to remove this.
 			
 			AwardSupplierResDTO resDTO = qtAwardSO.retrievePendingLoiList(reqDTO);
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
@@ -133,16 +200,14 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			// status
 			getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
 			
+			populateUserMinistryList();
+			initializeRemarks(new ScLoi());
+			getApproverNames();
+			
 		} catch (Exception ex) {																		
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), ex.getMessage()));
+			handleException(ex);
 		}
-	}
-	
-	
+	}	
 	
 	/**
 	 * to get ptj drop down Listing

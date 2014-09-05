@@ -87,6 +87,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private PmOrgProfile pmOrgProfile = new PmOrgProfile();
 	private PmOrgProfile selectedPtj = new PmOrgProfile();
 	private List<PmOrgProfile> ptjList;
+	
+	private Long sourceId;
 
 	
 	/**
@@ -701,6 +703,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setRecSupplierList(List<ScLoiLoa> recSupplierList) {
 		this.recSupplierList = recSupplierList;
+	}
+
+	/**
+	 * @return the sourceId
+	 */
+	public Long getSourceId() {
+		return sourceId;
+	}
+
+	/**
+	 * @param sourceId the sourceId to set
+	 */
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
 	}
 	
 	

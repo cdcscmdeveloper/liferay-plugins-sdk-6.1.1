@@ -570,6 +570,24 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loilist-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>scLoiReview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>loi-review-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>scLoiSupplierResponse</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>loi-supplier-response-portlet</css-class-wrapper>
+	</portlet>
 
 	<portlet>
 		<portlet-name>scDpLoaList</portlet-name>
