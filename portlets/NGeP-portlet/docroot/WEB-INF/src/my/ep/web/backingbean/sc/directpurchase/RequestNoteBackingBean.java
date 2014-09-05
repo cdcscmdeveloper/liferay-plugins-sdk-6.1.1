@@ -1304,7 +1304,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					.retrieveOrgProfileListByOrgType(profileReqDTO);
 			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
 				requestNote.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
-				ptjNameEvent();
+				//ptjNameEvent();
 			}
 		}
 		
