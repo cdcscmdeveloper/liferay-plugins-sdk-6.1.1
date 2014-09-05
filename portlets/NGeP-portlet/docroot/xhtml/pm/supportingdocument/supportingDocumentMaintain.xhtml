@@ -22,7 +22,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</th>
 					<td>
-						<p:selectOneMenu id="somDocCategory" 
+						<p:selectOneMenu id="somDocCategory" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
 							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  >
 							<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions()}"/>

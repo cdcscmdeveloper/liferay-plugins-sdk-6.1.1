@@ -96,7 +96,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					    </f:facet>
 				    	<p:selectOneMenu styleClass="ppDropDownWidthM"
 							value="#{restrict.restrType.parameterId}">
-							<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
+							<f:selectItems  value="#{supportDocBackingBean.procurementTypeOptions()}"/>
 							<p:ajax event="change" update="somAppType"/>
 						</p:selectOneMenu>
 			        </p:column>  

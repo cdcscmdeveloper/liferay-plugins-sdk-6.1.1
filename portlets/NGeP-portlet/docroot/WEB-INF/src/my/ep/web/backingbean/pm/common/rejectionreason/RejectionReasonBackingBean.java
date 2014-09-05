@@ -66,7 +66,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	//Mapper for DDL
 	private static Map<Long, Object> reasonCategoryMapper;
 	//List for Paging
-	private IPagingDataModel<PmReasonDesc> pmReasonDescDataMode = new PmReasonPagingDataModel();
+	private IPagingDataModel<PmReasonDesc> pmReasonDescDataModel = new PmReasonPagingDataModel();
 
 	public void preLoading(){
 		log.info("preLoading");
@@ -934,23 +934,23 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 */
 	public void searchReason(){
 		log.info("searchReason - Start");
-		pmReasonDescDataMode.reloadData();
+		pmReasonDescDataModel.reloadData();
 		log.info("searchReason - End");
 		
 	}
 	
 	/**
-	 * @return the pmReasonDescDataMode
+	 * @return the pmReasonDescDataModel
 	 */
 	public IPagingDataModel<PmReasonDesc> getPmReasonDescDataModel() {
-		return pmReasonDescDataMode;
+		return pmReasonDescDataModel;
 	}
 
 	/**
-	 * @param pmReasonDescDataMode the pmReasonDescDataMode to set
+	 * @param pmReasonDescDataModel the pmReasonDescDataModel to set
 	 */
-	public void setPmReasonDataModel(IPagingDataModel<PmReasonDesc> pmReasonDescDataMode) {
-		this.pmReasonDescDataMode = pmReasonDescDataMode;
+	public void setPmReasonDataModel(IPagingDataModel<PmReasonDesc> pmReasonDescDataModel) {
+		this.pmReasonDescDataModel = pmReasonDescDataModel;
 	}
 	
 	/**

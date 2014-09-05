@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
@@ -32,10 +33,13 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> comTypeRestrictions;
 	private List <PmDocumentRestr> suppTypeRestrictions;
 	private List <PmDocumentRestr> categoryRestrictions;
+	private List <PmDocumentRestr> checkListRestrictions;
 	private List <PmDocumentRestr> deleteAppTypeRestrictions;
 	private List <PmDocumentRestr> deleteComTypeRestrictions;
 	private List <PmDocumentRestr> deleteSuppTypeRestrictions;
 	private List <PmDocumentRestr> deleteCategoryRestrictions;
+	private List <PmDocumentRestr> deleteCheckListRestrictions;	
+	private List <PmCategoryL3> selectedCategoryL3s;
 	
 	
 	/**
@@ -196,6 +200,50 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 			List<PmDocumentRestr> deleteCategoryRestrictions) {
 		this.deleteCategoryRestrictions = deleteCategoryRestrictions;
 	}
+
+	/**
+	 * @return the selectedCategoryL3s
+	 */
+	public List<PmCategoryL3> getSelectedCategoryL3s() {
+		return selectedCategoryL3s;
+	}
+
+	/**
+	 * @return the checkListRestrictions
+	 */
+	public List<PmDocumentRestr> getCheckListRestrictions() {
+		return checkListRestrictions;
+	}
+
+	/**
+	 * @param checkListRestrictions the checkListRestrictions to set
+	 */
+	public void setCheckListRestrictions(List<PmDocumentRestr> checkListRestrictions) {
+		this.checkListRestrictions = checkListRestrictions;
+	}
+
+	/**
+	 * @return the deleteCheckListRestrictions
+	 */
+	public List<PmDocumentRestr> getDeleteCheckListRestrictions() {
+		return deleteCheckListRestrictions;
+	}
+
+	/**
+	 * @param deleteCheckListRestrictions the deleteCheckListRestrictions to set
+	 */
+	public void setDeleteCheckListRestrictions(
+			List<PmDocumentRestr> deleteCheckListRestrictions) {
+		this.deleteCheckListRestrictions = deleteCheckListRestrictions;
+	}
+
+	/**
+	 * @param selectedCategoryL3s the selectedCategoryL3s to set
+	 */
+	public void setSelectedCategoryL3s(List<PmCategoryL3> selectedCategoryL3s) {
+		this.selectedCategoryL3s = selectedCategoryL3s;
+	}
+	
 	
 	
 

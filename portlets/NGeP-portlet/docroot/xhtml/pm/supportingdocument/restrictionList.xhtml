@@ -11,7 +11,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	<p:outputPanel id="opRestriction">
 		<p:panel id="pDocRestriction" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true" 
 		>
-			<p:tabView widgetVar="tvDocRestriction" id="tvDocRestriction" dynamic="false" cache="false" orientation="top">
+			<p:tabView widgetVar="tvDocRestriction" id="tvDocRestriction" dynamic="false" cache="false" orientation="top" 
+				rendered="#{supportDocBackingBean.managedBean.selectedDocument.byAppType 
+					or supportDocBackingBean.managedBean.selectedDocument.byCompType 
+					or supportDocBackingBean.managedBean.selectedDocument.bySupplierType
+					or supportDocBackingBean.managedBean.selectedDocument.byCategory}"> 
 				<!-- Application Type -->
 				<p:tab id="tAppType" title="#{lbl['lbl.pm.application.type']}" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.byAppType}">  
 					<br/>
@@ -28,8 +32,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
 						    </f:facet>
-					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
-								value="#{restrict.restrType.parameterId}">
+					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthL"
+								value="#{restrict.appTypeCode.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 								<p:ajax event="change" update="somAppType"/>
 							</p:selectOneMenu>
@@ -47,11 +51,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				   	<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
-							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_APP)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
-							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_APP)}"
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
 							immediate="true" 
 							/> 
 					</div>
@@ -73,8 +77,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
 						    </f:facet>
-					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
-								value="#{restrict.restrType.parameterId}">
+					    	<p:selectOneMenu id="somCompType" styleClass="ppDropDownWidthL"
+								value="#{restrict.companyTypeCode.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
@@ -91,11 +95,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			   		<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtComType"
-							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_COMP)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrComp)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbComDelete" value="#{lbl['lbl.btn.delete']}"  update="dtComType"
-							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_COMP)}"
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrComp)}"
 							immediate="true" /> 
 					</div>
 				</p:tab>
@@ -116,8 +120,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 						    </f:facet> 
-					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
-								value="#{restrict.restrType.parameterId}">
+					    	<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL"
+								value="#{restrict.supplierTypeCode.parameterId}">
 								<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
@@ -134,11 +138,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				   	<br/>
 			   		<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.add']}"   update="dtSuppType"
-							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.RESTR_SUPP)}"
+							action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrSupp)}"
 							immediate="true"/>
 						&#160;
 						<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.delete']}"  update="dtSuppType"
-							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.RESTR_SUPP)}"
+							action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrSupp)}"
 							immediate="true" />
 					</div>
 				</p:tab>
@@ -153,44 +157,50 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-
 				        <p:column headerText="#{lbl['lbl.pm.category.l1']}">  
-					    	category1
+					    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
 				        </p:column>  
 				        <p:column headerText="#{lbl['lbl.pm.category.l2']}">  
-					    	category2
+					    	#{restrict.pmCategoryL3.pmCategoryL2.categoryName}
 				        </p:column>  
 				        <p:column headerText="#{lbl['lbl.pm.category.l3']}">  
-					    	category3
+					    	#{restrict.pmCategoryL3.categoryName}
 				        </p:column>   
 				        <p:column>  
 				        	<f:facet name="header">
 						     	<h:outputText value="* " styleClass="mandatory" />
 						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
 						    </f:facet>
-					      	status
+				      	   <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+							</p:selectOneMenu>
 				        </p:column>  
 				   	</p:dataTable>
 				   	<br/>
 			   		<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtCat" oncomplete="dlCatDetModal.show()"
-							immediate="true"/>
-						&#160;
-						<p:commandButton value="#{lbl['lbl.btn.delete']}"  update="dtCat"
-							immediate="true"
-							/> 
+			   			<table style="float:right;">
+							<tr>
+								<td>
+									<!--  Popup Category Details -->
+									<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" styleClass="ppDisplayCalS" 
+						            	readonly="true" selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
+										headerText="#{lbl['lbl.pm.search.category']}" update=":form:tvDocRestriction:dtCat"
+										saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
+										postUpdateListener="supportDocBackingBean.updateCategoryL3(supportDocBackingBean.managedBean.selectedCategoryL3s)"
+										conditionField="recordStatus^1" 
+										/>
+								</td>
+								<td>
+									<p:commandButton value="#{lbl['lbl.btn.delete']}"  update="dtCat"
+										immediate="true"
+										/> 
+								</td>
+							</tr>
+						</table>
 					</div>
 				</p:tab>
 			</p:tabView>
 			<br/>
 		</p:panel>
 	</p:outputPanel>
-	
-	<!--  Dialog for Category Details -->
-	<p:dialog id="dlCatDet" header="#{lbl['lbl.pm.select.category']}" widgetVar="dlCatDetModal"
-    		 resizable="false" styleClass="ppDialogBigBg" dynamic="true">  
-    	<p:outputPanel id="opCatDet">
-	    	<ui:include src="categoryDetails.xhtml"/>
-    	</p:outputPanel>
-	</p:dialog>
 </ui:composition>

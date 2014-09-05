@@ -5,6 +5,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:panel id="pSupportDocSearch" header="#{lbl['lbl.pm.search.support.doc']}" toggleable="true">
 		<br/>
@@ -15,7 +16,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:selectOneMenu id="somDocCate" label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParam.parameterId}">
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.docCategoryParam}">
 						<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions()}"/>
 					</p:selectOneMenu>
 				</td>
@@ -32,7 +33,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone.zoneId}">
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.pmZone}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 						<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}"  
 							var="zone" itemValue="#{zone.zoneId}" itemLabel="#{zone.zoneName}" />
@@ -52,7 +53,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthM" 
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.suppTypeParam.parameterId}">
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.suppTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 					</p:selectOneMenu>
 				</td>
@@ -61,7 +62,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM" 
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.appTypeParam.parameterId}">
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.appTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 					</p:selectOneMenu>
 				</td>
@@ -72,7 +73,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</th>
 				<td>
 					<p:selectOneMenu id="somComType" styleClass="ppDropDownWidthM"
-						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.comTypeParam.parameterId}">
+						value="#{supportDocBackingBean.managedBean.supportDocSearchBean.comTypeParam}">
 						<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 					</p:selectOneMenu>
 				</td>
