@@ -1,0 +1,69 @@
+<html>
+<head>
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
+</head>
+<body>
+	<table width="100%">
+	<tr>
+		<td>
+			<br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+			<p>Mesyuarat Jawatankuasa Penilaian Harga telah diadakan seperti berikut:</p>
+		</td>
+	</tr>
+	<tr align='left'>
+		<td>
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+			<table class="table2" width='100%'>
+				<tr>
+					<td>Bil</td>
+					<td>Tempaty</td>
+					<td>Tarikh</td>
+					<td>Masa</td>
+				</tr>
+				#set( $count = 1 )
+				#foreach( $meetingDtls in $scQtMeetings )
+				<tr>
+					<td>$count</td>
+					<td>$meetingDtls.meetingLocation</td>
+					<td>$meetingDtls.meetDateStr</td>
+					<td>$meetingDtls.meetTimeStr</td>
+				</tr>
+				#set( $count = $count + 1 )
+				#end
+			</table>
+			</span>
+		</td>
+	</tr>
+	</table>
+</body>
+</html>

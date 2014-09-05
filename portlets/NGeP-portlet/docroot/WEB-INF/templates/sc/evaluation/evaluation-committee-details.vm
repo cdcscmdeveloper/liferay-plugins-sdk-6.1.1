@@ -1,0 +1,71 @@
+<html>
+<head>
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
+</head>
+<body>
+	<table width="100%">
+	<tr>
+		<td>
+			<br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+		</td>
+	</tr>
+	<tr align='left'>
+		<td>
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+			<table class="table2" width='100%'>
+				<tr>
+					<td>Nama</td>
+					<td>Jawatan</td>
+					<td>Gred</td>
+					<td>Kad Pengenalan No.</td>
+					<td>Jabatan </td>
+					<td>Peranan</td>
+				</tr>
+				#foreach( $committeeMember in $committeeActivities )
+				<tr>
+					<td>$committeeMember.scCommitteeMember.memberName</td>
+					<td>$committeeMember.scCommitteeMember.designation</td>
+					<td>$committeeMember.scCommitteeMember.grade</td>
+					<td>$committeeMember.scCommitteeMember.icPassport</td>
+					<td></td>
+					<td>$committeeMember.scCommitteeMember.memberRole.parameterCode</td>
+				</tr>
+				#end
+			</table>
+			</span>
+		</td>
+	</tr>
+	</table>
+</body>
+</html>
+	
