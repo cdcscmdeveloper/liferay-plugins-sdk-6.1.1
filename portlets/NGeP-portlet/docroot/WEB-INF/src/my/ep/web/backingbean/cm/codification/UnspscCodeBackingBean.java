@@ -165,8 +165,28 @@ public class UnspscCodeBackingBean extends
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
 
-			SupplierSearchResDTO smResDTO = supplierSearchSO
-					.retriveSupplierProfiles(supplierReqDTO);
+			// this block is to identify the request from Catalogue Admin or Supplier
+			if(isAllSupplier()) {
+				SupplierSearchResDTO smResDTO = supplierSearchSO
+						.retriveSupplierProfiles(supplierReqDTO);
+				
+				if (smResDTO.getResultBean().getResultList().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_721017);
+				}
+				log.info("getSmSupplier: "
+						+ smResDTO.getResultBean().getResultList().get(0));
+				this.getManagedBean()
+				.getRequestCode()
+				.setSmSupplier(
+						smResDTO.getResultBean().getResultList().get(0));
+				
+				reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
+				
+				log.info("normal unspsc request");
+			} else {
+				reqDTO.setProcessId(CDProcessNameConst.CA_UNSPSC_CODE_REQUEST_PROCESS_ID);
+				log.info("skip CA unspsc request");
+			}
 
 			// if(smResDTO.getResultBean().getResultList() == null){
 			// FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -175,18 +195,6 @@ public class UnspscCodeBackingBean extends
 			// "user's profile not found!"," "));
 			// return "unspscRequestForm";
 			// }
-
-			if (smResDTO.getResultBean().getResultList().isEmpty()) {
-				throw new EpException(MessageConst.ERROR_721017);
-			}
-
-			log.info("getSmSupplier: "
-					+ smResDTO.getResultBean().getResultList().get(0));
-
-			this.getManagedBean()
-					.getRequestCode()
-					.setSmSupplier(
-							smResDTO.getResultBean().getResultList().get(0));
 
 			if (this.getManagedBean().getRequestCode().getItemType()
 					.equals("S")) {// for services clear extension fileds
@@ -199,7 +207,7 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
-			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
+
 			reqDTO.setToken(token);
 			CodificationResDTO resDTO = null;
 
@@ -223,8 +231,7 @@ public class UnspscCodeBackingBean extends
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
-					System.out
-							.println("***************BB end*****************");
+					log.debug("***************BB end*****************");
 					// return "unspscRequestForm";
 					return "BPMtesting";
 
