@@ -164,7 +164,7 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.uom']}" /> <p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" /> <p:outputLabel value="*" styleClass="mandatory"/></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
 							headerText="UOM Lov" readonly="true"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
@@ -174,7 +174,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
+							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
@@ -183,11 +183,11 @@
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
+							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
+							readonly="#{!codificationBackingBean.productCode(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.cmUnspsc.unspscCode) or unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 				</tr>
 				<tr style="height: 30px;">
 
