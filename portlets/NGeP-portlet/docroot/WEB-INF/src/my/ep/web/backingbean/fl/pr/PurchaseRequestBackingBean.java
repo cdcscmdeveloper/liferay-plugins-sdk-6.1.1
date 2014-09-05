@@ -1101,6 +1101,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 
 				if(itemAddr.getZoneId() == null){
+					oriItemAddr.setOrderedQty(new BigDecimal(0));
 					flItemAddr.setOrderedQty(new BigDecimal(0));
 					throw new EpException("this item is not within the zone.");
 
@@ -1163,6 +1164,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
 				if(flItemAddr.getZoneId() == null){
+					oriItemAddr.setOrderedQty(new BigDecimal(0));
 					flItemAddr.setOrderedQty(new BigDecimal(0));
 					throw new EpException("this item is not within the zone.");
 				}
