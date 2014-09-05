@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
@@ -36,7 +37,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.evaluation.SummaryZoneBaen;
-import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -199,6 +199,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	//payload
 	private Object evaluationPayLoad;
+	
+	private List<ScQtEvaluationReport> scQtEvaluationReportList;
+	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
+	private ScQtEvaluationReport scQtEvaluationReport;
+	private String reportHeader;
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -1909,6 +1914,64 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtPRPAssetLiability(ScQtPRPAssetLiability scQtPRPAssetLiability) {
 		this.scQtPRPAssetLiability = scQtPRPAssetLiability;
+	}
+
+	/**
+	 * @return the scQtEvaluationReportList
+	 */
+	public List<ScQtEvaluationReport> getScQtEvaluationReportList() {
+		return scQtEvaluationReportList;
+	}
+
+	/**
+	 * @param scQtEvaluationReportList the scQtEvaluationReportList to set
+	 */
+	public void setScQtEvaluationReportList(
+			List<ScQtEvaluationReport> scQtEvaluationReportList) {
+		this.scQtEvaluationReportList = scQtEvaluationReportList;
+	}
+
+	/**
+	 * @return the selectedScQtEvaluationReports
+	 */
+	public List<ScQtEvaluationReport> getSelectedScQtEvaluationReports() {
+		return selectedScQtEvaluationReports;
+	}
+
+	/**
+	 * @param selectedScQtEvaluationReports the selectedScQtEvaluationReports to set
+	 */
+	public void setSelectedScQtEvaluationReports(
+			List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
+		this.selectedScQtEvaluationReports = selectedScQtEvaluationReports;
+	}
+
+	/**
+	 * @return the scQtEvaluationReport
+	 */
+	public ScQtEvaluationReport getScQtEvaluationReport() {
+		return scQtEvaluationReport;
+	}
+
+	/**
+	 * @param scQtEvaluationReport the scQtEvaluationReport to set
+	 */
+	public void setScQtEvaluationReport(ScQtEvaluationReport scQtEvaluationReport) {
+		this.scQtEvaluationReport = scQtEvaluationReport;
+	}
+
+	/**
+	 * @return the reportHeader
+	 */
+	public String getReportHeader() {
+		return reportHeader;
+	}
+
+	/**
+	 * @param reportHeader the reportHeader to set
+	 */
+	public void setReportHeader(String reportHeader) {
+		this.reportHeader = reportHeader;
 	}
 
 }
