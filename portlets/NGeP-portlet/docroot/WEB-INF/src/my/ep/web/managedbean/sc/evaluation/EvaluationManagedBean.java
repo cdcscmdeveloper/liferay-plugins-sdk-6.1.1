@@ -1447,20 +1447,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.techGovProposalScore = techGovProposalScore;
 	}
 
-	
-
-	
-	
-
-	
-
-
-
-	
-
-
-
-	
 
 	/**
 	 * @return the bankTotalAmt
