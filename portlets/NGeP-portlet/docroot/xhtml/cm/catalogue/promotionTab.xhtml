@@ -69,15 +69,16 @@
 
 			</p:column>
 			<p:column>
-				<p:commandLink id="promotionErrorLink" title="Error" update=":form"
-					oncomplete="errorDialog.show();"
-					actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
-					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">
-					
-
-
-					<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-				</p:commandLink>
+				<p:panel id="promotionErrorLink" styleClass="noBorders tr,noBorders td">
+					<p:commandLink title="Error" update=":form"
+						oncomplete="errorDialog.show();"
+						actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
+						rendered="#{!catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+					<p:graphicImage value="/css/images/design/icon_success.png" 
+						rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}"></p:graphicImage>
+				</p:panel>
 			</p:column>
 			
 			

@@ -40,6 +40,17 @@
 
 			<p:column>
 				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{standard.price}" size="10" disabled="#{standard.standardDisabled}" style="text-align:right">
+					<p:ajax event="keyup" update="zonalStanErrorLink" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</p:column>
+
+
+			<p:column>
+				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{standard.startDate}" showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}" disabled="#{standard.standardDisabled}"
@@ -63,17 +74,6 @@
 
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{standard.price}" size="10" disabled="#{standard.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup" update="zonalStanErrorLink" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</p:column>
-
-
-			<p:column>
-				<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
 
@@ -86,14 +86,19 @@
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 
-						<td style="text-align: right;"><p:commandLink
-								id="zonalStanErrorLink" title="Error" process="@this"
-								actionListener="#{catalogueBackingBean.updateZonalStandardErrorDialog(rowIndex)}"
-								update=":form" oncomplete="errorDialog.show();"
-								disabled="#{!(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">
-								<p:graphicImage
-									value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>
+						<td style="text-align: right;">
+							<p:panel id="zonalStanErrorLink" styleClass="noBorders tr,noBorders td">
+								<p:commandLink title="Error" process="@this"
+									actionListener="#{catalogueBackingBean.updateZonalStandardErrorDialog(rowIndex)}"
+									update=":form" oncomplete="errorDialog.show();"
+									rendered="#{(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">
+									<p:graphicImage
+										value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" 
+									rendered="#{!(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}"></p:graphicImage>
+							</p:panel>	
+						</td>
 					</tr>
 
 

@@ -38,6 +38,15 @@
 
 			<p:column>
 				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<p:inputText value="#{zPromotion.price}" size="10" disabled="#{zPromotion.standardDisabled}" style="text-align:right">
+					<p:ajax event="keyup" update="zonalPromoErrorLink" />
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{zPromotion.startDate}" showOn="button" disabled="#{zPromotion.standardDisabled}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
@@ -58,15 +67,7 @@
 					</p:calendar>
 
 			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{zPromotion.price}" size="10" disabled="#{zPromotion.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup" update="zonalPromoErrorLink" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</p:column>
+
 
 			<p:column>
 				<f:facet name="header">
@@ -81,14 +82,19 @@
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
 
-						<td style="text-align: right;"><p:commandLink
-								id="zonalPromoErrorLink" title="Error" process="@this"
-								actionListener="#{catalogueBackingBean.updateZonalPromoErrorDialog(rowIndex)}"
-								update=":form" oncomplete="errorDialog.show();"
-								disabled="#{!(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">
-								<p:graphicImage
-									value="/css/images/design/icon_error.png"></p:graphicImage>
-							</p:commandLink></td>
+						<td style="text-align: right;">
+							<p:panel id="zonalPromoErrorLink" styleClass="noBorders tr,noBorders td">
+								<p:commandLink title="Error" process="@this"
+									actionListener="#{catalogueBackingBean.updateZonalPromoErrorDialog(rowIndex)}"
+									update=":form" oncomplete="errorDialog.show();"
+									rendered="#{(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">
+									<p:graphicImage
+										value="/css/images/design/icon_error.png"></p:graphicImage>
+								</p:commandLink>
+								<p:graphicImage value="/css/images/design/icon_success.png" 
+									rendered="#{!(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}"></p:graphicImage>
+							</p:panel>
+						</td>
 					</tr>
 				</table>
 
