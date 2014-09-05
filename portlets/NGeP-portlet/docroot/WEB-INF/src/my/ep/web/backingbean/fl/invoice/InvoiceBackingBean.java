@@ -24,6 +24,7 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -43,6 +44,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
+import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -411,17 +414,29 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	public void calInvSummary() {
+		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		if (null == getManagedBean().getChargeLineItemRoot()) {
 			getManagedBean().populateChargeLineData();
 		}
 		TreeNode root = getManagedBean().getChargeLineItemRoot();
-		BigDecimal invoiceTotalAmount = new BigDecimal(0);
+		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
 		BigDecimal orderTotalAmount = new BigDecimal(0);
+		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		for (TreeNode childNode : root.getChildren()) {
 			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+			//check item whther is exempted for this supplier.
+			reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
+			reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
+			reqDTO.setOrgProfileId(data.getFlInvoice().getFlRequest().getSmSupplier().getSupplierId());
+			FeeExemptionResDTO resDTO = feeExemptionSO.checkForFeeException(reqDTO);
+			if(!resDTO.isFeeExemption()){
+				nonExemptedItemList.add(data.getInvAmt());
+			}
 			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
 			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
 		}
+		
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
 		
@@ -431,12 +446,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		} else {
 			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
-		
+		BigDecimal nonExemptedItem = new BigDecimal(0);
+				
+		for(BigDecimal normalItemAmt : nonExemptedItemList){
+			nonExemptedItem = nonExemptedItem.add(normalItemAmt);
+		}
 		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
 		BigDecimal percentage = new BigDecimal(100);
 		BigDecimal invMulty = new BigDecimal(0.0);
 		BigDecimal feeAmount = new BigDecimal(0.0);
-		invMulty = invoiceTotalAmount.multiply(serviceFee);
+		invMulty = nonExemptedItem.multiply(serviceFee);
 		feeAmount = invMulty.divide(percentage);
 		getManagedBean().getInvoice().setFeeAmt(feeAmount);
 		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
