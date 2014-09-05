@@ -19,9 +19,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.reg.type']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" value="#{'yet to map'}"/></td>
+				
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.roc.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"  value="#{'what is the diff btw regno and roc no'}"/></td> <!-- #{smSupplier.regNo} -->
 			</tr>
 
 			<tr>
@@ -41,7 +42,7 @@
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smSupplier.smMofAccounts[0].mofNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.bumi.status']}" /></td>
-				<td><p:inputText value="#{supplierProposalDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, smSupplier.bumi)}" disabled="true" readonly="true"
+				<td><p:inputText value="#{(smSupplier.bumi)? 'Yes' : 'No' }" disabled="true" readonly="true"
 						size="30" /></td>
 			</tr>
 
@@ -64,7 +65,7 @@
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.business.type']}" /></td>
-				<td><p:inputText value="Distributor/Manufacturer"
+				<td><p:inputText value="#{(smSupplier.manufacturer)? 'Manufacturer' : 'Distributor' }" 
 						disabled="true" readonly="true" size="30" /></td>
 
 			</tr>
@@ -73,27 +74,27 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.address']}" /></td>
 				<td><p:inputTextarea disabled="true" readonly="true" rows="5"
-						cols="30" autoResize="flase"
+						cols="30" autoResize="flase" value="#{supplierProposalDetailBackingBean.getFullAddress(smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress)}"
 						style="width: 171px;margin-bottom: 5px;" /></td>
 
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" value="#{smAppl.smCompanyBasic.phoneNo}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.fax.no']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" value="#{smAppl.smCompanyBasic.faxNo}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.email']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30" value="#{'yet to map'}" /></td>
 
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.web.site']}" /></td>
-				<td colspan="3"><p:inputText disabled="true" readonly="true"
+				<td colspan="3"><p:inputText disabled="true" readonly="true" value="#{smAppl.smCompanyBasic.website}"
 						size="153" /></td>
 
 			</tr>
@@ -106,37 +107,39 @@
 			<tr>
 				<td style="width: 200px;"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.office.type']}" /></td>
-				<td colspan="3"><p:inputText value="Business/Home"
-						disabled="true" readonly="true" size="30" /></td>
+				<td colspan="3"><p:inputText value="#{'need clarity about parameter type'}"
+						disabled="true" readonly="true" size="30" />
+						
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.ownership.type']}" /></td>
-				<td colspan="3"><p:inputText value="Owned/Rented"
+				<td colspan="3"><p:inputText value="#{(supplierProposalDetailBackingBean.managedBean.smCompanyBasic.ownershipType) ? 'Owned' : 'Rented'}"
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true">
-		<p:dataTable id="factory" rowIndexVar="index" >
-			<ac:paginator for="factory"></ac:paginator>
-			<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
+	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true"> 
+		<p:dataTable id="facility" rowIndexVar="index" value="#{smAppl.smFacilities}">
+			<ac:paginator for="facility"></ac:paginator>
 			<p:column headerText=" #{lbl['lbl.sc.spec.tech.name']}">
-				<p:inputText></p:inputText>
+				<p:outputLabel value="#{facility.facilityName}"></p:outputLabel>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}">
-				<p:inputText></p:inputText>
+				<p:outputLabel value="#{'need clarity about parameter type'}"></p:outputLabel>
+				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.ownership.type']}">
-				<p:inputText></p:inputText>
+			<p:outputLabel value="#{(facility.ownershipType) ? 'Owned' : 'Rented'}"></p:outputLabel>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.area.feat']}">
-				<p:inputText></p:inputText>
+			<p:outputLabel value="#{facility.areaSquareFeet}"></p:outputLabel>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
-				<p:inputText></p:inputText>
+				<p:outputLabel value="#{supplierProposalDetailBackingBean.getFullAddress(facility.smAddress)}"></p:outputLabel>
 			</p:column>
 
 		</p:dataTable>

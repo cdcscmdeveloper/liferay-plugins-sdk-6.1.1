@@ -9,25 +9,55 @@
 	<p:panel header="#{lbl['lbl.sc.spec.capital.status']}"
 		toggleable="true">
 		<table style="width: 100%">
-			<tr>
-				<td style="width: 170px;"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.auth.capital']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smAppl.smCompanyBasic.authorizedCapital}" /></td>
-				<td style="width: 160px;"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.paid.capital']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30"
-						value="#{smAppl.smCompanyBasic.paidUpCapital}" /></td>
-			</tr>
-			<tr>
+
+			<c:if
+				test="#{smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP}">
+				<tr>
+					<td style="width: 170px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.auth.capital']}" /></td>
+					<td><p:inputText disabled="true" readonly="true" size="30"
+							value="#{smAppl.smCompanyBasic.authorizedCapital}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+					<td style="width: 160px;"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.paid.capital']}" /></td>
+					<td><p:inputText disabled="true" readonly="true" size="30"
+							value="#{smAppl.smCompanyBasic.paidUpCapital}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+
+			</c:if>
+
+			<c:if
+				test="#{smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK or
+					smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK}">
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.accumulate.capital']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{smAppl.smCompanyBasic.paidUpCapital}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</c:if>
+
+			<c:if
+				test="#{smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI or smSupplier.businessType eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN}">
+
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.spec.accumulate.share']}" /></td>
-				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
-			</tr>
+				<td><p:inputText disabled="true" readonly="true" size="30"
+						value="#{smAppl.smCompanyBasic.paidUpCapital}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+
+			</c:if>
+
 		</table>
+
 		<p:panelGrid style="margin-top:20px;width:100%;">
 			<f:facet name="header">
 				<p:row>
@@ -41,84 +71,117 @@
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.bumiputra']}</p:column>
 				<p:column style="font-weight: bold;" />
 				<p:column colspan="1" style="font-weight: bold;">
-					<h:outputText value="#{smAppl.smCompanyBasic.bumiEquity}" />
+					<p:outputLabel value="#{smAppl.smCompanyBasic.bumiEquity}" />
 				</p:column>
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.bumiPercentage}" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.non.bumiputra']}</p:column>
 				<p:column style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.nonBumiEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.nonBumiPercentage}" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.equity.govt']}</p:column>
 				<p:column style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.govtUnitrustEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.govtUTPercent}" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.govt.equity']}</p:column>
 				<p:column style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.govtEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.govtEquityPercent}" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.local.company']}</p:column>
 				<p:column style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.localCompanyEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.localCompPercent}" />
+				</p:column>
 			</p:row>
 			<p:row>
 				<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.foreign.company']}</p:column>
 				<p:column style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
-				<p:column colspan="1" style="font-weight: bold;" />
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel
+						value="#{smAppl.smCompanyBasic.foreignCompanyEquity}" />
+				</p:column>
+				<p:column colspan="1" style="font-weight: bold;">
+					<p:outputLabel value="#{smAppl.smCompanyBasic.foriegnCompPercent}" />
+				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.capital.share.holders']}"
-		toggleable="true">
-		<p:dataTable id="sharePersonal" rowIndexVar="index" var="factory"
-			rowKey="#{factory}">
-			<ac:paginator for="sharePersonal" />
-			<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
-				<p:inputText />
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.spec.shareholder.company']}"
-		toggleable="true">
-		<p:dataTable id="shareCompany" rowIndexVar="index" var="factory"
-			rowKey="#{factory}">
-			<ac:paginator for="shareCompany" />
-			<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
-				<p:inputText />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
-				<p:inputText />
-			</p:column>
-		</p:dataTable>
-	</p:panel>
+
+	<c:if
+		test="#{smSupplier.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN or smSupplier.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI or smSupplier.businessType ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN}">
+
+		<p:panel header="#{lbl['lbl.sc.spec.capital.share.holders']}"
+			toggleable="true">
+			<p:dataTable id="sharePerson" rowIndexVar="index" var="sharePerson"
+				value="#{supplierProposalDetailBackingBean.managedBean.equityShareHolders}"
+				rowKey="sharePerson">
+				<ac:paginator for="sharePerson" />
+				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
+					<p:outputLabel value="#{sharePerson.name}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
+					<p:outputLabel value="#{sharePerson.identificationNo}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
+					<p:outputLabel
+						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? 'Yes' : 'No'}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+					<p:outputLabel value="#{sharePerson.shareAmt}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+					<p:outputLabel value="#{sharePerson.sharePercentage}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
+					<p:outputLabel value="#{sharePerson.designation}"></p:outputLabel>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.spec.shareholder.company']}"
+			toggleable="true">
+			<p:dataTable id="shareCompany" rowIndexVar="index" var="shareCompany"
+				value="#{smAppl.smEquityCompanies}" rowKey="#{shareCompany}">
+				<ac:paginator for="shareCompany" />
+				<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
+					<p:outputLabel value="#{shareCompany.companyName}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
+					<p:outputLabel value="#{shareCompany.regNo}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
+					<p:outputLabel value="#{shareCompany.shareAmt}"></p:outputLabel>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}">
+					<p:outputLabel value="#{shareCompany.sharePercentage}"></p:outputLabel>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+	</c:if>
+
 </ui:composition>
