@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -346,10 +348,12 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 	 */
 	public void priceTypeChangeListener() {
 		debugLogger("priceTypeChangeListener");
+		Map<ScSupplierItemPrice, ScSupplierItemPrice> itemPricesMap = new HashMap<ScSupplierItemPrice, ScSupplierItemPrice>();
+		List<ScSupplierItemPrice> ItemPriceList = new ArrayList<ScSupplierItemPrice>();
 		if(getManagedBean().getScRequestSupplierItem() != null && 
 				getManagedBean().getScRequestSupplierItem().getSupplierItemPrices() != null && getManagedBean().getScRequestSupplierItem().getSupplierItemPrices().size() >0 ){
 			ScRequestSupplierItem scRequestSupplierItem = new ScRequestSupplierItem();
-			List<ScSupplierItemPrice>	scSupplierItemPrices= new ArrayList<ScSupplierItemPrice>();
+			//List<ScSupplierItemPrice>	scSupplierItemPrices= new ArrayList<ScSupplierItemPrice>();
 			List<ScSupplierItemPrice>	supplierItemPrices = getManagedBean().getScRequestSupplierItem().getSupplierItemPrices();
 			if(supplierItemPrices != null && supplierItemPrices.size() >0){
 				for (ScSupplierItemPrice scSupplierItemPrice : supplierItemPrices) {
@@ -360,13 +364,22 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
                             
 							if(getManagedBean().getPriStatus().equalsIgnoreCase("Pending Supplier Response")){
 								scSupplierItemPrice.setItemPrice(null);	
+								//scSupplierItemPrices.add(scSupplierItemPrice);
+								itemPricesMap.put(scSupplierItemPrice, scSupplierItemPrice);
+							} else{
+								//scSupplierItemPrices.add(scSupplierItemPrice);
+								itemPricesMap.put(scSupplierItemPrice, scSupplierItemPrice);
+								
 							}
-							scSupplierItemPrices.add(scSupplierItemPrice);
+							
 						}
 					}
 				}
+				
+				  ItemPriceList  = new ArrayList(itemPricesMap.keySet());
+				 //getManagedBean().setSupplierItemPrices(ItemPriceList);
 			}
-			scRequestSupplierItem.setSupplierItemPrices(scSupplierItemPrices);
+			scRequestSupplierItem.setSupplierItemPrices(ItemPriceList);
 			getManagedBean().getScPrInquiry().setRequestSupplierItem(scRequestSupplierItem);
 		}
 	}
