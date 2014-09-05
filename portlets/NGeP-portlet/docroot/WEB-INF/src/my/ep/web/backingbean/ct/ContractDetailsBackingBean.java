@@ -319,6 +319,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		     this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 	         this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	    
+	         setBondRecordStatus(this.getManagedBean().getContractVer());
 	        if(this.getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
 		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());
 	  
@@ -702,78 +703,78 @@ public void ConstructSideTabMenu(){
 	}
 	
     public String saveContract(String action) throws Exception{
-	    IContractSO contractSO = null;
+	  
+    	IContractSO contractSO = null;
 	    Calendar cal = Calendar.getInstance();
     	log.info("BackingBean: Performance Testing  saveContract Function: Time taken to start >>>>"+ cal.getTime());
-		try{
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
-			}
-			
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-			
-            reqDTO.setToken(token);
-            reqDTO.setOutcome(action);
-            reqDTO.setTaskId(this.getManagedBean().getTaskId());
-            reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-            
-            if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
-				this.getManagedBean().getContractVer().getCtContractItems().clear();
-            }
-            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemList());
-            this.getManagedBean().getContractVer().getCtContractItems().addAll(this.getManagedBean().getCtItemServiceList());
-            
-            getZoneObjDetails();
-            if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-            	convertScheduleDate();
-            	convertProgressiveScheduleDate();
-            }
-            
-            reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
-            CtContractVer ctContractVer = this.getManagedBean().getContractVer();
-            if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
-            	ctContractVer.getCtContractValue().setSupplierName(this.getManagedBean().getSupplierCompanyName());
-            }
-            
-            if (ctContractVer.getCtContractValue().isAddressChange()) {
-            	ctContractVer.getCtContractValue().setSupplierAddress(this.getManagedBean().getSmAddress());
-            }
-            reqDTO.setCtContractVer(ctContractVer);
-            
-            reqDTO.setUserRole(getUserRole());
-            reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-		    reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-		    reqDTO.setUserMap(getManagedBean().getUserMap());
-		    reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 		
-		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
-		    if(resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				String messageId = MessageConst.INFO_700005;
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
-				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					messageId = MessageConst.INFO_700008;
-				}
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+    	try{
+			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				      if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) 
+				       	throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+			    }
+			
+			   ContractReqDTO reqDTO = new ContractReqDTO();
+			   reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			   reqDTO.setOutcome(action);
+			   reqDTO.setTaskId(getManagedBean().getTaskId());
+	           reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			   
+               if(getManagedBean().getContractVer().getCtContractItems().size() > 0) 
+				    getManagedBean().getContractVer().getCtContractItems().clear();
+            
+                    getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemList());
+                    getManagedBean().getContractVer().getCtContractItems().addAll(getManagedBean().getCtItemServiceList());
+            
+                getZoneObjDetails();
+                setBondRecordStatus(getManagedBean().getContractVer());
+                if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+                	 convertScheduleDate();
+            	    convertProgressiveScheduleDate();
+                }
+            
+                reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
+                CtContractVer ctContractVer = getManagedBean().getContractVer();
+                if(ctContractVer.getCtContractValue().isCompanyNameChange()) 
+            	      ctContractVer.getCtContractValue().setSupplierName(getManagedBean().getSupplierCompanyName());
+            
+                if(ctContractVer.getCtContractValue().isAddressChange()) 
+                	 ctContractVer.getCtContractValue().setSupplierAddress(getManagedBean().getSmAddress());
+            
+                reqDTO.setCtContractVer(ctContractVer);
+                reqDTO.setUserRole(getUserRole());
+                reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+		        reqDTO.setAttachments(getManagedBean().getAttachmentList());
+		        reqDTO.setUserMap(getManagedBean().getUserMap());
+		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			 
+			    contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
+	            ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+		      
+	            if(resDTO.isSuccessful()) {
+				    log.info("Record saved successfully");
+				    String messageId = MessageConst.INFO_700005;
+				    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					     messageId = MessageConst.INFO_700025;
+				    } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+				     	messageId = MessageConst.INFO_700009;
+				    } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					    messageId = MessageConst.INFO_700007;
+				    } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+					   messageId = MessageConst.INFO_700008;
+				    }
+				   
+				    FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else {
-					setValidateContractField(resDTO);
-				}
+			        if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+				     	renewSesionObject();
+					    return CommonUIConst.ACKNOWLEDGE_PAGE;
+				    } else {
+				    	setValidateContractField(resDTO);
+			    	}
 			  }
 		  } finally {
 			contractSO = null;
@@ -783,6 +784,18 @@ public void ConstructSideTabMenu(){
 		
 		return null;	
 	}
+    
+    public void setBondRecordStatus(CtContractVer contractVar){
+    	  if(contractVar.getCtPerformanceBonds().size() > 0) {
+    		  for(CtPerformanceBond bond : contractVar.getCtPerformanceBonds()){
+    			     if(bond.getRecordStatusFlg().intValue() == 1 &&  !bond.isRecordStatus() ){
+    			    	 bond.setRecordStatus(true);
+    			     } else if(bond.isRecordStatus() && bond.getRecordStatusFlg().intValue() != 1){
+    			    	 bond.setRecordStatusFlg(1);
+    			     }
+    		  }
+    	  }
+    }
     
     public void convertScheduleDate(){
     	try {
