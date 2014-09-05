@@ -152,6 +152,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setUserRole(getUserRole());
 			if(!(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))){
 				reqDTO.setPmUser(getManagedBean().getPmUser());
+				// dunno what's the purpose of the above code
+				if(reqDTO.getPmUser()==null) {
+					reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				}
 				if(null != getManagedBean().getInvoice().getSupplierInvoiceRef()){
 					getManagedBean().getInvoice().setSupplierInvoiceRef(getManagedBean().getInvoice().getSupplierInvoiceRef());
 				}
