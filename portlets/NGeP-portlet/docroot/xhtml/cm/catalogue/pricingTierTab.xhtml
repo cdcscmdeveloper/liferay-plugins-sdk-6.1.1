@@ -36,7 +36,7 @@
             </p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
+					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
 				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" style="text-align:right">
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
