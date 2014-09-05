@@ -8,7 +8,7 @@
 
 	<p:dialog id="newcommitteeapproverid" position="top"
 		header="New #{qTCommitteBackingBean.managedBean.tabTitle}"
-		dynamic="true" widgetVar="newcommitteeapprover" modal="true"
+		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="commiteeapprovermember">
 		<p:panel id="committeApproverPnlId">
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
@@ -227,12 +227,12 @@
 				<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 					process="@this, newCommitteeApproverProfile, committeApproverPnlId"
 					action="#{qTCommitteBackingBean.okCommitteeAction}" ajax="true"
-					icon="ui-icon-check" oncomplete="newcommitteeapprover.hide();"
+					icon="ui-icon-check" 
 					update="@(.scmemberdtls, committeApproverPnlId)" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					styleClass="apply_button" process="@this"
-					oncomplete="newcommitteeapprover.hide();" icon="ui-icon-cancel" />
+					oncomplete="newspecificationcommittee.hide();" icon="ui-icon-cancel" />
 			</div>
 		</p:panel>
 	</p:dialog>

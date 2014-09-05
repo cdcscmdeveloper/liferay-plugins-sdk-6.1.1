@@ -21,7 +21,7 @@
 			<p:commandButton id="committeeapproveradd"
 				value="#{lbl['lbl.so.addbtn']}" process="@this"
 				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
-				oncomplete="newcommitteeapprover.show();"
+				oncomplete="newspecificationcommittee.show();"
 				update="@(.commiteeapprovermember)" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
