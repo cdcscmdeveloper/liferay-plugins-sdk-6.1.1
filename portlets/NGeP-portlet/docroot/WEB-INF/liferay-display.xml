@@ -138,7 +138,6 @@
 			<portlet id="flShippingInstruction" />
 			<portlet id="flStopDelivery" />
 			<portlet id="flDebitAdjustmentNote" />
-			<portlet id="flAp59" />
 			<portlet id="flAp59Search" />
 			<portlet id="flRemoveFactoringComp" />
 		</category>

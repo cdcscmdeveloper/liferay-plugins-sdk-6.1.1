@@ -365,13 +365,6 @@
 		<css-class-wrapper>fldan-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>flAp59</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<css-class-wrapper>flAp59-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
 		<portlet-name>flAp59Search</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
