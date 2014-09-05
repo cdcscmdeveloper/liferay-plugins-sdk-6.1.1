@@ -13,66 +13,69 @@
 
 
 	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
 		
-		<ac:smPanel id="tt">
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
-				<ui:include src="step1ViewBumiAppln_CompanyInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
-				<ui:include src="step4ViewBumiAppln_PersonnelInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
-				<ui:include src="step2ViewBumiAppln_CaptialAndEquityStatusInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
-				<ui:include src="step3ViewBumiAppln_BankInfo.xhtml" />
-			</c:if>
-			<c:choose>
-				<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser}">
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
-						<ui:include src="step5ViewBumiAppln_SupportingDocumentsInfo.xhtml" />
-					</c:if>
-				</c:when>
-				<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
-						<ui:include
-							src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
-					</c:if>
-					<c:choose>
-						<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-								<ui:include
-									src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
-							</c:if>
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include
-									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
-							</c:if>
-						</c:when>
-						<c:otherwise>
-							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-								<ui:include
-									src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
-							</c:if>
-						</c:otherwise>
-					</c:choose>
-
-				</c:when>
-				<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
-						<ui:include
-							src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
-					</c:if>
-					<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-						<ui:include
-							src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
-					</c:if>
-				</c:when>
-				<c:otherwise>
-				</c:otherwise>
-			</c:choose>
-
-		</ac:smPanel>
+		<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
+			<ac:smPanel id="tt">
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+					<ui:include src="step1ViewBumiAppln_CompanyInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
+					<ui:include src="step4ViewBumiAppln_PersonnelInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+					<ui:include src="step2ViewBumiAppln_CaptialAndEquityStatusInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
+					<ui:include src="step3ViewBumiAppln_BankInfo.xhtml" />
+				</c:if>
+				<c:choose>
+					<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+							<ui:include src="step5ViewBumiAppln_SupportingDocumentsInfo.xhtml" />
+						</c:if>
+					</c:when>
+					<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+							<ui:include
+								src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
+						</c:if>
+						<c:choose>
+							<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+									<ui:include
+										src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+								</c:if>
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+									<ui:include
+										src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+									<ui:include
+										src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+								</c:if>
+							</c:otherwise>
+						</c:choose>
+	
+					</c:when>
+					<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+							<ui:include
+								src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+						</c:if>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+							<ui:include
+								src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+						</c:if>
+					</c:when>
+					<c:otherwise>
+					</c:otherwise>
+				</c:choose>
+	
+			</ac:smPanel>
+		</c:if>
 
 	</ui:define>
 </ui:composition>

@@ -59,6 +59,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSmApplManagedBean;
@@ -94,6 +95,7 @@ public class ViewSmApplBackingBean extends
 		if (reloadPreviousApplication()) {
 			initPreviousApplication();
 		}
+		constructMessage();
 	}
 
 	// temp change for testing
@@ -128,7 +130,9 @@ public class ViewSmApplBackingBean extends
 			setPersonnelInfoCalculationSummary();
 			setDefaultApproverReviewSection();
 			retrievePmCertBodyList();
-
+			getManagedBean().setReviewApplicationExist(true);
+		} catch (NullPointerException ne) {
+			getManagedBean().setReviewApplicationExist(false);
 		} finally {
 			applRevisionSO = null;
 		}
@@ -416,13 +420,14 @@ public class ViewSmApplBackingBean extends
 		switch (getManagedBean().getSelectedMachine().getPurchaseMethod()) {
 		case "A":
 			getManagedBean().setSelectedMachineryPurchaseMethod(
-					ResourceBundleUtils.getMessage("lbl.sm.machine.cash", 1,
-							locale));
+					ResourceBundleUtils.getMessage("lbl.sm.machine.cash",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		case "B":
 			getManagedBean().setSelectedMachineryPurchaseMethod(
 					ResourceBundleUtils.getMessage(
-							"lbl.sm.machine.credit.card", 1, locale));
+							"lbl.sm.machine.credit.card",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		case "C":
 			getManagedBean().setSelectedMachineryPurchaseMethod(
@@ -432,7 +437,8 @@ public class ViewSmApplBackingBean extends
 		case "D":
 			getManagedBean().setSelectedMachineryPurchaseMethod(
 					ResourceBundleUtils.getMessage(
-							"lbl.sm.machine.online.banking", 1, locale));
+							"lbl.sm.machine.online.banking",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		default:
 			break;
@@ -615,18 +621,20 @@ public class ViewSmApplBackingBean extends
 		switch (getManagedBean().getSelectedBank().getAccountPurpose()) {
 		case "P":
 			getManagedBean().setSelectedBankAccountPurpose(
-					ResourceBundleUtils.getMessage("lbl.sm.paymentLbl", 1,
-							locale));
+					ResourceBundleUtils.getMessage("lbl.sm.paymentLbl",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		case "R":
 			getManagedBean().setSelectedBankAccountPurpose(
-					ResourceBundleUtils.getMessage("lbl.sm.bankDtls.registration", 1,
-							locale));
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.bankDtls.registration",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		case "B":
 			getManagedBean().setSelectedBankAccountPurpose(
-					ResourceBundleUtils.getMessage("lbl.sm.bankDtls.both.regandpay", 1,
-							locale));
+					ResourceBundleUtils.getMessage(
+							"lbl.sm.bankDtls.both.regandpay",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		default:
 			break;
@@ -982,14 +990,14 @@ public class ViewSmApplBackingBean extends
 		String[] params = { "" };
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.norm",
-					1, locale);
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else {
 			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.spl",
-					1, locale);
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
 		getManagedBean().setCatTypeConfirm(
-				ResourceBundleUtils.getMessage("lbl.sm.catCodeNote", params, 1,
-						locale));
+				ResourceBundleUtils.getMessage("lbl.sm.catCodeNote", params,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 	}
 
 	// temp added for testing
@@ -1051,12 +1059,14 @@ public class ViewSmApplBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			getManagedBean().setPersonnelInfoHeader(
 					ResourceBundleUtils.getMessage(
-							"lbl.sm.equity.owner.information", 1, locale));
+							"lbl.sm.equity.owner.information",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		} else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			getManagedBean().setPersonnelInfoHeader(
 					ResourceBundleUtils.getMessage(
-							"lbl.sm.personnel.information", 1, locale));
+							"lbl.sm.personnel.information",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 		}
 
 		if (shareHolderBean.getEpRole() != null
@@ -1318,6 +1328,22 @@ public class ViewSmApplBackingBean extends
 	public void retrieveBusinessTypeList() {
 		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
 		this.getManagedBean().setBusinessTypeLs(selectItems);
+	}
+	
+	private void constructMessage(){
+		if(!getManagedBean().isReviewApplicationExist()){
+			if(FacesContext.getCurrentInstance().getMessageList().isEmpty()){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_700054,
+										new String[] { getManagedBean()
+												.getApplicationNoParam() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+			RequestContext.getCurrentInstance().update("form:messages");
+		}
 	}
 
 	public StreamedContent getFile() {

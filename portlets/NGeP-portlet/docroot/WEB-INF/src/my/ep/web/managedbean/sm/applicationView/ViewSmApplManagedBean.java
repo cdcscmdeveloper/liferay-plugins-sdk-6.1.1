@@ -94,6 +94,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private boolean supplierUser;
 	private boolean approverUser;
 	private boolean reviewSiteVisit;
+	private boolean reviewApplicationExist;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -151,6 +152,7 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 		apprvrSecReview = new SmApplSectionReview();
 		poSecReview = new SmApplSectionReview();
 		equiCompCapTotal = new BigDecimal(0);
+		setReviewApplicationExist(true);
 		
 
 		shareHolderMailAddr = new SmPersonnelAddress();
@@ -779,5 +781,13 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	public void setSelectedMachineryPurchaseMethod(
 			String selectedMachineryPurchaseMethod) {
 		this.selectedMachineryPurchaseMethod = selectedMachineryPurchaseMethod;
+	}
+
+	public boolean isReviewApplicationExist() {
+		return reviewApplicationExist;
+	}
+
+	public void setReviewApplicationExist(boolean reviewApplicationExist) {
+		this.reviewApplicationExist = reviewApplicationExist;
 	}
 }

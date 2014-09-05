@@ -13,27 +13,29 @@
 
 
 	<ui:define name="contentSection">
-
-		<ac:smPanel id="tt">
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
-				<ui:include src="step1ViewUpdateMof_CompanyInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
-				<ui:include src="step2ViewUpdateMof_BranchCompanyInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
-				<ui:include src="step4ViewUpdateMof_PersonnelInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
-				<ui:include src="step3ViewUpdateMof_CaptialAndEquityStatusInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
-				<ui:include src="step5ViewUpdateMof_BankInfo.xhtml" />
-			</c:if>
-			<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-				<ui:include src="step6ViewUpdateMof_SupportingDocumentsInfo.xhtml" />
-			</c:if>
-		</ac:smPanel>
-
+		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+		
+		<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
+			<ac:smPanel id="tt">
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+					<ui:include src="step1ViewUpdateMof_CompanyInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
+					<ui:include src="step2ViewUpdateMof_BranchCompanyInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+					<ui:include src="step4ViewUpdateMof_PersonnelInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
+					<ui:include src="step3ViewUpdateMof_CaptialAndEquityStatusInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+					<ui:include src="step5ViewUpdateMof_BankInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+					<ui:include src="step6ViewUpdateMof_SupportingDocumentsInfo.xhtml" />
+				</c:if>
+			</ac:smPanel>
+		</c:if>
 	</ui:define>
 </ui:composition>
