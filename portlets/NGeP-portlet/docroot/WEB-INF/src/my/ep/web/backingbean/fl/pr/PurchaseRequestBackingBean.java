@@ -1450,6 +1450,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
 		//retrieveCountryList();
+		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManulaAddress(flDelAddress);
 		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision()==null) {
 			getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
