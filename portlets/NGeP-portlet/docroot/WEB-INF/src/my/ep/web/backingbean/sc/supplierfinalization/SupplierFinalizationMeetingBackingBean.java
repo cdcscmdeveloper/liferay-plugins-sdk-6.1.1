@@ -22,11 +22,13 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -36,6 +38,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -46,8 +50,8 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -72,7 +76,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.sc.loa.LOADetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -99,7 +102,7 @@ import org.primefaces.event.SelectEvent;
 @RequestScoped
 public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
-	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
+	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -108,6 +111,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		log.info(message);
 	}
 	
+	//Temporary
 	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
 	
 	public SupplierFinalizationMeetingBackingBean() {		
@@ -116,6 +120,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		}
 		if (this.getManagedBean().getCommitteMember() == null) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+			
+			preRenderView();
 		}
 	}
 	
@@ -123,9 +129,10 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		debugLogger("preRenderView");
 
 		try {
-			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
-
-			Long qtId = Long.valueOf(dataType.getQtId());
+			//SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			//Long qtId = Long.valueOf(dataType.getQtId());
+			
+			Long qtId = 2347L;
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
 
@@ -136,7 +143,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		}
 	}
 
-	//Start Header - QT Details
+//Start Header - QT Details
 	public void retriveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
@@ -154,10 +161,10 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			qtDetailSO = null;
 		}
 	}
-	//End Header - QT Details
+//End Header - QT Details
 	
 	
-	//Start Meeting Details
+//Start Meeting Details
 	public void retriveMeetingDetails(Long qtId) {
 		IQTMeetingSO qtMeetingSO;
 		try {
@@ -175,9 +182,22 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			ScCommittee scCommittee = resDTO.getQtCommittee().getScCommittee();
 			if(scCommittee != null){
 				if (scCommittee.getScCommitteeMembers() != null && !scCommittee.getScCommitteeMembers().isEmpty()) {
-					//getManagedBean().setCommitteeMemberActivity(resDTO.getCommitteMembers());
 					getManagedBean().setCommitteeMembersList(scCommittee.getScCommitteeMembers());
+					
+					List<ScCommitteeMember> list = scCommittee.getScCommitteeMembers();
+					getManagedBean().setOriginalCommitteeMembersList(new ArrayList<ScCommitteeMember>());
+					getManagedBean().getOriginalCommitteeMembersList().addAll(list);
 				}
+				/*}else{
+					getManagedBean().setCommitteeMembersList(new ArrayList<ScCommitteeMember>());
+					
+					//auto populate chairperson n secretary
+					ScCommitteeMember member = getSecretaryChaipersonList(RoleCode.PBA_CHAIRPERSON.value(), getManagedBean().getScQt(), scCommittee);
+					getManagedBean().getCommitteeMembersList().add(member);
+					
+					ScCommitteeMember member2 = getSecretaryChaipersonList(RoleCode.PBA_SECRETARY.value(), getManagedBean().getScQt(), scCommittee);
+					getManagedBean().getCommitteeMembersList().add(member2);
+				}*/
 			}
 
 			List<ScQtCommitteRemarks> qtRemarkList = new ArrayList<ScQtCommitteRemarks>();
@@ -208,7 +228,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		remark.setCreatedUser(facesScopes.getUserSessionBean());
 		remark.setScQtCommittee(getManagedBean().getScQtCommittee());
 		
-		PmStatus status = getRetrieveStatusById(QTStatusConst.ACTIVE_STATUS);
+		PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
 		remark.setPmStatus(status);
 		
 		if(getManagedBean().getQtCommitteeRemarks() == null){
@@ -228,7 +248,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			meeting.setQtCommittee(this.getManagedBean().getScQtCommittee());
 			setUserDetails(meeting);
 
-			PmStatus status = getRetrieveStatusById(QTStatusConst.ACTIVE_STATUS);
+			PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
 			meeting.setMeetingStatus(status);
 			
 			meetingList.add(meeting);
@@ -236,19 +256,6 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		} finally{
 			
 		}
-	}
-	
-	public void selectMeetingEvent(SelectEvent event) {
-		ScQtMeeting scQtMeeting = (ScQtMeeting) event.getObject();
-		if(getManagedBean().getMeetingMultiSelect() == null){
-			getManagedBean().setMeetingMultiSelect(new ArrayList<ScQtMeeting>());
-		}
-		getManagedBean().getMeetingMultiSelect().add(scQtMeeting);
-	}
-	
-	public void unSelectMeetingEvent(SelectEvent event) {
-		ScQtMeeting scQtMeeting = (ScQtMeeting) event.getObject();
-		getManagedBean().getMeetingMultiSelect().remove(scQtMeeting);
 	}
 	
 	public void meetingDeleteAction() {
@@ -269,6 +276,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	
 //Start - Committee Details
 	public void addPopupAction() {
+		committeeResetAction();
+		
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(SelectionType.Existing.value());
@@ -287,15 +296,67 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		this.getManagedBean().setSelections(selectionTypes);
 	}
 	
-	public SelectItem[] getRoleTypeDropdownValues(String committeeRole) {
+	public SelectItem[] getMemberRoleTypeDropdownValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 		
 		searchBean.getDataFilterBeans().add( new SearchFilterBean("pmParameter.parameterCode", SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
 		
-		SelectItem[] items = getDropdownValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 		return items;
+	}
+	
+	public SelectItem[] getRepresentativeTypeDropdownValues(){
+		SelectItem[] items = null;
+		
+		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
+				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
+			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(committeeType)) {
+			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A.equalsIgnoreCase(committeeType)) {
+			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBA);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equalsIgnoreCase(committeeType)) {
+			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH);
+		
+		} else if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK.equalsIgnoreCase(committeeType)) {
+			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK);
+		}
+		return items;
+	}
+	
+public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String code) {
+		
+		List<ScCommitteeMember> committeeMemberList = getManagedBean().getCommitteeMembersList();
+		for(ScCommitteeMember member : committeeMemberList){
+			if(scCommitteeMember.getPmUser().equals(member.getPmUser())){
+				String parameterType = "";
+				
+				if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
+					|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
+					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_QC;
+					
+				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBA;
+					
+				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
+					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_PBB;
+					
+				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBH;
+					
+				}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+					parameterType = ParameterTypeConst.REPRESENTATIVE_TYPE_FPBK;
+				}
+				
+				PmParameter pmParameter = getPmParameterByTypeAndCode(parameterType, code);
+				member.setRepresentativeType(pmParameter);
+			}
+		}
 	}
 	
 	public void userSelectionAction(AjaxBehaviorEvent event) {
@@ -312,17 +373,39 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		// this.getManagedBean().setCommitteMember(committeeMember);
 		if (SelectionType.Existing.value().equalsIgnoreCase(getManagedBean().getCommitteMember().getUserSelection())) {
 			committeeMember.setMemberRole(null);
-			// getManagedBean().getCommitteMember().setExternalUser(true);
-
 		} else if (SelectionType.New.value().equalsIgnoreCase(getManagedBean().getCommitteMember().getUserSelection())) {
 			committeeMember.setMemberRole(new PmParameter());
-			// getManagedBean().getCommitteMember().setExternalUser(true);
 		}
 		this.getManagedBean().setCommitteMember(committeeMember);
 	}
 	
 	public void committeeSearchAction() {
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+		
+		SearchFilterBean ministrySearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+		ministrySearchBean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+		ministrySearchBean.setSearchValue(getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId());
+		searchBean.getDataFilterBeans().add(ministrySearchBean);
+		
+		SearchFilterBean roleCodeSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+		roleCodeSearchBean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+		
+		String roleCode = "";
+		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
+			|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
+			roleCode = RoleCode.QC_MEMBER.value();
+		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
+			roleCode = RoleCode.PBA_MEMBER.value();
+		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
+			roleCode = RoleCode.PBB_MEMBER.value();
+		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
+			roleCode = RoleCode.FPB_MEMBER.value();
+		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
+			roleCode = RoleCode.FPB_MEMBER.value();
+		}
+		roleCodeSearchBean.setSearchValue(roleCode);
+		searchBean.getDataFilterBeans().add(roleCodeSearchBean);
+		
 		if (getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())) {
 			SearchFilterBean usernameSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			usernameSearchBean.setSearchField("userName");
@@ -351,25 +434,54 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			UserResDTO resDTO = userSO.searchUserProfile(userReqDTO);
 			if (resDTO != null) {
 				this.getManagedBean().setExternalUsers(resDTO.getUserResultBean().getResultList());
-				for (PmUser user : this.getManagedBean().getExternalUsers()) {
-					if (user.getMemberRole() == null) {
-						user.setMemberRole(new PmParameter());
-					}
-					if (user.isPMP()) {
-						PmParameter memberRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-						user.setMemberRole(memberRole);
-					}
-				}
 			}
 		} finally {
 			userSO = null;
 		}
 	}
 	
+	/*private ScCommitteeMember getSecretaryChaipersonList(String roleCode, ScQt scQt, ScCommittee scCommittee) {
+		IUserSO iUserSO = null;
+		try {
+			iUserSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setRoleCode(roleCode);
+			reqDTO.setOrgProfileId(scQt.getPmOrgProfile().getOrgProfileId());
+			
+			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(reqDTO);
+			PmUser pmUser = userResDTO.getUserList().get(0);
+			
+			ScCommitteeMember member = new ScCommitteeMember();
+			member.setMemberName(pmUser.getUserName());
+			member.setIcPassport(pmUser.getIdentificationNo());
+			member.setGrade(pmUser.getGrade());
+			member.setDesignation(pmUser.getDesignation());
+			member.setPNP(pmUser.isPMP());
+			member.setEmail(pmUser.getEmail());
+			if(roleCode.equals(RoleCode.PBA_CHAIRPERSON.value())){
+				roleCode = ParameterConst.COMMITTEE_ROLE_CHAIRPERSON;
+			}else{
+				roleCode = ParameterConst.COMMITTEE_ROLE_SECRETARY;
+			}
+			member.setMemberRole(getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, roleCode));
+			member.setAccessRight("E");
+			member.setScCommittee(scCommittee);
+			setUserDetails(member);
+			member.setPmOrgProfile(scQt.getPmOrgProfile());
+			member.setPmUser(pmUser);
+			
+			return member;
+		} finally {
+			iUserSO = null;
+		}
+	}*/
+	
 	public void committeeResetAction() {
 		this.getManagedBean().setName(null);
 		this.getManagedBean().setIdentificationType(null);
 		this.getManagedBean().setIdentificationNo(null);
+		this.getManagedBean().setExternalUsers(null);
 	}
 
 	public void committeeOkAction() {
@@ -382,13 +494,11 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			ScCommitteeMember scCommitteeMember = addNewUser();
 			if(scCommitteeMember != null){
 				committeeMemberList.add(scCommitteeMember);
-				getManagedBean().setCommiteeChanged(true);
 			}
 		} else {
 			List<ScCommitteeMember> memberList = addExistingUser();
 			if(memberList != null){
 				committeeMemberList.addAll(memberList);
-				getManagedBean().setCommiteeChanged(true);
 			}
 		}
 		this.getManagedBean().setCommitteeMembersList(committeeMemberList);
@@ -397,10 +507,15 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		RequestContext.getCurrentInstance().execute("newMemberWidgetVar.hide()");
 	}
 	
+	public void committeeCancelAction() {
+		committeeResetAction();
+		RequestContext.getCurrentInstance().execute("newMemberWidgetVar.hide()");
+	}
+	
 	public void committeeDeleteAction() {
 		try {
 			List<ScCommitteeMember> committeeList = getManagedBean().getCommitteeMembersList();
-			List<ScCommitteeMember> selectedCommitteeList = getManagedBean().getCloneCommitteMembersSelect();
+			List<ScCommitteeMember> selectedCommitteeList = getManagedBean().getSelectedCommitteeMembersList();
 			if (committeeList.size() == selectedCommitteeList.size()) {
 				committeeList.clear();
 			} else {
@@ -413,7 +528,6 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	}
 	
 	private ScCommitteeMember addNewUser (){
-		//ScCommittee scCommittee = this.getManagedBean().getScCommittee();
 		ScQt scQt = this.getManagedBean().getScQt();
 		
 		ScCommitteeMember member = new ScCommitteeMember();
@@ -425,17 +539,11 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		member.setEmail(getManagedBean().getCommitteMember().getEmail());
 		member.setMemberRole(getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER));
 		member.setAccessRight("E");
-		member.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
+		member.setScCommittee(getManagedBean().getScQtCommittee().getScCommittee());
 		setUserDetails(member);
 		member.setPmOrgProfile(scQt.getPmOrgProfile());
-		//member.setScCommittee(scCommittee);
-
-		/*PmUser user = userDetails(member);
+		PmUser user = userDetails(member);
 		member.setPmUser(user);
-		
-		ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-		activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-		activity.setScCommitteeMember(member);*/
 		
 		return member;
 	}
@@ -454,11 +562,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		// Identification Code
 		PmParameter identificationCode = getPmParameterByTypeAndCode(ParameterTypeConst.IDENTIFICATION_TYPES, ParameterConst.IDENTIFICATION_TYPES_IC);
 		user.setIdentificationCode(identificationCode);
-		// pmUser.setPmAddressTypes(null);
-		
-		PmCountry pmCountry = new PmCountry();
-		pmCountry.setCountryId(1L);//FIXME
-		user.setPmCountry(pmCountry);
+		user.setPmAddressTypes(null);
+		user.setPmCountry(getDefaultCountry());
 		
 		// User Notification
 		List<PmUserNotification> pmUserNotifications = userNotificationDetails(user);
@@ -476,6 +581,20 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		//Save new Member
 		PmUser newUser = saveNewUser(user);
 		return newUser;
+	}
+	
+	private PmCountry getDefaultCountry(){
+		ICountrySO countrySO = null;
+		try {
+			countrySO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySO.retrieveCountryByCode(countryReqDTo);
+
+			return countryResDTO.getPmCountry();
+		} finally {
+			countrySO = null;
+		}
 	}
 	
 	private List<PmUserNotification> userNotificationDetails(PmUser user){
@@ -560,22 +679,13 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			committeeMember.setPNP(user.isPMP());
 			committeeMember.setPmUser(user);
 			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-			
-			//committeeMember.setMemberRole(getManagedBean().getRoleName());
-			/*if(user.getMemberRole() != null){
-				PmParameter pmParameter = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, user.getMemberRole().getParameterCode());
-				committeeMember.setMemberRole(pmParameter);	
-			}*/
 			PmParameter pmParameter = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
-			committeeMember.setMemberRole(pmParameter);
+			committeeMember.setMemberRole(pmParameter);	
+			committeeMember.setRepresentativeType(new PmParameter());
 			committeeMember.setAccessRight("E");
 			committeeMember.setScCommittee(null);
 			setUserDetails(committeeMember);
-			// committeeMember.setScCommittee(scCommittee);
 			
-			/*ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-			activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-			activity.setScCommitteeMember(committeeMember);*/
 			memberList.add(committeeMember);
 		}
 		return memberList;
@@ -653,12 +763,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				scCommitteeMember.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
 				setUserDetails(scCommitteeMember);
 
-				/*ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-				activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-				activity.setScCommitteeMember(scCommitteeMember);
-				localList.add(activity);*/
 				localList.add(scCommitteeMember);
-				getManagedBean().setCommiteeChanged(true);
 			}
 		} else {
 			for (ScCommitteeMember committee : committeeMemberList) {
@@ -671,12 +776,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 						members.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
 						setUserDetails(members);
 
-						/*ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-						activity.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-						activity.setScCommitteeMember(members);
-						localList.add(activity);*/
 						localList.add(members);
-						getManagedBean().setCommiteeChanged(true);
 					}
 				}
 			}
@@ -793,34 +893,70 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		try {
 			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
 			
-			ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
-			List<ScCommitteeMember> scCommitteeMemberList = this.getManagedBean().getCommitteeMembersList();
+			MeetingReqDTO reqDTO = meetingDtlsInfo();
+			validateMeetingDtlsInfo(reqDTO);
+						
+			qtMeetingSO.saveQTDtl(reqDTO);
+			renewSessionAndRetrieve();
 			
-			if(getManagedBean().isCommiteeChanged()){
-				//create new committee and suspend old one
-				ScCommittee oldScCommittee = scQtCommittee.getScCommittee();
-				oldScCommittee.setRecordStatus(false);
-				
-				ScCommittee newScCommittee = new ScCommittee();
-				newScCommittee.setCommitteeType(oldScCommittee.getCommitteeType());
-				PmStatus status = new PmStatus();
-				status.setStatusId(QTStatusConst.CM_COMPLETE);
-				newScCommittee.setCommitteStatus(status);
-				setUserDetails(newScCommittee);
-				
-				for(ScCommitteeMember member : scCommitteeMemberList){
-					member.setCommitteeMemberId(null);
-					member.setScCommittee(newScCommittee);
-				}
-				
-				newScCommittee.setScCommitteeMembers(scCommitteeMemberList);
-				scQtCommittee.setScCommittee(newScCommittee);
-				
-			}
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+			String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+		} finally {
+			qtMeetingSO = null;
+		}
+	}
+	
+	private void renewSessionAndRetrieve(){
+		
+		ScQt scQt = getManagedBean().getScQt();
+		String taskId = this.getManagedBean().getTaskId();
+		String[] outComes = this.getManagedBean().getOutComes();
+		String processName = this.getManagedBean().getProcessName();
+		
+		renewSesionObject();
+		
+		this.getManagedBean().setScQt(scQt);
+		retriveMeetingDetails(scQt.getQtId());
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setOutComes(outComes);
+		this.getManagedBean().setProcessName(processName);
+	}
+
+	public void submitAction(String outCome) {
+		
+		IQTMeetingSO meetingSO = null;
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			 
+			MeetingReqDTO reqDTO = meetingDtlsInfo();
+			validateMeetingDtlsInfo(reqDTO);
 			
-			/*if (scCommitteeMemberList != null && !scCommitteeMemberList.isEmpty()) {
-				scQtCommittee.setCommitteeActivities(committeeActivities);
-			}*/
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setToken(ctxToken);
+			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+			reqDTO.setOutcome(outCome);
+			
+			MeetingResDTO resDTO = meetingSO.updateBPMAction(reqDTO);
+			renewSesionObject();
+			
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+			String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
+			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+			
+		} finally {
+			meetingSO = null;
+		}
+	}
+	
+	private MeetingReqDTO meetingDtlsInfo(){
+		MeetingReqDTO reqDTO = new MeetingReqDTO();
+		try {
+			ScQtCommittee scQtCommittee = isCommitteeChanged();
 			
 			List<ScQtMeeting> meetingList = this.getManagedBean().getScQtMeetings();
 			if (meetingList != null && !meetingList.isEmpty()) {
@@ -841,60 +977,69 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			
-			MeetingReqDTO metReqDtO = new MeetingReqDTO();
-			metReqDtO.setScQtCommitte(scQtCommittee);
-			
-			qtMeetingSO.saveQTDtl(metReqDtO);
-			
-			renewSessionAndRetrieve();
-			FacesContext.getCurrentInstance().addMessage( null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Finalization Committee Coordinate Meeting Saved Successfully", ""));
+			reqDTO.setScQtCommitte(scQtCommittee);
+			return reqDTO;
 		} finally {
-			qtMeetingSO = null;
+
 		}
 	}
 	
-	private void renewSessionAndRetrieve(){
+	private ScQtCommittee isCommitteeChanged(){
+		boolean committeeChanged = false;
+		ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee();
+		List<ScCommitteeMember> scCommitteeMemberList = this.getManagedBean().getCommitteeMembersList();
 		
-		ScQt scQt = getManagedBean().getScQt();
-		String taskId = this.getManagedBean().getTaskId();
-		String[] outComes = this.getManagedBean().getOutComes();
-		String processName = this.getManagedBean().getProcessName();
+		//check if got members changes
+		List<ScCommitteeMember> originalList = getManagedBean().getOriginalCommitteeMembersList();
+		List<PmUser> memberList = new ArrayList<PmUser>();
+		if(originalList != null){
+			for(ScCommitteeMember member : originalList){
+				memberList.add(member.getPmUser());
+			}
+			for(ScCommitteeMember member : scCommitteeMemberList){
+				if (!memberList.contains(member.getPmUser())) {
+					committeeChanged = true;
+				}
+			}
+		}else{
+			committeeChanged = true;
+		}
 		
-		renewSesionObject();
-		
-		retriveMeetingDetails(scQt.getQtId());
-		this.getManagedBean().setScQt(scQt);
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setOutComes(outComes);
-		this.getManagedBean().setProcessName(processName);
+		if(committeeChanged){
+			//create new committee and suspend old one
+			ScCommittee oldScCommittee = scQtCommittee.getScCommittee();
+			oldScCommittee.setRecordStatus(false);
+			
+			ScCommittee newScCommittee = new ScCommittee();
+			newScCommittee.setCommitteeType(oldScCommittee.getCommitteeType());
+			PmStatus status = new PmStatus();
+			status.setStatusId(QTStatusConst.CM_COMPLETE);
+			newScCommittee.setCommitteStatus(status);
+			setUserDetails(newScCommittee);
+			
+			for(ScCommitteeMember member : scCommitteeMemberList){
+				member.setCommitteeMemberId(null);
+				member.setScCommittee(newScCommittee);
+			}
+			
+			newScCommittee.setScCommitteeMembers(scCommitteeMemberList);
+			scQtCommittee.setScCommittee(newScCommittee);
+		}
+		return scQtCommittee;
 	}
-
-	public void submitAction(String outCome) {
-		/*FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-
-		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTMeetingSO.class);
-		MeetingReqDTO reqDTO = prepareMeetingDtls();
-
-		reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		reqDTO.setToken(ctxToken);
-		reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
-		reqDTO.setOutcome(outCome);
-		MeetingResDTO resDTO = meetingso.updateBPMAction(reqDTO);
-
-		// Code to renew the session Object..
-		renewSesionObject();
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Evaluation Meeting Submitted Successfully", ""));*/
-		
-		
-		String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
-		String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
-		commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+	
+	public void validateMeetingDtlsInfo(MeetingReqDTO reqDTO ) {
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			
+			SuppFinalizationReqDTO suppFinalReqDTO = new SuppFinalizationReqDTO();
+			suppFinalReqDTO.setCommitteeType(committeeType);
+			suppFinalReqDTO.setScQtCommittee(reqDTO.getScQtCommitte());
+			qtSuppFinalizationSO.validateCoordinateMeeting(suppFinalReqDTO);
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
 	}
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
@@ -911,7 +1056,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 	
-	private PmStatus getRetrieveStatusById(Long statusId){
+	private PmStatus getStatusById(Long statusId){
 		IStatusSO statusSO = null;
 		try{
 			statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -928,24 +1073,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		}
 	}
 	
-	
-	
-	
 	///to be removed
-	
-	private PmParameter getPmParameterById(Long parameterId) {
-		IParameterSO parameterSO = null;
-		try {
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			return resDTO.getPmParameter();
-		} finally {
-			parameterSO = null;
-		}
-	}
-	
 	private PmParameter getPmParameterByTypeAndCode(String parameterType, String parameterCode) {
 		IParameterSO parameterSO = null;
 		try {

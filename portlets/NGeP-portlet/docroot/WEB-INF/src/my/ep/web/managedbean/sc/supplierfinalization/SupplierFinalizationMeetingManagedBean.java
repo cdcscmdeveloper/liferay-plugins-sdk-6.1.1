@@ -28,6 +28,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	//Header
 	private ScQt scQt;
 	private String processName;
+	private Object payLoad;
 		
 	private List<ScQtMeeting> scQtMeetings;
 	private List<ScQtMeeting> meetingMultiSelect;
@@ -42,7 +43,8 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private SelectItem[] roleTypes; // Role type drop down
 	private String roleName;
 	private List<ScCommitteeMember> committeeMembersList;
-	private List<ScCommitteeMember> committeeMeetingSelectList;
+	private List<ScCommitteeMember> originalCommitteeMembersList;
+	private List<ScCommitteeMember> selectedCommitteeMembersList;
 	private QtnTenderSearchBean cloneQtnTenderSearchBean;
 	private List<ScQt> cloneTenderList;
 	private List<ScQt> selectedCloneTender;
@@ -52,7 +54,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
-	boolean isCommiteeChanged = false;
 	
 	/**
 	 * @return the scQtMeetings
@@ -211,19 +212,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.committeeMembersList = committeeMembersList;
 	}
 	/**
-	 * @return the committeeMeetingSelectList
-	 */
-	public List<ScCommitteeMember> getCommitteeMeetingSelectList() {
-		return committeeMeetingSelectList;
-	}
-	/**
-	 * @param committeeMeetingSelectList the committeeMeetingSelectList to set
-	 */
-	public void setCommitteeMeetingSelectList(
-			List<ScCommitteeMember> committeeMeetingSelectList) {
-		this.committeeMeetingSelectList = committeeMeetingSelectList;
-	}
-	/**
 	 * @return the cloneQtnTenderSearchBean
 	 */
 	public QtnTenderSearchBean getCloneQtnTenderSearchBean() {
@@ -338,18 +326,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.cloneCommitteMembersSelect = cloneCommitteMembersSelect;
 	}
 	/**
-	 * @return the isCommiteeChanged
-	 */
-	public boolean isCommiteeChanged() {
-		return isCommiteeChanged;
-	}
-	/**
-	 * @param isCommiteeChanged the isCommiteeChanged to set
-	 */
-	public void setCommiteeChanged(boolean isCommiteeChanged) {
-		this.isCommiteeChanged = isCommiteeChanged;
-	}
-	/**
 	 * @return the processName
 	 */
 	public String getProcessName() {
@@ -360,6 +336,44 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
+	}
+	/**
+	 * @return the payLoad
+	 */
+	public Object getPayLoad() {
+		return payLoad;
+	}
+	/**
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
+	}
+	/**
+	 * @return the selectedCommitteeMembersList
+	 */
+	public List<ScCommitteeMember> getSelectedCommitteeMembersList() {
+		return selectedCommitteeMembersList;
+	}
+	/**
+	 * @param selectedCommitteeMembersList the selectedCommitteeMembersList to set
+	 */
+	public void setSelectedCommitteeMembersList(
+			List<ScCommitteeMember> selectedCommitteeMembersList) {
+		this.selectedCommitteeMembersList = selectedCommitteeMembersList;
+	}
+	/**
+	 * @return the originalCommitteeMembersList
+	 */
+	public List<ScCommitteeMember> getOriginalCommitteeMembersList() {
+		return originalCommitteeMembersList;
+	}
+	/**
+	 * @param originalCommitteeMembersList the originalCommitteeMembersList to set
+	 */
+	public void setOriginalCommitteeMembersList(
+			List<ScCommitteeMember> originalCommitteeMembersList) {
+		this.originalCommitteeMembersList = originalCommitteeMembersList;
 	}
 	
 }

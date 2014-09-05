@@ -39,30 +39,14 @@
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
 						<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
-							<p:dataTable var="meeting" id="meetingTbl"
-								widgetVar="meetingDtls"
+							<p:dataTable id="meetingTbl"
+								var="meeting" widgetVar="meetingDtls"
+								rowKey="#{meeting}" rowIndexVar="rowIndex"
+								editable="true" style="width:100%"
 								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
-								selection="#{suppFinalMeetingBackingBean.managedBean.meetingMultiSelect}"
-								editable="true" rowIndexVar="index" style="width:100%"
-								rowKey="#{meeting}">
+								selection="#{suppFinalMeetingBackingBean.managedBean.meetingMultiSelect}">
 								<ac:paginator for="meetingTbl" />
 								
-								<p:ajax event="rowSelect" 
-									listener="#{suppFinalMeetingBackingBean.selectMeetingEvent}"
-									update=":form:meetingTbl" />
-									
-								<p:ajax event="rowSelectCheckbox" 
-									listener="#{suppFinalMeetingBackingBean.selectMeetingEvent}"
-									update=":form:meetingTbl" />
-									
-								<p:ajax event="rowUnselect"
-									listener="#{suppFinalMeetingBackingBean.unSelectMeetingEvent}"
-									update=":form:meetingTbl"></p:ajax>
-									
-								<p:ajax event="rowUnselectCheckbox"
-									listener="#{suppFinalMeetingBackingBean.unSelectMeetingEvent}"
-									update=":form:meetingTbl"></p:ajax>
-					
 								<p:column selectionMode="multiple" style="width:2%"></p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
@@ -101,11 +85,12 @@
 								var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
-								selection="#{suppFinalMeetingBackingBean.managedBean.committeeMeetingSelectList}"
+								selection="#{suppFinalMeetingBackingBean.managedBean.selectedCommitteeMembersList}"
 								rowKey="#{committeeMember}">
 								<ac:paginator for="memberListTbl" />
 					
-								<p:column selectionMode="multiple" style="width:2%"></p:column>
+								<p:column selectionMode="multiple" style="width:2%" 
+									disabledSelection="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}"/>
 								
 								<p:column headerText="#{lbl['lbl.sc.name']}">
 									<h:outputText value="#{committeeMember.memberName}"></h:outputText>
@@ -128,20 +113,23 @@
 								</p:column>
 					
 								<p:column headerText="#{lbl['lbl.sc.pnp']}">
-									<h:outputText value="#{committeeMember.PNP}"></h:outputText>
+									<h:outputText value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.PNP}" />
-									<p:selectOneMenu id="meetingRoleId" required="true" rendered="#{!committeeMember.PNP}"
-										value="#{committeeMember.memberRole.parameterId}" style="width: 110px;margin-bottom: 5px;">
-										<f:selectItems value="#{suppFinalMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
-									</p:selectOneMenu>
-									<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
+									<h:outputText value="#{lbl['lbl.sc.secretary']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />
+									<h:outputText value="#{lbl['lbl.sc.member']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}" />
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
-									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ommitteeMember.memberType)}"/>
+									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
+										style="width: 110px;margin-bottom: 5px;"
+										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
+										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
+										<p:ajax event="change" 
+											listener="#{suppFinalMeetingBackingBean.representativeTypeEvent(committeeMember,committeeMember.representativeType.parameterCode)}" process="@this" />
+									</p:selectOneMenu>
 								</p:column>
 							</p:dataTable>
 					
