@@ -1156,13 +1156,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			itemsToSelectedAddress(flItemAddr);
 		}else{ // zonal & standard & zonal promo & standard promo
 			FlFulfilmentItemAddr oriItemAddr = flItemAddr;
+			if(getManagedBean().getRequestNoteItemList().contains(flItemAddr)){
+				FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
+				flItemAddr = clonedlItemAddr;
+			}			
 			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 					|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
-				if(getManagedBean().getRequestNoteItemList().contains(flItemAddr)){
-					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
-					flItemAddr = clonedlItemAddr;
-				}
-
 				if(flItemAddr.getZoneId() == null){
 					flItemAddr.setOrderedQty(new BigDecimal(0));
 					throw new EpException("this item is not within the zone.");
