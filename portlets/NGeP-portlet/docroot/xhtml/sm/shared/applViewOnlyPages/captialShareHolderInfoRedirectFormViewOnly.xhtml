@@ -11,7 +11,8 @@
 			<div align="left">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
 					icon="ui-icon-back" update=":form" process="@this"
-					actionListener="#{viewSmApplBackingBean.backFromPersonnelPage}" />
+					actionListener="#{viewSmApplBackingBean.backFromPersonnelPage}" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</div>
 			<ui:include
 				src="/xhtml/sm/shared/applViewOnlyPages/shareHolderInfoPopUpFormViewOnly.xhtml" />

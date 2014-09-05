@@ -81,9 +81,7 @@ public class ViewSmApplBackingBean extends
 		BaseBackingBean<ViewSmApplManagedBean> {
 
 	public static Logger log = Logger.getLogger(ViewSmApplBackingBean.class);
-
-	private int currentTab;
-	private int outputTab;
+	
 	private StreamedContent file;
 	private String redirect = "REVIEW APPLICATION TESTING PAGE";
 
@@ -98,7 +96,6 @@ public class ViewSmApplBackingBean extends
 		constructMessage();
 	}
 
-	// temp change for testing
 	private void initPreviousApplication() {
 		ISmApplRevisionSO applRevisionSO = null;
 
@@ -138,7 +135,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	// temp added for testing
 	public void changeVerifySection(Boolean isSectionVerified) {
 		if (getManagedBean().isPoUser()) {
 			getManagedBean().getPoSecReview();
@@ -153,7 +149,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	// temp added for testing
 	public void downloadSelectedSuppDoc(String fileName, String filePath) {
 		String finalFilePath = filePath + fileName;
 		try {
@@ -169,12 +164,10 @@ public class ViewSmApplBackingBean extends
 		retrievePmCertBodyList();
 	}
 
-	// temp added for testing
 	public void viewSignatories(SmSupplierBank signAcctBean) {
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
-	// temp added for testing
 	private String getDropDownViewOnlyValueByCode(String parameterType,
 			String parameterCode) {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -212,7 +205,6 @@ public class ViewSmApplBackingBean extends
 		return reload;
 	}
 
-	// temp added for testing
 	private String getDropDownViewOnlyValueById(String parameterType,
 			Long parameterId) {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
@@ -241,10 +233,8 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	public void setTabValue(int currentTab, int outputTab, String outputPageType) {
+	public void setTabValue(int outputTab, String outputPageType) {
 		getManagedBean().setTabActiveIndex(outputTab);
-		this.currentTab = currentTab;
-		this.outputTab = outputTab;
 		getManagedBean().setRedirectToPersonPage(false);
 		getManagedBean().setCurrentPageType(outputPageType);
 		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
@@ -257,7 +247,6 @@ public class ViewSmApplBackingBean extends
 		this.getManagedBean().setCertBodyLs(resDTO.getCertBodyList());
 	}
 
-	// temp added for testing
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
@@ -332,16 +321,12 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
 		getManagedBean().setSelectedAssocCompany(assocBean);
-		// RequestContext.getCurrentInstance().execute("assocDialog.show()");
 	}
 
-	// temp change for testing
 	public void assignSelBranch(SmSupplierBranch branchBean) {
 		getManagedBean().setSelectedBranch(branchBean);
-		// RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
 
-	// temp change for testing
 	public void assignSelCert(SmSupplierCert certBean) {
 		getManagedBean().setSelectedCert(certBean);
 		getManagedBean().setSelectedCertType(
@@ -349,10 +334,8 @@ public class ViewSmApplBackingBean extends
 						"CRT",
 						Long.parseLong(getManagedBean().getSelectedCert()
 								.getCertTypeId().toString())));
-		// RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
 
-	// temp added for testing
 	public void assignSelBank(SmSupplierBank shareBankBean) {
 		getManagedBean().setSelBankBranchName("");
 
@@ -376,42 +359,35 @@ public class ViewSmApplBackingBean extends
 		setSelectedBankAccountPurpose();
 	}
 
-	// temp added for testing
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
 		setSmEquityCompanyPercentageCalculation();
 	}
 
-	// temp added for testing
 	public void assignSelFactory(SmFacility facilityBean) {
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
 		getManagedBean().setFacilityType("FACTORY");
 	}
 
-	// temp added for testing
 	public void assignSelWorkshop(SmFacility facilityBean) {
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
 		getManagedBean().setFacilityType("WORKSHOP");
 	}
 
-	// temp added for testing
 	public void assignSelDockyard(SmFacility facilityBean) {
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
 		getManagedBean().setFacilityType("DOCKYARD");
 	}
 
-	// temp added for testing
 	public void assignSelStore(SmFacility facilityBean) {
 		getManagedBean().setSelectedStoreFacility(facilityBean);
 		getManagedBean().setFacilityType("STORE");
 	}
 
-	// temp added for testing
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
 		getManagedBean().setSelectedManufacturer(manBean);
 	}
 
-	// temp added for testing
 	public void assignSelMachinery(SmMachineDtl macBean) {
 		getManagedBean().setSelectedMachine(macBean);
 
@@ -461,10 +437,8 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
-		// RequestContext.getCurrentInstance().execute("profDialog.show()");
 	}
 
-	// temp added for testing
 	private SmApplSectionReview assignVerificationCount(
 			SmApplSectionReview sec, Boolean isSectionVerified) {
 		if (isSectionVerified) {
@@ -615,7 +589,6 @@ public class ViewSmApplBackingBean extends
 		RequestContext.getCurrentInstance().reset(":form:tt:shareHolderDialog");
 	}
 
-	// temp added for testing
 	private void setSelectedBankAccountPurpose() {
 		Locale locale = new FacesScopes().getUserLocale();
 		switch (getManagedBean().getSelectedBank().getAccountPurpose()) {
@@ -642,7 +615,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	// temp added for testing
 	private void setSmCompanyBasicCalculation() {
 		try {
 			if (getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -913,12 +885,10 @@ public class ViewSmApplBackingBean extends
 			}
 
 		} catch (NumberFormatException ne) {
-			// ne.printStackTrace();
 			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
 
-	// temp added for testing
 	private void setSmEquityCompanyPercentageCalculation() {
 		try {
 			if (getManagedBean().getSelectedEquityCompany().getShareAmt() != null) {
@@ -984,7 +954,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	// temp added for testing
 	private void setCategoryTypeConfirm() {
 		Locale locale = new FacesScopes().getUserLocale();
 		String[] params = { "" };
@@ -1000,7 +969,6 @@ public class ViewSmApplBackingBean extends
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 	}
 
-	// temp added for testing
 	private void setApplicationFacilities(List<SmFacility> smFacilities) {
 		getManagedBean().setApplFactoryFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplDockyardFacilities(new ArrayList<SmFacility>());
@@ -1329,20 +1297,17 @@ public class ViewSmApplBackingBean extends
 		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
 		this.getManagedBean().setBusinessTypeLs(selectItems);
 	}
-	
-	private void constructMessage(){
-		if(!getManagedBean().isReviewApplicationExist()){
-			if(FacesContext.getCurrentInstance().getMessageList().isEmpty()){
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(MessageConst.INFO_700054,
-										new String[] { getManagedBean()
-												.getApplicationNoParam() },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
-			RequestContext.getCurrentInstance().update("form:messages");
+
+	private void constructMessage() {
+		if (!getManagedBean().isReviewApplicationExist()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700054,
+									new String[] { getManagedBean()
+											.getApplicationNoParam() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 		}
 	}
 

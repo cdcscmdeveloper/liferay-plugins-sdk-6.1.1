@@ -18,12 +18,21 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationTypeId}" /></td>
-				<td style="float:left;"><p:outputPanel id="equiPerDtlIdenTypeLblPan"><p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" id="equiPerIcNumLbl" /></p:outputPanel></td>
+				<td>
+					<p:outputPanel id="equiPerDtlIdenTypeLblPan">
+						<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']} :" id="equiPerIcNumLbl" />
+					</p:outputPanel>
+				</td>
 				<td style="float:left;"><p:outputPanel id="equiPerDtlIdenTypePan"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationNo}"/></p:outputPanel></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.dob']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" /></td>
+				<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+					<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/></td>
 			</tr>
@@ -124,7 +133,7 @@
 			src="/xhtml/sm/shared/applViewOnlyPages/shareHolderAddressInfoPopUpFormViewOnly.xhtml" />
 	</p:panel>
 
-	<p:panel header="Job Function" toggleable="true" id="equiShrHldrJbFnc">
+	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true" id="equiShrHldrJbFnc">
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf"

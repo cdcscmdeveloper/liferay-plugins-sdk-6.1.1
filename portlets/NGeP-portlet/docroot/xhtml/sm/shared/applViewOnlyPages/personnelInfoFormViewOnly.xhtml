@@ -440,6 +440,7 @@
 							<p:commandLink
 								action="#{viewSmApplBackingBean.assignSelShareHolder(person)}"
 								process="@this" partialSubmit="true" update=":form" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 								style="padding-right:5px;">
 								<p:graphicImage library="ep/images/design" name="document.png"
 									value="/resources/ep/images/design/document.png" />
