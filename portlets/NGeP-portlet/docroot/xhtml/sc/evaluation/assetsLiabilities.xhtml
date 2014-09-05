@@ -23,7 +23,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveFinAssetLiabilityDtls}" />
+				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
 
 		<p:panel>
@@ -77,21 +77,24 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.current.asset']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true">
+					<td><p:inputText style="text-align:right" disabled="true"
+							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}">
 
 						</p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true">
+					<td><p:inputText style="text-align:right" disabled="true"
+							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}">
 
 						</p:inputText></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.acid.ratio']}" /></td>
 					<td><p:inputText style="text-align:right" id="totalacidratio"
-							readonly="true" disabled="true">
+							disabled="true"
+							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.acidRatio}">
 
 						</p:inputText></td>
 				</tr>
@@ -110,7 +113,7 @@
 
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.finAssetLiabilityProposalScore}"
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
 					<tr>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
@@ -134,7 +137,7 @@
 		<h:panelGroup id="assetLiabilityAmount">
 			<ui:param name="scoringPnlId" value="evaassetLiabilityAmountId" />
 			<ui:param name="scoringList"
-				value="#{evaluationBackingBean.managedBean.assetLiabilityScore}"></ui:param>
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.eva.score.net.tot.amount']}"></ui:param>
 			<ui:include src="evaluationScoring.xhtml"></ui:include>

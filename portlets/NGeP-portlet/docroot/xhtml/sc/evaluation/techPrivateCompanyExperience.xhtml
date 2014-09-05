@@ -23,7 +23,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveTechNonCompantDtls}" />
+				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
 
 		<p:panel>
@@ -121,7 +121,7 @@
 
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.techPrivateProposalScore}"
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
 
 					<c:if test="${action.criteriaType eq '15'}">
@@ -172,7 +172,7 @@
 		<h:panelGroup id="noOfPrivateContracts">
 			<ui:param name="scoringPnlId" value="privateContractorListId" />
 			<ui:param name="scoringList"
-				value="#{evaluationBackingBean.managedBean.technicalPrivateNoOfContracts}"></ui:param>
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.spec.score.total.no.contracts']}"></ui:param>
 			<p:panel header="#{scoringPnlName}" toggleable="true">
@@ -210,7 +210,7 @@
 		<h:panelGroup id="noOfPrivateYears">
 			<ui:param name="scoringPnlId" value="noOfPrivateyearsId" />
 			<ui:param name="scoringList"
-				value="#{evaluationBackingBean.managedBean.technicalPrivateNoOfYears}"></ui:param>
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfYears}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.eva.cmp.tot.num.yrs']}"></ui:param>
 			<p:panel header="#{scoringPnlName}" toggleable="true">

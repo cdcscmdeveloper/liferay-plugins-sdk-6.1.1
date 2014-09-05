@@ -22,7 +22,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveFinacialCompliance}" />
+				action="#{evaluationBackingBean.saveTechnicalCompliance}" />
 		</div>
 
 		<p:panel>
@@ -40,7 +40,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
 			<p:dataTable var="complianceFinancialSupplier"
-				value="#{evaluationBackingBean.managedBean.complianceFinancialProposalCheckList}"
+				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				id="complianceFinancialSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceFinancialSupplier}">
 				<ac:paginator for="complianceFinancialSupplier" />

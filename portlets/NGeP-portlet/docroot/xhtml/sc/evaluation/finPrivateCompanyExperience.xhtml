@@ -23,7 +23,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveFinNonCompantDtls}" />
+				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
 
 		<p:panel>
@@ -126,7 +126,7 @@
 
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.finPrivateProposalScore}"
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
 					<tr>
 						<td><h:outputText
@@ -157,7 +157,7 @@
 		<h:panelGroup id="privatetotalContractAmount">
 			<ui:param name="scoringPnlId" value="privatecontractorAmountId" />
 			<ui:param name="scoringList"
-				value="#{evaluationBackingBean.managedBean.finPrivateContract}"></ui:param>
+				value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
 			<ui:param name="scoringPnlName"
 				value="#{lbl['lbl.sc.eva.cmpny.score.tot.contract.amount']}"></ui:param>
 			<ui:include src="evaluationScoring.xhtml"></ui:include>

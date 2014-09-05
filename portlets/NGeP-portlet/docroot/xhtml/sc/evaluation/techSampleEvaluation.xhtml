@@ -23,7 +23,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveTechSampleDtls}" />
+				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
 
 		<p:panel>
@@ -97,7 +97,7 @@
 			</p:dataTable>
 			<table>
 				<c:forEach
-					items="#{evaluationBackingBean.managedBean.techSampleProposalScore}"
+					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
 
 					<tr>

@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-	<p:messages id="technicalGovEvaluationmsgId" autoUpdate="true"
+		<p:messages id="technicalGovEvaluationmsgId" autoUpdate="true"
 			closable="true" showDetail="true" showSummary="false"
 			severity="error,info"></p:messages>
 
@@ -23,7 +23,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" update="@all"
-				action="#{evaluationBackingBean.saveTechCompantDtls}" />
+				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
 
 		<p:panel>
@@ -58,7 +58,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
-                      <p:commandLink ajax="false"
+					<p:commandLink ajax="false"
 						actionListener="#{evaluationBackingBean.downloadDocuments(techComplianceList)}"
 						process="@this" partialSubmit="true">
 						<p:graphicImage library="ep/images/design"
@@ -86,10 +86,10 @@
 				<ac:paginator for="experience"></ac:paginator>
 				<!-- <p:column  selectionMode="multiple" style="width:2px;"></p:column> -->
 				<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}">
-					<h:outputText value="#{experience.bankName}"></h:outputText>
+					<h:outputText value="#{experience.scLoiLoa.pmOrgProfile.orgName}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}">
-					<h:outputText value="#{experience.title}"></h:outputText>
+					<h:outputText value="#{experience.scLoiLoa.title}"></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}">
 					<h:outputText value="#{experience.loaNo}"></h:outputText>
@@ -107,12 +107,17 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}">
+					<h:outputText style="float : right"
+						value="#{experience.contractDuration.intValue()/12}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+					</h:outputText>
 				</p:column>
 			</p:dataTable>
 
 
 			<table>
-				
+
 				<c:forEach
 					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
@@ -138,22 +143,22 @@
 									rendered="#{action.criteriaType eq '10' and evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 						</tr>
 					</c:if>
-						<c:if test="${action.criteriaType eq '11'}">
-					<tr>
-						<td><h:outputText
-								value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
-						<td style="width: 200px;"><p:inputText readonly="true"
-								value="#{action.criteriaValue}" disabled="true"></p:inputText></td>
-						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
-								rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}" />
-							<h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
-								rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}" /></td>
-						<td><p:inputText readonly="true" disabled="true"
-								value="#{action.autoScore}"
-								rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}"></p:inputText>
-							<p:inputText value="#{action.userScore}" maxlength="18"
-								rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}"></p:inputText></td>
-					</tr>
+					<c:if test="${action.criteriaType eq '11'}">
+						<tr>
+							<td><h:outputText
+									value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
+							<td style="width: 200px;"><p:inputText readonly="true"
+									value="#{action.criteriaValue}" disabled="true"></p:inputText></td>
+							<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}" />
+								<h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}" /></td>
+							<td><p:inputText readonly="true" disabled="true"
+									value="#{action.autoScore}"
+									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}"></p:inputText>
+								<p:inputText value="#{action.userScore}" maxlength="18"
+									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}"></p:inputText></td>
+						</tr>
 					</c:if>
 				</c:forEach>
 			</table>
