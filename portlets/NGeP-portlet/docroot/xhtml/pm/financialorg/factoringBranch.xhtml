@@ -16,13 +16,13 @@
 
 			<p:column headerText="#{lbl['lbl.pm.financialbranch.branchname']}">
 
-				<p:inputText value="#{financialbranch.branchName}" size="15" />
+				<p:inputText value="#{financialbranch.branchName}" size="50" maxlength="100"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu
 					value="#{financialbranch.recordStatusFlg}"
-					 style="margin-bottom: 5px;">
+					 style="width: 235px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 				</p:selectOneMenu>

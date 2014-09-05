@@ -5,24 +5,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+
 	<p:panel>
 		<div align="left" class="header-info">
 			<table>
 				<tr>
 					<td style="width: 245px"><h:outputLabel
 							value="#{lbl['lbl.pm.financialorg.name']}"></h:outputLabel></td>
-					<td><p:inputText
-							value="#{financialOrgBackingBean.managedBean.orgName}" disabled="true" size="30" /></td>
+					<td class="header-info">
+						#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}</td>
 					<td style="width: 210px"><h:outputLabel
 							value="#{lbl['lbl.pm.financialorg.buzregno']}"></h:outputLabel></td>
-					<td><p:inputText
-							value="#{financialOrgBackingBean.managedBean.regNumber}"
-							size="30" disabled="true" /></td>
+					<td class="header-info-text">
+						#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}</td>
 					<td style="width: 210px"><h:outputLabel
 							value="#{lbl['lbl.pm.financialorg.status']}"></h:outputLabel></td>
+					<td class="header-info">
+						#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}</td>
+					<!-- <td style="width: 210px"><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel></td>
 					<td><p:inputText
-							value="#{financialOrgBackingBean.managedBean.serviceType}"
-							size="10" disabled="true"  /></td>
+							value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
+							size="10" disabled="true" /></td> -->
 
 				</tr>
 			</table>

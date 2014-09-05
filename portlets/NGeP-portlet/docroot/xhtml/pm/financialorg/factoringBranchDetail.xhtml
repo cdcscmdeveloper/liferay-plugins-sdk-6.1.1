@@ -5,39 +5,58 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:panel>
-		<p:dataTable id="financialaccid" var="financialacc"
-			value="#{financialOrgBackingBean.managedBean.pmFinancialAcc}"
+		<p:dataTable id="financialBranchAccId" var="financialacc"
+			value="#{financialOrgBackingBean.managedBean.pmFinancialBranchAcc}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
-			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialAcc}">
+			selection="#{financialOrgBackingBean.managedBean.selectedPmFinancialBranchAcc}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<ac:paginator for="financialacc" />
+
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
+				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
+					required="true" style="width: 235px;margin-bottom: 5px;">
+					<f:selectItem itemValue=" " itemLabel="---Select---" />
+					<f:selectItems var="finorgLs"
+						value="#{financialOrgBackingBean.managedBean.pmFinancialOrg}"
+						itemLabel="#{finorgLs.finOrgName}"
+						itemValue="#{finorgLs.financialOrgId}" />
 
-
+				</p:selectOneMenu>
+				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
+
 			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
 
-				<p:inputText value="#{financialacc.accountNo}" size="15" />
+				<p:inputText value="#{financialacc.accountNo}" size="20"
+					maxlength="20" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.effdate']}">
 
-				<p:inputText value="#{financialacc.effDate}" size="15">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-				</p:inputText>
+				<p:calendar value="#{financialacc.effDate}" showOn="button"
+					size="20" readonlyInput="true"
+					mindate="#{financialOrgBackingBean.managedBean.currentDate}"
+					style="margin-bottom: 5px;"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" update="branchexpDate" />
+				</p:calendar>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}">
 
-				<p:inputText value="#{financialacc.expDate}" size="15">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-				</p:inputText>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}">
+				<p:calendar id="branchexpDate" value="#{financialacc.expDate}"
+					showOn="button" size="20" mindate="#{financialacc.effDate}"
+					readonlyInput="true"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+
+				</p:calendar>
+
 			</p:column>
+
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
-					required="true" style="margin-bottom: 5px;">
+					required="true" style="width: 235px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 				</p:selectOneMenu>
@@ -48,14 +67,14 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				process="@this,financialaccid" partialSubmit="true"
-				action="#{financialOrgBackingBean.addFinancialAcc}"
-				update="financialaccid" icon="ui-icon-add" />
+				process="@this,financialBranchAccId" partialSubmit="true"
+				action="#{financialOrgBackingBean.addFinancialBranchAcc}"
+				update="financialBranchAccId" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="financialaccid"
-				process="@this,financialaccid" partialSubmit="true"
-				action="#{financialOrgBackingBean.deleteFinancialAcc}" />
+				icon="ui-icon-delete" update="financialBranchAccId"
+				process="@this,financialBranchAccId" partialSubmit="true"
+				action="#{financialOrgBackingBean.deleteFinancialBranchAcc}" />
 
 		</div>
 

@@ -9,9 +9,90 @@
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			severity="error, info" />
-		
-			<ui:include src="/xhtml/pm/financialorg/financialSearch.xhtml" />
-		
+
+		<p:panel>
+			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
+		</p:panel>
+
+		<p:panel header="SEARCH" toggleable="true" id="financialOrgSearch">
+
+			<h:panelGrid columns="2">
+				<h:column>
+					<ui:include src="/xhtml/pm/financialorg/financialSearch.xhtml" />
+				</h:column>
+
+			</h:panelGrid>
+			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+				width="100%">
+				<p:column>
+					<div style="float: right;">
+						<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
+							style="float:right;" action="#{financialOrgBackingBean.reset}"
+							update="financialOrgSearch" icon="ui-icon-reset"
+							resetValues="true" partialSubmit="true" />
+						<p:commandButton value="#{lbl['lbl.pm.search.location']}"
+							style="float:right;" icon="ui-icon-search"
+							action="#{financialOrgBackingBean.searchFinancialOrg}"
+							update="searchFinancialId" />
+
+					</div>
+				</p:column>
+
+			</h:panelGrid>
+
+		</p:panel>
+		<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+
+			<p:dataTable id="searchFinancialId" var="finorg"
+				value="#{financialOrgBackingBean.searchFinancialOrg}"
+				rowIndexVar="index" lazy="true">
+
+				<ac:paginator for="searchFinancialId"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.pm.financialorg.name']}"
+					style="width :15%">
+					<h:outputText value="#{finorg.finOrgName}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.financialorg.buzregno']}"
+					style="width :40%">
+					<h:outputText value="#{finorg.bizRegNumber}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.financialorg.status']}"
+					style="width :15%">
+
+					<h:outputText value="Active"
+						rendered="#{finorg.recordStatusFlg == '1'}" />
+					<h:outputText value="Expired"
+						rendered="#{finorg.recordStatusFlg == '2'}" />
+					<h:outputText value="Cancled"
+						rendered="#{finorg.recordStatusFlg == '3'}" />
+					<h:outputText value="Inactive"
+						rendered="#{finorg.recordStatusFlg == '0'}" />
+					<h:outputText value="Deleted"
+						rendered="#{finorg.recordStatusFlg == '9'}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.pm.financialorg.action']}"
+					style="width :5%">
+					<p:commandLink
+						action="#{financialOrgBackingBean.editFinancialOrg(finorg)}" update="@form">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							title="Edit Financial Org"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<div class="ppRightBtn">
+
+			<p:commandButton value="#{lbl['lbl.pm.financialorg.create']}"
+				icon="ui-icon-add"
+				action="#{financialOrgBackingBean.addFinancialOrg()}"  />
+
+
+		</div>
+
 	</ui:define>
 
 </ui:composition>
