@@ -304,7 +304,7 @@ public class LocationSingleton {
 						}
 					}
 					if (stateIds.contains(state.getStateId())) {
-						//stateNode.setSelected(Boolean.TRUE);
+						stateNode.setSelected(Boolean.TRUE);
 					}
 				}
 
@@ -2010,10 +2010,10 @@ public class LocationSingleton {
 	 * * @param locClass
 	 * @return
 	 */
-	public <LOCATION_CLASS extends TplSpecLoc> TreeNode constuctLocationTree(List<PmState> listStates,
+	public <LOCATION_CLASS extends TplSpecLoc> TreeNode constuctLocationTree(String locationLevel, List<PmState> listStates,
 			List<PmDistrict> listDistricts, List<PmDivision> listDivisions,
 			List<PmCity> listCities, Class<LOCATION_CLASS> locClass) {
-		TreeNode mainNode = new DefaultTreeNode("Main", null);
+		TreeNode mainNode = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
 
 		try {
 			Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(
@@ -2027,32 +2027,38 @@ public class LocationSingleton {
 				for (PmState state : listStates) {
 					LOCATION_CLASS stateLocation = locClass.newInstance();
 					stateLocation.setPmState(state);
-					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+					TreeNode rootNode = new DefaultTreeNode(QTConstants.NODE_ROOT, stateLocation,
 							mainNode);
+					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+							rootNode);
 				}
 			}
-			Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
-			if (statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()) {
-				for (PmState state : statesDivisionKeySet) {
-					LOCATION_CLASS stateLocation = locClass.newInstance();
-					stateLocation.setPmState(state);
-					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
-							mainNode);
+			
+			if (ParameterConst.LOCATION_LEVEL_DIVISION.equals(locationLevel)) {
+				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+				if (statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()) {
+					for (PmState state : statesDivisionKeySet) {
+						LOCATION_CLASS stateLocation = locClass.newInstance();
+						stateLocation.setPmState(state);
+						TreeNode node = new DefaultTreeNode(QTConstants.NODE_ROOT, stateLocation,
+								mainNode);
+						TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
+								node);
 
-					List<PmDivision> divisions = mapStatesDivision.get(state);
-					if (divisions != null && !divisions.isEmpty()) {
-						for (PmDivision division : divisions) {
-							LOCATION_CLASS divisionLocation = locClass
-									.newInstance();
-							divisionLocation.setPmDivision(division);
-							divisionLocation.setPmState(state);
-							TreeNode divisionNode = new DefaultTreeNode(
-									QTConstants.NODE_DIVISION, divisionLocation, stateNode);
+						List<PmDivision> divisions = mapStatesDivision.get(state);
+						if (divisions != null && !divisions.isEmpty()) {
+							for (PmDivision division : divisions) {
+								LOCATION_CLASS divisionLocation = locClass
+										.newInstance();
+								divisionLocation.setPmDivision(division);
+								divisionLocation.setPmState(state);
+								TreeNode divisionNode = new DefaultTreeNode(
+										QTConstants.NODE_DIVISION, divisionLocation, stateNode);
+							}
 						}
 					}
 				}
 			}
-
 			// build zone - state - district - city
 			Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
 					.keySet();
@@ -2099,22 +2105,24 @@ public class LocationSingleton {
 					.keySet();
 			if (statesDivisionsDistrictsCitiesKeySet != null
 					&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+				TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT, mainNode);
 				for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
 					LOCATION_CLASS stateLocation = locClass.newInstance();
 					stateLocation.setPmState(state);
 					
-					TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT, mainNode);
 					TreeNode stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, stateLocation,
 							rootLocationTree);
+					
 					Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
 							.get(state);
 					Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
 							.keySet();
+					
 					if (divisionsDistrictsCitiesKeySet != null
 							&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
 						for (PmDivision division : divisionsDistrictsCitiesKeySet) {
-							LOCATION_CLASS divisionLocation = locClass
-									.newInstance();
+							
+							LOCATION_CLASS divisionLocation = locClass.newInstance();
 							divisionLocation.setPmDivision(division);
 							divisionLocation.setPmState(state);
 
