@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +16,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -55,14 +57,22 @@ import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklist;
@@ -71,7 +81,6 @@ import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPBankStmt;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCashOnHand;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPCreditFacility;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
@@ -89,8 +98,10 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
@@ -111,6 +122,13 @@ public class EvaluationBackingBean extends
 
 	public EvaluationBackingBean() throws ParseException {
 
+	}
+	
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
 	}
 
 	@PostConstruct
@@ -2577,7 +2595,7 @@ public class EvaluationBackingBean extends
 			if (outputTab == 4) {
 				// this.getManagedBean().setScqt(new ScQt());
 				// retrivesummary();
-
+				retrieveReportTabDtl();
 			}
 			if (outputTab == 5) {
 				retriveCommitteeEndorsment();
@@ -2597,6 +2615,60 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
+	}
+
+	/**
+	 * 
+	 */
+	private void retrieveReportTabDtl() {
+		debugLogger("retrieveReportTabDtl");
+		retrieveReportHeader();
+		IQTEvaluationSO evaluationSO;
+		EvaluationResDTO resDTO = null;
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+			reqDTO.setCommType(getManagedBean().getCommitteeType());
+			List<ScQtEvaluationReport> scQtEvaluationReports = new ArrayList<ScQtEvaluationReport>();
+			if (this.getManagedBean().getScQtEvaluationReportList() == null) {
+				resDTO = evaluationSO.retriveReportDetails(reqDTO);
+				if (resDTO.getReports() != null && !resDTO.getReports().isEmpty()) {
+					this.getManagedBean().setScQtEvaluationReportList(resDTO.getReports());
+				} else if (resDTO.getPmDocuments() != null && resDTO.getPmDocuments().size() > 0) {
+					for (PmDocument pmDoc : resDTO.getPmDocuments()) {
+						ScQtEvaluationReport evaluationReport = new ScQtEvaluationReport();
+						evaluationReport.setScQt(this.getManagedBean().getScQt());
+						evaluationReport.setDocCategory(pmDoc.getDocCategoryCode().getParameterCode());
+						evaluationReport.setPmDocument(pmDoc);
+						evaluationReport.setTitle(pmDoc.getDocName());
+						evaluationReport.setDefinationType(pmDoc.getDocDefinitionTypeCode());
+						scQtEvaluationReports.add(evaluationReport);
+					}
+					this.getManagedBean().setScQtEvaluationReportList(scQtEvaluationReports);
+				}
+			}
+		} finally {
+			evaluationSO = null;
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void retrieveReportHeader() {
+		debugLogger("retrieveReportHeader");
+		String reportHeader = "";
+		if ("EC".equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			reportHeader = "Evaluation Report";
+		} else if ("OC".equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			reportHeader = "Opening Report";
+		} else if ("TEC".equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			reportHeader = "Technical Evaluation Report";
+		} else if ("FEC".equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			reportHeader = "Financial Evaluation Report";
+		}
+		getManagedBean().setReportHeader(reportHeader);
 	}
 
 	public void retriveCommitteeEndorsment() {
@@ -2809,10 +2881,24 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public void handleFileUpload(FileUploadEvent event) {
-
-		this.getManagedBean().setFileName(event.getFile().getFileName());
-
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		debugLogger("handleFileUpload");
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtEvaluationReport scQtEvaluationReport = this.getManagedBean().getScQtEvaluationReport();
+			ScQtEvaluationReportAttachment attachment = scQtEvaluationReport.getScQtEvaluationReportAttachment();
+			if (null == attachment) {
+				attachment = new ScQtEvaluationReportAttachment();
+				attachment.setScQtEvaluationReport(scQtEvaluationReport);
+				scQtEvaluationReport.setScQtEvaluationReportAttachment(attachment);
+			} else {
+				attachment.setScQtEvaluationReport(scQtEvaluationReport);
+				scQtEvaluationReport.setScQtEvaluationReportAttachment(attachment);
+			}
+			attachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
+			scAttachment = attachment; 
+			uploadAttachment(event.getFile(), scAttachment);
+		}
 	}
 
 	public void removeFile() {
@@ -3008,6 +3094,210 @@ public class EvaluationBackingBean extends
 					.handleNavigation(fc, null,
 							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
 		}
+	}
+	
+	public void downloadReport(ScQtEvaluationReport scQtEvaluationReport) throws IOException {
+		debugLogger("downloadReport");
+		ScQtEvaluationReportAttachment scQtEvaluationReportAttachment = scQtEvaluationReport.getScQtEvaluationReportAttachment();
+		if (scQtEvaluationReportAttachment == null) {
+			scQtEvaluationReportAttachment = generateDocumentAttachment(scQtEvaluationReport);
+		}
+		downloadFile(scQtEvaluationReportAttachment);
+	}
+
+	/**
+	 * @param scQtEvaluationReport
+	 * @return
+	 */
+	private ScQtEvaluationReportAttachment generateDocumentAttachment(ScQtEvaluationReport scQtEvaluationReport) {
+		debugLogger("generateDocumentAttachment");
+		String definitionType = scQtEvaluationReport.getDefinationType().getParameterCode();
+		ScQtEvaluationReportAttachment scQtEvaluationReportAttachment = null;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
+			try {
+				String docDefinitionKey = scQtEvaluationReport.getPmDocument().getDocDefinitionKey();
+				scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
+				scQtEvaluationReportAttachment.setScQtEvaluationReport(scQtEvaluationReport);
+				
+				if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+					generateCoverPdfFromVelocity((ScAttachment)scQtEvaluationReportAttachment, getManagedBean().getScQt());
+				} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS.equals(docDefinitionKey)) {
+					generateMeetingDetailsPdfFromVelocity((ScAttachment)scQtEvaluationReportAttachment, getManagedBean().getScQt());
+				} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS.equals(docDefinitionKey)) {
+					generateCommitteeDetailsPdfFromVelocity((ScAttachment)scQtEvaluationReportAttachment, getManagedBean().getScQt());
+					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			}
+			scQtEvaluationReport.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
+		}
+		return scQtEvaluationReportAttachment;
+	}
+
+	private void generateCommitteeDetailsPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Committee_Details.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+		List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
+		ScQtCommittee scQtCommittee = new ScQtCommittee();
+		IQTMeetingSO meetingSO = null;
+		MeetingResDTO resDTO = null;
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
+			resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+			scQtCommittee = resDTO.getQtCommittee();
+		} finally {
+			meetingSO = null;
+		}
+		if (null == scQtCommittee) {
+			scQtCommittee = new ScQtCommittee();
+		}
+		if (null != resDTO.getQtCommittee()) {
+			if (null != resDTO.getQtCommittee().getCommitteeActivities() && !resDTO.getQtCommittee().getCommitteeActivities().isEmpty()) {
+				committeeActivitiesList = resDTO.getQtCommittee().getCommitteeActivities();
+				for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
+					if(committeeActivity.getScCommitteeMember() != null) {
+						if (committeeActivity.getScCommitteeMember().getMemberName() == null) {
+							committeeActivity.getScCommitteeMember().setMemberName("");
+						}
+					}else{
+						committeeActivity.setScCommitteeMember(new ScCommitteeMember());
+						committeeActivity.getScCommitteeMember().setMemberName("");
+					}
+					if(committeeActivity.getScCommitteeMember() != null) {
+						if (committeeActivity.getScCommitteeMember().getDesignation() == null) {
+							committeeActivity.getScCommitteeMember().setDesignation("");
+						}
+					}else{
+						committeeActivity.setScCommitteeMember(new ScCommitteeMember());
+						committeeActivity.getScCommitteeMember().setDesignation("");
+					}
+					if(committeeActivity.getScCommitteeMember() != null) {
+						if (committeeActivity.getScCommitteeMember().getGrade() == null) {
+							committeeActivity.getScCommitteeMember().setGrade("");
+						}
+					}else{
+						committeeActivity.setScCommitteeMember(new ScCommitteeMember());
+						committeeActivity.getScCommitteeMember().setGrade("");
+					}
+					if(committeeActivity.getScCommitteeMember() != null) {
+						if (committeeActivity.getScCommitteeMember().getIcPassport() == null) {
+							committeeActivity.getScCommitteeMember().setIcPassport("");
+						}
+					}else{
+						committeeActivity.setScCommitteeMember(new ScCommitteeMember());
+						committeeActivity.getScCommitteeMember().setIcPassport("");
+					}
+					committeeActivities.add(committeeActivity); 
+				}
+			}
+		}
+		context.put("committeeActivities", committeeActivities);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/evaluation/evaluation-committee-details.vm", 
+    			context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Meeting_Details.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
+		IQTMeetingSO meetingSO = null;
+		try {
+			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			MeetingReqDTO reqDTO = new MeetingReqDTO();
+			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
+			MeetingResDTO resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+			scQtMeetings = resDTO.getMeetingDtls();
+		} finally {
+			meetingSO = null;
+		}
+		for (ScQtMeeting meeting : scQtMeetings) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			meeting.setMeetDateStr(sdf.format(meeting.getMeetingDate()));
+			log.info("Time : " + meeting.getMeetDateStr());
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(meeting.getMeetingDate());
+			meeting.setMeetTimeStr(calendar.get(Calendar.HOUR) + ":" + calendar.get(Calendar.MINUTE) + ":" + calendar.get(Calendar.SECOND));
+			log.info("Time : " + meeting.getMeetTimeStr());
+		}
+		context.put("scQtMeetings", scQtMeetings);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/evaluation/evaluation-meeting-details.vm", 
+    			context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Cover.pdf");
+		populateAttachmentDetails(attachment);
+		
+		VelocityContext context = new VelocityContext();
+		
+		context.put("title", qt.getQtTitle());
+		context.put("fileNo", qt.getQtNo());
+		context.put("ptjName", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/evaluation/evaluation-cover.vm", 
+    			context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+	
+	public void downloadAllReports() throws IOException {
+		debugLogger("downloadAllReports");
+		List<ScQtEvaluationReport> evaluationReports = getManagedBean().getScQtEvaluationReportList();
+		List<ScQtEvaluationReportAttachment> attachments = new ArrayList<ScQtEvaluationReportAttachment>();
+		for (ScQtEvaluationReport scQtEvaluationReport : evaluationReports) {
+			ScQtEvaluationReportAttachment reportAttachment = scQtEvaluationReport.getScQtEvaluationReportAttachment();
+			if(reportAttachment == null) {
+				reportAttachment = generateDocumentAttachment(scQtEvaluationReport);
+			}
+			attachments.add(reportAttachment);
+		}
+		downloadAllFiles("NGeP-QT-Evaluation-Report", attachments);
+	}
+	
+	/**
+	 * determineIcon for displaying image icon in pid
+	 */
+	public String determineIcon(ScQtEvaluationReportAttachment attachment) {
+		String imageFileName = "icon_file_default.png";
+		String ext = "";
+		if (attachment != null) {
+			String fileName = attachment.getFileName();
+			if (fileName != null) {
+				int mid = fileName.lastIndexOf(".");
+				ext = fileName.substring(mid + 1, fileName.length());
+			}
+			if ("doc".equals(ext) || "docx".equals(ext)) {
+				imageFileName = "icon_doc.png";
+			} else if ("pdf".equals(ext)) {
+				imageFileName = "icon_pdf.png";
+			} else if ("xls".equals(ext) || "xlsx".equals(ext)
+					|| "csv".equals(ext)) {
+				imageFileName = "icon_exel.png";
+			} else if ("jpg".equals(ext) || "bmp".equals(ext)
+					|| "png".equals(ext) || "gif".equals(ext)) {
+				imageFileName = "icon_image.png";
+			} else if ("txt".equals(ext)) {
+				imageFileName = "icon_txt.png";
+			}
+		}
+		return imageFileName;
+	}
+	
+	public void deleteUploadFile() {
+		getManagedBean().getScQtEvaluationReport().setScQtEvaluationReportAttachment(null);
 	}
 
 }
