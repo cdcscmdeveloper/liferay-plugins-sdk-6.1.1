@@ -185,10 +185,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 					messageId = MessageConst.INFO_700043;
 					messagePrefix = "Update for ";
-				} else {
-					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-						messagePrefix = "Cancellation for ";	
-					}
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messagePrefix = "Cancellation for "; 
 					messageId = MessageConst.INFO_700005;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
