@@ -9,14 +9,32 @@
 		<p:commandButton value="Preview Letter" icon="ui-icon-search"
 			action="loiLetterOfAcceptance.xhtml" process="@form"
 			update="@form" />
-
-		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save"
-			action="#{lOIDetailBackingBean.saveLOIDetailsAction}" process="@form"
-			update="@form" />
-
-		<p:commandButton value="#{lbl['lbl.so.complete']}" icon="ui-icon-submit"
-			action="#{lOIDetailBackingBean.saveLOIDetailsAction}" process="@form"
-			update="@form" />
+			
+		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
+			action="#{lOIDetailBackingBean.saveAction}" 
+			process="@form" update="@form" />
+			
+		<c:choose>
+			<c:when test="#{isPendingSubmissionStatus}">
+				<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
+					action="#{lOIDetailBackingBean.submitAction}" 
+					process="@form" update="@form"  />
+			</c:when>
+			<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
+				<ui:repeat var="bpmAction" value="#{lOIDetailBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+					
+					<p:commandButton value="#{lbl[buttonLabel]}"  
+						styleClass="ui-button"
+						icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+						action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
+						partialSubmit="true"
+						process="#{isReject ? '@this' : '@form'}"
+						update="#{isReject ? '@this' : '@form'}" />
+				</ui:repeat>
+			</c:when>
+		</c:choose>
 	</div>
 </ui:composition>
 

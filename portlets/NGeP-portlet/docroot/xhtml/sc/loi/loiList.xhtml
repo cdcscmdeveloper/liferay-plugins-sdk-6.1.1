@@ -9,13 +9,9 @@
 	<ui:define name="contentSection">
 		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.submit']}"
-				icon="ui-icon-submit"
-				action="#{lOIDetailBackingBean.saveLOIDetailsAction}"
-				process="@form" update="@form" />
-		</div>
 
+		<ui:include src="loiListButtons.xhtml" />
+		
 		<ui:include src="/xhtml/sc/loi/loiListHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
