@@ -52,14 +52,14 @@
 				  
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%;">
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
-						<p:commandLink value="Emergency" partialSubmit="true" process="@this"
+						<p:commandLink value="#{lbl['lbl.sc.justification.emergency']}" partialSubmit="true" process="@this"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
 
 					</ui:fragment>
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'A'}">
-						<p:commandLink value="Ad hoc" partialSubmit="true" process="@this"
+						<p:commandLink value="#{lbl['lbl.sc.justification.adhoc']}" partialSubmit="true" process="@this"
 							update=":form:justPopup"
 							actionListener="#{requestNoteBackingBean.showReqNotePopUps(requestNoteDtl)}"
 							oncomplete="justPopup.show();" />
