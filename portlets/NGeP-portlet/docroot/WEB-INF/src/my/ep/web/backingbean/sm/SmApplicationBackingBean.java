@@ -1989,8 +1989,7 @@ public class SmApplicationBackingBean extends
 						.getSmCompanyExperienceCats() != null && getManagedBean()
 						.getSelectedCompanyExperience()
 						.getSmCompanyExperienceCats().isEmpty())) {
-			throw new EpException(
-					"Category list cannot be empty : Please add atleast one category");
+			throw new EpException(MessageConst.ERROR_722550);
 		}
 		if (getManagedBean().getSelectedCompanyExperience()
 				.getPaymentMethodId() == null) {
@@ -2109,8 +2108,7 @@ public class SmApplicationBackingBean extends
 			SmCompanyExperience exp) {
 		if (getManagedBean().getSelectedCompExpCats().size() == exp
 				.getSmCompanyExperienceCats().size()) {
-			throw new EpException(
-					"All category codes cannot be removed.At least one category is required.");
+			throw new EpException(MessageConst.ERROR_722549);
 		}
 		if (getManagedBean().getSelectedCompExpCats().size() > 0) {
 			for (SmCompanyExperienceCat cat : getManagedBean()
@@ -2419,13 +2417,19 @@ public class SmApplicationBackingBean extends
 	public void saveSelectedCategory() {
 		boolean validCat = true;
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
-				&& getManagedBean()
-						.getSelectedCategory()
-						.getPmCategoryL1()
+				&& getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Id() != null ) {
+			for(PmCategoryL1 catL1 : getManagedBean().getSupplierParentCatList()){
+				if(catL1.getCategoryL1Id().equals(getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Id())){
+					getManagedBean().getSelectedCategory().setPmCategoryL1(catL1);
+					break;
+				}
+			}
+			if(getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Code()!= null && getManagedBean().getSelectedCategory().getPmCategoryL1()
 						.getCategoryL1Code()
 						.equalsIgnoreCase(
-								SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
+								SupplierManagementConst.ICT_CATEGORY_L1_CODE)){
 			validCat = validateIctCatCode();
+			}
 		}
 		validCat = validL3CategoryCode(getManagedBean().getSelectedCategory()
 				.getPmCategoryL3().getCategoryL3Id());
@@ -6798,7 +6802,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public SmPersonnleCalcVO getPersonnelCalculationVO(){
+	public SmPersonnleCalcVO getPersonnelCalculationVO() {
 		calcPersonnelListCount();
 		return getManagedBean().getPersonCalc();
 	}
@@ -7334,21 +7338,36 @@ public class SmApplicationBackingBean extends
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
 			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
-			if (userResDTO != null && !userResDTO.isExist()) {
+			if (userResDTO == null) {
+
+			} else {
 				if (userResDTO.getAllResult() != null
 						&& !userResDTO.getAllResult().isEmpty()) {
 					if (userResDTO.getAllResult().get(0).length > 2) {
-						System.out.println("******** Pm Profile"
+						System.out.println("******** Pm Profile  : "
 								+ userResDTO.getAllResult().get(0)[0]);
-						System.out.println("******** Liferay Profile"
+						System.out.println("******** Liferay Profile  : "
 								+ userResDTO.getAllResult().get(0)[1]);
-						System.out.println("******** LDAP Profile"
+						System.out.println("******** LDAP Profile  : "
 								+ userResDTO.getAllResult().get(0)[2]);
 					}
 				}
-				System.out
-						.println("**** User doesn't exist in LDAP/PM/Liferay ******");
-				throw new EpException(MessageConst.ERROR_721018);
+				if (!userResDTO.isExist()) {
+					System.out
+							.println("**** User doesn't exist any of the LDAP/PM/Liferay ******");
+					throw new EpException(MessageConst.ERROR_721018);
+				} else {
+					System.out
+							.println("**** To Check if user not exists in either of the LDAP/PM/Liferay******");
+					if (userResDTO.getAllResult().get(0)[0].startsWith("NO")
+							|| userResDTO.getAllResult().get(0)[1]
+									.startsWith("NO")
+							|| userResDTO.getAllResult().get(0)[2]
+									.startsWith("NO")) {
+						System.out
+								.println("**** This user is not configured in one or more of the LDAP/PM/Liferay places *****");
+					}
+				}
 			}
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
@@ -7367,13 +7386,14 @@ public class SmApplicationBackingBean extends
 			} else {
 				System.out
 						.println("**** No valid supplier record found for this user ******");
-				throw new EpException(MessageConst.ERROR_721017);
+				throw new EpException(MessageConst.ERROR_721018);
 			}
-
+			return smSupp;
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_721017);
 		}
-		return smSupp;
+
 	}
 
 	private void assignValReqdToTrue() {
