@@ -84,6 +84,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.component.tabview.TabView;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -730,75 +731,80 @@ public class QTCommitteBackingBean extends
 			memberList.add(member);
 		} else {
 			List<String> itemIds = new ArrayList<String>();
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				if (null != user.getPmAddressTypes()) {
-					for (PmAddressType address : user.getPmAddressTypes()) {
-						if (null != address.getPmAddress()) {
-							committeeMember.setEmail(address.getPmAddress().getEmail());
-							break;
+			if (!this.getManagedBean().getSelectedPmUser().isEmpty()) {
+				for (PmUser user : getManagedBean().getSelectedPmUser()) {
+					ScCommitteeMember committeeMember = new ScCommitteeMember();
+					committeeMember.setMemberName(user.getUserName());
+					committeeMember.setIcPassport(user.getIdentificationNo());
+					committeeMember.setDesignation(user.getDesignation());
+					if (null != user.getPmAddressTypes()) {
+						for (PmAddressType address : user.getPmAddressTypes()) {
+							if (null != address.getPmAddress()) {
+								committeeMember.setEmail(address.getPmAddress().getEmail());
+								break;
+							}
+						}
+					}
+					committeeMember.setGrade(user.getGrade());
+					committeeMember.setPNP(user.isPMP());
+					committeeMember.setPmUser(user);
+					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
+					if (user.isPMP() == true) {
+						ParameterReqDTO reqDTO = new ParameterReqDTO();
+						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+						ParameterResDTO resDTO = getParameterSO()
+								.retrieveParameterByTypeAndCode(reqDTO);
+						committeeMember.setMemberRole(resDTO.getPmParameter());
+					} else {
+						List<PmParameterDesc> roles = getManagedBean()
+								.getRoleTypes();
+						for (PmParameterDesc parameter : roles) {
+							if (parameter.getPmParameter().getParameterId()
+									.equals(user.getMemberRole().getParameterId())) {
+								ParameterReqDTO reqDTO = new ParameterReqDTO();
+								reqDTO.setParameterId(user.getMemberRole()
+										.getParameterId());
+								ParameterResDTO resDTO = getParameterSO()
+										.retrieveParameterById(reqDTO);
+								committeeMember.setMemberRole(resDTO
+										.getPmParameter());
+								break;
+							} else {
+								committeeMember.setMemberRole(user.getMemberRole());
+							}
+						}
+					}
+					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					committeeMember.setScCommittee(scCommittee);
+					setUserDetails(committeeMember);
+					//memberList.add(committeeMember);
+					if (scCommittee.getScCommitteeMembers().isEmpty()) {
+						//scCommittee.getScCommitteeMembers().add(committeeMember);
+						memberList.add(committeeMember);
+					} else {
+						for (ScCommitteeMember committeeMember2 : scCommittee.getScCommitteeMembers()) {
+							itemIds.add(committeeMember2.getIcPassport());
+						}
+						if (itemIds.size() > 0) {
+							if (itemIds.contains(user.getIdentificationNo())) {
+								throw new EpException("User already existed");
+							} else {
+								memberList.add(committeeMember);
+							}
 						}
 					}
 				}
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPNP(user.isPMP());
-				committeeMember.setPmUser(user);
-				committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-				if (user.isPMP() == true) {
-					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-					reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-					ParameterResDTO resDTO = getParameterSO()
-							.retrieveParameterByTypeAndCode(reqDTO);
-					committeeMember.setMemberRole(resDTO.getPmParameter());
-				} else {
-					List<PmParameterDesc> roles = getManagedBean()
-							.getRoleTypes();
-					for (PmParameterDesc parameter : roles) {
-						if (parameter.getPmParameter().getParameterId()
-								.equals(user.getMemberRole().getParameterId())) {
-							ParameterReqDTO reqDTO = new ParameterReqDTO();
-							reqDTO.setParameterId(user.getMemberRole()
-									.getParameterId());
-							ParameterResDTO resDTO = getParameterSO()
-									.retrieveParameterById(reqDTO);
-							committeeMember.setMemberRole(resDTO
-									.getPmParameter());
-							break;
-						} else {
-							committeeMember.setMemberRole(user.getMemberRole());
-						}
-					}
-				}
-				committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
-				committeeMember.setScCommittee(scCommittee);
-				setUserDetails(committeeMember);
-				//memberList.add(committeeMember);
-				if (scCommittee.getScCommitteeMembers().isEmpty()) {
-					//scCommittee.getScCommitteeMembers().add(committeeMember);
-					memberList.add(committeeMember);
-				} else {
-					for (ScCommitteeMember committeeMember2 : scCommittee.getScCommitteeMembers()) {
-						itemIds.add(committeeMember2.getIcPassport());
-					}
-					if (itemIds.size() > 0) {
-						if (itemIds.contains(user.getIdentificationNo())) {
-							throw new EpException("User already existed");
-						} else {
-							memberList.add(committeeMember);
-						}
-					}
-				}
+			} else {
+				throw new EpException("Please select a record.");
 			}
+			
 		}
 		scCommittee.setScCommitteeMembers(memberList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
-		// RequestContext.getCurrentInstance().execute("newspecificationcommittee.hide()");
+		RequestContext.getCurrentInstance().execute("newspecificationcommittee.hide()");
 	}
 
 	public void reset() {
