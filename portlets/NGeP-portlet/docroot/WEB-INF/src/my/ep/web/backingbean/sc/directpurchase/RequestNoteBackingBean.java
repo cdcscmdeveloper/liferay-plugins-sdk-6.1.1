@@ -1584,6 +1584,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		getManagedBean().setDeleteRequestNoteDtls(deleteRequestNoteDtls);
 		getManagedBean().setRequestNoteDtls(mainRequestNoteDtls);
+		getManagedBean().getRequestNote().setRequestNoteDtls(mainRequestNoteDtls);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
