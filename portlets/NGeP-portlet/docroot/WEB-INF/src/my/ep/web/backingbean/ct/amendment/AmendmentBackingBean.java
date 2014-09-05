@@ -213,8 +213,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	 HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			     HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			     String taskId = originalServletRequest.getParameter("taskId");
-			     if(taskId == null)
-				 return;
+			     if(taskId == null) {
+			    	 ConstructTabSideMenu();
+			    	 return;
+			     }
 
 			     FacesScopes face = new FacesScopes();
 			     String token = face.getBPMAuthenticationCtxToken();

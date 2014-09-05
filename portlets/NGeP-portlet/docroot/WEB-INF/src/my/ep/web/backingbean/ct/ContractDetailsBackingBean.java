@@ -260,8 +260,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			if(taskId == null)
-			return;
+			if(taskId == null) {
+				ConstructSideTabMenu();
+				return;
+			}
 
 			FacesScopes face = new FacesScopes();
 			String token = face.getBPMAuthenticationCtxToken();
@@ -300,6 +302,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		    setValidateContractField(resDTO);
+		    ConstructSideTabMenu();
 		    
 		    log.info("BackingBean: Performance Testing  preRenderView Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
 			log.info("BackingBean: Performance Testing  preRenderView Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
@@ -417,7 +420,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		    ConstructSideTabMenu();
 	}
 	
 public void ConstructSideTabMenu(){
@@ -774,6 +776,7 @@ public void ConstructSideTabMenu(){
 					    return CommonUIConst.ACKNOWLEDGE_PAGE;
 				    } else {
 				    	setValidateContractField(resDTO);
+				    	ConstructSideTabMenu();
 			    	}
 			  }
 		  } finally {
@@ -1648,7 +1651,6 @@ public void ConstructSideTabMenu(){
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
 			amendBB.setAmendmentContractVer(resDTO);
-			amendBB.ConstructTabSideMenu();
 		}finally {
 			contractSO = null;
 			ctBB = null;
@@ -1663,7 +1665,7 @@ public void ConstructSideTabMenu(){
 	
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-	    setValidateContractField(resDTO);  
+	    setValidateContractField(resDTO); 
 	    this.getManagedBean().setViewContract(true);
 	    this.getManagedBean().setSelectedTabIndex(0);
 		return CONTRACT_PAGE;
