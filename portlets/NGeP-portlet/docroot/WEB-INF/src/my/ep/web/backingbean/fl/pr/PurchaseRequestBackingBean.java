@@ -2585,8 +2585,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setRequestItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
 		reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+		reqDTO.setPriceType(getManagedBean().getPmPriceType());
 		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
-		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItem().getSupplierItemPrices());
+		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItemPriceList());
 	}
 	
 	private void sortAddressType(List<PmAddressType> addressTypeList) {
