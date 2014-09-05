@@ -1304,7 +1304,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					.retrieveOrgProfileListByOrgType(profileReqDTO);
 			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
 				requestNote.setPmOrgProfile(orgProfileResDTO.getOrgProfileList().get(0));
-				//ptjNameEvent();
+				ptjNameEvent();
 			}
 		}
 		
@@ -1685,6 +1685,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestItem.setCmItem(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem());
 					
 					// TODO selected ptj id for non contract item for pid
+					
 					purchaseInDefaultReqDTO.setOrgProfileId(scRequestNoteDtl.getScRequestNote().getPmOrgProfile().getOrgProfileId());
 					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
 					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
@@ -1704,8 +1705,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// request Note Items
 					requestNoteItems.add(requestItem);
 					//TODO call initialInformation &  fulfilmentTypeEvent methods based on ptj
-					initialInformation(scRequestNoteDtl.getScRequestNote());
-					fulfilmentTypeEvent(scRequestNoteDtl);
+					//initialInformation(scRequestNoteDtl.getScRequestNote());
+					//fulfilmentTypeEvent(scRequestNoteDtl);
 				}
 			}
 			this.getManagedBean().setRequestNoteDtls(requestNoteDtls);
