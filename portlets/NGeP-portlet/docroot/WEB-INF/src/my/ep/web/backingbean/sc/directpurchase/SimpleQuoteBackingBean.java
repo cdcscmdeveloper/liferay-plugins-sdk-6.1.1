@@ -1435,6 +1435,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * updateZone for location selection  in simple quote
     */
 	public void updateLocation() {
+		String locLevel = getManagedBean().getLocationLevel();
 		 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
 		List<TplSpecLoc> locationDTOs = new ArrayList<TplSpecLoc>();
 		if (getManagedBean().getSelectedLocNodes() != null) {
@@ -1454,13 +1455,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		if (getManagedBean().getLocIndex() == -1) {
 
-			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(states,
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locLevel, states,
 					districts, divisions, null,TplSpecZoneLoc.class));
 			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
 
 		} else if (getManagedBean().getLocIndex() >= 0) {
 			getManagedBean().getLocationTrees().remove(getManagedBean().getLocIndex());
-			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(null,
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locLevel, states,
 					districts, divisions, null,TplSpecZoneLoc.class));
 			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
 
@@ -1579,8 +1580,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
     			}
     		}
     	} else{
-    		TplSpecZoneLoc parentNode = (TplSpecZoneLoc) treeNode.getData();
-    		results.add(parentNode);
+    		if(!treeNode.getType().equalsIgnoreCase("division")){
+    			TplSpecZoneLoc parentNode = (TplSpecZoneLoc) treeNode.getData();
+    			results.add(parentNode);
+    		}
     	}
     	return results;
     }
@@ -2552,7 +2555,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}	
 			if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
 				 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
-				 LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(states,
+				 LocTrees.add(LocationSingleton.getInstance().constuctLocationTree("", states,
 									districts, divisions, null,TplSpecZoneLoc.class));
 				getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
 			}
