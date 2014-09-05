@@ -14,82 +14,71 @@ import my.ep.persistence.entity.pm.common.PmZone;
  *
  */
 public class SupportDocumentSearchBean {
-	private PmParameter docCategoryParam;
-	private PmParameter suppTypeParam;
-	private PmParameter comTypeParam;
-	private PmParameter appTypeParam;
-	private PmZone pmZone;
+	private Long docCategoryParam;
+	private Long suppTypeParam;
+	private Long comTypeParam;
+	private Long appTypeParam;
+	private Long pmZone;
 	private String docName;
 	private String businessCategory;
-	
 	/**
 	 * @return the docCategoryParam
 	 */
-	public PmParameter getDocCategoryParam() {
-		if(docCategoryParam==null)
-			docCategoryParam  = new PmParameter(); 
+	public Long getDocCategoryParam() {
 		return docCategoryParam;
 	}
 	/**
 	 * @param docCategoryParam the docCategoryParam to set
 	 */
-	public void setDocCategoryParam(PmParameter docCategoryParam) {
+	public void setDocCategoryParam(Long docCategoryParam) {
 		this.docCategoryParam = docCategoryParam;
 	}
 	/**
 	 * @return the suppTypeParam
 	 */
-	public PmParameter getSuppTypeParam() {
-		if(suppTypeParam==null)
-			suppTypeParam  = new PmParameter(); 
+	public Long getSuppTypeParam() {
 		return suppTypeParam;
 	}
 	/**
 	 * @param suppTypeParam the suppTypeParam to set
 	 */
-	public void setSuppTypeParam(PmParameter suppTypeParam) {
+	public void setSuppTypeParam(Long suppTypeParam) {
 		this.suppTypeParam = suppTypeParam;
 	}
 	/**
 	 * @return the comTypeParam
 	 */
-	public PmParameter getComTypeParam() {
-		if(comTypeParam==null)
-			comTypeParam  = new PmParameter(); 
+	public Long getComTypeParam() {
 		return comTypeParam;
 	}
 	/**
 	 * @param comTypeParam the comTypeParam to set
 	 */
-	public void setComTypeParam(PmParameter comTypeParam) {
+	public void setComTypeParam(Long comTypeParam) {
 		this.comTypeParam = comTypeParam;
 	}
 	/**
 	 * @return the appTypeParam
 	 */
-	public PmParameter getAppTypeParam() {
-		if(appTypeParam==null)
-			appTypeParam  = new PmParameter(); 
+	public Long getAppTypeParam() {
 		return appTypeParam;
 	}
 	/**
 	 * @param appTypeParam the appTypeParam to set
 	 */
-	public void setAppTypeParam(PmParameter appTypeParam) {
+	public void setAppTypeParam(Long appTypeParam) {
 		this.appTypeParam = appTypeParam;
 	}
 	/**
 	 * @return the pmZone
 	 */
-	public PmZone getPmZone() {
-		if(pmZone==null)
-			pmZone  = new PmZone(); 
+	public Long getPmZone() {
 		return pmZone;
 	}
 	/**
 	 * @param pmZone the pmZone to set
 	 */
-	public void setPmZone(PmZone pmZone) {
+	public void setPmZone(Long pmZone) {
 		this.pmZone = pmZone;
 	}
 	/**
@@ -116,6 +105,7 @@ public class SupportDocumentSearchBean {
 	public void setBusinessCategory(String businessCategory) {
 		this.businessCategory = businessCategory;
 	}
+	
 	
 	
 	
