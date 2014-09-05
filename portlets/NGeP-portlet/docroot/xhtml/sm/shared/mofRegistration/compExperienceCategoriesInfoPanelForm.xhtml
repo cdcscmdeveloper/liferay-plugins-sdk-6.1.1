@@ -63,6 +63,9 @@
 					<f:selectItems value="#{catBean.pmCategoryL3.pmCategoryL3s}"
 						var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
 						itemValue="#{conslSubChild.categoryL3Id}" />
+					<p:ajax event="change"
+						listener="#{backingBean.checkDuplicateCategoryForProject(catBean,backingBean.managedBean.selectedCompanyExperience)}"
+						update="conslSubChild" />
 				</p:selectOneMenu>
 				<p:message id="conslSubChildMsg" for="conslSubChild"
 					showSummary="true" showDetail="false" display="icon" />
