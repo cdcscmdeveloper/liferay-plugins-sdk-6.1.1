@@ -26,11 +26,16 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 
@@ -140,6 +145,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmAppl smAppl;
 	private List<TechnicalStaffBean> smPersonnelList;
+	private SmFacility smCompanyBasic;
+	private  List<SmChequeSignatory> smChequeSignatories;
+	private List<SmPersonnel> equityShareHolders;
+	private SmPersonnleCalcVO personCalc;
 	
 	private int technicalTableRow;
 	private int financialTableRow;
@@ -154,6 +163,102 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	}
 	
 	
+	
+
+	/**
+	 * @return the smCompanyBasic
+	 */
+	public SmFacility getSmCompanyBasic() {
+		List<SmFacility> facilities = null;
+		if(smAppl != null){
+			facilities = smAppl.getSmFacilities();
+		}
+		 
+		if(facilities != null){
+			
+			for (SmFacility facility : facilities){
+				
+				if(facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE || facility.getFacilityType() == SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE){
+					smCompanyBasic = facility;
+					break;
+				}
+			}
+			
+		}
+		return smCompanyBasic;
+	}
+
+
+
+	/**
+	 * @param smCompanyBasic the smCompanyBasic to set
+	 */
+	public void setSmCompanyBasic(SmFacility smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+
+
+
+
+	/**
+	 * @return the smChequeSignatories
+	 */
+	public List<SmChequeSignatory> getSmChequeSignatories() {
+		return smChequeSignatories;
+	}
+
+
+
+
+	/**
+	 * @param smChequeSignatories the smChequeSignatories to set
+	 */
+	public void setSmChequeSignatories(List<SmChequeSignatory> smChequeSignatories) {
+		this.smChequeSignatories = smChequeSignatories;
+	}
+
+
+
+
+	/**
+	 * @return the equityShareHolders
+	 */
+	public List<SmPersonnel> getEquityShareHolders() {
+		return equityShareHolders;
+	}
+
+
+
+
+	/**
+	 * @param equityShareHolders the equityShareHolders to set
+	 */
+	public void setEquityShareHolders(List<SmPersonnel> equityShareHolders) {
+		this.equityShareHolders = equityShareHolders;
+	}
+
+
+
+
+	/**
+	 * @return the personCalc
+	 */
+	public SmPersonnleCalcVO getPersonCalc() {
+		return personCalc;
+	}
+
+
+
+
+	/**
+	 * @param personCalc the personCalc to set
+	 */
+	public void setPersonCalc(SmPersonnleCalcVO personCalc) {
+		this.personCalc = personCalc;
+	}
+
+
+
 
 	/**
 	 * @return the toBeDeletedCashOnHandList
