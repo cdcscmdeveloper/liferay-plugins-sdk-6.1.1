@@ -117,23 +117,27 @@
 						<div style="width:100%; ">
 							<p:inputText id="typeremark1" value="#{review.typeRemark}"
 								size="30" requiredMessage="Type Remark is required!"
+								disabled="#{!(unspscCodeBackingBean.checkRemark(review.typeName, review.reviewedTypeName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.typeName, review.reviewedTypeName)}"></p:inputText>
 							<p:message id="typeremarkmsg" for="typeremark1"></p:message>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText id="brandRemark1" value="#{review.brandRemark}"
 								size="30" requiredMessage="Brand Remark is required!"
+								disabled="#{!(unspscCodeBackingBean.checkRemark(review.brandName, review.reviewedBrandName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.brandName, review.reviewedBrandName)}"></p:inputText>
 							<p:message id="brandremarkmsg" for="brandRemark1"></p:message>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.measurementRemark}" size="30" id="measurementRemark1" requiredMessage="Measurement Remark is required!"
+								disabled="#{!(unspscCodeBackingBean.checkRemark(review.measurementName, review.reviewedMeasurementName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.measurementName, review.reviewedMeasurementName)}">								
 							</p:inputText>
 							<p:message id="measurementremarkmsg" for="measurementRemark1"></p:message>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.colorRemark}" size="30" id="colorRemark1" requiredMessage="Color Remark is required!"
+							    disabled="#{!(unspscCodeBackingBean.checkRemark(review.colorName, review.reviewedColorName))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.colorName, review.reviewedColorName)}"></p:inputText>
 							<p:message id="colorremarkmsg" for="colorRemark1"></p:message>
 						</div>
