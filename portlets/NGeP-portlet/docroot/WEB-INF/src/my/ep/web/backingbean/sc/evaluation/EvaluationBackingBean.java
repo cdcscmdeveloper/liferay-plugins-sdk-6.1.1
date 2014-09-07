@@ -793,7 +793,7 @@ public class EvaluationBackingBean extends
 				List<String> evalstage = new ArrayList<String>();
 				evalstage.add(QTConstants.COMPLIANCE_CHECK);
 				reqDTO.setResultStages(evalstage);
-				// evaluationSO.prepareComplianceSummaryResults(reqDTO);
+				evaluationSO.prepareComplianceSummaryResults(reqDTO);
 				EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 				summaryReqDTO
 						.setQtId(this.getManagedBean().getScQt().getQtId());
