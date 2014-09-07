@@ -72,13 +72,16 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.vo.SmPersonnelSummaryCountVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -86,7 +89,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-import my.ep.web.vo.SmPersonnelSummaryCountVO;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -148,38 +151,31 @@ public class SPDetailBackingBean extends
 		getManagedBean().setPrepareActiveIndex(0);
 		IQTProposalSO proposalSO = null;
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
 			reqDTO.setHashSupplierId(supplierID);
-			ProposalResDTO resDTO = proposalSO
-					.retrieveProposalCheckListByQtIdNSupplierId(reqDTO);
+			
+			ProposalResDTO resDTO = proposalSO.retrieveProposalCheckListByQtIdNSupplierId(reqDTO);
 			getManagedBean().setQt(resDTO.getScQt());
+			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 
 			// Technical Check List
 			if (resDTO.getTechnicalCheckLists() != null) {
-				getManagedBean().setTecCheckDetailsList(
-						resDTO.getTechnicalCheckLists());
-
-				log.info("Technical Check list: "
-						+ resDTO.getTechnicalCheckLists().size());
+				getManagedBean().setTecCheckDetailsList(resDTO.getTechnicalCheckLists());
+				log.info("Technical Check list: " + resDTO.getTechnicalCheckLists().size());
 			}
+			
 			// Financial Check List
 			if (resDTO.getFinancialCheckLists() != null) {
-
-				getManagedBean().setFinanceCheckDetailsList(
-						resDTO.getFinancialCheckLists());
-
-				log.info("Financial Check list: "
-						+ resDTO.getFinancialCheckLists().size());
+				getManagedBean().setFinanceCheckDetailsList(resDTO.getFinancialCheckLists());
+				log.info("Financial Check list: " + resDTO.getFinancialCheckLists().size());
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
 				Date today = new Date();
-				long days = DateUtils.getDaysDifference(today, getManagedBean()
-						.getQt().getClosingDate());
+				long days = DateUtils.getDaysDifference(today, getManagedBean().getQt().getClosingDate());
 				this.getManagedBean().setDays(days);
 			}
 
@@ -208,44 +204,55 @@ public class SPDetailBackingBean extends
 	/**
 	 * Method to save the Supplier Proposal details
 	 */
-	public void saveSPDetailsAction() {
-		debugLogger("saveSPDetailsAction");
+	public void submitSupplierProposal() {
+		debugLogger("submitSupplierProposal");
+		
 		IQTProposalSO proposalSO = null;
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalSO = BusinessDelegate.getInstance().getServiceObject( ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			
 			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+			List<ScQtProposalChecklist> technicalChecklist = getManagedBean().getTecCheckDetailsList();
+			List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
+			
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
-			List<ScQtProposalChecklist> tecQtProposalChecklists = getManagedBean()
-					.getTecCheckDetailsList();
-			scQtProposalChecklists.addAll(tecQtProposalChecklists);
-			tecQtProposalChecklists = getManagedBean()
-					.getFinanceCheckDetailsList();
-			scQtProposalChecklists.addAll(tecQtProposalChecklists);
+			scQtProposalChecklists.addAll(technicalChecklist);
+			scQtProposalChecklists.addAll(financialChecklist);
+			scQtProposal.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(scQtProposalChecklists));
+			
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtSupplierId(1L);
-			ProposalResDTO resDTO = new ProposalResDTO();
-			// Update Changes
-			for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
-				proposalChecklist.setSubmitted(true);
-			}
-			scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
+			reqDTO.setQtSupplierId(getManagedBean().getQtProposal().getScQtSupplier().getQtSupplierId());
 			reqDTO.setScQtProposal(scQtProposal);
-			resDTO = proposalSO.saveQTDtl(reqDTO);
+			reqDTO.setTechnicalChecklist(new ArrayList<ScQtProposalChecklist>(technicalChecklist));
+			reqDTO.setFinancialChecklist(new ArrayList<ScQtProposalChecklist>(financialChecklist));
+			reqDTO.setAgreeWithIntegrityPact(getManagedBean().isAgreeWithIntegrityPact());
+			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean().isAgreeWithOthersTermsConditions());
+			
+			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				String message = "QT Proposal No. : "
-						+ scQtProposal.getQtProposalId();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record saved successfully.", message));
+				String variable1 = CommonMethod.getMessageCommon("lbl.sc.sp.pplno");
+				String variable2 = scQtProposal.getProposalNo();
+				commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
 			} else {
 				throw new EpException("Failed.");
 			}
 		} finally {
 			proposalSO = null;
 		}
+	}
+	
+	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+			FacesMessage.SEVERITY_INFO, 
+			null,
+			MessageUtils.getMessage(messageId, 
+					new String[]{variable1, variable2}, 
+					MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					new FacesScopes().getUserLocale())));
+		 // clear data
+		super.renewSesionObject();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 	/**
