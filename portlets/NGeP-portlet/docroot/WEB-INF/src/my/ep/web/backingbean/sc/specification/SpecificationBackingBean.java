@@ -1464,6 +1464,7 @@ public class SpecificationBackingBean extends
 						for (TplSpecZoneDtl zoneDtl : tenderResDTO
 								.getZoneDetails()) {
 							ctPanelZone.add(zoneDtl.getPanelZone());
+							this.getManagedBean().setCtPanelZones(ctPanelZone);
 						}
 						getManagedBean().getCtZoneSuppliers().add(
 								LocationSingleton.getInstance()
@@ -1472,7 +1473,7 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-
+				
 			}
 
 		} finally {
@@ -3383,7 +3384,7 @@ public class SpecificationBackingBean extends
 	 *            (To get the status we need to docType)
 	 */
 	public void retriveSpecdetails(Long qtId, String docType) {
-		
+
 		IQTDetailSO QtDetailsSO;
 		try {
 
@@ -7915,15 +7916,12 @@ public class SpecificationBackingBean extends
 	public void deleteSupplierQualificationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
-		/*if (!rootTrees.isEmpty()) {
-			ScQtSupplierCriteria supplierCriteria = null;
-			this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
-			this.getManagedBean()
-					.getScQt()
-					.getScQtSupplierCriteria()
-					.setScQtLocCriteria(
-							getQuoteZones(rootTrees, supplierCriteria));
-		}*/
+		/*
+		 * if (!rootTrees.isEmpty()) { ScQtSupplierCriteria supplierCriteria =
+		 * null; this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		 * this.getManagedBean() .getScQt() .getScQtSupplierCriteria()
+		 * .setScQtLocCriteria( getQuoteZones(rootTrees, supplierCriteria)); }
+		 */
 		this.getManagedBean().setIndex(-1);
 	}
 
