@@ -97,15 +97,6 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		}
    }
    
-   public int getAssocContractCount(Long associationId) {
-		ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
-		IContractAssociationSO contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAssociationSO.class);
-		reqDTO.setAssociationId(associationId);
-		ContractAssociationResDTO resDTO = contractAssociationSO.retrieveAssociation(reqDTO);
-		
-		return resDTO.getCtAssociation().getCtAssocContracts().size();
-	}
-   
      public void deleteAssociation() {
 
 		IContractAssociationSO contractAssociationSO = null;
@@ -311,7 +302,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 					searchBean.getDataFilterBeans().add(filterBean);	
 				}			
 				if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-					SearchFilterBean filterBean = new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.supplierCompanyName",
+					SearchFilterBean filterBean = new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.supplierName",
 														SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getCtSupplierName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
@@ -400,6 +391,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setContractSearchBean(searchBean);
+				reqDTO.setFilterByAssocContract(true);
 				ContractResDTO resDTO = contractSO.searchContract(reqDTO);
 				getManagedBean().setSelectedIndex(0);
 				
