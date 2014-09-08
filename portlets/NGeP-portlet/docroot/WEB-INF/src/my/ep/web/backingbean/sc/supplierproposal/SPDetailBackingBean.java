@@ -64,6 +64,8 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -1397,10 +1399,6 @@ public class SPDetailBackingBean extends
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
-			System.out
-					.println("******FN(NON_GOVT_COMPANY_EXPERIENCE_PAGE) defenition type parameter code is ******"
-							+ scQtProposalChecklist.getScQtCheckList()
-									.getPmDocument().getDocDefinitionKey());
 
 			List<ScQtProposalChecklist> techinicalProposalCheckLists = this
 					.getManagedBean().getTecCheckDetailsList();
@@ -1751,10 +1749,13 @@ public class SPDetailBackingBean extends
 		log.info("Supplier Id : " + supplierId);
 
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
-
+		
+		
 		if (smSupplier == null
 				|| (smSupplier.getSupplierId() != null && smSupplier
 						.getSupplierId().longValue() != supplierId)) {
+			
+		//	System.out.println("*****SmSupplier id is*****"+ );
 
 			IQTProposalSO proposalSO = null;
 			try {
@@ -1762,16 +1763,13 @@ public class SPDetailBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								IQTProposalSO.class);
 
-				System.out
-						.println("******SD(SUPPLIER_DETAILS_PAGE) defenition type parameter code is ******"
-								+ scQtProposalChecklist.getScQtCheckList()
-										.getPmDocument().getDocDefinitionKey());
-
 				ProposalReqDTO reqDTO = new ProposalReqDTO();
 				reqDTO.setSupplierId(supplierId);
 				ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				getManagedBean().setSmAppl(resDTO.getSmAppl());
+				log.info("*****SmAppl Appl_Id : *****" + resDTO.getSmAppl().getApplId());
+				//  equityShareHolders for 
 				List<SmPersonnel> equityShareHolders = new ArrayList<SmPersonnel>();
 
 				for (SmPersonnel personnel : resDTO.getSmAppl()
@@ -1782,8 +1780,18 @@ public class SPDetailBackingBean extends
 					}
 				}
 				getManagedBean().setEquityShareHolders(equityShareHolders);
-				// To fetch data for personnel tab
 				
+				// to set data for category codes
+				
+				System.out.println("********** category test***********");
+				if(resDTO.getSmAppl().getSmSupplierCategories() != null && resDTO.getSmAppl().getSmSupplierCategories().size() != 0){
+					for (SmSupplierCategory category : resDTO.getSmAppl().getSmSupplierCategories()){
+						System.out.println("&&&&&&&****** supplier category id is *****&&&&&&"+ category.getSupplierCategoryId());
+					}
+					
+				}
+				
+				// To fetch data for personnel tab
 				if(getManagedBean().getSmAppl().getSmPersonnels() !=  null){
 					System.out.println("**** Personnel sizze **** "+getManagedBean().getSmAppl().getSmPersonnels().size());
 					SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
@@ -1793,6 +1801,10 @@ public class SPDetailBackingBean extends
 					System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getHghMngNonBumiCnt());
 					System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getStfNonBumiEnterCnt());
 				}
+				
+				// To set data for bankinfo tab
+				getManagedBean().setSmChequeSignatories(getManagedBean().getSmAppl().getSmSupplierBanks().get(0).getSmChequeSignatories());
+				
 				//staffInformation();
 				log.info("Paid up capital : "
 						+ getManagedBean().getSmAppl().getSmCompanyBasic()
@@ -2435,147 +2447,6 @@ public class SPDetailBackingBean extends
 		SmSupplierBank bank = (SmSupplierBank) event.getObject();
 		getManagedBean().setSmChequeSignatories(bank.getSmChequeSignatories());
 
-	}
-
-	private void staffInformation() {
-		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
-			calcSumUpByPersonnel(per);
-		}
-	}
-
-	private void calcSumUpByPersonnel(SmPersonnel per) {
-
-		if (per.isDirector()) {
-
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getBodBumiCnt(), getManagedBean().getPersonCalc()
-					.getBodNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getBodFrgCnt());
-			getManagedBean().getPersonCalc().setBodBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setBodNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setBodFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-
-		if (per.isHigherManagement()) {
-
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getHghMngBumiCnt(), getManagedBean().getPersonCalc()
-					.getHghMngNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getHghMngFrgCnt());
-			getManagedBean().getPersonCalc().setHghMngBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setHghMngNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setHghMngFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-
-		if (per.isManagement()) {
-
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getMngtBumiCnt(), getManagedBean().getPersonCalc()
-					.getMngtNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getMngtFrgCnt());
-			getManagedBean().getPersonCalc().setMngtBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setMngtNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setMngtFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-
-		if (per.isClerical()) {
-
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getStfBumiEnterCnt(), getManagedBean().getPersonCalc()
-					.getStfNonBumiEnterCnt(), getManagedBean().getPersonCalc()
-					.getStfFrgEnterCnt());
-			getManagedBean().getPersonCalc().setStfBumiEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setStfNonBumiEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setStfFrgEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			if (per.isProf()) {
-
-				setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-						.getProfBumiEnterCnt(), getManagedBean()
-						.getPersonCalc().getProfNonBumiEnterCnt(),
-						getManagedBean().getPersonCalc().getProfFrgEnterCnt());
-				getManagedBean().getPersonCalc().setProfBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getBumiCount());
-				getManagedBean().getPersonCalc().setProfNonBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getNonBumiCount());
-				getManagedBean().getPersonCalc().setProfFrgEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getFrgCount());
-
-			}
-			if (per.isSemiProf()) {
-
-				setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-						.getSemiBumiEnterCnt(), getManagedBean()
-						.getPersonCalc().getSemiNonBumiEnterCnt(),
-						getManagedBean().getPersonCalc().getSemiFrgEnterCnt());
-				getManagedBean().getPersonCalc().setSemiBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getBumiCount());
-				getManagedBean().getPersonCalc().setSemiNonBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getNonBumiCount());
-				getManagedBean().getPersonCalc().setSemiFrgEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getFrgCount());
-			}
-
-		}
-
-	}
-
-	private void setPersonnelCountSummary(SmPersonnel per, int bumiCount,
-			int nonBumCount, int frgCount) {
-		getManagedBean().getPersonCalc().setSummaryCountVO(
-				new SmPersonnelSummaryCountVO());
-
-		if (per.getPmCountry() != null
-				&& per.getPmCountry().getCountryCode() != null
-				&& per.getPmCountry().getCountryCode()
-						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-			if (per.getBumiFlg() == 1) {
-				bumiCount = bumiCount + 1;
-			} else {
-				nonBumCount = nonBumCount + 1;
-			}
-		} else {
-			frgCount = frgCount + 1;
-		}
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setBumiCount(bumiCount);
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setNonBumiCount(nonBumCount);
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setFrgCount(frgCount);
 	}
 
 }
