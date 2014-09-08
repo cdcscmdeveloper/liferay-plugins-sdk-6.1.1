@@ -370,14 +370,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 		}
 	}
-
-	public void delAddrList(){
-		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-		FulfilmentResDTO resDTO = flOrderSO.getDeliveryAddressListById(reqDTO);
-		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
-	}
 	
 	public void calculateDelAmt(FlDeliveryOrder delOrder){
 		for(FlDelOrderItem orderItem : delOrder.getFlDelOrderItem()){

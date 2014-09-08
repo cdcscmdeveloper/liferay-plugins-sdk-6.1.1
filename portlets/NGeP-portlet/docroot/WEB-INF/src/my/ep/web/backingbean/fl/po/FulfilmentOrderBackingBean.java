@@ -199,15 +199,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			fulfilmentOrderSO = null;
 		}
 	}
-	
-	public FulfilmentResDTO getDeliveryAddress() {
-		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		List<FlDeliveryAddress> deliveryAddressList = filmentOrderSO.getDeliveryAddressList();
-		this.getManagedBean().setDeliveryAddressList(deliveryAddressList);
-		return resDTO;
-
-	}
 
 	public String navigateToFlOrder(int index) {
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
