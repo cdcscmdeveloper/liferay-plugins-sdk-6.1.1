@@ -597,7 +597,6 @@ public class QTBusinessOwnerBackingBean extends
 					}
 					if (null != member1) {
 						member1.setCommitteeMemberId(null);
-						member1.setScCommittee(null);
 						setUserDetails(member1);
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
