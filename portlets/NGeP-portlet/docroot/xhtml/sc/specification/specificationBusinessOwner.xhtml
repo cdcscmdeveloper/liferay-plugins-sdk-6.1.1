@@ -48,12 +48,16 @@
 			</tr>
 
 			<tr>
-
-				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3"><p:inputTextarea rows="2" cols="143" style="margin-bottom:5px;width: 80%;"
-						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-						maxlength="200"
-						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
+					<td><h:outputLabel
+							value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+					<td colspan="3"><p:inputTextarea rows="2" cols="143"
+							style="margin-bottom:5px;width: 80%;"
+							disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+							maxlength="200"
+							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"></p:inputTextarea></td>
+				</ui:fragment>
 
 			</tr>
 
@@ -222,11 +226,15 @@
 				<p:dataTable id="zoneGeneralDataTable"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
-					selection="#{specificationBackingBean.managedBean.selectedTreeNode}"
-					selectionMode="single" rowKey="#{zoneTree}">
+					rowKey="#{zoneTree}">
 
 					<p:column headerText="Location" style="width:90%">
-						<p:tree value="#{zoneTree}" var="location">
+						<p:tree value="#{zoneTree}" var="location"
+							selectionMode="checkbox">
+							<p:ajax event="select"
+								listener="#{specificationBackingBean.selectZoneTreeNode}" />
+							<p:ajax event="unselect"
+								listener="#{specificationBackingBean.unSelectZoneTreeNode}" />
 
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
@@ -263,9 +271,8 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this" update="@([id$=zonePopupGeneral])"
-					oncomplete="ZoneGeneral.show();"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
+					update="@([id$=zonePopupGeneral])" oncomplete="ZoneGeneral.show();"
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
