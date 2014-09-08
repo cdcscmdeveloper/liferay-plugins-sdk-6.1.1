@@ -9,7 +9,7 @@
 
 
 	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
-		height="500">
+		id="bocreateSpec" height="500">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.business.owner']}"></ac:title> -->
 		<p:messages id="bocreateTemplate" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -50,6 +50,9 @@
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
+									<p:ajax event="change"
+										listener="#{specificationBackingBean.itemTypeChange}"
+										update="searchBospec"></p:ajax>
 
 								</p:selectOneMenu> <p:message id="boItemType" for="templateSpecItemType"
 									display="icon"></p:message></td>
@@ -71,7 +74,9 @@
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
 
-
+									<p:ajax event="change"
+										listener="#{specificationBackingBean.itemTypeChange}"
+										update="searchBospec"></p:ajax>
 								</p:selectOneMenu> <p:message id="sourcingBoItemType" for="sourcingSpecItemType"
 									display="icon"></p:message></td>
 						</tr>
@@ -103,8 +108,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
 					action="#{specificationBackingBean.searchScqtDocAction}"
-					process="@this searchBospec" update="searchBospec,createList"
-					icon="ui-icon-search" />
+					process="@this searchBospec" update="@form" icon="ui-icon-search" />
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.reset']}"
 					icon="ui-icon-reset" partialSubmit="true" update="searchBospec"
 					process="@this" action="#{specificationBackingBean.resetTemplate}" />
@@ -143,15 +147,17 @@
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
-							<p:commandButton value="Create"
+							<p:commandButton value="Create" process="@all"
+								update=":form:searchBospec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
-								oncomplete="create.hide();" icon="ui-icon-add"></p:commandButton>
+								icon="ui-icon-add"></p:commandButton>
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
+								process="@all" update=":form:searchBospec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'BO')}"
-								oncomplete="create.hide();" icon="ui-icon-clone"></p:commandButton>
+								icon="ui-icon-clone"></p:commandButton>
 						</ui:fragment>
 					</p:column>
 

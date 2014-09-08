@@ -8,7 +8,7 @@
 
 
 
-	<p:dialog widgetVar="createCommitteeSpec" modal="true" width="1000"
+	<p:dialog widgetVar="createOwnerSpec" modal="true" width="1000"
 		height="500">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
 		<p:messages id="specCommitteecreateTemplate" showDetail="true"
@@ -52,6 +52,10 @@
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
+											<p:ajax event="change"
+										listener="#{specificationBackingBean.itemTypeChange}"
+										update="commiteeCreationSpec"></p:ajax>
+										
 								</p:selectOneMenu> <p:message id="strdTemplateItemType"
 									for="standardCommitteeItemType" display="icon"></p:message></td>
 						</tr>
@@ -70,6 +74,9 @@
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
+											<p:ajax event="change"
+										listener="#{specificationBackingBean.itemTypeChange}"
+										update="commiteeCreationSpec"></p:ajax>
 								</p:selectOneMenu> <p:message id="sourcingTemplateItemType"
 									for="sourcingCommitteeItemType" display="icon">
 								</p:message></td>
@@ -143,15 +150,17 @@
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
-							<p:commandButton value="Create"
+							<p:commandButton value="Create" process="@all"
+								update=":form:commiteeCreationSpec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
-								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-add"></p:commandButton>
+								 icon="ui-icon-add"></p:commandButton>
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
-							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
+							<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}" process="@all"
+								update=":form:commiteeCreationSpec"
 								action="#{specificationBackingBean.createTemplateSpec(tplSpecMaster,'SC')}"
-								oncomplete="createCommitteeSpec.hide();" icon="ui-icon-clone"></p:commandButton>
+								 icon="ui-icon-clone"></p:commandButton>
 						</ui:fragment>
 					</p:column>
 
