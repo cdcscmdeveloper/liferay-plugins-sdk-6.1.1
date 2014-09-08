@@ -64,7 +64,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
@@ -75,15 +74,15 @@ import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
-import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pp.common.CommonMethod;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.template.DocumentGenerator;
-import my.ep.web.vo.SmPersonnelSummaryCountVO;
+import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -315,7 +314,8 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
-
+				debugLogger("*****save successfull*****"+resDTO.isSuccessful());
+				
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -1431,7 +1431,6 @@ public class SPDetailBackingBean extends
 							.getScQtCheckList().getPmDocument()
 							.getDocDefinitionKey());
 					resDTO = proposalSO.retrieveNonGovCompanyExpDtls(reqDTO);
-
 					scQtPRPExperiences = resDTO.getPrpExperience();
 				}
 			}
@@ -1750,12 +1749,9 @@ public class SPDetailBackingBean extends
 
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
 		
-		
 		if (smSupplier == null
 				|| (smSupplier.getSupplierId() != null && smSupplier
 						.getSupplierId().longValue() != supplierId)) {
-			
-		//	System.out.println("*****SmSupplier id is*****"+ );
 
 			IQTProposalSO proposalSO = null;
 			try {
@@ -1791,17 +1787,19 @@ public class SPDetailBackingBean extends
 					
 				}
 				
-				// To fetch data for personnel tab
-				if(getManagedBean().getSmAppl().getSmPersonnels() !=  null){
-					System.out.println("**** Personnel sizze **** "+getManagedBean().getSmAppl().getSmPersonnels().size());
-					SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
-					smApplBB.getManagedBean().setSmAppl(getManagedBean().getSmAppl());
-					getManagedBean().setPersonCalc(smApplBB.getPersonnelCalculationVO());
-					System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getBodNonBumiCnt());
-					System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getHghMngNonBumiCnt());
-					System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getStfNonBumiEnterCnt());
-				}
 				
+				// To fetch data for personnel tab using the new static method
+				
+				if(getManagedBean().getSmAppl().getSmPersonnels() !=  null){
+					SmPersonnleCalcVO personnelVO = SmCommonUtil.calcPersonnelListCount(
+							 getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmStaffTotals(),
+							 getManagedBean().getSmSupplier().getBusinessType());
+							getManagedBean().setPersonCalc(personnelVO);
+							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getBodNonBumiCnt());
+							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getHghMngNonBumiCnt());
+							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getStfNonBumiEnterCnt());
+				}
+								
 				// To set data for bankinfo tab
 				getManagedBean().setSmChequeSignatories(getManagedBean().getSmAppl().getSmSupplierBanks().get(0).getSmChequeSignatories());
 				
