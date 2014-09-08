@@ -49,7 +49,7 @@
 						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.address']}">
-					<h:outputText value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
+					<p:outputLabel style="float : left" value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
 				</p:column>
 			</p:dataTable>
 

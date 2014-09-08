@@ -75,7 +75,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.sp.ac.type']}"/>
 					</f:facet>
-					<h:outputText value="#{supplierProposalDetailBackingBean.getParameterDesc(cashonhand.accountType)}"
+					<p:outputLabel style="float : left" value="#{supplierProposalDetailBackingBean.getParameterDesc(cashonhand.accountType)}"
 						rendered="#{cashonhand.brandNew eq false}" />
 					<p:selectOneMenu id="accountType" value="#{cashonhand.accountType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"

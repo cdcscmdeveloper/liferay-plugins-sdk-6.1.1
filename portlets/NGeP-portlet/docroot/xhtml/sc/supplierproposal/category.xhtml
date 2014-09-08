@@ -6,37 +6,33 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true">
+		<p:dataTable id="supplierCategory" rowIndexVar="index"
+			rowKey="#{supplierCategory}" value="#{smAppl.smSupplierCategories}"
+			var="supplierCategory">
+			<ac:paginator for="supplierCategory"></ac:paginator>
 
+			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
+				<h:outputText
+					value="#{supplierCategory.pmCategoryL1.categoryL1Code}"></h:outputText>
+			</p:column>
 
-		<p:panel header="#{lbl['lbl.sc.spec.category.code']}" toggleable="true" >
-			<p:dataTable id="supplierCategory"  value="smAppl.smSupplierCategories"
-				var="supplierCategory" >
-				<ac:paginator for="supplierCategory"></ac:paginator>
-				
-				<p:column headerText="#{lbl['lbl.sc.spec.category.code']}">
-					<p:outputLabel value="#{supplierCategory.pmCategoryL1.categoryL1Code}"></p:outputLabel>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
+				<h:outputText value="#{supplierCategory.pmCategoryL1.categoryName}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
+				<h:outputText value="#{supplierCategory.pmCategoryL2.categoryName}"></h:outputText>
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.main.category']}">
-					<p:outputLabel value="#{supplierCategory.pmCategoryL1.categoryName}"></p:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}">
-					<p:outputLabel value="#{supplierCategory.pmCategoryL2.categoryName}"></p:outputLabel>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
+				<h:outputText value="#{supplierCategory.pmCategoryL3.categoryName}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
+				<h:outputText
+					value="#{(supplierCategory.specialCategory) ? 'Special' : 'Normal'}"></h:outputText>
+			</p:column>
+		</p:dataTable>
 
-				<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}">
-					<p:outputLabel value="#{supplierCategory.pmCategoryL3.categoryName}"></p:outputLabel>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.spec.category.type']}">
-					<p:outputLabel value="#{(supplierCategory.specialCategory) ? 'Special' : 'Normal'}"></p:outputLabel>
-				</p:column>
-			</p:dataTable>
-
-		</p:panel>
-
-
-	
-
-	
+	</p:panel>
 
 </ui:composition>

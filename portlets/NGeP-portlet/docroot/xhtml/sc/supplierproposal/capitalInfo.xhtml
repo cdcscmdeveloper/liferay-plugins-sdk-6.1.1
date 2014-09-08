@@ -141,13 +141,13 @@
 				rowKey="sharePerson">
 				<ac:paginator for="sharePerson" />
 				<p:column headerText="#{lbl['lbl.sc.spec.personal.name']}">
-					<p:outputLabel value="#{sharePerson.name}"></p:outputLabel>
+					<p:outputLabel style="float : left" value="#{sharePerson.name}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.tech.identification.no']}">
 					<p:outputLabel value="#{sharePerson.identificationNo}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.citizen']}">
-					<p:outputLabel
+					<p:outputLabel style="float : left;"
 						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? 'Yes' : 'No'}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.amount']}">
@@ -157,7 +157,7 @@
 					<p:outputLabel value="#{sharePerson.sharePercentage}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
-					<p:outputLabel value="#{sharePerson.designation}"></p:outputLabel>
+					<p:outputLabel style="float : left" value="#{sharePerson.designation}"></p:outputLabel>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -168,7 +168,7 @@
 				value="#{smAppl.smEquityCompanies}" rowKey="#{shareCompany}">
 				<ac:paginator for="shareCompany" />
 				<p:column headerText="#{lbl['lbl.sc.spec.company.name']}">
-					<p:outputLabel value="#{shareCompany.companyName}"></p:outputLabel>
+					<p:outputLabel style="float : left" value="#{shareCompany.companyName}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}">
 					<p:outputLabel value="#{shareCompany.regNo}"></p:outputLabel>

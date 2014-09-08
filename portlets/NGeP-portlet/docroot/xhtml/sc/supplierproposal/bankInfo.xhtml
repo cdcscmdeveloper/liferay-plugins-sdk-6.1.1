@@ -20,10 +20,10 @@
 				<p:outputLabel value="#{bankDtls.accountNo}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.bank.name']}">
-				<p:outputLabel value="#{bankDtls.pmFinancialOrg.finOrgName}" />
+				<h:outputText value="#{bankDtls.pmFinancialOrg.finOrgName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.address']}">
-				<p:outputLabel value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
+				<p:outputLabel style="float : left;" value="#{supplierProposalDetailBackingBean.getFullAddress(bankDtls.smAddress)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -35,16 +35,16 @@
 			rowKey="#{chequesignatories}">
 			<ac:paginator for="cheque"></ac:paginator>
 			<p:column headerText="#{lbl['lbl.sc.spec.cheque.sign']}">
-				<p:outputLabel value="#{cheque.smPersonnel.name}"></p:outputLabel>
+				<h:outputText value="#{cheque.smPersonnel.name}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.passport.no']}">
-				<p:outputLabel value="#{cheque.smPersonnel.identificationNo}" ></p:outputLabel>
+				<h:outputText value="#{cheque.smPersonnel.identificationNo}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.bumi.status']}">
-				<p:outputLabel value="#{(cheque.smPersonnel.bumi) ? 'Yes' : 'No'}" ></p:outputLabel>
+				<h:outputText value="#{(cheque.smPersonnel.bumi) ? 'Yes' : 'No'}" ></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.share.position']}">
-				<p:outputLabel value="#{cheque.smPersonnel.designation}" ></p:outputLabel>
+				<h:outputText value="#{cheque.smPersonnel.designation}" ></h:outputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>

@@ -76,7 +76,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.sp.credit.type']}"/>
 					</f:facet>
-					<h:outputText value="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
+					<p:outputLabel style="float : left" value="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
 						rendered="#{creditfacilities.brandNew eq false}" />
 					<p:selectOneMenu id="creditType" value="#{creditfacilities.creditType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"
