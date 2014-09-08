@@ -1203,7 +1203,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		requestSupplierItem.setRequestNoteItem(scRequestItem);
-		requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+		if(requestNote.getRequestNoteNo() == null || requestNote.getRequestNoteNo().isEmpty()){
+			requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
+		}
+		
 		scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		scRequestNoteDtl.setRequestItem(scRequestItem);
 
@@ -1570,7 +1573,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (requestNoteDtl.isSelected()) {
 					// delete request note list
 					requestNoteDtl.setDeleted(Boolean.TRUE);
-					deleteRequestNoteDtls.add(requestNoteDtl);
+					
+					if(requestNoteDtl.getRequestNoteDtlId() != null){
+						deleteRequestNoteDtls.add(requestNoteDtl);
+					}
+					
 					++ counter;
 				} else{
 					mainRequestNoteDtls.add(requestNoteDtl);
