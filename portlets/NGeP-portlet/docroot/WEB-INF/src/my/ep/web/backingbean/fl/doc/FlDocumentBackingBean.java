@@ -292,7 +292,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) { 
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
 				FlStopInstr flStopInstr = new FlStopInstr();
 
@@ -319,7 +319,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO) && buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
@@ -345,7 +345,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
@@ -379,7 +379,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
 			Long flReqId=resDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId();
 			reqDTO.setFlRequestId(flReqId);
@@ -756,7 +756,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					if(null != resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
@@ -775,7 +775,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					if(null != resDTO.getFlDeliveryOrder().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
@@ -795,7 +795,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					if(null != resDTO.getInvoice().getFlFulfilmentOrder()){
 						reqDTO.setFlOrderId(resDTO.getInvoice().getFlFulfilmentOrder().getFulfilmentOrderId());
 						fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
-						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);
+						resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 							if(null != resDTO.getFlOrder()){
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
@@ -809,7 +809,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType) || ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(docType)){
 				fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 				reqDTO.setFlOrderId(Long.valueOf(docId));
-		        resDTO = fulfilmentOrderSO.retrieveFulfilmentOrder(reqDTO);			
+		        resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 				if(null != resDTO.getFlOrder()){
 					if(null != resDTO.getFlOrder()){
 						if(null != resDTO.getFlOrder().getStatus()){
