@@ -97,6 +97,15 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		}
    }
    
+   public int getAssocContractCount(Long associationId) {
+		ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
+		IContractAssociationSO contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAssociationSO.class);
+		reqDTO.setAssociationId(associationId);
+		ContractAssociationResDTO resDTO = contractAssociationSO.retrieveAssociation(reqDTO);
+		
+		return resDTO.getCtAssociation().getCtAssocContracts().size();
+	}
+   
      public void deleteAssociation() {
 
 		IContractAssociationSO contractAssociationSO = null;
