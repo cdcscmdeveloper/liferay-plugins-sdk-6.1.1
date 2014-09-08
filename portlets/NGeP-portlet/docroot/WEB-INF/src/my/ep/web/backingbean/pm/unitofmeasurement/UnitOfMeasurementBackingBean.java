@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -16,6 +17,7 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
@@ -219,13 +221,30 @@ public class UnitOfMeasurementBackingBean extends
 	}
 	
 	/**
-	 * save and update salutation details
+	 * Validation message for unit of measurement details
+	 * 
+	 */
+	private void validationMessage(PmUom uom){
+		debugLogger("validationMessage");
+		if(StringUtils.isBlank(uom.getUomCode())){
+			throw new EpException("UOM Code is Mandatory");
+		}
+		
+		if(StringUtils.isBlank(uom.getUomName())){
+			throw new EpException("UOM Name is Mandatory");
+		}		
+	}	
+	
+	/**
+	 * save and update unit of measurement details
 	 * 
 	 */
 	public void saveMeasurementDtls() {
 		debugLogger("saveMeasurementDtls");
 		
 		PmUom uom = this.getManagedBean().getPmUom();
+		validationMessage(uom);
+		
 		UomReqDTO reqDTO = new UomReqDTO();
 		reqDTO.setPmUom(uom);
 

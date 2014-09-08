@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -17,6 +18,7 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.type.aut.SearchOperator;
@@ -191,6 +193,26 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public void searchProfessionalCertBody() {
 		getProfCertBodyModel().reloadData();
 	}
+	
+	/**
+	 * Validation message for professional / certified details
+	 * 
+	 */
+	private void validationMessage(PmCertBody certBody){
+		debugLogger("validationMessage");
+		if(StringUtils.isBlank(certBody.getBodyCode())){
+			throw new EpException("Code is Mandatory");
+		}
+		
+		if(StringUtils.isBlank(certBody.getBodyName())){
+			throw new EpException("Name is Mandatory");
+		}	
+		
+		if(StringUtils.isBlank(certBody.getDescription())){
+			throw new EpException("Description is Mandatory");
+		}			
+		
+	}		
 
 	/**
 	 * to save professional / certified details
@@ -198,6 +220,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 */	
 	public void saveCertBodyDtls(){
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
+		validationMessage(certBody);
+		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 		CertBodyReqDTO certBodyReqDTO= new CertBodyReqDTO();
 		certBodyReqDTO.setCertBody(certBody);

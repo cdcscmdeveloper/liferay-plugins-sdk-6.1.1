@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -15,6 +16,7 @@ import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.type.aut.SearchOperator;
@@ -187,6 +189,21 @@ public class EducationBackingBean extends
 	}	
 	
 	/**
+	 * Validation message for pmfield details
+	 * 
+	 */
+	private void validationMessage(PmEduField eduField){
+		debugLogger("validationMessage");
+		if(StringUtils.isBlank(eduField.getFieldCode())){
+			throw new EpException("Field Code is Mandatory");
+		}
+		
+		if(StringUtils.isBlank(eduField.getFieldName())){
+			throw new EpException("Field Name is Mandatory");
+		}		
+	}	
+	
+	/**
 	 * save and update education field details
 	 * 
 	 */
@@ -194,6 +211,8 @@ public class EducationBackingBean extends
 		debugLogger("saveEducationDtls");
 		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
+		validationMessage(eduField);
+		
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		reqDTO.setEduField(eduField);
 		

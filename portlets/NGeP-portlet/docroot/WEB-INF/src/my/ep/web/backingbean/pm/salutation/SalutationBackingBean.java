@@ -6,6 +6,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -16,6 +17,7 @@ import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.type.aut.SearchOperator;
@@ -198,11 +200,28 @@ public class SalutationBackingBean extends
 	}	
 	
 	/**
+	 * Validation message for salutation details
+	 * 
+	 */
+	private void validationMessage(PmSalutation salutation){
+		debugLogger("validationMessage");
+		if(StringUtils.isBlank(salutation.getSalutationCode())){
+			throw new EpException("Salutation Code is Mandatory");
+		}
+		
+		if(StringUtils.isBlank(salutation.getSalutationName())){
+			throw new EpException("Salutation Name is Mandatory");
+		}		
+	}		
+	
+	/**
 	 * save and update salutation details
 	 * 
 	 */
 	 public void saveSaluationDtls(){
 		 PmSalutation salutation= this.getManagedBean().getPmSalutation();
+		 validationMessage(salutation);
+		 
 		 SalutationReqDTO reqDTO = new SalutationReqDTO();
 		 reqDTO.setSalutation(salutation);
 		 ISalutationSO iSalutationSO= EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
