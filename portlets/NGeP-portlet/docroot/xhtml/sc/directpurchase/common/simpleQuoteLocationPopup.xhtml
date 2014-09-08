@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog header="#{lbl['lbl.ss.simple.quote.delivery.location']}" widgetVar="locationPopup" modal="true" resizable="false" 
 		width="510" height="460">
+		 <p:messages id="LocMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"  severity="error, info"/>
 		<p:panel id="locPopupPanel">
 			<table styleClass="noBorders tr,noBorders td" >
 				<TR>
@@ -16,6 +17,10 @@
 								var="location"
 								selection="#{simpleQuoteBackingBean.managedBean.selectedLocNodes}"
 								selectionMode="checkbox">
+							   <p:ajax event="select"
+											listener="#{simpleQuoteBackingBean.selectLocationTreeNode}" />
+								<p:ajax event="unselect"
+											listener="#{simpleQuoteBackingBean.unSelectLocationTreeNode}" />
 								<p:treeNode type="state">
 									<h:outputText value="#{location.pmState.stateName}" />
 								</p:treeNode>
@@ -37,10 +42,11 @@
 			<p:row>
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
-						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"  onclick="locationPopup.hide();"
-						process="@all" update="@all"
+						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+						process="@all"  update="locPopupPanel,locationDataTable"
 						partialSubmit="true" icon="ui-icon-submit"
 						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
+						
 						<p:commandButton
 							value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" icon="ui-icon-cancel"
 							onclick="locationPopup.hide();" />

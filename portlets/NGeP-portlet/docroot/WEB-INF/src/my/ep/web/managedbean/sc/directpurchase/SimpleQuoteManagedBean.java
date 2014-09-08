@@ -35,6 +35,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.sc.directpurchase.ZonesBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -165,6 +166,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	private List<CtPanelItem> panelItems = new ArrayList<CtPanelItem>();
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
+	// to store locality
+	private List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1399,4 +1402,17 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setBeans(List<ZonesBean> beans) {
 		this.beans = beans;
 	}
+	/**
+	 * @return the tplSpecZoneLocs
+	 */
+	public List<TplSpecZoneLoc> getTplSpecZoneLocs() {
+		return tplSpecZoneLocs;
+	}
+	/**
+	 * @param tplSpecZoneLocs the tplSpecZoneLocs to set
+	 */
+	public void setTplSpecZoneLocs(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		this.tplSpecZoneLocs = tplSpecZoneLocs;
+	}
+	
 }
