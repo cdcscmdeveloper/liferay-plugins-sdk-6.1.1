@@ -13,8 +13,7 @@
 		</f:facet>
 		<p:dataTable id="businessownerId"
 			value="#{qTBusinessOwnerBackingBean.managedBean.scCommitteeMemberList}"
-			var="businessowner" rowIndexVar="index" 
-			rowKey="#{businessowner}"
+			var="businessowner" rowIndexVar="index" rowKey="#{businessowner}"
 			selection="#{qTBusinessOwnerBackingBean.managedBean.selectScCommitteMember}">
 
 			<p:ajax event="rowSelectRadio"
@@ -66,18 +65,21 @@
 			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
 				actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
 				oncomplete="cloneBusinessOwner.show();" process="@this"
-				icon="ui-icon-clone" update="@(.cloneAddMember)"/>
+				icon="ui-icon-clone" update="@(.cloneAddMember)"
+				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
 			<p:commandButton id="businessowneradd"
 				value="#{lbl['lbl.so.addbtn']}" process="@this"
 				action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
-				oncomplete="newbusinessowner.show();" update="@(.qtAddMember)" 
-				icon="ui-icon-add" />
+				oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
+				icon="ui-icon-add"
+				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete"
 				action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
-				update="businessownerId" />
+				update="businessownerId"
+				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 		</div>
 	</p:panel>
 	<p:panel header="Specification Approval" toggleable="true">

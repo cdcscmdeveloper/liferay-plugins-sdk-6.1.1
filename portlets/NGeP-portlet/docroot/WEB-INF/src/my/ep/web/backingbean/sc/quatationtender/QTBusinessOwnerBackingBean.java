@@ -41,6 +41,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -584,51 +585,56 @@ public class QTBusinessOwnerBackingBean extends
 		List<String> itemIds = new ArrayList<String>();
 		List<ScCommitteeMember> members = getManagedBean()
 				.getSelectedCommitteMemebers();
-		if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
-			for (ScCommitteeMember member : members) {
-				ScCommitteeMember member1 = null;
-				try {
-					member1 = (ScCommitteeMember) BeanUtils.cloneBean(member);
-				} catch (IllegalAccessException | InstantiationException
-						| InvocationTargetException | NoSuchMethodException e) {
-					e.printStackTrace();
-				}
-				if (null != member1) {
-					member1.setCommitteeMemberId(null);
-					setUserDetails(member1);
-					member1.setChangedDate(null);
-					if (member1.isConsolidate()) {
-						this.getManagedBean()
-								.setSelectScCommitteMember(member1);
+		if (!members.isEmpty()) {
+			if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
+				for (ScCommitteeMember member : members) {
+					ScCommitteeMember member1 = null;
+					try {
+						member1 = (ScCommitteeMember) BeanUtils.cloneBean(member);
+					} catch (IllegalAccessException | InstantiationException
+							| InvocationTargetException | NoSuchMethodException e) {
+						e.printStackTrace();
 					}
-					memberList.add(member1);
-				}
-			}
-			// memberList.addAll(getManagedBean().getSelectedCommitteMemebers());
-		} else {
-			for (ScCommitteeMember committee : this.getManagedBean()
-					.getScCommitteeMemberList()) {
-				itemIds.add(committee.getIcPassport());
-			}
-			for (ScCommitteeMember committees : getManagedBean()
-					.getSelectedCommitteMemebers()) {
-				if (itemIds.size() > 0) {
-					if (itemIds.contains(committees.getIcPassport())) {
-
-					} else {
-						committees.setCommitteeMemberId(null);
-						setUserDetails(committees);
-						committees.setChangedDate(null);
-						if (committees.isConsolidate()) {
-							this.getManagedBean().setSelectScCommitteMember(
-									committees);
+					if (null != member1) {
+						member1.setCommitteeMemberId(null);
+						member1.setScCommittee(null);
+						setUserDetails(member1);
+						member1.setChangedDate(null);
+						if (member1.isConsolidate()) {
+							this.getManagedBean()
+									.setSelectScCommitteMember(member1);
 						}
-						memberList.add(committees);
-						this.getManagedBean().setScCommitteeMemberList(
-								memberList);
+						memberList.add(member1);
+					}
+				}
+				// memberList.addAll(getManagedBean().getSelectedCommitteMemebers());
+			} else {
+				for (ScCommitteeMember committee : this.getManagedBean()
+						.getScCommitteeMemberList()) {
+					itemIds.add(committee.getIcPassport());
+				}
+				for (ScCommitteeMember committees : getManagedBean()
+						.getSelectedCommitteMemebers()) {
+					if (itemIds.size() > 0) {
+						if (itemIds.contains(committees.getIcPassport())) {
+							throw new EpException("User already existed");
+						} else {
+							committees.setCommitteeMemberId(null);
+							setUserDetails(committees);
+							committees.setChangedDate(null);
+							if (committees.isConsolidate()) {
+								this.getManagedBean().setSelectScCommitteMember(
+										committees);
+							}
+							memberList.add(committees);
+							this.getManagedBean().setScCommitteeMemberList(
+									memberList);
+						}
 					}
 				}
 			}
+		} else {
+			throw new EpException("Please select a record.");
 		}
 		scCommittee.setScCommitteeMembers(memberList);
 		PmStatus committeStatus = new PmStatus();
@@ -637,6 +643,9 @@ public class QTBusinessOwnerBackingBean extends
 		for (ScCommitteeMember scCommitteeMember : memberList) {
 			scCommitteeMember.setScCommittee(scCommittee);
 		}
+		
+		// Clone Business Owner validation
+		RequestContext.getCurrentInstance().execute("cloneBusinessOwner.hide()");
 	}
 
 	public void cloneBusinessOwnerPopupAction() {
@@ -653,6 +662,7 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().getCloneBusinessOwnerSearchBean().setQtStatus(null);
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setCloneBusinessTenderList(null);
+		getManagedBean().setSelectedCommitteMemebers(null);
 	}
 
 	public void okBusinessOwnerAction() {
@@ -690,7 +700,7 @@ public class QTBusinessOwnerBackingBean extends
 			member.setEmail(getManagedBean().getCommitteMember().getEmail());
 			member.setMemberRole(parameterResDTO1.getPmParameter());
 			// member.setMemberRole("M");
-			member.setAccessRight("E");
+			member.setAccessRight(QTConstants.ACCESS_RIGHT);
 			member.setPmOrgProfile(this.getManagedBean().getQt()
 					.getPmOrgProfile());
 			PmUser user = new PmUser();
@@ -760,51 +770,54 @@ public class QTBusinessOwnerBackingBean extends
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
-			System.out.println("done");
 			member.setPmUser(resDTO.getPmUser());
 			memberList.add(member);
 			getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
 			List<String> itemIds = new ArrayList<String>();
-			for (PmUser user : getManagedBean().getSelectedPmUser()) {
-				ScCommitteeMember committeeMember = new ScCommitteeMember();
-				committeeMember.setMemberName(user.getUserName());
-				committeeMember.setIcPassport(user.getIdentificationNo());
-				committeeMember.setDesignation(user.getDesignation());
-				if (null != user.getPmAddressTypes()) {
-					for (PmAddressType address : user.getPmAddressTypes()) {
-						if (null != address.getPmAddress()) {
-							committeeMember.setEmail(address.getPmAddress()
-									.getEmail());
-							break;
+			if (!this.getManagedBean().getSelectedPmUser().isEmpty()) {
+				for (PmUser user : getManagedBean().getSelectedPmUser()) {
+					ScCommitteeMember committeeMember = new ScCommitteeMember();
+					committeeMember.setMemberName(user.getUserName());
+					committeeMember.setIcPassport(user.getIdentificationNo());
+					committeeMember.setDesignation(user.getDesignation());
+					if (null != user.getPmAddressTypes()) {
+						for (PmAddressType address : user.getPmAddressTypes()) {
+							if (null != address.getPmAddress()) {
+								committeeMember.setEmail(address.getPmAddress()
+										.getEmail());
+								break;
+							}
+						}
+					}
+					committeeMember.setGrade(user.getGrade());
+					committeeMember.setPNP(user.isPMP());
+					committeeMember.setPmUser(user);
+					committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
+							.getPmOrgProfile());
+					committeeMember.setMemberRole(parameterResDTO1.getPmParameter());
+					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					if (this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
+						this.getManagedBean().getScCommitteeMemberList()
+								.add(committeeMember);
+					} else {
+						for (ScCommitteeMember committee : this.getManagedBean()
+								.getScCommitteeMemberList()) {
+							itemIds.add(committee.getIcPassport());
+						}
+						if (itemIds.size() > 0) {
+							if (itemIds.contains(user.getUserId())) {
+								throw new EpException("User already existed");
+							} else {
+								memberList.add(committeeMember);
+								this.getManagedBean().setScCommitteeMemberList(
+										memberList);
+							}
 						}
 					}
 				}
-				committeeMember.setGrade(user.getGrade());
-				committeeMember.setPNP(user.isPMP());
-				committeeMember.setPmUser(user);
-				committeeMember.setPmOrgProfile(this.getManagedBean().getQt()
-						.getPmOrgProfile());
-				committeeMember.setMemberRole(parameterResDTO1.getPmParameter());
-				committeeMember.setAccessRight("E");
-				if (this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
-					this.getManagedBean().getScCommitteeMemberList()
-							.add(committeeMember);
-				} else {
-					for (ScCommitteeMember committee : this.getManagedBean()
-							.getScCommitteeMemberList()) {
-						itemIds.add(committee.getIcPassport());
-					}
-					if (itemIds.size() > 0) {
-						if (itemIds.contains(user.getUserId())) {
-
-						} else {
-							memberList.add(committeeMember);
-							this.getManagedBean().setScCommitteeMemberList(
-									memberList);
-						}
-					}
-				}
+			} else {
+				throw new EpException("Please select a record.");
 			}
 		}
 		scCommittee.setScCommitteeMembers(memberList);
@@ -904,9 +917,7 @@ public class QTBusinessOwnerBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700004,
 														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
+																"",
 																scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
@@ -984,9 +995,7 @@ public class QTBusinessOwnerBackingBean extends
 												.getMessage(
 														MessageConst.INFO_700026,
 														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_QUOTATION),
+																"",
 																scQt.getQtNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
