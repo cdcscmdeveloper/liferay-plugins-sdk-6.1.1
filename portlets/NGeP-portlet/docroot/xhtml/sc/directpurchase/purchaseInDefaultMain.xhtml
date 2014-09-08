@@ -6,7 +6,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<ui:define name="contentSection">
 	<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
 		 <ac:title value="#{lbl['lbl.sc.pid']}" />
@@ -17,9 +18,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
     
-    
    <p:panel id="mailPanel">
-	  <div align="right">
+	<div class="ppRightBtn">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	        <p:commandButton  immediate="true" 
 	          value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
@@ -40,38 +40,23 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	    
 	     <table>
 			<tr>
-				<td align="right"><c:if
-						test="#{purchaseInDefaultBackingBean.managedBean.taskId ne null}">
-						<c:forEach items="#{purchaseInDefaultBackingBean.managedBean.outComes}"
-						var="action">
-
-						<c:if test="${action == 'SUBMIT'}">
-							<ui:param name="iconVar" value="ui-icon-submit" />
-
-						</c:if>
-
-						<c:if test="${action == 'REJECT'}">
-							<ui:param name="iconVar" value="ui-icon-reject" />
-
-						</c:if>
-						<c:if test="${action == 'REVISE'}">
-							<ui:param name="iconVar" value="ui-icon-revise" />
-
-						</c:if>
-						<c:if test="${action == 'APPROVE'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						<c:if test="${action == 'ACCEPT'}">
-							<ui:param name="iconVar" value="ui-icon-approve" />
-
-						</c:if>
-						<p:commandButton value="#{action}" process="@all"
-						        onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-								styleClass="ui-button" icon="#{iconVar}"
-								actionListener="#{purchaseInDefaultBackingBean.approverAction(action)}" />
-						</c:forEach>
-					</c:if></td>
+			<td align="right">
+				<c:choose>
+				<c:when test="#{!empty purchaseInDefaultBackingBean.managedBean.taskId}">
+				  <ui:repeat var="bpmAction" value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
+					  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+					  
+				     <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+						onstart="blockWidget.show();" 
+						oncomplete="blockWidget.hide();"
+						icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
+						styleClass="ui-button"
+						actionListener="#{purchaseInDefaultBackingBean.approverAction(bpmAction)}" />
+				 
+				  </ui:repeat>
+				 </c:when>
+				 </c:choose>
+				</c:if></td>
 			</tr>
 		</table>
      </div>
@@ -88,5 +73,3 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
    			
 	</ui:define>
 	</ui:composition>
-
-

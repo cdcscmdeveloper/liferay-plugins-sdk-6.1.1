@@ -11,55 +11,13 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
       <p:blockUI block=":form"  widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
-		<div align="right">
-			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
-				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
-				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					update="@form" icon="ui-icon-submit" rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
-					action="#{simpleQuoteBackingBean.supplierSubmit}" />
-			</c:if>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				update="@form" icon="ui-icon-submit"
+				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
+				action="#{simpleQuoteBackingBean.supplierSubmit}" />
 		</div>
-		<div align="right">
-			<table>
-				<tr>
-					<td align="right"><c:if
-							test="#{simpleQuoteBackingBean.managedBean.taskId ne null}">
-							<c:forEach items="#{simpleQuoteBackingBean.managedBean.outComes}"
-								var="action">
-
-								<c:if test="${action == 'SUBMIT'}">
-									<ui:param name="iconVar" value="ui-icon-submit" />
-
-								</c:if>
-
-								<c:if test="${action == 'REJECT'}">
-									<ui:param name="iconVar" value="ui-icon-reject" />
-
-								</c:if>
-								<c:if test="${action == 'REVISE'}">
-									<ui:param name="iconVar" value="ui-icon-revise" />
-
-								</c:if>
-								<c:if test="${action == 'APPROVE'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-
-								</c:if>
-								<c:if test="${action == 'ACCEPT'}">
-									<ui:param name="iconVar" value="ui-icon-approve" />
-
-								</c:if>
-								<p:commandButton value="#{action}" process="@all"
-									styleClass="ui-button" icon="#{iconVar}"
-								    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-									rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}"
-									actionListener="#{simpleQuoteBackingBean.supplierSubmit}" />
-							</c:forEach>
-						</c:if></td>
-				</tr>
-			</table>
-		</div>
-
 		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
-		
 </ui:define>
 </ui:composition>

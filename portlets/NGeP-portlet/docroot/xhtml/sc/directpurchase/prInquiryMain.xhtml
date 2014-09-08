@@ -5,7 +5,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
    <ui:define name="contentSection">
 	<c:if test="#{purchaseInquiryBackingBean.managedBean.titleChecker}">
 			<ac:title value="#{lbl['lbl.sc.pr.inquiry']}" />
@@ -17,72 +18,70 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	 
   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
   <p:panel id="mainPanel">
-   <div align="right">
-	    <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId eq null}">
-	    
+     <div class="ppRightBtn">
+	     <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Submission'}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 
 					<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					action="#{purchaseInquiryBackingBean.submitPrInquiryDtl}" style="float:right;"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					icon="ui-icon-submit"  update="mainPanel"/>
+					icon="ui-icon-submit"  update="@form"/>
 	    </c:if>
 
 	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
 	     <table style="width:100%">
 			<tr>
 				<td align="right">
+		     	<c:choose>
+				<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
 				
-					          <!-- 	view back button -->
-				               <c:if
-									test="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
-									<p:commandButton immediate="true"
-										value="#{lbl['lbl.sc.common.back']}"
-										icon="ui-icon-back" style="float:left;"
-										action="#{purchaseInquiryBackingBean.backToPervious}" />
-								</c:if> 
-								
-								<c:forEach
-											items="#{purchaseInquiryBackingBean.managedBean.outComes}"
-											var="action">
-
-											<c:if test="${action == 'SUBMIT'}">
-												<ui:param name="iconVar" value="ui-icon-submit" />
-											</c:if>
-											<c:if test="${action == 'CANCEL'}">
-												<ui:param name="iconVar" value="ui-icon-submit" />
-
-												<c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
-													<p:commandButton
-														value="#{lbl['lbl.sc.common.proceed.btn']}"
-														icon="ui-icon-submit"
-														onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-														action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
-
-													<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
-														icon="ui-icon-cancel" style="float:right;"
-														onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-														action="#{purchaseInquiryBackingBean.requisitionerAction(action)}" />
-
-												</c:if>
-											</c:if>
-
-											<c:if
-												test="#{purchaseInquiryBackingBean.managedBean.processName eq 'Purchase Inquiry Creation'}">
-												<p:commandButton value="#{action}" process="@all"
-													partialSubmit="true"
-													rendered="#{!unspscCodeBackingBean.requisitioner}"
-													styleClass="ui-button" icon="#{iconVar}" update="mainPanel"
-													onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-													actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(action)}" />
-											</c:if>
-
-										</c:forEach>
-									</td>
-			</tr>
-		</table>
-		</c:if>
+				    <!-- 	view back button -->
+					  <c:if test="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+						   <p:commandButton immediate="true"
+								value="#{lbl['lbl.sc.common.back']}"
+								icon="ui-icon-back" style="float:left;"
+								action="#{purchaseInquiryBackingBean.backToPervious}" />
+					 </c:if> 
+					 
+					 <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending RN Creation'}">
+	                  
+	                       <c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
+								<p:commandButton
+									value="#{lbl['lbl.sc.common.proceed.btn']}"
+									icon="ui-icon-submit"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
+	
+								<p:commandButton value="#{lbl['lbl.sc.common.cancel']}"
+									icon="ui-icon-cancel" style="float:right;"
+									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+									action="#{purchaseInquiryBackingBean.requisitionerAction('CANCEL')}" />
+	
+							</c:if>
+	                  </c:if>
+					<ui:repeat var="bpmAction" value="#{purchaseInquiryBackingBean.managedBean.outComes}">
+					   <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+	
+	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Supplier Response'}">
+	                       <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
+							        icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
+							        styleClass="ui-button"
+									partialSubmit="true"
+									rendered="#{!unspscCodeBackingBean.requisitioner}"
+								    update="@form"
+									onstart="blockWidget.show();"
+									oncomplete="blockWidget.hide();"
+									actionListener="#{purchaseInquiryBackingBean.submitPrInquiryPrice(bpmAction)}" />
+	                  </c:if>
+					</ui:repeat>
+				</c:when>
+			  </c:choose>		
+										
+	       </td>
+		 </tr>
+	 </table>
+	</c:if>
 	</div>
 	   <table style="border: 0px;align:center;width:100%;">
 			<tr>
