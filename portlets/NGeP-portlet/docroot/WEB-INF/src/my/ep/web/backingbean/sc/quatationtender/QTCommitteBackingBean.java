@@ -462,7 +462,7 @@ public class QTCommitteBackingBean extends
 		}
 
 		// this.getManagedBean().setScCommittee(committee);
-
+		List<ScCommitteeMember> committeeMemberList = new ArrayList<ScCommitteeMember>();
 		checkCloneNeedRNot(scQt.getEvaluationType(), scQt.getQtStatus(), committeesList);
 		List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 		if (!committeesList.isEmpty()) {
@@ -471,8 +471,22 @@ public class QTCommitteBackingBean extends
 					if (tabBean.getTitleName().equalsIgnoreCase(CommitteType.getValue(committe.getCommitteeType().getParameterCode()))) {
 						ScCommittee cloneCommitte = tabBean.getScQtCommittee().getScCommittee();
 						for (ScCommitteeMember members : committe.getScCommitteeMembers()) {
-							members.setScCommittee(cloneCommitte);
+							ScCommitteeMember member1 = null;
+							try {
+								member1 = (ScCommitteeMember) BeanUtils.cloneBean(members);
+							} catch (IllegalAccessException | InstantiationException
+									| InvocationTargetException | NoSuchMethodException e) {
+								e.printStackTrace();
+							}
+							if (null != member1) {
+								member1.setCommitteeMemberId(null);
+								setUserDetails(member1);
+								member1.setChangedDate(null);
+								committeeMemberList.add(member1);
+							}
+							member1.setScCommittee(cloneCommitte);
 						}
+						committe.setScCommitteeMembers(committeeMemberList);
 						if (null != tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers()) {
 							tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers().addAll(committe.getScCommitteeMembers());
 						} else {
