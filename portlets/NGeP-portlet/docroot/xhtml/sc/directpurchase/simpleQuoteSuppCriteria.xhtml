@@ -46,6 +46,9 @@
 										style="width: 140px;">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
+								<p:ajax event="change" update="locationDataTable" partialSubmit="true"
+									process="@this"
+									listener="#{simpleQuoteBackingBean.localityLocLevelEvent(simpleQuoteBackingBean.managedBean.locationLevel)}" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
