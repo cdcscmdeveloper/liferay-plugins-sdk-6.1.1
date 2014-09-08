@@ -1486,7 +1486,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(locationDTOs);
 		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(locationDTOs);
 
-		
+		if (getManagedBean().getLocIndex() == -1) {
 		if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_STATE)){
 			// check whether state exists or not
 			if(!getManagedBean().getTplSpecZoneLocs().isEmpty()){
@@ -1510,12 +1510,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			getManagedBean().setTplSpecZoneLocs(locationDTOs);
 		}
-		
-		if (getManagedBean().getLocIndex() == -1) {
 
-			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locationLevel, states,
-					districts, divisions, null,TplSpecZoneLoc.class));
-			getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
+		LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locationLevel, states,
+				districts, divisions, null,TplSpecZoneLoc.class));
+		getManagedBean().getLocationTrees().addAll(LocTrees.get(0).getChildren());
 
 		} else if (getManagedBean().getLocIndex() >= 0) {
 			getManagedBean().getLocationTrees().remove(getManagedBean().getLocIndex());
