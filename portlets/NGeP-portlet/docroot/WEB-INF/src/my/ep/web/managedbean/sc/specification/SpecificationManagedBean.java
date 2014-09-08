@@ -290,6 +290,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String criteriaType;
 	private String otherCriteriaType;
 	private String checkListTitle;
+	private String LocalLevelCode;
 
 	public SpecificationManagedBean() {
 
@@ -2996,6 +2997,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckListTitle(String checkListTitle) {
 		this.checkListTitle = checkListTitle;
+	}
+
+	/**
+	 * @return the localLevelCode
+	 */
+	public String getLocalLevelCode() {
+		return LocalLevelCode;
+	}
+
+	/**
+	 * @param localLevelCode the localLevelCode to set
+	 */
+	public void setLocalLevelCode(String localLevelCode) {
+		LocalLevelCode = localLevelCode;
 	}
 
 	
