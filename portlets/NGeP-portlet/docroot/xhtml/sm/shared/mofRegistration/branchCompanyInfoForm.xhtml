@@ -120,7 +120,7 @@
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K' or backingBean.managedBean.smAppl.supplierType eq 'J'}">
 			<ui:include src="branchDetailsTablePage.xhtml" />
 		</ui:fragment>
-		<p:panel header="Branch Details" toggleable="true"
+		<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}">
 			<ui:include src="branchDetailsTablePageConsultant.xhtml" />
 		</p:panel>

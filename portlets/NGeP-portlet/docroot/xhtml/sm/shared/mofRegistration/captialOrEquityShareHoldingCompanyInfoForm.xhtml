@@ -204,7 +204,7 @@
 						label="#{lbl['lbl.sm.country']}" id="suppEquiCompCntry"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="equiCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{equiCountry.countryId}"
@@ -229,7 +229,7 @@
 						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateId}"
 						id="equiState">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="equiState"
 							value="#{backingBean.managedBean.equiCompanyStates}"
 							itemValue="#{equiState.stateId}"
@@ -252,7 +252,7 @@
 						id="equiDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="equiDist"
 							value="#{backingBean.managedBean.equiCompanyDistricts}"
 							itemValue="#{equiDist.districtId}"
@@ -272,7 +272,7 @@
 						id="equiCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="equiCity"
 							value="#{backingBean.managedBean.equiCompanyCities}"
 							itemValue="#{equiCity.cityId}" itemLabel="#{equiCity.cityName}" />

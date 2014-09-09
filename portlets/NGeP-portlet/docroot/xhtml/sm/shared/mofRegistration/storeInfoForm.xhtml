@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Store Details" toggleable="true" id="smStrDtPanel">
+	<p:panel header="#{lbl['lbl.sm.store.details']}" toggleable="true" id="smStrDtPanel">
 
 		<p:dataTable var="stor" widgetVar="smFacStoreDtWidVar"
 			value="#{backingBean.managedBean.applStoreFacilities}"
@@ -15,15 +15,15 @@
 			<ac:paginator for="storeDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Store Name">
+			<p:column headerText="#{lbl['lbl.sm.store.name']}">
 				<h:outputText value="#{stor.facilityName}" />
 			</p:column>
 
-			<p:column headerText="Store Address">
+			<p:column headerText="#{lbl['lbl.sm.store.address']}">
 				<h:outputText
 					value="#{stor.smAddress.address1},#{stor.smAddress.address2},#{stor.smAddress.address3}" />
 			</p:column>
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink process="@this" partialSubmit="true"
 					action="#{backingBean.assignSelStore(stor)}"
 					update=":form:tt:storeDialog" style="padding-right:5px">
@@ -35,42 +35,42 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add "
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.assignNewStoreBean}"
 				update=":form:tt:storeDialog" partialSubmit="true" process="@this" />
-			<p:commandButton value="Delete " process="smStrDtPanel"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" process="smStrDtPanel"
 				partialSubmit="true" action="#{backingBean.deleteSelectedStores}"
 				update=":form:tt:storeDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="500px" header="Store Information"
+	<p:dialog width="500px" height="500px" header="#{lbl['lbl.sm.store.information']}"
 		widgetVar="storeDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="storeDialog">
 		<p:messages id="storeDialogMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.facilityType}" readonly="true"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Name" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText size="35" maxlength="50"
-						required="#{backingBean.managedBean.valueReqd}" label="Name"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.facility.name']}"
 						id="smStoreName"
 						value="#{backingBean.managedBean.selectedStoreFacility.facilityName}" />
 					<p:message id="smStoreNameMsg" for="smStoreName" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Address" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="35"
-						required="#{backingBean.managedBean.valueReqd}" label="Address"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.address']}"
 						id="smStoreAddr"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.address1}"
 						size="35" /> <p:message id="smStoreAddrMsg" for="smStoreAddr"
@@ -103,7 +103,7 @@
 						label="#{lbl['lbl.sm.country']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="storeCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{storeCountry.countryId}"
@@ -127,7 +127,7 @@
 						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmState.stateId}"
 						id="storeState">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="storeState"
 							value="#{backingBean.managedBean.storeFacilityStates}"
 							itemValue="#{storeState.stateId}"
@@ -150,7 +150,7 @@
 						id="storeDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmDistrict.districtId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="storeDist"
 							value="#{backingBean.managedBean.storeFacilityDistricts}"
 							itemValue="#{storeDist.districtId}"
@@ -170,7 +170,7 @@
 						id="storeCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.smAddress.pmCity.cityId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="storeCity"
 							value="#{backingBean.managedBean.storeFacilityCities}"
 							itemValue="#{storeCity.cityId}" itemLabel="#{storeCity.cityName}" />
@@ -211,8 +211,8 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Area(Sq Ft)" /></td>
-				<td><p:inputText id="smFacStoreArea" label="Area (Sq Ft)"
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.area.feat']}" /></td>
+				<td><p:inputText id="smFacStoreArea" label="#{lbl['lbl.sc.spec.area.feat']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.areaSquareFeet}"
 						size="35">
 						<f:convertNumber
@@ -221,14 +221,14 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio id="smStoreOwnerType"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="OwnerShip Type"
+						label="#{lbl['lbl.sm.facility.ownerType']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.ownershipType}">
-						<f:selectItem itemLabel="Rent " itemValue="R" />
-						<f:selectItem itemLabel="Own" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
 						<p:ajax event="change" listener="#{backingBean.storeOwnerTypeSel}"
 							update="storPan,storPanLbl" />
 					</p:selectOneRadio> <p:message id="smStoreOwnerTypeMsg" for="smStoreOwnerType"
@@ -236,15 +236,15 @@
 			</tr>
 			<tr>
 				<td><p:outputPanel id="storPanLbl">
-						<p:outputLabel value="Price (RM.)"
+						<p:outputLabel value="#{lbl['lbl.cm.price']}"
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}" />
-						<p:outputLabel value="Rent (RM.)"
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="storPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
-							<p:inputText id="smFacStorePrice" label="Price (RM.)"
+							<p:inputText id="smFacStorePrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.purchasePrice}"
 								size="20">
 								<f:convertNumber
@@ -255,7 +255,7 @@
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
-							<p:inputText id="smFacStoreRent" label="Rent (RM.)"
+							<p:inputText id="smFacStoreRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedStoreFacility.rentalRate}"
 								size="20">
 								<f:convertNumber
@@ -268,11 +268,10 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="
-								Owner Name" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="50" id="smFacStoreOwnName"
-						required="#{backingBean.managedBean.valueReqd}" label="Owner Name"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.ownername']}"
 						value="#{backingBean.managedBean.selectedStoreFacility.ownerName}"
 						size="35" /> <p:message id="smFacStoreOwnNameMsg"
 						for="smFacStoreOwnName" showSummary="true" showDetail="false"
@@ -282,11 +281,11 @@
 		</table>
 		<br />
 		<div align="right">
-			<p:commandButton value="Save"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateStoreToSmAppl}"
 				partialSubmit="true" process="storeDialog"
 				update=":form:tt:storeDt, @([id$=Msg])" />
-			<p:commandButton value="Cancel" process="@this" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" process="@this" partialSubmit="true"
 				action="#{backingBean.cancelStoreSaveorUpdate}" />
 		</div>
 	</p:dialog>

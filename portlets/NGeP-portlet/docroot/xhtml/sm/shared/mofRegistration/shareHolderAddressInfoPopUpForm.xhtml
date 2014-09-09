@@ -53,7 +53,7 @@
 									required="true" id="equiPersPermCntry"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCountry"
 										value="#{backingBean.managedBean.countryLs}"
 										itemValue="#{shrPermCountry.countryId}"
@@ -77,7 +77,7 @@
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
 									id="shrPermState">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermState"
 										value="#{backingBean.managedBean.shrHldrPermStates}"
 										itemValue="#{shrPermState.stateId}"
@@ -101,7 +101,7 @@
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermDist"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermDist"
 										value="#{backingBean.managedBean.shrHldrPermDistricts}"
 										itemValue="#{shrPermDist.districtId}"
@@ -122,7 +122,7 @@
 									required="true" style="width: 207px;margin-bottom: 5px;"
 									id="shrPermCity"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCity"
 										value="#{backingBean.managedBean.shrHldrPermCities}"
 										itemValue="#{shrPermCity.cityId}"
@@ -215,7 +215,7 @@
 											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrMailContry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrMailContry.countryId}"
@@ -241,7 +241,7 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
 											id="shrMailState">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrMailState"
 												value="#{backingBean.managedBean.shrHldrMailStates}"
 												itemValue="#{shrMailState.stateId}"
@@ -266,7 +266,7 @@
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailDist"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrMailDist"
 												value="#{backingBean.managedBean.shrHldrMailDistricts}"
 												itemValue="#{shrMailDist.districtId}"
@@ -288,7 +288,7 @@
 											required="#{!backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrMailCity"
 											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrMailCity"
 												value="#{backingBean.managedBean.shrHldrMailCities}"
 												itemValue="#{shrMailCity.cityId}"
@@ -392,7 +392,7 @@
 											id="equiPersResiCntry"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrResCountry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrResCountry.countryId}"
@@ -418,7 +418,7 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
 											id="shrResState">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrResState"
 												value="#{backingBean.managedBean.shrHldrResdStates}"
 												itemValue="#{shrResState.stateId}"
@@ -443,7 +443,7 @@
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResDist"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrResDist"
 												value="#{backingBean.managedBean.shrHldrResdDistricts}"
 												itemValue="#{shrResDist.districtId}"
@@ -465,7 +465,7 @@
 											disabled="#{backingBean.managedBean.shareHolderResdAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrResCity"
 											value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrResCity"
 												value="#{backingBean.managedBean.shrHldrResdCities}"
 												itemValue="#{shrResCity.cityId}"
@@ -562,7 +562,7 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
 											style="width: 207px;margin-bottom: 5px;">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrOffCountry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{shrOffCountry.countryId}"
@@ -588,7 +588,7 @@
 											style="width: 207px;margin-bottom: 5px;"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}"
 											id="shrOffState">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrOffState"
 												value="#{backingBean.managedBean.shrHldrOffStates}"
 												itemValue="#{shrOffState.stateId}"
@@ -613,7 +613,7 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffDist"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrOffDist"
 												value="#{backingBean.managedBean.shrHldrOffDistricts}"
 												itemValue="#{shrOffDist.districtId}"
@@ -635,7 +635,7 @@
 											disabled="#{backingBean.managedBean.shareHolderOffAddr.sameAsPerm}"
 											style="width: 207px;margin-bottom: 5px;" id="shrOffCity"
 											value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="shrOffCity"
 												value="#{backingBean.managedBean.shrHldrOffCities}"
 												itemValue="#{shrOffCity.cityId}"

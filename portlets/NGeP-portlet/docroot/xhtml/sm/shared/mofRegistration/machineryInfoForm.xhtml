@@ -187,11 +187,11 @@
 						label="#{lbl['lbl.sm.machine.purMthd']}" id="smMachPurMthd"
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Cash" itemValue="A" />
-						<f:selectItem itemLabel="Credit Card" itemValue="B" />
-						<f:selectItem itemLabel="Debit Card" itemValue="C" />
-						<f:selectItem itemLabel="Online Banking" itemValue="D" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.cash']}" itemValue="A" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.credit.card']}" itemValue="B" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.debit.card']}" itemValue="C" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.online.banking']}" itemValue="D" />
 					</p:selectOneMenu> <p:message id="smMachPurMthdMsg" for="smMachPurMthd"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>

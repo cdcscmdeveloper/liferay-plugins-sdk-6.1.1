@@ -179,8 +179,8 @@
 									value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 							<td><p:selectOneRadio
 									value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
-									<f:selectItem itemLabel="Federal Govt" itemValue="F" />
-									<f:selectItem itemLabel="Others" itemValue="O" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}" itemValue="O" />
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>
@@ -212,9 +212,9 @@
 									label="#{lbl['lbl.sm.projDtls.workProgress']}"
 									id="supConsExpPrgSt"
 									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
-									<f:selectItem itemLabel="In Progress" itemValue="P" />
-									<f:selectItem itemLabel="Success" itemValue="S" />
-									<f:selectItem itemLabel="Fail" itemValue="F" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
+									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}" itemValue="F" />
 								</p:selectOneRadio> <p:message id="supConsExpPrgStMsg" for="supConsExpPrgSt"
 									showSummary="true" showDetail="false" display="icon" /></td>
 						</tr>

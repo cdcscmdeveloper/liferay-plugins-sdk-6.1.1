@@ -144,7 +144,7 @@
 										style="width: 207px;margin-bottom: 5px;" required="true"
 										id="smSupCont"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId}">
-										<f:selectItem itemLabel="---Select---" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems var="basicCountry"
 											value="#{backingBean.managedBean.countryLs}"
 											itemValue="#{basicCountry.countryId}"
@@ -161,7 +161,7 @@
 										style="width: 207px;margin-bottom: 5px;" id="basicComState"
 										required="true" label="#{lbl['lbl.sm.state']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId}">
-										<f:selectItem itemLabel="---Select---" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems var="basicState"
 											value="#{backingBean.managedBean.basicCompanyStates}"
 											itemValue="#{basicState.stateId}"
@@ -180,7 +180,7 @@
 										style="width: 207px;margin-bottom: 5px;" id="basicCompDist"
 										required="true" label="#{lbl['lbl.sm.district']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId}">
-										<f:selectItem itemLabel="---Select---" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems var="dist"
 											value="#{backingBean.managedBean.basicCompanyDistricts}"
 											itemValue="#{dist.districtId}"
@@ -199,7 +199,7 @@
 										style="width: 207px;margin-bottom: 5px;" id="basicCompCity"
 										required="true" label="#{lbl['lbl.sm.towncity']}"
 										value="#{backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityId}">
-										<f:selectItem itemLabel="---Select---" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems var="city"
 											value="#{backingBean.managedBean.basicCompanyCities}"
 											itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
@@ -225,14 +225,14 @@
 							label="#{lbl['lbl.sm.annualRev']}" required="true"
 							id="smSupAnnRev"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.annualRevenue}">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItem itemLabel="Kurang Daripada RM 100,000"
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.annualRev.less.than.100k']}"
 								itemValue="1" />
-							<f:selectItem itemLabel="Kurang Daripada RM 500,000"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.annualRev.less.than.500k']}"
 								itemValue="2" />
-							<f:selectItem itemLabel="Kurang Daripada RM 1,000,000"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.annualRev.less.than.1m']}"
 								itemValue="3" />
-							<f:selectItem itemLabel="Lebih Daripada RM 1,000,000"
+							<f:selectItem itemLabel="#{lbl['lbl.sm.annualRev.more.than.1m']}"
 								itemValue="4" />
 						</p:selectOneMenu> <p:message id="smSupAnnRevMsg" for="smSupAnnRev"
 							showSummary="true" showDetail="false" display="icon" /></td>

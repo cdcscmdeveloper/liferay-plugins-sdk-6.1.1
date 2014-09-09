@@ -7,15 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel
-		header=" Supporting Document Offline Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}"
+		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
 		toggleable="true">
 		<table style="width: 30%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
 				<td><p:selectOneRadio id="offLnSuppDocs"
 						value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="Offline" itemValue="F" />
-						<f:selectItem itemLabel="Online" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" itemValue="F" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}" itemValue="O" />
 						<p:ajax update="supDocPan" event="change" />
 					</p:selectOneRadio></td>
 			</tr>

@@ -201,7 +201,7 @@
 						label="#{lbl['lbl.sm.country']}" id="asocCompCntrId"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{assCountry.countryId}"
@@ -225,7 +225,7 @@
 						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateId}"
 						id="assocState">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assState"
 							value="#{backingBean.managedBean.assocCompanyStates}"
 							itemValue="#{assState.stateId}" itemLabel="#{assState.stateName}" />
@@ -248,7 +248,7 @@
 						id="assocDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assDist"
 							value="#{backingBean.managedBean.assocCompanyDistricts}"
 							itemValue="#{assDist.districtId}"
@@ -268,7 +268,7 @@
 						id="assocCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="assCity"
 							value="#{backingBean.managedBean.assocCompanyCities}"
 							itemValue="#{assCity.cityId}" itemLabel="#{assCity.cityName}" />

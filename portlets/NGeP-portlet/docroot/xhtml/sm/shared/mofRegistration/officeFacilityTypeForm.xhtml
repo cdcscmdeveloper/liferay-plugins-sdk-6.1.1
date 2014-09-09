@@ -53,8 +53,8 @@
 							id="ownTypeId" label="#{lbl['lbl.sm.facility.ownerType']}"
 							value="#{backingBean.managedBean.basicCompanyFacility.ownershipType}"
 							required="true">
-							<f:selectItem itemLabel="Own" itemValue="O" />
-							<f:selectItem itemLabel="Rent" itemValue="R" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
 							<p:ajax update="ofp" event="change" process="@this"
 								listener="#{backingBean.officeFacilitySelected}" />
 						</p:selectOneRadio></td>
@@ -72,8 +72,8 @@
 								id="rentedFacTypeId"
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}"
 								required="true" label="#{lbl['lbl.sm.facility.facilityType']}">
-								<f:selectItem itemLabel="Home Office" itemValue="H" />
-								<f:selectItem itemLabel="Business Office" itemValue="B" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}" itemValue="H" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}" itemValue="B" />
 
 							</p:selectOneRadio> <p:message id="rentedFacTypeIdMsg" for="rentedFacTypeId"
 								showSummary="true" showDetail="false" display="icon" /></td>
@@ -157,7 +157,7 @@
 											style="width: 207px;margin-bottom: 5px;" id="companyCntry"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryId}"
 											required="true" label="#{lbl['lbl.sm.country']}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="basicCountry"
 												value="#{backingBean.managedBean.countryLs}"
 												itemValue="#{basicCountry.countryId}"
@@ -179,7 +179,7 @@
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateId}"
 											id="basicOffFacState" required="true"
 											label="#{lbl['lbl.sm.state']}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="offState"
 												value="#{backingBean.managedBean.basicOffFacStates}"
 												itemValue="#{offState.stateId}"
@@ -199,7 +199,7 @@
 											style="width: 207px;margin-bottom: 5px;" id="basicOffFacDist"
 											required="true" label="#{lbl['lbl.sm.district']}"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="offDist"
 												value="#{backingBean.managedBean.basicOffFacDistricts}"
 												itemValue="#{offDist.districtId}"
@@ -218,7 +218,7 @@
 											style="width: 207px;margin-bottom: 5px;" id="basicOffFacCity"
 											required="true" label="#{lbl['lbl.sm.towncity']}"
 											value="#{backingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityId}">
-											<f:selectItem itemLabel="---Select---" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems var="offCity"
 												value="#{backingBean.managedBean.basicOffFacCities}"
 												itemValue="#{offCity.cityId}"

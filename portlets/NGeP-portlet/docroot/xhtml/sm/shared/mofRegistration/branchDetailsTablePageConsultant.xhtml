@@ -7,13 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="* Branch Name" /></td>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.branch.branchName']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="* Address" /></td>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
 					size="35" /></td>
@@ -38,11 +38,11 @@
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="* Country" /></td>
+			<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 			<td><p:selectOneMenu
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId}"
 					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCountry"
 						value="#{backingBean.managedBean.countryLs}"
 						itemValue="#{branchCountry.countryId}"
@@ -62,7 +62,7 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateId}"
 					id="branchesState">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnState"
 						value="#{backingBean.managedBean.branchCompanyStates}"
 						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
@@ -81,7 +81,7 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesDist"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="brnDist"
 						value="#{backingBean.managedBean.branchCompanyDistricts}"
 						itemValue="#{brnDist.districtId}"
@@ -98,7 +98,7 @@
 			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					id="branchesCity"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityId}">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems var="branchCity"
 						value="#{backingBean.managedBean.branchCompanyCities}"
 						itemValue="#{branchCity.cityId}"
@@ -112,12 +112,12 @@
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Phone NO." /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Fax NO." /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 			<td><p:inputText
 					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" /></td>
 		</tr>

@@ -24,7 +24,7 @@
 						required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrOffCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{shrOffCountry.countryId}"
@@ -162,22 +162,22 @@
 						title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.bumiFlg}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']}"
 						title="For Malaysian Only" /></td>
 				<td colspan="3"><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.muslimFlg}">
-						<f:selectItem itemLabel="Islam" itemValue="1" />
-						<f:selectItem itemLabel="Non-Islam" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 					</p:selectOneRadio></td>
 
 			</tr>
 
 		</table>
 	</p:panel>
-	<p:panel header="User Roles" toggleable="true" id="shrRolesPanel">
+	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel">
 		<ui:include src="personnelRolesPanel.xhtml" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.shrPrvHdr']}" toggleable="true"
@@ -189,8 +189,8 @@
 				<td><p:selectOneRadio
 						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"
 						value="#{backingBean.managedBean.selectedShareHolder.authorizedFlg}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
@@ -202,7 +202,7 @@
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilegeByEpRole}" />
@@ -216,8 +216,8 @@
 						value="#{backingBean.managedBean.selectedShareHolder.softcertFlg}"
 						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
-						<f:selectItem itemLabel="Yes" itemValue="2" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="2" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
@@ -228,8 +228,8 @@
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
 			</tr>
 		</table>
@@ -270,7 +270,7 @@
 			src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
 	</p:panel>
 
-	<p:panel header="Job Function" toggleable="true" id="equiShrHldrJbFnc">
+	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true" id="equiShrHldrJbFnc">
 		<p:dataTable id="shrJfdt" widgetVar="suppPrsnJobFunDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smStaffExperiences}"
 			var="jf"
@@ -280,25 +280,25 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Company" />
+					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Designation" />
+					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year From" />
+					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<h:outputText value="#{jf.fromYear}" maxlength="4" label="Year From" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year To" />
+					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" maxlength="4" label="Year To" />
 			</p:column>
@@ -316,17 +316,17 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrJobFunction()}"
 				update=":form:tt:equiJobFunctionInfo" partialSubmit="true"
 				process="@this" />
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedShrHldrJobFunction()}"
 				update=":form:tt:shrJfdt" partialSubmit="true"
 				process="equiShrHldrJbFnc" />
 		</div>
 	</p:panel>
-	<p:dialog width="500px" height="200px" header="Job Function Details "
+	<p:dialog width="500px" height="200px" header="#{lbl['lbl.sm.job.function.details']}"
 		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo"
 		closable="false" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
@@ -334,10 +334,10 @@
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value=" Company" /> <p:outputLabel
+				<td><p:outputLabel value=" #{lbl['lbl.sm.assocCmpny.companyName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35"
-						required="#{backingBean.managedBean.valueReqd}" label="Company"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.assocCmpny.companyName']}"
 						id="equiJbFnInfCmpName" maxlength="100"
 						value="#{backingBean.managedBean.selectedJobFunction.companyName}" />
 					<p:message id="equiJbFnInfCmpNameMsg"
@@ -345,33 +345,33 @@
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Designation" /> <p:outputLabel
+				<td><p:outputLabel value=" #{lbl['lbl.sm.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35" maxlength="250"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Designation" id="equiJbFnInfDesg"
+						label="#{lbl['lbl.sm.designation']}" id="equiJbFnInfDesg"
 						value="#{backingBean.managedBean.selectedJobFunction.designation}" />
 					<p:message id="equiJbFnInfDesgMsg" for=":form:tt:equiJbFnInfDesg"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Year From" /> <p:outputLabel
+				<td><p:outputLabel value=" #{lbl['lbl.sm.year.from']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText style="margin-bottom : 5px;" size="35"
 						required="#{backingBean.managedBean.valueReqd}"
 						id="equiJbFnInfYrFrm"
 						value="#{backingBean.managedBean.selectedJobFunction.fromYear}"
-						maxlength="4" label="Year From">
+						maxlength="4" label="#{lbl['lbl.sm.year.from']}">
 						<f:validateLongRange minimum="1950" maximum="2050" />
 					</p:inputText> <p:message id="equiJbFnInfYrFrmMsg"
 						for=":form:tt:equiJbFnInfYrFrm" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Year To" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.year.to']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText size="35"
-						required="#{backingBean.managedBean.valueReqd}" label="Year To"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.year.to']}"
 						id="equiJbFnInfYrTo"
 						value="#{backingBean.managedBean.selectedJobFunction.toYear}"
 						maxlength="4">
@@ -391,7 +391,7 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:panel header="Related Companies" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.related.company.details']}" toggleable="true"
 		id="equiShrHldrRelComp">
 
 		<p:dataTable id="shrRelCom"
@@ -403,25 +403,25 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Company Name" />
+					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="ROC/ROB/ROS NO." />
+					<h:outputText value="#{lbl['lbl.sc.spec.roc.no']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.regNo}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Shareholding Total(RM.)" />
+					<h:outputText value="#{lbl['lbl.sm.shareholding.total.rm']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.shareAmt}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="MOF Reg NO." />
+					<h:outputText value="#{lbl['lbl.sm.mof.reg.no']}" />
 				</f:facet>
 				<h:outputText value="#{relCom.mofNo}" />
 			</p:column>
@@ -438,38 +438,38 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add" partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" partialSubmit="true" process="@this"
 				action="#{backingBean.addShrHldrRelatedCompany()}"
 				update="equiRelCompInfo" />
-			<p:commandButton value="Delete" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" partialSubmit="true"
 				process="equiShrHldrRelComp"
 				action="#{backingBean.deleteSelectedShrHldrRelatedCompanies()}"
 				update="shrRelCom" />
 		</div>
 	</p:panel>
 	<p:dialog width="500px" height="300px" closable="false"
-		header="Related Company Details " id="equiRelCompInfo"
+		header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
 		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<p:messages id="equiRelCompInfoMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Company Name" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="100"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Company Name" id="equiRlCmpInfCompName"
+						label="#{lbl['lbl.sm.assocCmpny.companyName']}" id="equiRlCmpInfCompName"
 						value="#{backingBean.managedBean.selectedRelatedCompany.companyName}"
 						size="35" /> <p:message id="equiRlCmpInfCompNameMsg"
 						for="equiRlCmpInfCompName" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Reg NO." /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}" label="Reg NO."
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.reg.no']}"
 						id="equiRlCmpInfRegNo"
 						value="#{backingBean.managedBean.selectedRelatedCompany.regNo}"
 						maxlength="20" size="35" /> <p:message id="equiRlCmpInfRegNoMsg"
@@ -477,20 +477,20 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Designation" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.designation']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="30"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Designation" id="equiRlCmpInfDesg"
+						label="#{lbl['lbl.sm.designation']}" id="equiRlCmpInfDesg"
 						value="#{backingBean.managedBean.selectedRelatedCompany.designation}"
 						size="35" /> <p:message id="equiRlCmpInfDesgMsg"
 						for="equiRlCmpInfDesg" showSummary="true" showDetail="false"
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Shareholding Total(RM.)" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText label="Shareholding Total(RM.)"
+				<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrAmt']}"
 						required="#{backingBean.managedBean.valueReqd}"
 						id="equiRlCmpInfShrAmt"
 						value="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}"
@@ -501,9 +501,9 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Shareholding (%)" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText label="Shareholding (%)"
+				<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrPerc']}"
 						required="#{backingBean.managedBean.valueReqd}"
 						id="equiRlCmpInfShrPerc" maxlength="2"
 						value="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}"
@@ -514,7 +514,7 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="MOF Reg NO." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedRelatedCompany.mofNo}"
 						size="35" maxlength="12" /></td>
@@ -532,7 +532,7 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:panel header="Professional Body" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
 		id="equiShrPfBdyPan">
 		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
 			value="#{backingBean.managedBean.selectedShareHolder.smAssociationBodies}"
@@ -540,13 +540,13 @@
 			rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
 			<ac:paginator for="shrProfDt" />
 			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="Professionl Body">
+			<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
 				<h:outputText value="#{profBean.pmCertBody.bodyName}" />
 			</p:column>
-			<p:column headerText="Registration NO.">
+			<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
 				<h:outputText value="#{profBean.regNo}" />
 			</p:column>
-			<p:column headerText="End Date">
+			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<h:outputText value="#{profBean.expDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -565,30 +565,30 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add" partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" partialSubmit="true" process="@this"
 				action="#{backingBean.addShrHldrProfBody()}"
 				update="equiShrProfBeanInfo" />
-			<p:commandButton value="Delete" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" partialSubmit="true"
 				process="equiShrPfBdyPan"
 				action="#{backingBean.deleteSelectedShrHldrProfBodies()}"
 				update="shrProfDt" />
 		</div>
 	</p:panel>
 	<p:dialog width="500px" height="300px" closable="false"
-		header="Professional Body Details" id="equiShrProfBeanInfo"
+		header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<p:messages id="equiShrProfBeanInfoMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Professionl Body" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Professionl Body" id="equiStfPrdBdyLbl"
+						label="#{lbl['lbl.sm.profBody.profBody']}" id="equiStfPrdBdyLbl"
 						value="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrProfBody"
 							value="#{backingBean.managedBean.profBodyLs}"
 							itemValue="#{shrProfBody.certBodyId}"
@@ -597,10 +597,10 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Reg No." /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}" label="Reg No."
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.profBody.regNo']}"
 						id="equiPrfBdyRegNo"
 						value="#{backingBean.managedBean.selectedStfPrfBdy.regNo}"
 						maxlength="20" size="35" /> <p:message id="equiPrfBdyRegNoMsg"
@@ -608,10 +608,10 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="End Date." /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar showOn="button" navigator="true"
-						display="inline" readonlyInput="true" label="End Date."
+						display="inline" readonlyInput="true" label="#{lbl['lbl.sm.prof.enddate']}"
 						id="equiPrfBdyEndDt"
 						required="#{backingBean.managedBean.valueReqd}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -634,7 +634,7 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:panel header="Academic Qualification" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
 		id="equiShrHldrAcadPan">
 
 		<p:dataTable id="shrAqdt"
@@ -646,26 +646,26 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year" />
+					<h:outputText value="#{lbl['lbl.sc.spec.contrat.year']}" />
 				</f:facet>
 				<h:outputText value="#{aq.year}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Institute" />
+					<h:outputText value="#{lbl['lbl.sm.institute']}" />
 				</f:facet>
 				<h:outputText value="#{aq.instituteName}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Education Field" />
+					<h:outputText value="#{lbl['lbl.sm.education.field']}" />
 				</f:facet>
 				<h:outputText value="#{aq.pmEduField.fieldName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Major In" />
+					<h:outputText value="#{lbl['lbl.sm.major.in']}" />
 				</f:facet>
 				<h:outputText value="#{aq.fieldMajor}" />
 			</p:column>
@@ -681,10 +681,10 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add" partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" partialSubmit="true" process="@this"
 				action="#{backingBean.addShrHldrAcademicQualification()}"
 				update="equiAcadInfo" />
-			<p:commandButton value="Delete" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" partialSubmit="true"
 				process="equiShrHldrAcadPan"
 				action="#{backingBean.deleteSelectedShrHldrAcademics()}"
 				update="shrAqdt" />
@@ -692,17 +692,17 @@
 
 	</p:panel>
 	<p:dialog width="450px" height="300px" closable="false"
-		header="Staff Academics Details" id="equiAcadInfo"
+		header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<p:messages id="equiAcadInfoMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Year" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText style="margin-bottom : 5px;" maxlength="4"
-						required="#{backingBean.managedBean.valueReqd}" label="Year"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sc.spec.contrat.year']}"
 						id="equiStfAcaYr"
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
 						size="35">
@@ -711,10 +711,10 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Institute" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.institute']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}" label="Institute"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.institute']}"
 						id="equiStfAcaInst" maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.instituteName}"
 						size="35" /> <p:message id="equiStfAcaInstMsg"
@@ -722,24 +722,24 @@
 						display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Qualification Level" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Qualification Level" id="equiStfAcaQl"
+						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
 						value="#{backingBean.managedBean.selectedStaffAcademic.qualificationLevelId}">
 						<f:selectItems value="#{backingBean.getDropdownValues('QL')}" />
 					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Education Field" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Education Field" id="equiStfAcaEduFld"
+						label="#{lbl['lbl.sm.education.field']}" id="equiStfAcaEduFld"
 						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}">
-						<f:selectItem itemLabel="-- Select-- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="eduField"
 							value="#{backingBean.managedBean.eduFieldList}"
 							itemValue="#{eduField.eduFieldId}"
@@ -749,7 +749,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Major In" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']}" /></td>
 				<td><p:inputText maxlength="50"
 						value="#{backingBean.managedBean.selectedStaffAcademic.fieldMajor}"
 						size="35" /></td>

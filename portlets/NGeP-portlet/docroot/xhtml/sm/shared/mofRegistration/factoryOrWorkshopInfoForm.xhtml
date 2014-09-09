@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Factory Details" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.factoryStepLbl']}" toggleable="true"
 		id="smFacilityFactoryDtPanel">
 
 		<p:dataTable var="fac" widgetVar="smFacilityFactorDtWidVar"
@@ -16,15 +16,15 @@
 			<ac:paginator for="facDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Factory Name">
+			<p:column headerText="#{lbl['lbl.sm.factory.name']}">
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column headerText="Factory Address">
+			<p:column headerText="#{lbl['lbl.sm.factory.address']}">
 				<h:outputText
 					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
 			</p:column>
-			<p:column headerText="Action">
+			<p:column headerText="#{lbl['lbl.sm.action']}">
 				<p:commandLink action="#{backingBean.assignSelFactory(fac)}"
 					partialSubmit="true" process="@this"
 					update=":form:tt:factoryDialog" style="padding-right:5px">
@@ -36,30 +36,30 @@
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add " partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}" partialSubmit="true" process="@this"
 				action="#{backingBean.assignNewFactoryBean}"
 				update=":form:tt:factoryDialog" />
-			<p:commandButton value="Delete " partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" partialSubmit="true"
 				process="smFacilityFactoryDtPanel"
 				action="#{backingBean.deleteSelectedFactories}"
 				update=":form:tt:facDt" />
 		</div>
 		<br />
 	</p:panel>
-	<p:dialog width="500px" height="500px" header="Factory Information"
+	<p:dialog width="500px" height="500px" header="#{lbl['lbl.sm.factory.information']}"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		closable="false" hideEffect="fade" modal="true" id="factoryDialog">
 		<p:messages id="factoryDialogMsg" showSummary="false"
 			showDetail="true" autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Facility Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.facilityType}" readonly="true"
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Name" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.name']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText size="35" maxlength="50" id="smFacFactorName"
 						required="#{backingBean.managedBean.valueReqd}" label="Name"
@@ -68,7 +68,7 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Address" /> <p:outputLabel value="*"
+				<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="35" id="smFacFactoryAddr"
 						required="#{backingBean.managedBean.valueReqd}" label="Address"
@@ -104,7 +104,7 @@
 						label="#{lbl['lbl.sm.country']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{factoryCountry.countryId}"
@@ -128,7 +128,7 @@
 						label="#{lbl['lbl.sm.state']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateId}"
 						id="factoryState">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="facState"
 							value="#{backingBean.managedBean.factoryFacilityStates}"
 							itemValue="#{facState.stateId}" itemLabel="#{facState.stateName}" />
@@ -150,7 +150,7 @@
 						id="factoryDist" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.district']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryDist"
 							value="#{backingBean.managedBean.factoryFacilityDistricts}"
 							itemValue="#{factoryDist.districtId}"
@@ -170,7 +170,7 @@
 						id="factoryCity" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.towncity']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="factoryCity"
 							value="#{backingBean.managedBean.factoryFacilityCities}"
 							itemValue="#{factoryCity.cityId}"
@@ -212,8 +212,8 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Area(Sq Ft)" /></td>
-				<td><p:inputText id="smFacFactoryArea" label="Area (Sq Ft)"
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.area']}" /></td>
+				<td><p:inputText id="smFacFactoryArea" label="#{lbl['lbl.sc.sp.area']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
 						size="35">
 						<f:convertNumber
@@ -222,14 +222,14 @@
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio id="smOwnerType"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="OwnerShip Type"
+						label="#{lbl['lbl.sm.facility.ownerType']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
-						<f:selectItem itemLabel="Rent" itemValue="R" />
-						<f:selectItem itemLabel="Own" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
 						<p:ajax event="change"
 							listener="#{backingBean.factoryOwnerTypeSel}"
 							update="facPan,facPanLbl" />
@@ -238,17 +238,17 @@
 			</tr>
 			<tr>
 				<td><p:outputPanel id="facPanLbl">
-						<p:outputLabel value="Price (RM.)"
+						<p:outputLabel value="#{lbl['lbl.cm.price']}"
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
 							id="oid" />
-						<p:outputLabel value="Rent (RM.)"
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
 							id="rid" />
 					</p:outputPanel></td>
 				<td><p:outputPanel id="facPan">
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
-							<p:inputText id="smFacFactoryPrice" label="Price (RM.)"
+							<p:inputText id="smFacFactoryPrice" label="#{lbl['lbl.cm.price']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
 								size="20">
 								<f:convertNumber
@@ -259,7 +259,7 @@
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
-							<p:inputText id="smFacFactoryRent" label="Rent (RM.)"
+							<p:inputText id="smFacFactoryRent" label="#{lbl['lbl.sm.facility.rent.rm']}"
 								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
 								size="20">
 								<f:convertNumber
@@ -272,10 +272,10 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Owner Name" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText maxlength="50" id="smFacFactoryOwnName"
-						required="#{backingBean.managedBean.valueReqd}" label="Owner Name"
+						required="#{backingBean.managedBean.valueReqd}" label="#{lbl['lbl.sm.ownername']}"
 						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
 						size="35" /> <p:message id="smFacFactoryOwnNameMsg"
 						for="smFacFactoryOwnName" showSummary="true" showDetail="false"
@@ -285,11 +285,11 @@
 		</table>
 		<br />
 		<div align="right">
-			<p:commandButton value="Save"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
 				partialSubmit="true" process="factoryDialog"
 				update=":form:tt:facDt, @([id$=Msg])" />
-			<p:commandButton value="Cancel" partialSubmit="true" process="@this"
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" partialSubmit="true" process="@this"
 				action="#{backingBean.cancelFactorySaveorUpdate}" />
 		</div>
 	</p:dialog>
