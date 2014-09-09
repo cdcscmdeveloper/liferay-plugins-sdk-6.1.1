@@ -46,25 +46,15 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class EvaluationManagedBean extends BaseManagedBean {
 
-	private List<EvaluationReportListBean> evaluationReportListItems;
-	private List<EvaluationReportSubBean> evaluationReportSupplierItems;
 	private List<ScQtMeeting> scQtMeetings;
 
 	private List<ScQtMeeting> meetingMultiSelect;
 	private ScQtMeeting meeting;
 	private List<ScQtCommitteeActivity> committeeMemberList;
-	private ScQtChecklistEvaluation checklistEvaluation;
-	private List<ScQtChecklistEvaluation> manuals1EvaluationList;
-	// private List<ScQtManualEvaluation> manualMultiSelect;
-	private List<ScQtEvaluationResult> s1TechEvalList;
-	private List<ScQtEvaluationResult> s1FinEvalList;
-	private List<ScQtEvaluationResult> s2TechSupplier;
-	private List<ScQtProposalChecklist> s2TechChecklist;
-	private List<ScQtEvaluationResult> s2FinSupplier;
-	private List<ScQtProposalChecklist> s2FinChecklist;
+
+	
 	private List<ScQtCommitteeActivity> committeeActivitymultiSelect;
-	private ScQtEvaluationResult s2techSingleSelect;
-	private ScQtEvaluationResult s2finSingleSelect;
+	
 	private ScEvaluationResult evaluationResult;
 	private List<ScQtProposalChecklist> complianceList;
 	private List<ScQtCommitteeActivity> signOffMemberList;
@@ -79,8 +69,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String committeeType;
 	private boolean isDemo = true;
 	private List<ScQtEvaluationResult> manuals1SupplierList;
-	// private List<ScQtProposalLabel> manualProposalLabel;
-	// private List<ScQtManualEvaluation> manualEvaluateList;
+	
 	private boolean isEvaluateStatus;
 	private Long evaluationResultId;
 	private int tempTab;
@@ -101,7 +90,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private int countDays;
 	private List<ScQtProposalChecklist> complianceTechnicalProposalCheckList;
-	
+
 	private ScQtCommittee scQtCommittee;
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	private int complianceActiveIndex;
@@ -114,18 +103,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> evaluationStgTechnicalCheckList;
 	private List<ScQtCheckList> evaluationStgfinancialCheckList;
 	private String summaryViewBy;
-	private List<ScQtCheckListScore> technicalGovNoOfContracts; 
-	private List<ScQtCheckListScore> technicalGovNoOfYears ;
-	
-	
-	
-	
-	
-	
-	
+	private List<ScQtCheckListScore> technicalGovNoOfContracts;
+	private List<ScQtCheckListScore> technicalGovNoOfYears;
 
-	
-	
 	private String checklistScoreType;
 	private String companyScoreType;
 	private ScQtCheckListScore technicalContractUserScore;
@@ -150,17 +130,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtPRPBankStmt> bankStmtList;
 	private List<ScQtPRPAssetLiability> assetList;
 	private List<ScQtProposalScore> techGovProposalScore;
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
 
 	private List<ScQtEvaluationResult> evaluationSummaryQualSuppliers;
 	private List<ScQtEvaluationResult> evaluationSummaryDisQualSuppliers;
@@ -193,80 +162,26 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String subject;
 	private boolean generateEvaluationButton = false;
 	private boolean complianceStageHide = false;
-	private int complianceSummaryCount=0;
+	private int complianceSummaryCount = 0;
 	private ScQtPRPAssetLiability scQtPRPAssetLiability;
 
 	private BigDecimal bankTotalAmt;
 
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
-	//payload
+	// payload
 	private Object evaluationPayLoad;
-	
+
 	private List<ScQtEvaluationReport> scQtEvaluationReportList;
 	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
 	private ScQtEvaluationReport scQtEvaluationReport;
 	private String reportHeader;
 	private List<TechnicalStaffBean> smPersonnelsList;
 	private int totalNoOfYearsExperience;
-	private SmAppl smAppl; 
+	private SmAppl smAppl;
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
-		super();
-		prepareDummyData1();
-	}
 
-	private void prepareDummyData1() {
-		evaluationReportListItems = new ArrayList<EvaluationReportListBean>();
-		evaluationReportSupplierItems = new ArrayList<EvaluationReportSubBean>();
-		EvaluationReportListBean requestListItem1 = new EvaluationReportListBean(
-				"General");
-		List<EvaluationReportSubBean> supplierItems1 = new ArrayList<EvaluationReportSubBean>();
-		supplierItems1.add(new EvaluationReportSubBean("Qtn/Tender Details"));
-		supplierItems1.add(new EvaluationReportSubBean("Meeting Details"));
-		supplierItems1.add(new EvaluationReportSubBean(
-				"Committee Attendence List"));
-		requestListItem1.setSupplierItems(supplierItems1);
-		evaluationReportListItems.add(requestListItem1);
-
-		EvaluationReportListBean requestListItem2 = new EvaluationReportListBean(
-				"Stage1");
-		List<EvaluationReportSubBean> supplierItems2 = new ArrayList<EvaluationReportSubBean>();
-		supplierItems2.add(new EvaluationReportSubBean("Kaedah Pemarkahan"));
-		supplierItems2.add(new EvaluationReportSubBean("Complience Summary"));
-
-		requestListItem2.setSupplierItems(supplierItems2);
-		evaluationReportListItems.add(requestListItem2);
-
-		EvaluationReportListBean requestListItem3 = new EvaluationReportListBean(
-				"Stage2");
-		List<EvaluationReportSubBean> supplierItems3 = new ArrayList<EvaluationReportSubBean>();
-		supplierItems3.add(new EvaluationReportSubBean("Kaedah Pemarkahan"));
-		supplierItems3.add(new EvaluationReportSubBean("Checklist1"));
-		supplierItems3.add(new EvaluationReportSubBean("Checklist2"));
-		requestListItem3.setSupplierItems(supplierItems3);
-		evaluationReportListItems.add(requestListItem3);
-
-		evaluationReportSupplierItems.add(new EvaluationReportSubBean("Hello"));
-		evaluationReportSupplierItems.add(new EvaluationReportSubBean("Hello"));
-	}
-
-	public List<EvaluationReportListBean> getEvaluationReportListItems() {
-		return evaluationReportListItems;
-	}
-
-	public void setEvaluationReportListItems(
-			List<EvaluationReportListBean> evaluationReportListItems) {
-		this.evaluationReportListItems = evaluationReportListItems;
-	}
-
-	public List<EvaluationReportSubBean> getEvaluationReportSupplierItems() {
-		return evaluationReportSupplierItems;
-	}
-
-	public void setEvaluationReportSupplierItems(
-			List<EvaluationReportSubBean> evaluationReportSupplierItems) {
-		this.evaluationReportSupplierItems = evaluationReportSupplierItems;
 	}
 
 	/**
@@ -299,37 +214,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.meeting = meeting;
 	}
 
-	/**
-	 * @return the checklistEvaluation
-	 */
-	public ScQtChecklistEvaluation getChecklistEvaluation() {
-		return checklistEvaluation;
-	}
-
-	/**
-	 * @param checklistEvaluation
-	 *            the checklistEvaluation to set
-	 */
-	public void setChecklistEvaluation(
-			ScQtChecklistEvaluation checklistEvaluation) {
-		this.checklistEvaluation = checklistEvaluation;
-	}
-
-	/**
-	 * @return the manuals1EvaluationList
-	 */
-	public List<ScQtChecklistEvaluation> getManuals1EvaluationList() {
-		return manuals1EvaluationList;
-	}
-
-	/**
-	 * @param manuals1EvaluationList
-	 *            the manuals1EvaluationList to set
-	 */
-	public void setManuals1EvaluationList(
-			List<ScQtChecklistEvaluation> manuals1EvaluationList) {
-		this.manuals1EvaluationList = manuals1EvaluationList;
-	}
+	
 
 	/**
 	 * @param meetingMultiSelect
@@ -409,66 +294,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.committeeActivitymultiSelect = committeeActivitymultiSelect;
 	}
 
-	/**
-	 * @return the s1TechEvalList
-	 */
-	public List<ScQtEvaluationResult> getS1TechEvalList() {
-		return s1TechEvalList;
-	}
-
-	/**
-	 * @param s1TechEvalList
-	 *            the s1TechEvalList to set
-	 */
-	public void setS1TechEvalList(List<ScQtEvaluationResult> s1TechEvalList) {
-		this.s1TechEvalList = s1TechEvalList;
-	}
-
-	/**
-	 * @return the s1FinEvalList
-	 */
-	public List<ScQtEvaluationResult> getS1FinEvalList() {
-		return s1FinEvalList;
-	}
-
-	/**
-	 * @param s1FinEvalList
-	 *            the s1FinEvalList to set
-	 */
-	public void setS1FinEvalList(List<ScQtEvaluationResult> s1FinEvalList) {
-		this.s1FinEvalList = s1FinEvalList;
-	}
-
-	/**
-	 * @return the s2TechSupplier
-	 */
-	public List<ScQtEvaluationResult> getS2TechSupplier() {
-		return s2TechSupplier;
-	}
-
-	/**
-	 * @param s2TechSupplier
-	 *            the s2TechSupplier to set
-	 */
-	public void setS2TechSupplier(List<ScQtEvaluationResult> s2TechSupplier) {
-		this.s2TechSupplier = s2TechSupplier;
-	}
-
-	/**
-	 * @return the s2FinSupplier
-	 */
-	public List<ScQtEvaluationResult> getS2FinSupplier() {
-		return s2FinSupplier;
-	}
-
-	/**
-	 * @param s2FinSupplier
-	 *            the s2FinSupplier to set
-	 */
-	public void setS2FinSupplier(List<ScQtEvaluationResult> s2FinSupplier) {
-		this.s2FinSupplier = s2FinSupplier;
-	}
-
+	
 	/**
 	 * @return the evaluationResult
 	 */
@@ -500,35 +326,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.scQtEvaluationResult = scQtEvaluationResult;
 	}
 
-	/**
-	 * @return the s2techSingleSelect
-	 */
-	public ScQtEvaluationResult getS2techSingleSelect() {
-		return s2techSingleSelect;
-	}
-
-	/**
-	 * @param s2techSingleSelect
-	 *            the s2techSingleSelect to set
-	 */
-	public void setS2techSingleSelect(ScQtEvaluationResult s2techSingleSelect) {
-		this.s2techSingleSelect = s2techSingleSelect;
-	}
-
-	/**
-	 * @return the s2finSingleSelect
-	 */
-	public ScQtEvaluationResult getS2finSingleSelect() {
-		return s2finSingleSelect;
-	}
-
-	/**
-	 * @param s2finSingleSelect
-	 *            the s2finSingleSelect to set
-	 */
-	public void setS2finSingleSelect(ScQtEvaluationResult s2finSingleSelect) {
-		this.s2finSingleSelect = s2finSingleSelect;
-	}
+	
 
 	/**
 	 * @return the commiteeActivity
@@ -636,35 +434,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.evaluationResultId = evaluationResultId;
 	}
 
-	/**
-	 * @return the s2TechChecklist
-	 */
-	public List<ScQtProposalChecklist> getS2TechChecklist() {
-		return s2TechChecklist;
-	}
-
-	/**
-	 * @param s2TechChecklist
-	 *            the s2TechChecklist to set
-	 */
-	public void setS2TechChecklist(List<ScQtProposalChecklist> s2TechChecklist) {
-		this.s2TechChecklist = s2TechChecklist;
-	}
-
-	/**
-	 * @return the s2FinChecklist
-	 */
-	public List<ScQtProposalChecklist> getS2FinChecklist() {
-		return s2FinChecklist;
-	}
-
-	/**
-	 * @param s2FinChecklist
-	 *            the s2FinChecklist to set
-	 */
-	public void setS2FinChecklist(List<ScQtProposalChecklist> s2FinChecklist) {
-		this.s2FinChecklist = s2FinChecklist;
-	}
+	
 
 	/**
 	 * @return the qualifiedList
@@ -957,8 +727,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.complianceTechnicalProposalCheckList = complianceTechnicalProposalCheckList;
 	}
 
-	
-
 	/**
 	 * @return the scQtCommittee
 	 */
@@ -1238,9 +1006,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.technicalGovNoOfYears = technicalGovNoOfYears;
 	}
 
-
-
-
 	/**
 	 * @return the complianceSummaryQualSuppliers
 	 */
@@ -1456,7 +1221,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 			List<ScQtProposalScore> techGovProposalScore) {
 		this.techGovProposalScore = techGovProposalScore;
 	}
-
 
 	/**
 	 * @return the bankTotalAmt
@@ -1879,7 +1643,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceStageHide the complianceStageHide to set
+	 * @param complianceStageHide
+	 *            the complianceStageHide to set
 	 */
 	public void setComplianceStageHide(boolean complianceStageHide) {
 		this.complianceStageHide = complianceStageHide;
@@ -1893,7 +1658,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSummaryCount the complianceSummaryCount to set
+	 * @param complianceSummaryCount
+	 *            the complianceSummaryCount to set
 	 */
 	public void setComplianceSummaryCount(int complianceSummaryCount) {
 		this.complianceSummaryCount = complianceSummaryCount;
@@ -1915,9 +1681,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtPRPAssetLiability the scQtPRPAssetLiability to set
+	 * @param scQtPRPAssetLiability
+	 *            the scQtPRPAssetLiability to set
 	 */
-	public void setScQtPRPAssetLiability(ScQtPRPAssetLiability scQtPRPAssetLiability) {
+	public void setScQtPRPAssetLiability(
+			ScQtPRPAssetLiability scQtPRPAssetLiability) {
 		this.scQtPRPAssetLiability = scQtPRPAssetLiability;
 	}
 
@@ -1929,7 +1697,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtEvaluationReportList the scQtEvaluationReportList to set
+	 * @param scQtEvaluationReportList
+	 *            the scQtEvaluationReportList to set
 	 */
 	public void setScQtEvaluationReportList(
 			List<ScQtEvaluationReport> scQtEvaluationReportList) {
@@ -1944,7 +1713,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedScQtEvaluationReports the selectedScQtEvaluationReports to set
+	 * @param selectedScQtEvaluationReports
+	 *            the selectedScQtEvaluationReports to set
 	 */
 	public void setSelectedScQtEvaluationReports(
 			List<ScQtEvaluationReport> selectedScQtEvaluationReports) {
@@ -1959,9 +1729,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtEvaluationReport the scQtEvaluationReport to set
+	 * @param scQtEvaluationReport
+	 *            the scQtEvaluationReport to set
 	 */
-	public void setScQtEvaluationReport(ScQtEvaluationReport scQtEvaluationReport) {
+	public void setScQtEvaluationReport(
+			ScQtEvaluationReport scQtEvaluationReport) {
 		this.scQtEvaluationReport = scQtEvaluationReport;
 	}
 
@@ -1973,7 +1745,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param reportHeader the reportHeader to set
+	 * @param reportHeader
+	 *            the reportHeader to set
 	 */
 	public void setReportHeader(String reportHeader) {
 		this.reportHeader = reportHeader;
@@ -1987,7 +1760,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smPersonnelsList the smPersonnelsList to set
+	 * @param smPersonnelsList
+	 *            the smPersonnelsList to set
 	 */
 	public void setSmPersonnelsList(List<TechnicalStaffBean> smPersonnelsList) {
 		this.smPersonnelsList = smPersonnelsList;
@@ -2001,7 +1775,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param totalNoOfYearsExperience the totalNoOfYearsExperience to set
+	 * @param totalNoOfYearsExperience
+	 *            the totalNoOfYearsExperience to set
 	 */
 	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
 		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
@@ -2015,7 +1790,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param smAppl the smAppl to set
+	 * @param smAppl
+	 *            the smAppl to set
 	 */
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
