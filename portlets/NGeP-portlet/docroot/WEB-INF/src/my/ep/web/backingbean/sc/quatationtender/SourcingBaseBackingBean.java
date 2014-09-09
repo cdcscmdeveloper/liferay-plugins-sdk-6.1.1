@@ -17,12 +17,20 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -73,6 +81,7 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -144,8 +153,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-
+//		byte[] fileBytes = file.getContents();
+		FileInputStream fis = (FileInputStream) file.getInputstream();
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
 
@@ -153,9 +162,41 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		FileOutputStream fos;
 		fos = new FileOutputStream(getActualFilePath(attachment));
-		fos.write(fileBytes);
-		fos.close();
-
+//		fos.write(fileBytes);
+//		fos.close();
+        BouncyCastleProvider_AES_CBC bc =
+                new BouncyCastleProvider_AES_CBC();
+        try {
+			bc.InitCiphers();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        //encryption
+        try {
+			bc.CBCEncrypt(fis, fos);
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
 
@@ -292,14 +333,51 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
+//			byte[] buffer = new byte[4096];
+//			int bytesRead;
+//			while ((bytesRead = input.read(buffer)) != -1) {
+//				out.write(buffer, 0, bytesRead);
+//				buffer = new byte[4096];
+			
+	            BouncyCastleProvider_AES_CBC bc =
+	                    new BouncyCastleProvider_AES_CBC();
+	            try {
+					bc.InitCiphers();
+				} catch (InvalidKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchProviderException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidAlgorithmParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+	            //decryption
+	            try {
+					bc.CBCDecrypt(input, out);
+				} catch (ShortBufferException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+			
+			
 			input.close();
 		}
+		
 		out.flush();
 		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
