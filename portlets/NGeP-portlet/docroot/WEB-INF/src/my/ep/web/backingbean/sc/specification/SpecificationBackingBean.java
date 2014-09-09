@@ -1409,11 +1409,10 @@ public class SpecificationBackingBean extends
 						}
 						if (null != getManagedBean().getZoneTrees()
 								&& getManagedBean().getZoneTrees().size() == 0) {
-							
-								getManagedBean().getZoneTrees().addAll(
-										LocationSingleton.getInstance()
-												.constuctTreeNode(locCriteria));
-							
+
+							getManagedBean().getZoneTrees().addAll(
+									LocationSingleton.getInstance()
+											.constuctTreeNode(locCriteria));
 
 						}
 					}
@@ -8085,7 +8084,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void deleteSupplierQualificationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
-		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+		deleteTreeNodes(rootTrees);
 		/*
 		 * if (!rootTrees.isEmpty()) { ScQtSupplierCriteria supplierCriteria =
 		 * null; this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
@@ -8093,6 +8092,51 @@ public class SpecificationBackingBean extends
 		 * .setScQtLocCriteria( getQuoteZones(rootTrees, supplierCriteria)); }
 		 */
 		this.getManagedBean().setIndex(-1);
+	}
+
+	public void deleteTreeNodes(List<TreeNode> rootTrees) {
+		if (rootTrees != null) {
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+						rootTrees.remove(row--);
+					} else {
+						deleteChildTreeNodes(zoneTree.getChildren());
+
+						if (zoneTree.getChildren().size() == 0) {
+							// rootTrees.remove(row--);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
+		if (treeNodes != null) {
+			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+					nodesToRemoved.add(treeNode);
+				} else {
+					if (treeNode.getChildren() != null
+							&& treeNode.getChildren().size() > 0) {
+						deleteChildTreeNodes(treeNode.getChildren());
+
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}
+		}
 	}
 
 	// Category Codes Set method
