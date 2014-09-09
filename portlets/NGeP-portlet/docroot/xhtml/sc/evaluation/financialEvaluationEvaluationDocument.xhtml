@@ -21,12 +21,12 @@
 			<!-- <p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save" /> -->
 		</div>
-
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea
+					<td><p:inputTextarea style="width:100%"
 							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
 							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
@@ -53,12 +53,12 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 					style="width:10%">
 					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-					<p:commandLink ajax="false"
-						actionListener="#{evaluationBackingBean.downloadDocuments(evaFinSupplier)}"
-						process="@this" partialSubmit="true">
-						<p:graphicImage library="ep/images/design"
-							value="/resources/ep/images/design/icon_txt.png" />
-							</p:commandLink>
+						<p:commandLink ajax="false"
+							actionListener="#{evaluationBackingBean.downloadDocuments(evaFinSupplier)}"
+							process="@this" partialSubmit="true">
+							<p:graphicImage library="ep/images/design"
+								value="/resources/ep/images/design/icon_txt.png" />
+						</p:commandLink>
 					</ui:fragment>
 
 				</p:column>
@@ -85,9 +85,9 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
 					style="width:25%">
 					<ui:fragment rendered="#{evaFinSupplier.submitted eq 'true'}">
-					<p:inputTextarea rows="2" cols="40"
-						value="#{evaFinSupplier.remark}" disabled="true"></p:inputTextarea>
-						</ui:fragment>
+						<p:inputTextarea rows="2" cols="40"
+							value="#{evaFinSupplier.remark}" disabled="true"></p:inputTextarea>
+					</ui:fragment>
 				</p:column>
 			</p:dataTable>
 		</p:panel>

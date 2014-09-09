@@ -12,7 +12,7 @@
 
 
 	<ui:define name="contentSection">
-	<p:messages id="financialPrivateEvaluationmsgId" autoUpdate="true"
+		<p:messages id="financialPrivateEvaluationmsgId" autoUpdate="true"
 			closable="true" showDetail="true" showSummary="false"
 			severity="error,info"></p:messages>
 
@@ -25,7 +25,7 @@
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
-
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -36,6 +36,7 @@
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							style="width:70%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>

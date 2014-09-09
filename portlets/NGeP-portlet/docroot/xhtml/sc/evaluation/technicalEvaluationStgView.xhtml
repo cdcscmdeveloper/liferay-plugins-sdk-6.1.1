@@ -15,15 +15,18 @@
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back" action="#{evaluationBackingBean.evaluationBackaction}"/>
+				style="float:left;" icon="ui-icon-back"
+				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 		</div>
-
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{evaluationBackingBean.managedBean.scQtChecklist.title}" rows="2" cols="150" disabled="true"></p:inputTextarea></td>
+					<td><p:inputTextarea
+							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
+							rows="2" cols="150" disabled="true" style="width:100%"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -31,7 +34,8 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="complianceTechnicalSupplier" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
+			<p:dataTable var="complianceTechnicalSupplier"
+				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
 				<ac:paginator for="complianceTechnicalSupplier" />
@@ -40,26 +44,32 @@
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
 					style="width:20%">
 
-					 <h:outputText value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
+					<h:outputText
+						value="#{complianceTechnicalSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}" style="width:10%">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
+					style="width:10%">
 					<h:outputText></h:outputText>
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}" style="width:20%">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.sub.status']}"
+					style="width:20%">
 					<h:outputText
 						value="#{evaluationBackingBean.getStatusDescById(complianceTechnicalSupplier.scQtCheckList.pmStatus.statusId)}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}" style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.compliance.status']}"
+					style="width:15%">
 					<h:outputText value="#{complianceTechnicalSupplier.compliance}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}" style="width:35%">
-					<p:inputTextarea rows="2" cols="40" value="#{complianceTechnicalSupplier.remark}" disabled="true"></p:inputTextarea>
+				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
+					style="width:35%">
+					<p:inputTextarea rows="2" cols="40"
+						value="#{complianceTechnicalSupplier.remark}" disabled="true"></p:inputTextarea>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
