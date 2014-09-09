@@ -635,16 +635,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			//redirect to requestNote screen
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
 			
 			// checking wheather stock available or not
 			if(prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
-				ScRequestNote	requestNote	=	prInquiry.getScRequestSupplierItems().get(0).getRequestNoteItem().getRequestNote();
-				reqDTO.setRequestNoteId(requestNote.getRequestNoteId());
-				IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-				RequestNoteResDTO resDTO = directPurchaseSO.getRequestNote(reqDTO);
-				requestNote	=	resDTO.getRequestNoteDetail();
-
+				ScRequestNote requestNote = getManagedBean().getRequestNote();
 				//get RequestNote Backing bean and manage bean and set Request Note to RequestNote manage bean
 				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 				RequestNoteBackingBean requestNoteBackingBean = (RequestNoteBackingBean) portletSession.getAttribute("requestNoteBackingBean");
@@ -818,8 +812,11 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			 requestNoteDtl.getRequestItem().setSupplierItems(prInquiry.getScRequestSupplierItems());
 			 RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
 			 ScRequestNote	requestNote	=	resDTO.getRequestNoteDetail();
-			 if(requestNote.getWorkFlowStatuses().size() > 0){
-				 flag = Boolean.FALSE;
+			 if(requestNote != null){
+				 getManagedBean().setRequestNote(requestNote);
+				 if(requestNote.getWorkFlowStatuses().size() > 0){
+					 flag = Boolean.FALSE;
+				 } 
 			 }
 	    }
 		 

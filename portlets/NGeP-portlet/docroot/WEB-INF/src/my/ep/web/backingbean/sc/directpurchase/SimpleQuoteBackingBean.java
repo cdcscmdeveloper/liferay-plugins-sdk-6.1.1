@@ -1344,18 +1344,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
+				
 				if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
-
-					if(treeNode.getChildCount()>0){
-						for (TreeNode childNode : treeNode.getChildren()) {
-							List<TplSpecZoneLoc> locationDTO = getLocations(childNode);
-							locationDTOs.addAll(locationDTO);
-						}	
+					if(treeNode.getType().equals("state")){
+						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+						locationDTOs.addAll(locationDTO);
+						if(treeNode.getChildCount()>0){
+							break;
+						}
 					} else{
 						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
 						locationDTOs.addAll(locationDTO);
 					}
-
 				} else{
 
 					if (treeNode.getParent().isSelected()) {
@@ -2644,13 +2644,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setBeans(beans);
 				}
 			}
-
+         
 			// by locality
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			if(scQuote.getLocationDivisionCriterias() != null) {
 				if(scQuote.getLocationDivisionCriterias().size() >0){
+				
 					for (ScLocationDivisionCriteria locationDivisionCriteria : scQuote.getLocationDivisionCriterias() ) {
+						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						divisions.add(locationDivisionCriteria.getPmDivision());
+						tplSpecZoneLoc.setPmDivision(locationDivisionCriteria.getPmDivision());
+						getManagedBean().getTplSpecZoneLocs().add(tplSpecZoneLoc);
 					}
 				}
 			}	
@@ -2659,7 +2663,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(scQuote.getLocationDistrictCriterias().size() >0){
 					getManagedBean().setByLocality(Boolean.TRUE);
 					for (ScLocationDistrictCriteria locationDistrictCriteria : scQuote.getLocationDistrictCriterias() ) {
+						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						districts.add(locationDistrictCriteria.getPmDistrict());
+						tplSpecZoneLoc.setPmDistrict(locationDistrictCriteria.getPmDistrict());
+						getManagedBean().getTplSpecZoneLocs().add(tplSpecZoneLoc);
 					}
 				}
 			}
@@ -2671,6 +2678,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						getManagedBean().setByLocality(Boolean.TRUE);
 						for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
 							states.add(locationStateCriteria.getPmState());
+							TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
+							tplSpecZoneLoc.setPmState(locationStateCriteria.getPmState());
+							getManagedBean().getTplSpecZoneLocs().add(tplSpecZoneLoc);
 						}
 					}
 				}

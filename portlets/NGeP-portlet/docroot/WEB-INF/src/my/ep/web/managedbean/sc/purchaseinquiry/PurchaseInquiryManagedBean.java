@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -60,7 +61,8 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	
 	private boolean titleChecker = Boolean.TRUE;
 	private boolean rnToPIFlag;
-	 private ScPIZone scPIZone = new ScPIZone(); 
+	private ScPIZone scPIZone = new ScPIZone(); 
+	private	ScRequestNote	requestNote;
 	
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
@@ -442,6 +444,20 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	 */
 	public void setScPIZone(ScPIZone scPIZone) {
 		this.scPIZone = scPIZone;
+	}
+
+	/**
+	 * @return the requestNote
+	 */
+	public ScRequestNote getRequestNote() {
+		return requestNote;
+	}
+
+	/**
+	 * @param requestNote the requestNote to set
+	 */
+	public void setRequestNote(ScRequestNote requestNote) {
+		this.requestNote = requestNote;
 	}
 	
 }
