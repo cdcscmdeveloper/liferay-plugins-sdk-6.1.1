@@ -108,9 +108,9 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 
 		SelectItem[] items = null;
 			items = new SelectItem[3];
-			items[0] = new SelectItem(0, "Select One");
-			items[1] = new SelectItem(1, "Professional");
-			items[2] = new SelectItem(2, "Certified");
+			items[0] = new SelectItem(null, "Select One");
+			items[1] = new SelectItem(0, "Professional");
+			items[2] = new SelectItem(1, "Certified");
 
 		return items;
 	}
@@ -150,7 +150,13 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 				ISearchBean<PmCertBody> searchBean) {
 			if (null == searchBean) {
 				searchBean = new SearchBean<PmCertBody>();
-			}
+			}			
+			if (null != getManagedBean().getCertType()) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("isCertifiedBody",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getManagedBean().getCertType()));
+			}			
 			if (!isNullOrEmpty(getManagedBean().getBodyCode())) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("bodyCode",

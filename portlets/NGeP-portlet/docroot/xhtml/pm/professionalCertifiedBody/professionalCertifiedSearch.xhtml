@@ -11,8 +11,7 @@
 		<h:panelGrid columns="2">
 
 			<h:outputLabel value="#{lbl['lbl.pm.search.profcert']}"></h:outputLabel>
-		       <p:selectOneMenu 
-		       					style="width:205px;margin-bottom:5px;">    
+		       <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certType}" >    
 				  <f:selectItems value="#{profcertifiedbodyBackingBean.getBodyType()}" /> 
               </p:selectOneMenu> 
 	
