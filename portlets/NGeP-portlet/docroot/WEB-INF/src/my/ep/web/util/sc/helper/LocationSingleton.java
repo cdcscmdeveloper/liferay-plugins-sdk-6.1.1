@@ -869,6 +869,7 @@ public class LocationSingleton {
 		try {
 			Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(
 					listDistricts, listCities);
+			
 			Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = getUniqueStatesDivisionsDistrictsCities(
 					listDistricts, listCities);
 			Map<PmState, List<PmDivision>> mapStatesDivision = getUniqueStatesDivision(listDivisions);
@@ -1675,7 +1676,7 @@ public class LocationSingleton {
 		return rootLocationTree;
 	}
 
-	private Map<PmState, List<PmDivision>> getUniqueStatesDivision(
+	public Map<PmState, List<PmDivision>> getUniqueStatesDivision(
 			List<PmDivision> divisions) {
 		Map<PmState, List<PmDivision>> results = new HashMap<PmState, List<PmDivision>>();
 		if (divisions != null && !divisions.isEmpty()) {
@@ -1693,7 +1694,7 @@ public class LocationSingleton {
 		return results;
 	}
 
-	private Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> getUniqueStatesDivisionsDistrictsCities(
+	public Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> getUniqueStatesDivisionsDistrictsCities(
 			List<PmDistrict> districts, List<PmCity> cities) {
 		Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> results = new HashMap<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>>();
 		Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = getUniqueDivisionsDistrictsCities(
@@ -1760,7 +1761,7 @@ public class LocationSingleton {
 		return results;
 	}
 
-	private Map<PmState, Map<PmDistrict, List<PmCity>>> getUniqueStateDistrictsCities(
+	public Map<PmState, Map<PmDistrict, List<PmCity>>> getUniqueStateDistrictsCities(
 			List<PmDistrict> districts, List<PmCity> cities) {
 
 		Map<PmDistrict, List<PmCity>> mapDistrictsCities = getUniqueDistrictCities(
@@ -1878,10 +1879,10 @@ public class LocationSingleton {
 		return root;
 	}
 
-	public TreeNode constuctTreeNode(List<ScQtLocCriteria> specLocs) {
-		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
+	public List<TreeNode> constuctTreeNode(List<ScQtLocCriteria> specLocs) {
+		List<TreeNode> rootNode=new ArrayList<TreeNode>();
 		if (specLocs != null) {
-
+           
 			List<PmState> states = new ArrayList<PmState>();
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			List<PmDistrict> districts = new ArrayList<PmDistrict>();
@@ -1893,7 +1894,10 @@ public class LocationSingleton {
 				PmState pmState = locCriteria.getPmState();
 
 				if (null != pmState && !states.contains(pmState)) {
+					
+					TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
 					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE, locCriteria, root);
+					rootNode.add(root);
 					// locations.add(root);
 				}
 				PmDivision division = locCriteria.getPmDivision();
@@ -1920,7 +1924,7 @@ public class LocationSingleton {
 				states.add(pmState);
 			}
 		}
-		return root;
+		return rootNode;
 	}
 
 	public TreeNode constuctPanelTreeNodes(List<CtPanelZone> ctPanelZones) {
