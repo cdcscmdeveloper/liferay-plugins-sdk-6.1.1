@@ -2355,6 +2355,13 @@ public class UnspscCodeBackingBean extends
 				.remove(index);
 
 	}
+	
+	public void removeExtensionRecord() {
+
+		this.getManagedBean().getRequestExtCodeList()
+				.remove(0);//there is only one record
+
+	}
 
 	public void addNewBpmRemark() {
 
@@ -2607,7 +2614,11 @@ public class UnspscCodeBackingBean extends
 			}
 		}
 	}
-
+	
+	public String backToPendingCodified(){
+		return "searchUnspscToAssign";
+	}
+	
 	public void checkingColorRedundency(String colorInput) {
 		log.info(".....checking redundancy for colorInput=" + colorInput);
 		log.info("colorList " + this.getManagedBean().getColorList());
