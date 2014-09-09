@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -1408,9 +1409,12 @@ public class SpecificationBackingBean extends
 						}
 						if (null != getManagedBean().getZoneTrees()
 								&& getManagedBean().getZoneTrees().size() == 0) {
-							getManagedBean().getZoneTrees().add(
-									LocationSingleton.getInstance()
-											.constuctTreeNode(locCriteria));
+							
+								getManagedBean().getZoneTrees().addAll(
+										LocationSingleton.getInstance()
+												.constuctTreeNode(locCriteria));
+							
+
 						}
 					}
 
@@ -1473,7 +1477,7 @@ public class SpecificationBackingBean extends
 					}
 
 				}
-				
+
 			}
 
 		} finally {
@@ -3115,24 +3119,190 @@ public class SpecificationBackingBean extends
 		if (null == getManagedBean().getZoneTrees()) {
 			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		}
+		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != states && !states.isEmpty()) {
+				for (PmState state : states) {
+					List<PmState> localStaeList = new ArrayList<PmState>();
+					localStaeList.add(state);
+					if (getManagedBean().getIndex() == -1) {
 
-		if (getManagedBean().getIndex() == -1) {
+						getManagedBean().getZoneTrees().add(
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, localStaeList,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+					}
+				}
 
-			getManagedBean().getZoneTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(null,
-							states, districts, divisions, cities,
-							ScQtLocCriteria.class));
+			}
 		}
 
-		if (getManagedBean().getIndex() >= 0) {
+		else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != districts && !districts.isEmpty()) {
+				List<TreeNode> localList = new ArrayList<TreeNode>();
+				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStatesDivisionsDistrictsCities(
+								districts, null);
 
-			getManagedBean().getZoneTrees().remove(getManagedBean().getIndex());
-			getManagedBean().getZoneTrees().add(
-					getManagedBean().getIndex(),
-					LocationSingleton.getInstance().buildLocationTree(null,
-							states, districts, divisions, cities,
-							ScQtLocCriteria.class));
+				Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
+						.keySet();
+				Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStateDistrictsCities(districts,
+								null);
+				Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
+						.keySet();
+				if (statesDivisionsDistrictsCitiesKeySet != null
+						&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+
+						// TreeNode stateNode = new
+						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
+						// zoneNode);
+						Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+								.get(state);
+						Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+								.keySet();
+						if (divisionsDistrictsCitiesKeySet != null
+								&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
+							divisions.clear();
+							districts.clear();
+							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+
+								// divisions.add(division);
+								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
+										.get(division);
+								Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+										.keySet();
+								if (districtsCitiesKeySet != null
+										&& !districtsCitiesKeySet.isEmpty()) {
+
+									for (PmDistrict district : districtsCitiesKeySet) {
+										districts.add(district);
+									}
+
+								}
+							}
+							if (getManagedBean().getIndex() == -1) {
+
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+							if (getManagedBean().getIndex() >= 0) {
+
+								getManagedBean().getZoneTrees().remove(
+										getManagedBean().getIndex());
+								getManagedBean().getZoneTrees().add(
+										getManagedBean().getIndex(),
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+						}
+					}
+				}
+
+				if (statesDistrictsCitiesKeySet != null
+						&& !statesDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDistrictsCitiesKeySet) {
+						divisions.clear();
+						Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
+								.get(state);
+						Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+								.keySet();
+						if (districtsCitiesKeySet != null
+								&& !districtsCitiesKeySet.isEmpty()) {
+							districts.clear();
+							for (PmDistrict district : districtsCitiesKeySet) {
+
+								districts.add(district);
+
+							}
+
+						}
+						if (getManagedBean().getIndex() == -1) {
+
+							getManagedBean().getZoneTrees().add(
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, states,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+						if (getManagedBean().getIndex() >= 0) {
+
+							getManagedBean().getZoneTrees().remove(
+									getManagedBean().getIndex());
+							getManagedBean().getZoneTrees().add(
+									getManagedBean().getIndex(),
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, states,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+					}
+				}
+
+			}
 		}
+
+		else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != divisions && !divisions.isEmpty()) {
+				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
+						.getInstance().getUniqueStatesDivision(divisions);
+				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+				if (statesDivisionKeySet != null
+						&& !statesDivisionKeySet.isEmpty()) {
+					for (PmState state : statesDivisionKeySet) {
+						divisions.clear();
+
+						// new
+						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
+						// zoneNode);
+						List<PmDivision> divisions1 = mapStatesDivision
+								.get(state);
+						if (divisions1 != null && !divisions1.isEmpty()) {
+							for (PmDivision division : divisions1) {
+								divisions.add(division);
+
+							}
+							if (getManagedBean().getIndex() == -1) {
+
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+							if (getManagedBean().getIndex() >= 0) {
+
+								getManagedBean().getZoneTrees().remove(
+										getManagedBean().getIndex());
+								getManagedBean().getZoneTrees().add(
+										getManagedBean().getIndex(),
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+						}
+					}
+				}
+
+			}
+		}
+
 		this.getManagedBean().setIndex(-1);
 
 	}
