@@ -1,0 +1,113 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+
+
+		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<h:panelGroup id="cmExtensionRequestFormID">
+
+			<div style="text-align: right;min-height: 40px;">
+				<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
+					action="#{codificationBackingBean.requestNewExtensionCode}" update="@form"></p:commandButton>
+				
+				<div style="float: left; clear: both;">
+					<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-back"
+						action="#{codificationBackingBean.backToExtensionSearch}" update="@form">
+					</p:commandButton>
+				</div>
+			</div>
+
+			
+
+
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" size="50" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td cosplan="1"><p:inputText
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" size="50" disabled="true" /></td>
+				</tr>
+			</table>
+
+			<p:dataTable id="extCodeId"
+				value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
+				var="ext">
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.type']}
+					</f:facet>
+						#{ext.typeName}
+
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.brand']}
+					</f:facet>
+						#{ext.brandName}
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.measurement']}
+					</f:facet>
+						#{ext.measurementName}
+					</p:column>
+				<p:column>
+					<f:facet name="header">
+						#{lbl['lbl.cm.color']}
+					</f:facet>
+						#{ext.colorName}
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+						<p:commandLink
+							action="#{unspscCodeBackingBean.removeExtensionRecord()}"
+							update="@form">
+							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+
+
+
+					</p:column>
+				
+			</p:dataTable>
+			<h:panelGroup id = "addBtnId">
+			<div style="text-align: right;" >
+				<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+					disabled="#{unspscCodeBackingBean.managedBean.requestExtCodeList.size() >= 1 }"
+					action="#{unspscCodeBackingBean.addMoreRequest}"
+					update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
+				
+			</div>
+			</h:panelGroup>
+
+
+			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
+				header="#{lbl['lbl.cm.request.extension.code']}" width="auto" height="auto">
+
+				<ui:include src="requestExtensionPopUp.xhtml" />
+
+			</p:dialog>
+
+		</h:panelGroup>
+
+
+
+
+	</ui:define>
+
+</ui:composition>

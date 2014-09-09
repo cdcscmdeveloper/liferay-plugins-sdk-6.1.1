@@ -1,0 +1,214 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+	<ui:define name="contentSection">
+		<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="false" />
+
+		
+
+		<p:panel header="Request Info" toggleable="true">
+
+			<table style="width: 100%; margin-bottom: 4px;">
+				<tr>
+					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:inputText disabled="true" size="20" 
+					value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
+					<td></td>
+					<td></td>
+				</tr>
+
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.selectedRequestItem.itemName}"
+							disabled="true" size="40"></p:inputText></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.selectedRequestItem.itemDesc}"
+							disabled="true" size="40"></p:inputText></td>
+				</tr>
+
+			</table>
+
+		</p:panel>
+
+		<h:panelGroup id="cmExtensionSearchID">
+
+			<p:panel header="SEARCH" toggleable="true">
+
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.commodity.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText style="font-weight: bold;"
+								value="Extension Attribute"></h:outputText></td>
+								<td/>
+								<td/>
+								<td/>
+								
+					</tr>
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								style="width:278px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.typeCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+						<td><p:selectOneMenu
+								value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								style="width:278px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.brandCriteria}" />
+							</p:selectOneMenu></td>
+					</tr>
+
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								style="width:278px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+						
+							
+					</tr>
+				</table>
+			</p:panel>
+
+			<div style="text-align: right;">
+				<p:commandButton value="Search" icon="ui-icon-search"
+					action="#{codificationBackingBean.extensionCodeSearch}"
+					update="itemTableID" />
+				<p:commandButton value="Back" icon="ui-icon-back"
+					action="#{codificationBackingBean.backToSearchUnspscToAssign}" />
+			</div>
+
+
+			<p:panel header="SEARCH RESULTS" toggleable="true">
+
+				<p:dataTable id="itemTableID"
+					value="#{codificationBackingBean.extensionSearchItemDataModel}"
+					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
+					selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"
+					lazy="true">
+						<p:column selectionMode="single" style="width:2%" />
+						
+					<ac:paginator for="itemTableID"></ac:paginator>
+
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.type']}
+						</f:facet>
+						#{obj[4]}
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.brand']}
+						</f:facet>
+						#{obj[5]}
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.measurement']}
+						</f:facet>
+						
+						#{obj[6]}
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.color']}
+						</f:facet>
+						#{obj[7]}
+					</p:column>
+
+
+
+				</p:dataTable>
+
+
+
+
+
+
+			</p:panel>
+
+		<div class="clear"></div>
+		<div style="text-align: right;">
+			<p:commandButton value="REQUEST EXTENSION"
+				action="#{codificationBackingBean.requestExtensionCode}" />
+		
+			<p:commandButton value="#{lbl['lbl.cm.assign']}"
+			   
+				action="#{codificationBackingBean.insertContractedItemCode}"
+				icon="ui-icon-accept" ></p:commandButton>
+
+
+		</div>
+		</h:panelGroup>
+
+
+	</ui:define>
+
+
+
+
+</ui:composition>
