@@ -3132,6 +3132,18 @@ public class SpecificationBackingBean extends
 												districts, divisions, cities,
 												ScQtLocCriteria.class));
 					}
+					if (getManagedBean().getIndex() >= 0) {
+
+						getManagedBean().getZoneTrees().remove(
+								getManagedBean().getIndex());
+						getManagedBean().getZoneTrees().add(
+								getManagedBean().getIndex(),
+								LocationSingleton.getInstance()
+										.buildLocationTree(null,
+												states, districts,
+												divisions, cities,
+												ScQtLocCriteria.class));
+					}
 				}
 
 			}
