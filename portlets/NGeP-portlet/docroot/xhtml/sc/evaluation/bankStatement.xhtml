@@ -12,9 +12,9 @@
 
 
 	<ui:define name="contentSection">
-	<p:messages id="financialBankStatementEvaluationmsgId" autoUpdate="true"
-			closable="true" showDetail="true" showSummary="false"
-			severity="error,info"></p:messages>
+		<p:messages id="financialBankStatementEvaluationmsgId"
+			autoUpdate="true" closable="true" showDetail="true"
+			showSummary="false" severity="error,info"></p:messages>
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -25,7 +25,7 @@
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
-<p:spacer height="50"></p:spacer>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -35,7 +35,8 @@
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true" style="width:70%"
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
@@ -98,18 +99,19 @@
 
 
 			<table>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
+					<td><p:inputText readonly="true"
+							value="#{evaluationBackingBean.managedBean.bankTotalAmt}"
+							disabled="true">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
 				<c:forEach
 					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
 					var="action">
-					<tr>
-						<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
-						<td><p:inputText readonly="true"
-								value="#{evaluationBackingBean.managedBean.bankTotalAmt}"
-								disabled="true">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
-					</tr>
+
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sc.eva.avg.bank.statements']}" /></td>

@@ -36,7 +36,7 @@
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"
-							style="width:70%"
+							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
@@ -73,8 +73,21 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.eva.paid.up.capital']}"
+
+
+
+		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
 			toggleable="true">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
+				<p:inputText style="text-align:right"
+					value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
+					disabled="true">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</h:panelGrid>
+
 
 			<table>
 				<c:forEach

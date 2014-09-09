@@ -12,9 +12,9 @@
 
 
 	<ui:define name="contentSection">
-	<p:messages id="technicalNoOfEmployeesEvaluationmsgId" autoUpdate="true"
-			closable="true" showDetail="true" showSummary="false"
-			severity="error,info"></p:messages>
+		<p:messages id="technicalNoOfEmployeesEvaluationmsgId"
+			autoUpdate="true" closable="true" showDetail="true"
+			showSummary="false" severity="error,info"></p:messages>
 
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -25,7 +25,7 @@
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
-<p:spacer height="50"></p:spacer>
+		<p:spacer height="50"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
@@ -35,7 +35,8 @@
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true" style="width:70%"
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
@@ -88,14 +89,15 @@
 
 
 			<table>
-				<c:forEach
-					items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
-					var="action">
-					<tr>
-						<td><h:outputText value="#{lbl['lbl.sc.eva.tot.employees']}" /></td>
-						<td style="width: 200px;"><p:inputText readonly="true"
-								value="#{evaluationBackingBean.managedBean.noOfEmployeeList.totalEmployees}"
-								disabled="true"></p:inputText></td>
+				<tr>
+					<td><h:outputText value="#{lbl['lbl.sc.eva.tot.employees']}" /></td>
+					<td style="width: 200px;"><p:inputText readonly="true"
+							value="#{evaluationBackingBean.managedBean.noOfEmployeeList.totalEmployees}"
+							disabled="true"></p:inputText></td>
+					<c:forEach
+						items="#{evaluationBackingBean.managedBean.techGovProposalScore}"
+						var="action">
+
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
@@ -105,10 +107,11 @@
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
 						<td><p:inputText value="#{action.userScore}" maxlength="18"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
-					</tr>
 
 
-				</c:forEach>
+
+					</c:forEach>
+				</tr>
 
 			</table>
 
