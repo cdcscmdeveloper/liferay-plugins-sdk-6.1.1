@@ -45,6 +45,10 @@
 			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
 			<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
 		</ui:fragment>
+		<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
+			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'MKM'}">
+			<ui:include src="branchDetailsTablePageConsultantViewOnly.xhtml" />
+		</p:panel>
 	</p:dialog>
 	
 </ui:composition>

@@ -65,8 +65,8 @@
 				</td>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']} :" /></td>
 				<td style="float:left;">
-					<p:outputLabel value="Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
-					<p:outputLabel value="Non-Islam" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
+					<p:outputLabel value="#{lbl['lbl.sm.person.religion.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
+					<p:outputLabel value="#{lbl['lbl.sm.person.religion.non.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
 				</td>
 			</tr>
 

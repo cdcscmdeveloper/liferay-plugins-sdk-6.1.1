@@ -26,8 +26,8 @@
 							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" />
 						</td>
 						<td style="float:left;">
-							<p:outputLabel value="Home Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
-							<p:outputLabel value="Business Office" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
+							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 						</td>
 					</tr>
 					<tr>

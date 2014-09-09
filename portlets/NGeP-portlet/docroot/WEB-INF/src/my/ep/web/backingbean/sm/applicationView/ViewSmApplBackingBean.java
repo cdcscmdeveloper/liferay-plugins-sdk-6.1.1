@@ -369,7 +369,7 @@ public class ViewSmApplBackingBean extends
 		case "C":
 			getManagedBean().setSelectedMachineryPurchaseMethod(
 					ResourceBundleUtils.getMessage("lbl.sm.machine.debit.card",
-							1, locale));
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 			break;
 		case "D":
 			getManagedBean().setSelectedMachineryPurchaseMethod(

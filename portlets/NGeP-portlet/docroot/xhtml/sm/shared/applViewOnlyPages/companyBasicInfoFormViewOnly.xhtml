@@ -72,13 +72,13 @@
 						<p:outputLabel value="#{lbl['lbl.sm.annualRev']} :" />
 					</td>
 					<td style="float:left;">
-						<p:outputLabel value="Kurang Daripada RM 100,000" 
+						<p:outputLabel value="#{lbl['lbl.sm.annualRev.less.than.100k']}" 
 							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '1'}"/>
-						<p:outputLabel value="Kurang Daripada RM 500,000" 
+						<p:outputLabel value="#{lbl['lbl.sm.annualRev.less.than.500k']}" 
 							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '2'}"/>
-						<p:outputLabel value="Kurang Daripada RM 1,000,000" 
+						<p:outputLabel value="#{lbl['lbl.sm.annualRev.less.than.1m']}" 
 							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '3'}"/>
-						<p:outputLabel value="Lebih Daripada RM 1,000,000" 
+						<p:outputLabel value="#{lbl['lbl.sm.annualRev.more.than.1m']}" 
 							rendered="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.annualRevenue eq '4'}"/>
 					</td>
 				</tr>
