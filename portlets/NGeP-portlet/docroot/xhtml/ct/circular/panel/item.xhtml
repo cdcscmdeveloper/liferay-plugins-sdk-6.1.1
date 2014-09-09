@@ -249,27 +249,37 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:outputLabel rendered="#{panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone}" value="#{lbl['lbl.ct.pc.sublabel.itemsupplier']}" style="float:left; font-weight:bold; padding-top:25px;"/>
 		<div style="clear:both" />
 		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
-		 (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
-			<p:dataTable id="itemSupplierDt" var="supVar" 
-			value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
-		    selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" rowIndexVar="index">
-				<ac:paginator for="itemSupplierDt" />
-				<p:column selectionMode="multiple" style="width:3%" />
-				<p:column headerText="Supplier Name">
-				  <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
-			    </p:column>
-				<p:column headerText="Business Reg. No."> <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/></p:column>
-				<p:column headerText="MOF No."><h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" /></p:column>
-				<p:column headerText="Address" style="white-space:normal;">
-					<h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
-				</p:column>
-				<p:column headerText="Status">
-				 <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
-                         disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:100px;">
-				         <f:selectItem itemValue="0" itemLabel="Inactive" />
-			             <f:selectItem itemValue="1" itemLabel="Active" />
+		       (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
+		    	<p:dataTable id="itemSupplierDt" var="supVar" 
+			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
+		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" rowIndexVar="index">
+			          <ac:paginator for="itemSupplierDt" />
+				      <p:column selectionMode="multiple" style="width:3%" />
+				
+				      <p:column headerText="Supplier Name" style="width:27%;white-space:normal;">
+				           <p:outputLabel value="#{supVar.supplier.companyName}" style="float:left;"/>
+			          </p:column>
+				
+				      <p:column headerText="Business Reg. No."  style="width:10%;"> 
+				          <h:outputText value="#{supVar.supplier.regNo}" style="float:left;"/>
+				      </p:column>
+				     
+				      <p:column headerText="MOF No."  style="width:10%;">
+				          <h:outputText value="#{panelBackingBean.retrieveMofNo(supVar.supplier)}" />
+				      </p:column>
+				   
+				      <p:column headerText="Address" style="width:40%;white-space:normal;">
+					     <h:outputText value="#{panelBackingBean.getSupAddress(supVar)}"/>
+				      </p:column>
+				   
+				      <p:column headerText="Status" style="width:10%;">
+				         <p:selectOneMenu  value="#{supVar.recordStatusFlg}"  
+                             disabled="#{!panelBackingBean.managedBean.updateAction}" style="width:70px;">
+				             <f:selectItem itemValue="0" itemLabel="Inactive" />
+			                 <f:selectItem itemValue="1" itemLabel="Active" />
 			          </p:selectOneMenu>
-				</p:column>
+				    </p:column>
+		
 			</p:dataTable>
 		   <div>
 		   	<table style="width: 100%">

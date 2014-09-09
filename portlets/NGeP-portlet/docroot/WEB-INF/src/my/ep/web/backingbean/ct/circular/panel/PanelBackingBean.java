@@ -237,12 +237,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
 			Collections.sort(getManagedBean().getCircularVer().getCtPanelItems(), new CtPanelItem());
 			for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
-				  if(panelItem.getCtPanelZones() != null && panelItem.getCtPanelZones().size() > 0)
+				  if(panelItem.getCtPanelZones() != null && panelItem.getCtPanelZones().size() > 0){
 						Collections.sort(panelItem.getCtPanelZones(), new CtPanelZone());
-			
-				/*  if(panelItem.getCtPanelSuppliers() != null && panelItem.getCtPanelSuppliers().size() > 0)
+				         for(CtPanelZone panelZone : panelItem.getCtPanelZones()){
+				        	 Collections.sort(panelZone.getCtPanelSuppliers(), new CtPanelSupplier()); 
+				         }
+				  }
+				 if(panelItem.getCtPanelSuppliers() != null && panelItem.getCtPanelSuppliers().size() > 0)
 			  		   Collections.sort(panelItem.getCtPanelSuppliers(), new CtPanelSupplier());  
-		*/	}
+		 	}
 		}
 		
 		getManagedBean().setRemarkList(resDTO.getRemarkList());
