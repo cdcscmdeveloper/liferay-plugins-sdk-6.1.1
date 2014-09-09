@@ -230,8 +230,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	//RequestItemInfo List
 	private List<ScSupplierItemPrice> reqItemInfoList;
 	private String itemName;
-	private Long quantity;
-	private Long standardUnitPrice;
+	private Double quantity;
+	private Double standardUnitPrice;
 	private PmParameter priceType;
 	private boolean standardPrice = false;
 	private boolean zonalPrice = false;
@@ -1863,7 +1863,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the quantity
 	 */
-	public Long getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
@@ -1877,7 +1877,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param quantity the quantity to set
 	 */
-	public void setQuantity(Long quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
@@ -1940,14 +1940,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the standardUnitPrice
 	 */
-	public Long getStandardUnitPrice() {
+	public Double getStandardUnitPrice() {
 		return standardUnitPrice;
 	}
 
 	/**
 	 * @param standardUnitPrice the standardUnitPrice to set
 	 */
-	public void setStandardUnitPrice(Long standardUnitPrice) {
+	public void setStandardUnitPrice(Double standardUnitPrice) {
 		this.standardUnitPrice = standardUnitPrice;
 	}
 	
