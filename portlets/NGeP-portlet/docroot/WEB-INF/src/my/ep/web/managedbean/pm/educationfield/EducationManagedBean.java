@@ -5,6 +5,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduFieldRestr;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -30,13 +31,11 @@ public class EducationManagedBean extends BaseManagedBean {
 	
 	private Long status;
 	
-	private List<PmEduField> eduList;	
-	
-	private List<PmEduField> eduListSelect;
-	
 	private List<PmEduFieldRestr> eduRestrList;
 	
-	private List<PmEduFieldRestr> eduRestrSelectList;
+	private List <PmCategoryL3> eduRestrSelectList;
+	
+	private List<PmEduFieldRestr> eduRestrDeleteList;
 	
 	/**
 	 * @return the pmEduField
@@ -102,28 +101,21 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.eduRestrList = eduRestrList;
 	}
 
-	public List<PmEduFieldRestr> getEduRestrSelectList() {
+	public List<PmCategoryL3> getEduRestrSelectList() {
 		return eduRestrSelectList;
 	}
 
-	public void setEduRestrSelectList(List<PmEduFieldRestr> eduRestrSelectList) {
+	public void setEduRestrSelectList(List<PmCategoryL3> eduRestrSelectList) {
 		this.eduRestrSelectList = eduRestrSelectList;
 	}
 
-	public List<PmEduField> getEduList() {
-		return eduList;
+	public List<PmEduFieldRestr> getEduRestrDeleteList() {
+		return eduRestrDeleteList;
 	}
 
-	public void setEduList(List<PmEduField> eduList) {
-		this.eduList = eduList;
+	public void setEduRestrDeleteList(List<PmEduFieldRestr> eduRestrDeleteList) {
+		this.eduRestrDeleteList = eduRestrDeleteList;
 	}
-
-	public List<PmEduField> getEduListSelect() {
-		return eduListSelect;
-	}
-
-	public void setEduListSelect(List<PmEduField> eduListSelect) {
-		this.eduListSelect = eduListSelect;
-	}			
+	
 	
 }

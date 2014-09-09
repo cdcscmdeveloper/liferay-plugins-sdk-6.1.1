@@ -1,5 +1,8 @@
 package my.ep.web.backingbean.pm.educationfield;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -18,7 +21,9 @@ import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmEduFieldRestr;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -229,5 +234,55 @@ public class EducationBackingBean extends
 			}
 	 }
 	
+	/**
+	 * add list of category into PmEduFieldRestr
+	 * 
+	 */
+	public void addEducationList(List<PmCategoryL3>pmCategoryL3s) {
+		debugLogger("addEducationList");
+		
+		if(pmCategoryL3s!=null){
+			if(this.getManagedBean().getEduRestrList()==null){
+				this.getManagedBean().setEduRestrList(new ArrayList<PmEduFieldRestr>());
+			}
+
+				for(PmCategoryL3 pmCategoryL3: pmCategoryL3s){
+					PmEduFieldRestr eduFieldRestr = new PmEduFieldRestr();
+					eduFieldRestr.setPmCategoryL3(pmCategoryL3);
+					this.getManagedBean().getEduRestrList().add(eduFieldRestr);
+				}
+				this.getManagedBean().getEduRestrSelectList().clear();
+
+		}
+	}
+
+	/**
+	 * delete list of category into PmEduFieldRestr
+	 * by selection
+	 */	
+	public void deleteEducationList() {
+		debugLogger("deleteEducationList");	
+
+		List<PmEduFieldRestr> educatList = this.getManagedBean()
+				.getEduRestrList();
+
+		if (null == educatList) {
+			educatList = new ArrayList<PmEduFieldRestr>();
+		}
+
+		List<PmEduFieldRestr> eduSelectList = this.getManagedBean()
+				.getEduRestrDeleteList();
+		if (null == eduSelectList) {
+			eduSelectList = new ArrayList<PmEduFieldRestr>();
+		}
+
+		if (educatList.size() == eduSelectList.size()) {
+			educatList.clear();
+		} else {
+			for (PmEduFieldRestr category : eduSelectList)
+				educatList.remove(category);
+		}
+	
+	}	
 	}
 	

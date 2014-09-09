@@ -30,6 +30,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	private String bodyName;
 	
 	private Long status;
+	
+	private Integer certType;
 
 	/**
 	 * Search Bean List
@@ -106,6 +108,20 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	 */
 	public void setCertBody(PmCertBody certBody) {
 		this.certBody = certBody;
+	}
+
+	/**
+	 * @return the certType
+	 */
+	public Integer getCertType() {
+		return certType;
+	}
+	/**
+	 * @param certType the certType to set
+	 */
+	public void setCertType(Integer certType) {
+		this.certType = certType;
 	}	
+	
 	
 }
