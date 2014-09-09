@@ -104,6 +104,8 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private String applicationNoParam;
 	private String supplierBusinessTypeVal;
 	private String selectedMachineryPurchaseMethod;
+	private String supplierRemarks;
+	private String currentStatus;
 	
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -188,13 +190,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	
 	//temp added for testing
 	private void initDefaultAddress(){
-		CountryReqDTO reqDTO = new CountryReqDTO();
-		reqDTO.setCountryCode("MY");
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
-		setDefaultCountry(resDTO.getPmCountry());
-		
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
@@ -789,5 +784,21 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setReviewApplicationExist(boolean reviewApplicationExist) {
 		this.reviewApplicationExist = reviewApplicationExist;
+	}
+
+	public String getSupplierRemarks() {
+		return supplierRemarks;
+	}
+
+	public void setSupplierRemarks(String supplierRemarks) {
+		this.supplierRemarks = supplierRemarks;
+	}
+
+	public String getCurrentStatus() {
+		return currentStatus;
+	}
+
+	public void setCurrentStatus(String currentStatus) {
+		this.currentStatus = currentStatus;
 	}
 }

@@ -18,6 +18,8 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -29,8 +31,12 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -53,6 +59,7 @@ import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmRelatedCompany;
+import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
 import my.ep.persistence.entity.sm.SmStaffTotal;
@@ -134,6 +141,10 @@ public class ViewSmApplBackingBean extends
 			setPersonnelInfoCalculationSummary();
 			setDefaultApproverReviewSection();
 			retrievePmCertBodyList();
+			setSupplierCancellationRemarks(getManagedBean().getSmAppl()
+					.getApplType(), getManagedBean().getSmAppl().getApplId());
+			setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId().toString());
 			getManagedBean().setReviewApplicationExist(true);
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
@@ -228,6 +239,16 @@ public class ViewSmApplBackingBean extends
 		return retVal;
 	}
 
+	private SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(docId);
+		reqDTO.setDocType(docType);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISmRemarksSO.class);
+		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
+		return resDTO;
+	}
+
 	private void setTabParam() {
 		String tabParam = new FacesScopes().getParameter("tab");
 
@@ -273,11 +294,39 @@ public class ViewSmApplBackingBean extends
 		return addr;
 	}
 
+	private void setSupplierCancellationRemarks(String docType, Long docId) {
+		SmRemaksResDTO resDTO = getRemarksByDoc(docType, docId);
+		StringBuffer sb = new StringBuffer();
+		if (resDTO != null && resDTO.getRemarksList() != null
+				&& !resDTO.getRemarksList().isEmpty()) {
+
+			for (SmRemark rem : resDTO.getRemarksList()) {
+				sb.append(rem.getRemark()).append("\n");
+			}
+		}
+		getManagedBean().setSupplierRemarks(sb.toString());
+
+	}
+
 	private void setPersonnelInfoCalculationSummary() {
-		getManagedBean().setPersonCalc(SmCommonUtil.calcPersonnelListCount(getManagedBean().getSmAppl()
-				.getSmPersonnels(), getManagedBean().getSmAppl()
-				.getSmStaffTotals(), getManagedBean().getSmAppl()
-				.getSupplierType()));
+		getManagedBean().setPersonCalc(
+				SmCommonUtil.calcPersonnelListCount(getManagedBean()
+						.getSmAppl().getSmPersonnels(), getManagedBean()
+						.getSmAppl().getSmStaffTotals(), getManagedBean()
+						.getSmAppl().getSupplierType()));
+	}
+
+	private void setPmStatusDesc(String statusId) {
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(Long.parseLong(statusId));
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
+		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
+			getManagedBean().setCurrentStatus(
+					resDTO.getPmStatusDesc().getStatusName());
+		}
 	}
 
 	public void assignSelAssoc(SmAssociateCompany assocBean) {
