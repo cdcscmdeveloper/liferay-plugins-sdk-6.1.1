@@ -108,7 +108,7 @@
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 									<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
-										<p:commandButton value="#{bpmAction}"
+										<p:commandButton value="#{lbl[buttonLabel]}"
 											rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 											styleClass="ui-button"
 											partialSubmit="true" process="@form"
@@ -120,7 +120,7 @@
 										</p:commandButton>
 									</h:panelGroup>
 									<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
-										<p:commandButton value="#{bpmAction}" process="@all"
+										<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 											update="@form"
 											rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
 											styleClass="ui-button"
