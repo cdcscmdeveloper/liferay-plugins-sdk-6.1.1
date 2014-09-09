@@ -2565,13 +2565,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 		getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
 		if(null == flItemAddr.getScRequestItem().getQuantity()){
-			getManagedBean().setQuantity(0L);
+			getManagedBean().setQuantity(new Double(0));
 		}else{
-			getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().longValue());
+			getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().doubleValue());
 		}
 		flItemAddr.setPriceType(getManagedBean().getPmPriceType());
 		getManagedBean().setPriceType(flItemAddr.getPriceType());
-		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().longValue());
+		getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
 		getManagedBean().setStandardPrice(false);
 		getManagedBean().setZonalPrice(false);
 		getManagedBean().setZonalTierPrice(false);
