@@ -33,10 +33,12 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.evaluation.SummaryZoneBaen;
+import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -204,6 +206,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationReport> selectedScQtEvaluationReports;
 	private ScQtEvaluationReport scQtEvaluationReport;
 	private String reportHeader;
+	private List<TechnicalStaffBean> smPersonnelsList;
+	private int totalNoOfYearsExperience;
+	private SmAppl smAppl; 
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -1972,6 +1977,48 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setReportHeader(String reportHeader) {
 		this.reportHeader = reportHeader;
+	}
+
+	/**
+	 * @return the smPersonnelsList
+	 */
+	public List<TechnicalStaffBean> getSmPersonnelsList() {
+		return smPersonnelsList;
+	}
+
+	/**
+	 * @param smPersonnelsList the smPersonnelsList to set
+	 */
+	public void setSmPersonnelsList(List<TechnicalStaffBean> smPersonnelsList) {
+		this.smPersonnelsList = smPersonnelsList;
+	}
+
+	/**
+	 * @return the totalNoOfYearsExperience
+	 */
+	public int getTotalNoOfYearsExperience() {
+		return totalNoOfYearsExperience;
+	}
+
+	/**
+	 * @param totalNoOfYearsExperience the totalNoOfYearsExperience to set
+	 */
+	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
+		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
+	}
+
+	/**
+	 * @return the smAppl
+	 */
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	/**
+	 * @param smAppl the smAppl to set
+	 */
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 
 }
