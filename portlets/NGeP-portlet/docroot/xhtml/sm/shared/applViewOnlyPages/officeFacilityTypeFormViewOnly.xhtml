@@ -13,8 +13,8 @@
 				<tr>
 					<td width="134px;" style="float:left;"><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
 					<td style="float:left;">
-						<p:outputLabel value="Own" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
-						<p:outputLabel value="Rent" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
+						<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
+						<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
 					</td>
 				</tr>
 			</table>
@@ -40,7 +40,7 @@
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.facility.monthRent']} :" />
 						</td>
-						<td>
+						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
 							<h:outputText value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
