@@ -1441,11 +1441,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			 //System.out.println("Map Value;;; "+ getManagedBean().getFlReqNoteMap().get(dtl).getRequestNoteDtlId());
 			 getManagedBean().getFlReqNoteMap().get(dtl);
 			 //reqDTO.setItemId(item.getScRequestNoteDtl().getRequestNoteDtlId());
-			 FulfilmentResDTO resDTO = fulfilmentRequestSO.accumulativeProcurementValue(reqDTO);
-			 accumulativeProcuValue = resDTO.getAccumulativeProcuValue().intValue();
-			 	if(accumulativeProcuValue > 50000){
+			 //FulfilmentResDTO resDTO = fulfilmentRequestSO.accumulativeProcurementValue(reqDTO);
+			// accumulativeProcuValue = resDTO.getAccumulativeProcuValue().intValue();
+			// 	if(accumulativeProcuValue > 50000){
 						//throw new EpException("Item --- "+ item.getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemName()+" Accumulative Procu Value  has been exceeded the RM 50K .");
-					}
+			//		}
 		 }	
 	 }
 	
