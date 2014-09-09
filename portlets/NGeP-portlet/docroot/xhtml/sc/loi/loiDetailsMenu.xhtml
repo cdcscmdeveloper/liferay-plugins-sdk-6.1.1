@@ -104,7 +104,7 @@
 				<td><p:inputText disabled="true" 
 						value="#{lOIDetailBackingBean.managedBean.qt.fileNo}" size="30" /> 
 						<p:spacer width="2px"></p:spacer>
-					 <p:inputText disabled="true" size="4"  value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.fileNo}"/></td>
+					 <p:inputText disabled="true" size="4"  value="#{lOIDetailBackingBean.managedBean.scLoi.fileExtnNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.issue']}" /></td>
@@ -123,25 +123,6 @@
 						width="10px" /> <p:inputText
 						value="Days"
 						disabled="true" size="8" readonly="true" /></td>
-			</tr>
-		</table>
-	</p:panel>
-	
-	<p:panel header="CONTRACT SIGNER" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 154px;"><p:outputLabel
-						value="Contract Signer" /></td>
-				<td><p:selectOneMenu id="app"
-						value="#{lOIDetailBackingBean.managedBean.reqApprove}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-							itemValue="#{null}" />
-						<f:selectItems
-							value="#{lOIDetailBackingBean.managedBean.contractSigners}"
-							var="contractSigner" itemLabel="#{contractSigner.userName}"
-							itemValue="#{contractSigner.userId}" />
-					</p:selectOneMenu></td>
 			</tr>
 		</table>
 	</p:panel>
