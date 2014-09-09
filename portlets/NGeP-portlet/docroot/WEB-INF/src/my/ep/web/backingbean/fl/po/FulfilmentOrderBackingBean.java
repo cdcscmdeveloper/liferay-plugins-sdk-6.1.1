@@ -204,6 +204,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlOrderId(getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+		reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 		FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
