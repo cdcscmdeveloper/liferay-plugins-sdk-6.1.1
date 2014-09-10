@@ -12,6 +12,7 @@
 	<p:spacer height="10"></p:spacer>
 		
 	<table style="width:100%;">
+	   <p:spacer height="5"></p:spacer>
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -20,7 +21,7 @@
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ef.fname']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="50" /></td>
+		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldName}" size="30" /></td>
 	  </tr>		  
 		<p:spacer height="5"></p:spacer>
 	   <tr> 
@@ -44,16 +45,16 @@
 		
 	   <p:column selectionMode="multiple" style="width:2%" /> 
 		  	  	         
-       <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" >
+       <p:column headerText="#{lbl['lbl.pm.ef.catcode']}" style="width:28%">
 		 <h:outputText value="#{eduFieldRes.pmCategoryL3.categoryL3Code}" />	
        </p:column>  
        
-       <p:column headerText="#{lbl['lbl.pm.ef.catname']}" > 
+       <p:column headerText="#{lbl['lbl.pm.ef.catname']}" style="width:50%"> 
 		 <h:outputText value="#{eduFieldRes.pmCategoryL3.categoryName}" />
        </p:column> 
 
-       <p:column headerText="#{lbl['lbl.pm.search.status']}" > 
-		 <p:selectOneMenu style="width:178px;margin-bottom:5px;" value="#{eduFieldRes.recordStatusFlg}">
+       <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:20%"> 
+		 <p:selectOneMenu style="width:178px;" value="#{eduFieldRes.recordStatusFlg}">
      	    <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 	 	    	
   	     </p:selectOneMenu>
        </p:column>            

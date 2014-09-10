@@ -8,27 +8,18 @@
 	
 	<p:panel>
 
-		<h:panelGrid columns="4" style="width:80%;">
+		<h:panelGrid columns="2">
 	
 	        <h:outputLabel value="#{lbl['lbl.pm.ef.code']}"></h:outputLabel>
             <p:inputText value="#{educationBackingBean.managedBean.fieldCodes}" size="30"  />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.ef.maincat']}"></h:outputLabel>
-			<p:inputText size="30" />
 							
 			<h:outputLabel value="#{lbl['lbl.pm.ef.fname']}"></h:outputLabel>
 			<p:inputText value="#{educationBackingBean.managedBean.fieldNames}" size="30" />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.ef.subcat']}"></h:outputLabel>
-			<p:inputText size="30" />
 													
 		    <h:outputLabel value="#{lbl['lbl.pm.search.status']}"></h:outputLabel>
 		       <p:selectOneMenu style="width:205px" value="#{educationBackingBean.managedBean.status}" > 
      	      	 <f:selectItems value="#{educationBackingBean.getEducationStatusList()}"></f:selectItems> 		          
               </p:selectOneMenu> 
-              
-			<h:outputLabel value="#{lbl['lbl.pm.ef.subcatdiv']}"></h:outputLabel>
-			<p:inputText size="30" />
 				
 		</h:panelGrid>
  </p:panel>
