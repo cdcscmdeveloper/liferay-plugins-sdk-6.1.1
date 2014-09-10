@@ -8,20 +8,24 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+	<f:event listener="#{sdoReviewBackingBean.preRenderView}" type="preRenderView"></f:event>
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}" />
-			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}">
+				<f:param name="disableValidation" value="true" />
+			</p:commandButton>
 		</div>
 
 		<p:outputPanel id="resOutPanelId">
-			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true"
-				height="450" width="525">
-				<table>
+			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="auto">
+				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
+					<table>
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
 					</tr>
 					<tr>
-						<td><p:inputText size="50" id="resInquirySubId" readonly="true"
+						<td><p:inputText size="50" id="resInquirySubId" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
 					</tr>
 					<tr>
@@ -29,18 +33,34 @@
 					</tr>
 					<tr>
 						<td><p:inputTextarea id="resInquiryId" rows="10" cols="80" 
-								autoResize="false" readonly="true"
+								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquiryText}" /></td>
 					</tr>
+					</table>
+				</p:panel>
+				
+				<p:panel header="#{lbl['lbl.sm.supportingdoc.response']}" id="pnlResponseId">
+				<table>
 					<tr>
 						<td>#{lbl['lbl.sm.supportingdoc.responsedate']} :</td>
 					</tr>
 					<tr>
+						<td><p:inputText disabled="true" value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.responseDate}">
+								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+							</p:inputText>
+						</td>
+					</tr>
+
+					<tr>
+						<td>#{lbl['lbl.sm.supportingdoc.response']} :</td>
+					</tr>
+					<tr>
 						<td><p:inputTextarea id="responseTextId" rows="10" cols="80"
-								autoResize="false" readonly="true"
+								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.responseText}" /></td>
 					</tr>
 				</table>
+				</p:panel>
 
 			</p:dialog>
 		</p:outputPanel>
@@ -79,7 +99,8 @@
 						<td class="tdContent"><p:calendar id="receiveCalId"
 								navigator="true" label="#{lbl['lbl.sm.receivedate']}"
 								value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
-								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" 
+								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+								maxdate="#{CommonConstants.CURRENT_DATE}" 
 								display="inline" size="30" showOn="button" /> <p:message
 								id="receiveCalIdMsg" for="receiveCalId" display="icon" /></td>
 					</tr>
@@ -256,17 +277,23 @@
 <!-- 				</p:column> -->
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
 					<p:selectBooleanCheckbox value="#{suppDoc.received}">
-						<p:ajax event="change" update="dtSuppDoc" />
+						<p:ajax event="change" update="dtSuppDoc" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isvalid']}">
-					<p:selectBooleanCheckbox value="#{suppDoc.verified}" disabled="#{!suppDoc.received}" />
+					<p:selectOneMenu value="#{suppDoc.verifiedFlg}" label="#{lbl['lbl.sm.supportingdoc.docstatus']}" disabled="#{!suppDoc.received}" required="#{suppDoc.received}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
+						<f:selectItem itemLabel="Valid" itemValue="1" />
+						<f:selectItem itemLabel="Invalid" itemValue="0" />
+						<p:ajax event="change" /> 
+						<f:validateBean disabled="#{!empty param['disableValidation']}" />
+					</p:selectOneMenu>
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Inquiries" toggable="true"
+		<p:panel header="Inquiry(s)" toggable="true"
 			rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}">
 			<p:dataTable id="dtInquiryResponse" selectionMode="single" 
 			selection="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
@@ -281,7 +308,6 @@
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
-
 				</p:column>
 			</p:dataTable>
 		</p:panel>
