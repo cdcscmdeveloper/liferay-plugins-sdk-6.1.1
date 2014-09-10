@@ -103,19 +103,19 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @param id
 	 * @return xhtml
 	 */
-	public String redirectToMaintainReason(Long id){
+	public String redirectToMaintainReason(Long id)throws Exception{
 		log.info("redirectToMaintainReason - Start");
-		try{
+//		try{
 			this.loadReasonCategoryMapper();
 			if(id!=null && id>0){
 				loadRejectReason(id);
 			}else{
 				initialRejectReason();
 			}
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
+//		}catch (Exception e){
+//			e.printStackTrace();
+//			
+//		}
 		log.info("redirectToMaintainReason - End");
 		return NAV_TO_MAINTAIN;
 	}
@@ -204,6 +204,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 //			this.getManagedBean().setComTypeRestrictions(loadRestriction(ParameterTypeConst.COMPANY_TYPES, id));
 //			this.getManagedBean().setSuppTypeRestrictions(loadRestriction(ParameterTypeConst.SUPPLIER_TYPES, id));
 		}catch (Exception e){
+			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770004);
 		}
 		
@@ -383,7 +384,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonId(reasonId);
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
-			ReasonResDTO resDTO = reqSO.retrieveReasonById(reqDTO);
+			ReasonResDTO resDTO = reqSO.retrieveReasonDtlById(reqDTO);
 			if(resDTO.isSuccessful()){
 				pmReason = resDTO.getPmReason();
 			}
