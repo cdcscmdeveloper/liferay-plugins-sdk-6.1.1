@@ -1169,7 +1169,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					throw new EpException("this item is not within the zone.");
 				}
 			}
-			
+			if(flItemAddr.getOrderedQty() == null){
+				flItemAddr.setOrderedQty(new BigDecimal(0));
+			}
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
 			if(oriItemAddr.getOrderedQty() == null){
@@ -1181,6 +1183,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}
+		populateItemsForSelectedAddress();
 	}
 	
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
