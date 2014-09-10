@@ -127,9 +127,10 @@
 			</tr>
 			<tr>
 				<td style="width: 72px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.inv.no']}" /></td>
+						value="#{lbl['lbl.fl.supp.inv.no']}" /><h:outputLabel
+							value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="45" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK'}" 
-						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" /></td>
+						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" required="true" label="Supplier Invoice No"/><p:message for="supplierInvoiceRef" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
