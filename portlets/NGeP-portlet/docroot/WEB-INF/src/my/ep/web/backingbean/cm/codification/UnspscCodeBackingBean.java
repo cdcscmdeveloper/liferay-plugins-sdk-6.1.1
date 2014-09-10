@@ -2121,7 +2121,11 @@ public class UnspscCodeBackingBean extends
 
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
-
+        this.getManagedBean().setSelectedLovUnspscSegment(null);
+        this.getManagedBean().setSelectedLovUnspscfamily(null);
+        this.getManagedBean().setSelectedLovUnspscClass(null);
+        this.getManagedBean().setSelectedLovUnspsc(null);
+        
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
