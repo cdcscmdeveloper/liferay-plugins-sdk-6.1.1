@@ -171,7 +171,7 @@
 							label="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
-							<f:selectItem itemLabel="Select " itemValue="O" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
 							<f:selectItem itemLabel="Registration" itemValue="R" />
 							<f:selectItem itemLabel="Payment" itemValue="P" />
 							<f:selectItem itemLabel="Both" itemValue="B" />
@@ -189,7 +189,7 @@
 							label="#{lbl['lbl.sm.bankDtls.bankName']}" id="smBankNameVal"
 							value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.financialOrgId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="finOrg"
 								value="#{backingBean.managedBean.finOrgLs}"
 								itemValue="#{finOrg.financialOrgId}"
@@ -261,7 +261,7 @@
 							label="#{lbl['lbl.sm.country']}" id="smBankCntryId"
 							value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCountry"
 								value="#{backingBean.managedBean.countryLs}"
 								itemValue="#{smBankCountry.countryId}"
@@ -285,7 +285,7 @@
 							label="#{lbl['lbl.sm.state']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateId}"
 							id="smBankState">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankState"
 								value="#{backingBean.managedBean.bankStates}"
 								itemValue="#{smBankState.stateId}"
@@ -308,7 +308,7 @@
 							id="smBankDist" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.district']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankDist"
 								value="#{backingBean.managedBean.bankDistricts}"
 								itemValue="#{smBankDist.districtId}"
@@ -328,7 +328,7 @@
 							id="smBankCity" required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.towncity']}"
 							value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="smBankCity"
 								value="#{backingBean.managedBean.bankCities}"
 								itemValue="#{smBankCity.cityId}"
@@ -363,7 +363,7 @@
 							style="width: 207px;margin-bottom: 5px;" id="banBranchVal"
 							rendered="#{backingBean.managedBean.selectedBank.accountPurpose eq 'P' or backingBean.managedBean.selectedBank.accountPurpose eq 'B'}"
 							value="#{backingBean.managedBean.selBankBranchId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 								var="supBean" itemLabel="#{supBean.branchName}"
@@ -372,15 +372,19 @@
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']} " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']} " />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 					<td><p:selectManyMenu showCheckbox="true"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.bankDtls.cheSigns']}" id="bankCheqSignId"
 							value="#{backingBean.managedBean.chequeSingPerId}"
 							style="height:100px;width: 200px;">
 							<f:selectItems
 								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
 								itemLabel="#{per.name}" itemValue="#{per.personnelId}" />
-						</p:selectManyMenu></td>
+						</p:selectManyMenu> <p:message id="bankCheqSignIdMsg" for="bankCheqSignId"
+							showSummary="true" showDetail="false" display="icon" /></td>
 
 				</tr>
 

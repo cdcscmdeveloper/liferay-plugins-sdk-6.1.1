@@ -21,7 +21,7 @@
 					id="consultProjParCatCode"
 					value="#{catBean.pmCategoryL1.categoryL1Id}"
 					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{backingBean.managedBean.supplierParentCatList}"
 						var="parent" itemLabel="#{parent.categoryName}"
@@ -42,7 +42,7 @@
 					label="#{lbl['lbl.sm.projDtls.subCat']}"
 					value="#{catBean.pmCategoryL2.categoryL2Id}" id="conslChild"
 					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{catBean.pmCategoryL2.pmCategoryL2s}"
 						var="conslChild" itemLabel="#{conslChild.categoryName}"
 						itemValue="#{conslChild.categoryL2Id}" />
@@ -59,7 +59,7 @@
 					label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
 					value="#{catBean.pmCategoryL3.categoryL3Id}" id="conslSubChild"
 					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{catBean.pmCategoryL3.pmCategoryL3s}"
 						var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
 						itemValue="#{conslSubChild.categoryL3Id}" />
