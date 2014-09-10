@@ -25,11 +25,11 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.cityname']}" width="15%">
-				#{userprofile.pmAddressTypes[0].pmAddress.pmCity!=null ? userprofile.pmAddressTypes[0].pmAddress.pmCity.cityName : ''}
+				#{userprofile.addressTypeC.pmAddress.pmCity!=null ? userprofile.addressTypeC.pmAddress.pmCity.cityName : ''}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.statename']}" width="15%">
-				#{userprofile.pmAddressTypes[0].pmAddress.pmState!=null ? userprofile.pmAddressTypes[0].pmAddress.pmState.stateName : ''}
+				#{userprofile.addressTypeC.pmAddress.pmState!=null ? userprofile.addressTypeC.pmAddress.pmState.stateName : ''}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.status']}" width="10%">

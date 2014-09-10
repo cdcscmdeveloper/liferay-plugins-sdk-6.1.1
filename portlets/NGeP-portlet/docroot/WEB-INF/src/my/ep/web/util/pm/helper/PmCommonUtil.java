@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -32,6 +33,8 @@ import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -57,6 +60,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -398,7 +402,7 @@ public class PmCommonUtil {
 	/**
 	 * retrieve active PmUserOrgs
 	 * @param id
-	 * @return PmUser
+	 * @return List<PmUserOrg> 
 	 */
 	public static List<PmUserOrg> retrieveActiveOrg(Long id){
 		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
@@ -416,6 +420,36 @@ public class PmCommonUtil {
 			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
 		}		
 		return pmUserOrgs;
+	}
+	
+
+	/**
+	 * retrieve address type list by user id
+	 * @param userId
+	 * @return List<PmAddressType>
+	 */
+	public static List<PmAddressType> retrieveAddressTypesByUserIdOrAddressType(Long userId, String addressType){
+		List <PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
+		try {
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			AddressResDTO resDTO = null;
+			if(userId!=null){
+				reqDTO.setUserId(userId);
+			}
+			if(addressType!=null){
+				reqDTO.setAddressType(addressType);
+			}
+			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmAddressTypes = resDTO.getAddressTypeList();
+			}
+				
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770060 , new String[]{userId.toString(), e.getMessage()}); 
+			
+		}		
+		return pmAddressTypes;
 	}
 	
 	/**

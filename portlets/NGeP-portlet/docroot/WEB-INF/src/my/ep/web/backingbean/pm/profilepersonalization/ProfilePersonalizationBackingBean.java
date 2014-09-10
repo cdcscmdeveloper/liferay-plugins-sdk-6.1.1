@@ -187,9 +187,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
 			
 			//load address
-			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
-				populateUserAddress(pmUser);
-			}
+			populateUserAddress(pmUser);
+			
 			//load preference - notification
 			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
 			
@@ -219,18 +218,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 */
 	private void populateUserAddress(PmUser pmUser){
 		logger.info("populateUserAddress");
-		boolean hasAddress = false;
 		try {
-			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
-				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
-					hasAddress = true;
-					break;
-				}
-			}
-			if(!hasAddress){
-				this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
-			}
+			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
+			this.getManagedBean().setUserAddress((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : PmCommonUtil.getNewPmAddress());
+			
+	
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); 

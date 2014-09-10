@@ -249,9 +249,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			pmUser.setSalutationCode(pmUser.getSalutationCode()==null ? new PmSalutation() : pmUser.getSalutationCode());
 			pmUser.setOrgTypeCode(pmUser.getOrgTypeCode()==null ? new PmParameter() : pmUser.getOrgTypeCode());
 			
-			if (pmUser!=null && pmUser.getPmAddressTypes() != null) {
-				populateUserAddress(pmUser);
-			}
+			populateUserAddress(pmUser);
 			
 			//load preference - notification
 			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
@@ -350,12 +348,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	private void populateUserAddress(PmUser pmUser){
 		logger.info("populateUserAddress");
 		try {
-			for (PmAddressType addressTypeObj : pmUser.getPmAddressTypes()) {
-				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-					this.getManagedBean().setUserAddress(addressTypeObj.getPmAddress());
-					break;
-				}
-			}
+			List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
+			this.getManagedBean().setUserAddress((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0).getPmAddress() : PmCommonUtil.getNewPmAddress());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770017, new String[]{e.getMessage()}); 
@@ -1154,6 +1148,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //				boolean isApprover = false;
 				ISearchBean<PmRoleDesc> searchBeanData = getRoleBeanData(searchBean, null);
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
+				roleReqDTO.setLanguage(getFacesScopes().getUserLocale().getLanguage());
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				IRoleSO roleSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
@@ -1177,29 +1172,36 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 //					getManagedBean().setAvailableRoles(resDto.getSearchRoleResultBean().getResultList());
 					
 					// disabled selected roles
-					if(resDto.getSearchRoleResultBean()!=null 
-							&& resDto.getSearchRoleResultBean().getResultList()!=null 
-							&& !resDto.getSearchRoleResultBean().getResultList().isEmpty()){
-						if(getManagedBean().getSelectedUserOrg()!=null 
-								&& getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
-							List <PmRole> selectedRoles = new ArrayList<PmRole>();
-							for(PmUserRole obj:getManagedBean().getSelectedUserOrg().getPmUserRoles()){
-								selectedRoles.add(obj.getPmRole());
-								
-							}
-							for(PmRoleDesc obj:resDto.getSearchRoleResultBean().getResultList()){
-								if(selectedRoles.contains(obj.getPmRole())){
-									obj.setSelected(true);
-								}
-							}
-						}
-					}
+					markupRoleResult(resDto.getSearchRoleResultBean());
+					
 					return resDto.getSearchRoleResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
+		}
+	}
+	
+	private void markupRoleResult(ISearchResultBean<PmRoleDesc> searchRoleResultBean){
+		logger.info("markupRoleResult");
+		// disabled selected roles
+		if(searchRoleResultBean!=null 
+				&& searchRoleResultBean.getResultList()!=null 
+				&& !searchRoleResultBean.getResultList().isEmpty()){
+			if(getManagedBean().getSelectedUserOrg()!=null 
+					&& getManagedBean().getSelectedUserOrg().getPmUserRoles()!=null){
+				List <PmRole> selectedRoles = new ArrayList<PmRole>();
+				for(PmUserRole obj:getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+					selectedRoles.add(obj.getPmRole());
+					
+				}
+				for(PmRoleDesc obj:searchRoleResultBean.getResultList()){
+					if(selectedRoles.contains(obj.getPmRole())){
+						obj.setSelected(true);
+					}
+				}
+			}
 		}
 	}
 	/** Roles & Paging - End  */
@@ -1324,6 +1326,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);	
 				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
 				if (resDto != null && resDto.isSuccessful()) {
+					markupUserResult(resDto.getUserResultBean());
 					return resDto.getUserResultBean();
 				}
 			} catch (Exception e) {
@@ -1332,6 +1335,19 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			return null;
 		}
 
+	}
+	
+	private void markupUserResult(ISearchResultBean<PmUser> userResultBean){
+		logger.info("markupUserResult");
+		if(userResultBean!=null 
+				&& userResultBean.getResultList()!=null 
+				&& !userResultBean.getResultList().isEmpty()){
+			
+			for(PmUser pmUser:userResultBean.getResultList()){
+				List<PmAddressType> addressTypes = PmCommonUtil.retrieveAddressTypesByUserIdOrAddressType(pmUser.getUserId(), ProfileManagementConst.ADDRESS_USER);
+				pmUser.setAddressTypeC((addressTypes!=null && !addressTypes.isEmpty()) ? addressTypes.get(0) : new PmAddressType());
+			}
+		}
 	}
 	
 	/** User Search & Paging - End  */
