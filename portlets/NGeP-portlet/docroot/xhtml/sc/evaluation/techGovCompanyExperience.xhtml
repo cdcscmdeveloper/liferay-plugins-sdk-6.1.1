@@ -29,7 +29,7 @@
 		<p:panel>
 			<table>
 				<tr>
-					<td ><h:outputLabel
+					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
 					<td><p:inputText disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
@@ -184,16 +184,19 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:40%"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.rangeFrom}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:30%"
 						rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.rangeTo}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
 						style="width:30%">
-						<h:outputText value="#{checkListScoring.score}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.score}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>
@@ -221,16 +224,19 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:40%"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeFrom}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.rangeFrom}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:30%"
 						rendered="#{evaluationBackingBean.managedBean.companyScoreType eq '1'}">
-						<h:outputText value="#{checkListScoring.rangeTo}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.rangeTo}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}"
 						style="width:30%">
-						<h:outputText value="#{checkListScoring.score}"></h:outputText>
+						<h:outputLabel value="#{checkListScoring.score}"
+							style="text-align:right"></h:outputLabel>
 					</p:column>
 					<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
 					<p:commandLink>
