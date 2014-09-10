@@ -403,7 +403,7 @@ public class CodificationBackingBean extends
 				}
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
-				
+
 				log.info("............itemType=" + itemType);
 				if (itemType != null) {
 					if (itemType.equals("S") || itemType.equals("2")) {
@@ -841,15 +841,15 @@ public class CodificationBackingBean extends
 
 	public void clearContractedCodePopUp() {
 		resetAction();
-//		this.getManagedBean().setSelectedLovUnspscSegment(null);
-//		this.getManagedBean().setSelectedLovUnspscFamily(null);
-//		this.getManagedBean().setSelectedLovUnspscClass(null);
-//		this.getManagedBean().setSelectedUNSPSCObj(null);
+		// this.getManagedBean().setSelectedLovUnspscSegment(null);
+		// this.getManagedBean().setSelectedLovUnspscFamily(null);
+		// this.getManagedBean().setSelectedLovUnspscClass(null);
+		// this.getManagedBean().setSelectedUNSPSCObj(null);
 		this.getManagedBean().setRequestExtCode(null);
-//		this.getManagedBean().setTypeDisable(true);
-//		this.getManagedBean().setBrandDisable(true);
-//		this.getManagedBean().setMeasurementDisable(true);
-//		this.getManagedBean().setColorDisable(true);
+		// this.getManagedBean().setTypeDisable(true);
+		// this.getManagedBean().setBrandDisable(true);
+		// this.getManagedBean().setMeasurementDisable(true);
+		// this.getManagedBean().setColorDisable(true);
 	}
 
 	public void filterFamily() {
@@ -963,8 +963,8 @@ public class CodificationBackingBean extends
 		}
 
 	}
-	
-	public String insertContractedItemCodeForService(CmUnspsc commodity){
+
+	public String insertContractedItemCodeForService(CmUnspsc commodity) {
 		this.getManagedBean().setSelectedUNSPSCObj(commodity);
 		return insertContractedItemCode();
 	}
@@ -1008,7 +1008,7 @@ public class CodificationBackingBean extends
 			extCodeVO = new ExtensionCodeVO();
 			CmUnspsc selectedCommodity = this.getManagedBean()
 					.getSelectedUNSPSCObj();
-			log.info("..................selectedCommodity="+selectedCommodity);
+			log.info("..................selectedCommodity=" + selectedCommodity);
 
 			extCodeVO.setTypeId(selectedCommodity.getCmType().get(0)
 					.getTypeId());
@@ -1148,7 +1148,10 @@ public class CodificationBackingBean extends
 				codifiedItemReqDTO.setPendingCodifiedItemId(this
 						.getManagedBean().getSelectedVPendingCodifiedItem()
 						.getPendingCodifiedItemId());
-				log.info("........getPendingCodifiedItemId()"+this.getManagedBean().getSelectedVPendingCodifiedItem().getPendingCodifiedItemId());
+				log.info("........getPendingCodifiedItemId()"
+						+ this.getManagedBean()
+								.getSelectedVPendingCodifiedItem()
+								.getPendingCodifiedItemId());
 				PendingCodifiedItemResDTO codifiedItemResDTO = codifiedItemSO
 						.retrievePendingCodifiedItemById(codifiedItemReqDTO);
 				CmPendingCodifiedItem codifiedItem = codifiedItemResDTO
@@ -1502,18 +1505,19 @@ public class CodificationBackingBean extends
 		// "reviewUnspscCode?faces-redirect=true"
 		// : "reviewBeforeCreateTempCode?faces-redirect=true";
 	}
-	
-	public String backToPendingCodified(){
+
+	public String backToPendingCodified() {
 		return "assignProductCode?faces-redirect=true";
 	}
-	
-	public String backToSearchUnspscToAssign(){
-        return "searchUnspscToAssign";
+
+	public String backToSearchUnspscToAssign() {
+		return "searchUnspscToAssign";
 	}
 
-	public String backToExtensionSearch(){
+	public String backToExtensionSearch() {
 		return "searchExtensionToAssignItem";
 	}
+
 	public void onNodeSelect(NodeSelectEvent event) {
 
 		DefaultTreeNode tree = (DefaultTreeNode) event.getTreeNode();
@@ -1784,14 +1788,14 @@ public class CodificationBackingBean extends
 
 	public String returnToPendingCodified(CmUnspsc unspscObj) {
 		System.out.println("**********returnToPendingCodified************");
-		
-			return "assignProductCode?faces-redirect=true";
 
+		return "assignProductCode?faces-redirect=true";
 
 	}
+
 	public String selectFromExtensionToAssign(CmUnspsc unspscObj) {
 		log.debug("**********selectFromExtensionToAssign************");
-System.out.println("**********selectFromExtensionToAssign************");
+		System.out.println("**********selectFromExtensionToAssign************");
 		this.getManagedBean().setMeasurementCriteria(null);
 		this.getManagedBean().setColorCriteria(null);
 		this.getManagedBean().setBrandCriteria(null);
@@ -1850,9 +1854,11 @@ System.out.println("**********selectFromExtensionToAssign************");
 								.getColorName()));
 			}
 		}
-       System.out.println("......... unspscObj.getCmBrand()="+ unspscObj.getCmBrand());
+		System.out.println("......... unspscObj.getCmBrand()="
+				+ unspscObj.getCmBrand());
 		for (CmBrand brand : unspscObj.getCmBrand()) {
-			System.out.println(".........brand.getBrandName()="+brand.getBrandName()); 
+			System.out.println(".........brand.getBrandName()="
+					+ brand.getBrandName());
 			if (!StringUtils.isBlank(brand.getBrandName())) {
 				this.getManagedBean()
 						.getBrandCriteria()
@@ -1860,7 +1866,9 @@ System.out.println("**********selectFromExtensionToAssign************");
 								.getBrandName()));
 			}
 		}
-		System.out.println("..................this.getManagedBean().getBrandCriteria().size()="+this.getManagedBean().getBrandCriteria().size());
+		System.out
+				.println("..................this.getManagedBean().getBrandCriteria().size()="
+						+ this.getManagedBean().getBrandCriteria().size());
 
 		for (CmType type : unspscObj.getCmType()) {
 			if (!StringUtils.isBlank(type.getTypeName())) {
@@ -1882,6 +1890,7 @@ System.out.println("**********selectFromExtensionToAssign************");
 
 		return "searchExtensionToAssignItem.xhtml";
 	}
+
 	public String requestExtensionWithUNSPSC() {
 
 		UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
@@ -2185,201 +2194,202 @@ System.out.println("**********selectFromExtensionToAssign************");
 		System.out
 				.println("..................requestNewExtensionCode....................");
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-//		// set unspscCommidityCode
-//		this.getManagedBean()
-//				.getRequestExtCode()
-//				.setTempCode(
-//						this.getManagedBean().getSelectedUNSPSCObj()
-//								.getUnspscCode());
-//		this.getManagedBean()
-//				.getRequestExtCode()
-//				.setTempTitle(
-//						this.getManagedBean().getSelectedUNSPSCObj()
-//								.getUnspscTitle());
-//
-//		if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
-//			if (StringUtils.isBlank((String) typeFilterBean.getSearchValue())) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"select from the list if you don't want to request new one.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//			// get object from selected values :
-//			Long typeId = Long.valueOf(typeFilterBean.getSearchValue()
-//					.toString());
-//			CmType cmType = null;
-//			cmType = searchTypeOjbyTypeId(typeId);
-//
-//			this.getManagedBean().getRequestExtCode()
-//					.setTypeName(cmType.getTypeName());
-//			this.getManagedBean().getRequestExtCode()
-//					.setTypeId(cmType.getTypeId());
-//		} else {// request new checked for Type
-//			if (this.getManagedBean().getRequestExtCode().getTypeName()
-//					.isEmpty()) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"Fill up the Request New field for those are selected.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//		}
-//
-//		if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
-//			if (StringUtils.isBlank((String) brandFilterBean.getSearchValue())) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"select from the list if you don't want to request new one.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//			// get object from selected values :
-//			Long brandId = Long.valueOf(brandFilterBean.getSearchValue()
-//					.toString());
-//			CmBrand cmBrand = null;
-//			cmBrand = searchBrandObjByBrandId(brandId);
-//
-//			this.getManagedBean().getRequestExtCode()
-//					.setBrandName(cmBrand.getBrandName());
-//			this.getManagedBean().getRequestExtCode()
-//					.setBrandId(cmBrand.getBrandId());
-//
-//		} else {// request new checked for Brand
-//			if (this.getManagedBean().getRequestExtCode().getBrandName()
-//					.isEmpty()) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"Fill up the Request New field for those are selected.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//		}
-//
-//		if (!this.getManagedBean().getRequestExtCode().isRequestMeasurement()) {
-//			if (StringUtils.isBlank((String) measurementFilterBean
-//					.getSearchValue())) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"select from the list if you don't want to request new one.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//			// get object from selected values :
-//			Long measurementId = Long.valueOf(measurementFilterBean
-//					.getSearchValue().toString());
-//			CmMeasurement cmMeasurement = null;
-//			cmMeasurement = searchMeasurementByMeasurementId(measurementId);
-//			this.getManagedBean().getRequestExtCode()
-//					.setMeasurementId(cmMeasurement.getMeasurementId());
-//			this.getManagedBean().getRequestExtCode()
-//					.setMeasurementName(cmMeasurement.getMeasurementName());
-//		} else {// request new checked for Measurment
-//			if (this.getManagedBean().getRequestExtCode().getMeasurementName()
-//					.isEmpty()) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"Fill up the Request New field for those are selected.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//		}
-//
-//		if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
-//			if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"select from the list if you don't want to request new one.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//			// get object from selected values :
-//
-//			Long colorId = Long.valueOf(colorFilterBean.getSearchValue()
-//					.toString());
-//			CmColor selectedCmColor = null;
-//			selectedCmColor = searchColorObjByColorId(colorId);
-//
-//			this.getManagedBean().getRequestExtCode()
-//					.setColorName(selectedCmColor.getColorName());
-//			this.getManagedBean().getRequestExtCode()
-//					.setColorId(selectedCmColor.getColorId());
-//
-//		} else {// request new checked for Color
-//			if (this.getManagedBean().getRequestExtCode().getColorName()
-//					.isEmpty()) {
-//				facesContext
-//						.addMessage(
-//								null,
-//								new FacesMessage(
-//										FacesMessage.SEVERITY_ERROR,
-//										null,
-//										MessageUtils
-//												.getMessage(
-//														"Fill up the Request New field for those are selected.",
-//														MessageUtils.BUNDLE_COMMON_MESSAGES,
-//														new FacesScopes()
-//																.getUserLocale())));
-//				return "";
-//			}
-//		}
-UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+		// // set unspscCommidityCode
+		// this.getManagedBean()
+		// .getRequestExtCode()
+		// .setTempCode(
+		// this.getManagedBean().getSelectedUNSPSCObj()
+		// .getUnspscCode());
+		// this.getManagedBean()
+		// .getRequestExtCode()
+		// .setTempTitle(
+		// this.getManagedBean().getSelectedUNSPSCObj()
+		// .getUnspscTitle());
+		//
+		// if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
+		// if (StringUtils.isBlank((String) typeFilterBean.getSearchValue())) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "select from the list if you don't want to request new one.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// // get object from selected values :
+		// Long typeId = Long.valueOf(typeFilterBean.getSearchValue()
+		// .toString());
+		// CmType cmType = null;
+		// cmType = searchTypeOjbyTypeId(typeId);
+		//
+		// this.getManagedBean().getRequestExtCode()
+		// .setTypeName(cmType.getTypeName());
+		// this.getManagedBean().getRequestExtCode()
+		// .setTypeId(cmType.getTypeId());
+		// } else {// request new checked for Type
+		// if (this.getManagedBean().getRequestExtCode().getTypeName()
+		// .isEmpty()) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "Fill up the Request New field for those are selected.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// }
+		//
+		// if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
+		// if (StringUtils.isBlank((String) brandFilterBean.getSearchValue())) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "select from the list if you don't want to request new one.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// // get object from selected values :
+		// Long brandId = Long.valueOf(brandFilterBean.getSearchValue()
+		// .toString());
+		// CmBrand cmBrand = null;
+		// cmBrand = searchBrandObjByBrandId(brandId);
+		//
+		// this.getManagedBean().getRequestExtCode()
+		// .setBrandName(cmBrand.getBrandName());
+		// this.getManagedBean().getRequestExtCode()
+		// .setBrandId(cmBrand.getBrandId());
+		//
+		// } else {// request new checked for Brand
+		// if (this.getManagedBean().getRequestExtCode().getBrandName()
+		// .isEmpty()) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "Fill up the Request New field for those are selected.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// }
+		//
+		// if
+		// (!this.getManagedBean().getRequestExtCode().isRequestMeasurement()) {
+		// if (StringUtils.isBlank((String) measurementFilterBean
+		// .getSearchValue())) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "select from the list if you don't want to request new one.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// // get object from selected values :
+		// Long measurementId = Long.valueOf(measurementFilterBean
+		// .getSearchValue().toString());
+		// CmMeasurement cmMeasurement = null;
+		// cmMeasurement = searchMeasurementByMeasurementId(measurementId);
+		// this.getManagedBean().getRequestExtCode()
+		// .setMeasurementId(cmMeasurement.getMeasurementId());
+		// this.getManagedBean().getRequestExtCode()
+		// .setMeasurementName(cmMeasurement.getMeasurementName());
+		// } else {// request new checked for Measurment
+		// if (this.getManagedBean().getRequestExtCode().getMeasurementName()
+		// .isEmpty()) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "Fill up the Request New field for those are selected.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// }
+		//
+		// if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
+		// if (StringUtils.isBlank((String) colorFilterBean.getSearchValue())) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "select from the list if you don't want to request new one.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// // get object from selected values :
+		//
+		// Long colorId = Long.valueOf(colorFilterBean.getSearchValue()
+		// .toString());
+		// CmColor selectedCmColor = null;
+		// selectedCmColor = searchColorObjByColorId(colorId);
+		//
+		// this.getManagedBean().getRequestExtCode()
+		// .setColorName(selectedCmColor.getColorName());
+		// this.getManagedBean().getRequestExtCode()
+		// .setColorId(selectedCmColor.getColorId());
+		//
+		// } else {// request new checked for Color
+		// if (this.getManagedBean().getRequestExtCode().getColorName()
+		// .isEmpty()) {
+		// facesContext
+		// .addMessage(
+		// null,
+		// new FacesMessage(
+		// FacesMessage.SEVERITY_ERROR,
+		// null,
+		// MessageUtils
+		// .getMessage(
+		// "Fill up the Request New field for those are selected.",
+		// MessageUtils.BUNDLE_COMMON_MESSAGES,
+		// new FacesScopes()
+		// .getUserLocale())));
+		// return "";
+		// }
+		// }
+		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		this.getManagedBean().getRequestExtCodeList()
 				.addAll(bb.getManagedBean().getRequestExtCodeList());
 
@@ -2401,22 +2411,24 @@ UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		String token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-//		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-//				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-//		SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-//
-//		PmUser pmUser = new FacesScopes().getUserSessionBean();
-//		supplierReqDTO.setUserId(pmUser.getUserId());
+		// ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO)
+		// BusinessDelegate
+		// .getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		// SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
+		//
+		// PmUser pmUser = new FacesScopes().getUserSessionBean();
+		// supplierReqDTO.setUserId(pmUser.getUserId());
 
-//		SupplierSearchResDTO smResDTO = supplierSearchSO
-//				.retriveSupplierProfiles(supplierReqDTO);
-//
-//		System.out.println("getSmSupplier"
-//				+ smResDTO.getResultBean().getResultList().get(0));
+		// SupplierSearchResDTO smResDTO = supplierSearchSO
+		// .retriveSupplierProfiles(supplierReqDTO);
+		//
+		// System.out.println("getSmSupplier"
+		// + smResDTO.getResultBean().getResultList().get(0));
 
-//		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
-//			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
-//		}
+		// for (CmRequestCode code :
+		// this.getManagedBean().getRequestExtCodeList()) {
+		// code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));
+		// }
 
 		reqDTO.setCatalogueAdminRequest(true);
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
@@ -2441,14 +2453,12 @@ UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 				"contractedItemPopUp.hide()");
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
 	}
-	
-	public String requestExtensionCode() {
+
+	public String requestExtensionCodeII() {
 		UnspscCodeBackingBean codeBB = new UnspscCodeBackingBean();
 		if (codeBB.getManagedBean().getRequestExtCodeList() != null) {
 			codeBB.getManagedBean().getRequestExtCodeList().clear();
 		}
-
-		
 
 		codeBB.getManagedBean()
 				.getSelectedLovUnspsc()
@@ -2576,24 +2586,28 @@ UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
 				|| fs.hasRoleUser("CM_USER");
 	}
-	
-	public String redirectToequestUnspscCodeII() {
-//		renewSesionObject();
-     UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+
+	public String redirectToRequestUnspscCodeII() {
+		// renewSesionObject();
+		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		if (bb.getManagedBean().getRequestExtCodeList() != null) {
 			bb.getManagedBean().getRequestExtCodeList().clear();
 		}
-		bb.getManagedBean().getRequestCode().setItemType("P");
+		if (this.getManagedBean().getSelectedRequestItem().getItemType()
+				.equals("2")) {
+			bb.getManagedBean().getRequestCode().setItemType("S");
+		} else {
+			bb.getManagedBean().getRequestCode().setItemType("P");
+		}
 		return "unspscRequestFormII";
 	}
-	
-	
-	
-	public void preRenderCodificationView(){
-		  log.info(".................preRenderCodificationView................");
-//		  this.renewSesionObject();
-		  resetAction();
-		  FacesContext fc = FacesContext.getCurrentInstance();
-		  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "codificationView");
+
+	public void preRenderCodificationView() {
+		log.info(".................preRenderCodificationView................");
+		// this.renewSesionObject();
+		resetAction();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "codificationView");
 	}
 }

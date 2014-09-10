@@ -91,9 +91,6 @@
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
 								value="Extension Attribute"></h:outputText></td>
-								<td/>
-								<td/>
-								<td/>
 								
 					</tr>
 
@@ -126,7 +123,13 @@
 									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-						
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								style="width:278px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.colorCriteria}" />
+							</p:selectOneMenu></td>
 							
 					</tr>
 				</table>
@@ -194,7 +197,7 @@
 		<div class="clear"></div>
 		<div style="text-align: right;">
 			<p:commandButton value="REQUEST EXTENSION"
-				action="#{codificationBackingBean.requestExtensionCode}" />
+				action="#{codificationBackingBean.requestExtensionCodeII}" />
 		
 			<p:commandButton value="#{lbl['lbl.cm.assign']}"
 			   
