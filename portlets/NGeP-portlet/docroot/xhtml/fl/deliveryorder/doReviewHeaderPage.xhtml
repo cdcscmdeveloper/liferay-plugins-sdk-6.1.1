@@ -16,7 +16,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.fl.supp.del.ord.no']} " rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}"/>
 				</td>
 				<td class="header-info-text">
-					#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo == null ? '------' :createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo}
+					#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo == null ? '' :createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
