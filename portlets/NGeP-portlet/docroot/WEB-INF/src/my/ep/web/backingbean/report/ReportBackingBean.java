@@ -36,11 +36,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 /**
  * @Author Jangari Kondal Reddy
  */
 @ManagedBean(name="reportBackingBean")
-@RequestScoped
+@ViewScoped
 public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
@@ -74,7 +75,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String registrationType;	
 	private String itemCategory;
 	private String itemName;
-	private String proofIdentity;
+	
 	private String epNumber;
 	private String businessRegNo;
 	private String icNumber;
@@ -113,7 +114,263 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String poAmount;
 	private String prNo;
 	private String pmo;
-/*FL end*/
+   /*FL end*/
+   /*SM start*/
+	private String supportingDocument;	
+	private String docStatus;
+	private String SuppDocStatus;
+	private String registrationNo;
+	private String ePNo;
+	private String applicationNo;
+	private String zone;
+	private String supplierType;
+	private String mofRegNo;
+	private String mofRegNoFrom;
+	private String mofRegNoTo;
+	private String registrationStatus;
+	private String capitalNaccum;
+	private String paidUpCapitalNaccumShare;
+	private String category;
+	private String noOfCategory;
+	private String mainCategory;
+	private String subCategory;
+	private String subCategoryDivision;
+	private String role;
+	private String applicationStatus;
+	private String cancelledBy;
+	private String paymentType;
+	private String applicationType;
+	private String state;
+	private String district;
+	private String supplierName;
+	private String reportType;
+	private String organizationType;
+	private String kementerian;
+	private String namAgensi;
+	private String complaintNo;
+	private String proofIdentity;
+	private String companyStatus;
+	private String caseNo;
+	private String compApplStatus;
+	private String generatedURL;
+	/*SM end*/
+	
+	public String getGeneratedURL() {
+		return generatedURL;
+	}
+	public void setGeneratedURL(String generatedURL) {
+		this.generatedURL = generatedURL;
+	}
+	public String getCompApplStatus() {
+		return compApplStatus;
+	}
+	public void setCompApplStatus(String compApplStatus) {
+		this.compApplStatus = compApplStatus;
+	}
+	public String getCaseNo() {
+		return caseNo;
+	}
+	public void setCaseNo(String caseNo) {
+		this.caseNo = caseNo;
+	}
+	public String getCompanyStatus() {
+		return companyStatus;
+	}
+	public void setCompanyStatus(String companyStatus) {
+		this.companyStatus = companyStatus;
+	}
+	public String getZone() {
+		return zone;
+	}
+	public void setZone(String zone) {
+		this.zone = zone;
+	}
+	public String getSupplierType() {
+		return supplierType;
+	}
+	public void setSupplierType(String supplierType) {
+		this.supplierType = supplierType;
+	}
+	public String getMofRegNo() {
+		return mofRegNo;
+	}
+	public void setMofRegNo(String mofRegNo) {
+		this.mofRegNo = mofRegNo;
+	}
+	public String getMofRegNoFrom() {
+		return mofRegNoFrom;
+	}
+	public void setMofRegNoFrom(String mofRegNoFrom) {
+		this.mofRegNoFrom = mofRegNoFrom;
+	}
+	public String getMofRegNoTo() {
+		return mofRegNoTo;
+	}
+	public void setMofRegNoTo(String mofRegNoTo) {
+		this.mofRegNoTo = mofRegNoTo;
+	}
+	public String getRegistrationStatus() {
+		return registrationStatus;
+	}
+	public void setRegistrationStatus(String registrationStatus) {
+		this.registrationStatus = registrationStatus;
+	}
+	public String getCapitalNaccum() {
+		return capitalNaccum;
+	}
+	public void setCapitalNaccum(String capitalNaccum) {
+		this.capitalNaccum = capitalNaccum;
+	}
+	public String getPaidUpCapitalNaccumShare() {
+		return paidUpCapitalNaccumShare;
+	}
+	public void setPaidUpCapitalNaccumShare(String paidUpCapitalNaccumShare) {
+		this.paidUpCapitalNaccumShare = paidUpCapitalNaccumShare;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public String getNoOfCategory() {
+		return noOfCategory;
+	}
+	public void setNoOfCategory(String noOfCategory) {
+		this.noOfCategory = noOfCategory;
+	}
+	public String getMainCategory() {
+		return mainCategory;
+	}
+	public void setMainCategory(String mainCategory) {
+		this.mainCategory = mainCategory;
+	}
+	public String getSubCategory() {
+		return subCategory;
+	}
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
+	}
+	public String getSubCategoryDivision() {
+		return subCategoryDivision;
+	}
+	public void setSubCategoryDivision(String subCategoryDivision) {
+		this.subCategoryDivision = subCategoryDivision;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getApplicationStatus() {
+		return applicationStatus;
+	}
+	public void setApplicationStatus(String applicationStatus) {
+		this.applicationStatus = applicationStatus;
+	}
+	public String getCancelledBy() {
+		return cancelledBy;
+	}
+	public void setCancelledBy(String cancelledBy) {
+		this.cancelledBy = cancelledBy;
+	}
+	public String getPaymentType() {
+		return paymentType;
+	}
+	public void setPaymentType(String paymentType) {
+		this.paymentType = paymentType;
+	}
+	public String getApplicationType() {
+		return applicationType;
+	}
+	public void setApplicationType(String applicationType) {
+		this.applicationType = applicationType;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public String getSupplierName() {
+		return supplierName;
+	}
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+	public String getReportType() {
+		return reportType;
+	}
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
+	public String getOrganizationType() {
+		return organizationType;
+	}
+	public void setOrganizationType(String organizationType) {
+		this.organizationType = organizationType;
+	}
+	public String getKementerian() {
+		return kementerian;
+	}
+	public void setKementerian(String kementerian) {
+		this.kementerian = kementerian;
+	}
+	public String getNamAgensi() {
+		return namAgensi;
+	}
+	public void setNamAgensi(String namAgensi) {
+		this.namAgensi = namAgensi;
+	}
+	public String getComplaintNo() {
+		return complaintNo;
+	}
+	public void setComplaintNo(String complaintNo) {
+		this.complaintNo = complaintNo;
+	}	
+	public String getSupportingDocument() {
+		return supportingDocument;
+	}
+	public void setSupportingDocument(String supportingDocument) {
+		this.supportingDocument = supportingDocument;
+	}
+	public String getDocStatus() {
+		return docStatus;
+	}
+	public void setDocStatus(String docStatus) {
+		this.docStatus = docStatus;
+	}
+	public String getSuppDocStatus() {
+		return SuppDocStatus;
+	}
+	public void setSuppDocStatus(String suppDocStatus) {
+		SuppDocStatus = suppDocStatus;
+	}
+	public String getRegistrationNo() {
+		return registrationNo;
+	}
+	public void setRegistrationNo(String registrationNo) {
+		this.registrationNo = registrationNo;
+	}
+	public String getePNo() {
+		return ePNo;
+	}
+	public void setePNo(String ePNo) {
+		this.ePNo = ePNo;
+	}
+	public String getApplicationNo() {
+		return applicationNo;
+	}
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+	}	
 	public String getUserId() {
 		return userId;
 	}
@@ -473,17 +730,21 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public List<SelectItem> retriveModuleList() {
 		moduleList = new ArrayList<SelectItem>();		
 		SelectItem selectItem= new SelectItem();
-		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SUP_SEL_TTL));
+		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
 		selectItem.setValue(ModuleCodeConst.SUPPLIER_SELECTION);
 		moduleList.add(selectItem);			
 		SelectItem selectItem1= new SelectItem();
-		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_CAT_MGT_TTL));
+		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_CM_TTL));
 		selectItem1.setValue(ModuleCodeConst.CATALOGUE_MANAGEMENT);
 		moduleList.add(selectItem1);			
 		SelectItem selectItem2= new SelectItem();
 		selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_FL_TTL));
 		selectItem2.setValue(ModuleCodeConst.ORDER_FULFILLMENT);
-		moduleList.add(selectItem2);		
+		moduleList.add(selectItem2);
+		SelectItem selectItem3= new SelectItem();
+		selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SM_TTL));
+		selectItem3.setValue(ModuleCodeConst.SUPPLIER_MANAGEMENT);
+		moduleList.add(selectItem3);
 		checkVariableValueExist();
 		return moduleList;
 	}
@@ -504,6 +765,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				retriveReportListByCMModule();			
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				retriveReportListByFLModule();
+			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+				retriveReportListBySMModule();
 			}
 		}		
 		getManagedBean().setReportList(reportList);		
@@ -557,10 +820,306 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					authoriztionList.add(RoleCode.BPK_CCA.toString());
 				}else if(RoleCode.BPK_PCA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
 					authoriztionList.add(RoleCode.BPK_PCA.toString());
-				}				
+				}else if(ReportConst.UPS_SDO.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SDO.toString());
+				}else if(ReportConst.UPS_SDO_HQ.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SDO_HQ.toString());
+				}else if(ReportConst.UPS_SDO_SA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SDO_SA.toString());
+				}else if(ReportConst.UPS_SDO_SK.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SDO_SK.toString());
+				}else if(RoleCode.UPS_ADMIN.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(RoleCode.UPS_ADMIN.toString());
+				}else if(ReportConst.UPS_PO.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_PO.toString());
+				}else if(ReportConst.UPS_PO_HQ.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_PO_HQ.toString());
+				}else if(ReportConst.UPS_PO_SA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_PO_SA.toString());
+				}else if(ReportConst.UPS_PO_SK.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_PO_SK.toString());
+				}else if(RoleCode.BPK_ADMIN.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(RoleCode.BPK_ADMIN.toString());
+				}else if(RoleCode.EP_ADMIN.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(RoleCode.EP_ADMIN.toString());
+				}else if(ReportConst.AGENCY.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.AGENCY.toString());
+				}else if(ReportConst.EP_COORDINATOR.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.EP_COORDINATOR.toString());
+				}else if(ReportConst.UPS_SVC_HQ.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVC_HQ.toString());
+				}else if(ReportConst.UPS_SVC_SA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVC_SA.toString());
+				}else if(ReportConst.UPS_SVC_SK.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVC_SK.toString());
+				}else if(ReportConst.UPS_SVC.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVC.toString());
+				}else if(ReportConst.UPS_SVO_HQ.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVO_HQ.toString());
+				}else if(ReportConst.UPS_SVO_SA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVO_SA.toString());
+				}else if(ReportConst.UPS_SVO_SK.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVO_SK.toString());
+				}else if(ReportConst.UPS_SVO.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.UPS_SVO.toString());
+				}else if(ReportConst.DISC_SECRETARY_HQ.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.DISC_SECRETARY_HQ.toString());
+				}else if(ReportConst.DISC_SECRETARY_SA.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.DISC_SECRETARY_SA.toString());
+				}else if(ReportConst.DISC_SECRETARY_SK.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.DISC_SECRETARY_SK.toString());
+				}else if(ReportConst.DISC_SECRETARY.toString().equalsIgnoreCase(pmRoleDesc.getPmRole().getRoleCode())) {					
+					authoriztionList.add(ReportConst.DISC_SECRETARY.toString());
+				}
 			}			
 		}		
 		return authoriztionList;
+	}
+	/*
+	 *Retrieve report list by SM module 
+	 */
+	public void retriveReportListBySMModule() {
+		reportList=new ArrayList<SelectItem>();		
+		//if((authoriztionList.contains(ReportConst.UPS_SDO.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SK.toString()))||(authoriztionList.contains(RoleCode.UPS_ADMIN.toString()))){
+			SelectItem selectItem1= new SelectItem();		
+			selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_APP_RPT_NAME));
+			selectItem1.setValue(ReportConst.SM_LST_OF_APP_RPT_VAL);
+			reportList.add(selectItem1);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_SDO.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SK.toString()))){
+			SelectItem selectItem2= new SelectItem();
+			selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_NAME));
+			selectItem2.setValue(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL);
+			reportList.add(selectItem2);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem3= new SelectItem();
+			selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME));
+			selectItem3.setValue(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL);
+			reportList.add(selectItem3);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))||(authoriztionList.contains(ReportConst.AGENCY.toString()))||(authoriztionList.contains(ReportConst.EP_COORDINATOR.toString()))){
+			SelectItem selectItem4= new SelectItem();
+			selectItem4.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME));
+			selectItem4.setValue(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL);
+			reportList.add(selectItem4);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))){
+			SelectItem selectItem5= new SelectItem();
+			selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME));
+			selectItem5.setValue(ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL);
+			reportList.add(selectItem5);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))){
+			SelectItem selectItem6= new SelectItem();
+			selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME));
+			selectItem6.setValue(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL);
+			reportList.add(selectItem6);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem7= new SelectItem();
+			selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_NAME));
+			selectItem7.setValue(ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_VAL);
+			reportList.add(selectItem7);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))){
+			SelectItem selectItem8= new SelectItem();
+			selectItem8.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_NAME));
+			selectItem8.setValue(ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_VAL);
+			reportList.add(selectItem8);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem9= new SelectItem();
+			selectItem9.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_NAME));
+			selectItem9.setValue(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL);
+			reportList.add(selectItem9);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))){
+			SelectItem selectItem10= new SelectItem();
+			selectItem10.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_NAME));
+			selectItem10.setValue(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL);
+			reportList.add(selectItem10);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))){
+			SelectItem selectItem11= new SelectItem();
+			selectItem11.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_NAME));
+			selectItem11.setValue(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL);
+			reportList.add(selectItem11);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem12= new SelectItem();
+			selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_NAME));
+			selectItem12.setValue(ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL);
+			reportList.add(selectItem12);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_COORDINATOR.toString()))){
+			SelectItem selectItem13= new SelectItem();
+			selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_RPT_NAME));
+			selectItem13.setValue(ReportConst.SM_CAT_STATIC_RPT_VAL);
+			reportList.add(selectItem13);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem14= new SelectItem();
+			selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_NAME));
+			selectItem14.setValue(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL);
+			reportList.add(selectItem14);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem15= new SelectItem();
+			selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_NAME));
+			selectItem15.setValue(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL);
+			reportList.add(selectItem15);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem16= new SelectItem();
+			selectItem16.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERIFY_RPT_NAME));
+			selectItem16.setValue(ReportConst.SM_APPL_VERIFY_RPT_VAL);
+			reportList.add(selectItem16);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))){
+			SelectItem selectItem17= new SelectItem();
+			selectItem17.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_APPL_APPROVED_RPT_NAME));
+			selectItem17.setValue(ReportConst.SM_APPL_APPROVED_RPT_VAL);
+			reportList.add(selectItem17);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))){
+			SelectItem selectItem18= new SelectItem();
+			selectItem18.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_APPL_REJECTED_RPT_NAME));
+			selectItem18.setValue(ReportConst.SM_APPL_REJECTED_RPT_VAL);
+			reportList.add(selectItem18);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(ReportConst.UPS_SVC.toString()))||(authoriztionList.contains(ReportConst.UPS_SVC_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_SVC_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_SVC_SK.toString()))||(authoriztionList.contains(ReportConst.UPS_SVO.toString()))||(authoriztionList.contains(ReportConst.UPS_SVO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_SVO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_SVO_SK.toString()))){
+			SelectItem selectItem19= new SelectItem();
+			selectItem19.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_NAME));
+			selectItem19.setValue(ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_VAL);
+			reportList.add(selectItem19);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))){
+			SelectItem selectItem20= new SelectItem();
+			selectItem20.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_NAME));
+			selectItem20.setValue(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL);
+			reportList.add(selectItem20);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem21= new SelectItem();
+			selectItem21.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_PRE_EXP_COMP_RPT_NAME));
+			selectItem21.setValue(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL);
+			reportList.add(selectItem21);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_ADMIN.toString()))){
+			SelectItem selectItem22= new SelectItem();
+			selectItem22.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_MONTH_WISE_RPT_NAME));
+			selectItem22.setValue(ReportConst.SM_LST_MONTH_WISE_RPT_VAL);
+			reportList.add(selectItem22);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))){
+			SelectItem selectItem23= new SelectItem();
+			selectItem23.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_NAME));
+			selectItem23.setValue(ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_VAL);
+			reportList.add(selectItem23);
+		//}
+		//if((authoriztionList.contains(ReportConst.APPROVER.toString()))){
+			SelectItem selectItem24= new SelectItem();
+			selectItem24.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_NAME));
+			selectItem24.setValue(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL);
+			reportList.add(selectItem24);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_SDO.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_SDO_SK.toString()))||(authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem25= new SelectItem();
+			selectItem25.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMP_ADDR_RPT_NAME));
+			selectItem25.setValue(ReportConst.SM_LST_COMP_ADDR_RPT_VAL);
+			reportList.add(selectItem25);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem26= new SelectItem();
+			selectItem26.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_NAME));
+			selectItem26.setValue(ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL);
+			reportList.add(selectItem26);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))||(authoriztionList.contains(ReportConst.EP_COORDINATOR.toString()))){
+			SelectItem selectItem27= new SelectItem();
+			selectItem27.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_SUPPL_STAT_RPT_NAME));
+			selectItem27.setValue(ReportConst.SM_SUPPL_STAT_RPT_VAL);
+			reportList.add(selectItem27);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem28= new SelectItem();
+			selectItem28.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_BPK_USER_PROF_RPT_NAME));
+			selectItem28.setValue(ReportConst.SM_BPK_USER_PROF_RPT_VAL);
+			reportList.add(selectItem28);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem29= new SelectItem();
+			selectItem29.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_BPK_ADMIN_PROF_RPT_NAME));
+			selectItem29.setValue(ReportConst.SM_BPK_ADMIN_PROF_RPT_VAL);
+			reportList.add(selectItem29);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem30= new SelectItem();
+			selectItem30.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_NAME));
+			selectItem30.setValue(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_VAL);
+			reportList.add(selectItem30);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem31= new SelectItem();
+			selectItem31.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_AGENCY_STAT_SUMM_RPT_NAME));
+			selectItem31.setValue(ReportConst.SM_AGENCY_STAT_SUMM_RPT_VAL);
+			reportList.add(selectItem31);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem32= new SelectItem();
+			selectItem32.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_QUESTIONAIRE_RPT_NAME));
+			selectItem32.setValue(ReportConst.SM_QUESTIONAIRE_RPT_VAL);
+			reportList.add(selectItem32);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem33= new SelectItem();
+			selectItem33.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_NAME));
+			selectItem33.setValue(ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_VAL);
+			reportList.add(selectItem33);
+		//}
+		//if((authoriztionList.contains(ReportConst.EP_ADMIN.toString()))){
+			SelectItem selectItem34= new SelectItem();
+			selectItem34.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_NAME));
+			selectItem34.setValue(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL);
+			reportList.add(selectItem34);
+		//}
+		//if((authoriztionList.contains(ReportConst.BPK_ADMIN.toString()))){
+			SelectItem selectItem35= new SelectItem();
+			selectItem35.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_NAME));
+			selectItem35.setValue(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL);
+			reportList.add(selectItem35);
+		//}
+		//if((authoriztionList.contains(ReportConst.UPS_PO.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_HQ.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SA.toString()))||(authoriztionList.contains(ReportConst.UPS_PO_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.EP_ADMIN.toString()))){
+			SelectItem selectItem36= new SelectItem();
+			selectItem36.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME));
+			selectItem36.setValue(ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL);
+			reportList.add(selectItem36);
+		//}
+		//if((authoriztionList.contains(ReportConst.DISC_SECRETARY.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_HQ.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_SA.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_SK.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))){
+			SelectItem selectItem37= new SelectItem();
+			selectItem37.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME));
+			selectItem37.setValue(ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL);
+			reportList.add(selectItem37);
+		//}
+		//if((authoriztionList.contains(ReportConst.DISC_SECRETARY.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_HQ.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_SA.toString()))||(authoriztionList.contains(ReportConst.DISC_SECRETARY_SK.toString()))){
+			SelectItem selectItem38= new SelectItem();
+			selectItem38.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME));
+			selectItem38.setValue(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL);
+			reportList.add(selectItem38);
+		//}
+		//if(){
+			SelectItem selectItem39= new SelectItem();
+			selectItem39.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME));
+			selectItem39.setValue(ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL);
+			reportList.add(selectItem39);
+		//}
+		//if(){
+			SelectItem selectItem40= new SelectItem();
+			selectItem40.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_LST_CONTACT_PERSON_RPT_NAME));
+			selectItem40.setValue(ReportConst.SM_LST_CONTACT_PERSON_RPT_VAL);
+			reportList.add(selectItem40);
+		//}
 	}
 	/*
 	 *Retrieve report list by SC module 
@@ -713,480 +1272,480 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void retriveReportListByCMModule() {
 		reportList=new ArrayList<SelectItem>();		
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem= new SelectItem();		
 				selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PUB_CAT_ITM_RPT_NAME));
 				selectItem.setValue(ReportConst.LST_PUB_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem1= new SelectItem();
 				selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_APPR_CAT_ITM_RPT_NAME));
 				selectItem1.setValue(ReportConst.LST_APPR_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem1);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem2= new SelectItem();
 				selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_REJ_CAT_ITM_RPT_NAME));
 				selectItem2.setValue(ReportConst.LST_REJ_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem2);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem3= new SelectItem();
 				selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_NAME));
 				selectItem3.setValue(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem3);			
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem4= new SelectItem();
 				selectItem4.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_EXP_CAT_ITM_RPT_NAME));
 				selectItem4.setValue(ReportConst.LST_EXP_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem4);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem5= new SelectItem();
 				selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_STS_RPT_NAME));
 				selectItem5.setValue(ReportConst.TOT_CAT_ITM_STS_RPT_VAL);
 				reportList.add(selectItem5);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem6= new SelectItem();
 				selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_NAME));
 				selectItem6.setValue(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL);
 				reportList.add(selectItem6);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem7= new SelectItem();
 				selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_STD_PRC_RPT_NAME));
 				selectItem7.setValue(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL);
 				reportList.add(selectItem7);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem8= new SelectItem();
 				selectItem8.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_NAME));
 				selectItem8.setValue(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL);
 				reportList.add(selectItem8);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem9= new SelectItem();
 				selectItem9.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_NAME));
 				selectItem9.setValue(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL);
 				reportList.add(selectItem9);
-			}
-			if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem10= new SelectItem();
 				selectItem10.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_NAME));
 				selectItem10.setValue(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL);
 				reportList.add(selectItem10);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem11= new SelectItem();
 				selectItem11.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_NAME));
 				selectItem11.setValue(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL);
 				reportList.add(selectItem11);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem12= new SelectItem();
 				selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.SUM_REJ_CAT_ITM_RPT_NAME));
 				selectItem12.setValue(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL);
 				reportList.add(selectItem12);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
 				SelectItem selectItem13= new SelectItem();
 				selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_NAME));
 				selectItem13.setValue(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL);
 				reportList.add(selectItem13);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
 				SelectItem selectItem14= new SelectItem();
 				selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME));
 				selectItem14.setValue(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL);
 				reportList.add(selectItem14);
-			}
-			if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))||(authoriztionList.contains(RoleCode.CD_COMMITTEE.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))||(authoriztionList.contains(RoleCode.CD_COMMITTEE.toString()))){
 				SelectItem selectItem15= new SelectItem();
 				selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_NAME));
 				selectItem15.setValue(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL);
 				reportList.add(selectItem15);
-			}
-			if((authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
+			//}
+			//if((authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
 				SelectItem selectItem16= new SelectItem();
 				selectItem16.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
 				selectItem16.setValue(ReportConst.LST_ITM_CODE_RPT_VAL);
 				reportList.add(selectItem16);
-			}	 
+			//}	 
 	}	
 	/*
 	 * Retrieve report list by FL module
 	 */
 	public void retriveReportListByFLModule() {
 		reportList=new ArrayList<SelectItem>();
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
 			SelectItem selectItem1= new SelectItem();
 			selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_MIN_NAME));
 			selectItem1.setValue(ReportConst.CON_REQ_RPT_MIN_VAL);
 			reportList.add(selectItem1);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
 			SelectItem selectItem2= new SelectItem();
 			selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_ORD_RPT_MIN_NAME));
 			selectItem2.setValue(ReportConst.CON_ORD_RPT_MIN_VAL);
 			reportList.add(selectItem2);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){			
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){			
 			SelectItem selectItem3= new SelectItem();
 			selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_MIN_NAME));
 			selectItem3.setValue(ReportConst.DEL_ORD_RPT_MIN_VAL);
 			reportList.add(selectItem3);			
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem4= new SelectItem();
 			selectItem4.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_MIN_NAME));
 			selectItem4.setValue(ReportConst.FL_REC_NOTE_RPT_MIN_VAL);
 			reportList.add(selectItem4);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
 			SelectItem selectItem5= new SelectItem();
 			selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_MIN_NAME));
 			selectItem5.setValue(ReportConst.LATE_DEL_RPT_MIN_VAL);
 			reportList.add(selectItem5);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){		
 			SelectItem selectItem6= new SelectItem();
 			selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_MIN_NAME));
 			selectItem6.setValue(ReportConst.DEL_ORD_REJ_RPT_MIN_VAL);
 			reportList.add(selectItem6);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem7= new SelectItem();
 			selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.SHP_INSTR_RPT_MIN_NAME));
 			selectItem7.setValue(ReportConst.SHP_INSTR_RPT_MIN_VAL);
 			reportList.add(selectItem7);
-		}	
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem8= new SelectItem();
 			selectItem8.setLabel(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_MIN_NAME));
 			selectItem8.setValue(ReportConst.STP_INSTR_DEL_RPT_MIN_VAL);
 			reportList.add(selectItem8);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
 			SelectItem selectItem9= new SelectItem();
 			selectItem9.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_MIN_NAME));
 			selectItem9.setValue(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL);
 			reportList.add(selectItem9);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem10= new SelectItem();
 			selectItem10.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_MIN_NAME));
 			selectItem10.setValue(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL);
 			reportList.add(selectItem10);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem11= new SelectItem();
 			selectItem11.setLabel(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_MIN_NAME));
 			selectItem11.setValue(ReportConst.PYMT_MATCH_RPT_MIN_VAL);
 			reportList.add(selectItem11);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem12= new SelectItem();
 			selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.DED_RPT_MIN_NAME));
 			selectItem12.setValue(ReportConst.DED_RPT_MIN_VAL);
 			reportList.add(selectItem12);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))){
 			SelectItem selectItem13= new SelectItem();
 			selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_REQ_CANC_RPT_MIN_NAME));
 			selectItem13.setValue(ReportConst.CON_REQ_CANC_RPT_MIN_VAL);
 			reportList.add(selectItem13);
-		}	
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem14= new SelectItem();
 			selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_ORD_CANC_RPT_MIN_NAME));
 			selectItem14.setValue(ReportConst.CON_ORD_CANC_RPT_MIN_VAL);
 		    reportList.add(selectItem14);
-		}	
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}	
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem15= new SelectItem();
 			selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_MIN_NAME));
 			selectItem15.setValue(ReportConst.DEL_ORD_CANC_RPT_MIN_VAL);
 			reportList.add(selectItem15);
-		}
-		if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem16= new SelectItem();
 			selectItem16.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_NAME));
 			selectItem16.setValue(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL);
 			reportList.add(selectItem16);
-		}	
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem17= new SelectItem();
 			selectItem17.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_MIN_NAME));
 			selectItem17.setValue(ReportConst.INV_CANC_RPT_MIN_VAL);
 			reportList.add(selectItem17);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem18= new SelectItem();
 			selectItem18.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_MIN_NAME));
 			selectItem18.setValue(ReportConst.YEP_RPT_MIN_VAL);
 			reportList.add(selectItem18);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem19= new SelectItem();
 			selectItem19.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_MIN_NAME));
 			selectItem19.setValue(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_MIN_VAL);
 			reportList.add(selectItem19);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))){
 			SelectItem selectItem20= new SelectItem();
 			selectItem20.setLabel(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_MIN_NAME));
 			selectItem20.setValue(ReportConst.SUP_PERF_RPT_MIN_VAL);
 			reportList.add(selectItem20);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem21= new SelectItem();
 			selectItem21.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_CEN_PEN_NAME));
 			selectItem21.setValue(ReportConst.CON_REQ_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem21);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem22= new SelectItem();
 			selectItem22.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_ORD_RPT_CEN_PEN_NAME));
 			selectItem22.setValue(ReportConst.CON_ORD_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem22);
-		}	
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem23= new SelectItem();
 			selectItem23.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_CEN_PEN_NAME));
 			selectItem23.setValue(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem23);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem24= new SelectItem();
 			selectItem24.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_NAME));
 			selectItem24.setValue(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem24);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem25= new SelectItem();
 			selectItem25.setLabel(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_CEN_PEN_NAME));
 			selectItem25.setValue(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem25);
-		}	
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem26= new SelectItem();
 			selectItem26.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_CEN_PEN_NAME));
 			selectItem26.setValue(ReportConst.DEL_ORD_REJ_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem26);
-		}	
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.MIN_CONTRACT_ADMIN.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem27= new SelectItem();
 			selectItem27.setLabel(CommonMethod.getMessageCommon(ReportConst.SHP_INSTR_RPT_CEN_PEN_NAME));
 			selectItem27.setValue(ReportConst.SHP_INSTR_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem27);
-		}
-		if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem28= new SelectItem();
 			selectItem28.setLabel(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_NAME));
 			selectItem28.setValue(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem28);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
 			SelectItem selectItem29= new SelectItem();
 			selectItem29.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_NAME));
 			selectItem29.setValue(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL);
 			reportList.add(selectItem29);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem30= new SelectItem();
 			selectItem30.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_NAME));
 			selectItem30.setValue(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL);
 			reportList.add(selectItem30);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem31= new SelectItem();
 			selectItem31.setLabel(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_CEN_PEN_NAME));
 			selectItem31.setValue(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem31);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem32= new SelectItem();
 			selectItem32.setLabel(CommonMethod.getMessageCommon(ReportConst.DED_RPT_CEN_PEN_NAME));
 			selectItem32.setValue(ReportConst.DED_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem32);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem33= new SelectItem();
 			selectItem33.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_NAME));
 			selectItem33.setValue(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem33);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem34= new SelectItem();
 			selectItem34.setLabel(CommonMethod.getMessageCommon(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_NAME));
 			selectItem34.setValue(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem34);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem35= new SelectItem();
 			selectItem35.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_NAME));
 			selectItem35.setValue(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem35);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem36= new SelectItem();
 			selectItem36.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_NAME));
 			selectItem36.setValue(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem36);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem37= new SelectItem();
 			selectItem37.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_CEN_PEN_NAME));
 			selectItem37.setValue(ReportConst.INV_CANC_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem37);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem38= new SelectItem();
 			selectItem38.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_CEN_PEN_NAME));
 			selectItem38.setValue(ReportConst.YEP_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem38);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem39= new SelectItem();
 			selectItem39.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_NAME));
 			selectItem39.setValue(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem39);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem40= new SelectItem();
 			selectItem40.setLabel(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_CEN_PEN_NAME));
 			selectItem40.setValue(ReportConst.SUP_PERF_RPT_CEN_PEN_VAL);
 			reportList.add(selectItem40);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem41= new SelectItem();
 			selectItem41.setLabel(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_RPT_PO_NAME));
 			selectItem41.setValue(ReportConst.PUR_REQ_RPT_PO_VAL);
 			reportList.add(selectItem41);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem42= new SelectItem();
 			selectItem42.setLabel(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_RPT_PO_NAME));
 			selectItem42.setValue(ReportConst.PUR_ORD_RPT_PO_VAL);
 			reportList.add(selectItem42);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem43= new SelectItem();
 			selectItem43.setLabel(CommonMethod.getMessageCommon(ReportConst.EMR_PROCUR_RPT_PO_NAME));
 			selectItem43.setValue(ReportConst.EMR_PROCUR_RPT_PO_VAL);
 			reportList.add(selectItem43);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem44= new SelectItem();
 			selectItem44.setLabel(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_REJ_RPT_PO_NAME));
 			selectItem44.setValue(ReportConst.PUR_ORD_REJ_RPT_PO_VAL);
 			reportList.add(selectItem44);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem45= new SelectItem();
 			selectItem45.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_PO_NAME));
 			selectItem45.setValue(ReportConst.DEL_ORD_RPT_PO_VAL);
 			reportList.add(selectItem45);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem46= new SelectItem();
 			selectItem46.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_PO_NAME));
 			selectItem46.setValue(ReportConst.FL_REC_NOTE_RPT_PO_VAL);
 			reportList.add(selectItem46);
-		}
-		if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem47= new SelectItem();
 			selectItem47.setLabel(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_PO_NAME));
 			selectItem47.setValue(ReportConst.LATE_DEL_RPT_PO_VAL);
 			reportList.add(selectItem47);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem48= new SelectItem();
 			selectItem48.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_PO_NAME));
 			selectItem48.setValue(ReportConst.DEL_ORD_REJ_RPT_PO_VAL);
 			reportList.add(selectItem48);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem49= new SelectItem();
 			selectItem49.setLabel(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_PO_NAME));
 			selectItem49.setValue(ReportConst.STP_INSTR_DEL_RPT_PO_VAL);
 			reportList.add(selectItem49);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))){
 			SelectItem selectItem50= new SelectItem();
 			selectItem50.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_PO_NAME));
 			selectItem50.setValue(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL);
 			reportList.add(selectItem50);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem51= new SelectItem();
 			selectItem51.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_PO_NAME));
 			selectItem51.setValue(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL);
 			reportList.add(selectItem51);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem52= new SelectItem();
 			selectItem52.setLabel(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_PO_NAME));
 			selectItem52.setValue(ReportConst.PYMT_MATCH_RPT_PO_VAL);
 			reportList.add(selectItem52);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem53= new SelectItem();
 			selectItem53.setLabel(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_CANC_RPT_PO_NAME));
 			selectItem53.setValue(ReportConst.PUR_REQ_CANC_RPT_PO_VAL);
 			reportList.add(selectItem53);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem54= new SelectItem();
 			selectItem54.setLabel(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_CANC_RPT_PO_NAME));
 			selectItem54.setValue(ReportConst.PUR_ORD_CANC_RPT_PO_VAL);
 			reportList.add(selectItem54);
-		}
-		if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem55= new SelectItem();
 			selectItem55.setLabel(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_PO_NAME));
 			selectItem55.setValue(ReportConst.DEL_ORD_CANC_RPT_PO_VAL);
 			reportList.add(selectItem55);
-		}
-		if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem56= new SelectItem();
 			selectItem56.setLabel(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_PO_NAME));
 			selectItem56.setValue(ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL);
 			reportList.add(selectItem56);
-		}
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem57= new SelectItem();
 			selectItem57.setLabel(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_PO_NAME));
 			selectItem57.setValue(ReportConst.INV_CANC_RPT_PO_VAL);
 			reportList.add(selectItem57);
-		}
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem58= new SelectItem();
 			selectItem58.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_PO_NAME));
 			selectItem58.setValue(ReportConst.YEP_RPT_PO_VAL);
 			reportList.add(selectItem58);
-		}	
-		if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.PAY_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem59= new SelectItem();
 			selectItem59.setLabel(CommonMethod.getMessageCommon(ReportConst.YEP_AP58A_RPT_PO_NAME));
 			selectItem59.setValue(ReportConst.YEP_AP58A_RPT_PO_VAL);
 			reportList.add(selectItem59);
-		}	
-		if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.REQUISITIONER.toString()))||(authoriztionList.contains(RoleCode.RECEIVING_OFFICER.toString()))||(authoriztionList.contains(RoleCode.APPROVER.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem60= new SelectItem();
 			selectItem60.setLabel(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_PO_NAME));
 			selectItem60.setValue(ReportConst.SUP_PERF_RPT_PO_VAL);
 			reportList.add(selectItem60);	
-		}	
-		if((authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
+		//}	
+		//if((authoriztionList.contains(RoleCode.BPK_CCA.toString()))||(authoriztionList.contains(RoleCode.BPK_PCA.toString()))){
 			SelectItem selectItem61= new SelectItem();
 			selectItem61.setLabel(CommonMethod.getMessageCommon(ReportConst.SUMM_RPT_PAN_ITM_NAME));
 			selectItem61.setValue(ReportConst.SUMM_RPT_PAN_ITM_VAL);
 			reportList.add(selectItem61);
-		}
+		//}
 	}	
 	/*
 	 *Enable  criteria variables by report name 
@@ -1202,9 +1761,324 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				criteriaVariablesByReportBySC();				
 			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){ 
 				criteriaVariablesByReportByFL();
+			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){ 
+				criteriaVariablesByReportBySM();
 			}
 			resetReportForm();
 			getManagedBean().setRptGenBean(rptGenBean);			
+		}
+	}
+	/*
+	 *Enable SM module criteria by report name 
+	 */
+	public void criteriaVariablesByReportBySM(){
+		switch (getManagedBean().getReportNameValue()) {		
+	        case ReportConst.SM_LST_OF_APP_RPT_VAL:
+	        	rptGenBean.setSupportingDocumentView(true);
+				rptGenBean.setDocStatusView(true);
+				rptGenBean.setSuppDocStatusView(true);
+				rptGenBean.setRegistrationNoView(true);
+				rptGenBean.setePNoView(true);
+				rptGenBean.setApplicationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_APP_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL:
+	        	rptGenBean.setRegistrationNoView(true);
+				rptGenBean.setePNoView(true);
+				rptGenBean.setApplicationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL:	        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMofRegNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMofRegNoFromView(true);
+	        	rptGenBean.setMofRegNoToView(true);
+	        	rptGenBean.setCompanyNameView(true);
+	        	rptGenBean.setRegistrationTypeView(true);
+	        	rptGenBean.setRegistrationStatusView(true);
+	        	rptGenBean.setPaidUpCapitalNaccumShareView(true);
+	        	rptGenBean.setCapitalNaccumView(true);
+	        	rptGenBean.setCategoryView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMofRegNoView(true);
+	        	rptGenBean.setCompanyNameView(true);	        	
+	        	rptGenBean.setRoleView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMofRegNoFromView(true);
+	        	rptGenBean.setMofRegNoToView(true);
+	        	rptGenBean.setCompanyNameView(true);	        	
+	        	rptGenBean.setProofIdentityView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMofRegNoFromView(true);
+	        	rptGenBean.setMofRegNoToView(true);
+	        	rptGenBean.setCompanyNameView(true);
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);	        	
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL:	        	
+	        	rptGenBean.setProofIdentityView(true);	        	
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL:	        	
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setApplicationStatusView(true);	
+	        	rptGenBean.setCancelledByView(true);	  
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL:	        	
+	        	rptGenBean.setPaymentTypeView(true);
+	        	rptGenBean.setSupplierView(true);
+	        	rptGenBean.setApplicationTypeView(true);	  
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_CAT_STATIC_RPT_VAL:	        	
+	        	rptGenBean.setStateView(true);
+	        	rptGenBean.setDistrictView(true);
+	        	rptGenBean.setCategoryView(true);
+	        	rptGenBean.setRegistrationStatusView(true);
+	        	rptGenBean.setNoOfCategoryView(true);
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:		        	
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
+	        	rptGenBean.setStateView(true);	        	
+	        	rptGenBean.setCategoryView(true);
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_APPL_VERIFY_RPT_VAL:		        	
+	        	rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);				
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERIFY_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_APPL_APPROVED_RPT_VAL:		        	
+	        	rptGenBean.setSupplierNameView(true);
+				rptGenBean.setMofNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_APPROVED_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_APPL_REJECTED_RPT_VAL:		        	
+	        	rptGenBean.setSupplierNameView(true);
+				rptGenBean.setMofNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_REJECTED_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_VAL:		        	
+	        	rptGenBean.setCompanyNameView(true);
+				rptGenBean.setCategoryView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:
+	        	rptGenBean.setExtraTwoColumnView(true);
+				rptGenBean.setReportTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL:	        	
+				rptGenBean.setSupplierTypeView(true);
+				rptGenBean.setCompanyNameView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PRE_EXP_COMP_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:				
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_MONTH_WISE_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_VAL:	
+	        	rptGenBean.setApplicationTypeView(true);
+	        	rptGenBean.setSupplierTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:	
+	        	rptGenBean.setRegistrationTypeView(true);
+	        	rptGenBean.setSupplierNameView(true);
+	        	rptGenBean.setMofNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_COMP_ADDR_RPT_VAL:	
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setCompApplStatusView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMP_ADDR_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:
+	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setReportTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_SUPPL_STAT_RPT_VAL:	
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setStateView(true);
+	        	rptGenBean.setDistrictView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPPL_STAT_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_BPK_USER_PROF_RPT_VAL:
+	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setZoneView(true);	        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_BPK_USER_PROF_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_BPK_ADMIN_PROF_RPT_VAL:	
+	        	rptGenBean.setExtraTwoColumnView(true);
+	        	rptGenBean.setZoneView(true);	        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_BPK_ADMIN_PROF_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_VAL:	
+	        	rptGenBean.setZoneView(true);
+	        	rptGenBean.setOrganizationTypeView(true);
+	        	rptGenBean.setKementerianView(true);
+	        	rptGenBean.setNamAgensiView(true);
+	        	rptGenBean.setCompApplStatusView(true);
+	        	rptGenBean.setCompanyStatusView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_AGENCY_STAT_SUMM_RPT_VAL:		        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_AGENCY_STAT_SUMM_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_QUESTIONAIRE_RPT_VAL:	
+	        	rptGenBean.setZoneView(true);	        	
+	        	rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setReportTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_QUESTIONAIRE_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_VAL:	        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL:	        	
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL:
+	        	rptGenBean.setZoneView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL:
+	        	rptGenBean.setRegistrationTypeView(true);
+	        	rptGenBean.setStateView(true);
+	        	rptGenBean.setDocStatusView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL:
+	        	rptGenBean.setSupplierNameView(true);
+	        	rptGenBean.setCaseNoView(true);
+	        	rptGenBean.setDocStatusView(true);
+	        	rptGenBean.setRegistrationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL:
+	        	rptGenBean.setSupplierNameView(true);
+	        	rptGenBean.setComplaintNoView(true);	        	
+	        	rptGenBean.setRegistrationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL:	        		        	
+	        	rptGenBean.setProofIdentityView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME));			
+	            break;
+	        case ReportConst.SM_LST_CONTACT_PERSON_RPT_VAL:	        		        	
+	        	rptGenBean.setePNoView(true);
+	        	rptGenBean.setMofNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);	
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_CONTACT_PERSON_RPT_NAME));			
+	            break;
+	        default:            
+	            break;
 		}
 	}
 	/*
@@ -2284,7 +3158,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void generateReport(){		
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
 			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
-				if(((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null))){				
+				if(((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null))){		
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam("reportInValid", "true");  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
@@ -2295,7 +3171,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				generateFLReport();
 			}			
-		}else{			
+		}else{	
+			RequestContext context = RequestContext.getCurrentInstance();  
+	        context.addCallbackParam("reportInValid", "true");  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
@@ -2310,12 +3188,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);	
 			}			
 			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;	
-			try {
+			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
 			} catch (IOException e) {				
 				e.printStackTrace();
-			}			
+			}	*/	
+			setGeneratedURL(url);
 			log.info(url);
 		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
 			if((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL)){				 
@@ -2360,14 +3239,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));			
 			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;	
-			try {
+			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);			
 				
 			} catch (IOException e) {
 				
 				e.printStackTrace();
-			}			
+			}*/	
+			setGeneratedURL(url);
 			log.info(url);
 		}else{
 			
@@ -2461,17 +3341,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;			
-			try {				
+			
+			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
-				
-			} catch (IOException e) {
-				
+			} catch (IOException e) {				
 				e.printStackTrace();
-			}
+			}	*/	
+			setGeneratedURL(url);
 			log.info(url);
 		}else{
-			
+			RequestContext context = RequestContext.getCurrentInstance();  
+	        context.addCallbackParam("reportInValid", "true");  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -2669,13 +3550,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(urlFLReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			
 			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-			try {
+			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
 			} catch (IOException e) {
 				
 				e.printStackTrace();
-			}
+			}*/
+			setGeneratedURL(url);
 			log.info(url);
 		}else{
 			
