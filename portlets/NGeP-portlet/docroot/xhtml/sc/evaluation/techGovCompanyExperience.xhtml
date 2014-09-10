@@ -25,17 +25,18 @@
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 		</div>
-<p:spacer height="75"></p:spacer>
+		<p:spacer height="75"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
-					<td><h:outputLabel
+					<td ><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText  disabled="true"
+					<td><p:inputText disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true" style="width:90%"
+					<td><p:inputTextarea rows="2" cols="100" disabled="true"
+							style="width:90%"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
 				</tr>
 			</table>
