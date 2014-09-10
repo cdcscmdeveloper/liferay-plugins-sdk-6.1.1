@@ -2417,18 +2417,27 @@ public class SmApplicationBackingBean extends
 	public void saveSelectedCategory() {
 		boolean validCat = true;
 		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
-				&& getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Id() != null ) {
-			for(PmCategoryL1 catL1 : getManagedBean().getSupplierParentCatList()){
-				if(catL1.getCategoryL1Id().equals(getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Id())){
-					getManagedBean().getSelectedCategory().setPmCategoryL1(catL1);
+				&& getManagedBean().getSelectedCategory().getPmCategoryL1()
+						.getCategoryL1Id() != null) {
+			for (PmCategoryL1 catL1 : getManagedBean()
+					.getSupplierParentCatList()) {
+				if (catL1.getCategoryL1Id().equals(
+						getManagedBean().getSelectedCategory()
+								.getPmCategoryL1().getCategoryL1Id())) {
+					getManagedBean().getSelectedCategory().setPmCategoryL1(
+							catL1);
 					break;
 				}
 			}
-			if(getManagedBean().getSelectedCategory().getPmCategoryL1().getCategoryL1Code()!= null && getManagedBean().getSelectedCategory().getPmCategoryL1()
-						.getCategoryL1Code()
-						.equalsIgnoreCase(
-								SupplierManagementConst.ICT_CATEGORY_L1_CODE)){
-			validCat = validateIctCatCode();
+			if (getManagedBean().getSelectedCategory().getPmCategoryL1()
+					.getCategoryL1Code() != null
+					&& getManagedBean()
+							.getSelectedCategory()
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equalsIgnoreCase(
+									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
+				validCat = validateIctCatCode();
 			}
 		}
 		validCat = validL3CategoryCode(getManagedBean().getSelectedCategory()
@@ -6808,327 +6817,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void calcPersonnelListCount() {
-		resetAllPersonnelCount();
+		SmPersonnleCalcVO calcVO = SmCommonUtil.calcPersonnelListCount(
+				getManagedBean().getSmAppl().getSmPersonnels(),
+				getManagedBean().getSmAppl().getSmStaffTotals(),
+				getManagedBean().getSmAppl().getSupplierType());
+		getManagedBean().setPersonCalc(calcVO);
 		getManagedBean().setValidSmUserLimit(validatePersonLimit());
-		for (SmPersonnel per : getManagedBean().getSmAppl().getSmPersonnels()) {
-			calcSumUpByPersonnel(per);
-		}
-		calcuteStaffSubTotalSummary();
-	}
-
-	private void calcSumUpByPersonnel(SmPersonnel per) {
-		per.setRoleName("");
-		if (per.getPmCountry() != null
-				&& per.getPmCountry().getCountryId() != null) {
-			if (per.getPmCountry().getCountryCode() == null
-					|| (per.getPmCountry().getCountryCode() != null && per
-							.getPmCountry().getCountryCode()
-							.equalsIgnoreCase(""))) {
-				per.setPmCountry(retrievePmCountryById(per.getPmCountry()
-						.getCountryId()));
-			}
-		}
-
-		StringBuffer sb = new StringBuffer();
-		if (per.isEquityOwner()) {
-			sb.append(SupplierManagementConst.PERSONNEL_EQUI_OWNER).append(",");
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getEquiOwnrBumiCnt(), getManagedBean().getPersonCalc()
-					.getEquiOwnrNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getEquiOwnrFrgCnt());
-			getManagedBean().getPersonCalc().setEquiOwnrBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setEquiOwnrNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setEquiOwnrFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-		if (per.isDirector()) {
-			// setDirectorCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_DIR_ROLENAME).append(
-					",");
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getBodBumiCnt(), getManagedBean().getPersonCalc()
-					.getBodNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getBodFrgCnt());
-			getManagedBean().getPersonCalc().setBodBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setBodNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setBodFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-		if (per.isHigherManagement()) {
-			// setHigherMngmtCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_HGHR_ROLENAME).append(
-					",");
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getHghMngBumiCnt(), getManagedBean().getPersonCalc()
-					.getHghMngNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getHghMngFrgCnt());
-			getManagedBean().getPersonCalc().setHghMngBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setHghMngNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setHghMngFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-		if (per.isClerical()) {
-			// staff
-			// setStaffEnteredCount(per);
-			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-				sb.append(
-						SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME)
-						.append(",");
-			} else {
-				sb.append(SupplierManagementConst.PERSONNEL_STAFF_ROLENAME)
-						.append(",");
-			}
-
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getStfBumiEnterCnt(), getManagedBean().getPersonCalc()
-					.getStfNonBumiEnterCnt(), getManagedBean().getPersonCalc()
-					.getStfFrgEnterCnt());
-			getManagedBean().getPersonCalc().setStfBumiEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setStfNonBumiEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setStfFrgEnterCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-		if (per.isManagement()) {
-			// management
-			// setManagementCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME)
-					.append(",");
-			setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-					.getMngtBumiCnt(), getManagedBean().getPersonCalc()
-					.getMngtNonBumiCnt(), getManagedBean().getPersonCalc()
-					.getMngtFrgCnt());
-			getManagedBean().getPersonCalc().setMngtBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getBumiCount());
-			getManagedBean().getPersonCalc().setMngtNonBumiCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getNonBumiCount());
-			getManagedBean().getPersonCalc().setMngtFrgCnt(
-					getManagedBean().getPersonCalc().getSummaryCountVO()
-							.getFrgCount());
-		}
-		if (getManagedBean().getSmAppl().getSupplierType()
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			if (per.isProf()) {
-				// prof
-				// setProfEnteredCount(per);
-				sb.append(SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME)
-						.append(",");
-				setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-						.getProfBumiEnterCnt(), getManagedBean()
-						.getPersonCalc().getProfNonBumiEnterCnt(),
-						getManagedBean().getPersonCalc().getProfFrgEnterCnt());
-				getManagedBean().getPersonCalc().setProfBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getBumiCount());
-				getManagedBean().getPersonCalc().setProfNonBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getNonBumiCount());
-				getManagedBean().getPersonCalc().setProfFrgEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getFrgCount());
-
-			}
-			if (per.isSemiProf()) {
-				// semi
-				// setSemiProfEnteredCount(per);
-				sb.append(
-						SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME)
-						.append(",");
-				setPersonnelCountSummary(per, getManagedBean().getPersonCalc()
-						.getSemiBumiEnterCnt(), getManagedBean()
-						.getPersonCalc().getSemiNonBumiEnterCnt(),
-						getManagedBean().getPersonCalc().getSemiFrgEnterCnt());
-				getManagedBean().getPersonCalc().setSemiBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getBumiCount());
-				getManagedBean().getPersonCalc().setSemiNonBumiEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getNonBumiCount());
-				getManagedBean().getPersonCalc().setSemiFrgEnterCnt(
-						getManagedBean().getPersonCalc().getSummaryCountVO()
-								.getFrgCount());
-			}
-		}
-		if (!sb.toString().isEmpty() && sb.toString().length() > 0) {
-			per.setRoleName(sb.toString().substring(0,
-					sb.toString().length() - 1));
-		}
-		sb = null;
-
-	}
-
-	private void calcuteStaffSubTotalSummary() {
-		getManagedBean().getPersonCalc().setEquityOwnerTotalCnt(
-				getManagedBean().getPersonCalc().getEquiOwnrBumiCnt()
-						+ getManagedBean().getPersonCalc()
-								.getEquiOwnrNonBumiCnt()
-						+ getManagedBean().getPersonCalc().getEquiOwnrFrgCnt());
-		getManagedBean().getPersonCalc().setBodTotalCnt(
-				getManagedBean().getPersonCalc().getBodBumiCnt()
-						+ getManagedBean().getPersonCalc().getBodNonBumiCnt()
-						+ getManagedBean().getPersonCalc().getBodFrgCnt());
-		getManagedBean().getPersonCalc().setHghrMngmtTotalCnt(
-				getManagedBean().getPersonCalc().getHghMngBumiCnt()
-						+ getManagedBean().getPersonCalc()
-								.getHghMngNonBumiCnt()
-						+ getManagedBean().getPersonCalc().getHghMngFrgCnt());
-		getManagedBean().getPersonCalc().setMngmtTotalCnt(
-				getManagedBean().getPersonCalc().getMngtBumiCnt()
-						+ getManagedBean().getPersonCalc().getMngtNonBumiCnt()
-						+ getManagedBean().getPersonCalc().getMngtFrgCnt());
-		getManagedBean().getPersonCalc().setStfTotalCnt(
-				getManagedBean().getPersonCalc().getStfBumiEnterCnt()
-						+ getManagedBean().getPersonCalc()
-								.getStfNonBumiEnterCnt()
-						+ getManagedBean().getPersonCalc().getStfFrgEnterCnt());
-		getManagedBean().getPersonCalc()
-				.setSemiTotalCnt(
-						getManagedBean().getPersonCalc().getSemiBumiEnterCnt()
-								+ getManagedBean().getPersonCalc()
-										.getSemiNonBumiEnterCnt()
-								+ getManagedBean().getPersonCalc()
-										.getSemiFrgEnterCnt());
-		getManagedBean().getPersonCalc()
-				.setProfTotalCnt(
-						getManagedBean().getPersonCalc().getProfBumiEnterCnt()
-								+ getManagedBean().getPersonCalc()
-										.getProfNonBumiEnterCnt()
-								+ getManagedBean().getPersonCalc()
-										.getProfFrgEnterCnt());
 	}
 
 	private void calculateBumiPercentageTotals() {
-		calcuteStaffSubTotalSummary();
-		getManagedBean().getPersonCalc().setTotalStaffEntered(
-				getManagedBean().getPersonCalc().getBodTotalCnt()
-						+ getManagedBean().getPersonCalc()
-								.getHghrMngmtTotalCnt()
-						+ getManagedBean().getPersonCalc().getMngmtTotalCnt()
-						+ getManagedBean().getPersonCalc().getStfTotalCnt()
-						+ getManagedBean().getPersonCalc().getSemiTotalCnt()
-						+ getManagedBean().getPersonCalc().getProfTotalCnt());
-		getManagedBean().getPersonCalc().setTotalKeyRolesEntered(
-				getManagedBean().getPersonCalc().getBodTotalCnt()
-						+ getManagedBean().getPersonCalc()
-								.getHghrMngmtTotalCnt()
-						+ getManagedBean().getPersonCalc().getMngmtTotalCnt());
-
-		int stfBumiTotal = getManagedBean().getPersonCalc().getBodBumiCnt()
-				+ getManagedBean().getPersonCalc().getHghMngBumiCnt()
-				+ getManagedBean().getPersonCalc().getMngtBumiCnt()
-				+ getManagedBean().getPersonCalc().getStfBumiEnterCnt()
-				+ getManagedBean().getPersonCalc().getSemiBumiEnterCnt()
-				+ getManagedBean().getPersonCalc().getProfBumiEnterCnt();
-
-		BigDecimal mul = new BigDecimal(100);
-		BigDecimal halfBumi = new BigDecimal(51);
-		if (getManagedBean().getPersonCalc().getTotalStaffEntered() > 0) {
-			BigDecimal stffBumiPer = new BigDecimal(stfBumiTotal
-					/ getManagedBean().getPersonCalc().getTotalStaffEntered())
-					.multiply(mul).setScale(2, RoundingMode.HALF_UP);
-			getManagedBean().getPersonCalc().setTotalStaffBumiPerc(stffBumiPer);
-		}
-		if (getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
-				.compareTo(mul) == 0) {
-			getManagedBean().getPersonCalc().setFullBumiStatus(true);
-		} else if (getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
-				.compareTo(halfBumi) >= 0
-				&& getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
-						.compareTo(mul) < 0) {
-			int keyRoleBumiTotal = getManagedBean().getPersonCalc()
-					.getBodBumiCnt()
-					+ getManagedBean().getPersonCalc().getHghMngBumiCnt()
-					+ getManagedBean().getPersonCalc().getMngtBumiCnt();
-			if (getManagedBean().getPersonCalc().getTotalKeyRolesEntered() > 0
-					&& getManagedBean().getPersonCalc().getTotalStaffBumiPerc()
-							.compareTo(mul) != 0) {
-				BigDecimal keyRoleBumiPer = new BigDecimal(keyRoleBumiTotal
-						/ getManagedBean().getPersonCalc()
-								.getTotalKeyRolesEntered()).multiply(mul)
-						.setScale(2, RoundingMode.HALF_UP);
-				getManagedBean().getPersonCalc().setTotalKeyRoleBumiPerc(
-						keyRoleBumiPer);
-				if (getManagedBean().getPersonCalc().getTotalKeyRoleBumiPerc()
-						.compareTo(halfBumi) >= 0
-						&& getManagedBean().getPersonCalc()
-								.getTotalKeyRoleBumiPerc().compareTo(mul) < 0) {
-					for (SmPersonnel per : getManagedBean().getSmAppl()
-							.getSmPersonnels()) {
-						if (per.isEquityOwner() && per.getBumiFlg() == 1) {
-							getManagedBean()
-									.getPersonCalc()
-									.setTotalShrBumiShrHldrPerc(
-											getManagedBean()
-													.getPersonCalc()
-													.getTotalShrBumiShrHldrPerc()
-													.add(per.getSharePercentage()));
-						}
-					}
-					if (getManagedBean().getPersonCalc()
-							.getTotalShrBumiShrHldrPerc().compareTo(halfBumi) >= 0
-							&& getManagedBean().getPersonCalc()
-									.getTotalShrBumiShrHldrPerc()
-									.compareTo(mul) < 0) {
-						getManagedBean().getPersonCalc()
-								.setHalfBumiStatus(true);
-					}
-
-				}
-			}
-		}
-
-	}
-
-	private void setPersonnelCountSummary(SmPersonnel per, int bumiCount,
-			int nonBumCount, int frgCount) {
-		getManagedBean().getPersonCalc().setSummaryCountVO(
-				new SmPersonnelSummaryCountVO());
-
-		if (per.getPmCountry() != null
-				&& per.getPmCountry().getCountryCode() != null
-				&& per.getPmCountry().getCountryCode()
-						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
-			if (per.getBumiFlg() == 1) {
-				bumiCount = bumiCount + 1;
-			} else {
-				nonBumCount = nonBumCount + 1;
-			}
-		} else {
-			frgCount = frgCount + 1;
-		}
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setBumiCount(bumiCount);
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setNonBumiCount(nonBumCount);
-		getManagedBean().getPersonCalc().getSummaryCountVO()
-				.setFrgCount(frgCount);
-	}
-
-	private void resetAllPersonnelCount() {
-		getManagedBean().setPersonCalc(new SmPersonnleCalcVO());
-		assignEnteredStaffValues();
+		SmPersonnleCalcVO calcVO = SmCommonUtil.calculateBumiPercentageTotals(
+				getManagedBean().getPersonCalc(), getManagedBean().getSmAppl()
+						.getSmPersonnels());
+		getManagedBean().setPersonCalc(calcVO);
 	}
 
 	private MofRegistrationResDTO retriveApplicationById(int applId) {
@@ -7337,38 +7038,38 @@ public class SmApplicationBackingBean extends
 					+ pmUser.getLoginId());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
-			UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
-			if (userResDTO == null) {
-
-			} else {
-				if (userResDTO.getAllResult() != null
-						&& !userResDTO.getAllResult().isEmpty()) {
-					if (userResDTO.getAllResult().get(0).length > 2) {
-						System.out.println("******** Pm Profile  : "
-								+ userResDTO.getAllResult().get(0)[0]);
-						System.out.println("******** Liferay Profile  : "
-								+ userResDTO.getAllResult().get(0)[1]);
-						System.out.println("******** LDAP Profile  : "
-								+ userResDTO.getAllResult().get(0)[2]);
-					}
-				}
-				if (!userResDTO.isExist()) {
-					System.out
-							.println("**** User doesn't exist any of the LDAP/PM/Liferay ******");
-					throw new EpException(MessageConst.ERROR_721018);
-				} else {
-					System.out
-							.println("**** To Check if user not exists in either of the LDAP/PM/Liferay******");
-					if (userResDTO.getAllResult().get(0)[0].startsWith("NO")
-							|| userResDTO.getAllResult().get(0)[1]
-									.startsWith("NO")
-							|| userResDTO.getAllResult().get(0)[2]
-									.startsWith("NO")) {
-						System.out
-								.println("**** This user is not configured in one or more of the LDAP/PM/Liferay places *****");
-					}
-				}
-			}
+			// UserResDTO userResDTO = userSO.isUserExist(userReqDTO);
+			// if (userResDTO == null) {
+			// throw new EpException(MessageConst.ERROR_721018);
+			// } else {
+			// if (userResDTO.getAllResult() != null
+			// && !userResDTO.getAllResult().isEmpty()) {
+			// if (userResDTO.getAllResult().get(0).length > 2) {
+			// System.out.println("******** Pm Profile  : "
+			// + userResDTO.getAllResult().get(0)[0]);
+			// System.out.println("******** Liferay Profile  : "
+			// + userResDTO.getAllResult().get(0)[1]);
+			// System.out.println("******** LDAP Profile  : "
+			// + userResDTO.getAllResult().get(0)[2]);
+			// }
+			// }
+			// if (!userResDTO.isExist()) {
+			// System.out
+			// .println("**** User doesn't exist any of the LDAP/PM/Liferay ******");
+			// throw new EpException(MessageConst.ERROR_721018);
+			// } else {
+			// System.out
+			// .println("**** To Check if user not exists in either of the LDAP/PM/Liferay******");
+			// if (userResDTO.getAllResult().get(0)[0].startsWith("NO")
+			// || userResDTO.getAllResult().get(0)[1]
+			// .startsWith("NO")
+			// || userResDTO.getAllResult().get(0)[2]
+			// .startsWith("NO")) {
+			// System.out
+			// .println("**** This user is not configured in one or more of the LDAP/PM/Liferay places *****");
+			// }
+			// }
+			// }
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
