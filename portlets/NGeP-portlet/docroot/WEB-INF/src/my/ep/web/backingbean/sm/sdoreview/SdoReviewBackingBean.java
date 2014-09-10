@@ -39,9 +39,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
 
 	public SdoReviewBackingBean() {
-		if (MDC.get(LogKey.USER_ID) == null) {
+/*		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
-		}
+		}*/
 		
 	}
 
@@ -53,7 +53,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public void viewSupportingDocument() {
 		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
-//		this.getManagedBean().setAppId(1542); //TODO
+		//this.getManagedBean().setAppId(2765); //TODO
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -138,7 +138,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(resAction);
 				reqDTO.setSmRemark(smRmk);
-				
+								
 				this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 				
@@ -197,6 +197,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
 			viewSupportingDocument();
+		}
+	}
+	
+	public void receiveStatusChange(SmApplSupportDoc applSuppDoc){
+		log.info("--------receiveStatusChange--------" + applSuppDoc.getApplSupportDocId());
+		if(!applSuppDoc.isReceived()){
+			applSuppDoc.setVerifiedFlg(null);
 		}
 	}
 }
