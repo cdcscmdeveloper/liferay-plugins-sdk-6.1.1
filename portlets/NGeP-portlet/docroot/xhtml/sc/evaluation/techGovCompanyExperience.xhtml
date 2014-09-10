@@ -131,16 +131,16 @@
 							<td><h:outputText
 									value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
 							<td style="width: 200px;"><p:inputText readonly="true"
-									value="#{action.criteriaValue}" disabled="true"></p:inputText></td>
+									value="#{action.criteriaValue}" disabled="true" style="text-align:right"></p:inputText></td>
 
 							<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 									rendered="#{action.criteriaType eq '10' and evaluationBackingBean.managedBean.checklistScoreType eq '1'}" />
 								<h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 									rendered="#{action.criteriaType eq '10' and evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
 							<td><p:inputText readonly="true" disabled="true"
-									value="#{action.autoScore}"
+									value="#{action.autoScore}" style="text-align:right"
 									rendered="#{action.criteriaType eq '10' and evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText>
-								<p:inputText value="#{action.userScore}" maxlength="18"
+								<p:inputText value="#{action.userScore}" maxlength="18" style="text-align:right"
 									rendered="#{action.criteriaType eq '10' and evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 						</tr>
 					</c:if>
@@ -148,16 +148,16 @@
 						<tr>
 							<td><h:outputText
 									value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
-							<td style="width: 200px;"><p:inputText readonly="true"
+							<td style="width: 200px;"><p:inputText readonly="true" style="text-align:right"
 									value="#{action.criteriaValue}" disabled="true"></p:inputText></td>
 							<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}" />
 								<h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}" /></td>
 							<td><p:inputText readonly="true" disabled="true"
-									value="#{action.autoScore}"
+									value="#{action.autoScore}" style="text-align:right"
 									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '1'}"></p:inputText>
-								<p:inputText value="#{action.userScore}" maxlength="18"
+								<p:inputText value="#{action.userScore}" maxlength="18" style="text-align:right"
 									rendered="#{action.criteriaType eq '11' and evaluationBackingBean.managedBean.companyScoreType eq '2'}"></p:inputText></td>
 						</tr>
 					</c:if>

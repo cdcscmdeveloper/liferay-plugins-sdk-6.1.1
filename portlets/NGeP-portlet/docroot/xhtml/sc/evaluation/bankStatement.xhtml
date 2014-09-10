@@ -31,7 +31,7 @@
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText  disabled="true"
+					<td><p:inputText disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
@@ -83,15 +83,15 @@
 				style="width:100%" rowIndexVar="index" rowKey="#{banking}">
 
 				<p:column headerText="#{lbl['lbl.sc.spec.month']}" style="width:50%">
-					<h:outputText value="#{banking.month}"></h:outputText>
+					<h:outputText value="#{banking.month}" ></h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.amount']}"
 					style="width:50%">
-					<h:outputText value="#{banking.balanceAmt}">
+					<h:outputLabel value="#{banking.balanceAmt}"
+						style="text-align:right">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-
+					</h:outputLabel>
 				</p:column>
 			</p:dataTable>
 
@@ -101,7 +101,7 @@
 			<table>
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sc.eva.bank.total']}" /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" style="text-align:right"
 							value="#{evaluationBackingBean.managedBean.bankTotalAmt}"
 							disabled="true">
 							<f:convertNumber
@@ -116,18 +116,20 @@
 						<td><h:outputText
 								value="#{lbl['lbl.sc.eva.avg.bank.statements']}" /></td>
 						<td style="width: 200px;"><p:inputText readonly="true"
-								value="#{action.criteriaValue}" disabled="true">
+								style="text-align:right" value="#{action.criteriaValue}"
+								disabled="true">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								value="#{action.autoScore}"
+								value="#{action.autoScore}" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
 						<td><p:inputText value="#{action.userScore}" maxlength="18"
+								style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 					</tr>
 				</c:forEach>

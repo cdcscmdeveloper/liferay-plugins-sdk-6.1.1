@@ -91,7 +91,7 @@
 			<table>
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sc.eva.tot.employees']}" /></td>
-					<td style="width: 200px;"><p:inputText readonly="true"
+					<td style="width: 200px;"><p:inputText readonly="true" style="text-align:right"
 							value="#{evaluationBackingBean.managedBean.noOfEmployeeList.totalEmployees}"
 							disabled="true"></p:inputText></td>
 					<c:forEach
@@ -101,11 +101,11 @@
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								value="#{action.autoScore}"
+								value="#{action.autoScore}" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
-						<td><p:inputText value="#{action.userScore}" maxlength="18"
+						<td><p:inputText value="#{action.userScore}" maxlength="18" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 
 

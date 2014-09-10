@@ -78,7 +78,7 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.current.asset']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true"
+					<td><p:inputText style="text-align:right" disabled="true" 
 							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.currentAssets}">
 
 						</p:inputText></td>
@@ -86,7 +86,7 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
-					<td><p:inputText style="text-align:right" disabled="true"
+					<td><p:inputText style="text-align:right" disabled="true" 
 							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.currentLiabilities}">
 
 						</p:inputText></td>
@@ -94,7 +94,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.acid.ratio']}" /></td>
 					<td><p:inputText style="text-align:right" id="totalacidratio"
-							disabled="true"
+							disabled="true" 
 							value="#{evaluationBackingBean.managedBean.scQtPRPAssetLiability.acidRatio}">
 
 						</p:inputText></td>
@@ -120,11 +120,11 @@
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								value="#{action.autoScore}"
+								value="#{action.autoScore}" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
-						<td><p:inputText value="#{action.userScore}" maxlength="18"
+						<td><p:inputText value="#{action.userScore}" maxlength="18" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 					</tr>
 				</c:forEach>

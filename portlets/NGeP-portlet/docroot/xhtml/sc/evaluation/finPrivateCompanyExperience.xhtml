@@ -134,7 +134,7 @@
 						<td><h:outputText
 								value="#{lbl['lbl.sc.eva.cmpny.tot.contract.amount']}" /></td>
 						<td style="width: 200px;"><p:inputText readonly="true"
-								value="#{action.criteriaValue}" disabled="true">
+								value="#{action.criteriaValue}" disabled="true" style="text-align:right">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>
@@ -142,11 +142,11 @@
 						<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}" /></td>
 						<td><p:inputText readonly="true" disabled="true"
-								value="#{action.autoScore}"
+								value="#{action.autoScore}" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '1'}"></p:inputText></td>
 						<td><h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}" /></td>
-						<td><p:inputText value="#{action.userScore}" maxlength="18"
+						<td><p:inputText value="#{action.userScore}" maxlength="18" style="text-align:right"
 								rendered="#{evaluationBackingBean.managedBean.checklistScoreType eq '2'}"></p:inputText></td>
 					</tr>
 				</c:forEach>
