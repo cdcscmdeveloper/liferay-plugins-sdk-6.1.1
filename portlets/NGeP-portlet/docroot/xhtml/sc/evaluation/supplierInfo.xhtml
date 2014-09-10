@@ -26,18 +26,20 @@
 
 
 		</div>
-		<p:spacer height="50"></p:spacer>
+		<p:spacer height="75"></p:spacer>
 
 		<p:panel>
 			<table>
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"></p:inputText></td>
+					<td><p:inputText disabled="true"
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea rows="2" cols="100" disabled="true"
-							style="width:70%"></p:inputTextarea></td>
+							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"
+							style="width:90%"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>

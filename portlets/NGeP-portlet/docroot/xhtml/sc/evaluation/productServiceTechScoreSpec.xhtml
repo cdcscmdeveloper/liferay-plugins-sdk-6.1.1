@@ -25,17 +25,17 @@
 				style="float:right;" icon="ui-icon-save" update="@all"
 				action="#{evaluationBackingBean.saveTempleateSpecDtls}" />
 		</div>
-		<p:spacer height="50"></p:spacer>
+		<p:spacer height="75"></p:spacer>
 		<p:panel>
 			<table>
 				<tr>
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50" disabled="true"
+					<td><p:inputText  disabled="true"
 							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea style="width:70%"
+					<td><p:inputTextarea style="width:90%"
 							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
 							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
 				</tr>
