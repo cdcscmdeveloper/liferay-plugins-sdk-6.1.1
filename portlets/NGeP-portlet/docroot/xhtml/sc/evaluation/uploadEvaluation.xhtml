@@ -8,23 +8,17 @@
 
 	<h:panelGroup id="reportMangaFile">
 
-		<p:dialog widgetVar="uploadDlg" position="top" resizable="false" 
-			width="700px" height="200" styleClass="pop_up_top" 
+		<p:dialog widgetVar="uploadDlg" position="top" resizable="false"
+			width="700px" height="200" styleClass="pop_up_top"
 			header="#{lbl['lbl.bpm.choose.file']}">
 
-			<p:fileUpload mode="advanced" style="display:inline;" id="evaReportUpld" process="@this" 
+			<p:fileUpload mode="advanced" style="display:inline;"
+				id="evaReportUpld" process="@this"
 				fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" update="evauploadfile"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				update="evauploadfile"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
 				oncomplete="uploadDlg.hide()"></p:fileUpload>
-
-
 		</p:dialog>
-
 	</h:panelGroup>
-	
-	
-	
-	
-
 </ui:composition>

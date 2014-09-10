@@ -60,7 +60,7 @@
 				<p:selectOneMenu id="meetingstatus" required="true"
 					label="#{lbl['lbl.sc.eva.mtng.status']}"
 					value="#{meeting.meetingStatus.statusId}">
-					<f:selectItems value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}"></f:selectItems>
+					<f:selectItems value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}"/>
 				</p:selectOneMenu>
 
 			</p:column>
@@ -68,7 +68,7 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}">
 
 
-				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="50"></p:inputTextarea>
+				<p:inputTextarea value="#{meeting.remark}" rows="2" cols="30"/>
 
 			</p:column>
 
