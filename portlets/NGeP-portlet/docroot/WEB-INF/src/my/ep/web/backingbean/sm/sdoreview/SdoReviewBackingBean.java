@@ -194,6 +194,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 
+	//for local testing purpose
 	public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
 			viewSupportingDocument();

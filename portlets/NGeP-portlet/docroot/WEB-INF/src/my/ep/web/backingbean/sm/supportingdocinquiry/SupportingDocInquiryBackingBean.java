@@ -47,7 +47,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	public String submitInquiryResponse(){
 		System.out.println("**********submitInquiryResponse*********");
-		try{
+		//try{
 			System.out.println("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
@@ -71,9 +71,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				return navigateToAck();
 			}
-		}catch(Exception ex){
+/*		}catch(Exception ex){
 			throw new EpException(ex.getMessage());
-		}
+		}*/
 		
 		return "";
 	}
