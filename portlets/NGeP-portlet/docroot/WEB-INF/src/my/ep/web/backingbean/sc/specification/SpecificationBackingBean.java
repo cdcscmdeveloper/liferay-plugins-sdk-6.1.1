@@ -370,7 +370,7 @@ public class SpecificationBackingBean extends
 
 	// Method to save the specifcation Details..
 	public void saveSpecificationDtls() {
-		validateBusinessOwner();
+		validateBusinessOwner(false);
 		FacesContext.getCurrentInstance().addMessage(
 				null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
@@ -382,7 +382,7 @@ public class SpecificationBackingBean extends
 
 	}
 
-	public void validateBusinessOwner() {
+	public void validateBusinessOwner(boolean isSpecComplete) {
 
 		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -430,7 +430,9 @@ public class SpecificationBackingBean extends
 
 			specReqDTO.setScQt(techSpec);
 			resDTO = specSO.saveQTDtl(specReqDTO);
-			renewSesionObject();
+			if(!isSpecComplete){
+				renewSesionObject();
+			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			retriveTechnicalSpecification();
 			break;
@@ -439,7 +441,9 @@ public class SpecificationBackingBean extends
 
 			specReqDTO.setScQt(finSpec);
 			resDTO = specSO.saveQTDtl(specReqDTO);
-			renewSesionObject();
+			if(!isSpecComplete){
+				renewSesionObject();
+			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			retriveFinancialSpecification();
 			break;
@@ -8685,6 +8689,9 @@ public class SpecificationBackingBean extends
 	 * @return
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
+		
+		validateBusinessOwner(true);
+		
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
