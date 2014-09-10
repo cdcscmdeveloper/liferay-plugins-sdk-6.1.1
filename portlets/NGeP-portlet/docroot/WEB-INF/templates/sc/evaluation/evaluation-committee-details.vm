@@ -36,11 +36,52 @@
 	</tr>
 	<tr>
 		<td>
-    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Ahli Ahli Jawatankuasa</span>
+    		<br /><br />
 		</td>
 	</tr>
-	<tr align='left'>
-		<td>
+	<tr>
+		<td>#if ( $ec == "true")
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+			<table class="table2" width='100%'>
+				<tr>
+					<td>Nama</td>
+					<td>Jawatan</td>
+					<td>Gred</td>
+					<td>Kad Pengenalan No.</td>
+					<td>Jabatan </td>
+					<td>Peranan</td>
+				</tr>
+				#foreach( $committeeMember in $committeeActivities )
+				<tr>
+					<td>$committeeMember.scCommitteeMember.memberName</td>
+					<td>$committeeMember.scCommitteeMember.designation</td>
+					<td>$committeeMember.scCommitteeMember.grade</td>
+					<td>$committeeMember.scCommitteeMember.icPassport</td>
+					<td></td>
+					<td>$committeeMember.scCommitteeMember.memberRole.parameterCode</td>
+				</tr>
+				#end
+			</table>
+			<p><b>Turut Hadir</b></p>
+			<table class="table2" width='100%'>
+				<tr>
+					<td>Nama</td>
+					<td>Kad Pengenalan No.</td>
+				</tr>
+				#foreach( $memberAttendance in $meetingAttendances )
+				<tr>
+					<td>$memberAttendance.name</td>
+					<td>$memberAttendance.icPassport</td>
+				</tr>
+				#end
+			</table>
+			</span>
+            #end
+        </td>
+    </tr>
+	<tr>
+		<td>#if ( $oc == "true")
 			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 			<table class="table2" width='100%'>
 				<tr>
@@ -63,8 +104,9 @@
 				#end
 			</table>
 			</span>
-		</td>
-	</tr>
+			 #end
+        </td>
+    </tr>
 	</table>
 </body>
 </html>

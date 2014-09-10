@@ -14,11 +14,33 @@
 <body>
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-        <td align="center">
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LAPORAN PEMATUHAN PERINGKAT 1 </span>
+		<td align="center">#if ( $ec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LAPORAN PENILAIAN TEKNIKAL DAN HARGA </span>
             <br/> <br/>
+            #end
         </td>
     </tr>
+    <tr>
+		<td align="center">#if ( $oc == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LAPORAN PEMATUHAN PERINGKAT 1 </span>
+            <br/> <br/>
+            #end
+        </td>
+    </tr>
+	<tr>
+		<td align="center">#if ( $tec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LAPORAN PENILAIAN TEKNIKAL </span>
+            <br/> <br/>
+            #end
+        </td>
+    </tr>
+    <tr>
+		<td align="center">#if ( $fec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> LAPORAN PENILAIAN HARGA </span>
+            <br/> <br/>
+            #end
+        </td>
+    </tr>	
 	<tr>
         <td align="right">
              <br/>

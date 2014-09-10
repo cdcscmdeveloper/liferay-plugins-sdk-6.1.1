@@ -35,18 +35,40 @@
 		</td>
 	</tr>
 	<tr>
-		<td>
-    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+		<td>#if ( $ec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+			<p>Mesyuarat Jawatankuasa Penilaian Teknikal dan Harga telah diadakan seperti berikut:</p>
+            #end
+        </td>
+    </tr>
+    <tr>
+		<td>#if ( $oc == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
 			<p>Mesyuarat Jawatankuasa Penilaian Harga telah diadakan seperti berikut:</p>
-		</td>
-	</tr>
+            #end
+        </td>
+    </tr>
+    <tr>
+		<td>#if ( $tec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+			<p>Mesyuarat Jawatankuasa Penilaian Teknikal telah diadakan seperti berikut:</p>
+            #end
+        </td>
+    </tr>
+    <tr>
+		<td>#if ( $fec == "true")
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perincian Mesyuarat</span>
+			<p>Mesyuarat Jawatankuasa Penilaian Harga telah diadakan seperti berikut:</p>
+            #end
+        </td>
+    </tr>
 	<tr align='left'>
 		<td>
 			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 			<table class="table2" width='100%'>
 				<tr>
-					<td>Bil</td>
-					<td>Tempaty</td>
+					<td>Bil.</td>
+					<td>Tempat</td>
 					<td>Tarikh</td>
 					<td>Masa</td>
 				</tr>
