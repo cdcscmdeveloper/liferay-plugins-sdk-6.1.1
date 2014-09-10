@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,11 +16,9 @@ import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmSvOfficer;
 import my.ep.persistence.entity.sm.SmSvTask;
-import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -29,9 +26,9 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
 
@@ -80,11 +77,11 @@ public class SvcSiteAssignBackingBean extends
 				svOfficer.setPmUser(pmUsr);
 				svTask.getSmSvOfficers().add(svOfficer);
 			}
-
+			log.info("Task ID>>>>>" + this.getManagedBean().getSmSvTask().getSvTaskId());
 			//System.out.println("****************** submitSiteVisitAssignment *****" + svTask.getSmSvOfficers().get(0).getPmUser());
 			this.getManagedBean().getSmRemark().setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVC);
 			this.getManagedBean().getSmRemark().setDocId(this.getManagedBean().getSmSvTask().getSvTaskId());
-
+			
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
@@ -94,10 +91,16 @@ public class SvcSiteAssignBackingBean extends
 			SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 
 			if (resDTO.isSuccessful()) {
+				log.info("Submission is success>>>>>>>>"); 
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721201,
+					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+				log.info("Submission is failed >>>>>>>>"); 
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(MessageConst.ERROR_721202);
 			}
 		}catch(Exception ex){
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
@@ -146,5 +149,15 @@ public class SvcSiteAssignBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	public String getsupplierApplTypeDesc(String applType){
+		return SmCommonUtil.getApplTypeDesc(applType);
+	}
 
+	//for local testing purpose
+	public void preRenderView(){
+		if(this.getManagedBean().getSmSvTask() == null){
+			retrieveSiteAssignInfo();
+		}
+	}
 }
