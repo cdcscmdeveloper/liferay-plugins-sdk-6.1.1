@@ -1291,7 +1291,7 @@ public class SmApplicationBackingBean extends
 				validSave = false;
 				setNavigationBackToCurrentPage();
 				throw new EpException(MessageConst.ERROR_722513, new String[] {
-						"Management Staff", "Management" });
+						"Management Staff", "one(1)", "Management Staff" });
 			}
 			calculateBumiPercentageTotals();
 			break;
@@ -5121,6 +5121,24 @@ public class SmApplicationBackingBean extends
 		return resDTO.getCategoryL2List();
 	}
 
+	private List<PmCategoryL3> retrieveExperienceSubChildCategoryList(
+			long categoryL2Id) {
+		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setCategoryL2Id(categoryL2Id);
+		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+				.getSupplierType());
+		// if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+		// reqDTO.setIsSpecialCategory(false);
+		// } else {
+		// reqDTO.setIsSpecialCategory(true);
+		// }
+		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
+
+		return resDTO.getCategoryL3List();
+	}
+
 	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
@@ -5741,7 +5759,7 @@ public class SmApplicationBackingBean extends
 			PmCategoryL3 catL3) {
 		try {
 			List<PmCategoryL3> categoryL3s = this
-					.retrieveSubChildCategoryList(childId);
+					.retrieveExperienceSubChildCategoryList(childId);
 			catL3.setPmCategoryL3s(categoryL3s);
 
 		} catch (Exception e) {
