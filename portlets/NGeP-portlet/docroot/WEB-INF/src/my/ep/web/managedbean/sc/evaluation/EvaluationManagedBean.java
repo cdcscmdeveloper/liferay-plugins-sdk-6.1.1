@@ -49,15 +49,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtMeeting> scQtMeetings;
 
 	private List<ScQtMeeting> meetingMultiSelect;
-	private ScQtMeeting meeting;
+
 	private List<ScQtCommitteeActivity> committeeMemberList;
 
-	
 	private List<ScQtCommitteeActivity> committeeActivitymultiSelect;
-	
+
 	private ScEvaluationResult evaluationResult;
-	private List<ScQtProposalChecklist> complianceList;
-	private List<ScQtCommitteeActivity> signOffMemberList;
+
 	private List<ScQtEvaluationResult> qualifiedList;
 	private List<ScQtEvaluationResult> disQualifiedList;
 	private ScQtEvaluationResult scQtEvaluationResult;
@@ -68,19 +66,16 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	// OC,EC,TEC,FEC
 	private String committeeType;
 	private boolean isDemo = true;
-	private List<ScQtEvaluationResult> manuals1SupplierList;
-	
+
 	private boolean isEvaluateStatus;
 	private Long evaluationResultId;
 	private int tempTab;
 	private TplSpecMaster specMaster;
-	private String overAllResult;
-	private String stageOneoverAllResult;
+
 	private int result = 1;
-	private int manualList;
+
 	private String viewBy = "P";
-	private List<ScQtEvaluationResult> requestDemoSelect;
-	private String fileName;
+
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> meetingAttendanceSelectList;
 	private List<ScQtCheckList> complianceTechnicalCheckList;
@@ -200,23 +195,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the meeting
-	 */
-	public ScQtMeeting getMeeting() {
-		return meeting;
-	}
-
-	/**
-	 * @param meeting
-	 *            the meeting to set
-	 */
-	public void setMeeting(ScQtMeeting meeting) {
-		this.meeting = meeting;
-	}
-
-	
-
-	/**
 	 * @param meetingMultiSelect
 	 *            the meetingMultiSelect to set
 	 */
@@ -229,22 +207,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public List<ScQtMeeting> getMeetingMultiSelect() {
 		return meetingMultiSelect;
-	}
-
-	/**
-	 * @return the signOffMemberList
-	 */
-	public List<ScQtCommitteeActivity> getSignOffMemberList() {
-		return signOffMemberList;
-	}
-
-	/**
-	 * @param signOffMemberList
-	 *            the signOffMemberList to set
-	 */
-	public void setSignOffMemberList(
-			List<ScQtCommitteeActivity> signOffMemberList) {
-		this.signOffMemberList = signOffMemberList;
 	}
 
 	/**
@@ -294,7 +256,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.committeeActivitymultiSelect = committeeActivitymultiSelect;
 	}
 
-	
 	/**
 	 * @return the evaluationResult
 	 */
@@ -326,8 +287,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.scQtEvaluationResult = scQtEvaluationResult;
 	}
 
-	
-
 	/**
 	 * @return the commiteeActivity
 	 */
@@ -356,22 +315,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
-	}
-
-	/**
-	 * @return the manuals1SupplierList
-	 */
-	public List<ScQtEvaluationResult> getManuals1SupplierList() {
-		return manuals1SupplierList;
-	}
-
-	/**
-	 * @param manuals1SupplierList
-	 *            the manuals1SupplierList to set
-	 */
-	public void setManuals1SupplierList(
-			List<ScQtEvaluationResult> manuals1SupplierList) {
-		this.manuals1SupplierList = manuals1SupplierList;
 	}
 
 	/**
@@ -405,21 +348,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the complianceList
-	 */
-	public List<ScQtProposalChecklist> getComplianceList() {
-		return complianceList;
-	}
-
-	/**
-	 * @param complianceList
-	 *            the complianceList to set
-	 */
-	public void setComplianceList(List<ScQtProposalChecklist> complianceList) {
-		this.complianceList = complianceList;
-	}
-
-	/**
 	 * @return the evaluationResultId
 	 */
 	public Long getEvaluationResultId() {
@@ -433,8 +361,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setEvaluationResultId(Long evaluationResultId) {
 		this.evaluationResultId = evaluationResultId;
 	}
-
-	
 
 	/**
 	 * @return the qualifiedList
@@ -482,36 +408,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the overAllResult
-	 */
-	public String getOverAllResult() {
-		return overAllResult;
-	}
-
-	/**
-	 * @param overAllResult
-	 *            the overAllResult to set
-	 */
-	public void setOverAllResult(String overAllResult) {
-		this.overAllResult = overAllResult;
-	}
-
-	/**
-	 * @return the stageOneoverAllResult
-	 */
-	public String getStageOneoverAllResult() {
-		return stageOneoverAllResult;
-	}
-
-	/**
-	 * @param stageOneoverAllResult
-	 *            the stageOneoverAllResult to set
-	 */
-	public void setStageOneoverAllResult(String stageOneoverAllResult) {
-		this.stageOneoverAllResult = stageOneoverAllResult;
-	}
-
-	/**
 	 * @return the result
 	 */
 	public int getResult() {
@@ -527,21 +423,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the manualList
-	 */
-	public int getManualList() {
-		return manualList;
-	}
-
-	/**
-	 * @param manualList
-	 *            the manualList to set
-	 */
-	public void setManualList(int manualList) {
-		this.manualList = manualList;
-	}
-
-	/**
 	 * @return the viewBy
 	 */
 	public String getViewBy() {
@@ -554,37 +435,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setViewBy(String viewBy) {
 		this.viewBy = viewBy;
-	}
-
-	/**
-	 * @return the requestDemoSelect
-	 */
-	public List<ScQtEvaluationResult> getRequestDemoSelect() {
-		return requestDemoSelect;
-	}
-
-	/**
-	 * @param requestDemoSelect
-	 *            the requestDemoSelect to set
-	 */
-	public void setRequestDemoSelect(
-			List<ScQtEvaluationResult> requestDemoSelect) {
-		this.requestDemoSelect = requestDemoSelect;
-	}
-
-	/**
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 * @param fileName
-	 *            the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
 	}
 
 	/**
