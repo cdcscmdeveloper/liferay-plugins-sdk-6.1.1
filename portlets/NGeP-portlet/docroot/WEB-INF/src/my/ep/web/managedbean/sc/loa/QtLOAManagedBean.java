@@ -6,8 +6,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
@@ -40,6 +43,10 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	private List<ScQtProposalRanking> scQtProposalRankingList;
 	private ScQtEvaluationResult scQtEvaluationResult;
 	private List<ScQtEvaluationResult> scQtEvaluationResultList;
+
+	private List<ScLoiLoa> scLoiLoaList;
+
+
 
 	/**
 	 * @return the scQtEvaluationResult
@@ -194,6 +201,14 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setQt(ScQt qt) {
 		this.qt = qt;
+	}
+	
+	public List<ScLoiLoa> getScLoiLoaList() {
+		return scLoiLoaList;
+	}
+
+	public void setScLoiLoaList(List<ScLoiLoa> scLoiLoaList) {
+		this.scLoiLoaList = scLoiLoaList;
 	}
 
 }

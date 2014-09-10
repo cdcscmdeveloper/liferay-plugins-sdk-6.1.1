@@ -8,35 +8,91 @@
 
 	<p:panel header="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
 		toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.bond.letter']}"
+			process="@this" style="float:left;" styleClass="blue_font"
+			action="#{lOADetailBackingBean.getBondLetterStreamContent}"
+			oncomplete="bdLetterDlg.show();">
+		</p:commandLink>
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel
+				<td style="width: 20%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.bond.res.due.date']}" /></td>
-				<td colspan="3" style="width: 128px;"><p:inputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.bondDueDate}"
-						size="14" disabled="true" readonly="true" /> <p:spacer
-						width="10px" /> <p:inputText
-						value="#{lOADetailBackingBean.managedBean.scLoa.bondDuration} Days"
+				<td colspan="3" style="width: 80%;"><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate}"
+						size="14" disabled="true" readonly="true">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loa.cont.period']}" /></td>
+				<td><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration} months"
 						disabled="true" size="8" readonly="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>
-				<td colspan="3" style="width: 128px;"><p:inputText
-						value="#{lOADetailBackingBean.managedBean.bondAmount}"
-						disabled="true" size="30" readonly="true" /> <p:spacer
-						width="10px" /> <p:inputText value="" disabled="true" size="30"
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.cont.amt']}" /></td>
+				<td><p:inputText value="Unknown" disabled="true" size="8"
 						readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" /></td>
-				<td colspan="3" style="width: 128px;"><p:inputText
-						value="#{lOADetailBackingBean.managedBean.bondPercentage}"
+				<td><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.bondPercentage}"
+						disabled="true" size="30" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" /></td>
+				<td><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.bondAmt}"
+						disabled="true" size="30" readonly="true" /> <p:spacer
+						width="10px" /> <p:inputText
+						value="#{lOADetailBackingBean.managedBean.bondAmountWord}"
 						disabled="true" size="30" readonly="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:dataTable id="performancebondtbl" var="bondList"
+		value="#{lOADetailBackingBean.managedBean.scLoa.performanceBonds}"
+		rows="10" rowIndexVar="rowIndex">
+		<ac:paginator for="performancebondtbl" />
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
+			style="width:20%">
+			#{bondList.bondRefNo}
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
+			style="width:20%">
+			#{bondList.financialOrg.finOrgName}
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
+			style="width:10%">
+			#{bondList.bondAmount}
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.eff.date']}"
+			style="width:15%">
+			<h:outputText value="#{bondList.bondEffDate}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.exp.date']}"
+			style="width:15%">
+			<h:outputText value="#{bondList.bondExpDate}">
+				<f:convertDateTime pattern="dd/MM/yyyy" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
+			style="width:15%">
+			<h:outputText value="#{bondList.fileName}" />
+		</p:column>
+	</p:dataTable>
+
+	<!-- <p:dataTable id="performancebondtbl" var="bondList"
 		value="#{lOADetailBackingBean.managedBean.scBondDtlList}"
 		selection="#{lOADetailBackingBean.managedBean.selectScBondDtlList}"
 		rows="10" rowKey="#{bondList}" rowIndexVar="rowIndex">
@@ -52,7 +108,7 @@
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
 			style="width:5%">
-			<p:inputText value="#{bondList.institutionName}" style="width:95%" />
+			<p:inputText value="#{bondList.financialOrg.finOrgName}" style="width:95%" />
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
@@ -62,7 +118,7 @@
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.eff.date']}"
 			style="width:5%">
-			<!-- <h:outputText value="#{bondList.bondEffDate}" style="width:85%" /> -->
+			<h:outputText value="#{bondList.bondEffDate}" style="width:85%" />
 			<p:calendar id="bondeffdate" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 				value="#{bondList.bondEffDate}" />
@@ -70,7 +126,7 @@
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.exp.date']}"
 			style="width:5%">
-			<!-- <h:outputText value="#{bondList.bondExpDate}" style="width:85%" /> -->
+			<h:outputText value="#{bondList.bondExpDate}" style="width:85%" />
 			<p:calendar id="bondexpdate" size="10"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 				value="#{bondList.bondExpDate}" />
@@ -78,40 +134,38 @@
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
 			style="width:5%">
-			<h:outputText value="#{bondList.scBondDtlAttachment.fileName}"
-				rendered="#{!empty bondList.scBondDtlAttachment}" />
+			<h:outputText value="#{bondList.fileName}" />
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 			style="width:15%">
 			<p:commandLink oncomplete="attachDlg.show();return false;"
-				update="performancebondtbl">
+				update="performancebondtbl" rendered="#{bondList.fileName eq 'null'}">
 				<p:graphicImage library="ep/images/design" name="upload.png"
 					value="/resources/ep/images/design/upload.png" />
 				<f:setPropertyActionListener value="#{bondList}"
 					target="#{lOADetailBackingBean.managedBean.scBondDtl}" />
 			</p:commandLink>
 			<p:spacer width="10" height="5" />
-			<p:commandLink>
+			<p:commandLink rendered="#{bondList.fileName ne 'null'}">
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
 			</p:commandLink>
 		</p:column>
 
-		<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
 			<p:commandLink>
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
 			</p:commandLink>
 
-		</p:column> -->
+		</p:column>
 
 	</p:dataTable>
 	<p:spacer height="20px" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 			process="@this,performancebondtbl" partialSubmit="true"
-			action="#{lOADetailBackingBean.addPerformanceBond}"
 			update="performancebondtbl" icon="ui-icon-add" />
 
 		<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
@@ -124,11 +178,27 @@
 		header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{lOADetailBackingBean.handleFileAttachment}"
+			fileUploadListener=""
 			mode="advanced" id="upload"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
 			update="performancebondtbl" oncomplete="attachDlg.hide()">
 		</p:fileUpload>
+	</p:dialog> -->
+
+	<p:dialog id="sampleBondLetterDlg" widgetVar="bdLetterDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="1000px"
+		height="500px" styleClass="pop_up_top"
+		header="#{lbl['lbl.sc.loiloa.bond.letter']}">
+		<p:media value="#{lOADetailBackingBean.bondLetterStreamContent}"
+			width="100%" height="450px" player="pdf" />
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.close']}"
+						onclick="bdLetterDlg.hide()" icon="ui-icon-cancel" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
 	</p:dialog>
 </ui:composition>

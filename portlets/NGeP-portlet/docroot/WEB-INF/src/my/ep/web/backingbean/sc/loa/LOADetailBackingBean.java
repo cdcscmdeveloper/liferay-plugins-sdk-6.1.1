@@ -1,11 +1,14 @@
 package my.ep.web.backingbean.sc.loa;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -77,13 +80,16 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
+import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -103,6 +109,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
@@ -113,6 +120,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.springframework.util.CollectionUtils;
 
@@ -138,7 +146,7 @@ public class LOADetailBackingBean extends
 	}
 
 	public void addPerformanceBond() {
-		
+
 		debugLogger("addPerformanceBond");
 		ScPerformanceBond scBondDtl = new ScPerformanceBond();
 		try {
@@ -300,6 +308,7 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = resDTO.getScLoa();
 
 		getManagedBean().setScLoa(scLoa);
+		getManagedBean().setScQt(resDTO.getScQt());
 
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
@@ -336,6 +345,7 @@ public class LOADetailBackingBean extends
 		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
 		// Fulfilment Schedule
+
 		List<ScQtSchedule> scheduleList = this.getManagedBean()
 				.getScheduleList();
 
@@ -440,15 +450,15 @@ public class LOADetailBackingBean extends
 					int count = 0;
 
 					if (eYear >= sYear) {
-						if(endYear != startYear){
-						   diffYear = eYear - sYear;
+						if (endYear != startYear) {
+							diffYear = eYear - sYear;
 						}
 						for (int i = start + 1; i <= end + 1; i++) {
 							count++;
 						}
 						count = count + (diffYear * 12);
 						scQtSchedule.setTotalMonths(new BigDecimal(count));
-					}else{
+					} else {
 						scQtSchedule.setTotalMonths(BigDecimal.ZERO);
 					}
 
@@ -523,6 +533,10 @@ public class LOADetailBackingBean extends
 		scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa.getScLoaRemarks(),
 				ScLoaRemark.class));
 
+		if (scLoa.getBondAmt() != null) {
+			getManagedBean().setBondAmountWord(
+					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
+		}
 		/*
 		 * branch.setSmAppl(getManagedBean().getScQtProposalRanking()
 		 * .getScQtProposalEvaluate().getScQtProposal()
@@ -768,11 +782,12 @@ public class LOADetailBackingBean extends
 						.equals(docDefinitionKey)) {
 					saveScheduleList();
 					generateFrequencySchedulePdfFromVelocity(
-							(ScAttachment) scLoaReportAttachment,getManagedBean().getScLoa());
-				}else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+							(ScAttachment) scLoaReportAttachment,
+							getManagedBean().getScLoa());
+				} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
 						.equals(docDefinitionKey)) {
-					formJadualHarga(
-							(ScAttachment) scLoaReportAttachment,getManagedBean().getScLoa());
+					formJadualHarga((ScAttachment) scLoaReportAttachment,
+							getManagedBean().getScLoa());
 				}
 				// TODO - generate documents
 			} catch (Exception e) {
@@ -1673,6 +1688,7 @@ public class LOADetailBackingBean extends
 
 		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 		saveScheduleList();
+		saveProgressivePaymntList();
 	}
 
 	public void contractTypeChanged() {
@@ -1941,28 +1957,33 @@ public class LOADetailBackingBean extends
 	}
 
 	public void calculateScheduleMonths(ScQtSchedule schedule) {
-	
+
 		List<ScQtSchedule> freqSchedule = this.getManagedBean()
 				.getScheduleList();
 		if (null == freqSchedule) {
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
 		}
-		Integer startMonth = 0,endMonth = 0,startYear = 0,endYear = 0,diffYear = 0, count = 0;
-		startMonth = schedule.getStartMonth() != null ? Integer.parseInt(schedule.getStartMonth()) : null;
-		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule.getEndMonth()) : null;
-		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule.getStartYear()) : null;
-		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule.getEndYear()) : null;
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
+		startMonth = schedule.getStartMonth() != null ? Integer
+				.parseInt(schedule.getStartMonth()) : null;
+		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
+				.getEndMonth()) : null;
+		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
+				.getStartYear()) : null;
+		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
+				.getEndYear()) : null;
 
-		if (startMonth != null && endMonth !=null && startYear !=null && endYear !=null && endYear >= startYear) {
-			if(endYear != startYear){
-			   diffYear = endYear - startYear;
+		if (startMonth != null && endMonth != null && startYear != null
+				&& endYear != null && endYear >= startYear) {
+			if (endYear != startYear) {
+				diffYear = endYear - startYear;
 			}
 			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
 				count++;
 			}
 			schedule.setTotalMonths(new BigDecimal(count));
-		}else{
+		} else {
 			schedule.setTotalMonths(BigDecimal.ZERO);
 		}
 
@@ -1972,7 +1993,7 @@ public class LOADetailBackingBean extends
 		this.getManagedBean().setScheduleList(freqSchedule);
 	}
 
-	public void saveScheduleList() {
+	private void saveScheduleList() {
 		List<ScQtSchedule> freqschedule = this.getManagedBean()
 				.getScheduleList();
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
@@ -2052,7 +2073,7 @@ public class LOADetailBackingBean extends
 				try {
 					if (df.parse(fromdate).after(df.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
-					}else{
+					} else {
 						schedule.setFromDate(df.parse(fromdate));
 						schedule.setToDate(df.parse(toDate));
 					}
@@ -2087,13 +2108,11 @@ public class LOADetailBackingBean extends
 	}
 
 	private void generateFrequencySchedulePdfFromVelocity(
-			ScAttachment attachment,ScLoa scLoa) throws Exception {
+			ScAttachment attachment, ScLoa scLoa) throws Exception {
 		attachment.setFileName("Frequency_Schedule.pdf");
 		populateAttachmentDetails(attachment);
-		SimpleDateFormat monthFormat = new SimpleDateFormat(
-				"MMM");
-		SimpleDateFormat yearFormat = new SimpleDateFormat(
-				"yyyy");
+		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 		IParameterSO parameterSO = null;
 		VelocityContext context = new VelocityContext();
 		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
@@ -2102,19 +2121,27 @@ public class LOADetailBackingBean extends
 		int totalFrequency = 0;
 		if (scheduleList != null && scheduleList.size() > 0) {
 			totalFrequency = scheduleList.size();
-			for(ScQtSchedule schedule : scheduleList){
+			for (ScQtSchedule schedule : scheduleList) {
 				try {
 					reportSchedule = new ScQtSchedule();
-					parameterSO = BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+					parameterSO = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IParameterSO.class);
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterId(schedule.getScheduleType().getParameterId());
-					ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+					reqDTO.setParameterId(schedule.getScheduleType()
+							.getParameterId());
+					ParameterResDTO resDTO = parameterSO
+							.retrieveParameterById(reqDTO);
 					reportSchedule.setScheduleType(resDTO.getPmParameter());
-					reportSchedule.setStartMonth(monthFormat.format(schedule.getFromDate()));
-					reportSchedule.setStartYear(yearFormat.format(schedule.getFromDate()));
-					reportSchedule.setEndMonth(monthFormat.format(schedule.getToDate()));
-					reportSchedule.setEndYear(yearFormat.format(schedule.getToDate()));
+					reportSchedule.setStartMonth(monthFormat.format(schedule
+							.getFromDate()));
+					reportSchedule.setStartYear(yearFormat.format(schedule
+							.getFromDate()));
+					reportSchedule.setEndMonth(monthFormat.format(schedule
+							.getToDate()));
+					reportSchedule.setEndYear(yearFormat.format(schedule
+							.getToDate()));
 					reportSchedule.setScheduleNo(schedule.getScheduleNo());
 					reportSchedule.setTotalMonths(schedule.getTotalMonths());
 					scheduleReportList.add(reportSchedule);
@@ -2132,132 +2159,437 @@ public class LOADetailBackingBean extends
 				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
-	
-	public void formJadualHarga(ScAttachment attachment,ScLoa scLoa) throws Exception{
+
+	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
+			throws Exception {
 		attachment.setFileName("JadualHarga.xlsx");
 		populateAttachmentDetails(attachment);
 		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
 		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
 		JadualHargaBean jadualHarga = null;
-			        	
-		for(ScLoiLoaItem item : scLoa.getScLoiLoaItems()){
+
+		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
 			jadualHarga = mappingJadualHarga(item);
-			if(getParameterDesc(item.getScRequestItem().getItemType()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)){
+			if (getParameterDesc(item.getScRequestItem().getItemType())
+					.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
 				productJadualHargaList.add(jadualHarga);
-			}else if(getParameterDesc(item.getScRequestItem().getItemType()).equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)){
+			} else if (getParameterDesc(item.getScRequestItem().getItemType())
+					.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
 				serviceJadualHargaList.add(jadualHarga);
 			}
-			
+
 		}
-		
-		generateJadualHarga(attachment,productJadualHargaList,serviceJadualHargaList);
+
+		generateJadualHarga(attachment, productJadualHargaList,
+				serviceJadualHargaList);
 
 	}
-		private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item){
-			JadualHargaBean jadualHarga = new JadualHargaBean();
-			CommonUtils commonUtils = new CommonUtils();
-			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-			jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item.getTplSpecZoneDtl().getZoneName() : "N/A");
-			jadualHarga.setItem(item.getScRequestItem().getItemName());
-			jadualHarga.setUnitPrice(nf.format(item.getUnitPrice().longValue()));
-			jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
-			jadualHarga.setFreqUom(null == item.getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
-					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
-		    jadualHarga.setUomPerDay(null == item.getScRequestItem().getTplSpecQuestion().getClUomPerDay() ? 
-		    		"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerDay().toString());
-		    jadualHarga.setUomPerMonth(null == item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() ?
-					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClUomPerMonth().toString());
-		    jadualHarga.setUomPerYear(null == item.getScRequestItem().getTplSpecQuestion().getClDurationMonth()?
-					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClDurationMonth().toString());
-		    jadualHarga.setQuantity(null == item.getScRequestItem().getTplSpecQuestion().getClQuantity() ?
-					"N/A" : item.getScRequestItem().getTplSpecQuestion().getClQuantity().toString());
-		    jadualHarga.setTotalAmount(item.getUnitPrice().multiply(item.getScRequestItem().getTplSpecQuestion().getClQuantity()).toString());
-			
 
-			return jadualHarga;
-			
-		}
-		
-		private void generateJadualHarga(ScAttachment attachment,List<JadualHargaBean> productList,List<JadualHargaBean> serviceList) throws Exception{
-			if(serviceList.size()>0 || productList.size()>0){
-				try {
-					FileInputStream inputStream = new FileInputStream(new File(
-							FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates") + "/sc/loa/jadual-harga.xlsx"));	
-					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
-					boolean emptyProductList = false;
-			        Sheet productSheet =null;
-			        Sheet serviceSheet = null;
-			        Row row = null;
-			        int rowIndex = 0;
-			        int cellIndex = 0;
-			        if(productList.size() > 0){
-			        	rowIndex = 0;
-			        	productSheet = wb.getSheetAt(0);
-			        	wb.setSheetName(0, "ProductSheet");
-			        	for(JadualHargaBean product : productList){
-			        		rowIndex ++;
-			        		cellIndex =0;
-			        		row = productSheet.createRow(rowIndex);
-			        		row.createCell(cellIndex++).setCellValue(product.getZone());
-			        		row.createCell(cellIndex++).setCellValue(product.getItem());
-			        		row.createCell(cellIndex++).setCellValue(product.getUom());
-			        		row.createCell(cellIndex++).setCellValue(product.getQuantity());
-			        		row.createCell(cellIndex++).setCellValue(product.getSubSequence());
-			        		row.createCell(cellIndex++).setCellValue(product.getUnitPrice());
-			        		row.createCell(cellIndex++).setCellValue(product.getTotalAmount()); 
-			        	}
-			        	//Auto size all the columns
-				        for (int x = 0; x < productSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-				        	productSheet.autoSizeColumn(x);
-				        }
-			        }else{
-			        	wb.removeSheetAt(0);
-			        	emptyProductList = true;
-			        }
-			        
-			        if(serviceList.size() > 0){
-			        	rowIndex = 0;
-			        	if(emptyProductList){
-			        		serviceSheet = wb.getSheetAt(0);
-			        		wb.setSheetName(0, "ServiceSheet");
-			        	}else{
-			        		serviceSheet = wb.getSheetAt(1);
-			        		wb.setSheetName(1, "ServiceSheet");
-			        	}
-			        	
-			        	for(JadualHargaBean service : serviceList){
-			        		rowIndex ++;
-			        		cellIndex =0;
-			        		row = serviceSheet.createRow(rowIndex);
-			        		row.createCell(cellIndex++).setCellValue(service.getZone());
-			        		row.createCell(cellIndex++).setCellValue(service.getItem());
-			        		row.createCell(cellIndex++).setCellValue(service.getUom());
-			        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
-			        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
-			        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
-			        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
-			        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
-			        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
-			        		row.createCell(cellIndex++).setCellValue(service.getTotalAmount());
-			        		
-			        	}
-			        	
-			            for (int x = 0; x < serviceSheet.getRow(0).getPhysicalNumberOfCells(); x++) {
-				        	serviceSheet.autoSizeColumn(x);
-				        }
-			        }else{
-			        	wb.removeSheetAt(1);
-			        }
-			        
-			        wb.setActiveSheet(0);
-			        FileOutputStream os = new FileOutputStream(getActualFilePath(attachment));
-			        wb.write(os);
-			        os.flush();
-			        os.close();
-			      
-				} catch (IOException e) {
-					e.printStackTrace();
+	private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item) {
+		JadualHargaBean jadualHarga = new JadualHargaBean();
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat nf = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item
+				.getTplSpecZoneDtl().getZoneName() : "N/A");
+		jadualHarga.setItem(item.getScRequestItem().getItemName());
+		jadualHarga.setUnitPrice(nf.format(item.getUnitPrice().longValue()));
+		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
+				.getClUom().getUomName());
+		jadualHarga.setFreqUom(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomFrequency() ? "N/A" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
+				.toString());
+		jadualHarga.setUomPerDay(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerDay() ? "N/A" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerDay()
+				.toString());
+		jadualHarga.setUomPerMonth(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerMonth() ? "N/A" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
+				.toString());
+		jadualHarga.setUomPerYear(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClDurationMonth() ? "N/A" : item
+				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
+				.toString());
+		jadualHarga.setQuantity(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClQuantity() ? "N/A" : item
+				.getScRequestItem().getTplSpecQuestion().getClQuantity()
+				.toString());
+		jadualHarga.setTotalAmount(item
+				.getUnitPrice()
+				.multiply(
+						item.getScRequestItem().getTplSpecQuestion()
+								.getClQuantity()).toString());
+
+		return jadualHarga;
+
+	}
+
+	private void generateJadualHarga(ScAttachment attachment,
+			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList)
+			throws Exception {
+		if (serviceList.size() > 0 || productList.size() > 0) {
+			try {
+				FileInputStream inputStream = new FileInputStream(new File(
+						FacesContext.getCurrentInstance().getExternalContext()
+								.getRealPath("/WEB-INF/templates")
+								+ "/sc/loa/jadual-harga.xlsx"));
+				XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
+																	// HSSFWorkbook();
+				boolean emptyProductList = false;
+				Sheet productSheet = null;
+				Sheet serviceSheet = null;
+				Row row = null;
+				int rowIndex = 0;
+				int cellIndex = 0;
+				if (productList.size() > 0) {
+					rowIndex = 0;
+					productSheet = wb.getSheetAt(0);
+					wb.setSheetName(0, "ProductSheet");
+					for (JadualHargaBean product : productList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = productSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								product.getZone());
+						row.createCell(cellIndex++).setCellValue(
+								product.getItem());
+						row.createCell(cellIndex++).setCellValue(
+								product.getUom());
+						row.createCell(cellIndex++).setCellValue(
+								product.getQuantity());
+						row.createCell(cellIndex++).setCellValue(
+								product.getSubSequence());
+						row.createCell(cellIndex++).setCellValue(
+								product.getUnitPrice());
+						row.createCell(cellIndex++).setCellValue(
+								product.getTotalAmount());
+					}
+					// Auto size all the columns
+					for (int x = 0; x < productSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						productSheet.autoSizeColumn(x);
+					}
+				} else {
+					wb.removeSheetAt(0);
+					emptyProductList = true;
 				}
+
+				if (serviceList.size() > 0) {
+					rowIndex = 0;
+					if (emptyProductList) {
+						serviceSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ServiceSheet");
+					} else {
+						serviceSheet = wb.getSheetAt(1);
+						wb.setSheetName(1, "ServiceSheet");
+					}
+
+					for (JadualHargaBean service : serviceList) {
+						rowIndex++;
+						cellIndex = 0;
+						row = serviceSheet.createRow(rowIndex);
+						row.createCell(cellIndex++).setCellValue(
+								service.getZone());
+						row.createCell(cellIndex++).setCellValue(
+								service.getItem());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUom());
+						row.createCell(cellIndex++).setCellValue(
+								service.getFreqUom());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerDay());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerMonth());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUomPerYear());
+						row.createCell(cellIndex++).setCellValue(
+								service.getQuantity());
+						row.createCell(cellIndex++).setCellValue(
+								service.getUnitPrice());
+						row.createCell(cellIndex++).setCellValue(
+								service.getTotalAmount());
+
+					}
+
+					for (int x = 0; x < serviceSheet.getRow(0)
+							.getPhysicalNumberOfCells(); x++) {
+						serviceSheet.autoSizeColumn(x);
+					}
+				} else {
+					wb.removeSheetAt(1);
+				}
+
+				wb.setActiveSheet(0);
+				FileOutputStream os = new FileOutputStream(
+						getActualFilePath(attachment));
+				wb.write(os);
+				os.flush();
+				os.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+	}
+
+	public void generateSuppLoiLoaList() {
+
+		SuppLoiLoaBean suppLoaLoi = null;
+		List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
+		if (getManagedBean().getSelectedLoiLoa() != null) {
+			for (ScLoi scLoi : getManagedBean().getSelectedLoiLoa().getScLois()) {
+				suppLoaLoi = new SuppLoiLoaBean();
+				suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
+				suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
+				// suppLoaLoi.setStatus(getStatusDescById(scLoi.get()
+				// .getStatusId()));
+				suppLoaLoi.setScLoi(scLoi);
+				suppLoiLoaList.add(suppLoaLoi);
+			}
+
+			for (ScLoa scLoa : getManagedBean().getSelectedLoiLoa().getScloas()) {
+				suppLoaLoi = new SuppLoiLoaBean();
+				suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
+				suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
+				// suppLoaLoi.setStatus(getStatusDescById(scLoa.getPmStatus()
+				// .getStatusId()));
+				suppLoaLoi.setScLoa(scLoa);
+				suppLoiLoaList.add(suppLoaLoi);
+			}
+
+			getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
+		}
+	}
+
+	public void showItemDetailsPopUps(SuppLoiLoaBean suppLoiLoaBean) {
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			String language = new FacesScopes().getUserLocale().getLanguage();
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			AwardSupplierResDTO resDTO = null;
+			reqDTO.setLanguageCode(language);
+
+			if (suppLoiLoaBean.getScLoa() != null) {
+				reqDTO.setScLoa(suppLoiLoaBean.getScLoa());
+				resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			} else if (suppLoiLoaBean.getScLoi() != null) {
+				reqDTO.setScLoi(suppLoiLoaBean.getScLoi());
+				resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			}
+
+			if (resDTO != null) {
+				if (resDTO.getScLoa() != null) {
+					suppLoiLoaBean.setScLoa(resDTO.getScLoa());
+					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoa().getScLoiLoaItems());
+				} else if (resDTO.getScLoi() != null) {
+					suppLoiLoaBean.setScLoi(resDTO.getScLoi());
+					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoi().getScLoiLoaItems());
+				}
+			}
+
+			getManagedBean().setSelectedSuppLoiLoaBean(suppLoiLoaBean);
+
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			qtAwardSO = null;
+		}
+	}
+
+	public String goQtEditLoaAction(SuppLoiLoaBean suppLoiLoaBean) {
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			String language = new FacesScopes().getUserLocale().getLanguage();
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			AwardSupplierResDTO resDTO = null;
+			reqDTO.setLanguageCode(language);
+
+			if (suppLoiLoaBean.getScLoa() != null) {
+				reqDTO.setScLoa(suppLoiLoaBean.getScLoa());
+				resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			} else if (suppLoiLoaBean.getScLoi() != null) {
+				reqDTO.setScLoi(suppLoiLoaBean.getScLoi());
+				resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			}
+
+			if (resDTO != null) {
+				if (resDTO.getScLoa() != null) {
+					return editLOAAction(resDTO.getScLoa());
+				} else if (resDTO.getScLoi() != null) {
+					return null;
+				}
+			}
+
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			qtAwardSO = null;
+		}
+		return "";
+	}
+
+	public void addProgressiveDetails() {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		List<ScQtProgressivePayment> progressive = this.getManagedBean()
+				.getProgressivePaymentList();
+		if (null == progressive) {
+			progressive = new ArrayList<ScQtProgressivePayment>();
+
+		}
+
+		if (progressive.size() > this.getManagedBean()
+				.getTotalProgressivePayment()) {
+
+			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
+			for (int j = 0; j < this.getManagedBean()
+					.getTotalProgressivePayment(); j++) {
+				progressiveList.add(progressive.get(j));
+
+			}
+			this.getManagedBean().setProgressivePaymentList(progressiveList);
+		} else {
+			for (int i = progressive.size(); i < this.getManagedBean()
+					.getTotalProgressivePayment(); i++) {
+
+				ScQtProgressivePayment payment = new ScQtProgressivePayment();
+				payment.setStartYear(String.valueOf(year));
+				payment.setEndYear(String.valueOf(year));
+				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+				// payment.setScheduleType(new BigDecimal(1));
+
+				setUserDetails(payment);
+				progressive.add(payment);
+			}
+			this.getManagedBean().setProgressivePaymentList(progressive);
+		}
+	}
+
+	private void saveProgressivePaymntList() {
+		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
+				.getProgressivePaymentList();
+		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
+			String Startmonth = "";
+			String endmonth = "";
+			for (ScQtProgressivePayment payment : progressivePayemnt) {
+				if (payment.getStartMonth().equalsIgnoreCase("0")) {
+					Startmonth = "01";
+				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
+					Startmonth = "02";
+				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
+					Startmonth = "03";
+				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
+					Startmonth = "04";
+				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
+					Startmonth = "05";
+				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
+					Startmonth = "06";
+				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
+					Startmonth = "07";
+				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
+					Startmonth = "08";
+				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
+					Startmonth = "09";
+				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
+					Startmonth = "10";
+				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
+					Startmonth = "11";
+				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
+					Startmonth = "12";
+				}
+				if (payment.getEndMonth().equalsIgnoreCase("0")) {
+					endmonth = "01";
+				} else if (payment.getEndMonth().equalsIgnoreCase("1")) {
+					endmonth = "02";
+				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
+					endmonth = "03";
+				}
+
+				else if (payment.getEndMonth().equalsIgnoreCase("3")) {
+					endmonth = "04";
+				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
+					endmonth = "05";
+				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
+					endmonth = "06";
+				}
+
+				else if (payment.getEndMonth().equalsIgnoreCase("6")) {
+					endmonth = "07";
+				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
+					endmonth = "08";
+				} else if (payment.getEndMonth().equalsIgnoreCase("8")) {
+					endmonth = "09";
+				} else if (payment.getEndMonth().equalsIgnoreCase("9")) {
+					endmonth = "10";
+				} else if (payment.getEndMonth().equalsIgnoreCase("10")) {
+					endmonth = "11";
+				} else if (payment.getEndMonth().equalsIgnoreCase("11")) {
+					endmonth = "12";
+				}
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/" + Startmonth + "/"
+						+ payment.getStartYear();
+				String toDate = date + "/" + endmonth + "/"
+						+ payment.getEndYear();
+				try {
+					if (df.parse(fromdate).after(df.parse(toDate))) {
+						throw new EpException(MessageConst.ERROR_715011);
+					} else {
+						payment.setFromDate(df.parse(fromdate));
+						payment.setToDate(df.parse(toDate));
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				payment.setScLoa(getManagedBean().getScLoa());
+				paymentList.add(payment);
+			}
+			getManagedBean().getScLoa().setScQtProgPayments(paymentList);
+
+		} else {
+			getManagedBean().getScLoa().setScQtProgPayments(null);
+		}
+	}
+
+	public StreamedContent getBondLetterStreamContent() throws Exception {
+		
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoa()
+				.getLoaNo());
+		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment);
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
+				pbAttachment,
+				CommonConstants.FILE_CONTENT_TYPE_PDF);
+
+		return pbStreamContent;
+
+	}
+	
+	private void generateBondLetterFromVelocityToPdf(
+			ScAttachment attachment) throws Exception {
+		attachment.setFileName("Bond Letter.pdf");
+		populateAttachmentDetails(attachment);
+		VelocityContext context = new VelocityContext();
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_BOND_LETTER, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
 }

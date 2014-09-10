@@ -16,14 +16,18 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -44,6 +48,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String selectedContractAgency;
 	private String attachmentDocType;
 	private ScLoa scLoa;
+	private ScQt scQt;
 	private SmPersonnel supplierHQPersonnel;
 	private ScLoaWitness loaAgencyWitness;
 	private ScLoaWitness loaSupplierWitness;
@@ -55,6 +60,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private StreamedContent loaStreamContent;
 	private List<ScLoaReport> selectedScLoaReports;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
+	private ScLoiLoa selectedLoiLoa;
+	private SuppLoiLoaBean selectedSuppLoiLoaBean;
 	
 	// Selection list - LOA Details.
 	private List<PmParameterDesc> agencyList;
@@ -84,6 +91,12 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<ScQtSchedule> scheduleList;
 	private List<SelectItem> yearList;
 	private List<SelectItem> yearsDisplayList;
+	
+	private List<SuppLoiLoaBean> suppLoiLoaList;
+	
+	private int totalProgressivePayment;
+	private List<ScQtProgressivePayment> progressivePaymentList;
+	private String bondAmountWord;
 	
 	
 	public LOADetailManagedBean() {
@@ -680,6 +693,62 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
 		this.yearsDisplayList = yearsDisplayList;
+	}
+
+	public List<SuppLoiLoaBean> getSuppLoiLoaList() {
+		return suppLoiLoaList;
+	}
+
+	public void setSuppLoiLoaList(List<SuppLoiLoaBean> suppLoiLoaList) {
+		this.suppLoiLoaList = suppLoiLoaList;
+	}
+
+	public SuppLoiLoaBean getSelectedSuppLoiLoaBean() {
+		return selectedSuppLoiLoaBean;
+	}
+
+	public void setSelectedSuppLoiLoaBean(SuppLoiLoaBean selectedSuppLoiLoaBean) {
+		this.selectedSuppLoiLoaBean = selectedSuppLoiLoaBean;
+	}
+
+	public ScLoiLoa getSelectedLoiLoa() {
+		return selectedLoiLoa;
+	}
+
+	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
+		this.selectedLoiLoa = selectedLoiLoa;
+	}
+
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	public List<ScQtProgressivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+	public void setProgressivePaymentList(List<ScQtProgressivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+	public int getTotalProgressivePayment() {
+		return totalProgressivePayment;
+	}
+
+	public void setTotalProgressivePayment(int totalProgressivePayment) {
+		this.totalProgressivePayment = totalProgressivePayment;
+	}
+
+	public String getBondAmountWord() {
+		return bondAmountWord;
+	}
+
+	public void setBondAmountWord(String bondAmountWord) {
+		this.bondAmountWord = bondAmountWord;
 	}
 
 }

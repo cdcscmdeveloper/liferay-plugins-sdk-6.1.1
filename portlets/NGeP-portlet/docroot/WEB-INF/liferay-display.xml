@@ -86,6 +86,7 @@
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
 			<portlet id="scDpLoaList" />
+			<portlet id="scQtLoaList" />
 			<portlet id="scLoaReview" />
 			<portlet id="scLoaSupplierResponse" />
 			<portlet id="scEvaluation Stage2" />

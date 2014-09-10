@@ -1,0 +1,89 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:messages id="qtloaMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+		<ui:include src="qtLoaListHeader.xhtml" />
+		<p:panel id="suppListPanel" toggleable="true" toggleSpeed="500">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']}" />
+			</f:facet>
+			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.award.type']}"></h:outputLabel>
+				<p:inputText id="awardType"
+					value="#{qtLOABackingBean.getParameterDesc(lOADetailBackingBean.managedBean.selectedLoiLoa.recommendTypeCode)}"
+					disabled="true" size="30" readonly="true" />
+			</h:panelGrid>
+			<p:dataTable id="qtLoaTbl" var="scLoiLoa"
+				value="#{qtLOABackingBean.managedBean.scLoiLoaList}"
+				rows="10"
+				selection="#{lOADetailBackingBean.managedBean.selectedLoiLoa}"
+				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex"
+				selectionMode="single">
+				<ac:paginator for="qtLoaTbl" />
+				<p:ajax event="rowSelect"
+					listener="#{lOADetailBackingBean.generateSuppLoiLoaList}"
+					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
+				<p:ajax event="rowUnselect"
+					listener="#{lOADetailBackingBean.generateSuppLoiLoaList}"
+					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
+
+				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}">
+					#{scLoiLoa.supplierName}
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
+					<p:commandButton icon="ui-icon-add"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{lOADetailBackingBean.editLOAAction(scPurchaseRequest.scLoa)}"
+						rendered="#{empty scLoiLoa.scloas}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<br />
+		 <p:panel id="supploaloalistPnl" toggleable="true" toggleSpeed="500">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']}" />
+			</f:facet>
+			<p:dataTable id="qtLoiLoaList" var="loiloa" rows="10"
+				value="#{lOADetailBackingBean.managedBean.suppLoiLoaList}"
+				rowIndexVar="rowIndex">
+				<ac:paginator for="qtLoiLoaList" />
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
+					#{loiloa.loiLoaNo}
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.loiloa.type']}">
+					#{loiloa.type}
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.item']}">
+					<p:commandLink
+						actionListener="#{lOADetailBackingBean.showItemDetailsPopUps(loiloa)}"
+						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
+						process="@this">
+						<p:graphicImage library="ep/images/design" name="document.png" title="Item Detail" 
+							value="/resources/ep/images/design/document.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.loiloa.status']}">
+					#{loiloa.status}
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
+						<p:commandButton icon="ui-icon-edit" title="edit" rendered="#{loiloa.type eq 'LOI'}"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{lOIDetailBackingBean.createLOI()}" />
+					<p:commandButton icon="ui-icon-edit" title="edit"  rendered="#{loiloa.type eq 'LOA'}"
+						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+						action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		<ui:include src="qtItemDetailPopUp.xhtml" /> 
+	</ui:define>
+
+</ui:composition>

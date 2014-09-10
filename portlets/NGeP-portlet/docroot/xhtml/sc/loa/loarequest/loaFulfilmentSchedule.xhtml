@@ -6,10 +6,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="isDocTypeQuotation"
+		value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+	<ui:param name="isDocTypePurchaseRequest"
+		value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypePurchaseRequest}" />
 	<h:panelGroup id="frequency">
 		<h:panelGroup id="schedule">
-		 	<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
-				toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
+				toggleable="true"
+				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
@@ -17,7 +22,7 @@
 						value="#{lOADetailBackingBean.managedBean.totalFrequency}">
 						<p:ajax event="blur" update="frequencySchedule"
 							partialSubmit="true" process="@this"
-						 	listener="#{lOADetailBackingBean.addScheduleDetails}" />
+							listener="#{lOADetailBackingBean.addScheduleDetails}" />
 					</p:inputText>
 				</h:panelGrid>
 				<p:dataTable id="frequencySchedule" var="frequency"
@@ -43,8 +48,8 @@
 						<p:selectOneMenu style="width:100px;" required="true"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true" 
-							listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"/>  
+							<p:ajax process="@this" event="change" partialSubmit="true"
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
@@ -52,10 +57,9 @@
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}"
 							style="width:100px;" required="true">
-							<f:selectItems
-								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax process="@this" event="change" partialSubmit="true" 
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"/>  
+							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+							<p:ajax process="@this" event="change" partialSubmit="true"
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
 						</p:selectOneMenu>
 					</p:column>
 
@@ -65,17 +69,19 @@
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
+							<p:ajax event="change" update="scheduleDetails"
+								partialSubmit="true"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" required="true">
-							<f:selectItems
-								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax event="change" update="scheduleDetails" partialSubmit="true"
+						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;"
+							required="true">
+							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+							<p:ajax event="change" update="scheduleDetails"
+								partialSubmit="true"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
@@ -83,7 +89,8 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
 						style="width:10%">
 						<h:panelGroup id="scheduleDetails">
-							<h:outputText style="text-align:right" value="#{frequency.totalMonths}"></h:outputText>
+							<h:outputText style="text-align:right"
+								value="#{frequency.totalMonths}"></h:outputText>
 						</h:panelGroup>
 					</p:column>
 
@@ -104,8 +111,103 @@
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
-				<p:spacer height="20"></p:spacer> 
+				<p:spacer height="20"></p:spacer>
 			</p:panel>
 		</h:panelGroup>
+	</h:panelGroup>
+
+	<h:panelGroup id="progressive">
+			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
+				toggleable="true"
+				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'P'}">
+
+				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
+					<p:inputText
+						value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}">
+						<p:ajax event="blur" update="progressivePayment"
+							partialSubmit="true" process="@this"
+							listener="#{lOADetailBackingBean.addProgressiveDetails}" />
+					</p:inputText>
+				</h:panelGrid>
+				<p:dataTable id="progressivePayment" var="payment"
+					rowIndexVar="index"
+					value="#{lOADetailBackingBean.managedBean.progressivePaymentList}">
+					<ac:paginator for="progressivePayment" />
+
+					<p:column style="width:10%" headerText="#{lbl['lbl.sc.spec.phase']}">		
+						<h:outputText value="#{payment.phaseNo}"  id="progressivePhase">
+						</h:outputText>
+					</p:column>
+					<p:column style="width:10%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
+						</f:facet>
+						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
+							required="true" id="progressivePhasedesc" style="width:100px;">
+							<p:ajax event="blur" partialSubmit="true" process="@this" />
+						</p:inputText>
+						<p:message id="phaseDescId" for="progressivePhasedesc"
+							display="icon"></p:message>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
+						style="width:15%">
+						<p:selectOneMenu style="width:100px;"
+							value="#{payment.startMonth}">
+							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
+							<p:ajax process="@this" event="change" partialSubmit="true"/>
+						</p:selectOneMenu>
+
+					</p:column>
+					<p:column
+						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
+						style="width:15%">
+
+						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
+							<f:selectItems
+								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+								<p:ajax process="@this" event="change" partialSubmit="true"/>
+						</p:selectOneMenu>
+
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
+						style="width:15%">
+						<p:selectOneMenu style="width:100px;" value="#{payment.endMonth}">
+
+							<f:selectItems value="#{lOADetailBackingBean.yearDetails}">
+							</f:selectItems>
+							<p:ajax process="@this" event="change" partialSubmit="true"/>
+						</p:selectOneMenu>
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+						style="width:15%">
+						<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
+							<f:selectItems
+								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
+								<p:ajax process="@this" event="change" partialSubmit="true"/>
+						</p:selectOneMenu>
+
+					</p:column>
+					<p:column style="width:10%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
+						</f:facet>
+						<p:inputText value="#{payment.percentage}" required="true"
+							id="progressivePercentage" style="width:100px;"
+							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
+							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+							<p:ajax event="blur" partialSubmit="true" process="@this" />
+						</p:inputText>
+						<p:message id="pahsePercentage" for="progressivePercentage"
+							display="icon"></p:message>
+					</p:column>
+				</p:dataTable>
+				<p:spacer height="20"></p:spacer>
+			</p:panel>
 	</h:panelGroup>
 </ui:composition>
