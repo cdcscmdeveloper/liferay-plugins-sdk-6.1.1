@@ -434,6 +434,8 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+			retriveBusinessOwnerQualificationCriteri();
 			retriveTechnicalSpecification();
 			break;
 		case 3:
@@ -445,6 +447,9 @@ public class SpecificationBackingBean extends
 				renewSesionObject();
 			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+			retriveBusinessOwnerQualificationCriteri();
+			retriveTechnicalSpecification();
 			retriveFinancialSpecification();
 			break;
 		case 4:
