@@ -751,11 +751,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.searchViewPendingCodifiedItems(reqDTO);
 				for (VCmPendingCodifiedItem vCmPendingItem : resDTO
 						.getViewPendingCodifiedItemList()) {
-					if (vCmPendingItem.getOrgProfileId() != null) {
-						vCmPendingItem.setPmOrgProfile(CommonMethod
-								.retrieveOrgProfile(vCmPendingItem
-										.getOrgProfileId()));
-					}
+					System.out.println(".................before calling");
+					System.out.println(".................vCmPendingItem.getPmOrgProfile()="+vCmPendingItem.getPmOrgProfile());
+					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile());
+					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity());
+					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName());
+//					if (vCmPendingItem.getOrgProfileId() != null) {
+//						vCmPendingItem.setPmOrgProfile(CommonMethod
+//								.retrieveOrgProfile(vCmPendingItem
+//										.getOrgProfileId()));
+//					}
 				}
 				setViewPendingCodifiedItemList(resDTO
 						.getViewPendingCodifiedItemList());

@@ -635,22 +635,28 @@ public class CodificationBackingBean extends
 	public String goToAssignUnspsc(VCmPendingCodifiedItem item) {
 		System.out.println("**********goToAssignUnspsc************");
 
-		IRequestItemSO requestItemSO = null;
+//		IRequestItemSO requestItemSO = null;
 
-		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IRequestItemSO.class);
-		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
-
+//		requestItemSO = (IRequestItemSO) BusinessDelegate.getInstance()
+//				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+//						IRequestItemSO.class);
+//		RequestItemReqDTO reqDTO = new RequestItemReqDTO();
+//
+//		reqDTO.setDocType(item.getDocType());
+//		reqDTO.setDocId(item.getDocId());
+//
+//		RequestItemResDTO resDTO = requestItemSO
+//				.retrieveItemListByDocIdNType(reqDTO);
+		IPendingCodifiedItemSO codifiedSO = (IPendingCodifiedItemSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+						IPendingCodifiedItemSO.class);
+		PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
 		reqDTO.setDocType(item.getDocType());
-		reqDTO.setDocId(item.getDocId());
+		reqDTO.setDocID(item.getDocId());
+		PendingCodifiedItemResDTO resDTO = codifiedSO.retrieveScRequestItemListByDocIdNType(reqDTO);
 
-		RequestItemResDTO resDTO = requestItemSO
-				.retrieveItemListByDocIdNType(reqDTO);
-
-		List<ScRequestItem> list = resDTO.getItemResultBean().getResultList();
 		// set the requestItemList of the pendingCodifiedItem
-		this.getManagedBean().setSelectedVPendingRequestItemList(list);
+		this.getManagedBean().setSelectedVPendingRequestItemList(resDTO.getRequestItemList());
 		this.getManagedBean().setSelectedVPendingCodifiedItem(item);
 		// this.getManagedBean().setItemCode(null);
 		return NAV_TO_ASSIGN_PRODUCT_CODE;
@@ -1866,9 +1872,9 @@ public class CodificationBackingBean extends
 								.getBrandName()));
 			}
 		}
-		System.out
-				.println("..................this.getManagedBean().getBrandCriteria().size()="
-						+ this.getManagedBean().getBrandCriteria().size());
+//		System.out
+//				.println("..................this.getManagedBean().getBrandCriteria().size()="
+//						+ this.getManagedBean().getBrandCriteria().size());
 
 		for (CmType type : unspscObj.getCmType()) {
 			if (!StringUtils.isBlank(type.getTypeName())) {
