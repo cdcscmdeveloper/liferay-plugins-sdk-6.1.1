@@ -1,0 +1,61 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+<br/>
+					<p:dataTable id="dtCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						selection="#{supportDocBackingBean.managedBean.deleteCategoryRestrictions}" rowKey="#{restrict}"
+						value="#{supportDocBackingBean.managedBean.categoryRestrictions}" var="restrict"
+						>
+						<ac:paginator for="dtCat" />
+						<p:ajax event="toggleSelect" update="@this" process="@this" />
+						<p:ajax event="rowSelectCheckbox" update="@this" />
+						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+				        <p:column headerText="#{lbl['lbl.pm.category.l1']}">  
+					    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
+				        </p:column>  
+				        <p:column headerText="#{lbl['lbl.pm.category.l2']}">  
+					    	#{restrict.pmCategoryL3.pmCategoryL2.categoryName}
+				        </p:column>  
+				        <p:column headerText="#{lbl['lbl.pm.category.l3']}">  
+					    	#{restrict.pmCategoryL3.categoryName}
+				        </p:column>   
+				        <p:column>  
+				        	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
+				      	   <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+								<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+							</p:selectOneMenu>
+				        </p:column>  
+				   	</p:dataTable>
+				   	<br/>
+			   		<div class="ppRightBtn">
+			   			<table style="float:right;">
+							<tr>
+								<td>
+									<!--  Popup Category Details -->
+									<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" styleClass="ppDisplayCalS" 
+						            	readonly="true" selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
+										headerText="#{lbl['lbl.pm.search.category']}" update=":form:tvDocRestriction:dtCat"
+										saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
+										postUpdateListener="supportDocBackingBean.updateCategoryL3(supportDocBackingBean.managedBean.selectedCategoryL3s)"
+										conditionField="recordStatus^1" 
+										/>
+								</td>
+								<td>
+									<p:commandButton value="#{lbl['lbl.btn.delete']}"  update="dtCat"
+										immediate="true"
+										/> 
+								</td>
+							</tr>
+						</table>
+					</div>
+
+</ui:composition>

@@ -66,6 +66,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public static final int RESTR_SUPP = 3;
 	public static final int RESTR_CATEGORY = 4;
 	
+	
+	
 	//Mapper for DDL object
 	private static Map<Long, Object> docCategoryMapper;
 	
@@ -78,6 +80,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void preLoading(){
 		log.info("preLoading");
 		this.resetSupportDocSearchBean();
+		this.getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -181,8 +184,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			if(pmDocument.getPmZone()==null){
 				pmDocument.setPmZone(new PmZone());
 			}
-			if(pmDocument.getPmZone()==null){
-				pmDocument.setPmZone(new PmZone());
+			if(pmDocument.getDocDefinitionTypeCode()==null){
+				pmDocument.setDocDefinitionTypeCode(new PmParameter());
 			}
 			
 			this.getManagedBean().setSelectedDocument(pmDocument);
@@ -195,6 +198,18 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("loadSupportDoc - End");
 	}
 	
+	public void defaultTab(PmDocument pmDocument){
+		log.info("defaultTab");
+		if(pmDocument.isByAppType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_APP);
+		}else if(pmDocument.isByCompType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_COMP);
+		}else if(pmDocument.isBySupplierType()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_SUPP);
+		}else if(pmDocument.isByCategory()){
+			this.getManagedBean().setSelectedTabIndex(RESTR_CATEGORY);
+		}
+	}
 	/**
 	 * load the pm document to tab view by restriction type
 	 * @param pmDocument
@@ -208,20 +223,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				List <PmDocumentRestr> suppTypeRestrictions = new ArrayList<PmDocumentRestr>();
 				List <PmDocumentRestr> categoryRestrictions = new ArrayList<PmDocumentRestr>();
 				for(PmDocumentRestr pmDocumentRestr:pmDocument.getPmDocumentRestrs()){
-					if(pmDocument.isByAppType()){
-						appTypeRestrictions.add(pmDocumentRestr);
-					}else if(pmDocument.isByCompType()){
-						comTypeRestrictions.add(pmDocumentRestr);
-					}else if(pmDocument.isBySupplierType()){
-						suppTypeRestrictions.add(pmDocumentRestr);
-					}else if(pmDocument.isByCategory()){
-						categoryRestrictions.add(pmDocumentRestr);
-					}
+					
 				}
+
 				this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
 				this.getManagedBean().setComTypeRestrictions(comTypeRestrictions);
 				this.getManagedBean().setSuppTypeRestrictions(suppTypeRestrictions);
 				this.getManagedBean().setCategoryRestrictions(categoryRestrictions);
+				
+				defaultTab(pmDocument);
 			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())
 					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 				List <PmDocumentRestr> categoryRestriction = new ArrayList<PmDocumentRestr>();

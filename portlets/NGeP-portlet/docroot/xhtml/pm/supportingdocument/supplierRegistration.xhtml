@@ -25,25 +25,29 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			</th>
 			<td colspan="3">
 				<p:selectBooleanCheckbox id="chkAppType" value="#{supportDocBackingBean.managedBean.selectedDocument.byAppType}">
-					<p:ajax event="change" update="pDocRestriction" />
+					<p:ajax event="change" update="pDocRestriction" 
+						listener="#{supportDocBackingBean.defaultTab(supportDocBackingBean.managedBean.selectedDocument)}"/>
 				</p:selectBooleanCheckbox>
 			 	<h:outputText value="#{lbl['lbl.pm.by.application.type']}"/>
 			 	<br/>
 			 	
 				<p:selectBooleanCheckbox id="chkComType" value="#{supportDocBackingBean.managedBean.selectedDocument.byCompType}">
-					<p:ajax event="change" update="pDocRestriction" />
+					<p:ajax event="change" update="pDocRestriction" 
+						listener="#{supportDocBackingBean.defaultTab(supportDocBackingBean.managedBean.selectedDocument)}"/>
 				</p:selectBooleanCheckbox>
 				<h:outputText value="#{lbl['lbl.pm.by.company.type']}"/>
 				<br/>
 				
 				<p:selectBooleanCheckbox id="chkSuppType" value="#{supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
-					<p:ajax event="change" update="pDocRestriction" />
+					<p:ajax event="change" update="pDocRestriction" 
+						listener="#{supportDocBackingBean.defaultTab(supportDocBackingBean.managedBean.selectedDocument)}"/>
 				</p:selectBooleanCheckbox>
 				<h:outputText value="#{lbl['lbl.pm.by.supplier.type']}"/>
 				<br/>
 				
 				<p:selectBooleanCheckbox id="chkCat" value="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-					<p:ajax event="change" update="pDocRestriction" />
+					<p:ajax event="change" update="pDocRestriction" 
+						listener="#{supportDocBackingBean.defaultTab(supportDocBackingBean.managedBean.selectedDocument)}"/>
 				</p:selectBooleanCheckbox>
 				<h:outputText value="#{lbl['lbl.pm.by.category']}"/>
 				<br/>

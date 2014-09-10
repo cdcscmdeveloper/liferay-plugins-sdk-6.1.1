@@ -1,0 +1,52 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+
+	<br/>
+	<p:dataTable id="dtAppType" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+		 selection="#{supportDocBackingBean.managedBean.deleteAppTypeRestrictions}" rowKey="#{restrict}"
+		 value="#{supportDocBackingBean.managedBean.appTypeRestrictions}" var="restrict" 
+		>
+		<ac:paginator for="dtAppType" />
+		<p:ajax event="toggleSelect" update="@this" process="@this" />
+		<p:ajax event="rowSelectCheckbox" update="@this" />
+		<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
+        <p:column>
+       	    <f:facet name="header">
+		     	<h:outputText value="* " styleClass="mandatory" />
+		     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
+		    </f:facet>
+	    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthL"
+				value="#{restrict.appTypeCode.parameterId}">
+				<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
+				<p:ajax event="change" update="somAppType"/>
+			</p:selectOneMenu>
+        </p:column>  
+        <p:column>  
+        	<f:facet name="header">
+		     	<h:outputText value="* " styleClass="mandatory" />
+		     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+		    </f:facet>
+         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+				<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
+			</p:selectOneMenu>
+        </p:column>  
+   	</p:dataTable>
+   	<br/>
+  		<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.add']}" update="dtAppType"
+			action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.restrApp)}"
+			immediate="true"/>
+		&#160;
+		<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}" update="dtAppType"
+			action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrApp)}"
+			immediate="true" 
+			/> 
+	</div>
+</ui:composition>

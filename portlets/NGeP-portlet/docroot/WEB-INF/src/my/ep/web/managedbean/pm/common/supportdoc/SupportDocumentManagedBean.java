@@ -40,8 +40,23 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteCategoryRestrictions;
 	private List <PmDocumentRestr> deleteCheckListRestrictions;	
 	private List <PmCategoryL3> selectedCategoryL3s;
+	private int selectedTabIndex;
 	
 	
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
+	}
+
 	/**
 	 * @return the appTypeRestrictions
 	 */
