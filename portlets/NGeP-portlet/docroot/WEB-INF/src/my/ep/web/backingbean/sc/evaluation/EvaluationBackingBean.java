@@ -2665,8 +2665,9 @@ public class EvaluationBackingBean extends
 
 			}
 			if (outputTab == 4) {
-				// this.getManagedBean().setScqt(new ScQt());
-				// retrivesummary();
+				if (this.getManagedBean().getScQtEvaluationReport() == null) {
+					this.getManagedBean().setScQtEvaluationReport(new ScQtEvaluationReport());
+				}
 				retrieveReportTabDtl();
 			}
 			if (outputTab == 5) {
