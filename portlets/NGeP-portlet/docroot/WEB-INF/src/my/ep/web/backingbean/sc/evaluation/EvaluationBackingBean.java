@@ -2438,6 +2438,12 @@ public class EvaluationBackingBean extends
 				else if (QTConstants.FINANCIAL_SUPPLIER_DETAILS_CODE
 						.equalsIgnoreCase(proposalCheckList.getScQtCheckList()
 								.getPmDocument().getDocDefinitionKey())) {
+					this.getManagedBean().setScQtChecklist(
+							proposalCheckList.getScQtCheckList());
+					this.getManagedBean().setQtProposalChecklist(
+							proposalCheckList);
+
+					reqDTO.setProposalChecklist(proposalCheckList);
 					return "supplierInfo.xhtml";
 				}
 			}
