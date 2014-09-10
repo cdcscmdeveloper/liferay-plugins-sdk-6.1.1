@@ -66,9 +66,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private BigDecimal orderedAmtTotal ;
 	private BigDecimal danAmtTotal ;
 	private BigDecimal invAmtTotal ;
-	
-	
-	
+	private String accountNoName;
 	
 	
 	/**
@@ -372,6 +370,18 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setInvAmtTotal(BigDecimal invAmtTotal) {
 		this.invAmtTotal = invAmtTotal;
+	}
+	/**
+	 * @return the accountNoName
+	 */
+	public String getAccountNoName() {
+		return accountNoName;
+	}
+	/**
+	 * @param accountNoName the accountNoName to set
+	 */
+	public void setAccountNoName(String accountNoName) {
+		this.accountNoName = accountNoName;
 	}
 	
 }

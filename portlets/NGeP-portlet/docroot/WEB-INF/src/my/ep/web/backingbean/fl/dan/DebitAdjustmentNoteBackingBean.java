@@ -154,6 +154,8 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 		if(getManagedBean().getAdjustment().getFlOrder().isFactored()){
 			getFactoringBranchDtl();
+		}else{
+			getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
 		}
 		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -210,6 +212,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
 					getManagedBean().getAdjustment().getFlInvoice().setAccountNo(financialAcc.getAccountNo());
 					getManagedBean().getAdjustment().getFlInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
+					getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
 					break;
 				}
 	        }

@@ -90,11 +90,12 @@
 								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}"/></td>
 							</tr>
 						</table></td>
+						
 					<td style="width: 134px;"><p:outputLabel
-							value="#{lbl['lbl.fl.payment.bank.name']}"
+							value="#{lbl['lbl.fl.bank.acc.no.name']}"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
-					<td><p:inputText size="40"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}"
+					<td><p:inputText size="55"
+							value="#{danBackingBean.managedBean.accountNoName}"
 							disabled="true"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
 				</tr>
@@ -103,12 +104,6 @@
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
 					<td><p:inputText size="50" disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}"
-							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
-					<td style="width: 100px;"><p:outputLabel
-							value="#{lbl['lbl.fl.bank.acc.no']}"
-							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
-					<td><p:inputText size="40" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.accountNo}"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
 				</tr>
 				<tr>
