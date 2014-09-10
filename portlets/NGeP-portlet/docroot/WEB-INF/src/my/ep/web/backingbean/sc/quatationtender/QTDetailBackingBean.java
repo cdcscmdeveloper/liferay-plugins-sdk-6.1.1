@@ -1773,7 +1773,7 @@ public class QTDetailBackingBean extends
 						}
 						if (this.getManagedBean().getZoneTrees().size() == 0
 								&& this.getManagedBean().getZoneTrees() != null) {
-							getManagedBean().getZoneTrees().add(
+							getManagedBean().getZoneTrees().addAll(
 									LocationSingleton.getInstance()
 											.constuctTreeNode(locCriteria));
 						}
@@ -2517,8 +2517,14 @@ public class QTDetailBackingBean extends
 
 	public void retrieveSecretaryNameByCommType(AjaxBehaviorEvent event) {
 		debugLogger("retrieveSecretaryNameByCommType");
-		String commType = (String) event.getComponent().getAttributes()
+		
+		long id = (long) event.getComponent().getAttributes()
 				.get("value");
+		System.out.println("Id : " + id);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterId(id);
+		ParameterResDTO parameterResDTO = getParameterSO().retrieveParameterById(parameterReqDTO);
+		String commType = parameterResDTO.getPmParameter().getParameterCode();
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(commType);
 		reqDTO.setFinalizationSecratary(true);
@@ -2528,9 +2534,12 @@ public class QTDetailBackingBean extends
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO
-					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+					.retrieveCommitteByQtIdNCommType(reqDTO);
+			ScCommittee scCommittee = resDTO.getCommittee();
+			List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
+			/*ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
 			List<ScCommitteeMember> commMembers = resDTO
-					.getCommMemberResultBean().getResultList();
+					.getCommMemberResultBean().getResultList();*/
 			this.getManagedBean().getQt()
 					.setFinalizationSecratery(commMembers.get(0).getPmUser());
 		} finally {

@@ -5,6 +5,8 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -756,6 +758,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
 					locationLevelCode = paramDesc.getPmParameter().getParameterCode();
+					this.getManagedBean().setLocalLevelCode(locationLevelCode);
 					break;
 				}
 			}
@@ -800,6 +803,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
 			for (PmParameterDesc paramDesc : localParamDesc) {
 				if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
+					this.getManagedBean().setLocalLevelCode(paramDesc.getPmParameter().getParameterCode());
 					CountryReqDTO countryReqDTo = new CountryReqDTO();
 					countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 					CountryResDTO countryResDTO = countrySo.retrieveCountryByCode(countryReqDTo);
@@ -827,7 +831,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 					// treeNode.getData();
 					locationDTOs.addAll(locationDTO);
 				}
+
 				else {
+
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
 					// LocationDTO locationDTO = (LocationDTO)
 					// treeNode.getData();
@@ -835,29 +841,218 @@ public class QTSupplierQulCriteriaBackingBean extends
 				}
 			}
 		}
+		
 		List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTO(locationDTOs);
+
 		List<PmDivision> divisions = SourcingLocationHelper
 				.getDivisionFromLocationDTO(locationDTOs);
 		List<PmDistrict> districts = SourcingLocationHelper
 				.getDistrictFromLocationDTO(locationDTOs);
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
-		if (getManagedBean().getIndex() == -1) {
-			getManagedBean().getZoneTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(null,
-							states, districts, divisions, cities,
-							ScQtLocCriteria.class));
+		if (null == getManagedBean().getZoneTrees()) {
+			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 		}
-		if (getManagedBean().getIndex() >= 0) {
-			getManagedBean().getZoneTrees().remove(getManagedBean().getIndex());
-			getManagedBean().getZoneTrees().add(
-					getManagedBean().getIndex(),
-					LocationSingleton.getInstance().buildLocationTree(null,
-							states, districts, divisions, cities,
-							ScQtLocCriteria.class));
+		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != states && !states.isEmpty()) {
+				for (PmState state : states) {
+					List<PmState> localStaeList = new ArrayList<PmState>();
+					localStaeList.add(state);
+					if (getManagedBean().getIndex() == -1) {
+
+						getManagedBean().getZoneTrees().add(
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, localStaeList,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+					}
+					if (getManagedBean().getIndex() >= 0) {
+
+						getManagedBean().getZoneTrees().remove(
+								getManagedBean().getIndex());
+						getManagedBean().getZoneTrees().add(
+								getManagedBean().getIndex(),
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, localStaeList,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+					}
+				}
+
+			}
 		}
+		
+		else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != districts && !districts.isEmpty()) {
+				List<TreeNode> localList = new ArrayList<TreeNode>();
+				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStatesDivisionsDistrictsCities(
+								districts, null);
+				
+				Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
+						.keySet();
+				Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStateDistrictsCities(districts,
+								null);
+				Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
+						.keySet();
+				if (statesDivisionsDistrictsCitiesKeySet != null
+						&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+
+						// TreeNode stateNode = new
+						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
+						// zoneNode);
+						Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+								.get(state);
+						Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+								.keySet();
+						if (divisionsDistrictsCitiesKeySet != null
+								&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
+							divisions.clear();
+							districts.clear();
+							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+
+								// divisions.add(division);
+								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
+										.get(division);
+								Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+										.keySet();
+								if (districtsCitiesKeySet != null
+										&& !districtsCitiesKeySet.isEmpty()) {
+
+									for (PmDistrict district : districtsCitiesKeySet) {
+										districts.add(district);
+									}
+
+								}
+							}
+							if (getManagedBean().getIndex() == -1) {
+
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+							if (getManagedBean().getIndex() >= 0) {
+
+								getManagedBean().getZoneTrees().remove(
+										getManagedBean().getIndex());
+								getManagedBean().getZoneTrees().add(
+										getManagedBean().getIndex(),
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+						}
+					
+					}
+				}
+				
+				if (statesDistrictsCitiesKeySet != null
+						&& !statesDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDistrictsCitiesKeySet) {
+						divisions.clear();
+						Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
+								.get(state);
+						Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+								.keySet();
+						if (districtsCitiesKeySet != null
+								&& !districtsCitiesKeySet.isEmpty()) {
+							districts.clear();
+							for (PmDistrict district : districtsCitiesKeySet) {
+
+								districts.add(district);
+
+							}
+
+						}
+						if (getManagedBean().getIndex() == -1) {
+
+							getManagedBean().getZoneTrees().add(
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, states,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+						if (getManagedBean().getIndex() >= 0) {
+
+							getManagedBean().getZoneTrees().remove(
+									getManagedBean().getIndex());
+							getManagedBean().getZoneTrees().add(
+									getManagedBean().getIndex(),
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, states,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+					
+					}
+				}
+			}
+		}
+		
+		else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != divisions && !divisions.isEmpty()) {
+				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
+						.getInstance().getUniqueStatesDivision(divisions);
+				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+				if (statesDivisionKeySet != null
+						&& !statesDivisionKeySet.isEmpty()) {
+					for (PmState state : statesDivisionKeySet) {
+						divisions.clear();
+
+						// new
+						// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
+						// zoneNode);
+						List<PmDivision> divisions1 = mapStatesDivision
+								.get(state);
+						if (divisions1 != null && !divisions1.isEmpty()) {
+							for (PmDivision division : divisions1) {
+								divisions.add(division);
+
+							}
+							if (getManagedBean().getIndex() == -1) {
+
+								getManagedBean().getZoneTrees().add(
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+							if (getManagedBean().getIndex() >= 0) {
+
+								getManagedBean().getZoneTrees().remove(
+										getManagedBean().getIndex());
+								getManagedBean().getZoneTrees().add(
+										getManagedBean().getIndex(),
+										LocationSingleton.getInstance()
+												.buildLocationTree(null,
+														states, districts,
+														divisions, cities,
+														ScQtLocCriteria.class));
+							}
+						}
+					}
+				}
+
+			
+			}
+		}
+		
 		this.getManagedBean().setIndex(-1);
+		
 	}
 
 
@@ -955,9 +1150,52 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public void deleteSupplierQualificationTreeNode() {
 		debugLogger("deleteSupplierQualificationTreeNode");
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
-		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+		deleteTreeNodes(rootTrees);
+		this.getManagedBean().setIndex(-1);
+	}
+	
+	public void deleteTreeNodes(List<TreeNode> rootTrees) {
+		debugLogger("deleteTreeNodes");
+		if (rootTrees != null) {
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+						rootTrees.remove(row--);
+					} else {
+						deleteChildTreeNodes(zoneTree.getChildren());
+						if (zoneTree.getChildren().size() == 0) {
+							// rootTrees.remove(row--);
+						}
+					}
+				}
+			}
+		}
 	}
 
+	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
+		debugLogger("deleteChildTreeNodes");
+		if (treeNodes != null) {
+			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+					nodesToRemoved.add(treeNode);
+				} else {
+					if (treeNode.getChildren() != null
+							&& treeNode.getChildren().size() > 0) {
+						deleteChildTreeNodes(treeNode.getChildren());
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}
+		}
+	}
+	
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
 
 		List<String> types = new ArrayList<String>();

@@ -267,6 +267,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean durationField = true;
 
 	private int allStateCode;
+	private String LocalLevelCode;
 
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
@@ -2585,6 +2586,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCommType(String commType) {
 		this.commType = commType;
+	}
+
+	public String getLocalLevelCode() {
+		return LocalLevelCode;
+	}
+
+	public void setLocalLevelCode(String localLevelCode) {
+		LocalLevelCode = localLevelCode;
 	}
 
 }

@@ -6,9 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-	<ui:include src="/xhtml/sc/evaluation/uploadEvaluation.xhtml" />
-
 	<p:panel header="#{lbl['lbl.sc.eva.report.contents']}"
 		toggleable="true">
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
@@ -29,10 +26,10 @@
 			</p:column>
 			
 			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
-				<p:commandLink >
+				<p:commandLink action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
-				</p:commandLink>			
+				</p:commandLink>
 				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
 					ajax="false" action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}"/>
 			</p:column>
@@ -43,19 +40,19 @@
 		</div>
 	</p:panel>
 
-	<p:panel header="#{evaluationBackingBean.managedBean.reportHeader}" toggleable="true">
-		<table style="width: 100%" id="bpkremarksupDtlslist">
+	<p:panel header="#{evaluationBackingBean.managedBean.reportHeader}" toggleable="true" id="evauploadfile">
+		<table style="width: 100%">
 			<tr>
-				<td class="TableFieldLeft">
+				<td class="TableFieldLeft" style="width: 100px;">
 					<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}" /></td>
 				<td class="TableFieldRight">
-					<table style="width: 150px;">
+					<table>
 						<tr>
 							<td colspan="2"><p:commandButton
-									oncomplete="uploadDlg.show();"
+									onclick="uploadDlg.show();"
 									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 									partialSubmit="true" process="@this"
-									update="@([id$=reportMangaFile])">
+									update="@([id$=evauploadfile])">
 								</p:commandButton></td>
 						</tr>
 						<tr>
@@ -97,7 +94,20 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog id="uploadDlgids" widgetVar="uploadDlg" modal="true"
+		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.txt.choose.files']}">
 
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
+			mode="advanced" id="dlgsuploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="evauploadfile" oncomplete="uploadDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+	
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
