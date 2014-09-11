@@ -28,17 +28,17 @@
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
-			<p:panel header="Request Info" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 
 				<table style="width: 100%;">
 					<tr>
-						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;" disabled="true">
-								<f:selectItem itemValue="P" itemLabel="Product " />
-								<f:selectItem itemValue="S" itemLabel="Service" />
+								<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+								<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -81,7 +81,7 @@
 
 			</p:panel>
 
-			<p:panel header="Search and Recommend" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true">
 
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.search']}"
@@ -97,7 +97,7 @@
 
 					<p:column>
 						<f:facet name="header">
-					Recommended Item Code
+					#{lbl['lbl.cm.recommended.item.code']}
 				</f:facet>
 
 				
@@ -108,7 +108,7 @@
 				</p:column>
 					<p:column>
 						<f:facet name="header">
-					Recommended Item Name
+					#{lbl['lbl.cm.recommended.item.name']}
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
@@ -133,7 +133,7 @@
 			</p:panel>
 
 
-			<p:panel header="Create Temporary Code" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.create.temporary.code']}" toggleable="true">
 
 				<p:panelGrid style="width:100%;" styleClass="tablePanel"
 					id="tablePanelId">
@@ -143,14 +143,14 @@
 								<h:outputLabel value="" />
 							</p:column>
 							<p:column>
-							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" Code" />
+							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" #{lbl['lbl.cm.code']}" />
 						</p:column>
 							<p:column>
-							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" Title" />
+							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" #{lbl['lbl.cm.doc.title']}" />
 						</p:column>
 
 							<p:column>
-							Description
+							#{lbl['lbl.cm.description']}
 						</p:column>
 						</p:row>
 
@@ -158,7 +158,7 @@
 
 					<p:row>
 						<p:column>
-							<h:outputLabel value="Segment" />
+							<h:outputLabel value="#{lbl['lbl.cm.segment']}" />
 						</p:column>
 						<p:column>
 
@@ -189,10 +189,10 @@
 
 					<p:row>
 						<p:column>
-							<h:outputLabel value="Family" />
+							<h:outputLabel value="#{lbl['lbl.cm.family']}" />
 						</p:column>
 						<p:column>
-							<ac:lov id="familyUploadId" lovId="CM_UNSPSC" headerText="Family"
+							<ac:lov id="familyUploadId" lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.family']}"
 								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
@@ -217,10 +217,10 @@
 
 					<p:row>
 						<p:column>
-							<h:outputLabel value="Class" />
+							<h:outputLabel value="#{lbl['lbl.cm.class']}" />
 						</p:column>
 						<p:column>
-							<ac:lov id="classUploadId" lovId="CM_UNSPSC" headerText="Class"
+							<ac:lov id="classUploadId" lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.class']}"
 								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
@@ -246,11 +246,11 @@
 
 					<p:row>
 						<p:column>
-							<h:outputLabel value="Commodity" />
+							<h:outputLabel value="#{lbl['lbl.cm.commodity']}" />
 						</p:column>
 						<p:column>
 							<ac:lov id="commodityUploadId" lovId="CM_UNSPSC"
-								headerText="Commodity" update=":form:tablePanelId"
+								headerText="#{lbl['lbl.cm.commodity']}" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^3|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
