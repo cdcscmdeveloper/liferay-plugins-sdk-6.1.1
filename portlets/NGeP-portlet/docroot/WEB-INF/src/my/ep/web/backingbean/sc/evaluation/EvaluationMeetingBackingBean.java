@@ -35,6 +35,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -295,6 +296,18 @@ public class EvaluationMeetingBackingBean extends
 				.getManagedBean().getCommitteeType())) {
 			this.getManagedBean().setCommitteeTypeDesc(
 					QTConstants.EVALUATION_COMMITTEE_TAB);
+		} else if (QTConstants.DOCTYPE_OPENING_COMMITTE.equalsIgnoreCase(this
+				.getManagedBean().getCommitteeType())) {
+			this.getManagedBean().setCommitteeTypeDesc(
+					QTConstants.OPENING_COMMITTEE_TAB);
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			this.getManagedBean().setCommitteeTypeDesc(
+					QTConstants.FINANCIAL_COMMITTEE_TAB);
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
+			this.getManagedBean().setCommitteeTypeDesc(
+					QTConstants.TECHNICAL_COMMITTEE_TAB);
 		}
 
 		getManagedBean().setName(null);
@@ -1036,7 +1049,7 @@ public class EvaluationMeetingBackingBean extends
 
 	public String submitMettingDetails(String outCome) {
 		try {
-		
+
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
