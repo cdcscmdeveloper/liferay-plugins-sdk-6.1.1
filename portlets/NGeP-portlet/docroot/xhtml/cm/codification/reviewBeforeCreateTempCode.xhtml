@@ -163,7 +163,7 @@
 						<p:column>
 
 							<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
-								headerText="Segment" update=":form:tablePanelId"
+								headerText="#{lbl['lbl.cm.segment']}" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^0|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}">

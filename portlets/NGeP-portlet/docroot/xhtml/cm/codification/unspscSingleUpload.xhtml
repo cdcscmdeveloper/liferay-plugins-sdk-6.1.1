@@ -15,7 +15,7 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
 					action="#{unspscCodeBackingBean.savetempCode}" update="@form"></p:commandButton>
-				<p:commandButton value="Back" icon="ui-icon-prev"
+				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-prev"
 					action="#{unspscCodeBackingBean.backToReviewUnspsc}"></p:commandButton>
 			</div>
 
@@ -42,16 +42,16 @@
 							<h:outputLabel value="" />
 						</p:column>
 						<p:column>
-							 Code
+							#{lbl['lbl.cm.code']} 
 						</p:column>
 						<p:column>
-							Title
+							#{lbl['lbl.cm.doc.title']}
 						</p:column>
 						<p:column>
-							Key
+							#{lbl['lbl.cm.key']}
 						</p:column>
 						<p:column>
-							Description
+							#{lbl['lbl.cm.description']}
 						</p:column>
 					</p:row>
 
@@ -59,12 +59,12 @@
 
 				<p:row>
 					<p:column>
-						<h:outputLabel value="Segment" />
+						<h:outputLabel value="#{lbl['lbl.cm.segment']}" />
 					</p:column>
 					<p:column>
 
 						<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
-							headerText="Segment Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.segment']} Lov" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^0">
@@ -91,11 +91,11 @@
 
 				<p:row>
 					<p:column>
-						<h:outputLabel value="Family" />
+						<h:outputLabel value="#{lbl['lbl.cm.family']}" />
 					</p:column>
 					<p:column>
 						<ac:lov id="familyUploadId" lovId="CM_UNSPSC"
-							headerText="Family Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.family']} Lov" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
@@ -121,11 +121,11 @@
 
 				<p:row>
 					<p:column>
-						<h:outputLabel value="Class" />
+						<h:outputLabel value="#{lbl['lbl.cm.class']}" />
 					</p:column>
 					<p:column>
 						<ac:lov id="classUploadId" lovId="CM_UNSPSC"
-							headerText="Class Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.class']} Lov" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
@@ -151,11 +151,11 @@
 
 				<p:row>
 					<p:column>
-						<h:outputLabel value="Commodity" />
+						<h:outputLabel value="#{lbl['lbl.cm.commodity']}" />
 					</p:column>
 					<p:column>
 						<ac:lov id="commodityUploadId" lovId="CM_UNSPSC"
-							headerText="Commodity Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.commodity']} Lov" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
