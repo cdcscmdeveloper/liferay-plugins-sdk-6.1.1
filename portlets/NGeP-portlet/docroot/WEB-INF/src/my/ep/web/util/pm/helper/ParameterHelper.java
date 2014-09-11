@@ -37,8 +37,11 @@ public class ParameterHelper {
 	
 	public static final String KEY_SEPARATOR = "_";
 	
+	public static final int MAP_VALUE_PARAMETER_DESC_ID = 0;
+	public static final int MAP_VALUE_PARAMETER_CODE = 1;
+	
 	private static ParameterHelper instance;	
-	private static Map<String, List<PmParameterDesc>> parameterMap = new HashMap<String, List<PmParameterDesc>>();
+	private static Map<String, String[][]> parameterMap = new HashMap<String, String[][]>();
 	
 	/**
 	 * Get singleton of ParameterHelper
@@ -90,42 +93,82 @@ public class ParameterHelper {
 		debugLogger("key: " + key);
 		
 		// Get the parameter description list from map.
-		List<PmParameterDesc> list = parameterMap.get(key.toString());
+		String[][] paramDescArry = parameterMap.get(key.toString());
+		List<PmParameterDesc> list = null;
 		
-		debugLogger("list: " + list);
+		debugLogger("paramDescArry: " + paramDescArry);
 		
-		if (list == null) {
-			IParameterSO parameterSO;
-			
-			try {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterDescSearchBean(searchBean);
-				reqDTO.setParameterType(parameterType);
-				reqDTO.setLanguageCode(languageCode);
-				
-				// Get parameter description list from db.
-				ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
-				
-			    list = resDTO.getParameterDescList();
-			    
-			    // Only cache the parameter description without data filter.
-			    if (searchBean == null || searchBean.getDataFilterMetadatas().size() == 0) {
-			    	// Put parameter description list into map.			   
-					parameterMap.put(key.toString(), list);	
-			    }
-				
-				debugLogger("put into list: " + list);
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			} finally {
-				parameterSO = null;
-			}
+		if (paramDescArry == null) {
+			// Get parameter description list from db directly.
+			list = getParameterDescFromDB(key.toString(), languageCode, parameterType, searchBean);
+		} else {				
+			// Get parameter description list from jpa cache.
+			list = getParameterDescFromCache(paramDescArry[MAP_VALUE_PARAMETER_DESC_ID]);
 		}
 		
 		return list;
+	}
+	
+	/**
+	 * Get parameter description by parameter type and code.
+	 * 
+	 * @param parameterType
+	 * 		the parameter type
+	 * @param parameterCode
+	 * 		the parameter code
+	 * @return the parameter description
+	 */
+	public String getParameterDesc(String parameterType, String parameterCode) {
+		debugLogger("getParameterDescList.parameterType: " + parameterType + ", parameterCode: " + parameterCode);
+		
+		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		StringBuilder key = new StringBuilder()
+			.append(parameterType)
+			.append(KEY_SEPARATOR)
+			.append(languageCode);
+		
+		debugLogger("key: " + key);
+		
+		// Get the parameter description list from map.
+		String[][] paramDescArry = parameterMap.get(key.toString());
+		
+		if (paramDescArry == null) {
+			// Get parameter description list from db directly.
+			List<PmParameterDesc> list = getParameterDescFromDB(key.toString(), languageCode, parameterType, null);
+			
+			for (PmParameterDesc pmParameterDesc : list) {
+				// compare matched parameterCode.
+				if (pmParameterDesc.getPmParameter().getParameterCode()
+						.equals(parameterCode)) {
+					return pmParameterDesc.getCodeName();
+				}
+			}
+			
+		} else {
+			// Get parameter description list from jpa cache.
+			int i = 0;
+			String[] parameterDescIds = new String[1];
+			
+			for (String tmpParameterCode : paramDescArry[MAP_VALUE_PARAMETER_CODE]) {
+				// compare matched parameterCode.
+				if (tmpParameterCode.equals(parameterCode)) {
+					parameterDescIds[0] = paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i];
+					break;
+				}
+				
+				i++;
+			}
+			
+			if (StringUtils.isNotBlank(parameterDescIds[0])) {
+				List<PmParameterDesc> list = getParameterDescFromCache(parameterDescIds);
+				
+				if (list.size() > 0) {
+					return list.get(0).getCodeName();
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	private String getSearchBeanKey(ISearchBean<PmParameterDesc> searchBean) {
@@ -162,6 +205,79 @@ public class ParameterHelper {
 		}
 		
 		return searchBeanKey.toString();
+	}
+	
+	private List<PmParameterDesc> getParameterDescFromDB(String key, String languageCode, String parameterType, ISearchBean<PmParameterDesc> searchBean) {
+		IParameterSO parameterSO;
+		List<PmParameterDesc> list = null;
+		
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			
+			reqDTO.setParameterDescSearchBean(searchBean);
+			reqDTO.setParameterType(parameterType);
+			reqDTO.setLanguageCode(languageCode);
+			
+			// Get parameter description list from db.
+			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+			
+		    list = resDTO.getParameterDescList();
+		    
+		    // Only cache the parameter description without data filter.
+		    if (searchBean == null || searchBean.getDataFilterMetadatas().size() == 0) {
+		    	int i = 0;
+		    	
+		    	String[][] paramDescArry = new String[MAP_VALUE_PARAMETER_CODE+1][list.size()];
+		    	
+		    	for (PmParameterDesc parameterDesc : list) {
+		    		paramDescArry[MAP_VALUE_PARAMETER_DESC_ID][i] = parameterDesc.getParameterDescId().toString();
+		    		paramDescArry[MAP_VALUE_PARAMETER_CODE][i] = parameterDesc.getPmParameter().getParameterCode();
+		    		
+		    		i++;
+		    	}
+		    	
+		    	// Put parameter description list into map.			   
+				parameterMap.put(key, paramDescArry);	
+		    }
+		    
+		    debugLogger("put into list: " + list);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
+		}
+		
+		return list;
+	}
+	
+	private List<PmParameterDesc> getParameterDescFromCache(String[] parameterDescIds) {
+		IParameterSO parameterSO;
+		List<PmParameterDesc> list = null;
+		
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			
+			reqDTO.setParameterDescIds(parameterDescIds);
+			
+			// Get parameter description list from jpa cache.
+			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByDescIds(reqDTO);
+			
+		    list = resDTO.getParameterDescList();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(e.getMessage());
+		} finally {
+			parameterSO = null;
+		}
+		
+		return list;
 	}
 	
 	private void debugLogger(Object message) {

@@ -399,7 +399,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	public String getParameterDesc(PmParameter parameter) {
 		if (parameter != null && StringUtils.isNotBlank(parameter.getParameterType())) {
-			return getParameterDesc(
+			return ParameterHelper.getInstance().getParameterDesc(
 					parameter.getParameterType(),
 					parameter.getParameterCode());	
 		} else {
@@ -417,22 +417,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * @return parameter description
 	 */
 	public String getParameterDesc(String parameterType, String parameterCode) {		
-		String parameterDesc = null;
-		
-		// Get the parameter description list.
-		List<PmParameterDesc> list = ParameterHelper.getInstance()
-				.getParameterDescList(parameterType);
-		
-		for (PmParameterDesc pmParameterDesc : list) {
-			// compare matched parameterCode.
-			if (pmParameterDesc.getPmParameter().getParameterCode()
-					.equals(parameterCode)) {
-				parameterDesc = pmParameterDesc.getCodeName();
-				break;
-			}
-		}
-		
-		return parameterDesc;
+		return ParameterHelper.getInstance().getParameterDesc(
+				parameterType, parameterCode);
 	}
 	
 	/**
