@@ -20,36 +20,43 @@
 				style="width:58%">
 				<h:outputText value="#{scQtEvaluationReport.title}" />
 			</p:column>
-			
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.eva.report.type']}">
+
+			<p:column style="width:10%;"
+				headerText="#{lbl['lbl.sc.eva.report.type']}">
 				#{evaluationBackingBean.getParameterDesc(scQtEvaluationReport.definationType)}
 			</p:column>
-			
+
 			<p:column style="width:10%;" headerText="#{lbl['lbl.so.action']}">
-				<p:commandLink action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
+				<p:commandLink
+					action="#{evaluationBackingBean.showTemplateAction(scQtEvaluationReport)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
+						value="/resources/ep/images/design/edit.png"
+						rendered="#{scQtEvaluationReport.definationType.parameterCode eq 'TD'}" />
 				</p:commandLink>
-				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
-					ajax="false" action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}"/>
+				<p:commandButton id="download" icon="ui-icon-download"
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{evaluationBackingBean.downloadReport(scQtEvaluationReport)}" />
 			</p:column>
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton icon="ui-icon-download" value="#{lbl['lbl.btn.download.all']}" ajax="false"  action="#{evaluationBackingBean.downloadAllReports}"/>
+			<p:commandButton icon="ui-icon-download"
+				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+				action="#{evaluationBackingBean.downloadAllReports}" />
 		</div>
 	</p:panel>
 
-	<p:panel header="#{evaluationBackingBean.managedBean.reportHeader}" toggleable="true" id="evauploadfile">
+	<p:panel header="#{evaluationBackingBean.managedBean.reportHeader}"
+		toggleable="true" id="evauploadfile">
 		<table style="width: 100%">
 			<tr>
-				<td class="TableFieldLeft" style="width: 100px;">
-					<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}" /></td>
+				<td class="TableFieldLeft" style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.sc.eva.report.attachment']}" /></td>
 				<td class="TableFieldRight">
 					<table>
 						<tr>
-							<td colspan="2"><p:commandButton
-									onclick="uploadDlg.show();"
+							<td colspan="2"><p:commandButton onclick="uploadDlg.show();"
 									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 									partialSubmit="true" process="@this"
 									update="@([id$=evauploadfile])">
@@ -107,21 +114,34 @@
 			update="evauploadfile" oncomplete="uploadDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
-	
+
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
-						update=":form" />
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
 				</div></td>
-			<td><div align="right" style="width: 99%">
+			<td>
+				<div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('4','5')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
 						iconPos="right" update=":form" />
-				</div></td>
+				</div>
+			</td>
 		</tr>
 	</table>
 </ui:composition>

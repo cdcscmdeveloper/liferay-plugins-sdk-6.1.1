@@ -99,9 +99,11 @@
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
 						update=":form" />
 				</div></td>
-			<td><ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.demo eq 'true'}">
-					<div align="right" style="width: 99%">
+			<td>
+				<div align="right" style="width: 99%">
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
+
 
 
 						<p:commandButton value="#{lbl['lbl.sm.next']}"
@@ -109,10 +111,11 @@
 							action="#{evaluationBackingBean.updateSmAppl}"
 							icon="ui-icon-next" iconPos="right" update=":form" />
 
-					</div>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC' }">
-					<div align="right" style="width: 99%">
+
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired eq 'flase'}">
+
 
 
 						<p:commandButton value="#{lbl['lbl.sm.next']}"
@@ -120,8 +123,23 @@
 							action="#{evaluationBackingBean.updateSmAppl}"
 							icon="ui-icon-next" iconPos="right" update=":form" />
 
-					</div>
-				</ui:fragment></td>
+
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC' }">
+
+
+
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-next" iconPos="right" update=":form" />
+
+
+					</ui:fragment>
+				</div>
+			</td>
 		</tr>
 	</table>
 

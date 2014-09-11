@@ -74,8 +74,8 @@
 
 			<p:spacer width="40"></p:spacer>
 			<p:outputLabel id="presefile"
-				value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
-			<p:commandLink actionListener="#{evaluationBackingBean.removeFile}"
+				></p:outputLabel>
+			<p:commandLink 
 				process="@this,presentDemoRemove" update="presentDemoRemove" partialSubmit="true"
 				style="width:40%;">
 				<p:graphicImage library="ep/images/design" name="delete.png"

@@ -60,12 +60,10 @@
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '3'}">
 
 						<ui:include src="complianceSummary.xhtml"></ui:include>
-						</c:if>
-				</ui:fragment> 
-				
-				<ui:fragment
+					</c:if>
+				</ui:fragment> <ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.sampleReq eq 'false'}">
-					
+
 					<c:if
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '1'}">
 
@@ -75,10 +73,8 @@
 						test="#{evaluationBackingBean.managedBean.complianceActiveIndex eq '2'}">
 
 						<ui:include src="complianceSummary.xhtml"></ui:include>
-						</c:if>
-				</ui:fragment> 
-				
-				</td>
+					</c:if>
+				</ui:fragment></td>
 		</tr>
 	</table>
 
@@ -92,11 +88,13 @@
 				</div></td>
 			<td><div align="right" style="width: 99%">
 
-
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
-						actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
-						iconPos="right" update=":form" />
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC'}">
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-next" iconPos="right" update=":form" />
+					</ui:fragment>
 
 				</div></td>
 		</tr>
