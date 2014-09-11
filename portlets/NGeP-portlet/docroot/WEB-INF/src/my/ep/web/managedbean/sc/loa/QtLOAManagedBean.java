@@ -23,7 +23,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Viswanath
  * 
  */
-@ManagedBean(name = "loaManagedBean")
+@ManagedBean(name = "qtLOAManagedBean")
 @SessionScoped
 public class QtLOAManagedBean extends BaseManagedBean {
 

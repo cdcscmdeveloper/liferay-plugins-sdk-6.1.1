@@ -329,7 +329,7 @@ public class LOADetailBackingBean extends
 		ScLoaWitness loaSupplierWitness = null;
 		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
 			String partyType = scLoaWitness.getPartyType();
-
+			scLoaWitness.setScLoa(scLoa);
 			if (ParameterConst.WITNESS_PARTY_TYPE_AGENCY.equals(partyType)) {
 				loaAgencyWitness = scLoaWitness;
 			} else if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
