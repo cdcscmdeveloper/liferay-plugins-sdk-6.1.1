@@ -10,20 +10,20 @@
 	<div class="header-info">
 		<table style="width: 100%;">
 			<tr>
-				<td><p:outputLabel value="Doc No."></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
 				<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.docNo}" disabled="true"
 						size="30"></p:inputText></td>
 
-				<td><p:outputLabel value="Status"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.doc.status']}"></p:outputLabel></td>
 				<td><p:inputText
 						value="#{unspscCodeBackingBean.managedBean.docStatus}"
 						disabled="true" size="30"></p:inputText></td>
 
-				<td><p:outputLabel value="Company Name"></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.company.name']}"></p:outputLabel></td>
 				<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.companyName}" disabled="true"
 						size="30"></p:inputText></td>
 
-				<td><p:outputLabel value="EP No."></p:outputLabel></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.ep.no']}"></p:outputLabel></td>
 				<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.smSupplier.epNo}" disabled="true" size="30"></p:inputText></td>
 			</tr>
 		</table>
