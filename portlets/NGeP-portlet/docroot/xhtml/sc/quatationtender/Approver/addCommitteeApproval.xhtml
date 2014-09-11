@@ -9,7 +9,7 @@
 	<p:dialog id="newcommitteeapproverid" position="top"
 		header="New #{qTCommitteBackingBean.managedBean.tabTitle}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
-		styleClass="commiteeapprovermember">
+		styleClass="commiteeapprovermember" width="950" height="600">
 		<p:panel id="committeApproverPnlId">
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
@@ -71,14 +71,14 @@
 							value="#{qTCommitteBackingBean.managedBean.userSearchCommitteeDataModel}"
 							selection="#{qTCommitteBackingBean.managedBean.selectedPmUser}"
 							rowKey="#{existcommitteeuser.userId}" var="existcommitteeuser"
-							lazy="true" style="width : 900px;"
+							lazy="true" style="width : 100%;" rows="10"
 							styleClass="existingCommitteeResults">
 
 							<ac:paginator for="existingcommitteeapproversearchid" />
 
 							<p:column selectionMode="multiple" style="width:2%" />
 
-							<p:column headerText="#{lbl['lbl.so.bo.name']}">
+							<p:column headerText="#{lbl['lbl.so.bo.name']}" style="white-space: normal;">
 								<h:outputText value="#{existcommitteeuser.userName}" />
 							</p:column>
 
@@ -86,11 +86,11 @@
 								<h:outputText value="#{existcommitteeuser.identificationNo}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+							<p:column headerText="#{lbl['lbl.so.bo.designation']}" style="white-space: normal;">
 								<h:outputText value="#{existcommitteeuser.designation}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.so.bo.email']}">
+							<p:column headerText="#{lbl['lbl.so.bo.email']}" style="white-space: normal;">
 								<h:outputText
 									value="#{existcommitteeuser.pmAddressTypes[0].pmAddress.email}" />
 							</p:column>
