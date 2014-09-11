@@ -542,7 +542,8 @@ public class CodificationBackingBean extends
 	}
 
 	public String goToExtensionSearch(CmUnspsc unspscObj) {
-		System.out.println("**********goToExtensionSearch************");
+		log.debug("**********goToExtensionSearch************");
+		
 		this.getManagedBean().setMeasurementCriteria(null);
 		this.getManagedBean().setColorCriteria(null);
 		this.getManagedBean().setBrandCriteria(null);
@@ -552,7 +553,27 @@ public class CodificationBackingBean extends
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-		String classCode = getParentCode(new Long(unspscObj.getUnspscCode()));
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO resDTO = unspscSO.retrieveUNSPSCByCommodityCode(reqDTO);
+		
+		if(resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
+			
+//			this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
+//			this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
+			
+			this.getManagedBean().setClassCode(commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(commodity.getCmUnspsc().getUnspscTitle());
+			
+			this.getManagedBean().setFamilyCode(commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+			
+			this.getManagedBean().setSegmentCode(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setSegmentTitle(commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc().getUnspscTitle());
+		}
+		
+/*		String classCode = getParentCode(new Long(unspscObj.getUnspscCode()));
 
 		reqDTO.setUnspscCode(classCode);
 		CodificationResDTO classDTO = unspscSO.searchUnspscObj(reqDTO);
@@ -587,9 +608,9 @@ public class CodificationBackingBean extends
 		this.getManagedBean().getSelectedUNSPSCObj()
 				.setUnspscCode(unspscObj.getUnspscCode());
 		this.getManagedBean().getSelectedUNSPSCObj()
-				.setUnspscTitle(unspscObj.getUnspscTitle());
+				.setUnspscTitle(unspscObj.getUnspscTitle());*/
 
-		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
+		resDTO = unspscSO.searchColor(reqDTO);
 
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
