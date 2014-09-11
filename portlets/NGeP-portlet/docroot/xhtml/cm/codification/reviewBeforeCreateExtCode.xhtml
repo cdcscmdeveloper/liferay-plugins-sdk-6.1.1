@@ -13,17 +13,17 @@
 		<h:panelGroup id="cmReviewUnspsc">
 			<div style="text-align: right;">
 
-				<p:commandButton value="Submit"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{unspscCodeBackingBean.saveExtCode}"></p:commandButton>
 
 			</div>
 
 			<table style="width: 66%; margin-bottom: 4px;">
 				<tr>
-					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 					<td><p:selectOneMenu value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" style="width:228px;" disabled="true">
-							<f:selectItem itemValue="P" itemLabel="Product " />
-							<f:selectItem itemValue="S" itemLabel="Service" />
+							<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+							<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
