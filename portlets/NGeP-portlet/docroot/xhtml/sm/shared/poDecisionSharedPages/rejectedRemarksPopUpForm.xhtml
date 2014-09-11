@@ -12,7 +12,7 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td><p:outputLabel value="Rejection Reason(s)" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
@@ -28,10 +28,10 @@
 			</c:if>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Remarks For Rejection" /> <p:outputLabel
+			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					id="rmrksForRejectTxtArea" label="Remarks For Rejection"
+					id="rmrksForRejectTxtArea" label="#{lbl['lbl.sm.remarks.rejection']}"
 					required="#{backingBean.managedBean.valueReqd}" /> <p:message
 					id="rmrksForRejectTxtAreaMsg" for="rmrksForRejectTxtArea"
 					showSummary="true" showDetail="false" display="icon" /></td>
