@@ -265,6 +265,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
+				reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+				resDTO = orderSO.retrieveFulfilmentOrderById(reqDTO);
 				setDeliveryOrder(resDTO);
 			}
 		} finally {
