@@ -406,7 +406,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	}
 	
 	/**
-	 * save to Rejection Reason Search
+	 * save to Rejection Reason
 	 * @return xhtml
 	 */
 	public String saveRejectReason(){

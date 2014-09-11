@@ -13,7 +13,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		    	action="#{supportDocBackingBean.redirectToSearchSupportDoc}"/>
 
 	    	<div class="rowBtnRight">
-			 	<p:commandButton value="#{lbl['lbl.btn.add']}" 
+			 	<p:commandButton value="#{lbl['lbl.btn.add']}" action="#{supportDocBackingBean.saveSupportDoc()}"
    					update="@([id$=Msg])"/>
 	    	</div>
 	  	</div>
