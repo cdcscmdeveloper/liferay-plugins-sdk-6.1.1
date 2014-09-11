@@ -1040,12 +1040,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_PRODUCT);
 		parameterReqDTO.setParameterType(ParameterTypeConst.SC_ITEM_TYPE);
 		ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		ContractAmendmentResDTO resDto = amendSO.getProductList(reqDto, resDTO.getPmParameter().getParameterId());
+		ContractAmendmentResDTO resDto = amendSO.getItemList(reqDto, resDTO.getPmParameter().getParameterId());
 		List<CtItemPrice> productList = resDto.getItemPrices();
 		
 		parameterReqDTO.setParameterCode(ParameterConst.ITEM_TYPE_SERVICE);
 		resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		resDto = amendSO.getServiceList(reqDto, resDTO.getPmParameter().getParameterId());
+		resDto = amendSO.getItemList(reqDto, resDTO.getPmParameter().getParameterId());
 		List<CtItemPrice> serviceList = resDto.getItemPrices();
 		
 		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
@@ -1060,12 +1060,12 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
 			CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
 			productItemPrice.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
-			jadualHarga = mappingJadualHarga(productItemPrice,1);
+			jadualHarga = mappingJadualHarga(productItemPrice, ParameterConst.ITEM_TYPE_PRODUCT);
 			productJadualHargaList.add(jadualHarga);
 		}
 		
 		for(CtItemPrice serviceItemPrice : serviceList){
-			jadualHarga = mappingJadualHarga(serviceItemPrice,2);
+			jadualHarga = mappingJadualHarga(serviceItemPrice, ParameterConst.ITEM_TYPE_SERVICE);
 			serviceJadualHargaList.add(jadualHarga);
 		}  
 		
@@ -2451,7 +2451,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	//type 1 - product, type 2 - service
-	private JadualHargaBean mappingJadualHarga(CtItemPrice itemPrice,int type){
+	private JadualHargaBean mappingJadualHarga(CtItemPrice itemPrice, String type){
 		JadualHargaBean jadualHarga = new JadualHargaBean();
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -2459,7 +2459,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		jadualHarga.setItem(itemPrice.getCtContractItem().getItemName());
 		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
 		
-		if(type == 1){
+		if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			jadualHarga.setUom(itemPrice.getCtContractItem().getUom().getUomName());
 			jadualHarga.setQuantity(itemPrice.getFromQty() != null && itemPrice.getToQty() !=null ? itemPrice.getFromQty() + " To " + itemPrice.getToQty() : 
 					itemPrice.getMaxQuantity() != null ? itemPrice.getMaxQuantity().toString() : "N/A");
@@ -2470,7 +2470,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			} else {
 				jadualHarga.setTotalAmount("N/A");
 			}
-		}else if(type == 2){
+		}else if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
 			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency() ? 
 					"N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());

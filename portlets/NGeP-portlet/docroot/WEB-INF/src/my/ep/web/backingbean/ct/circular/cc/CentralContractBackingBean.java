@@ -405,8 +405,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         		circularContract = new CtCircularContract();
         		
         		reqDTO.setContractId(contract.getContractId());
-        		circularContract.setCtContract(contractSO.retrieveContract(reqDTO).getContract());
-        		circularContract.setCtContractVer(contractSO.retrieveContract(reqDTO).getContract().getLatestContractVer());
+        		ContractResDTO resDTO = contractSO.retrieveContract(reqDTO);
+        		circularContract.setCtContract(resDTO.getContract());
+        		circularContract.setCtContractVer(resDTO.getContract().getLatestContractVer());
         		getManagedBean().getCircularVer().getCtCircularContracts().add(circularContract);
         	}
 		} catch (Exception e) {
