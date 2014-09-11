@@ -38,9 +38,9 @@
 				</p:outputPanel> <br />
 				<table>
 					<tr>
-						<td><p:commandLink value="Click Here"
+						<td><p:commandLink value="#{lbl['lbl.sm.sitevist.link.review.sitevisit.report']}"
 								onclick="siteVisitRptDlg.show();" /> <p:spacer /> <h:outputText
-								value="to review the site visit report" /></td>
+								value="#{lbl['lbl.sm.sitevist.link.review.sitevisit.report']}" /></td>
 					</tr>
 				</table> <br /> <br />
 
@@ -63,14 +63,14 @@
 		</tr>
 	</table>
 	<p:dialog width="750px" height="560px"
-		header="Site Visit Report Details" widgetVar="siteVisitRptDlg"
+		header="#{lbl['lbl.sm.sitevist.report.details']}" widgetVar="siteVisitRptDlg"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
 		id="siteVisitRptDlg">
 
 		<!-- <ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml" /> -->
 		<div align="right">
-			<p:commandButton value="Save" onclick="siteVisitRptDlg.hide();" />
-			<p:commandButton value="Cancel" onclick="siteVisitRptDlg.hide();" />
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" onclick="siteVisitRptDlg.hide();" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="siteVisitRptDlg.hide();" />
 		</div>
 	</p:dialog>
 </ui:composition>

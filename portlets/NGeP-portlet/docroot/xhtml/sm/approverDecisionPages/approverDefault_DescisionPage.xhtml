@@ -30,14 +30,14 @@
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
-					<p:commandButton value="Approve" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.sm.button.approve']}" partialSubmit="true"
 						process="@this" update=":form:tt:approverAppDialog"
 						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
-					<p:commandButton value="Reject" update=":form:tt:approverRejDialog"
+					<p:commandButton value="#{lbl['lbl.sm.button.reject']}" update=":form:tt:approverRejDialog"
 						partialSubmit="true" process="@this"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
 
-				</div> <p:panel header="Approver Decision">
+				</div> <p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
 					<table>
 						<!-- <tr>
 				<td colspan="3"><h4
