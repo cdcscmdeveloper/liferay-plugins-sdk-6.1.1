@@ -45,6 +45,7 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -73,6 +74,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
+import my.ep.persistence.entity.cm.catalog.CmPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -126,6 +128,8 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
+
+import utils.netAddresses;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -464,6 +468,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						supplierItem.setSmSupplier(smResDTO.getResultBean()
 								.getResultList().get(0));
 						supplierItem.setRecordStatus(true);
+						
+						CmStandardPricing standardPrice = new CmStandardPricing();
+						standardPrice.setCmSupplierItem(supplierItem);
+						supplierItem.setCmStandardPricing(standardPrice);
+						
+						CmPromotionPricing promotionPrice = new CmPromotionPricing();
+						promotionPrice.setCmSupplierItem(supplierItem);
+						supplierItem.setCmPromotionPricing(promotionPrice);
+						
 						reqDTO.getSupplierItem().add(supplierItem);
 					}
 	
@@ -573,7 +586,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String navigateToCatalogDet(int index) {
-
+log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaintainItemList()
+		.get(index).getSupplierId());
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		
@@ -584,12 +598,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 	
 			reqDTO.setSupplierId(this.getManagedBean().getMaintainItemList()
-					.get(index).getSmSupplier().getSupplierId());
+					.get(index).getSupplierId());
 	
 			CatalogueResDTO resDTO = catalogueSO
 					.retrieveSupplierZoneBySuppId(reqDTO);
 	
-			System.out.println("size:" + resDTO.getSupplierZoneLs().size());
+			log.debug("size:" + resDTO.getSupplierZoneLs().size());
 	
 			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
 	
@@ -605,13 +619,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
 			bb.getManagedBean().setCatDetTabActiveIndex(0);
 	
-			this.getManagedBean().setSelectedMaintainItem(
-					this.getManagedBean().getMaintainItemList().get(index));
+			reqDTO.setSupplierItemId(this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
+			resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 			this.getManagedBean()
 					.getSelectedMaintainItem()
-					.setCompareDesc(
-							this.getManagedBean().getMaintainItemList().get(index)
-									.getItemDesc());
+					.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 
 			//sort Tier
 			if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().isEmpty()){
@@ -659,8 +672,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			this.getManagedBean().setPricingTabIndex(0);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
 		}finally {
 			catalogueSO = null;
 		}	
@@ -733,14 +746,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	
 	
 	public String navigateToPublishedItemDet(int index) {
+		
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+		CatalogueResDTO resDTO = new CatalogueResDTO();
+		ICatalogueSO catalogueSO = null;
+		
+		try {
+			catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			
+			reqDTO.setSupplierItemId(this.getManagedBean().getPublishedItemList().get(index).getSupplierItemId());
+			resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+		} finally {
+			catalogueSO = null;
+		}
 
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getPublishedItemList().get(index));
-		this.getManagedBean()
-				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getPublishedItemList().get(index)
-								.getItemDesc());
+		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
+		this.getManagedBean().getSelectedMaintainItem()
+				.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 		this.getManagedBean().setTabActiveIndex(4);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
@@ -783,7 +806,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 
+		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();		
+		CatalogueResDTO catResDTO = new CatalogueResDTO();
+		ICatalogueSO catalogueSO = null;
+		
 		try{
+
+			catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			
+			catReqDTO.setSupplierItemId(this.getManagedBean().getApprovalItemList().get(index).getSupplierItemId());
+			catResDTO = catalogueSO.retrieveSupplierItemById(catReqDTO);
+			
 			statusReqDTO.setDocType("CMR");
 			statusReqDTO.setModuleCode("CM");
 			statusReqDTO.setLanguageCode(languageCode);
@@ -802,13 +836,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * this.getManagedBean().setRejectReason(reason.getRemark()); }
 			 */
 	
-			this.getManagedBean().setSelectedMaintainItem(
-					this.getManagedBean().getApprovalItemList().get(index));
-			this.getManagedBean()
-					.getSelectedMaintainItem()
-					.setCompareDesc(
-							this.getManagedBean().getApprovalItemList().get(index)
-									.getItemDesc());
+			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
+			this.getManagedBean().getSelectedMaintainItem()
+					.setCompareDesc(catResDTO.getSupplierItem().getItemDesc());
 	
 			for (CmItemRejectReason remark : this.getManagedBean()
 					.getSelectedMaintainItem().getCmItemRejectReasons()) {
@@ -829,6 +859,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}finally {
 			userSO = null;
 			statusSO = null;
+			catalogueSO = null;
 		}	
 		
 		return "addCatalogItem";
@@ -837,20 +868,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public String navigateToApprovedItemDet(int index) {
 
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getApprovedItemList().get(index));
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+		CatalogueResDTO resDTO = new CatalogueResDTO();
+		
+		reqDTO.setSupplierItemId(this.getManagedBean().getApprovedItemList().get(index).getSupplierItemId());
+		resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+		
+		this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 		this.getManagedBean()
 				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getApprovedItemList().get(index)
-								.getItemDesc());
+				.setCompareDesc(resDTO.getSupplierItem().getItemDesc());
 		this.getManagedBean().setTabActiveIndex(2);
 		this.getManagedBean().setDisplayCatalogue(true);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		return "addCatalogItem";
 		//return "editCatalogItem";
-
 	}
 
 	public String navigateToRejectedItemDet(int index) {
@@ -859,6 +893,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
+		
+		
+//		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+//		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
+//		CatalogueResDTO resDTO = new CatalogueResDTO();
 
 		try{
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
@@ -883,21 +922,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 */
 			CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 			
-			CatalogueResDTO catResDTO = null;
+			CatalogueResDTO catResDTO = new CatalogueResDTO();
 			
-			catReqDTO.setToken(languageCode);
 			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectedItemList().get(index).getSupplierItemId());
-			catReqDTO.setCmSupplierItemObj(this.getManagedBean().getRejectedItemList().get(index));
-			catResDTO = catalogueSO.findItemRejectReasons(catReqDTO);
+			catResDTO = catalogueSO.retrieveSupplierItemById(catReqDTO);
+			
+//			catReqDTO.setToken(languageCode);
+//			catReqDTO.setSupplierItemId(this.getManagedBean().getRejectedItemList().get(index).getSupplierItemId());
+//			catReqDTO.setCmSupplierItemObj(this.getManagedBean().getRejectedItemList().get(index));
+//			catResDTO = catalogueSO.findItemRejectReasons(catReqDTO);
 			this.getManagedBean().getRejectedItemList().get(index).setCmItemRejectReasons(catResDTO.getSupplierItem().getCmItemRejectReasons());
 	
-			this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getRejectedItemList().get(index));
-			this.getManagedBean().getSelectedMaintainItem()
-			.setCompareDesc(this.getManagedBean().getRejectedItemList().get(index).getItemDesc());
+			this.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
+			this.getManagedBean().getSelectedMaintainItem().setCompareDesc(catResDTO.getSupplierItem().getItemDesc());
 	
-			UserReqDTO userReqDTO = new UserReqDTO();
-	
-			for (CmItemRejectReason remark : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()) {
+			UserReqDTO userReqDTO = new UserReqDTO();	
+			for (CmItemRejectReason remark : catResDTO.getSupplierItem().getCmItemRejectReasons()) {
 	
 				userReqDTO.setUserId(remark.getChangedBy());
 				System.out.println("remark.getChangedBy()" + remark.getChangedBy());
@@ -2040,8 +2080,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 
 		try {
-
-			
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			boolean inactiveFlag = false;
@@ -2998,8 +3036,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		//return "preRenderCatalogueMaintenanceFile";
 	}
 
-	public String submitToReviewItems() {
+	public String submitToReviewItems() throws Exception {
 		log.debug("submitToReviewItems");
+		
 		log.info("this.getManagedBean().getSelectedMaintainItems(): " + this.getManagedBean().getSelectedMaintainItems().length);
 		if(this.getManagedBean().getSelectedMaintainItems().length < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
@@ -3013,18 +3052,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		CatalogueResDTO resDTO = new CatalogueResDTO();
 		try {
-
 			this.getManagedBean().setTabActiveIndex(0);
-
-			System.out
-					.println("this.getManagedBean().getSelectedMaintainItems().length:"
-							+ this.getManagedBean().getSelectedMaintainItems().length);
 			
 			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {
-				CmSupplierItem catalog = this.getManagedBean()
-						.getSelectedMaintainItems()[i];
-				System.out.println("catalog.getPmUom().getUomName():"
-						+ catalog.getPmUom().getUomName());
+				reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItems()[i].getSupplierItemId());
+				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+				
+//				CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
+				CmSupplierItem catalog = resDTO.getSupplierItem();
+				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
+				
+				catalog.getCmStandardPricing().setPrice(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getPrice());
+				catalog.getCmStandardPricing().setStartDate(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getStartDate());
+				catalog.getCmStandardPricing().setEndDate(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getEndDate());
+				catalog.setPmUom(this.getManagedBean().getSelectedMaintainItems()[i].getPmUom());
 				
 				//mandatory checking
 				if (catalog.getCmStandardPricing().getPrice() == null
@@ -3329,9 +3370,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 			resDTO = catalogueSO.updateSupplierItem(reqDTO);
-
-			System.out
-					.println("resDTO.isSuccessful():" + resDTO.isSuccessful());
+			log.debug("resDTO.isSuccessful():" + resDTO.isSuccessful());
+			
 			if (resDTO.isSuccessful()) {
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
@@ -3359,9 +3399,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			}
 
-		} catch (Exception e) {
-
-			e.printStackTrace();
+//		} catch (Exception e) {
+//
+//			e.printStackTrace();
 		}finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
@@ -3634,6 +3674,52 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * } }
 	 */
 
+	public String publishApprovedItems() {
+		
+		if(this.getManagedBean().getSelectedApprovedItems() != null 
+				&& this.getManagedBean().getSelectedApprovedItems().length > 0) {
+			
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			ICatalogueSO catalogueSO = null;
+			List<CmSupplierItem> csiList = new ArrayList<CmSupplierItem>();
+			
+			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
+				csiList.add(csi);
+				reqDTO.setSupplierId(csi.getSupplierId());
+			}
+			
+			try {
+				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+				reqDTO.setSupplierItem(csiList);
+				
+				CatalogueResDTO resDTO = catalogueSO.publishApprovedItem(reqDTO);
+				if(resDTO.isSuccessful()) {
+					
+					reqDTO.setSupplierItem(null);
+					reqDTO.setItemStatus(CmConst.ITEM_STATUS_APPROVED);
+					resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+					this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+					
+//					this.getManagedBean().setApprovalItemList(resDTO.getSupplierItemList());
+					log.info("resDTO.getSupplierItemList(): " + resDTO.getSupplierItemList());
+					FacesContext facesContext = FacesContext.getCurrentInstance();					
+					facesContext.addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(MessageConst.INFO_710002,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+				}
+			} finally {
+				catalogueSO = null;
+			}			
+			
+		} else {
+			throw new EpException(MessageConst.ERROR_715015);
+		}
+		return "catalogMaintenanceFile";
+	}
+	
 	public String publishCatalogItem() {
 		
 		if(this.getManagedBean().getSelectedApprovedItems().length < 1) {

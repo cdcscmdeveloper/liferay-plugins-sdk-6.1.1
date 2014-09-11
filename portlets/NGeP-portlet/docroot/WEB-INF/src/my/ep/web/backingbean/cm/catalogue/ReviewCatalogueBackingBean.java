@@ -102,8 +102,9 @@ public class ReviewCatalogueBackingBean extends
 		bb.getManagedBean().setRejectReason(null);
 		bb.getManagedBean().setSupplierZoneList(catResDTO.getSupplierZoneLs());
 
-		bb.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getSelectedReviewCat());
+		reqDTO.setSupplierItemId(this.getManagedBean().getSelectedReviewCat().getSupplierItemId());
+		catResDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+		bb.getManagedBean().setSelectedMaintainItem(catResDTO.getSupplierItem());
 
 		for (CmItemRejectReason remark : bb.getManagedBean()
 				.getSelectedMaintainItem().getCmItemRejectReasons()) {

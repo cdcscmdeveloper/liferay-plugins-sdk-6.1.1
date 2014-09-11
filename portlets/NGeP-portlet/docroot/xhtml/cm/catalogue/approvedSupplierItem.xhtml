@@ -9,8 +9,10 @@
 
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.publish']}"
-			action="#{catalogueBackingBean.publishCatalogItem}"
+			action="#{catalogueBackingBean.publishApprovedItems}"
 			update="approvedSupplierItemID" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"></p:commandButton>
+		<p:remoteCommand name="updateApproveItems" update="approvedSupplierItemID" />
+		
 	</div>
 	<p:dataTable id="approvedSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.approvedItemList}"
