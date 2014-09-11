@@ -11,13 +11,13 @@
 	<table>
 
 		<tr>
-			<td><p:outputLabel value="Site Visit To Be Peformed *" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.to.be.performed']} *" /></td>
 			<td><p:selectOneMenu
 					value="#{backingBean.managedBean.poSiteVisitType}"
 					style="width: 207px;margin-bottom: 5px;">
-					<f:selectItem itemLabel="-- Select Value --" itemValue="X" />
-					<f:selectItem itemLabel="Before Approval" itemValue="B" />
-					<f:selectItem itemLabel="After Approval" itemValue="A" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="X" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" itemValue="B" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" itemValue="A" />
 					<p:ajax update=":form:tt:svcButPan" event="change" />
 				</p:selectOneMenu></td>
 
@@ -26,7 +26,7 @@
 	</table>
 
 	<br />
-	<p:panel header="Associated Companies" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.assocCmpny.panHdr']}" toggleable="true">
 		<p:dataTable var="assocBean"
 			value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 			selection="#{backingBean.managedBean.selectedAssocCompanies}"
@@ -34,14 +34,14 @@
 			<ac:paginator for="svdHeadOff" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="NO.">
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 				<h:outputText value="#{index+1}" />
 			</p:column>
-			<p:column headerText="Head Office Name">
+			<p:column headerText="#{lbl['lbl.sm.assocCmpny.head.office.name']}">
 				<h:outputText value="#{assocBean.companyName}" />
 			</p:column>
 
-			<p:column headerText="Address">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 				<h:outputText
 					value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
 			</p:column>
@@ -49,29 +49,29 @@
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<p:panel header="Company Branches" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true">
 		<p:dataTable var="branchBean" id="svcBrDt"
 			value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 			selection="#{backingBean.managedBean.selectedBranches}"
 			rowKey="#{branchBean}" rowIndexVar="index">
 			<ac:paginator for="svcBrDt" />
 			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="NO.">
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 				<h:outputText value="#{index+1}" />
 			</p:column>
 
-			<p:column headerText="Branch Name">
+			<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 				<h:outputText value="#{branchBean.branchName}" />
 			</p:column>
 
-			<p:column headerText="Address">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 				<h:outputText
 					value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<p:panel header="Facilities" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.facilities']}" toggleable="true">
 		<p:dataTable var="fac"
 			value="#{backingBean.managedBean.smAppl.smFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
@@ -80,11 +80,11 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 
-			<p:column headerText="Factory Name">
+			<p:column headerText="#{lbl['lbl.sm.factory.name']}">
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column headerText="Factory/ Workshop/Dockyard Address">
+			<p:column headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
 				<h:outputText
 					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
 			</p:column>
@@ -92,7 +92,7 @@
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<p:panel header="Categories" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.category.categories']}" toggleable="true">
 		<p:dataTable var="catBean"
 			value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 			selection="#{backingBean.managedBean.selectedCategories}"
@@ -103,8 +103,8 @@
 
 				<p:row>
 					<p:column selectionMode="multiple" width="5%" />
-					<p:column headerText="Category" />
-					<p:column headerText="Category Type" />
+					<p:column headerText="#{lbl['lbl.sm.category']}" />
+					<p:column headerText="#{lbl['lbl.sm.category.type']}" />
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" width="5%" />
@@ -119,8 +119,8 @@
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
-				<h:outputText value="Normal" rendered="#{catBean.specialCategory}" />
-				<h:outputText value="Special" rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}" rendered="#{catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.special']}" rendered="#{!catBean.specialCategory}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -128,7 +128,7 @@
 	<table style="width: 100%">
 
 		<tr>
-			<td><p:outputLabel value="Remarks For SVC" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
 		</tr>
@@ -139,14 +139,14 @@
 		<p:panel rendered="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
 			<table>
 				<tr>
-					<td><p:outputLabel value="Remarks For Approver" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Recommendation For Approver" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
 					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="Approve" />
-							<f:selectItem itemLabel="Reject" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approver']}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.reject']}" />
 						</p:selectOneRadio></td>
 				</tr>
 
@@ -155,20 +155,20 @@
 		<div align="right">
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
-					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="svcDialog.hide();"
 						update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
-					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="svcDialog.hide();"
 						update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}" />
 				</c:when>
 				<c:otherwise>
-					<p:commandButton value="Submit" disabled="true" />
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" disabled="true" />
 				</c:otherwise>
 			</c:choose>
-			<p:commandButton value="Cancel" onclick="svcDialog.hide();"
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="svcDialog.hide();"
 				immediate="true" />
 		</div>
 	</p:outputPanel>

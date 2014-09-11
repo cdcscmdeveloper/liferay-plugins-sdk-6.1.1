@@ -11,14 +11,14 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td><p:outputLabel value="Registration Status" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 
-				<td><p:selectOneMenu label="Registration Status"
+				<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
 						id="approveSelBox" required="#{backingBean.managedBean.valueReqd}"
 						value="#{backingBean.managedBean.smAppl.pmStatus.statusId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{backingBean.managedBean.regStatusDescList}" var="reg"
 							itemLabel="#{reg.statusName}"
@@ -29,10 +29,10 @@
 			</c:if>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Remarks For Approval" /> <p:outputLabel
+			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approval']}" /> <p:outputLabel
 					value="*" styleClass="mandatory" /></td>
 			<td style="padding-top: 5px;"><p:inputTextarea cols="90"
-					id="rmrksForApprTxtArea" label="Remarks For Approval"
+					id="rmrksForApprTxtArea" label="#{lbl['lbl.sm.remarks.approval']}"
 					required="#{backingBean.managedBean.valueReqd}" /> <p:message
 					id="rmrksForApprTxtAreaMsg" for="rmrksForApprTxtArea"
 					showSummary="true" showDetail="false" display="icon" /></td>
