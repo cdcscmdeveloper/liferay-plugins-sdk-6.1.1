@@ -42,10 +42,10 @@ public class PublicCatalogueBackingBean extends
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueBackingBean.class);
 
-	public PublicCatalogueBackingBean(){
+/*	public PublicCatalogueBackingBean(){
 		System.out.println("in constructor:::::::::");
 //		this.getManagedBean().setItemName(null);
-	}
+	}*/
 	public List<String> autoCompleteItemName(String query) {
 
 		System.out.println("query:::::::::::::::::::::::::::::: " + query);
@@ -87,8 +87,7 @@ public class PublicCatalogueBackingBean extends
 
 				String commodityCode = (String) obj[0];
 
-				System.out.println("*********commodityCode**********"
-						+ commodityCode);
+				log.info("*********commodityCode**********"	+ commodityCode);
 				codeReqDTO.setUnspscCode(commodityCode);
 
 				CodificationResDTO codeResDTO = codeSO
@@ -301,7 +300,8 @@ public class PublicCatalogueBackingBean extends
 		this.getManagedBean().setBrandId(null);
 		this.getManagedBean().setPriceTo(null);
 		this.getManagedBean().setPriceForm(null);
-		System.out.println("getUnspscCode******" + commodity.getUnspscCode());
+		
+		log.info("getUnspscCode******" + commodity.getUnspscCode());
 		String subString = "";
 
 		this.getManagedBean().setKeyWord(false);
@@ -313,8 +313,7 @@ public class PublicCatalogueBackingBean extends
 			this.getManagedBean().setFamilyCode(commodity.getUnspscCode());
 			this.getManagedBean().setCommodityCode(commodity.getUnspscCode());
 		}
-		System.out.println("getFamilyCode:"
-				+ this.getManagedBean().getFamilyCode());
+		log.info("getFamilyCode:" + this.getManagedBean().getFamilyCode());
 
 		reqDTO.getSubStringFamilyCode().add(
 				this.getManagedBean().getFamilyCode());
@@ -335,10 +334,22 @@ public class PublicCatalogueBackingBean extends
 		 reqDTO.setPriceTo(this.getManagedBean().getPriceTo());
 		 }
 
-		System.out.println("getCmBrand:" + commodity.getCmBrand().size());
+		 ICodificationSO codificationSO = null;
+		 CodificationResDTO cdResDTO = new CodificationResDTO();
+		 try {
+			 codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		
+			CodificationReqDTO cdReqDTO = new CodificationReqDTO();
+			cdReqDTO.setUnspscId(commodity.getUnspscId());
+			cdResDTO = codificationSO.retrieveBrandByCommodityId(cdReqDTO);
+		 } finally {
+			 codificationSO = null;
+		 }
+		log.debug("getCmBrand:" + cdResDTO.getBrandList().size());
 
-		for (CmBrand brand : commodity.getCmBrand()) {
-			System.out.println("getBrandName:" + brand.getBrandName());
+		for (CmBrand brand : cdResDTO.getBrandList()) {
+			log.debug("getBrandName:" + brand.getBrandName());
 			this.getManagedBean()
 					.getBrandCriteria()
 					.add(new SelectItem(brand.getBrandId(), brand
@@ -348,7 +359,7 @@ public class PublicCatalogueBackingBean extends
 		CatalogueResDTO resDTO = catalogueSO
 				.findPubCatalogueByFamilyLevel(reqDTO);
 
-		System.out.println("***********************"
+		log.debug("***********************"
 				+ resDTO.getViewPublicSuppItemResultBean().getResultList());
 
 		for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
@@ -495,8 +506,7 @@ public class PublicCatalogueBackingBean extends
 	}
 
 	public void searchCatalogueByCommodityCode(CmUnspsc commodityCode) {
-		System.out
-				.println("..............searchCatalogueByCommodityCode..................");
+		log.debug("..............searchCatalogueByCommodityCode..................");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
@@ -507,8 +517,7 @@ public class PublicCatalogueBackingBean extends
 		this.getManagedBean().setPriceTo(null);
 		this.getManagedBean().getBrandCriteria().clear();
 
-		System.out.println("getUnspscCode******"
-				+ commodityCode.getUnspscCode());
+		log.info("getUnspscCode******" + commodityCode.getUnspscCode());
 		String subString = "";
 
 		this.getManagedBean().setKeyWord(false);
@@ -517,31 +526,31 @@ public class PublicCatalogueBackingBean extends
 		if (commodityCode.getUnspscCode() != null
 				&& commodityCode.getUnspscCode().trim().length() > 0) {
 
-			this.getManagedBean().setCommodityCode(
-					commodityCode.getUnspscCode());
+			this.getManagedBean().setCommodityCode(commodityCode.getUnspscCode());
 		}
-		System.out.println("CommodityCode:"
-				+ this.getManagedBean().getCommodityCode());
+		log.info("CommodityCode:" + this.getManagedBean().getCommodityCode());
 
 		reqDTO.setCommodityCode(this.getManagedBean().getCommodityCode());
 
-		CatalogueResDTO resDTO = catalogueSO
-				.findPubCatalogueByCommodityCode(reqDTO);
+		CatalogueResDTO resDTO = catalogueSO.findPubCatalogueByCommodityCode(reqDTO);
 
-		System.out.println("***********************"
-				+ resDTO.getViewPublicSuppItemResultBean().getResultList());
+		log.debug("resDTO.getViewPublicSuppItemResultBean().getResultList(): "	+ resDTO.getViewPublicSuppItemResultBean().getResultList());
 
-		for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
-				.getResultList()) {
-
-			this.getManagedBean().getCatalogueList()
-					.add(view);
+		for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean().getResultList()) {
+			this.getManagedBean().getCatalogueList().add(view);
 		}
 
-		System.out.println("getCmBrand:" + commodityCode.getCmBrand().size());
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		
+		CodificationReqDTO cdReqDTO = new CodificationReqDTO();
+		cdReqDTO.setUnspscId(commodityCode.getUnspscId());
+		CodificationResDTO cdResDTO = codificationSO.retrieveBrandByCommodityId(cdReqDTO);
+		
+		log.info("getCmBrand:" + cdResDTO.getBrandList().size());
 
-		for (CmBrand brand : commodityCode.getCmBrand()) {
-			System.out.println("getBrandName:" + brand.getBrandName());
+		for (CmBrand brand : cdResDTO.getBrandList()) {
+			log.debug("getBrandName:" + brand.getBrandName());
 			this.getManagedBean()
 					.getBrandCriteria()
 					.add(new SelectItem(brand.getBrandId(), brand
@@ -550,7 +559,6 @@ public class PublicCatalogueBackingBean extends
 
 		this.getManagedBean().setFamilyList(null);
 		this.getManagedBean().getFamilyList().add(commodityCode);
-
 	}
 
 }
