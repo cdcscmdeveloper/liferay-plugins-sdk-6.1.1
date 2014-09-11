@@ -3740,11 +3740,6 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 	
 				catalog.setItemStatus("U");
 				
-				//Past Start Date should change to current date
-				Date dateNow = new Date();
-				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
-					catalog.getCmStandardPricing().setStartDate(dateNow);
-				}
 				
 				//end date already passed
 				if(catalog.getCmStandardPricing().getEndDate().before(dateNow)){
@@ -3755,6 +3750,12 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 					return "catalogMaintenanceFile";
+				}
+				
+				//Past Start Date should change to current date
+				Date dateNow = new Date();
+				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
+					catalog.getCmStandardPricing().setStartDate(dateNow);
 				}
 				
 				
@@ -3823,6 +3824,7 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 			
 			}catch(Exception e){
 				//this.getManagedBean().setApprovedItemList(null);
+				e.printStackTrace();
 			}finally {
 				catalogueSO = null;
 				supplierSearchSO = null;
