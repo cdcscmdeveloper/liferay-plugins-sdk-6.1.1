@@ -40,16 +40,16 @@ public class RoleHelper {
 	/**
 	 * Get a list of role description by org code
 	 * 
-	 * @param orgTypeId
-	 * 			the Org TypeId
+	 * @param orgTypeCode
+	 * 			the Org Type Code
 	 * @return list of PmRoleDesc
 	 */
-	public List<PmRoleDesc> getRoleDescList(Long orgTypeId) {
-		debugLogger("getRoleDescList.orgTypeId: " + orgTypeId);
+	public List<PmRoleDesc> getRoleDescList(String orgTypeCode) {
+		debugLogger("getRoleDescList.orgTypeCode: " + orgTypeCode);
 		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		String key = new StringBuilder()
-			.append(orgTypeId)
+			.append(orgTypeCode)
 			.append(KEY_SEPARATOR)
 			.append(languageCode)
 			.toString();
@@ -68,7 +68,7 @@ public class RoleHelper {
 				roleSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IRoleSO.class);
 				
 				RoleReqDTO reqDTO = new RoleReqDTO();
-				reqDTO.setOrgTypeId(orgTypeId);
+				reqDTO.setOrgTypeCode(orgTypeCode);
 				reqDTO.setLanguage(languageCode);
 				
 				// Get role description list from db.
