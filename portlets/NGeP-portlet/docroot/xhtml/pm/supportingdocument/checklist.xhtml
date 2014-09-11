@@ -16,7 +16,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td colspan="3">
-					<p:inputTextarea
+					<p:inputTextarea value="#{supportDocBackingBean.managedBean.selectedDocument.docName}"
 				 		cols="50" rows="5" maxlength="255"/>
 				</td>
 			</tr>
@@ -26,9 +26,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
+					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.document.definition']}"
+						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"
 					>
-						<f:selectItem  itemLabel="Upload" itemValue="0" />
+						<f:selectItems value="#{supportDocBackingBean.docDefinitionOptions()}" />
 					</p:selectOneMenu>
 				</td>
 				<th>
@@ -36,7 +37,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextS"/>
+					<p:inputText styleClass="ppDisplayTextS" value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"/>
 				</td>
 			</tr>
 			<tr>
@@ -45,9 +46,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu disabled="true"  styleClass="ppDropDownWidthS" label="#{lbl['lbl.pm.document.definition']}"
-					>
-						<f:selectItem  itemLabel="Upload" itemValue="0" />
+					<p:selectOneMenu disabled="true"  styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
+						value="#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}">
+						<f:selectItems value="#{supportDocBackingBean.supplierActionOptions()}" />
 					</p:selectOneMenu>
 				</td>
 				<th>
@@ -55,7 +56,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneRadio>
+					<p:selectOneRadio value="#{supportDocBackingBean.managedBean.selectedDocument.scoringReq}">
 						<f:selectItems value="#{supportDocBackingBean.getYesNoOptions()}" />
 					</p:selectOneRadio> 
 				</td>
@@ -66,7 +67,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" >
+					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 						<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 					</p:selectOneMenu>
 				</td>
@@ -85,7 +86,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<p:tab id="tAppType" title="#{lbl['lbl.pm.procurement.category']}">  
 				<br/>
 				<p:dataTable id="dtProcureCat" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-					>
+					selection="#{supportDocBackingBean.managedBean.deleteCheckListRestrictions}" rowKey="#{restrict}"
+			 		value="#{supportDocBackingBean.managedBean.checkListRestrictions}" var="restrict" >
 					<p:ajax event="toggleSelect" update="@this" process="@this" />
 					<p:ajax event="rowSelectCheckbox" update="@this" />
 					<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
@@ -95,7 +97,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					     	<h:outputText value="#{lbl['lbl.pm.procurement.category']}" />
 					    </f:facet>
 				    	<p:selectOneMenu styleClass="ppDropDownWidthM"
-							value="#{restrict.restrType.parameterId}">
+							value="#{restrict.procurementCatCode.parameterId}">
 							<f:selectItems  value="#{supportDocBackingBean.procurementTypeOptions()}"/>
 							<p:ajax event="change" update="somAppType"/>
 						</p:selectOneMenu>
@@ -105,7 +107,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pm.mandatory']}" />
 					    </f:facet>
-			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
+			         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.mandatory}">
 							<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 						</p:selectOneMenu>
 			        </p:column>   

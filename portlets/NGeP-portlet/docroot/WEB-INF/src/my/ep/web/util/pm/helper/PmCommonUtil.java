@@ -67,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmLanguage;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -580,5 +581,22 @@ public class PmCommonUtil {
 		}
 		return resDTO!=null? resDTO.isSuccessful() : false;
 	}
+	
+
+	/**
+	 * retrieve parameter obj
+	 * @param pmParameter
+	 */
+	
+	public static PmParameter retrievePmParameter(String paramType, String paramCode){
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+		parameterReqDTO.setParameterType(paramType);
+		parameterReqDTO.setParameterCode(paramCode);
+		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+		PmParameter pmParameter = parameterResDTO.getPmParameter();
+		return pmParameter;
+	}
+	
 
 }

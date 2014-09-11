@@ -16,13 +16,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -32,7 +34,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -42,6 +43,7 @@ import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.managedbean.pm.common.supportdoc.SupportDocumentManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
@@ -138,8 +140,23 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			this.getManagedBean().getSelectedDocument().getDocCategoryCode().setParameterCode(pmParameter.getParameterCode());
 			if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmParameter.getParameterCode())){
 				this.getManagedBean().setCheckList(true);
+				//load default value for checklist
+				if(this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode()==null){
+					this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(
+							PmCommonUtil.retrievePmParameter(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, ProfileManagementConst.DEFAULT_DOC_DEFINITION)
+							);
+				}
+				if(this.getManagedBean().getSelectedDocument().getChecklistActionCode()==null){
+					this.getManagedBean().getSelectedDocument().setChecklistActionCode(
+							PmCommonUtil.retrievePmParameter(ParameterTypeConst.SC_SUPPLIER_ACTION, ProfileManagementConst.DEFAULT_SUPPLIER_ACTION)
+							);
+				}
+				this.getManagedBean().getSelectedDocument().setPmZone(null);
 			}else{
 				this.getManagedBean().setCheckList(false);
+				this.getManagedBean().getSelectedDocument().setPmZone(new PmZone());
+				this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(null);
+				this.getManagedBean().getSelectedDocument().setChecklistActionCode(null);
 			}
 		}else{
 			this.getManagedBean().setCheckList(false);
@@ -152,9 +169,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void initialSupportDoc(){
 		log.info("initialSupportDoc - Start");
 		PmDocument pmDocument = new PmDocument();
-		pmDocument.setDocCategoryCode(new PmParameter());
-		pmDocument.setPmZone(new PmZone());
-		pmDocument.setDocDefinitionTypeCode(new PmParameter());
+		pmDocument.setDocCategoryCode(new PmParameter()); // checklist, supp doc
+		pmDocument.setPmZone(new PmZone()); //supp doc
+		pmDocument.setDocDefinitionTypeCode(null);  // checklist
+		pmDocument.setChecklistActionCode(null); // checklist
 		this.getManagedBean().setAppTypeRestrictions(null);
 		this.getManagedBean().setComTypeRestrictions(null);
 		this.getManagedBean().setSuppTypeRestrictions(null);
@@ -167,6 +185,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		this.getManagedBean().setDeleteCheckListRestrictions(null);
 		this.getManagedBean().setSelectedDocument(pmDocument);
 		this.getManagedBean().setCheckList(false);
+		this.getManagedBean().setSelectedTabIndex(0);
 		log.info("initialSupportDoc - End");
 	}
 	
@@ -223,7 +242,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				List <PmDocumentRestr> suppTypeRestrictions = new ArrayList<PmDocumentRestr>();
 				List <PmDocumentRestr> categoryRestrictions = new ArrayList<PmDocumentRestr>();
 				for(PmDocumentRestr pmDocumentRestr:pmDocument.getPmDocumentRestrs()){
-					
+					if(pmDocument.isByAppType()){
+						appTypeRestrictions.add(pmDocumentRestr);
+					}else if(pmDocument.isByCompType()){
+						comTypeRestrictions.add(pmDocumentRestr);
+					}else if(pmDocument.isBySupplierType()){
+						suppTypeRestrictions.add(pmDocumentRestr);
+					}else if(pmDocument.isByCategory()){
+						categoryRestrictions.add(pmDocumentRestr);
+					}
 				}
 
 				this.getManagedBean().setAppTypeRestrictions(appTypeRestrictions);
@@ -238,6 +265,18 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				for(PmDocumentRestr pmDocumentRestr:pmDocument.getPmDocumentRestrs()){
 					categoryRestriction.add(pmDocumentRestr);
 				}
+//				
+//				//load default value for checklist
+//				if(pmDocument.getDocDefinitionTypeCode()==null){
+//					pmDocument.setDocDefinitionTypeCode(
+//							PmCommonUtil.retrievePmParameter(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, ProfileManagementConst.DEFAULT_DOC_DEFINITION)
+//							);
+//				}
+//				if(pmDocument.getChecklistActionCode()==null){
+//					pmDocument.setChecklistActionCode(
+//							PmCommonUtil.retrievePmParameter(ParameterTypeConst.SC_SUPPLIER_ACTION, ProfileManagementConst.DEFAULT_SUPPLIER_ACTION)
+//							);
+//				}
 			}
 		}
 		log.info("loadRestriction - End");
@@ -325,7 +364,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				System.out.println("selected size " + pmCategoryL3s.size());
 				for(PmCategoryL3 pmCategoryL3: pmCategoryL3s){
 					PmDocumentRestr categoryRestr = new PmDocumentRestr();
-					categoryRestr.setPmCategoryL3(pmCategoryL3);
+					categoryRestr.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3.getCategoryL3Id()));
 					this.getManagedBean().getCategoryRestrictions().add(categoryRestr);
 				}
 				this.getManagedBean().getSelectedCategoryL3s().clear();
@@ -519,6 +558,19 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		return getDropdownValues(ParameterTypeConst.PROCUREMENT_CATEGORY);
 	}
 	
+
+
+	/**
+	 * retrieve supplier action
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] supplierActionOptions() {
+		log.info("supplierActionOptions");
+		return getDropdownValues(ParameterTypeConst.SC_SUPPLIER_ACTION);
+	}
+	
+	
 	/**
 	 * retrieve supplier zone
 	 * 
@@ -526,7 +578,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public List<PmZone> supplierZoneOptions() {
 		log.info("supplierZoneOptions");
-		 List<PmZone> zoneList = new ArrayList<PmZone>();
+		List<PmZone> zoneList = new ArrayList<PmZone>();
 		try{
 			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);	
 			ZoneResDTO resDTO = reqSO.retrieveZoneList();
@@ -588,7 +640,24 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	    return items;
 	}
 	
-	
+	public PmCategoryL3 retrieveCategoryL3DtlById(Long id){
+		log.info("supplierZoneOptions");
+		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
+		try{
+			ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL3Id(id);
+			CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3DtlById(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmCategoryL3 =resDTO.getCategoryL3();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve pmCategoryL3."); //TODO
+		}
+		return pmCategoryL3;
+	}
+
 	/**
 	 * get record status options //TODO: to load dynamically
 	 * @return SelectItem[] 
@@ -690,12 +759,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		//Business Category
 		if (sdSearchBean.getBusinessCategory() != null && !"".equalsIgnoreCase(sdSearchBean.getBusinessCategory())) {
 			log.info("+ businessCategory "  +sdSearchBean.getBusinessCategory());
-//			SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//			bean.setCaseInsensitive(true);
-//			bean.setSearchField("docName");
-//			bean.setSearchValue(sdSearchBean.getBusinessCategory());
-//			searchBean.getDataFilterBeans().add(bean);
-//			isEmpty = false;
+			SearchFilterBean bean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setCaseInsensitive(true);
+			bean.setSearchField("pmDocumentRestrs.pmCategoryL3.categoryName");
+			bean.setSearchValue(sdSearchBean.getBusinessCategory());
+			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
 		}
 
 		//base on the flag, default list is either select all or empty

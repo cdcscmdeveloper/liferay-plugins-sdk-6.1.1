@@ -38,7 +38,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	private List <PmDocumentRestr> deleteComTypeRestrictions;
 	private List <PmDocumentRestr> deleteSuppTypeRestrictions;
 	private List <PmDocumentRestr> deleteCategoryRestrictions;
-	private List <PmDocumentRestr> deleteCheckListRestrictions;	
+	private List <PmDocumentRestr> deleteCheckListRestrictions;
+	
 	private List <PmCategoryL3> selectedCategoryL3s;
 	private int selectedTabIndex;
 	

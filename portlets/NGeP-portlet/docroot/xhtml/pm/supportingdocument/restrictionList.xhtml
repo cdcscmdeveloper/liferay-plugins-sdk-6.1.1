@@ -38,19 +38,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:menuitem>
 			</p:tabMenu>
 			<!-- Application Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrApp}">
+			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrApp
+				and supportDocBackingBean.managedBean.selectedDocument.byAppType}">
 				<ui:include src="/xhtml/pm/supportingdocument/restrAppType.xhtml" /> 
 			</p:outputPanel>
 			<!-- Company Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrComp}">
+			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrComp
+				and supportDocBackingBean.managedBean.selectedDocument.byCompType}">
 				<ui:include src="/xhtml/pm/supportingdocument/restrCompType.xhtml" /> 
 			</p:outputPanel>
 			<!-- Supplier Type -->
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrSupp}">
+			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrSupp
+				and supportDocBackingBean.managedBean.selectedDocument.bySupplierType}">
 				<ui:include src="/xhtml/pm/supportingdocument/restrSuppType.xhtml" /> 
 			</p:outputPanel>
 			<!-- Category -->	
-			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrCategory}">
+			<p:outputPanel rendered="#{supportDocBackingBean.managedBean.selectedTabIndex == supportDocBackingBean.restrCategory
+				and supportDocBackingBean.managedBean.selectedDocument.byCategory}">
 				<ui:include src="/xhtml/pm/supportingdocument/restrCategory.xhtml" /> 
 			</p:outputPanel>
 	
