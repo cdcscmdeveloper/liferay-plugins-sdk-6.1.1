@@ -41,6 +41,7 @@ import my.ep.persistence.entity.sm.SmPaymentDtl;
 import my.ep.persistence.entity.sm.SmPaymentOrder;
 import my.ep.persistence.entity.sm.SmPaymentResponse;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -73,14 +74,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	
 	public PaymentBackingBean(){
 		this.getManagedBean().setCountry("MY");
-//		PmUser pmUser = new FacesScopes().getUserSessionBean();
-//		if (pmUser != null && pmUser.getUserId() != null) {
-//			System.out.println("***userId: " + pmUser.getUserId());
-//
-//			new LogKey(pmUser.getUserId()); 
-//		}else{
-//			new LogKey(1L); 
-//		}
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
+
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
 	}
 
 	/**
@@ -141,7 +142,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
 		this.getManagedBean().setAppId(mofReqDTO.getApplId());*/ //dummy test
 
-		//this.getManagedBean().setAppId(1009L);
+		//this.getManagedBean().setAppId(2960L);
 		log.info("*******retrieveBillInfo Start******");
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -300,7 +301,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				}
 			}
 			
-			payment.setPmParameter1(paymentMode);
+			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
 
 			SmBill smBill = this.getManagedBean().getSmBill();
@@ -715,7 +716,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 				}
 			}
 			
-			payment.setPmParameter1(paymentMode);
+			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
 
 			SmBill smBill = this.getManagedBean().getSmBill();
@@ -794,6 +795,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			
 			
 			PmStatusDesc pmStatDesc = pmStatusDescMap.get(statusCode);
+			log.info(">>>>PaymentStatus ID>>>>" + pmStatDesc.getPmStatus().getStatusId());
 			smPayment.setPmStatus(pmStatDesc.getPmStatus());
 			
 			paymentOrder.setChannelName("");
