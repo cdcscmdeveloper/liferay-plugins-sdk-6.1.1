@@ -3741,6 +3741,12 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 				catalog.setItemStatus("U");
 				
 				
+				//Past Start Date should change to current date
+				Date dateNow = new Date();
+				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
+					catalog.getCmStandardPricing().setStartDate(dateNow);
+				}
+
 				//end date already passed
 				if(catalog.getCmStandardPricing().getEndDate().before(dateNow)){
 					FacesContext.getCurrentInstance().addMessage(
@@ -3751,13 +3757,6 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 											new FacesScopes().getUserLocale())));
 					return "catalogMaintenanceFile";
 				}
-				
-				//Past Start Date should change to current date
-				Date dateNow = new Date();
-				if(catalog.getCmStandardPricing().getStartDate().before(dateNow)){
-					catalog.getCmStandardPricing().setStartDate(dateNow);
-				}
-				
 				
 				//same item with existed one cannot overlap the date
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
