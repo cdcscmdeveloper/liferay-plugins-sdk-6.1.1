@@ -20,7 +20,7 @@
 			<p:messages id="publicCatMesId" showDetail="true" autoUpdate="true" closable="true" showSummary="true" />
 
 		<p:tabView id="catalogueTabId">
-			<p:tab title="Keyword Search">
+			<p:tab title="#{lbl['lbl.cm.pub.catalog.keyword.search']}">
 				<table style="width: 100%; margin-top: 8px;">
 					<tr>
 						<td style="width: 20%;"><p:inputText style="height: 33px !important; width: 600px;font-size: 18px;"
@@ -28,14 +28,14 @@
 								value="#{pCatalogueBackingBean.managedBean.itemName}"
 								/> <p:watermark
 								for="itemNameId"
-								value="Search by item name keywords. Eg, Personal computer"></p:watermark></td>
-						<td style="padding-left: 5px;vertical-align: middle;"><p:commandLink title="Search" id="searchBtnId"
+								value="#{lbl['lbl.cm.pub.catalog.search.filed.watermark']}"></p:watermark></td>
+						<td style="padding-left: 5px;vertical-align: middle;"><p:commandLink title="#{lbl['lbl.cm.search']}" id="searchBtnId"
 								update=":form" action="#{pCatalogueBackingBean.searchCatalogue}">
 								<p:graphicImage value="/css/images/design/search.png" style="20px;"></p:graphicImage>
 							</p:commandLink>
 							<p:defaultCommand target="searchBtnId" />
 							<p:spacer width="10px;" />
-							<p:commandLink title="Clear" update=":form"
+							<p:commandLink title="#{lbl['lbl.cm.clear']}" update=":form"
 								action="#{pCatalogueBackingBean.clearSerach}">
 								<p:graphicImage value="/css/images/design/reject.png" style="20px;"></p:graphicImage>
 							</p:commandLink></td>
@@ -49,7 +49,7 @@
 				<h:panelGroup id="frontPageId"
 					rendered="#{pCatalogueBackingBean.managedBean.frontPage}">
 
-					<p:panel header="Popular UNSPSC Categories in Commodity level"
+					<p:panel header="#{lbl['lbl.cm.pub.catalog.panelgrid.title']}"
 						style="margin-top:10px;">
 
 						<p:dataGrid columns="4" rows="8" styleClass="publicCatGridCol"
@@ -60,7 +60,7 @@
 									<td>#{popular.unspscTitle}</td>
 								</tr>
 								<tr>
-									<td><p:commandLink value=">> Details"
+									<td><p:commandLink value=">> #{lbl['lbl.cm.pub.catalog.details']}"
 											action="#{pCatalogueBackingBean.searchCatalogueByCommodityCode(popular)}"
 											process="@this" update=":form"></p:commandLink></td>
 								</tr>
@@ -79,7 +79,7 @@
 								<table style="width: 90%;">
 									<tr>
 										<td style="background-color: #DBDBDB;height: 40px;"><p:outputLabel
-												value="Categories"
+												value="#{lbl['lbl.cm.pub.catalog.categories']}"
 												style="font-weight:bold;font-size:17px;text-align : left;float:left; vertical-align: middle;margin-left : 5px;" /></td>
 									</tr>
 									<tr>
@@ -132,7 +132,7 @@
 									<tr height="30px;">
 										<td
 											style="border-top: 1px solid #CFD62A;"><p:outputLabel
-												value="Price Range"
+												value="#{lbl['lbl.cm.pub.catalog.price.range']}"
 												style="font-weight:bold;float:left;font-size:15px;" /></td>
 									</tr>
 									<tr height="40px;">
@@ -145,9 +145,9 @@
 									</tr>
 									<tr>
 										<td style="text-align: right;"><p:commandButton
-												value="Reset" process=":form:catalogueTabId:resultpl"
+												value="#{lbl['lbl.btn.reset']}" process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.resetCatalogue()}"
-												update=":form" /> <p:commandButton value="Search"
+												update=":form" /> <p:commandButton value="#{lbl['lbl.btn.search']}"
 												process=":form:catalogueTabId:resultpl"
 												action="#{pCatalogueBackingBean.searchCatalogueByPrice()}"
 												update=":form" /></td>
@@ -158,12 +158,12 @@
 							<td width="70%"><p:outputLabel
 									rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
 									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
+									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
 
 								<p:outputLabel
 									rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} items found for #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
 								<br />
 								<hr class="horizontal_dotted_line" /> <br /> 
 								
