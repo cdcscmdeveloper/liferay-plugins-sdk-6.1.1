@@ -224,14 +224,18 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * to save professional / certified details
 	 * 
 	 */	
-	public void saveCertBodyDtls(){
+	public String saveCertBodyDtls(){
+		
+	try {	
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
 		validationMessage(certBody);
 		
 		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
+		
 		CertBodyReqDTO certBodyReqDTO= new CertBodyReqDTO();
 		certBodyReqDTO.setCertBody(certBody);
 		CertBodyResDTO resDTO = certBodySO.saveOrUpdateCertBodyDtls(certBodyReqDTO);
+		
 		this.getManagedBean().setCertBody(resDTO.getCertBody());
 		if(resDTO.isSuccessful()){
 			FacesContext
@@ -241,7 +245,17 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 					new FacesMessage(
 							FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 		}
+      } catch (Exception e) {
+		e.printStackTrace();
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+						"Record Save failed."));
+		throw e;
 	}
+	
+		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedBodyMain.xhtml";
+ }
 
 	/**
 	 * get value from search to maintenance page
