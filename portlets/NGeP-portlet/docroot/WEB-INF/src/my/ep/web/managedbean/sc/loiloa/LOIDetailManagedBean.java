@@ -12,6 +12,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
@@ -24,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -89,7 +91,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> ptjList;
 	
 	private Long sourceId;
+	List<LoiLoaBean>  loiLoaBeans  = new ArrayList<LoiLoaBean>();
+	private ScLoiLoa selectedLoiLoa = new ScLoiLoa();
 
+	private List<ScLoiLoaItem> scLoiLoaItems;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -718,6 +723,47 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSourceId(Long sourceId) {
 		this.sourceId = sourceId;
 	}
-	
+
+	/**
+	 * @return the scLoiLoaItems
+	 */
+	public List<ScLoiLoaItem> getScLoiLoaItems() {
+		return scLoiLoaItems;
+	}
+
+	/**
+	 * @param scLoiLoaItems the scLoiLoaItems to set
+	 */
+	public void setScLoiLoaItems(List<ScLoiLoaItem> scLoiLoaItems) {
+		this.scLoiLoaItems = scLoiLoaItems;
+	}
+
+	/**
+	 * @return the loiLoaBeans
+	 */
+	public List<LoiLoaBean> getLoiLoaBeans() {
+		return loiLoaBeans;
+	}
+
+	/**
+	 * @param loiLoaBeans the loiLoaBeans to set
+	 */
+	public void setLoiLoaBeans(List<LoiLoaBean> loiLoaBeans) {
+		this.loiLoaBeans = loiLoaBeans;
+	}
+
+	/**
+	 * @return the selectedLoiLoa
+	 */
+	public ScLoiLoa getSelectedLoiLoa() {
+		return selectedLoiLoa;
+	}
+
+	/**
+	 * @param selectedLoiLoa the selectedLoiLoa to set
+	 */
+	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
+		this.selectedLoiLoa = selectedLoiLoa;
+	}
 	
 }

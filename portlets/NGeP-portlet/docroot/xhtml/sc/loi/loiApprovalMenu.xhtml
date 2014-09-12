@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel header="#{lbl['lbl.sc.loiloa.loi.req.for.approval']}" 
+	<p:panel header="#{lbl['lbl.sc.loiloa.loi.req.for.approval']}"  
+	    id="approvalId"
 		toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -14,13 +15,13 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="approversId" />
+						<p:ajax event="change" update="approvalId"/>
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td style="width: 154px;"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.approver']}" /></td>
-				<td><p:selectOneMenu id="approversId" value="#{lOIDetailBackingBean.managedBean.reqApprove}"
+						value="#{lbl['lbl.sc.loiloa.loi.approver']}"  rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"/></td>
+				<td><p:selectOneMenu id="approversId" value="#{lOIDetailBackingBean.managedBean.reqApprove}" rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -68,7 +69,7 @@
 
 	<p:panel header="History" toggleable="true">
 		<p:dataTable id="itemtbl" var="loi"
-			value="#{lOIDetailBackingBean.managedBean.lois}" rows="10"
+			value="#{lOIDetailBackingBean.managedBean.lois}"
 			rowIndexVar="rowIndex">
 			<p:column headerText="Approved By">
 				<h:outputText value="#{loi.scLoiApproval.approver.userName}" />
