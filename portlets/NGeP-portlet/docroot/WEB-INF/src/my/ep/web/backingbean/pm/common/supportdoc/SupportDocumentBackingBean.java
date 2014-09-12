@@ -722,40 +722,64 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	private void validateRestriction(PmDocument pmDocument, List<PmDocumentRestr> restrictList, int restrictType){
 		log.info("validateRestriction");
-		if(restrictList!=null){
+//		if(restrictList!=null){
 			boolean isSelected = true;
+			boolean isNotEmpty = true;
 			if(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 				//Validation for mandatory field
-				if(pmDocument.isByAppType()){
-					if(restrictList.size()>1 
-							&& restrictList.get(
-									restrictList.size()-1).getAppTypeCode().getParameterId()==null){
-						isSelected = false;
+				if(RESTR_APP == restrictType && pmDocument.isByAppType()){
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getAppTypeCode().getParameterId()==null){
+								isSelected = false;
+							}
+						}
 					}
-				}else if(pmDocument.isByCompType()){
-					if(restrictList.size()>1 
-							&& restrictList.get(
-									restrictList.size()-1).getCompanyTypeCode().getParameterId()==null){
-						isSelected = false;
+				}else if(RESTR_COMP == restrictType && pmDocument.isByCompType()){
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getCompanyTypeCode().getParameterId()==null){
+								isSelected = false;
+							}
+						}
 					}
-				}else if(pmDocument.isBySupplierType()){
-					if(restrictList.size()>1 
-							&& restrictList.get(
-									restrictList.size()-1).getSupplierTypeCode().getParameterId()==null){
-						isSelected = false;
+				}else if(RESTR_SUPP == restrictType && pmDocument.isBySupplierType()){
+					
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getSupplierTypeCode().getParameterId()==null){
+								isSelected = false;
+							}
+						}
 					}
-				}else if(pmDocument.isByCategory()){
-					if(restrictList.size()>1 
-							&& restrictList.get(
-									restrictList.size()-1).getPmCategoryL3().getCategoryL3Id()==null){
-						isSelected = false;
+				}else if(RESTR_APP == restrictType && pmDocument.isByCategory()){
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id()==null){
+								isSelected = false;
+							}
+						}
 					}
 				}
 			}else{
-				if(restrictList.size()>1 
-						&& restrictList.get(
-								restrictList.size()-1).getProcurementCatCode().getParameterId()==null){
-					isSelected = false;
+				if(CHECKLIST == restrictType){
+					if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+						isNotEmpty = false;
+					}else{
+						for(PmDocumentRestr pmDocumentRestr: restrictList){
+							if(pmDocumentRestr.getProcurementCatCode().getParameterId()==null){
+								isSelected = false;
+							}
+						}
+					}
 				}
 			}
 			//throw validation message accordingly
@@ -771,8 +795,20 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				}else if(CHECKLIST == restrictType){
 					throw new EpException(" Please select Procurement Type.");
 				}
+			}else if(!isNotEmpty){
+				if(RESTR_APP == restrictType){
+					throw new EpException("At least one Application Type is required.");
+				}else if(RESTR_COMP == restrictType){
+					throw new EpException("At least one Company Type is required.");
+				}else if(RESTR_SUPP == restrictType){
+					throw new EpException("At least one Supplier Type is required.");
+				}else if(RESTR_CATEGORY == restrictType){
+					throw new EpException("At least one Category Type is required.");
+				}else if(CHECKLIST == restrictType){
+					throw new EpException("At least one Procurement Type is required.");
+				}
 			}
-		}		
+//		}		
 	}
 
 	/**

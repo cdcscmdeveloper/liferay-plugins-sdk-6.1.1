@@ -750,13 +750,18 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		log.info("validateRestriction");
 		if(restrictList!=null){
 			boolean isSelected = true;			
+//			boolean isNotEmpty = true;
 			
 			//Validation for mandatory field
-			if(restrictList.size()>1 
-					&& restrictList.get(
-							restrictList.size()-1).getRestrType().getParameterId()==null){
-				isSelected = false;
-			}
+//			if(restrictList==null || (restrictList!=null && restrictList.isEmpty())){
+//				isNotEmpty = false;
+//			}else{
+				for(PmSupplierReason pmSupplierReason: restrictList){
+					if(pmSupplierReason.getRestrType().getParameterId()==null){
+						isSelected = false;
+					}
+				}
+//			}
 
 			//throw validation message accordingly
 			if(!isSelected){
@@ -768,6 +773,15 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 					throw new EpException(MessageConst.ERROR_770010);
 				}
 			}
+//			else if(!isNotEmpty){
+//				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
+//					throw new EpException(MessageConst.ERROR_770062);
+//				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
+//					throw new EpException(MessageConst.ERROR_770063);
+//				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
+//					throw new EpException(MessageConst.ERROR_770064);
+//				}
+//			}
 		}		
 	}
 
