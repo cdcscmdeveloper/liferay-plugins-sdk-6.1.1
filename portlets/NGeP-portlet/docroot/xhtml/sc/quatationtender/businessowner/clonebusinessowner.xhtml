@@ -124,7 +124,7 @@
 			header="#{lbl['lbl.so.business.owner']}" toggleable="true">
 			<p:dataTable id="businessownerlistid"
 				value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
-				var="member" rowKey="#{member.committeeMemberId}"
+				var="member" rowKey="#{member}"
 				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
 				styleClass="cloneResults,cloneCommitteMembers">
 

@@ -519,41 +519,36 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			Long qtId = scQt.getQtId();
+			renewSesionObject();
+			
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setQtId(qtId);
 			reqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
 			this.getManagedBean().setQt(selectedScQt);
-			if (QTStatusConst.QT_PENDING_APPOINT_BO.equals(selectedScQt
-					.getQtStatus().getStatusId())
-					|| QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION
-							.equals(selectedScQt.getQtStatus().getStatusId())
-					|| (QTStatusConst.QT_CANCELLED.equals(selectedScQt
-							.getQtStatus().getStatusId()) && null == selectedScQt
-							.getQtType())) {
-				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",
-						selectedScQt.getQtId());
+			if (QTStatusConst.QT_PENDING_APPOINT_BO.equals(selectedScQt.getQtStatus().getStatusId())
+					|| QTStatusConst.QT_PENDING_SPECIFICATION_PREPARATION.equals(selectedScQt.getQtStatus().getStatusId())
+					|| (QTStatusConst.QT_CANCELLED.equals(selectedScQt.getQtStatus().getStatusId()) && null == selectedScQt.getQtType())) {
+				ScQtCommittee committee = getQtCommiteDtlsByQtIdNType("BO",selectedScQt.getQtId());
 				List<ScQtCommittee> qtCommittee = new ArrayList<ScQtCommittee>();
 				qtCommittee.add(committee);
 				selectedScQt.setScQtCommittees(qtCommittee);
 				this.getManagedBean().setScQtCommittee(committee);
-				this.getManagedBean().setScCommitteeMemberList(
-						committee.getScCommittee().getScCommitteeMembers());
-				List<ScCommitteeMember> committeMembers = committee
-						.getScCommittee().getScCommitteeMembers();
+				this.getManagedBean().setScCommitteeMemberList(committee.getScCommittee().getScCommitteeMembers());
+				List<ScCommitteeMember> committeMembers = committee.getScCommittee().getScCommitteeMembers();
 				// Code for selected consolidate Person should be highlight..
 				if (null != committeMembers) {
 					for (ScCommitteeMember committeeMember : committeMembers) {
 						if (committeeMember.isConsolidate()) {
-							this.getManagedBean().setSelectScCommitteMember(
-									committeeMember);
+							this.getManagedBean().setSelectScCommitteMember(committeeMember);
 							break;
 						}
 					}
 				}
-				this.getManagedBean()
-						.setCommitteMember(new ScCommitteeMember());
+				this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 				REDIRECT_PAGE = QTConstants.BO_MAINTANANCE_PAGE;
 			} else {
 				getManagedBean().setQt(resDTO.getQtDetail());

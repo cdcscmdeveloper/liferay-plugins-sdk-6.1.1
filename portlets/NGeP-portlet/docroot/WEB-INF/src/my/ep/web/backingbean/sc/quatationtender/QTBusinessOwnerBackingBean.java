@@ -581,6 +581,9 @@ public class QTBusinessOwnerBackingBean extends
 			throw new EpException("Please select a record.");
 		}
 		scCommittee.setScCommitteeMembers(memberList);
+		
+		ScQtCommittee qtCommittee = getManagedBean().getScQtCommittee();
+		qtCommittee.setScCommittee(scCommittee);
 				
 		// Clone Business Owner validation
 		RequestContext.getCurrentInstance().execute("cloneBusinessOwner.hide()");
@@ -618,8 +621,7 @@ public class QTBusinessOwnerBackingBean extends
 		parameterReqDTO1.setParameterCode(ParameterConst.COMMITTEE_ROLE_MEMBER);
 		ParameterResDTO parameterResDTO1 = getParameterSO()
 				.retrieveParameterByTypeAndCode(parameterReqDTO1);
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getScCommitteeMemberList();
+		List<ScCommitteeMember> memberList = getManagedBean().getScCommitteeMemberList();
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
@@ -775,6 +777,10 @@ public class QTBusinessOwnerBackingBean extends
 				committeeMemberList.remove(scCommitteeMember);
 			}
 		}
+		
+		ScQtCommittee qtCommittee = getManagedBean().getScQtCommittee();
+		ScCommittee scCommittee = qtCommittee.getScCommittee();
+		scCommittee.setScCommitteeMembers(committeeMemberList);
 	}
 
 	public void reset() {
@@ -824,15 +830,16 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setQtdetail(scQt);
 			quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			detailSO.validateateBODetails(quationTenderReqDTO);
-			QuationTenderResDTO quationTenderResDTO = detailSO
-					.saveQTDtl(quationTenderReqDTO);
+			QuationTenderResDTO quationTenderResDTO = detailSO.saveQTDtl(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
 				// TODO Need to think to move to finally block...
+				ScQt qt = quationTenderResDTO.getQtDetail();
+				
 				// To renew the session..
 				renewSesionObject();
 				getMinistrySpecificationSecretaryList();
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-				detailBackingBean.editAction(quationTenderResDTO.getQtDetail());
+				detailBackingBean.editAction(qt);
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(

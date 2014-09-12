@@ -12,9 +12,9 @@
 			<h:outputText value="#{lbl['lbl.so.business.owner']}" />
 		</f:facet>
 		<p:dataTable id="businessownerId"
-			value="#{qTBusinessOwnerBackingBean.managedBean.scCommitteeMemberList}"
+			value="#{qTDetailBB.managedBean.scCommitteeMemberList}"
 			var="businessowner" rowIndexVar="index" rowKey="#{businessowner}"
-			selection="#{qTBusinessOwnerBackingBean.managedBean.selectScCommitteMember}">
+			selection="#{qTDetailBB.managedBean.selectScCommitteMember}">
 
 			<p:ajax event="rowSelectRadio"
 				listener="#{qTBusinessOwnerBackingBean.consolidateRowSelectRadio}" />
@@ -86,7 +86,7 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
 			columnClasses="columnWidth10" style="margin-left: 26px;">
 			<p:selectBooleanCheckbox
-				value="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq}">
+				value="#{qTDetailBB.managedBean.qt.specApprovalReq}">
 				<p:ajax update="approvalSpec"
 					listener="#{qTBusinessOwnerBackingBean.processChecked}" />
 			</p:selectBooleanCheckbox>
@@ -95,14 +95,14 @@
 
 		<h:panelGroup id="approvalSpec">
 			<p:panel
-				rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.specApprovalReq ne '0'}">
+				rendered="#{qTDetailBB.managedBean.qt.specApprovalReq ne '0'}">
 				<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td">
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
 
 					<p:selectOneMenu id="ministryspec"
 						label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
-						value="#{qTBusinessOwnerBackingBean.managedBean.qt.ministrySpecSecrataryId.userId}"
+						value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
