@@ -77,18 +77,18 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			SupplierManagementConst.P222003);
 
 	public SvoSiteVisitBackingBean() {
-		PmUser pmUser = new FacesScopes().getUserSessionBean();
+/*		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
 			System.out.println("***userId: " + pmUser.getUserId());
 
 			new LogKey(pmUser.getUserId()); 
 		}else{
 			new LogKey(1L); 
-		}
+		}*/
 	}
 	
 	public void retrieveSiteVisitInfo(String viewMode){
-		this.getManagedBean().setAppId(1009);
+		//this.getManagedBean().setAppId(1009);
 		System.out.println("--------retrieveSiteVisitInfo--------" + this.getManagedBean().getAppId());
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		//reqDTO.setAppId(1009);
