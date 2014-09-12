@@ -332,6 +332,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
+					reqDTO.setFlRequestId(resDTO.getFlRequestId());
+					resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 					setFulfilmentRequestField(resDTO);
 				}
 			} 
@@ -1642,12 +1644,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						//String setiaCode = setiaCodeMap.get(childData.getPmSubSetia().getPmSetia().getSetiaId()).getSetiaCode();
 						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
 						
-						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
+//						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
 //							String projectCode = projectCodeMap.get(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId()).getProjectCode();
-							getManagedBean().setProjectCode(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
-						}
+							getManagedBean().setProjectCode("test kk");
+//						}
 					}
-					getManagedBean().setFinancingTypeCode(subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getFinancingType().getParameterCode());
+					getManagedBean().setFinancingTypeCode("TEST KK");
 				}
 			}
 		}
