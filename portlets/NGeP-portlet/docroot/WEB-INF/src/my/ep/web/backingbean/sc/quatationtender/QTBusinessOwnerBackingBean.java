@@ -22,7 +22,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
@@ -35,8 +34,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -522,16 +519,15 @@ public class QTBusinessOwnerBackingBean extends
 
 	public void addCloneCommitteeMembersAction() {
 		debugLogger("addCloneCommitteeMembersAction");
-		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
-				.getScCommittee();
-		List<ScCommitteeMember> memberList = getManagedBean()
-				.getScCommitteeMemberList();
+		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee().getScCommittee();
+		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CM_COMPLETE));		
+		
+		List<ScCommitteeMember> memberList = getManagedBean().getScCommitteeMemberList();
 		if (null == memberList) {
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
 		List<String> itemIds = new ArrayList<String>();
-		List<ScCommitteeMember> members = getManagedBean()
-				.getSelectedCommitteMemebers();
+		List<ScCommitteeMember> members = getManagedBean().getSelectedCommitteMemebers();
 		if (!members.isEmpty()) {
 			if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
 				for (ScCommitteeMember member : members) {
@@ -550,6 +546,7 @@ public class QTBusinessOwnerBackingBean extends
 							this.getManagedBean()
 									.setSelectScCommitteMember(member1);
 						}
+						member1.setScCommittee(scCommittee);
 						memberList.add(member1);
 					}
 				}
@@ -572,6 +569,7 @@ public class QTBusinessOwnerBackingBean extends
 								this.getManagedBean().setSelectScCommitteMember(
 										committees);
 							}
+							committees.setScCommittee(scCommittee);
 							memberList.add(committees);
 							this.getManagedBean().setScCommitteeMemberList(
 									memberList);
@@ -583,13 +581,7 @@ public class QTBusinessOwnerBackingBean extends
 			throw new EpException("Please select a record.");
 		}
 		scCommittee.setScCommitteeMembers(memberList);
-		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(60202l);
-		scCommittee.setCommitteStatus(committeStatus);
-		for (ScCommitteeMember scCommitteeMember : memberList) {
-			scCommitteeMember.setScCommittee(scCommittee);
-		}
-		
+				
 		// Clone Business Owner validation
 		RequestContext.getCurrentInstance().execute("cloneBusinessOwner.hide()");
 	}
@@ -614,15 +606,13 @@ public class QTBusinessOwnerBackingBean extends
 	public void okBusinessOwnerAction() {
 		debugLogger("okBusinessOwnerAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
-		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee()
-				.getScCommittee();
+		ScCommittee scCommittee = this.getManagedBean().getScQtCommittee().getScCommittee();
+		scCommittee.setCommitteStatus(setPmStatus(QTStatusConst.CM_COMPLETE));
+		
 		// Setting the pm status for New User
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		statusReqDTO.setStatusId(60730L);
-		StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(
-				statusReqDTO);
-		PmStatus status = statusResDTO.getPmStatus();
+		PmStatus status = setPmStatus(60730L);
 		// scQt.setQtStatus(status);
+		
 		ParameterReqDTO parameterReqDTO1 = new ParameterReqDTO();
 		parameterReqDTO1.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 		parameterReqDTO1.setParameterCode(ParameterConst.COMMITTEE_ROLE_MEMBER);
@@ -717,6 +707,8 @@ public class QTBusinessOwnerBackingBean extends
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
 			member.setPmUser(resDTO.getPmUser());
+			member.setScCommittee(scCommittee);
+			
 			memberList.add(member);
 			getManagedBean().setScCommitteeMemberList(memberList);
 		} else {
@@ -727,15 +719,6 @@ public class QTBusinessOwnerBackingBean extends
 					committeeMember.setMemberName(user.getUserName());
 					committeeMember.setIcPassport(user.getIdentificationNo());
 					committeeMember.setDesignation(user.getDesignation());
-					/*if (null != user.getPmAddressTypes()) {
-						for (PmAddressType address : user.getPmAddressTypes()) {
-							if (null != address.getPmAddress()) {
-								committeeMember.setEmail(address.getPmAddress()
-										.getEmail());
-								break;
-							}
-						}
-					}*/
 					committeeMember.setEmail(user.getEmail());
 					committeeMember.setGrade(user.getGrade());
 					committeeMember.setPNP(user.isPMP());
@@ -744,6 +727,8 @@ public class QTBusinessOwnerBackingBean extends
 							.getPmOrgProfile());
 					committeeMember.setMemberRole(parameterResDTO1.getPmParameter());
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
+					committeeMember.setScCommittee(scCommittee);
+					
 					if (this.getManagedBean().getScCommitteeMemberList().isEmpty()) {
 						this.getManagedBean().getScCommitteeMemberList()
 								.add(committeeMember);
@@ -768,12 +753,7 @@ public class QTBusinessOwnerBackingBean extends
 			}
 		}
 		scCommittee.setScCommitteeMembers(memberList);
-		PmStatus committeStatus = new PmStatus();
-		committeStatus.setStatusId(QTStatusConst.CM_COMPLETE);
-		scCommittee.setCommitteStatus(committeStatus);
-		for (ScCommitteeMember scCommitteeMember : memberList) {
-			scCommitteeMember.setScCommittee(scCommittee);
-		}
+		
 		// BO validation
 		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
 	}
@@ -1006,11 +986,6 @@ public class QTBusinessOwnerBackingBean extends
 				+ "?faces-redirect=true";
 	}
 
-	private IQTDetailSO getDetailSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-	}
-
 	/**
 	 * To cancle the QT. need to add logic for cancel update bpm
 	 * 
@@ -1114,6 +1089,24 @@ public class QTBusinessOwnerBackingBean extends
 		this.flag = flag;
 	}
 
+	public SelectItem[] getProcurementModeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		recommendList.add(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+	}
+	
+	private IQTDetailSO getDetailSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+	}
+	
 	private IUserSO getUserSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -1128,23 +1121,11 @@ public class QTBusinessOwnerBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 	}
-
-	private IStatusSO getStatusSO() {
-		return BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-	}
-
-	public SelectItem[] getProcurementModeDropdownValues() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> recommendList = new ArrayList<String>();
-		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
-		recommendList.add(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE);
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(
-				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
-		return items;
+	
+	private PmStatus setPmStatus(Long statusId){
+		PmStatus status = new PmStatus();
+		status.setStatusId(statusId);
+		return status;
 	}
 
 }
