@@ -141,30 +141,46 @@
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
 								id="typeremark2" />
-							<p:message id="typeremarkmsg" for="typeremark2"></p:message>
+							
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.brandRemarkII}" size="30"
 								id="brandRemark2" requiredMessage="Brand Remark is required!"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)))}"></p:inputText>
-							<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
+							
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.measurementRemarkII}" size="30"
 								id="measurementRemark2" requiredMessage="Measurement Remark is required!"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)))}"></p:inputText>
-							<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
+							
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.colorRemarkII}" size="30"
 								id="colorRemark2" requiredMessage="Color Remark is required!"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)))}"></p:inputText>
-							<p:message id="colorremarkmsg" for="colorRemark2"></p:message>
+							
 						</div>
 
+					</p:column>
+					 <p:column>
+
+						<div style="width:100%;">
+							<p:message id="typeremarkmsg" for="typeremark2"></p:message>
+						</div>
+						<div style="width:100%;height: 25px;">
+							<p:message id="brandremarkmsg" for="brandRemark2"></p:message>
+						</div>
+						<div style="width:100%;height: 25px;">
+							<p:message id="measurementremarkmsg" for="measurementRemark2"></p:message>
+						</div>
+						<div style="width:100%;height: 20px;">
+							<p:message id="colorremarkmsg" for="colorRemark2"></p:message>
+						</div>
+						
 					</p:column>
 
 				</p:dataTable>
