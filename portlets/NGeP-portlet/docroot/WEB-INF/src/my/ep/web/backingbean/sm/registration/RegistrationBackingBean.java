@@ -130,6 +130,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 
 	public String proceedToCompanyInfo() {
+		System.out.println("---------proceedToCompanyInfo-------" + new Date());
 		if (this.getManagedBean().getSmSupp() == null) {
 			log.info("-------RegistrationBackingBean is NUll-------------");
 			//default to malaysia
@@ -407,7 +408,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmPersonnelAddress personnelAddRes = new SmPersonnelAddress();
 		SmPersonnelAddress personnelAddPerm = new SmPersonnelAddress();
 		
-		personnelAddRes.setAddressType(SupplierManagementConst.RES_ADD);
+		personnelAddRes.setAddressType(SupplierManagementConst.MAIL_ADD);
 		if(this.getManagedBean().isSameAddress()){
 			personnelAddRes.setSmAddress(smPermAdd);
 			personnelAddRes.setSmPersonnel(smPersonnel);
