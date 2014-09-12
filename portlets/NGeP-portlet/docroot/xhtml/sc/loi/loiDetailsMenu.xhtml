@@ -40,20 +40,17 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.address']}" /></td>
-				<td><p:inputTextarea id="delAddrText" cols="30"
+				<td><p:inputTextarea id="delAddrText" cols="32"
 						rows="5"
 						value="test"
 						style=" margin-bottom:5px;" disabled="true" /></td>
-			
 			</tr>
-			
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.contact.person']}" /></td>
 				<td><p:inputText size="30"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContact}"
 						disabled="true" /></td>
-			
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Tel No" /></td>
@@ -65,7 +62,6 @@
 				<td><p:inputText size="30"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierFaxNo}"
 						disabled="true" /></td>		
-						
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" /></td>
@@ -73,10 +69,9 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierMobNo}"
 						disabled="true" /></td>
 			</tr>
-
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" /></td>
-				<td colspan="4"><p:inputText size="117"
+				<td colspan="4"><p:inputText size="101"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierEmail}"
 						disabled="true" /></td>
 			</tr>
@@ -91,7 +86,7 @@
 				<td><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText
-							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" size="69" />
+							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" size="60" />
 					</c:if> 
 					
 					<c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">

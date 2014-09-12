@@ -6,6 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div class="ppRightBtn">
+		<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}"
+			icon="ui-icon-back" style="float:left;"
+			action="#{lOIDetailBackingBean.backToPervious}" />
+
 		<p:commandButton value="Preview Letter" icon="ui-icon-search"
 			action="loiLetterOfAcceptance.xhtml" process="@form"
 			update="@form" />

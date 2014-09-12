@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
+	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" id="awardTypeId"
 		toggleable="true">
 			<table>
 				<tr>
@@ -28,9 +28,15 @@
 	
 	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="false">
 		<p:dataTable id="itemtbl" var="loiLoaItem"  
-			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}" rows="10"
+			value="#{lOIDetailBackingBean.managedBean.scLoiLoaItems}"
+			rowKey="#{loiLoaItem}"
 			rowIndexVar="rowIndex">
-			<ac:paginator for="itemtbl" />
+
+			<c:if test="#{loiLoaItem.tplSpecZoneDtl ne null}">
+				<p:column headerText="Zone/Location" style="width:25%">
+					<h:outputText value="#{loiLoaItem.tplSpecZoneDtl.zoneName}" />
+				</p:column>
+			</c:if>
 			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}" style="width:25%">
 				<h:outputText value="#{loiLoaItem.scRequestItem.itemName}" />
 			</p:column>
@@ -51,30 +57,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.unit.price']}"
 				style="width:10%">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.loiloa.item.total']}" />
-				</f:facet>
-
-				<h:outputText value="#{loiloaItem.unitPrice}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+				<h:outputText value="#{loiloaItem.unitPrice}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.sub.total']}"
 				style="width:15%">
-				<f:facet name="footer">
-					<h:outputText
-						value="#{lOIDetailBackingBean.managedBean.scLoi.loiAmt}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</f:facet>
-
-				<h:outputText value="#{loiloaItem.qty * loiloaItem.unitPrice}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+				<h:outputText value="#{loiloaItem.qty * loiloaItem.unitPrice}"/>
 			</p:column>
 
 		</p:dataTable>

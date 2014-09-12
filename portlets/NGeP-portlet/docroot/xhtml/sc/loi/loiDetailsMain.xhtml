@@ -8,55 +8,54 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<ui:include src="loiButtons.xhtml" />
-		
-		<ui:include src="loiDetailsHeader.xhtml" />
-		
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="20%" valign="top" class="sidemenutd">
-				<p:tabMenu styleClass="sidemenu"
-					activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-					style="display : table-caption;">
+		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
 
+		<ui:include src="loiButtons.xhtml" />
+
+		<ui:include src="loiDetailsHeader.xhtml" />
+
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%;" class="sidemenutd"
+					style="vertical-align: baseline;">
+					<p:tabMenu
+						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+						styleClass="sidemenu" style="display : table-caption;">
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loi.details']}"
 							update="@form"
-							action="#{lOIDetailBackingBean.tabMenuListener('0')}" />
+							actionListener="#{lOIDetailBackingBean.tabMenuListener('0')}" />
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@all" partialSubmit="true"
-							action="#{lOIDetailBackingBean.tabMenuListener('1')}" />
+							update="@form"
+							actionListener="#{lOIDetailBackingBean.tabMenuListener('1')}" />
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
 							update="@form"
-							action="#{lOIDetailBackingBean.tabMenuListener('2')}" />
+							actionListener="#{lOIDetailBackingBean.tabMenuListener('2')}" />
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}"
 							update="@form"
-							action="#{lOIDetailBackingBean.tabMenuListener('3')}" />
-					</p:tabMenu>
-			</td>
-			<td width="80%">
-				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
-					<ui:include src="loiDetailsMenu.xhtml" />
-				</c:if>
-	
-				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
-					<ui:include src="loiAwardDetailsMenu.xhtml" />
-				</c:if>
-				
-				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
-					<ui:include src="loiNegotiationDetailsMenu.xhtml" />
-				
-				</c:if>
-				
-				<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
-				    <ui:include src="loiApprovalMenu.xhtml" />
-				</c:if>
-			</td>
-		</tr>
+							actionListener="#{lOIDetailBackingBean.tabMenuListener('3')}" />
+					</p:tabMenu></td>
+				<td width="80%"><h:panelGroup>
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
+							<ui:include src="loiDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
+							<ui:include src="loiAwardDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
+							<ui:include src="loiNegotiationDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+							<ui:include src="loiApprovalMenu.xhtml" />
+						</c:if>
+					</h:panelGroup></td>
+			</tr>
 		</table>
 	</ui:define>
 </ui:composition>

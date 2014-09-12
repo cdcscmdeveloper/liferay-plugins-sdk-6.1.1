@@ -15,7 +15,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
-import my.ep.persistence.entity.sc.loaloi.ScTermDesc;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -55,9 +54,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScLoiTerm scNegoTerm;
 	private List<ScLoiTerm> negoTermsList;
 	private List<ScLoiTerm> selectedNegoTermsList;
-	private ScTermDesc scTermDesc;
-	private List<ScTermDesc> scTermDescList;
-	private List<ScTermDesc> selectedCheckDetails;
 	private PmUser pmUser;
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
@@ -239,34 +235,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the scTermDesc
-	 */
-	public ScTermDesc getScTermDesc() {
-		return scTermDesc;
-	}
-
-	/**
-	 * @param scTermDesc the scTermDesc to set
-	 */
-	public void setScTermDesc(ScTermDesc scTermDesc) {
-		this.scTermDesc = scTermDesc;
-	}
-
-	/**
-	 * @return the selectedCheckDetails
-	 */
-	public List<ScTermDesc> getSelectedCheckDetails() {
-		return selectedCheckDetails;
-	}
-
-	/**
-	 * @param selectedCheckDetails the selectedCheckDetails to set
-	 */
-	public void setSelectedCheckDetails(List<ScTermDesc> selectedCheckDetails) {
-		this.selectedCheckDetails = selectedCheckDetails;
-	}
-
-	/**
 	 * @return the branchsList
 	 */
 	public List<SmSupplierBranch> getBranchsList() {
@@ -339,22 +307,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setReqApprove(String reqApprove) {
 		this.reqApprove = reqApprove;
 	}
-
-	/**
-	 * @return the scTermDescList
-	 */
-	public List<ScTermDesc> getScTermDescList() {
-		return scTermDescList;
-	}
-
-	/**
-	 * @param scTermDescList
-	 *            the scTermDescList to set
-	 */
-	public void setScTermDescList(List<ScTermDesc> scTermDescList) {
-		this.scTermDescList = scTermDescList;
-	}
-
 	/**
 	 * @return the scNegoTerm
 	 */

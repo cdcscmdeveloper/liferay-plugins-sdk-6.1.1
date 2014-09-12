@@ -52,7 +52,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -509,7 +508,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		debugLogger("addPredefinedTerms");
 
 		ScLoiTerm scNegoTerm = new ScLoiTerm();
-		ScTerm scTerm = new ScTerm();
+		//ScTerm scTerm = new ScTerm();
 		List<ScLoiTerm> list = getManagedBean().getNegoTermsList();
 
 		if (list == null) {
