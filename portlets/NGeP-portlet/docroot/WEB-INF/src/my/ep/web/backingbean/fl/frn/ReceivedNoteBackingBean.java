@@ -17,11 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
@@ -29,6 +31,7 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
@@ -154,19 +157,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
-					getManagedBean().setFulfilmentNote(
-							resDTO.getFulfilmentNote());
-					getManagedBean().setSelectedItem(
-							getManagedBean().getFulfilmentNote()
-									.getFlFulfilmentNoteItem().get(0));
-					reqDTO.setDeliveryOrderId(getManagedBean()
-							.getFulfilmentNote().getFlDeliveryOrder()
-							.getDeliveryOrderId());
-					getManagedBean().getFulfilmentNote().setStatus(
-							receivedNoteSO.retrieveReceivedNoteStatus(reqDTO)
-									.getPmStatus());
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),
-							resDTO.getAttachmentList());
+					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
+					resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+					
+					getManagedBean().setSelectedTabIndex(0);
+					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+					getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
+					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),	resDTO.getAttachmentList());
 				}
 			}
 		} finally {
@@ -193,6 +190,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
@@ -241,6 +239,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 					getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFlDeliveryOrder().getFlRequest().getDocType());
+					// Default status
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT);
+					getManagedBean().getFulfilmentNote().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 					
 					List<FlFulfilmentNoteItem> noteItemList=new ArrayList<FlFulfilmentNoteItem>();
 					for (FlDelOrderItem delOrderItem : resDTO.getFlDeliveryOrder().getFlDelOrderItem()){
@@ -277,8 +279,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().setOutComes(outcome);
 			}
 			getManagedBean().setSelectedTabIndex(0);
-			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
-			getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 			
 			// Set evaluation
 			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
@@ -287,7 +287,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
 				getManagedBean().getFulfilmentNote().setReceivedDate(getCurrentDate());
 			}
-			
 		}
 	}
 	
@@ -353,10 +352,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	public void checkScore(FlSupplierEvaluation supplierEvaluation){
-		if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
-			String score = supplierEvaluation.getScore().toString();
-			supplierEvaluation.setScore(null);
-			throw new EpException(MessageConst.ERROR_100039, new String[]{score,"1","5"});
+		if(supplierEvaluation.getScore()!=null) {
+			if(supplierEvaluation.getScore() > 5 || supplierEvaluation.getScore() == 0){
+				String score = supplierEvaluation.getScore().toString();
+				supplierEvaluation.setScore(null);
+				throw new EpException(MessageConst.ERROR_100039, new String[]{score,"1","5"});
+			}
 		}
 	}
 	public void receivedAmtValidation(FlFulfilmentNoteItem item) {
