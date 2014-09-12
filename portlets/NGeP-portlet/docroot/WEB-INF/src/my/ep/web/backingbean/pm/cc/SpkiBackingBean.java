@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.bouncycastle.crypto.tls.Certificate;
 
 import my.ep.biz.service.pm.common.digisign.IDigiSignSO;
@@ -29,9 +31,9 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.logging.LogKey;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.pm.userprofile.UserprofileBackingBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -64,11 +66,13 @@ public class SpkiBackingBean {
 	private String challengeQues1;
 	private String challsAnswer;
 	private String password;
+	private PmDigiSign pmDigiSign = new PmDigiSign();
 	
+
 	public SpkiBackingBean() {}
 	
 	private static final Logger logger = EpLogger
-			.getLogger(UserprofileBackingBean.class);
+			.getLogger(SpkiBackingBean.class);
 
 	private void debugLogger(Object message) {
 		if (logger.isDebugEnabled()) {
@@ -77,40 +81,16 @@ public class SpkiBackingBean {
 		logger.info(message);
 	}
 	
-	 public void testCreate() throws Exception {
 
-//		   UserCreate test = new UserCreate();
-//
-//		      try
-//		      {
-//		         test.execute();
-//		      }
-//		      catch (Exception ex)
-//		      {
-//		         test.log("EXCEPTION: " + ex.getMessage());
-//		      }
-		      DigiSignReqDTO reqDTO = new DigiSignReqDTO();
-		      System.err.println("===============================================================1");
-		      IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
-		      System.err.println("===============================================================1q");
-		      		PmDigiSign pmDigiSign = new PmDigiSign();
-		      		pmDigiSign.setCertificate("111111");
-//		      		pmDigiSign.setDigiSignId(4);
-		      		pmDigiSign.setDocType("CT");
-		      		pmDigiSign.setCreatedBy(new BigDecimal(1));
-		      		pmDigiSign.setCreatedDate(null);
-		      		pmDigiSign.setDocId(new BigDecimal(11));
-		      		pmDigiSign.setDocNo("1");
-		      		pmDigiSign.setDocType("CT");
-		      		pmDigiSign.setOrginalData("textbeforesign");
-		      		pmDigiSign.setSignedData("signedData");
-		      		reqDTO.setPmDigiSign(pmDigiSign);    
-		      		System.err.println("===============================================================1aa");
-		      		digiSignSO.saveOrUpdateDigiSign(reqDTO);		    
-		      	  System.err.println("===============================================================1aaa");
-			}
-	 
-	 
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+ 
 	public void getChallengeQuestions(){ 
 	try{
 			// Create property file
@@ -119,7 +99,7 @@ public class SpkiBackingBean {
 			KMCClient client = KMCClientFactory.getInstance(f);
 
 			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("781212141111", 1));
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
 //			List<String> challs = null;
 			switch(res.getStatusCode())
 			{
@@ -213,14 +193,14 @@ public class SpkiBackingBean {
 //			
 			// Simulate user selected the question and answer accordingly
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
-			challenges.put("Name?", "Don't care!");
+			challenges.put(challengeQues1, challsAnswer);
 
 			// Simulate the data ready to sign
 			String dataForSigning = "This is data for signing!";
 			
 			// Simulate usel expression that maps to a server side
  
-			String pin = "123123";
+			String pin = getPassword();
 			
 			// Request service to signData based on the answered challenges and data 
 			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("800808081011","cdc", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
@@ -248,31 +228,46 @@ public class SpkiBackingBean {
 		}
 
 	}
-	
-	public void signAction() {
-//		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	public void spkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
+        String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("inputTextBeforeSign");
+	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
+	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
+	    spkiSignTransaction();
+	    Long userId = (Long) MDC.get(LogKey.USER_ID);
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		
+		pmDigiSign.setCreatedBy(userId);
+        pmDigiSign.setCertificate("111111");
+        pmDigiSign.setCreatedDate(date);
+        pmDigiSign.setOrginalData(textBeforeSign);
+        pmDigiSign.setSignedData(signedText);
+//		obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign});
 
-		    String value = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
-		    String value2 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
-		    String value3 = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
+	    debugLogger("textBeforeSign==================================: "+textBeforeSign);
+	    debugLogger("reflectAction=====================================: "+ challsAnswer+ password);
+	}
+	public void signAction(my.ep.persistence.entity.pm.common.PmDigiSign pmDigiSign) {
 
-//https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx
-//https://kmcep-dev.digicert.com.my/RequestChangePIN.aspx
-//https://kmcep-dev.digicert.com.my/RequestResetPIN.aspx
-//https://kmcep-dev.digicert.com.my/RequestRevokeCertaspx
-	    debugLogger("this.challengeQues1===============.=====================: "+this.challengeQues1);
-	    debugLogger("SignedText====================================: "+this.challsAnswer);
-	    debugLogger("this.password ====================================: "+this.password );
+		    DigiSignReqDTO reqDTO = new DigiSignReqDTO();
+	        IDigiSignSO digiSignSO = (IDigiSignSO) EpEjbBusinessDelegate.getInstance().getServiceObject("pm", IDigiSignSO.class);
+	        reqDTO.setPmDigiSign(pmDigiSign);    
+	        digiSignSO.saveOrUpdateDigiSign(reqDTO);      
+
+	    debugLogger("========================: "+pmDigiSign.getSignedData());
 
 		}
 	public void RequestChangePIN() throws IOException, PortalException, SystemException {
 	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
 	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
-	    debugLogger("this.statusCode====================================: "+statusCode);
+
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Contact admin."));
 //		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 //		externalContext.redirect("https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx"+generateSecurityToken()p);
-	}
+      //https://kmcep-dev.digicert.com.my/RequestChallRespUpdate.aspx
+      //https://kmcep-dev.digicert.com.my/RequestChangePIN.aspx
+      //https://kmcep-dev.digicert.com.my/RequestResetPIN.aspx
+      //https://kmcep-dev.digicert.com.my/RequestRevokeCertaspx	
+        }
 	
 	
 	public String getChallengeQues1() {

@@ -1,36 +1,14 @@
 package my.ep.web.backingbean.pm.cc;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-
-import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.Http.Method;
 
 
 @ManagedBean(name = "gpkiBackingBean")
