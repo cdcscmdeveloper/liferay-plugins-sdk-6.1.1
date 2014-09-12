@@ -15,12 +15,16 @@
 	  <tr>	  	
 		<td style="width:12%;"><p:outputLabel value="#{lbl['lbl.pm.sa.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="SalutationCode" value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}" size="30" /></td>
+		<td><p:inputText id="SalutationCode" value="#{salutationBackingBean.managedBean.pmSalutation.salutationCode}"
+		     size="30" maxlength="10" />
+		</td>
 	  </tr>	
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.sa.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText id="SalutationName" value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" size="30" /></td>
+		<td><p:inputText id="SalutationName" value="#{salutationBackingBean.managedBean.pmSalutation.salutationName}" 
+			 size="30" maxlength="100" />
+	  </td>
 	  </tr>
 	   <tr> 
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.status']}" /></td>
