@@ -58,7 +58,10 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+
+import weblogic.wsee.util.StringUtil;
 
 /**
  * Backing Bean for Support Document
@@ -156,10 +159,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().setCheckList(true);
 				//load default value for checklist
 				if(this.getManagedBean().getSelectedDocument().isBrandNew() && this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode()==null){
+					if(this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode()==null){
+						this.getManagedBean().getSelectedDocument().setDocDefinitionTypeCode(new PmParameter());
+					}
 					PmParameter tempParam = PmCommonUtil.retrievePmParameter(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE, ProfileManagementConst.DEFAULT_DOC_DEFINITION);
 					this.getManagedBean().getSelectedDocument().getDocDefinitionTypeCode().setParameterId(tempParam.getParameterId());
 				}
 				if(this.getManagedBean().getSelectedDocument().isBrandNew() && this.getManagedBean().getSelectedDocument().getChecklistActionCode()==null){
+					if(this.getManagedBean().getSelectedDocument().getChecklistActionCode()==null){
+						this.getManagedBean().getSelectedDocument().setChecklistActionCode(new PmParameter());
+					}
 					PmParameter tempParam = PmCommonUtil.retrievePmParameter(ParameterTypeConst.SC_SUPPLIER_ACTION, ProfileManagementConst.DEFAULT_SUPPLIER_ACTION);
 					this.getManagedBean().getSelectedDocument().getChecklistActionCode().setParameterId(tempParam.getParameterId());
 				}
@@ -480,16 +489,24 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				
 				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCategoryRestrictions()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
+						System.out.println("getCategoryRestrictions.getCategoryL3Id()>>>>" +pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
 						categoryL3Id.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
 					}
 				}	
 			
 				for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedCategoryL3s()){
+					System.out.println("getSelectedCategoryL3s.getCategoryL3Id()>>>>" + pmCategoryL3.getCategoryL3Id());
 					if(categoryL3Id.contains(pmCategoryL3.getCategoryL3Id())){
 						isUnique = false;
 						break;
 					}
 				}
+				
+//				Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
+//				if(!categoryL3Id.isEmpty() && (tempRestrictIdSet.size()!=categoryL3Id.size())){
+//					isUnique = false;
+//				}
+				
 			}
 		}
 		return isUnique;
@@ -806,7 +823,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		
 			Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
-			if(!tempRestrictIdList.isEmpty() && (tempRestrictIdSet.size()!=pmDocumentRestrs.size())){
+			if(!tempRestrictIdList.isEmpty() && (tempRestrictIdSet.size()!=tempRestrictIdList.size())){
 				isUnique = false;
 				throw new EpException(errorMesg);
 			}
@@ -877,21 +894,172 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getSuppTypeRestrictions());
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getCategoryRestrictions());
 			addDocRestrToDocument(pmDocument, this.getManagedBean().getCheckListRestrictions());
-			if(pmDocument.getPmDocumentRestrs()!=null){
-				System.out.println("PmDocumentRestrs>>>" + pmDocument.getPmDocumentRestrs().size());
-			}else{
-				System.out.println("PmDocumentRestrs>>>>>null");
-			}
+			
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()});
+			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()}); //TODO
 
 		}
 	}
 	
+	/**
+	 * validate document
+	 * @param pmDocument
+	 */
+	private void validateDocument(PmDocument pmDocument){
+		log.info("validateDocument");
+		if(pmDocument.getDocCategoryCode().getParameterId()==null){
+			throw new EpException("Document Category is mandatory.");
+		}
+		
+		if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
+			if(StringUtils.isBlank(pmDocument.getDocName())){ 
+				throw new EpException("Document Name is mandatory.");
+			}else{
+				//doc name unique
+				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
+				
+				//docCategoryCode
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("docCategoryCode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								pmDocument.getDocCategoryCode().getParameterCode()));
+				//recordStatusFlg
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				//docName
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchField("docName");
+				bean.setCaseInsensitive(true);
+				bean.setSearchValue(pmDocument.getDocName());
+				searchBean.getDataFilterBeans().add(bean);
+				
+				//documentId
+				if(!pmDocument.isBrandNew()){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("documentId",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(),
+									pmDocument.getDocumentId()));
+				}
+				if(searchDocument(searchBean)){
+					throw new EpException("Document Name is duplicated in the same Document Category.");
+				}
+			}
+			
+			
+			if(pmDocument.getDisplaySeq()==null || pmDocument.getDisplaySeq()<=0){
+				throw new EpException("Display Seq is mandatory.");
+			}else{
+				//display seq unique
+				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
+				
+				//docCategoryCode
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("docCategoryCode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								pmDocument.getDocCategoryCode().getParameterCode()));
+				
+				//recordStatusFlg
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				//displaySeq
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchField("displaySeq");
+				bean.setSearchValue(pmDocument.getDisplaySeq());
+				searchBean.getDataFilterBeans().add(bean);
+				
+				//documentId
+				if(!pmDocument.isBrandNew()){
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("documentId",
+									SearchOperator.OPERATOR_NOT_EQUALS.value(),
+									pmDocument.getDocumentId()));
+				}
+				if(searchDocument(searchBean)){
+					throw new EpException("Display Seq is duplicated in the same Document Category.");
+				}
+			}
+			
+		}else{
+			if(StringUtils.isBlank(pmDocument.getDocName())){ 
+				throw new EpException("Document Name is mandatory.");
+			}
+
+			if(pmDocument.getPmZone().getZoneId()==null){
+				throw new EpException("Supplier Zone is mandatory.");
+			}
+			
+			//doc name unique + zone id unique
+			SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
+			
+			//docCategoryCode
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("docCategoryCode.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							pmDocument.getDocCategoryCode().getParameterCode()));
+			
+			//docName
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+			bean.setSearchField("docName");
+			bean.setCaseInsensitive(true);
+			bean.setSearchValue(pmDocument.getDocName());
+			searchBean.getDataFilterBeans().add(bean);
+			
+			//recordStatusFlg
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("recordStatusFlg",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			//displaySeq
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("displaySeq",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							pmDocument.getDisplaySeq()));
+			
+			//zoneId
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmZone.zoneId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							pmDocument.getPmZone().getZoneId()));
+			
+			//documentId
+			if(!pmDocument.isBrandNew()){
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("documentId",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								pmDocument.getDocumentId()));
+			}
+			if(searchDocument(searchBean)){
+				throw new EpException("Document Name and Supplier Zone is duplicated in the same Document Category.");
+			}
+			
+		}
+		
+	}
 	
 	
+	private boolean searchDocument(ISearchBean<PmDocument> searchBean){
+		DocumentReqDTO reqDTO = new DocumentReqDTO();
+		reqDTO.setDocumentSearchBean(searchBean);
+		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
+		DocumentResDTO resDTO = reqSO.retrieveDocumentBySearchBean(reqDTO);
+		if (resDTO.isSuccessful()) {
+			return (resDTO.getDocumentResultBean()!=null 
+					&& resDTO.getDocumentResultBean().getResultList()!=null 
+					&& !resDTO.getDocumentResultBean().getResultList().isEmpty());
+		}
+		return false;
+	}
 	/**
 	 * save to Supporting Document
 	 * @return xhtml
@@ -904,6 +1072,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		IDocumentSO reqSO = null;
 		try{
 			PmDocument pmDocument = this.getManagedBean().getSelectedDocument();
+			validateDocument(pmDocument);
 			validateRestrictions(pmDocument);
 			getAllRestrictions(pmDocument);
 			

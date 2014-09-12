@@ -25,7 +25,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<td>
 						<p:selectOneMenu id="somDocCategory" disabled="#{!supportDocBackingBean.managedBean.selectedDocument.brandNew}"
 							value="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId}"
-							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  >
+							label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
+							required="true">
 							<f:selectItems  value="#{supportDocBackingBean.documentCategoryOptions()}"/>
 							<p:ajax event="change" update="opDocDetails" listener="#{supportDocBackingBean.docCategoryChange}"/>
 						</p:selectOneMenu>

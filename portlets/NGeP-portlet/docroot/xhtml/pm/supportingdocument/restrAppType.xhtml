@@ -23,11 +23,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
 		    </f:facet>
 	    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthL"
+	    		required="true" label="#{lbl['lbl.pm.application.type']}"
 				value="#{restrict.appTypeCode.parameterId}">
 				<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
 				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 					supportDocBackingBean.restrApp)}"/>
 			</p:selectOneMenu>
+			<p:message id="somAppTypeMsg" for="somAppType" display="icon" />
         </p:column>  
         <p:column>  
         	<f:facet name="header">

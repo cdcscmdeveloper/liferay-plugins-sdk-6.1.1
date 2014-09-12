@@ -23,11 +23,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 		    </f:facet> 
 	    	<p:selectOneMenu id="somSuppType" styleClass="ppDropDownWidthL"
+	    		required="true" label="#{lbl['lbl.pm.supplier.type']}"
 				value="#{restrict.supplierTypeCode.parameterId}">
 				<f:selectItems  value="#{supportDocBackingBean.supplierTypeOptions()}"/>
 				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 					supportDocBackingBean.restrSupp)}"/>
 			</p:selectOneMenu>
+			<p:message id="somSuppTypeMsg" for="somSuppType" display="icon" />
         </p:column>  
         <p:column>  
         	<f:facet name="header">

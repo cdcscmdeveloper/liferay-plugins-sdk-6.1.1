@@ -686,6 +686,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
 						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
 					}
+					this.getManagedBean().getSelectedRoles().clear();
 					updateReceivingAddressFlag();
 				}else{
 					throw new EpException(MessageConst.ERROR_770020);

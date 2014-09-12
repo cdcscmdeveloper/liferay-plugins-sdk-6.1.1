@@ -18,7 +18,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td colspan="3">
 					<p:inputTextarea value="#{supportDocBackingBean.managedBean.selectedDocument.docName}"
-				 		cols="50" rows="5" maxlength="255"/>
+						label="#{lbl['lbl.pm.document.name']}"
+				 		cols="50" rows="5" maxlength="255" required="true" id="itaDocName" />
+			 		<p:message id="itaDocNameMsg" for="itaDocName" display="icon" />
 				</td>
 			</tr>
 			<tr>
@@ -27,18 +29,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.document.definition']}"
+					<p:selectOneMenu disabled="true" styleClass="ppDropDownWidthM"  required="true"
+						id="somDocDefinition" label="#{lbl['lbl.pm.document.definition']}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.docDefinitionTypeCode.parameterId}"
 					>
 						<f:selectItems value="#{supportDocBackingBean.docDefinitionOptions()}" />
 					</p:selectOneMenu>
+					<p:message id="somDocDefinitionMsg" for="somDocDefinition" display="icon" />
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.display.sequence']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextS" value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"/>
+					<p:inputText styleClass="ppDisplayTextS" required="true"
+						label="#{lbl['lbl.pm.display.sequence']}" id="itDisplaySeq"
+						value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"/>
+					<p:message id="itDisplaySeqMsg" for="itDisplaySeq" display="icon" />
 				</td>
 			</tr>
 			<tr>
@@ -47,20 +54,23 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-				#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}
-					<p:selectOneMenu  styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
+					<p:selectOneMenu  disabled="true" required="true" id="somSupplierAction"
+						styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.action']}"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.checklistActionCode.parameterId}">
 						<f:selectItems value="#{supportDocBackingBean.supplierActionOptions()}" />
 					</p:selectOneMenu>
+					<p:message id="somSupplierActionMsg" for="somSupplierAction" display="icon" />
 				</td>
 				<th>
 					<p:outputLabel value="#{lbl['lbl.pm.scoring.required']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
-				<td>#{supportDocBackingBean.managedBean.selectedDocument.scoringReq}
-					<p:selectOneRadio value="#{supportDocBackingBean.managedBean.selectedDocument.scoringReq}">
+				<td>
+					<p:selectOneRadio value="#{supportDocBackingBean.managedBean.selectedDocument.scoringReq}"
+						label="#{lbl['lbl.pm.scoring.required']}" id="sorScoringReq" required="true">
 						<f:selectItems value="#{supportDocBackingBean.getYesNoOptions()}" />
 					</p:selectOneRadio> 
+					<p:message id="sorScoringReqMsg" for="sorScoringReq" display="icon" />
 				</td>
 			</tr>
 			<tr>
@@ -69,9 +79,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
+					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somDocStatus" required="true"
+						label="#{lbl['lbl.pm.status']}"
+						value="#{supportDocBackingBean.managedBean.selectedDocument.recordStatusFlg}">
 						<f:selectItems  value="#{supportDocBackingBean.getStatusOptions()}"/>
 					</p:selectOneMenu>
+					<p:message id="somDocStatusMsg" for="somDocStatus" display="icon" />
 				</td>
 				<th>
 					
@@ -99,12 +112,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					     	<h:outputText value="* " styleClass="mandatory" />
 					     	<h:outputText value="#{lbl['lbl.pm.procurement.category']}" />
 					    </f:facet>
-				    	<p:selectOneMenu styleClass="ppDropDownWidthL" id="somProcurementType"
-							value="#{restrict.procurementCatCode.parameterId}">
+				    	<p:selectOneMenu styleClass="ppDropDownWidthL" 
+				    		id="somProcurementType" required="true"
+				    		label="#{lbl['lbl.pm.procurement.category']}"
+							value="#{restrict.procurementCatCode.parameterId}"> 
 							<f:selectItems  value="#{supportDocBackingBean.procurementTypeOptions()}"/>
 							<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 								supportDocBackingBean.checklist)}"/>
 						</p:selectOneMenu>
+						<p:message id="somProcurementTypeMsg" for="somProcurementType" display="icon" />
 			        </p:column>  
 			        <p:column>  
 			        	<f:facet name="header">

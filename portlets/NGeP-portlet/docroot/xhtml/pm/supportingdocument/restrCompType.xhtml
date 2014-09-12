@@ -23,11 +23,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
 		    </f:facet>
 	    	<p:selectOneMenu id="somCompType" styleClass="ppDropDownWidthL"
+	    		required="true" label="#{lbl['lbl.pm.company.type']}"
 				value="#{restrict.companyTypeCode.parameterId}">
 				<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
 				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
 					supportDocBackingBean.restrComp)}"/>
 			</p:selectOneMenu>
+			<p:message id="somCompTypeMsg" for="somCompType" display="icon" />
         </p:column>  
         <p:column>  
         	<f:facet name="header">
