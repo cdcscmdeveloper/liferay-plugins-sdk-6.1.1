@@ -422,7 +422,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 						IDivisionSO divisionSO = (IDivisionSO)BusinessDelegate.getInstance().getServiceObject("pm",IDivisionSO.class);
 						DivisionReqDTO reqDivisionDTO = new DivisionReqDTO();
 						reqDivisionDTO.setDivisionId(divisionNodeDto2.getDivision().getDivisionId());
-						DivisionResDTO resDivisionDTO = divisionSO.retrieveDivisionById(reqDivisionDTO);
+						DivisionResDTO resDivisionDTO = divisionSO.retrieveDivisionDtlById(reqDivisionDTO);
 						PmDivision newDivision2 = resDivisionDTO.getPmDivision();
 						if(selectedNode.getChildren() != null){
 							for(TreeNode dCh : selectedNode.getChildren()){
@@ -499,7 +499,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							IDivisionSO divisionSO = (IDivisionSO)BusinessDelegate.getInstance().getServiceObject("pm",IDivisionSO.class);
 							DivisionReqDTO reqDivisionDTO = new DivisionReqDTO();
 							reqDivisionDTO.setDivisionId(divisionNodeDto3.getDivision().getDivisionId());
-							DivisionResDTO resDivisionDTO = divisionSO.retrieveDivisionById(reqDivisionDTO);
+							DivisionResDTO resDivisionDTO = divisionSO.retrieveDivisionDtlById(reqDivisionDTO);
 							newDivision3 = resDivisionDTO.getPmDivision();
 						}
 					}

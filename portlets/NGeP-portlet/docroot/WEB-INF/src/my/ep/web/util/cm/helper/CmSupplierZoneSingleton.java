@@ -269,6 +269,9 @@ public class CmSupplierZoneSingleton {
 						CmSupplierZoneStateDistrictDTO districtLocation = new CmSupplierZoneStateDistrictDTO(district);
 						TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
 						// build district tree
+						if (districtIds.contains(district.getDistrictId())) {
+							districtNode.setSelected(Boolean.TRUE);
+						}
 					}
 					if (divisionIds.contains(division.getDivisionId())) {
 						divisionNode.setSelected(Boolean.TRUE);
@@ -399,7 +402,7 @@ public class CmSupplierZoneSingleton {
 								
 								PmDivision d = district.getPmDivision();
 								
-								if(d.getDivisionId() == division.getDivisionId()){
+								if(d!=null && d.getDivisionId() == division.getDivisionId()){
 								
 									CmSupplierZoneStateDistrictDTO districtLocation = new CmSupplierZoneStateDistrictDTO(district);
 									TreeNode districtNode = new DefaultTreeNode("district",districtLocation, divisionNode);
