@@ -18,16 +18,17 @@
 				<p:commandButton value="#{lbl['lbl.so.save']}"
 					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
 					process="@all" icon="ui-icon-save" update="@all" />
+				
 				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
-					rendered="#{qTBusinessOwnerBackingBean.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
+					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
 					process="@all" icon="ui-icon-submit" update="@all" />
 
 				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
 					process="@all" style="float:right;margin-right: 12px;"
 					icon="ui-icon-cancel" update="@form"
-					rendered="#{!qTBusinessOwnerBackingBean.managedBean.qt.brandNew}" />
+					rendered="#{!qTDetailBB.managedBean.qt.brandNew}" />
 			</c:if>
 
 		</div>
