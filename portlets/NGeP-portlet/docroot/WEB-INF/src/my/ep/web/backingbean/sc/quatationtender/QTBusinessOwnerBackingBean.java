@@ -50,7 +50,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -430,58 +429,6 @@ public class QTBusinessOwnerBackingBean extends
 		System.out.println("*******" + member.isConsolidate());
 	}
 
-	/**
-	 * @return
-	 */
-	public void existingBusinessOwnerAction() {
-		UserReqDTO userReqDTO = new UserReqDTO();
-		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-		UserResDTO resDto = null;
-		if (getManagedBean().getName() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getName())) {
-			SearchFilterBean usernameSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			usernameSearchBean.setSearchField("userName");
-			usernameSearchBean.setSearchValue(getManagedBean().getName());
-			searchBean.getDataFilterBeans().add(usernameSearchBean);
-
-		}
-
-		if (getManagedBean().getIdentificationType() != null
-				&& !"".equalsIgnoreCase(getManagedBean()
-						.getIdentificationType())) {
-			SearchFilterBean idtypeSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_LIKE.value());
-			idtypeSearchBean.setSearchField("identificationCode.parameterCode");
-			idtypeSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationType());
-			searchBean.getDataFilterBeans().add(idtypeSearchBean);
-		}
-
-		if (getManagedBean().getIdentificationNo() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			idNoSearchBean.setSearchField("identificationNo");
-			idNoSearchBean.setSearchValue(getManagedBean()
-					.getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
-		userReqDTO.setUserSearchBean(searchBean);
-		IUserSO userSO;
-		try {
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDto = userSO.searchUserProfile(userReqDTO);
-			if (resDto != null) {
-				this.getManagedBean().setExternalUsers(
-						resDto.getUserResultBean().getResultList());
-			}
-		} finally {
-			userSO = null;
-		}
-	}
-
 	public void cloneSearchCommitteAction() {
 		QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
 				.getCloneQtnTenderSearchBean();
@@ -780,7 +727,7 @@ public class QTBusinessOwnerBackingBean extends
 					committeeMember.setMemberName(user.getUserName());
 					committeeMember.setIcPassport(user.getIdentificationNo());
 					committeeMember.setDesignation(user.getDesignation());
-					if (null != user.getPmAddressTypes()) {
+					/*if (null != user.getPmAddressTypes()) {
 						for (PmAddressType address : user.getPmAddressTypes()) {
 							if (null != address.getPmAddress()) {
 								committeeMember.setEmail(address.getPmAddress()
@@ -788,7 +735,8 @@ public class QTBusinessOwnerBackingBean extends
 								break;
 							}
 						}
-					}
+					}*/
+					committeeMember.setEmail(user.getEmail());
 					committeeMember.setGrade(user.getGrade());
 					committeeMember.setPNP(user.isPMP());
 					committeeMember.setPmUser(user);
