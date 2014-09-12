@@ -147,7 +147,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Map<Long, List<PmAddressType>> manualAddressMap;
 	
 	// getUserGroup
-	private Map<Long, PmUserGroup> userGroupMap;
 	private List<PmUserGroup> userGroupList;
 	private String fulfilmentRequisitioner;
 	
@@ -787,20 +786,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlItemMap(HashMap<String, FlFulfilmentItem> flItemMap) {
 		this.flItemMap = flItemMap;
-	}
-
-	/**
-	 * @return the userGroupMap
-	 */
-	public Map<Long, PmUserGroup> getUserGroupMap() {
-		return userGroupMap;
-	}
-
-	/**
-	 * @param userGroupMap the userGroupMap to set
-	 */
-	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
-		this.userGroupMap = userGroupMap;
 	}
 
 	/**
