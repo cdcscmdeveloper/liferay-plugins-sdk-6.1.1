@@ -613,9 +613,6 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 			this.getManagedBean().setCloneCmSupplierItem(clone);
 			this.getManagedBean().setCloneIndex(index);
 	
-			log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"
-					+ this.getManagedBean().getMaintainItemList().get(index)
-							.getCmImages().size());
 			ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
 			bb.getManagedBean().setCatDetTabActiveIndex(0);
 	
