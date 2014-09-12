@@ -11,16 +11,19 @@ import java.util.Map;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.type.sm.ApplType;
@@ -169,7 +172,7 @@ public class SmCommonUtil {
 				.println("********* Staff calculation from Util class ********* ");
 		SmPersonnleCalcVO personVO = new SmPersonnleCalcVO();
 		personVO = resetAllPersonnelCount(stfTotals, personVO);
-		// getManagedBean().setValidSmUserLimit(validatePersonLimit());
+		// setValidSmUserLimit(validatePersonLimit());
 		for (SmPersonnel per : personnelList) {
 			personVO = calcSumUpByPersonnel(per, personVO, supplierType);
 		}
@@ -471,5 +474,132 @@ public class SmCommonUtil {
 			}
 		}
 		return persCalcVo;
+	}
+
+	public static void calculateSmApplicationPaidUpCapitalSum(
+			SmCompanyBasic compBasic, String businessTypeVal) {
+		boolean llpOrRoc = false;
+		if (compBasic.getBumiEquity() != null) {
+			compBasic.setBumiEquity(compBasic.getBumiEquity().setScale(2,
+					RoundingMode.HALF_UP));
+		} else {
+			compBasic.setBumiEquity(new BigDecimal(0));
+		}
+		if (compBasic.getNonBumiEquity() != null) {
+			compBasic.setNonBumiEquity(compBasic.getNonBumiEquity().setScale(2,
+					RoundingMode.HALF_UP));
+		} else {
+			compBasic.setNonBumiEquity(new BigDecimal(0));
+		}
+		if (compBasic.getForeignerEquity() != null) {
+			compBasic.setForeignerEquity(compBasic.getForeignerEquity()
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setForeignerEquity(new BigDecimal(0));
+		}
+		if (businessTypeVal
+				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+				|| businessTypeVal
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+			llpOrRoc = true;
+		}
+		if (compBasic.getGovtEquity() != null && llpOrRoc) {
+			compBasic.setGovtEquity(compBasic.getGovtEquity().setScale(2,
+					RoundingMode.HALF_UP));
+		} else {
+			compBasic.setGovtEquity(new BigDecimal(0));
+		}
+		if (compBasic.getGovtUnitrustEquity() != null && llpOrRoc) {
+			compBasic.setGovtUnitrustEquity(compBasic.getGovtUnitrustEquity()
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setGovtUnitrustEquity(new BigDecimal(0));
+		}
+		if (compBasic.getForeignCompanyEquity() != null && llpOrRoc) {
+			compBasic.setForeignCompanyEquity(compBasic
+					.getForeignCompanyEquity()
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setForeignCompanyEquity(new BigDecimal(0));
+		}
+		if (compBasic.getLocalCompanyEquity() != null && llpOrRoc) {
+			compBasic.setLocalCompanyEquity(compBasic.getLocalCompanyEquity()
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setLocalCompanyEquity(new BigDecimal(0));
+		}
+		if (compBasic.getAuthorizedCapital() != null) {
+			compBasic.setAuthorizedCapital(compBasic.getAuthorizedCapital()
+					.setScale(2, RoundingMode.HALF_UP));
+		} else {
+			compBasic.setAuthorizedCapital(new BigDecimal(0));
+		}
+		if (compBasic.getTotalShare() != null) {
+			compBasic.setTotalShare(compBasic.getTotalShare().setScale(2,
+					RoundingMode.HALF_UP));
+		} else {
+			compBasic.setTotalShare(new BigDecimal(0));
+		}
+		if (compBasic.getTotalMember() != null) {
+			compBasic.setTotalMember(compBasic.getTotalMember());
+		} else {
+			compBasic.setTotalMember(new BigDecimal(0));
+		}
+		compBasic.setPaidUpCapital(compBasic.getBumiEquity()
+				.add(compBasic.getNonBumiEquity())
+				.add(compBasic.getLocalCompanyEquity())
+				.add(compBasic.getForeignCompanyEquity())
+				.add(compBasic.getForeignerEquity())
+				.add(compBasic.getGovtEquity())
+				.add(compBasic.getGovtUnitrustEquity())
+				.setScale(2, RoundingMode.HALF_UP));
+		System.out.println("**** Paid up capital ****** "
+				+ compBasic.getPaidUpCapital());
+	}
+
+	public static void calculateSmApplicationPaidUpCapitalPercent(
+			SmCompanyBasic compBasic) {
+		BigDecimal mul = new BigDecimal(100);
+		System.out.println(" *** Intial Calc ***** ");
+		if (compBasic.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+			compBasic.setBumiPercent(compBasic
+					.getBumiEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			log.debug("******* First Value of  setBumiPercent "
+					+ compBasic.getBumiPercent());
+			compBasic.setNonBumiPercent(compBasic
+					.getNonBumiEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setForiegnerPercent(compBasic
+					.getForeignerEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setGovtUTPercent(compBasic
+					.getGovtUnitrustEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setGovtEquityPercent(compBasic
+					.getGovtEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setForiegnCompPercent(compBasic
+					.getForeignCompanyEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+			compBasic.setLocalCompPercent(compBasic
+					.getLocalCompanyEquity()
+					.divide(compBasic.getPaidUpCapital(), 4,
+							RoundingMode.HALF_UP).multiply(mul)
+					.setScale(2, RoundingMode.HALF_UP));
+		}
+
 	}
 }
