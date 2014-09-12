@@ -148,14 +148,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
-		log.info("=======get File path1====" + getActualFilePath(attachment));
+
 		populateAttachmentDetails(attachment);
 
 		FileOutputStream fos;
 		fos = new FileOutputStream(getActualFilePath(attachment));
 		fos.write(fileBytes);
 		fos.close();
-		log.info("=======get File path2====" + getActualFilePath(attachment));
+
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
 
@@ -266,6 +266,27 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public File downloadFile(String filePath, String fileName)
 			throws IOException {
+
+		if (filePath != null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			downloadFileByInputStream(input, fileName);
+		}
+
+		// use to upload back to database
+		File file = new File(filePath);
+		return file;
+	}
+	
+	protected void downloadFileByInputStream(InputStream input, String fileName)
+			throws IOException {
 		log.info("Inside downloadFile(..)");
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
@@ -282,31 +303,16 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		OutputStream out = response.getOutputStream();
 
-		if (filePath != null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
-
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
-			}
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while ((bytesRead = input.read(buffer)) != -1) {
-				out.write(buffer, 0, bytesRead);
-				buffer = new byte[4096];
-			}
-			input.close();
+		byte[] buffer = new byte[4096];
+		int bytesRead;
+		while ((bytesRead = input.read(buffer)) != -1) {
+			out.write(buffer, 0, bytesRead);
+			buffer = new byte[4096];
 		}
+		input.close();
 		out.flush();
 		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
-
-		// use to upload back to database
-		File file = new File(filePath);
-		return file;
 	}
 
 	protected <ATTACHMENT extends ScAttachment> void downloadAllFiles(
@@ -502,10 +508,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
+		
+		if (baseObject.isBrandNew()) {
+			baseObject.setCreatedBy(user.getUserId());
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		}
 		baseObject.setChangedBy(user.getUserId());
-		baseObject.setCreatedBy(user.getUserId());
-		baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-
 	}
 
 	public String getMessgeConstant(String outCome) {
