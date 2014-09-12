@@ -51,6 +51,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 				<td>
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"  update="dtCat"
+						action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory)}"
 						immediate="true"
 						/> 
 				</td>

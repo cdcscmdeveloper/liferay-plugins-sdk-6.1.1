@@ -35,6 +35,9 @@ import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
+import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -322,6 +325,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	}
 	
 	
+	
 	/**
 	 * add new document restriction
 	 * @param restrictionType
@@ -329,40 +333,40 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public void addRestriction(int restrictionType){
 		log.info("addRestriction");
 		log.info("restrictionType = " + restrictionType);
-		
-		PmDocumentRestr pmDocumentRestr = new PmDocumentRestr();
-		if(restrictionType == RESTR_APP){
-			if(this.getManagedBean().getAppTypeRestrictions()==null){
-				this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmDocumentRestr>());
+		if(validateUniqueRestrType(restrictionType)){
+			PmDocumentRestr pmDocumentRestr = new PmDocumentRestr();
+			if(restrictionType == RESTR_APP){
+				if(this.getManagedBean().getAppTypeRestrictions()==null){
+					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				pmDocumentRestr.setAppTypeCode(new PmParameter());
+				this.getManagedBean().getAppTypeRestrictions().add(pmDocumentRestr);
+			}else if(restrictionType == RESTR_COMP){
+				if(this.getManagedBean().getComTypeRestrictions()==null){
+					this.getManagedBean().setComTypeRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				pmDocumentRestr.setCompanyTypeCode(new PmParameter());
+				this.getManagedBean().getComTypeRestrictions().add(pmDocumentRestr);
+			}else if(restrictionType == RESTR_SUPP){
+				if(this.getManagedBean().getSuppTypeRestrictions()==null){
+					this.getManagedBean().setSuppTypeRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				pmDocumentRestr.setSupplierTypeCode(new PmParameter());
+				this.getManagedBean().getSuppTypeRestrictions().add(pmDocumentRestr);
+			}else if(restrictionType == RESTR_CATEGORY){
+				if(this.getManagedBean().getCategoryRestrictions()==null){
+					this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				pmDocumentRestr.setPmCategoryL3(new PmCategoryL3());
+				this.getManagedBean().getCategoryRestrictions().add(pmDocumentRestr);
+			}else if(restrictionType == CHECKLIST){
+				if(this.getManagedBean().getCheckListRestrictions()==null){
+					this.getManagedBean().setCheckListRestrictions(new ArrayList<PmDocumentRestr>());
+				}
+				pmDocumentRestr.setProcurementCatCode(new PmParameter());
+				this.getManagedBean().getCheckListRestrictions().add(pmDocumentRestr);
 			}
-			pmDocumentRestr.setAppTypeCode(new PmParameter());
-			this.getManagedBean().getAppTypeRestrictions().add(pmDocumentRestr);
-		}else if(restrictionType == RESTR_COMP){
-			if(this.getManagedBean().getComTypeRestrictions()==null){
-				this.getManagedBean().setComTypeRestrictions(new ArrayList<PmDocumentRestr>());
-			}
-			pmDocumentRestr.setCompanyTypeCode(new PmParameter());
-			this.getManagedBean().getComTypeRestrictions().add(pmDocumentRestr);
-		}else if(restrictionType == RESTR_SUPP){
-			if(this.getManagedBean().getSuppTypeRestrictions()==null){
-				this.getManagedBean().setSuppTypeRestrictions(new ArrayList<PmDocumentRestr>());
-			}
-			pmDocumentRestr.setSupplierTypeCode(new PmParameter());
-			this.getManagedBean().getSuppTypeRestrictions().add(pmDocumentRestr);
-		}else if(restrictionType == RESTR_CATEGORY){
-			if(this.getManagedBean().getCategoryRestrictions()==null){
-				this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
-			}
-			pmDocumentRestr.setPmCategoryL3(new PmCategoryL3());
-			this.getManagedBean().getCategoryRestrictions().add(pmDocumentRestr);
-		}else if(restrictionType == CHECKLIST){
-			if(this.getManagedBean().getCheckListRestrictions()==null){
-				this.getManagedBean().setCheckListRestrictions(new ArrayList<PmDocumentRestr>());
-			}
-//			pmDocumentRestr.setSupplierTypeCode(new PmParameter());
-			this.getManagedBean().getCheckListRestrictions().add(pmDocumentRestr);
 		}
-		
 	}
 	
 	/**
@@ -450,7 +454,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
 			}
 			if(isUniqueCategoryL3()){
-				System.out.println("selected size " + pmCategoryL3s.size());
 				for(PmCategoryL3 pmCategoryL3: pmCategoryL3s){
 					PmDocumentRestr categoryRestr = new PmDocumentRestr();
 					categoryRestr.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3.getCategoryL3Id()));
@@ -472,11 +475,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		boolean isUnique = true;
 		if(this.getManagedBean().getSelectedCategoryL3s()!=null 
 				&& !this.getManagedBean().getSelectedCategoryL3s().isEmpty()){
-			if(this.getManagedBean().getSelectedCategoryL3s()!=null && !this.getManagedBean().getSelectedCategoryL3s().isEmpty()){
+			if(this.getManagedBean().getCategoryRestrictions()!=null && !this.getManagedBean().getCategoryRestrictions().isEmpty()){
 				List <Long> categoryL3Id = new ArrayList<Long>();
 				
-				for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedCategoryL3s()){
-					categoryL3Id.add(pmCategoryL3.getCategoryL3Id());
+				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCategoryRestrictions()){
+					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
+						categoryL3Id.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
+					}
 				}	
 			
 				for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedCategoryL3s()){
@@ -504,7 +509,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			DocumentReqDTO reqDTO = new DocumentReqDTO();
 			reqDTO.setDocumentId(docId);
 			IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);
-			DocumentResDTO resDTO = reqSO.retrieveDocumentById(reqDTO);
+			DocumentResDTO resDTO = reqSO.retrieveDocumentDtlById(reqDTO);
 			if(resDTO.isSuccessful()){
 				pmDocument = resDTO.getDocument();
 			}
@@ -702,8 +707,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		log.info("validateRestriction");
 		if(restrictList!=null){
 			boolean isSelected = true;
-			boolean isUnique = true;
-			
 			if(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 				//Validation for mandatory field
 				if(pmDocument.isByAppType()){
@@ -738,75 +741,102 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					isSelected = false;
 				}
 			}
-			
-
-			//Validation for unique restriction
-			if(isSelected && restrictList.size()>1){	
-				List <Long> tempRestrictIdList = new ArrayList<Long>();
-				for(PmDocumentRestr pmDocumentRestr :restrictList){
-					if(pmDocument.isByAppType()){
-						tempRestrictIdList.add(pmDocumentRestr.getAppTypeCode().getParameterId());
-					}else if(pmDocument.isByCompType()){
-						tempRestrictIdList.add(pmDocumentRestr.getCompanyTypeCode().getParameterId());
-					}else if(pmDocument.isBySupplierType()){
-						tempRestrictIdList.add(pmDocumentRestr.getSupplierTypeCode().getParameterId());
-					}else if(pmDocument.isByCategory()){
-						tempRestrictIdList.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
-					}
-				}
-				Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
-				if(tempRestrictIdSet.size()!=restrictList.size()){
-					isUnique = false;
-				}
-			}
-			
 			//throw validation message accordingly
 			if(!isSelected){
 				if(RESTR_APP == restrictType){
 					throw new EpException(" Please select Application Type.");
 				}else if(RESTR_COMP == restrictType){
 					throw new EpException(" Please select Company Type.");
-				}else if(RESTR_APP == restrictType){
+				}else if(RESTR_SUPP == restrictType){
 					throw new EpException(" Please select Supplier Type.");
 				}else if(RESTR_CATEGORY == restrictType){
 					throw new EpException(" Please select Category Type.");
 				}else if(CHECKLIST == restrictType){
 					throw new EpException(" Please select Procurement Type.");
 				}
-			}else if(!isUnique){
-				if(RESTR_APP == restrictType){
-					throw new EpException("Duplicate Application Type being added to the list.");
-				}else if(RESTR_COMP == restrictType){
-					throw new EpException("Duplicate Company Type being added to the list.");
-				}else if(RESTR_APP == restrictType){
-					throw new EpException("Duplicate Supplier Type being added to the list.");
-				}else if(RESTR_CATEGORY == restrictType){
-					throw new EpException("Duplicate Category Type being added to the list.");
-				}else if(CHECKLIST == restrictType){
-					throw new EpException("Duplicate Procurement Type being added to the list.");
-				}
-			}	
+			}
 		}		
 	}
 
-	private void addDocRestrToDocument(List <PmDocumentRestr> pmDocumentRestrs){
+	/**
+	 * validate unique restr type
+	 * @param pmParam
+	 * @param id
+	 * @param restrictType
+	 */
+	public boolean validateUniqueRestrType(int restrictType){
+		log.info("validateUniqueRestrType");
+		boolean isUnique = true;
+		String errorMesg = null;
+		List <PmDocumentRestr> pmDocumentRestrs = null; 
+		if(RESTR_APP == restrictType){
+			pmDocumentRestrs = this.getManagedBean().getAppTypeRestrictions();
+			errorMesg = "Duplicate Application Type being added to the list.";
+		}else if(RESTR_COMP == restrictType){
+			pmDocumentRestrs = this.getManagedBean().getComTypeRestrictions();
+			errorMesg = "Duplicate Company Type being added to the list.";
+		}else if(RESTR_SUPP == restrictType){
+			pmDocumentRestrs = this.getManagedBean().getSuppTypeRestrictions();
+			errorMesg = "Duplicate Supplier Type being added to the list.";
+		}else if(RESTR_CATEGORY == restrictType){
+			pmDocumentRestrs = this.getManagedBean().getCategoryRestrictions();
+			errorMesg = "Duplicate Category Type being added to the list.";
+		}else if(CHECKLIST == restrictType){
+			pmDocumentRestrs = this.getManagedBean().getCheckListRestrictions();
+			errorMesg = "Duplicate Procurement Type being added to the list.";
+		}
+
+		//Validation for unique restriction
+		if(pmDocumentRestrs!=null && pmDocumentRestrs.size()>1){	
+			List <Long> tempRestrictIdList = new ArrayList<Long>();
+			for(PmDocumentRestr pmDocumentRestr :pmDocumentRestrs){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
+					if(RESTR_APP == restrictType){
+						tempRestrictIdList.add(pmDocumentRestr.getAppTypeCode().getParameterId());
+					}else if(RESTR_COMP == restrictType){
+						tempRestrictIdList.add(pmDocumentRestr.getCompanyTypeCode().getParameterId());
+					}else if(RESTR_SUPP == restrictType){
+						tempRestrictIdList.add(pmDocumentRestr.getSupplierTypeCode().getParameterId());
+					}else if(RESTR_CATEGORY == restrictType){
+						tempRestrictIdList.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
+					}else if(CHECKLIST == restrictType){
+						tempRestrictIdList.add(pmDocumentRestr.getProcurementCatCode().getParameterId());
+					}
+				}
+			}
+		
+			Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
+			if(!tempRestrictIdList.isEmpty() && (tempRestrictIdSet.size()!=pmDocumentRestrs.size())){
+				isUnique = false;
+				throw new EpException(errorMesg);
+			}
+			
+		}
+		return isUnique;
+	}
+
+	/**
+	 * add restr to document
+	 * @param pmDocumentRestrs
+	 */
+	private void addDocRestrToDocument(PmDocument pmDocument, List <PmDocumentRestr> pmDocumentRestrs){
 		log.info("addDocRestrToDocument");
 		if(pmDocumentRestrs!=null && pmDocumentRestrs.size()>0){
 			for(PmDocumentRestr documentRestr:pmDocumentRestrs){
 				if(documentRestr.isBrandNew()){
 					if(!documentRestr.isSelected()){
-						if(this.getManagedBean().getSelectedDocument().getPmDocumentRestrs()==null){
-							this.getManagedBean().getSelectedDocument().setPmDocumentRestrs(new ArrayList<PmDocumentRestr>());
+						if(pmDocument.getPmDocumentRestrs()==null){
+							pmDocument.setPmDocumentRestrs(new ArrayList<PmDocumentRestr>());
 						}
-						this.getManagedBean().getSelectedDocument().addPmDocumentRestrs(documentRestr);
+						pmDocument.addPmDocumentRestrs(documentRestr);
 						documentRestr.setSelected(true);
 					}
 				}else{
 					if(!documentRestr.isSelected()){
-						for (int i=0; i <this.getManagedBean().getSelectedDocument().getPmDocumentRestrs().size(); i++){
-							if(this.getManagedBean().getSelectedDocument().getPmDocumentRestrs().get(i).getDocumentRestrId()
+						for (int i=0; i <pmDocument.getPmDocumentRestrs().size(); i++){
+							if(pmDocument.getPmDocumentRestrs().get(i).getDocumentRestrId()
 									.equals(documentRestr.getDocumentRestrId())){
-								this.getManagedBean().getSelectedDocument().getPmDocumentRestrs().set(i, documentRestr);
+								pmDocument.getPmDocumentRestrs().set(i, documentRestr);
 							}
 						}
 						documentRestr.setSelected(true);
@@ -816,31 +846,50 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 	}
 	/**
-	 * collect all 3 restriction type to one list
+	 * validate all restrictions
+	 * @param pmDocument
 	 */
-	private void getAllRestrictions(){
+	private void validateRestrictions(PmDocument pmDocument){
+		log.info("validateRestrictions");
+		
+		//validate required field
+		validateRestriction(pmDocument, this.getManagedBean().getAppTypeRestrictions(), RESTR_APP);
+		validateRestriction(pmDocument, this.getManagedBean().getComTypeRestrictions(), RESTR_COMP);
+		validateRestriction(pmDocument, this.getManagedBean().getSuppTypeRestrictions(), RESTR_SUPP);
+		validateRestriction(pmDocument, this.getManagedBean().getCategoryRestrictions(), RESTR_CATEGORY);
+		validateRestriction(pmDocument, this.getManagedBean().getCheckListRestrictions(), CHECKLIST);
+		
+		//validate unique field
+		validateUniqueRestrType(RESTR_APP);
+		validateUniqueRestrType(RESTR_COMP);
+		validateUniqueRestrType(RESTR_SUPP);
+		validateUniqueRestrType(RESTR_CATEGORY);
+		validateUniqueRestrType(CHECKLIST);
+	}
+	
+	private void getAllRestrictions(PmDocument pmDocument){
 		log.info("getAllRestrictions");
 		try{
-			//validate before getting all
-			validateRestriction(this.getManagedBean().getSelectedDocument(), this.getManagedBean().getAppTypeRestrictions(), RESTR_APP);
-			validateRestriction(this.getManagedBean().getSelectedDocument(), this.getManagedBean().getComTypeRestrictions(), RESTR_COMP);
-			validateRestriction(this.getManagedBean().getSelectedDocument(), this.getManagedBean().getSuppTypeRestrictions(), RESTR_SUPP);
-			validateRestriction(this.getManagedBean().getSelectedDocument(), this.getManagedBean().getCategoryRestrictions(), RESTR_CATEGORY);
-			validateRestriction(this.getManagedBean().getSelectedDocument(), this.getManagedBean().getCheckListRestrictions(), CHECKLIST);
 	
 			//add doc restr to document
-			addDocRestrToDocument(this.getManagedBean().getAppTypeRestrictions());
-			addDocRestrToDocument(this.getManagedBean().getComTypeRestrictions());
-			addDocRestrToDocument(this.getManagedBean().getSuppTypeRestrictions());
-			addDocRestrToDocument(this.getManagedBean().getCategoryRestrictions());
-			addDocRestrToDocument(this.getManagedBean().getCheckListRestrictions());
-		
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getAppTypeRestrictions());
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getComTypeRestrictions());
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getSuppTypeRestrictions());
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getCategoryRestrictions());
+			addDocRestrToDocument(pmDocument, this.getManagedBean().getCheckListRestrictions());
+			if(pmDocument.getPmDocumentRestrs()!=null){
+				System.out.println("PmDocumentRestrs>>>" + pmDocument.getPmDocumentRestrs().size());
+			}else{
+				System.out.println("PmDocumentRestrs>>>>>null");
+			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()});
 
 		}
 	}
+	
 	
 	
 	/**
@@ -855,8 +904,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		IDocumentSO reqSO = null;
 		try{
 			PmDocument pmDocument = this.getManagedBean().getSelectedDocument();
-			// for support doc (validation included)
-			getAllRestrictions();
+			validateRestrictions(pmDocument);
+			getAllRestrictions(pmDocument);
 			
 			reqDTO = new DocumentReqDTO();
 			reqDTO.setPmDocument(pmDocument);
@@ -1074,6 +1123,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public int getRestrCategory() {
 		return RESTR_CATEGORY;
+	}
+
+	/**
+	 * @return the checklist
+	 */
+	public int getChecklist() {
+		return CHECKLIST;
 	}
 	
 

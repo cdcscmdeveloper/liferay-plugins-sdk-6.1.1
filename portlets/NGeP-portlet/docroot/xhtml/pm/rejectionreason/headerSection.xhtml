@@ -13,7 +13,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		    				action="#{rejectionReasonBackingBean.redirectToSearchReason}"/>
 
 	    	<div class="rowBtnRight">
-			 	<p:commandButton value="#{rejectionReasonBackingBean.managedBean.selectedReason.brandNew? lbl['lbl.btn.add'] : lbl['lbl.btn.save']}" 
+			 	<p:commandButton value="#{rejectionReasonBackingBean.managedBean.selectedReason.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}" 
    					action="#{rejectionReasonBackingBean.saveRejectReason()}" update="@([id$=Msg])"/>
 	    	</div>
 	  	</div>

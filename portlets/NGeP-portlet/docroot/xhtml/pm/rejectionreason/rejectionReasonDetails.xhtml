@@ -11,7 +11,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<table class="ppOneTable">
 			<tr>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pm.reason.category']}"/>
+					<p:outputLabel value="#{lbl['lbl.pm.reason.category']}"/>
+					<h:outputText value="* " styleClass="mandatory" />
 				</th>
 				<td>
 					<p:selectOneMenu id="somReasonCategory" required="true" disabled="#{!rejectionReasonBackingBean.managedBean.selectedReason.brandNew}"
@@ -31,7 +32,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<table class="ppOneTable">
 				<tr>
 					<th>
-						<p:outputLabel value="* #{lbl['lbl.pm.reason.code']}"/>
+						<p:outputLabel value="#{lbl['lbl.pm.reason.code']}"/>
+						<h:outputText value="* " styleClass="mandatory" />
 					</th>
 					<td>
 						<p:inputText id="itReasonCode" styleClass="ppDisplayTextM" required="true" maxlength="10" 
@@ -44,10 +46,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<tr>
 					<!-- List of languages with description -->
 					<th>
-						<p:outputLabel value="* #{lbl['lbl.pm.reason.desc']}"/>
+						<p:outputLabel value="#{lbl['lbl.pm.reason.desc']}"/>
+						<h:outputText value="* " styleClass="mandatory" />
 					</th>
 					<td>
-						<p:dataTable id="dtReasonDesc" styleClass="reasonDescList" var="reasonDesc"  
+						<p:dataTable id="dtReasonDesc" styleClass="reasonDescList" var="reasonDesc"   
 							value="#{rejectionReasonBackingBean.managedBean.selectedReason.pmReasonDescs}">
 					        <p:column headerText="#{lbl['lbl.pm.settings.language']}" width="10%">  
 						    	#{reasonDesc.pmLanguage.languageName}
@@ -62,7 +65,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</tr>
 				<tr>
 					<th>
-						<p:outputLabel value="* #{lbl['lbl.pm.status']}"/>
+						<p:outputLabel value="#{lbl['lbl.pm.status']}"/>
+						<h:outputText value="* " styleClass="mandatory" />
 					</th>
 					<td>
 						<p:selectOneMenu styleClass="ppDropDownWidthM"  label="#{lbl['lbl.pm.status']}"

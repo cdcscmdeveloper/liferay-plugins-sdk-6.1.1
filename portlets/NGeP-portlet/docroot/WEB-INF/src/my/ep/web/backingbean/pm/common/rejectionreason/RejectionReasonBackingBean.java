@@ -27,7 +27,10 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDocument;
+import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -236,18 +239,68 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 		}
 		log.info("loadRestriction - End");
 	}
-	
+	/**
+	 * validate unique restr type
+	 * @param pmParam
+	 * @param id
+	 * @param restrictType
+	 */
+	public boolean validateUniqueRestrType(String restrictType){
+		log.info("validateUniqueRestrType");
+		boolean isUnique = true;
+		String errorMesg = null;
+		List <PmSupplierReason> pmSupplierReasons = null; 
+
+		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
+			pmSupplierReasons = this.getManagedBean().getAppTypeRestrictions();
+			errorMesg = MessageConst.ERROR_770011;
+		}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
+			pmSupplierReasons = this.getManagedBean().getComTypeRestrictions();
+			errorMesg =MessageConst.ERROR_770012;
+		}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
+			pmSupplierReasons = this.getManagedBean().getSuppTypeRestrictions();
+			errorMesg = MessageConst.ERROR_770013;
+		}
+		
+		//Validation for unique restriction
+		if(pmSupplierReasons!=null && pmSupplierReasons.size()>1){	
+			List <Long> tempRestrictIdList = new ArrayList<Long>();
+			for(PmSupplierReason suppReason :pmSupplierReasons){
+				tempRestrictIdList.add(suppReason.getRestrType().getParameterId());
+			}
+			Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
+			if(tempRestrictIdSet.size()!=pmSupplierReasons.size()){
+				isUnique = false;
+			}
+			
+			if(!isUnique){
+				throw new EpException(errorMesg);
+			}	
+		}
+		return isUnique;
+	}
+	/**
+	 * validate all restrictions
+	 * @param pmReason
+	 */
+	private void validateRestrictions(PmReason pmReason){
+		log.info("validateRestrictions");
+		//validate required field
+		validateRestriction(this.getManagedBean().getAppTypeRestrictions(), ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
+		validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.COMPANY_TYPES);
+		validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), ParameterTypeConst.SUPPLIER_TYPES);
+		
+		//validate unique field
+		validateUniqueRestrType(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
+		validateUniqueRestrType(ParameterTypeConst.COMPANY_TYPES);
+		validateUniqueRestrType(ParameterTypeConst.SUPPLIER_TYPES);
+	}
 	/**
 	 * collect all 3 restriction type to one list
 	 */
 	private void getAllRestrictions(){
 		log.info("getAllRestrictions");
 		try{
-			//validate before getting all
-			validateRestriction(this.getManagedBean().getAppTypeRestrictions(), ParameterTypeConst.SUPPLIER_APPLICATION_TYPES);
-			validateRestriction(this.getManagedBean().getComTypeRestrictions(), ParameterTypeConst.COMPANY_TYPES);
-			validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), ParameterTypeConst.SUPPLIER_TYPES);
-			
 			
 			//for application type
 			if(this.getManagedBean().getAppTypeRestrictions()!=null && this.getManagedBean().getAppTypeRestrictions().size()>0){
@@ -340,37 +393,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 
 		}
 	}
-//	/**
-//	 * load the Pm Supplier Reason by the restriction type
-//	 * @param restrictType
-//	 * @param reasonId
-//	 * @return List<PmSupplierReason>
-//	 */
-//	public List<PmSupplierReason> loadRestriction(String restrictType, Long reasonId){
-//		log.info("loadRestriction - Start");
-//		log.info("restrictType: "+ restrictType);
-//		log.info("reasonId: " + reasonId);
-//		List <PmSupplierReason> supplierReason = new ArrayList<PmSupplierReason>();
-//		try {
-//			ReasonReqDTO reqDTO = new ReasonReqDTO();
-//			reqDTO.setReasonId(reasonId);
-//			reqDTO.setRestrictionType(restrictType);
-//			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
-//			ReasonResDTO resDTO = reqSO.retrieveSuppReasonByRestrType(reqDTO);
-//			log.info("isSuccessful " + resDTO.isSuccessful());
-//			if(resDTO.isSuccessful()){
-//				supplierReason = resDTO.getSuppReasonList();
-//				log.info("size " + resDTO.getSuppReasonList().size());
-//			}
-//				
-//		} catch (Exception e) {
-//			//TODO: throw exception
-//			throw new EpException("Failed to get restriction list due to " + e.getMessage());
-//
-//		}
-//		log.info("loadRestriction - End");
-//		return supplierReason;
-//	}
+
 	
 	/**
 	 * retrieve reason object by id
@@ -412,10 +435,6 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public String saveRejectReason(){
 		log.info("saveRejectReason - Start");
 		boolean isSuccess = false;
-		if(this.getManagedBean().isSuppReason()){
-			getAllRestrictions();
-		}
-		
 		//unique reason code
 		if(!isUniqueReasonCode(this.getManagedBean().getSelectedReason().getReasonCode()
 				, this.getManagedBean().getSelectedReason().getReasonCategoryCode().getParameterId()
@@ -423,6 +442,13 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			throw new EpException(MessageConst.ERROR_770003, new String[]{this.getManagedBean().getSelectedReason().getReasonCode()});
 
 		}
+		
+		if(this.getManagedBean().isSuppReason()){
+			validateRestrictions(this.getManagedBean().getSelectedReason());
+			getAllRestrictions();
+		}
+		
+		
 		
 		if(this.getManagedBean().getSelectedReason().isBrandNew()){
 			isSuccess = createRejectReason(this.getManagedBean().getSelectedReason());
@@ -614,31 +640,28 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	public void addRestriction(String restrictionType){
 		log.info("addRestriction");
 		log.info("restrictionType = " + restrictionType);
-		
-		
-		PmSupplierReason restriction = new PmSupplierReason();
-		restriction.setRecordStatus(true);
-		restriction.setRestrType(new PmParameter());
-		restriction.setDeleted(false);
-		
-		if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
-			if(this.getManagedBean().getAppTypeRestrictions()==null){
-				this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
+		if(validateUniqueRestrType(restrictionType)){
+			PmSupplierReason restriction = new PmSupplierReason();
+			restriction.setRecordStatus(true);
+			restriction.setRestrType(new PmParameter());
+			restriction.setDeleted(false);
+			
+			if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictionType)){
+				if(this.getManagedBean().getAppTypeRestrictions()==null){
+					this.getManagedBean().setAppTypeRestrictions(new ArrayList<PmSupplierReason>());
+				}
+				this.getManagedBean().getAppTypeRestrictions().add(restriction);
+			}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictionType)){
+				if(this.getManagedBean().getComTypeRestrictions()==null){
+					this.getManagedBean().setComTypeRestrictions(new ArrayList<PmSupplierReason>());
+				}
+				this.getManagedBean().getComTypeRestrictions().add(restriction);
+			}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictionType)){
+				if(this.getManagedBean().getSuppTypeRestrictions()==null){
+					this.getManagedBean().setSuppTypeRestrictions(new ArrayList<PmSupplierReason>());
+				}
+				this.getManagedBean().getSuppTypeRestrictions().add(restriction);
 			}
-//			validateRestriction(this.getManagedBean().getAppTypeRestrictions(), restrictionType);
-			this.getManagedBean().getAppTypeRestrictions().add(restriction);
-		}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictionType)){
-			if(this.getManagedBean().getComTypeRestrictions()==null){
-				this.getManagedBean().setComTypeRestrictions(new ArrayList<PmSupplierReason>());
-			}
-//			validateRestriction(this.getManagedBean().getComTypeRestrictions(), restrictionType);
-			this.getManagedBean().getComTypeRestrictions().add(restriction);
-		}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictionType)){
-			if(this.getManagedBean().getSuppTypeRestrictions()==null){
-				this.getManagedBean().setSuppTypeRestrictions(new ArrayList<PmSupplierReason>());
-			}
-//			validateRestriction(this.getManagedBean().getSuppTypeRestrictions(), restrictionType);
-			this.getManagedBean().getSuppTypeRestrictions().add(restriction);
 		}
 	}
 
@@ -726,8 +749,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	private void validateRestriction(List<PmSupplierReason> restrictList, String restrictType){
 		log.info("validateRestriction");
 		if(restrictList!=null){
-			boolean isSelected = true;
-			boolean isUnique = true;
+			boolean isSelected = true;			
 			
 			//Validation for mandatory field
 			if(restrictList.size()>1 
@@ -735,19 +757,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 							restrictList.size()-1).getRestrType().getParameterId()==null){
 				isSelected = false;
 			}
-			
-			//Validation for unique restriction
-			if(isSelected && restrictList.size()>1){	
-				List <Long> tempRestrictIdList = new ArrayList<Long>();
-				for(PmSupplierReason suppReason :restrictList){
-					tempRestrictIdList.add(suppReason.getRestrType().getParameterId());
-				}
-				Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
-				if(tempRestrictIdSet.size()!=restrictList.size()){
-					isUnique = false;
-				}
-			}
-			
+
 			//throw validation message accordingly
 			if(!isSelected){
 				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
@@ -757,15 +767,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
 					throw new EpException(MessageConst.ERROR_770010);
 				}
-			}else if(!isUnique){
-				if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(restrictType)){
-					throw new EpException(MessageConst.ERROR_770011);
-				}else if(ParameterTypeConst.COMPANY_TYPES.equals(restrictType)){
-					throw new EpException(MessageConst.ERROR_770012);
-				}else if(ParameterTypeConst.SUPPLIER_TYPES.equals(restrictType)){
-					throw new EpException(MessageConst.ERROR_770013);
-				}
-			}	
+			}
 		}		
 	}
 

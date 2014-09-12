@@ -12,7 +12,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<p:panel id="pDocRestriction" header="#{lbl['lbl.pm.document.restriction']}" toggleable="true" 
 		>
 		
-			<p:tabMenu id="tvDocRestriction"
+			<p:tabMenu id="tvDocRestriction" rendered="#{supportDocBackingBean.managedBean.selectedDocument.docCategoryCode.parameterId>0}"
 					activeIndex="#{supportDocBackingBean.managedBean.selectedTabIndex}"
 					>
 					

@@ -102,6 +102,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				    	<p:selectOneMenu styleClass="ppDropDownWidthL" id="somProcurementType"
 							value="#{restrict.procurementCatCode.parameterId}">
 							<f:selectItems  value="#{supportDocBackingBean.procurementTypeOptions()}"/>
+							<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
+								supportDocBackingBean.checklist)}"/>
 						</p:selectOneMenu>
 			        </p:column>  
 			        <p:column>  
@@ -125,9 +127,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			   	<br/>
 		   		<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"  update="dtProcureCat"
+						action="#{supportDocBackingBean.addRestriction(supportDocBackingBean.checklist)}"
 						immediate="true"/>
 					&#160;
 					<p:commandButton id="cbAppDelete" value="#{lbl['lbl.btn.delete']}"  update="dtProcureCat"
+						action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.checklist)}"
 						immediate="true" 
 						/> 
 				</div>

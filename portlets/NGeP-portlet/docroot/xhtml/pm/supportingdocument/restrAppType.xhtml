@@ -25,6 +25,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthL"
 				value="#{restrict.appTypeCode.parameterId}">
 				<f:selectItems  value="#{supportDocBackingBean.applicationTypeOptions()}"/>
+				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
+					supportDocBackingBean.restrApp)}"/>
 			</p:selectOneMenu>
         </p:column>  
         <p:column>  

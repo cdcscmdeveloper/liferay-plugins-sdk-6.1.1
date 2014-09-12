@@ -25,6 +25,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	    	<p:selectOneMenu id="somCompType" styleClass="ppDropDownWidthL"
 				value="#{restrict.companyTypeCode.parameterId}">
 				<f:selectItems  value="#{supportDocBackingBean.companyTypeOptions()}"/>
+				<p:ajax event="change" listener="#{supportDocBackingBean.validateUniqueRestrType(
+					supportDocBackingBean.restrComp)}"/>
 			</p:selectOneMenu>
         </p:column>  
         <p:column>  

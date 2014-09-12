@@ -21,14 +21,23 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="* #{lbl['lbl.pm.application.type']}">
+				        <p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.application.type']}" />
+						    </f:facet>
 					    	<p:selectOneMenu id="somAppType"  styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.applicationTypeOptions()}"/>
-								<p:ajax event="change" update="somAppType"/>
+								<p:ajax event="change" update="somAppType" 
+									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierApplicationTypes)}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+			          	<p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>
 				         	<p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -56,13 +65,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-				        <p:column headerText="* #{lbl['lbl.pm.company.type']}">  
+						<p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.company.type']}" />
+						    </f:facet>
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
-								<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"/>
+								<f:selectItems  value="#{rejectionReasonBackingBean.companyTypeOptions()}"
+									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.companyTypes)}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+				       	<p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>    
 				            <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
 							</p:selectOneMenu>
@@ -89,16 +107,24 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:ajax event="toggleSelect" update="@this" process="@this" />
 						<p:ajax event="rowSelectCheckbox" update="@this" />
 						<p:column selectionMode="multiple" disabledSelection="#{!restrict.brandNew}" style="width:2%" />
-
-				        <p:column headerText="* #{lbl['lbl.pm.supplier.type']}">  
+						<p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
+						    </f:facet>  
 					    	<p:selectOneMenu id="somAppType" styleClass="ppDropDownWidthM"
 								value="#{restrict.restrType.parameterId}">
 								<f:selectItems  value="#{rejectionReasonBackingBean.supplierTypeOptions()}"/>
 							</p:selectOneMenu>
 				        </p:column>  
-				        <p:column headerText="* #{lbl['lbl.pm.status']}">  
+			        	<p:column>
+				          	<f:facet name="header">
+						     	<h:outputText value="* " styleClass="mandatory" />
+						     	<h:outputText value="#{lbl['lbl.pm.status']}" />
+						    </f:facet>  
 					        <p:selectOneMenu styleClass="ppDropDownWidthS" value="#{restrict.recordStatusFlg}">
-								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"/>
+								<f:selectItems  value="#{rejectionReasonBackingBean.getStatusOptions()}"
+									listener="#{rejectionReasonBackingBean.validateUniqueRestrType(ParameterTypeConst.supplierTypes)}"/>
 							</p:selectOneMenu>
 				        </p:column>  
 				   	</p:dataTable>
