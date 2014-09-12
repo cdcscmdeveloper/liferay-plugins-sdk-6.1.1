@@ -239,9 +239,10 @@ public class UnitOfMeasurementBackingBean extends
 	 * save and update unit of measurement details
 	 * 
 	 */
-	public void saveMeasurementDtls() {
+	public String saveMeasurementDtls() {
 		debugLogger("saveMeasurementDtls");
 		
+	try {	
 		PmUom uom = this.getManagedBean().getPmUom();
 		validationMessage(uom);
 		
@@ -259,6 +260,16 @@ public class UnitOfMeasurementBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			 
 			}
-	 }	
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+						"Record Save failed."));
+		  throw e;
+		}
+	
+		  return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+	}	
 
 }
