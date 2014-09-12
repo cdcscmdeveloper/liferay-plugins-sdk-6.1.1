@@ -77,7 +77,7 @@ public class CmSupplierZoneSingleton {
 				pmState.setPmDivisions(null);
 			}
 			//update the relationship for the parent
-			if(pmState.getPmDistricts() != null && !pmState.getPmDistricts().isEmpty()){
+/*			if(pmState.getPmDistricts() != null && !pmState.getPmDistricts().isEmpty()){
 				for(PmDistrict district: pmState.getPmDistricts()){
 					district.setPmState(pmState);
 					
@@ -105,7 +105,7 @@ public class CmSupplierZoneSingleton {
 						}
 					}
 				}
-			}
+			}*/
 		}
 		mapStates.put(countryId, listStates);
 		return listStates;
@@ -367,11 +367,11 @@ public class CmSupplierZoneSingleton {
 								
 				if(listDistricts != null && listDistricts.size() > 0){
 					for (PmDistrict district : listDistricts) {
+						
 						if(district.getPmDivision() == null){
-							
 							PmState dSt = district.getPmState();
 							
-							if(dSt.getStateId() == state.getStateId()){
+							if(dSt != null && dSt.getStateId() == state.getStateId()){
 								CmSupplierZoneStateDistrictDTO districtSDDTO = new CmSupplierZoneStateDistrictDTO(district);
 								TreeNode districtNode = new DefaultTreeNode("district",districtSDDTO, stateNode);
 								// build district tree

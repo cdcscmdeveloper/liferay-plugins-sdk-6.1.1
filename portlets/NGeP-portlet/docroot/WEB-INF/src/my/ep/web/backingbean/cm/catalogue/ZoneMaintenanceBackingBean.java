@@ -438,7 +438,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 											IDistrictSO districtSO = (IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 											DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 											reqDistrictDTO.setDistrictId(districtNodeDto3.getDistrict().getDistrictId());
-											DistrictResDTO resDistrictDTO = districtSO.retriveDistrictByID(reqDistrictDTO);
+											DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 											PmDistrict newDistrict3 = resDistrictDTO.getPmDistrict();
 											cmDtl7.setPmDistrict(newDistrict3);
 											newCmSupplierZoneDTLs.add(cmDtl7);
@@ -475,7 +475,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							IDistrictSO districtSO = (IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 							DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 							reqDistrictDTO.setDistrictId(districtNodeDto4.getDistrict().getDistrictId());
-							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictByID(reqDistrictDTO);
+							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict4 = resDistrictDTO.getPmDistrict();
 							CmSupplierZoneDTL cmDtl9 = new CmSupplierZoneDTL();
 							cmDtl9.setCmSupplierZone(selZone);
@@ -524,7 +524,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							IDistrictSO districtSO = (IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 							DistrictReqDTO reqDistrictDTO = new DistrictReqDTO();
 							reqDistrictDTO.setDistrictId(districtNodeDto5.getDistrict().getDistrictId());
-							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictByID(reqDistrictDTO);
+							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict5 = resDistrictDTO.getPmDistrict();
 							CmSupplierZoneDTL cmDtl11 = new CmSupplierZoneDTL();
 							cmDtl11.setCmSupplierZone(selZone);
