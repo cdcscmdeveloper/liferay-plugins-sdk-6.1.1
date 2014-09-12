@@ -50,6 +50,7 @@ import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmSvTemplateAddress;
 import my.ep.persistence.entity.sm.SmSvWorker;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -59,6 +60,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "svoSiteVisitBackingBean")
 @RequestScoped
@@ -252,6 +254,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_WORKSHOP) ||
 					svTemplate.getPmParameter().getParameterCode().equals(SupplierManagementConst.CAT_TYPE_PRINTING)){
 				if(svTemplate.getSmSvFacility() == null){
+					log.info("**********dsfdsfdsfsdfdsf*******");
 					svTemplate.setSmSvFacility(new SmSvFacility());
 				}
 				svTemplate.getSmSvFacility().setSmSvTemplate(svTemplate);
@@ -605,7 +608,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 		
-		reqDTO.setUserRole(SupplierManagementConst.SVO_HQ);
+		reqDTO.setUserRole(RoleCode.UPS_SVO.value());
 		reqDTO.setSmSvTask(this.getManagedBean().getSmSvTask());
 		reqDTO.setSmRemarkMap(this.getManagedBean().getRemarkMap());
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
@@ -618,8 +621,10 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			return "/xhtml/sm/sitevisit/outputMsg";
 		} else {
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR,null,MessageUtils.getMessage(MessageConst.EP_MAJ_00001,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,
 					new FacesScopes().getUserLocale())));
