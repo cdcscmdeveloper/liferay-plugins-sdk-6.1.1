@@ -24,7 +24,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPEmployee;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -71,7 +71,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	// payLoad object Added By Vidyasagar.
 	private Object proposalData;
-	private String supplierId;
+	private Long supplierId;
 
 	// private ScAttachment scAttachment = new ScAttachment();
 	private List<ScAttachment> scAttachmentList;
@@ -139,7 +139,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	// Sample Address
 	private ScQtSampleSubmission scQtSampleSubmission;
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
-	private List<ScQtSampleItem> scQtSampleItemList;
+	private ScQtSampleLable scQtSampleLable;
 
 	// Supplier Information
 	private SmSupplier smSupplier;
@@ -437,11 +437,17 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.proposalData = proposalData;
 	}
 
-	public String getSupplierId() {
+	/**
+	 * @return the supplierId
+	 */
+	public Long getSupplierId() {
 		return supplierId;
 	}
 
-	public void setSupplierId(String supplierId) {
+	/**
+	 * @param supplierId the supplierId to set
+	 */
+	public void setSupplierId(Long supplierId) {
 		this.supplierId = supplierId;
 	}
 
@@ -695,12 +701,18 @@ public class SPDetailManagedBean extends BaseManagedBean {
 		this.scQtSampleSubmissionList = scQtSampleSubmissionList;
 	}
 
-	public List<ScQtSampleItem> getScQtSampleItemList() {
-		return scQtSampleItemList;
+	/**
+	 * @return the scQtSampleLable
+	 */
+	public ScQtSampleLable getScQtSampleLable() {
+		return scQtSampleLable;
 	}
 
-	public void setScQtSampleItemList(List<ScQtSampleItem> scQtSampleItemList) {
-		this.scQtSampleItemList = scQtSampleItemList;
+	/**
+	 * @param scQtSampleLable the scQtSampleLable to set
+	 */
+	public void setScQtSampleLable(ScQtSampleLable scQtSampleLable) {
+		this.scQtSampleLable = scQtSampleLable;
 	}
 
 	public List<ScLoa> getScLoaList() {

@@ -23,7 +23,7 @@
 		<ui:include src="checklistHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
-			rendered="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.scQt.zonal eq 'true'}">
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 			
 			#{lbl['lbl.sc.sp.note2']} 
 			<br />
@@ -63,7 +63,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
 					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSampleLable.lableNo}"
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 							size="30" disabled="true" readonly="true" /></td>
 					<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
 					<td />
@@ -72,7 +72,7 @@
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
-			rendered="#{supplierProposalDetailBackingBean.managedBean.scQtCheckList.scQt.zonal ne 'true'}">
+			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table>
 				<tr>
 					<td colspan="4">#{lbl['lbl.sc.sp.note2']}</td>
@@ -100,7 +100,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
 					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qtProposal.scQtSampleLable.lableNo}"
+							value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
 							size="30" disabled="true" readonly="true" /></td>
 					<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
 					<td />
@@ -111,13 +111,13 @@
 		<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
 			<p:dataTable id="sampleitemid" var="sampleitemdtl"
 				style="width : 100%" editable="true" rowIndexVar="rowIndex"
-				value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleItemList}"
+				value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
 				styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
 				<p:column headerText="#{lbl['lbl.sc.sp.item']}">
-					<h:outputText value="#{sampleitemdtl.scRequestItem.tplSpecQuestion.clItem}" />
+					<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
-					#{sampleitemdtl.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
+					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column>
 			</p:dataTable>
 
