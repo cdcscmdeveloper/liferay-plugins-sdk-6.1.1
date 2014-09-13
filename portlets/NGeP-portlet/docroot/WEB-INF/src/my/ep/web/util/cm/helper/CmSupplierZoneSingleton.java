@@ -273,12 +273,12 @@ public class CmSupplierZoneSingleton {
 							districtNode.setSelected(Boolean.TRUE);
 						}
 					}
-					if (divisionIds.contains(division.getDivisionId())) {
+					if (divisionIds.contains(division.getDivisionId()) && checkAllChildsSelected(divisionNode)) {
 						divisionNode.setSelected(Boolean.TRUE);
 					}
 				}
 			}
-			if (stateIds.contains(state.getStateId())) {
+			if (stateIds.contains(state.getStateId()) && checkAllChildsSelected(stateNode)) {
 				stateNode.setSelected(Boolean.TRUE);
 			}
 		}
@@ -286,7 +286,18 @@ public class CmSupplierZoneSingleton {
 		return rootLocationTree;
 	}
 	
-	
+	public boolean checkAllChildsSelected(TreeNode node){
+		boolean chkSel = true;
+		if(node.getChildren() != null && node.getChildCount() > 0){
+			for(TreeNode chNode : node.getChildren()){
+				if(!chNode.isSelected()){
+					chkSel = false;
+					break;
+				}	
+			}
+		}		
+		return chkSel;
+	}
 	
 	
 	
