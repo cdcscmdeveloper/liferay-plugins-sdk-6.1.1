@@ -22,9 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -37,12 +39,14 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.votfund.VotFundReqDTO;
-import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -68,9 +72,9 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -164,13 +168,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						FacesMessage.SEVERITY_INFO, 
 						null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PAYMENT_ADVICE), resDTO.getPaymentAdvice().getPaymentAdviceNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PAYMENT_ADVICE), resDTO.getPaymentAdviceNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
+					reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
+					resDTO = paymentSO.retrievePaymentAdviseByOrderId(reqDTO);
+					
+					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
 					for(FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
 						if(flPaymentItem.getFlAdjustmentItem()==null) {
@@ -179,7 +187,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 						}
 					}					
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
-					setStopInstrNo(resDTO.getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder());					
+					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
 					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 			}
@@ -218,13 +226,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IInvoiceSO.class);
 			IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IPaymentMatchSO.class);
 			
-			//TODO should call this after BPM add in invoiceId in payload.
-			//flReqDTO.setInvoiceId(paymentObj.get)
-			//paymentMatchSO.retrievePaymentAdviseByInvoiceId(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			FlPaymentAdvice paymentAdvice = null;
 			resDTO = paymentMatchSO.retrievePaymentAdviseByOrderId(flReqDTO);
 			if(resDTO.getPaymentAdvice()==null) {
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 				paymentAdvice = initializePaymentAdvice(resDTO);
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
@@ -237,7 +243,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					}
 				}
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
-				setStopInstrNo(paymentAdvice.getFlInvoice().getFlFulfilmentOrder());
+				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
 
@@ -249,15 +255,16 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setDocType(paymentAdvice.getFlRequest().getDocType());
 			getManagedBean().setFulfilmentRequest(paymentAdvice.getFlRequest());
 			
-			if(getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().isFactored()){
+			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().isFactored()){
 				getFactoringBranchDtl(); 
 			}
 			
 			getManagedBean().setSelectedTabIndex(0);
 			if(getManagedBean().getPaymentAdvice().getStatus()==null) {
-				PmStatus pmStatus = new PmStatus();
-				pmStatus.setStatusId(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH);
-				getManagedBean().getPaymentAdvice().setStatus(pmStatus);
+				IStatusSO statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(FulfilmentStatusConst.PA_PENDING_PAYMENT_MATCH);
+				getManagedBean().getPaymentAdvice().setStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 			}	
 			
 			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -268,15 +275,13 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			populateChargeLineData();
 			if(null == getManagedBean().getPaymentAdvice().getDescription()){
 				getManagedBean().getPaymentAdvice().setDescription(getManagedBean().getPaymentAdvice().getFlRequest().getTitle());
-				
 			}
 		}
 	}
 	
 	private FlPaymentAdvice initializePaymentAdvice(FulfilmentResDTO resDTO) {
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-		IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IVotFundSO.class);
-		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
+		IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
 		
 		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 		paymentAdvice.setFlInvoice(resDTO.getInvoice());
@@ -294,17 +299,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		paymentDeduction.setDeductionType(parameterResDTO.getPmParameter());
 		paymentDeduction.setDeductionAmt(paymentAdvice.getFeeAmt());
 		paymentDeduction.setDeductionDesc(" ");
-		//TODO supposely pm should have a transaction fee vot fund and GOSODO
-		VotFundReqDTO votFundReqDTO = new VotFundReqDTO();
-		votFundReqDTO.setVotFundId(125L);
-		VotFundResDTO votFundResDTO = votFundSO.retrieveVotFundByFundId(votFundReqDTO);
-		paymentDeduction.setPmVotFund(votFundResDTO.getPmVotFund());
-		//TODO should have a fixed GL Account
-		//paymentDeduction.setPmGlAccount(new PmGlAccount());
-		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-		glAccountReqDTO.setPtjGroupId(resDTO.getInvoice().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId());
-		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
-		paymentDeduction.setPmGlAccount(glAccountResDTO.getGlAccountList().get(0));
+		
+		ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(null);
+		paymentDeduction.setPmVotFund(configGeneralResDTO.getPmConfigGeneral().getPmVotFund());
+		paymentDeduction.setPmGlAccount(configGeneralResDTO.getPmConfigGeneral().getPmGlAccount());
 		
 		paymentAdvice.setFlPaymentDeduction(new ArrayList<FlPaymentDeduction>());
 		paymentAdvice.getFlPaymentDeduction().add(paymentDeduction);
@@ -576,14 +574,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setFinancingTypeCode("");		
 	}
 	
-	public FulfilmentResDTO getPaymentAdviseByPaymentAdviseId(Long paymentAdviseId){
-		IPaymentMatchSO paymentMatchSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setPaymentAdviseId(paymentAdviseId);
-		FulfilmentResDTO resDTO = paymentMatchSO.retrievePaymentAdviseByPaymentId(reqDTO);
-		resDTO.getPaymentAdvice();//this is the payment advise object
-		return resDTO;
-	}
 	/**
 	 * @return the votFundCodeMap
 	 */
@@ -686,6 +676,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		glAccountReqDTO.setPtjGroupId(pmOrgProfile.getPmPtjGroup().getPtjGroupId());
 		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
 		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
+	}
+	
+	public String retrieveMofNo(SmSupplier smSupplier) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+			return resDTO.getMofAccount().getMofNo();
+		}
+		return null;
 	}
 	
 }
