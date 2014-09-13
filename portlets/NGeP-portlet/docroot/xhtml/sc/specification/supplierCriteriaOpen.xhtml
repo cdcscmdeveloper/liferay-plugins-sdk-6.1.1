@@ -26,6 +26,7 @@
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
+					postUpdateListener="specificationBackingBean.categoryCodesUpdate(index,specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:openPnlId">
 
@@ -175,8 +176,9 @@
 						var="zoneTree" style="width:100%" rowIndexVar="index"
 						rowKey="#{zoneTree}">
 						<p:column headerText="Location" style="width:90%">
-							<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox">
-							<p:ajax event="select"
+							<p:tree value="#{zoneTree}" var="location"
+								selectionMode="checkbox">
+								<p:ajax event="select"
 									listener="#{specificationBackingBean.selectLocationTreeNode}" />
 								<p:ajax event="unselect"
 									listener="#{specificationBackingBean.unSelectLocationTreeNode}" />
