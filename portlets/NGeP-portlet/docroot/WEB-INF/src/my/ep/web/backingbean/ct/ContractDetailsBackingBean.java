@@ -293,12 +293,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 				ctReqDTO.setContractId(new Long(dataType.getContractId()));
 				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				ctReqDTO.setDocType(dataType.getDocType());
 			} else { 
 				CTContractDataType dataType = (CTContractDataType) obj;
 				ctReqDTO.setContractId(new Long(dataType.getContractId()));
 				ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				ctReqDTO.setDocType(dataType.getDocType());
 			}
-			
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		    setValidateContractField(resDTO);
@@ -1260,13 +1261,18 @@ public void ConstructSideTabMenu(){
 	public void addAgencyDetails(){
 		List<CtAgency> ctAgencyList = new ArrayList<CtAgency>();
 		
-		for(int i=0; i<selectedPmOrgProfile.length; i++){
-			PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
+		for(int i=0; i<selectedPmOrgProfile.length; i++) {
 			CtAgency ctAgency = new CtAgency();
 			ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			ctAgency.setCeilingAmount(new BigDecimal(0));
-		  	ctAgency.setOrgProfile(pmOrgProfile);
+			
+			 IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			 reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
+			 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+			 ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
+		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
 		  
@@ -1662,7 +1668,8 @@ public void ConstructSideTabMenu(){
 		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(contractVerId);
-	
+    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 	    setValidateContractField(resDTO); 
@@ -1890,7 +1897,7 @@ public void ConstructSideTabMenu(){
 				 IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				 OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				 reqDTO.setOrgProfileSearchBean(searchBean);
-				 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileList(reqDTO);
+				 OrgProfileResDTO resDTO = orgProfileSO.searchOrgProfile(reqDTO);
 				 if(resDTO.isSuccessful()) {
 					 return resDTO.getOrgProfileResultBean();
 				 }

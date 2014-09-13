@@ -252,6 +252,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 			     ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			     ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
+			     ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			     resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			     setAmendmentContractVer(resDTO);

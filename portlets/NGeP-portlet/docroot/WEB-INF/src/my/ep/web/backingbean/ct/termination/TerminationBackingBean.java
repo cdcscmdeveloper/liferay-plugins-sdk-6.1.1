@@ -149,6 +149,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			ctReqDTO.setDocType(dataType.getDocType());
 			this.getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
