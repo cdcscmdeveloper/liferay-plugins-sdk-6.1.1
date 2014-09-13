@@ -71,9 +71,9 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton 
-			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
+			rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
 			value="Add" icon="ui-icon-add" action="#{paymentMatchBackingBean.addDeductionRow()}" update="deductionDataTable"/>
-			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
+			<p:commandButton rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docType == ParameterConst.doctypeContractOrder}" 
 			id="deleteDeductionBtn" value="Delete" icon="ui-icon-delete"/>
 		</div>
 	</p:panel>
