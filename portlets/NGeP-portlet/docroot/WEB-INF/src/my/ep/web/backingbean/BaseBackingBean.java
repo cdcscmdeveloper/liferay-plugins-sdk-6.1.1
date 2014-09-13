@@ -546,13 +546,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 //		String tempDir = "C://Ngep//doc//"+moduleName+"//";
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += "/" + path;
-		
-		File dir = new File(tempDir);
-		log.info(" dir.exists()"+ dir.exists());
-		  
-		if(dir.exists()){}
-		else{dir.mkdirs();}
+		tempDir += "/" + path; 
 		
 		String uploadDir = "";
 		
@@ -611,7 +605,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	public void genFile(String uploadDir, byte[] content){
 
-
+		File dir = new File(uploadDir);
+		log.info(" dir.exists()"+ dir.exists());		  
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
 		try {	
 			
 			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir));
