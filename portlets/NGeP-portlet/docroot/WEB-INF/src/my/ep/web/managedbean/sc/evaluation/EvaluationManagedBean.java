@@ -172,7 +172,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String reportHeader;
 	private List<TechnicalStaffBean> smPersonnelsList;
 	private int totalNoOfYearsExperience;
-	private SmAppl smAppl;
+
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -1632,19 +1632,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
 	}
 
-	/**
-	 * @return the smAppl
-	 */
-	public SmAppl getSmAppl() {
-		return smAppl;
-	}
-
-	/**
-	 * @param smAppl
-	 *            the smAppl to set
-	 */
-	public void setSmAppl(SmAppl smAppl) {
-		this.smAppl = smAppl;
-	}
+	
 
 }
