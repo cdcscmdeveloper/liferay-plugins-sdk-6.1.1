@@ -22,7 +22,7 @@
 				update="@(.chargeLineSection)" />				
 			<p:column headerText="Item Code">
 				<h:outputText
-					value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.cmItem.extensionCode}"
+					value="#{chargeLineNode.flItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Name" style="white-space:normal;">
