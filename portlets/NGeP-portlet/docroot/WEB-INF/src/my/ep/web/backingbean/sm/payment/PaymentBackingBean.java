@@ -142,7 +142,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 		this.getManagedBean().setSmAppl(mofResDTO.getSmAppl());
 		this.getManagedBean().setAppId(mofReqDTO.getApplId());*/ //dummy test
 
-		//this.getManagedBean().setAppId(2960L);
+		//this.getManagedBean().setAppId(2997L);
 		log.info("*******retrieveBillInfo Start******");
 		IPaymentSO reqSO = (IPaymentSO) BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
 		PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -698,23 +698,14 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	public void tempPaymentSuccess(){
 		log.info("********submitPayment******");
 		if(this.getManagedBean().getSmBill() != null){
-			List<PmParameterDesc> paymentModeLs =SmCommonUtil.retrieveParameterDescList(SupplierManagementConst.PM_PAYMENT_MODE, new FacesScopes().getUserLocale().getLanguage());
-			List<PmStatusDesc> paymentStatusLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
+			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
+			Map<Long,PmStatusDesc> pmStatusDescMap = SmCommonUtil.converPmStatusListToMap(pmStatLs);
 			PmParameter paymentMode = new PmParameter();
 			SmPayment payment = new SmPayment();
 			PmStatus paymentStatus = new PmStatus();
 			
-			for(PmParameterDesc pMethod : paymentModeLs){
-				if(pMethod.getPmParameter().getParameterCode().equals(SupplierManagementConst.ONLINE_PAYMENT)){
-					paymentMode = pMethod.getPmParameter();
-				}
-			}
-			
-			for(PmStatusDesc pStat : paymentStatusLs){
-				if(pStat.getPmStatus().getStatusId().equals(SupplierManagementConst.PM_STAT_PENDING_PAYMENT)){
-					paymentStatus = pStat.getPmStatus();
-				}
-			}
+			paymentMode = SmCommonUtil.retrieveParameterByTypeAndCode(SupplierManagementConst.PM_PAYMENT_MODE,SupplierManagementConst.ONLINE_PAYMENT,new FacesScopes().getUserLocale().getLanguage());
+			paymentStatus = pmStatusDescMap.get(SupplierManagementConst.PM_STAT_PENDING_PAYMENT).getPmStatus();
 			
 			payment.setPaymentMode(paymentMode);
 			payment.setPmStatus(paymentStatus);
@@ -775,11 +766,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 			String status = "00";
 			
 			SmPayment smPayment = paymentResDTO.getSmPayment();
-			
-			List<PmStatusDesc> pmStatLs = SmCommonUtil.retrievePmStatusList("SM",SupplierManagementConst.PM_STATUS_PAYMENT, new FacesScopes().getUserLocale().getLanguage());
-			Map<Long,PmStatusDesc> pmStatusDescMap = SmCommonUtil.converPmStatusListToMap(pmStatLs);
-			
-			log.info("pmStatLs>>>>>" + pmStatLs.size());
+					
 			SmPaymentResponse smPaymentRes = new SmPaymentResponse();
 			SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
 			Long statusCode = null;
@@ -865,6 +852,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean>{
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
 	}
+	
 	
 	
 }
