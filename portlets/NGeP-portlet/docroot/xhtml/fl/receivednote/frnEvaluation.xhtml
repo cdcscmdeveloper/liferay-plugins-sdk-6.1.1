@@ -20,7 +20,7 @@
 							<td style="width: 109px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="23"
-									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}"
+									value="#{receivedNoteBackingBean.retrieveMofNo(receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier)}"
 									disabled="true" /></td>
 						</tr>
 					</table></td>
