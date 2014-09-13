@@ -430,7 +430,7 @@ public class SpecificationBackingBean extends
 
 			specReqDTO.setScQt(techSpec);
 			resDTO = specSO.saveQTDtl(specReqDTO);
-			if(!isSpecComplete){
+			if (!isSpecComplete) {
 				renewSesionObject();
 			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
@@ -443,7 +443,7 @@ public class SpecificationBackingBean extends
 
 			specReqDTO.setScQt(finSpec);
 			resDTO = specSO.saveQTDtl(specReqDTO);
-			if(!isSpecComplete){
+			if (!isSpecComplete) {
 				renewSesionObject();
 			}
 			this.getManagedBean().setScQt(resDTO.getScQt());
@@ -3148,9 +3148,8 @@ public class SpecificationBackingBean extends
 						getManagedBean().getZoneTrees().add(
 								getManagedBean().getIndex(),
 								LocationSingleton.getInstance()
-										.buildLocationTree(null,
-												states, districts,
-												divisions, cities,
+										.buildLocationTree(null, states,
+												districts, divisions, cities,
 												ScQtLocCriteria.class));
 					}
 				}
@@ -3409,6 +3408,7 @@ public class SpecificationBackingBean extends
 		scQt.setScheduleType("F");
 		ScQtSupplierCriteria qtSupplierCriteria = scQt
 				.getScQtSupplierCriteria();
+		
 		if (!scQt.isPanel() && null != qtSupplierCriteria) {
 			if (scQt.isZonal()
 					&& scQt.getQtType().equals(QTConstants.OPEN_TYPE)) {
@@ -3600,7 +3600,7 @@ public class SpecificationBackingBean extends
 			if (scQt.isZonal() && !scQt.isPanel()
 					&& null != this.getManagedBean().getZoneGeneralTrees()
 					&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
-				System.out.println("===zones not null and not empty===");
+				
 				retriveNonpanelZoneDtls(qtId, docType);
 
 			}
@@ -8159,6 +8159,11 @@ public class SpecificationBackingBean extends
 			}
 		}
 	}
+	
+	public void categoryCodesUpdate(int index,List<ScQtCategory> categoryList,PmCategoryL3 categoryL3){
+		
+		
+	}
 
 	// Category Codes Set method
 	private void updateCategoryCodesToQt(List<ScQtCategory> categories,
@@ -8694,9 +8699,9 @@ public class SpecificationBackingBean extends
 	 * @return
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
-		
+
 		validateBusinessOwner(true);
-		
+
 		ScQtCheckList scQtCheckList = this.getManagedBean().getScQtChecklist();
 		List<ScQtCheckList> updatedCheckLists = new ArrayList<ScQtCheckList>();
 		SpecificationReqDTO reqDTO = new SpecificationReqDTO();
