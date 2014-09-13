@@ -216,6 +216,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
+					reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 					reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
 					resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);
 					getManagedBean().setSelectedTabIndex(0);
@@ -292,7 +293,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 				FLInvoiceDataType paymentObj = (FLInvoiceDataType)obj;
 				IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
-				
+				reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 				reqDTO.setFlOrderId(paymentObj.getFlOrderId());
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);//if save button are exist
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
