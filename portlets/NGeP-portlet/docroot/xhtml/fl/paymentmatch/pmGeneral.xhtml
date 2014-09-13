@@ -12,7 +12,7 @@
 				<td style="width: 124px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td style="width: 140px;"><p:inputText size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.dan.no']}" /></td>
 				<td style="width: 146px;"><p:inputText disabled="true" size="20"
@@ -21,9 +21,9 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.preparedOrgProfile.orgName}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.can.no']}" /></td>
 				<td style="width: 146px;"><p:inputText disabled="true" size="20"
@@ -33,9 +33,9 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.issuedOrgProfile.orgName}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.stop.instr.no']}" /></td>
 				<td><p:inputText disabled="true" size="20"
@@ -44,26 +44,26 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.chargeOrgProfile.orgName}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pm.contr.no']}" /></td>
 				<td style="width: 25px;"><p:inputText size="20"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.ctContract.contractNo}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
 						disabled="true" /></td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
 				<td><p:inputText size="5" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.agOffice.officeCode}" />
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.agOffice.officeName}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeName}" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.pm.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.mto}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.mto}"
 						disabled="true" /></td>		
 			</tr>
 		</table>
@@ -81,7 +81,7 @@
 							<td style="width: 152px;"><p:outputLabel
 									value="#{lbl['lbl.fl.pm.factored']}" /></td>
 							<td><p:selectBooleanCheckbox disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" /></td>
 						</tr>
 					</table></td>
 				<td style="width: 137px;"><p:outputLabel
@@ -144,30 +144,31 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.smSupplier.regNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.smSupplier.regNo}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-							<td><p:inputText size="16" disabled="true" /></td>
-
+							<td>
+								<p:inputText size="9" value="#{paymentMatchBackingBean.retrieveMofNo(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.smSupplier)}" disabled="true" />
+							</td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.supplierName}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.branchName}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.branchName}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="55" rows="8" disabled="true"
 						style=" margin-bottom:5px;"
-						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.smAddress)}" /></td>
+						value="#{paymentMatchBackingBean.getFullAddress(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.smAddress)}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
@@ -176,11 +177,11 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.phoneNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.phoneNo}" /></td>
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.faxNo}" /></td>
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.faxNo}" /></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -188,29 +189,29 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.contactPerson}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.contactEmail}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactEmail}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="FACTORING DETAILS" toggleable="true"
-		rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.factored eq 'true'}">
+		rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'true'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 135px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
 				<td><p:inputText disabled="true" size="53"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
 				<td style="width: 133px;"><p:outputLabel
 						value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
 				<td><p:inputText size="45" disabled="true"
