@@ -63,7 +63,8 @@
 							<td style="width: 88px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="16" disabled="true"
-									value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
+									value="#{createDOBackingBean.retrieveMofNo(createDOBackingBean.managedBean.fulfilmentRequest.smSupplier)}" />
+							</td>
 						</tr>
 					</table></td>
 			</tr>
