@@ -112,6 +112,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean piRNChecker = Boolean.TRUE;
     
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+    private	List<ScSupplierItemPrice>	storedSupplierItemPrices	=	new ArrayList<ScSupplierItemPrice>();
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -846,6 +847,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 			List<ScRequestNoteDtl> deleteRequestNoteDtls) {
 		this.deleteRequestNoteDtls = deleteRequestNoteDtls;
 	}
-	
+	/**
+	 * @return the storedSupplierItemPrices
+	 */
+	public List<ScSupplierItemPrice> getStoredSupplierItemPrices() {
+		return storedSupplierItemPrices;
+	}
+	/**
+	 * @param storedSupplierItemPrices the storedSupplierItemPrices to set
+	 */
+	public void setStoredSupplierItemPrices(
+			List<ScSupplierItemPrice> storedSupplierItemPrices) {
+		this.storedSupplierItemPrices = storedSupplierItemPrices;
+	}
 	
 }

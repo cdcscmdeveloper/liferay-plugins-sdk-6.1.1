@@ -210,9 +210,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     	requestNote.setRequestNoteDtls(scRequestNoteDtls);
     	
 		// Target Approver
-		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-		    requestNote.setApprovalUsers(createTargetApprover(requestNote));
-		}
+    	if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
+    		  requestNote.setApprovalUsers(createTargetApprover(requestNote));
+    	} else{
+    		requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
+    	}
 		
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		// Remarks
@@ -314,9 +316,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote.setRequestNoteDtls(scRequestNoteDtls);
 			
 			// Target Approver
-			if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
-				requestNote.setApprovalUsers(createTargetApprover(requestNote));
-			}
+			// Target Approver
+	    	if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
+	    		  requestNote.setApprovalUsers(createTargetApprover(requestNote));
+	    	} else{
+	    		requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
+	    	}
 
 			requestNote.setWorkFlowStatuses(null);
 			// Remarks
@@ -453,7 +458,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestSupplierItem != null){
 					if(!scRequestSupplierItem.getSupplierItemPrices().isEmpty() && scRequestSupplierItem.getSupplierItemPrices() != null ){
 						scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
-						scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getSmSupplier().getSupplierId());
+						scRequestSupplierItem.setSupplierItemId(scRequestSupplierItem.getRequestSupplierItemId());
 						scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 					}
 
@@ -509,8 +514,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					requestSupplierItem.setSmSupplier(smSupplier);
 					scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				}
+				
 				supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-						scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
+						scRequestNoteDtl, Boolean.FALSE ,scRequestNoteDtl.getAssignedUser().getUserId() , scRequestNoteDtl.getDeliverTermType().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
 			getManagedBean().setRequestNote(requestNote);
@@ -1260,8 +1266,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().getRequestNoteDtls().add(scRequestNoteDtl);
 			
 			// set by default selected price type , rec.supplier and offer price
-			supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-					scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
+			supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId(), scRequestNoteDtl.getPriceType().getParameterId() ,
+					scRequestNoteDtl,Boolean.FALSE ,scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 		} else {
 			List<Long> itemIds = new ArrayList<Long>();
 			for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
@@ -1273,8 +1279,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				} else {
 					requestNoteDtls.add(scRequestNoteDtl);
 					// set by default selected price type , rec.supplier and offer price
-					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId() ,scRequestNoteDtl.getPriceType().getParameterId() ,
-							scRequestNoteDtl,scRequestNoteDtl.getRequestItem().getSupplierItems() , scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
+					supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId(), scRequestNoteDtl.getPriceType().getParameterId() ,
+							scRequestNoteDtl, Boolean.FALSE , scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 					getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				}
 			}
@@ -1488,7 +1494,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(scRequestNoteDtl.getScRequestSupplierItem() != null){
 			ScRequestSupplierItem  scRequestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 
-			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
+			if(getManagedBean().getStoredSupplierItemPrices() != null && getManagedBean().getStoredSupplierItemPrices().size() >0){
 				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
 
 					if(scSupplierItemPrice.getPriceType().getParameterId().equals(scRequestNoteDtl.getPriceType().getParameterId())){
@@ -1496,6 +1502,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}
 			}
+			scRequestSupplierItem.setSupplierItemPrices(supplierItemPrices);
 			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setPricingList(supplierItemPrices);
 		}
@@ -1581,21 +1588,40 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
-	
+
 	/**
-	  * To get Approver Pick List  in Request Note
+	 * To get Approver Pick List  in Request Note
 	 */
 	private	List<ScRequestNoteApprovalUser> createTargetApprover(ScRequestNote requestNote){
 		List<ScRequestNoteApprovalUser> results = new ArrayList<ScRequestNoteApprovalUser>();
-		for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
-			ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
-			approver.setPmUser(pmUser);
-			approver.setRequestNote(requestNote);
-			results.add(approver);
+		List<Long> userIds = new ArrayList<Long>();
+		if(requestNote.getApprovalUsers() != null && requestNote.getApprovalUsers().size()>0){
+			for (ScRequestNoteApprovalUser scRequestNoteApprovalUser : requestNote.getApprovalUsers() ) {
+				userIds.add(scRequestNoteApprovalUser.getPmUser().getUserId());
+			}
+		}
+
+		if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
+			for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
+				if(userIds.isEmpty()){
+					ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
+					approver.setPmUser(pmUser);
+					approver.setRequestNote(requestNote);
+					results.add(approver);
+				} else {
+					if(!userIds.contains(pmUser.getUserId())){
+						ScRequestNoteApprovalUser approver = new ScRequestNoteApprovalUser();
+						approver.setPmUser(pmUser);
+						approver.setRequestNote(requestNote);
+						requestNote.getApprovalUsers().add(approver);
+						results.add(approver);
+					} 
+				}
+			}
 		}
 		return results;
 	}
-	
+
 	public void  getCurrentStatus(Long statusId) {
 		if (statusId != null) {
 			getManagedBean().setRequestNoteStatus(getStatusDescById(statusId));
@@ -1992,48 +2018,63 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
-	public void supplierLister(Long supplierId ,Long priceTypeId ,ScRequestNoteDtl requestNoteDtl , List<ScRequestSupplierItem> supplierItems , Long assignedUserId , Long deliveryTermId) {
+	public void supplierLister(Long supplierId ,Long priceTypeId , ScRequestNoteDtl requestNoteDtl , boolean isSupplierSelection , Long assignedUserId , Long deliveryTermId) {
 		debugLogger("supplierLister");
-		for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
-			if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(supplierId)){
-				if(priceTypeId != null && priceTypeId > 0){
 
-					if(scRequestSupplierItem.getSupplierItemPrices()!= null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		if(isSupplierSelection){
+			System.out.println("selected supplier :"+supplierId);
+			requestNoteReqDTO.setSupplierItemId(supplierId);
+			RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
 
-						for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-							
-							// zonal item price  
-							if(requestNoteDtl.getTplSpecZoneDtl() !=null){
-								if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
-									scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-									requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
-									break;
-								}
-							}else {
-								 // non zonal item price 
-								if(scSupplierItemPrice.getPriceType() != null){
-									if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
-										scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
-										requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
-										break;
-									}
-								}
+			if(requestNoteResTO.getSupplierItem() != null ){
+				ScRequestSupplierItem scRequestSupplierItem = requestNoteResTO.getSupplierItem();
+				List<ScSupplierItemPrice>	supplierItemPrices  = scRequestSupplierItem.getSupplierItemPrices();
+				if(supplierItemPrices != null && supplierItemPrices.size()>0){
+					getManagedBean().setStoredSupplierItemPrices(supplierItemPrices);
+					requestNoteDtl.getScRequestSupplierItem().setSupplierItemPrices(supplierItemPrices);
+				}
+			}
+		}  else{
+			ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
+		}
+		if(priceTypeId != null && priceTypeId > 0){
+
+			if(getManagedBean().getStoredSupplierItemPrices()!= null && getManagedBean().getStoredSupplierItemPrices().size()>0){
+
+				for (ScSupplierItemPrice scSupplierItemPrice : getManagedBean().getStoredSupplierItemPrices()) {
+
+					// zonal item price  
+					if(requestNoteDtl.getTplSpecZoneDtl() !=null){
+						if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
+							scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+							requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+							break;
+						}
+					}else {
+						// non zonal item price 
+						if(scSupplierItemPrice.getPriceType() != null){
+							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+								break;
 							}
 						}
 					}
-				} else{
-					//requestNoteDtl.getPriceType().setParameterId(null);
 				}
-				// selected rec.supplier
-				scRequestSupplierItem.setSupplierItemId(supplierId);
-				requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
-				// prepared by
-				if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
-					for (PmUser user  : getManagedBean().getUserList()) {
-						if(user.getUserId().equals(assignedUserId)){
-							requestNoteDtl.setAssignedUser(user);	
-						}
-					}
+			}
+		} else{
+			//requestNoteDtl.getPriceType().setParameterId(null);
+		}
+		// selected rec.supplier
+		scRequestSupplierItem.setSupplierItemId(supplierId);
+		requestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+		// prepared by
+		if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
+			for (PmUser user  : getManagedBean().getUserList()) {
+				if(user.getUserId().equals(assignedUserId)){
+					requestNoteDtl.setAssignedUser(user);	
 				}
 			}
 		}
@@ -2153,14 +2194,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public boolean  checkPriceOffered(String priceTypeCode) {
 		log.info("checkPriceOffered");
 		if(priceTypeCode != null){
-			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) ||
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) ||
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) || 
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION) || 
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) ||
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) ||
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF) || 
-					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)){
+			if(!priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD) &&
+					!priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION)){
 
 				return Boolean.TRUE;
 			}

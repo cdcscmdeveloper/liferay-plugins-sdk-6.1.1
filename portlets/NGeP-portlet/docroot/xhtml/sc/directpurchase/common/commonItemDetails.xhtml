@@ -37,7 +37,7 @@
 					  <p:spacer width="2px;"/>
 					<p:commandLink partialSubmit="true" process="@this"
 						actionListener="#{requestNoteBackingBean.showPurchaseInDefault(requestNoteDtl)}"
-						rendered="#{!empty requestNoteDtl.scRequestSupplierItem.requestNoteItem.purchaseInDefault}">
+						rendered="#{!empty requestNoteDtl.requestItem.purchaseInDefault}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 					</p:commandLink>
@@ -97,11 +97,11 @@
 					   <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
-							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
+							itemValue="#{supplierItem.requestSupplierItemId}"></f:selectItems>
 							
 							<p:ajax event="change" update="priceType ,offerPriceId ,supplierViewId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, true , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					<p:spacer width="2px"></p:spacer>
 					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
@@ -128,12 +128,12 @@
 						<f:selectItems
 							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
 							var="pmParameter"
-							itemLabel="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,pmParameter.parameterCode)}"
+							itemLabel="#{requestNoteBackingBean.getParameterDesc(pmParameter)}"
 							itemValue="#{pmParameter.parameterId}" />
 							
 							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -184,7 +184,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
@@ -209,7 +209,7 @@
 						
 						<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl,requestNoteDtl.requestItem.supplierItems , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
