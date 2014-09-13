@@ -8,6 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -25,6 +28,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -46,6 +50,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -61,6 +67,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -77,6 +84,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
@@ -208,6 +216,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
+					reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
+					resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);
+					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setInvoice(resDTO.getInvoice());
 					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
@@ -290,7 +301,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					getManagedBean().setInvoice(new FlInvoice());
 					getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
 					reqDTO.setFlRequestId(paymentObj.getFlRequestId().longValue());
-					resDTO = fulfilmentSO.retrieveFulfilmentRequest(reqDTO);
+					reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
+					resDTO = fulfilmentSO.retrieveFulfilmentRequestByDocType(reqDTO);
+					
+					getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
+					getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());					
 					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 					getInvoiceTable(resDTO);				
 				} else {
@@ -303,8 +318,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(outcome);
 				
-				getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
-				getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());
 				if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 					getFactoringBranchDtl(); 
 				}
@@ -417,7 +430,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
 		if (null == getManagedBean().getChargeLineItemRoot()) {
-			getManagedBean().populateChargeLineData();
+			populateChargeLineData();
 		}
 		TreeNode root = getManagedBean().getChargeLineItemRoot();
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
@@ -428,7 +441,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			//check item whther is exempted for this supplier.
 			reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
 			reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
-			reqDTO.setOrgProfileId(data.getFlInvoice().getFlRequest().getSmSupplier().getSupplierId());
+			reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 			FeeExemptionResDTO resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 			if(!resDTO.isFeeExemption()){
 				nonExemptedItemList.add(data.getInvAmt());
@@ -464,9 +477,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(null==getManagedBean().getChargeLineItemRoot()){
-				 getManagedBean().populateChargeLineData();
+				 populateChargeLineData();
 			}
-		setClassName("@(.invItemPnlClass)");
+			setClassName("@(.invItemPnlClass)");
 		}
 		if(selectedTabIndex==2){
 			calInvSummary();
@@ -500,16 +513,14 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 			}
 			
-			if (populateBankAccountList.size()==0  
-					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-					&& this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
-				List<SmSupplierBank> supplierBank = this.getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSmAppl().getSmSupplierBanks();
-				for (SmSupplierBank obj : supplierBank) {
+			if (populateBankAccountList.size()==0) {
+				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(supplierSearchReqDTO);
+				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
 						if (obj.getPmFinancialOrg() != null)
 							account = account + "  " + obj.getPmFinancialOrg().getFinOrgName();
-						//populateBankAccountList.add(new SelectItem(obj.getAccountNo(), obj.getAccountNo()));
 						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
 						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
@@ -782,6 +793,68 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 		}finally {
 			invoiceSO = null;
+		}
+		return null;
+	}
+	
+	private void populateChargeLineData(){
+		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+		
+		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
+		List<FlInvoiceItem> flInvoiceItemList = null;
+		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
+			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode())) {
+				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode());
+			} else {
+				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
+			}
+			flInvoiceItemList.add(flInvoiceItem);
+			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItemList);
+		}
+		
+		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+		//for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
+		for(Entry<String, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){	
+			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
+			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+			flInvoiceItem.setParent(true);
+			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getCmItem().getExtensionCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
+			
+			BigDecimal totalOrderAmt = new BigDecimal(0);
+			BigDecimal totalReceiveAmt = new BigDecimal(0);
+			BigDecimal totalRecallAmt = new BigDecimal(0);
+			BigDecimal totalInvAmt = new BigDecimal(0);
+			for(FlInvoiceItem chargeLineItem : invoiceItems) {
+				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getCmItem().getExtensionCode(),chargeLineItem,childItemNode);
+				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
+				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
+				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
+				totalInvAmt=totalInvAmt.add(chargeLineItem.getInvAmt());
+			}			
+
+			flInvoiceItem.setOrderedAmt(totalOrderAmt);
+			flInvoiceItem.setReceivedAmt(totalReceiveAmt);
+			flInvoiceItem.setRecalledAmt(totalRecallAmt);
+			flInvoiceItem.setInvAmt(totalInvAmt);
+			
+			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
+			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+		}
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+	}
+	
+	public String retrieveMofNo(SmSupplier smSupplier) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+			return resDTO.getMofAccount().getMofNo();
 		}
 		return null;
 	}
