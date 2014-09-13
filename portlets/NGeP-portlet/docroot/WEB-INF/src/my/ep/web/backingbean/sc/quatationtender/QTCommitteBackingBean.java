@@ -751,14 +751,7 @@ public class QTCommitteBackingBean extends
 					committeeMember.setMemberName(user.getUserName());
 					committeeMember.setIcPassport(user.getIdentificationNo());
 					committeeMember.setDesignation(user.getDesignation());
-					if (null != user.getPmAddressTypes()) {
-						for (PmAddressType address : user.getPmAddressTypes()) {
-							if (null != address.getPmAddress()) {
-								committeeMember.setEmail(address.getPmAddress().getEmail());
-								break;
-							}
-						}
-					}
+					committeeMember.setEmail(user.getEmail());
 					committeeMember.setGrade(user.getGrade());
 					committeeMember.setPNP(user.isPMP());
 					committeeMember.setPmUser(user);
@@ -802,7 +795,7 @@ public class QTCommitteBackingBean extends
 						}
 						if (itemIds.size() > 0) {
 							if (itemIds.contains(user.getIdentificationNo())) {
-								throw new EpException("User already existed");
+								throw new EpException(MessageConst.ERROR_760120);
 							} else {
 								memberList.add(committeeMember);
 							}
@@ -810,7 +803,7 @@ public class QTCommitteBackingBean extends
 					}
 				}
 			} else {
-				throw new EpException("Please select a record.");
+				throw new EpException(MessageConst.ERROR_760121);
 			}
 			
 		}

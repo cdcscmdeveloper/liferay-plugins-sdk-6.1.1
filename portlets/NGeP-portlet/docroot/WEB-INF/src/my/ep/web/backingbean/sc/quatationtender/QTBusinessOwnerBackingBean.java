@@ -527,10 +527,10 @@ public class QTBusinessOwnerBackingBean extends
 			memberList = new ArrayList<ScCommitteeMember>();
 		}
 		List<String> itemIds = new ArrayList<String>();
-		List<ScCommitteeMember> members = getManagedBean().getSelectedCommitteMemebers();
-		if (!members.isEmpty()) {
+		List<ScCommitteeMember> selectedCloneMembersList = getManagedBean().getSelectedCommitteMemebers();
+		if (!selectedCloneMembersList.isEmpty()) {
 			if (getManagedBean().getScCommitteeMemberList().isEmpty()) {
-				for (ScCommitteeMember member : members) {
+				for (ScCommitteeMember member : selectedCloneMembersList) {
 					ScCommitteeMember member1 = null;
 					try {
 						member1 = (ScCommitteeMember) BeanUtils.cloneBean(member);
@@ -543,8 +543,7 @@ public class QTBusinessOwnerBackingBean extends
 						setUserDetails(member1);
 						member1.setChangedDate(null);
 						if (member1.isConsolidate()) {
-							this.getManagedBean()
-									.setSelectScCommitteMember(member1);
+							this.getManagedBean().setSelectScCommitteMember(member1);
 						}
 						member1.setScCommittee(scCommittee);
 						memberList.add(member1);
@@ -556,21 +555,20 @@ public class QTBusinessOwnerBackingBean extends
 						.getScCommitteeMemberList()) {
 					itemIds.add(committee.getIcPassport());
 				}
-				for (ScCommitteeMember committees : getManagedBean()
-						.getSelectedCommitteMemebers()) {
+				for (ScCommitteeMember committeeMember : selectedCloneMembersList) {
 					if (itemIds.size() > 0) {
-						if (itemIds.contains(committees.getIcPassport())) {
-							throw new EpException("User already existed");
+						if (itemIds.contains(committeeMember.getIcPassport())) {
+							throw new EpException(MessageConst.ERROR_760120);
 						} else {
-							committees.setCommitteeMemberId(null);
-							setUserDetails(committees);
-							committees.setChangedDate(null);
-							if (committees.isConsolidate()) {
+							committeeMember.setCommitteeMemberId(null);
+							setUserDetails(committeeMember);
+							committeeMember.setChangedDate(null);
+							if (committeeMember.isConsolidate()) {
 								this.getManagedBean().setSelectScCommitteMember(
-										committees);
+										committeeMember);
 							}
-							committees.setScCommittee(scCommittee);
-							memberList.add(committees);
+							committeeMember.setScCommittee(scCommittee);
+							memberList.add(committeeMember);
 							this.getManagedBean().setScCommitteeMemberList(
 									memberList);
 						}
@@ -578,7 +576,7 @@ public class QTBusinessOwnerBackingBean extends
 				}
 			}
 		} else {
-			throw new EpException("Please select a record.");
+			throw new EpException(MessageConst.ERROR_760121);
 		}
 		scCommittee.setScCommitteeMembers(memberList);
 		
@@ -740,8 +738,8 @@ public class QTBusinessOwnerBackingBean extends
 							itemIds.add(committee.getIcPassport());
 						}
 						if (itemIds.size() > 0) {
-							if (itemIds.contains(user.getUserId())) {
-								throw new EpException("User already existed");
+							if (itemIds.contains(user.getIdentificationNo())) {
+								throw new EpException(MessageConst.ERROR_760120);
 							} else {
 								memberList.add(committeeMember);
 								this.getManagedBean().setScCommitteeMemberList(
@@ -751,7 +749,7 @@ public class QTBusinessOwnerBackingBean extends
 					}
 				}
 			} else {
-				throw new EpException("Please select a record.");
+				throw new EpException(MessageConst.ERROR_760121);
 			}
 		}
 		scCommittee.setScCommitteeMembers(memberList);
