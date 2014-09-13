@@ -129,9 +129,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 		  CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
 		  catReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
-
 		  ScPrInquiry scPrInquiry = new ScPrInquiry(); 
-		  ScRequestItem scRequestItem = new ScRequestItem();
+		  ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 		  if(cmSupplierItem != null && cmSupplierItem.getCmPricings().size() > 0) {
 			  ScSupplierItemPrice supplierItemPrice = new ScSupplierItemPrice();
 			  // TODO Check active CmPricings
@@ -156,7 +155,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			  requestSupplierItem.setSmSupplier(cmSupplierItem.getSmSupplier());
 			  supplierItemPrice.setScRequestSupplierItem(requestSupplierItem);
 			  requestSupplierItem.setSupplierItemPrice(supplierItemPrice);
-			  requestSupplierItem.setRequestNoteItem(scRequestItem);
+			  requestSupplierItem.setRequestNoteItem(requestItem);
 		  }
 		  scPrInquiry.setWorkflowStatuses(null);
 
@@ -220,7 +219,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			  catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
 			  catalogueReqDTO.setExtensionCode(cmSupplierItem.getCmItem().getExtensionCode());
 			  CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
-			  ScRequestItem requestItem = createRequestItem(cmSupplierItem);
+			 
 			  List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
 			  for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
 				  if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
@@ -635,10 +634,14 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			//redirect to requestNote screen
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			
+			 IDirectPurchaseSO directPurchaseSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+			 RequestNoteReqDTO	requestDTO	=	new RequestNoteReqDTO();
 			// checking wheather stock available or not
-			if(prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
-				ScRequestNote requestNote = getManagedBean().getRequestNote();
+			 if(prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
+				 requestDTO.setRequestNoteId(getManagedBean().getRequestNote().getRequestNoteId());
+				 RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
+				 ScRequestNote requestNote = resDTO.getRequestNoteDetail();
+
 				//get RequestNote Backing bean and manage bean and set Request Note to RequestNote manage bean
 				PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 				RequestNoteBackingBean requestNoteBackingBean = (RequestNoteBackingBean) portletSession.getAttribute("requestNoteBackingBean");
@@ -683,8 +686,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
-						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId(),
-								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getRequestItem().getSupplierItems() ,scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
+						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId(),
+								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, Boolean.TRUE, scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 						
 						// fulfilmentTypeEvent
 						requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
@@ -760,8 +763,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
  public void preRenderView() {
 	 HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 	 HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-	 IDirectPurchaseSO directPurchaseSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-	 RequestNoteReqDTO	requestDTO	=	new RequestNoteReqDTO();
 	 String taskId = originalServletRequest.getParameter("taskId");
 	 if (StringUtils.isNotBlank(taskId)) {
 		 this.getManagedBean().setTaskId(taskId);
@@ -807,17 +808,17 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			 getManagedBean().setPmOrgProfile(requestNoteDtl.getScRequestNote().getPmOrgProfile());
 			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
 			 getManagedBean().setScRequestSupplierItem(requestSupplierItem);
+			 
 			 //RequestNote Details - checking workflow status exits or not for PI to RN
-			 requestDTO.setRequestNoteId(requestNoteDtl.getScRequestNote().getRequestNoteId());
 			 requestNoteDtl.getRequestItem().setSupplierItems(prInquiry.getScRequestSupplierItems());
-			 RequestNoteResDTO	resDTO	=	directPurchaseSO.getRequestNote(requestDTO);
-			 ScRequestNote	requestNote	=	resDTO.getRequestNoteDetail();
-			 if(requestNote != null){
+			 if(requestNoteDtl.getScRequestNote() != null){
+				 ScRequestNote	requestNote  = requestNoteDtl.getScRequestNote();
 				 getManagedBean().setRequestNote(requestNote);
 				 if(requestNote.getWorkFlowStatuses().size() > 0){
 					 flag = Boolean.FALSE;
 				 } 
 			 }
+			 getManagedBean().setRequestNoteDtl(requestNoteDtl);
 	    }
 		 
 		// no of response days

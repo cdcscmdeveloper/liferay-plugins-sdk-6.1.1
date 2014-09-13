@@ -126,6 +126,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// contract item
 				ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 				contractItemReqDTO.setContractItemId(vCmSupplierItem.getDocId());
+				contractItemReqDTO.setFetchSubEntity(Boolean.TRUE);
 				ContractItemResDTO contractItemResDTO = contractItemSO.getContractItem(contractItemReqDTO);
 				if(contractItemResDTO.getCtContractItem()!=null) {
 					scPurchaseInDefault.setContractedItem(contractItemResDTO.getCtContractItem());
@@ -597,13 +598,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
 		   // contract item
 		   if(purchaseInDefault.getContractedItem() != null){
-			  CtContractItem contractItem = purchaseInDefault.getContractedItem();
+			/*  CtContractItem contractItem = purchaseInDefault.getContractedItem();
 			   IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 			   ContractItemReqDTO contractItemReqDTO = new ContractItemReqDTO();
 			   contractItemReqDTO.setContractItemId(contractItem.getContractItemId());
 			   ContractItemResDTO ConIresDTO = contractItemSO.getContractItem(contractItemReqDTO);
 			   contractItem	=	ConIresDTO.getCtContractItem();
-			   purchaseInDefault.setContractedItem(contractItem);
+			   purchaseInDefault.setContractedItem(contractItem);*/
 			   getManagedBean().setCheckContractItem(Boolean.TRUE);
 		   }
 		   // panel item

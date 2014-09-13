@@ -11,28 +11,28 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.product.code']}" /></td>
 				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.cmItem.extensionCode}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.cmItem.extensionCode}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true"  size="46"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName}" /></td>
 			</tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea disabled="true" rows="2" cols="55"
 						style="margin-bottom: 5px; width: 300px;"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemDesc}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemDesc}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td valign="bottom"><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.dtl.price.type']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.priceType,requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType.parameterCode)}" />
+						value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType)}" />
 			   </td>
 			</tr>
 	
@@ -41,29 +41,29 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}"/></td>
 							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25"  
-							       value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomFrequency}"/>  
+							       value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomFrequency}"/>  
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.day']}" /></td>
 							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" 
-							      value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomPerDay}"/>
+							      value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomPerDay}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.frequency.per.uom']}" /></td>
-							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomFrequency}"/>
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomFrequency}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.no.uom.per.month']}" /></td>
 							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" 
-							value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clUomPerMonth}"/>
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clUomPerMonth}"/>
 						   </td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sc.duration.month']}" /></td>
-							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.tplSpecQuestion.clDurationMonth}"/>
+							<td><p:inputText styleClass="ppNumericAlign" disabled="true" size="25" value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.tplSpecQuestion.clDurationMonth}"/>
 						   </td>
 						</tr>
 						 </ui:fragment>

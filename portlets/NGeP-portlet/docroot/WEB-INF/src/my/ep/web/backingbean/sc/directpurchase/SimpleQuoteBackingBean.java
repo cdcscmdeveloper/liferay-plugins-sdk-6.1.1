@@ -257,7 +257,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){
 				CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 				catalogueReqDTO.setDocId(docId);
-				CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItemByStatus(catalogueReqDTO);
+				CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItem(catalogueReqDTO);
 
 				if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
 					CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
@@ -608,7 +608,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		PmParameter pmParameter = new PmParameter();
 		// TODO check supplier is government seller or not 
 		if(pmOrgProfile != null &&
-				pmOrgProfile.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+				pmOrgProfile.isGovtSeller()){
 			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 			scQuote.setProcurementType(pmParameter);
 			getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
