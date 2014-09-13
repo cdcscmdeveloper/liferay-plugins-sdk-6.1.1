@@ -17,7 +17,7 @@
 					<h:outputText value="#{lbl['lbl.sc.loiloa.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
 				</f:facet>
 				<h:outputText
-					value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.cmItem.extensionCode}"
+					value="#{chargeLineNode.flFulfilmentItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
 			<p:column headerText="Item Name" style="white-space:normal;" >
