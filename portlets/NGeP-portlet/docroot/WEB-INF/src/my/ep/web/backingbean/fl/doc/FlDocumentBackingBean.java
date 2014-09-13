@@ -4,9 +4,7 @@
 package my.ep.web.backingbean.fl.doc;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -48,7 +46,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
@@ -59,7 +56,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -635,20 +631,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					reqDTO.setUserId(getManagedBean().getPmUser().getUserId());
 					reqDTO.setLanguageCode("en");
 					UserResDTO resDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-					Date currentDate = new Timestamp(System.currentTimeMillis());
 					for(PmRoleDesc roleDesc : resDTO.getRoleDescList()){
 						roleDesc.getPmRole().getRoleCode();
 					}
-					for(PmUserOrg pmUserOrg : getManagedBean().getPmUser().getPmUserOrgs()){
-						if(pmUserOrg.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE){
-							if(pmUserOrg.getEffDate().before(currentDate)){
-								if(pmUserOrg.getExpDate().after(currentDate)){
-									defaultOrgProfile = pmUserOrg.getPmOrgProfile();
-									
-									break;
-								}
-							}
-						}
+					
+					resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+					if(resDTO.getUserOrgList()!=null && resDTO.getUserOrgList().size()>0) {
+						defaultOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
 					}
 				}
 			
