@@ -62,20 +62,20 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+			<p:commandButton value="#{lbl['lbl.btn.clone']}"
 				actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
 				oncomplete="cloneBusinessOwner.show();" process="@this"
 				icon="ui-icon-clone" update="@(.cloneAddMember)"
 				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
 			<p:commandButton id="businessowneradd"
-				value="#{lbl['lbl.so.addbtn']}" process="@this"
+				value="#{lbl['lbl.btn.add']}" process="@this"
 				action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
 				oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
 				icon="ui-icon-add"
 				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				icon="ui-icon-delete"
 				action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
 				update="businessownerId"

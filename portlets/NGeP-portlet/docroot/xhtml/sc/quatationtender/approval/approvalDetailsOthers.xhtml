@@ -36,8 +36,9 @@
 					display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.qt.document']}">
-				<h:outputText
-					value="#{otherrequestdetails.approvalRequestAttachement.fileName}" />
+				<h:commandLink value="#{otherrequestdetails.approvalRequestAttachement.fileName}"
+					styleClass="blue_font" immediate="true"
+					action="#{approvalBackingBean.downloadFile(otherrequestdetails.approvalRequestAttachement)}" />
 				<p:commandButton oncomplete="otherApprovalAttachDlg.show();"
 					value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
 					partialSubmit="true" process="@this" update="otherreqdtlsid">
@@ -46,7 +47,6 @@
 						target="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalDtls}" />
 				</p:commandButton>
 			</p:column>
-
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
