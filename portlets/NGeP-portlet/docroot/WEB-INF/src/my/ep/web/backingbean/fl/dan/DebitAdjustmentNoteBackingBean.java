@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -29,11 +30,14 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -100,7 +104,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
+				reqDTO.setDanId(adjustment.getAdjustmentId());
+				resDTO = adjustmentSO.retrieveAdjustmentById(reqDTO);
 				setAdjustmentNote(resDTO);
+				getManagedBean().setSelectedTabIndex(0);
 			}
 		} finally {
 			adjustmentSO = null;
@@ -278,5 +285,16 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
 		getManagedBean().setFinancingTypeCode("");		
+	}
+	
+	public String retrieveMofNo(SmSupplier smSupplier) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+			return resDTO.getMofAccount().getMofNo();
+		}
+		return null;
 	}
 }

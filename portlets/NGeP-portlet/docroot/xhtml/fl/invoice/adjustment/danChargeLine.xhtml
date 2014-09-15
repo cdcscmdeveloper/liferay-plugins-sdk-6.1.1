@@ -9,7 +9,7 @@
 	<p:panel header="SUMMARY" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 148px"><p:outputLabel
+				<td style="width: 152px"><p:outputLabel
 						value="#{lbl['lbl.fl.total.oredered.amt']}"	 /></td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.orderedAmtTotal}">
@@ -51,7 +51,7 @@
 				<h:outputText value="#{danItem.flItem.cmItem.extensionCode}" />
 			</p:column>
 			<p:column headerText="Item Name" style="white-space:normal;">
-				<h:outputText value="#{danItem.flItem.cmItem.itemName}" />
+				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="UOM">
 				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
