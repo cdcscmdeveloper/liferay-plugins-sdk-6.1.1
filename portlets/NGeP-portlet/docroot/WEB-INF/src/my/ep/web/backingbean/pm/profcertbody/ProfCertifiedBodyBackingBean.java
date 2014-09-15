@@ -225,8 +225,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * 
 	 */	
 	public String saveCertBodyDtls(){
+		debugLogger("saveCertBodyDtls");
 		
-	try {	
 		PmCertBody certBody =  this.getManagedBean().getCertBody();
 		validationMessage(certBody);
 		
@@ -244,18 +244,11 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 					null,
 					new FacesMessage(
 							FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
+			
 		}
-      } catch (Exception e) {
-		e.printStackTrace();
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-						"Record Save failed."));
-		throw e;
-	}
 	
-		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedBodyMain.xhtml";
- }
+			return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedBodyMain.xhtml";
+	}
 
 	/**
 	 * get value from search to maintenance page

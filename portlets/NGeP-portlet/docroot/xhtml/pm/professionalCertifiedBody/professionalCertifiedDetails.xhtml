@@ -14,17 +14,22 @@
 	  <tr>	  	
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText style="width:180px" size="30" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" /></td>
+		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
+			  size="20" maxlength="12" />
+		</td>
 	  </tr>	
 	  <tr>	
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.name']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" /></td>
+		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyName}" 
+			size="40" maxlength="255" />
+		</td>
 	  </tr>
 	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.search.desc']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" /></td>
+		<td><p:inputTextarea row="40" cols="80" value="#{profcertifiedbodyBackingBean.managedBean.certBody.description}" 
+			 maxlength="500" /></td>
 	  </tr>  
 	  <tr>
 	    <td></td>
