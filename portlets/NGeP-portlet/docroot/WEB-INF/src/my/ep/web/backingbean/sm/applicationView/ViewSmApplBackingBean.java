@@ -15,7 +15,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
-import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -25,8 +24,6 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
-import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -62,7 +59,6 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
-import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -78,8 +74,6 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
-import my.ep.web.vo.SmPersonnelSummaryCountVO;
-import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
@@ -1318,6 +1312,58 @@ public class ViewSmApplBackingBean extends
 											.getApplicationNoParam() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
+		}
+	}
+
+	private void redirectToViewBasePage() {
+		String pageType = new FacesScopes().getParameter("page");
+		
+		if(pageType!=null){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			switch (pageType) {
+			case "N":
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(
+								fc,
+								null,
+								"/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml");
+				break;
+			case "A":
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(
+								fc,
+								null,
+								"/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml");
+				break;
+			case "B":
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(
+								fc,
+								null,
+								"/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml");
+				break;
+			case "U":
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(
+								fc,
+								null,
+								"/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml");
+				break;
+			case "R":
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(
+								fc,
+								null,
+								"/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml");
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
