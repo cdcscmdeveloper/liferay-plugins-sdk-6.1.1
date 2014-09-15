@@ -3221,7 +3221,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			//Code for getting the report from the Oracle Report Server.
 			if(null!=generatedURL && !"".equals(generatedURL)){
-				loadReport();
+				loadReport(generatedURL);
 			}
 		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
@@ -3229,7 +3229,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
-	private void loadReport() {
+	private void loadReport(String gnrtdURL) {
 		try {			
 			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
@@ -3237,7 +3237,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			String baseUrl=serverDetails+FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 			String path=baseUrl+"/ReportViewServlet";			
 			log.info(path);
-			req.getSession().setAttribute("generatedUrl", generatedURL);
+			req.getSession().setAttribute("generatedUrl", gnrtdURL);
 			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);			
 		} catch (Exception e) {
 			e.printStackTrace();
