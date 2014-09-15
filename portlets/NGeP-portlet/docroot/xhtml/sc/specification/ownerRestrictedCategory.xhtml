@@ -26,6 +26,7 @@
 					headerText="Category Lov"
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
+					postUpdateListener="specificationBackingBean.categoryCodesUpdate(index,specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:restrictedtabView:restrictedPnlId">
 
@@ -36,13 +37,11 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%;white-space: normal;">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%;white-space: normal;">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
