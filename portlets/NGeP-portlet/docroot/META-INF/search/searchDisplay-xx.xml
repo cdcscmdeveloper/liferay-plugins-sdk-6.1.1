@@ -488,6 +488,7 @@
 	<bean id="PM_ADDRESS_TYPE" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="addressTypeId" />
 		<property name="daoClass" value="my.ep.persistence.dao.pm.common.address.AddressTypeDAO" />
+		<property name="searchMethod" value="retrieveAddressTypeAddressDtlList" /> 
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
