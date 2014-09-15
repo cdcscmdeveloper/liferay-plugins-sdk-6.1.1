@@ -15,13 +15,13 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.rev.hed.pr.order.no']} " /></td>
 					<td class="header-info-text">
-						#{flOrderBB.managedBean.flRequest.flFulfilmentOrder.docNo}</td>
+						#{flOrderBB.managedBean.fulfilmentOrder.docNo}</td>
 				</c:if>
 				<c:if test="#{not empty flOrderBB.managedBean.buttonVal}">
 					<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " />
 					</td>
 					<td class="header-info-text">
-						#{flOrderBB.managedBean.flRequest.flFulfilmentOrder.docNo}
+						#{flOrderBB.managedBean.fulfilmentOrder.docNo}
 					</td>
 				</c:if>
 				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
