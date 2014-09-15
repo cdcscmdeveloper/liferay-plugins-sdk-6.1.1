@@ -147,7 +147,7 @@
 							<td style="width: 78px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
+									value="#{purchaseRequestBackingBean.retrieveMofNo(purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier)}" /></td>
 						</tr>
 					</table></td>
 			</tr>

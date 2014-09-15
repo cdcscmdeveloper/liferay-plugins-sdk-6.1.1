@@ -40,7 +40,9 @@ import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -79,8 +81,12 @@ import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
@@ -379,9 +385,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 		getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 
-		if(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches() != null && !resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches().isEmpty()){
-			getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches());
-		}
+		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		
 		for(FlFulfilmentItem flItem : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()) { 
 			String key = flItem.getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().toString() + flItem.getUnitPrice().doubleValue() + "";
@@ -2267,15 +2271,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setManualAddrList(manualAddrList);
 	}
 	
-	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
+	private void getSupplierBranchesList(SmSupplier smSupplier){
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(reqDTO);
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
-		for (SmSupplierBranch supplierBranch : branches) {
+		for (SmSupplierBranch supplierBranch : resDTO.getSmSupplierBranchList()) {
 			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
-		return supplierBranches;
 	}
+	
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
 		if(supplierBranchId!=null) {
@@ -2604,6 +2613,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		   }
 		  };
 		  Collections.sort(addressTypeList, comparator);
-		 }
+	}
 
+	public String retrieveMofNo(SmSupplier smSupplier) {
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+			return resDTO.getMofAccount().getMofNo();
+		}
+		return null;
+	}
+	
 }
