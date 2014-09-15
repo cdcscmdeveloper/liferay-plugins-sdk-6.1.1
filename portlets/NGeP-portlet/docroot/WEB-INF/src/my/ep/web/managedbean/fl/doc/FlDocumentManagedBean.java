@@ -48,6 +48,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private Date searchContractFromDuration;
 	private Date searchContractToDuration;
+	private String searchOrderNo;
 	
 	private List<PmStatusDesc> docStatusList;
 	private List<PmParameterDesc> procurementTypeList;
@@ -530,6 +531,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckInDocType(Boolean checkInDocType) {
 		this.checkInDocType = checkInDocType;
+	}
+
+	/**
+	 * @return the searchOrderNo
+	 */
+	public String getSearchOrderNo() {
+		return searchOrderNo;
+	}
+
+	/**
+	 * @param searchOrderNo the searchOrderNo to set
+	 */
+	public void setSearchOrderNo(String searchOrderNo) {
+		this.searchOrderNo = searchOrderNo;
 	}
 	
 }

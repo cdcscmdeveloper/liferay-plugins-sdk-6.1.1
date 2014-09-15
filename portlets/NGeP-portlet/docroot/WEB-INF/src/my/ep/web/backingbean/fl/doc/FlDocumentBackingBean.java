@@ -4,7 +4,9 @@
 package my.ep.web.backingbean.fl.doc;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -47,6 +49,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
@@ -55,6 +58,7 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
@@ -115,7 +119,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 
 	public void searchDocument(){
-		if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){
+		if(null == getManagedBean().getSearchOrderType()){ 
+			throw new EpException(MessageConst.ERROR_740023);
+		}else if((null ==getManagedBean().getSearchDocType() &&  "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
 			throw new EpException(MessageConst.ERROR_740023);
 		}
 		flDocumentDataModel.reloadData();
@@ -167,25 +173,86 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(getManagedBean().getSearchOrderType()!=null) {
 				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
-					if(isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()) {
+					if(isFlFulfilmentRequisitioner()) {
 						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+					}else if(isFlFulfilmentApprover()){
+						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						
+					}else if(isFlFulfilmentRecevingOfficer()){
+						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						
+					}else if(isFlFulfilmentPaymentOfficer()){
+						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 					}
 				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					if(isFlFulfilmentRequisitioner() || isFlFulfilmentApprover()) {
+					if(isFlFulfilmentRequisitioner()) {
 						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						
+					}else if(isFlFulfilmentApprover()){
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						
+					}else if(isFlFulfilmentRecevingOfficer()){
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+						
+					}else if(isFlFulfilmentPaymentOfficer()){
+						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 					}
 				}
-				if(isFlFulfilmentRecevingOfficer()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				}
-				if(isFlFulfilmentPaymentOfficer()){
-					flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-				}	
+				
 				if(isFlFulfilmentSupplier()) {
 					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+					flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 				}
 			}
 			List<String> selectedItemCode = new ArrayList<String>();
@@ -506,14 +573,20 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchContractNo(null);
 		getManagedBean().setSearchContractFromDuration(null);
 		getManagedBean().setSearchContractToDuration(null);
+		getManagedBean().setSearchOrderNo(null);
 	}
 	
 	public void selectedDoctype(AjaxBehaviorEvent e) {
 		String id = (String) e.getComponent().getAttributes().get("value");
 		
 		// reset everything to false
-		this.getManagedBean().setCheckDocNo(true);
-		this.getManagedBean().setCheckDocType(false);
+		//this.getManagedBean().setCheckDocNo(true);
+		if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+			this.getManagedBean().setCheckDocType(true);
+		}else{
+			this.getManagedBean().setCheckDocType(false);
+		}
+		
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
 		this.getManagedBean().setCheckInDocType(false);
@@ -521,9 +594,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		resetSearchCriteria();
 		
 		if(id!=null) {
-			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+			/*if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 				this.getManagedBean().setCheckDocType(true);
-			}else if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+			}else */
+			if(getManagedBean().getSearchOrderType().equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				this.getManagedBean().setCheckDocType(true);
+			}
+			if(id.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 				this.getManagedBean().setCheckPoDocType(true);
 				getProcurementTypeList();
 			}else if(id.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
@@ -536,16 +613,24 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	}
 	
 	public void selectedOrderType(AjaxBehaviorEvent e) {
+		String id = (String) e.getComponent().getAttributes().get("value");
 		getManagedBean().setSearchDocType(null);
 
 		// reset everything to false
-		this.getManagedBean().setCheckDocNo(false);
+		//this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
 		this.getManagedBean().setCheckInDocType(false);
 		this.getManagedBean().setCheckDoInDocType(false);
 		resetSearchCriteria();
+		if(id!=null) {
+			if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+				this.getManagedBean().setCheckDocType(true);
+			}	
+		}
+		
+		
 	}
 	
 	public void searchReset(){
@@ -562,7 +647,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchDocType(null);
 		
 		// reset everything to false
-		this.getManagedBean().setCheckDocNo(false);
+		//this.getManagedBean().setCheckDocNo(false);
 		this.getManagedBean().setCheckDocType(false);
 		this.getManagedBean().setCheckPoDocType(false);
 		this.getManagedBean().setCheckDoDocType(false);
@@ -591,7 +676,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				log.debug("pageChangeListener");
 			}
 			try {
-				if(null == getManagedBean().getSearchOrderType() || null ==getManagedBean().getSearchDocType()){
+				if(null == getManagedBean().getSearchOrderType()){ 
+					throw new EpException(MessageConst.ERROR_740023);
+				}else if((null ==getManagedBean().getSearchDocType() &&  "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
 					throw new EpException(MessageConst.ERROR_740023);
 				}
 				
@@ -628,6 +715,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				}
 				if(getManagedBean().getSearchSuppInvRef()!=null && getManagedBean().getSearchSuppInvRef()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppInvRef(), true));
+				}
+				if(getManagedBean().getSearchOrderNo()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("orderNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchOrderNo()));
 				}
 			
 				if(isFlFulfilmentSupplier()){
@@ -837,15 +927,16 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 								if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
 									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
 								}
+								
 							}
 						}
 					}
+					
 				}
 			}
 		}
 		return orderInfo;
 	}
-	
 	public void getProcurementTypeList(){
 		IParameterSO parameterSO = (IParameterSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
