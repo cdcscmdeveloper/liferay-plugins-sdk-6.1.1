@@ -679,8 +679,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return items;
 	}
 
-	public SelectItem[] getSupplierSignerDropdown(
-			CtAgreementParty agreementParty) {
+	public SelectItem[] getSupplierSignerDropdown() {
 		SelectItem[] items = null;
 		ISupplierSearchSO supplierSearchSO;
 		try {
@@ -690,16 +689,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
 							ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			reqDTO.setSupplierId(getManagedBean().getCtContract()
+			reqDTO.setSupplierId(this.getManagedBean().getCtContract()
 					.getSmSupplier().getSupplierId());
 
 			SupplierSearchResDTO resDTO = supplierSearchSO
 					.retrieveContractSigners(reqDTO);
-
-			for (SmPersonnel personnel : resDTO.getPersonnels()) {
-				System.out.println("personnel.getName(): "
-						+ personnel.getName() + " | " + personnel.getPmUser());
-			}
 
 			items = new SelectItem[resDTO.getPersonnels().size() + 1];
 			items[0] = new SelectItem(null, "- Select One -");
@@ -726,6 +720,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractVerId(contractVerId);
+    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
