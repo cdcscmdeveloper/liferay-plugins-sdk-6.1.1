@@ -7,10 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.common.supportdoc.SupportDocumentBackingBean.PmDocumentDataModel;
-import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.pm.taskassign.TaskAssignmentManagedBean;
 
