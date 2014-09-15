@@ -398,6 +398,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setTierMap(new HashMap<Long,List<FlFulfilmentItemAddr>>());
 			getManagedBean().setZonalTierMap(new HashMap<String,List<FlFulfilmentItemAddr>>());
 			
+			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setSelectedDelAddr(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().get(0));
 			selectAddrEvent();
 			List<FlFulfilmentItemAddr> fulfilmentItemAddrList = null;
