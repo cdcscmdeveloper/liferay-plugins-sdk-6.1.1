@@ -8,19 +8,20 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-		<p:dataTable id="openPnlId" var="cateGory"
+		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			rowIndexVar="index" styleClass="openPnlId"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
+			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
+					postUpdateListener="qTSupplierQulCriteriaBackingBean.categoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList, qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:openPnlId">
 				</ac:lov>
@@ -28,14 +29,12 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%; white-space: normal;">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%; white-space: normal;">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}" />
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
@@ -57,11 +56,13 @@
 
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-				update="openPnlId" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, openPnlId" partialSubmit="true" update="openPnlId"
+				icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
+				icon="ui-icon-delete" process="@this, openPnlId"
+				partialSubmit="true"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
 				update="openPnlId" />
 		</div>

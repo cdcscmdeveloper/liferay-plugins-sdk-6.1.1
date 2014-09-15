@@ -21,6 +21,7 @@
 				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
+					postUpdateListener="qTSupplierQulCriteriaBackingBean.restrictedCategoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList, qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3)"
 					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:restrictedtendertabView:restrictedPnlId">
 				</ac:lov>
@@ -29,13 +30,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%; white-space: normal;">
 				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}" />
+					value="#{restrcitedCateGory.pmCategoryL1.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%; white-space: normal;">
 				<h:outputText
-					value="#{restrcitedCateGory.pmCategoryL3.pmCategoryL2.categoryName}" />
+					value="#{restrcitedCateGory.pmCategoryL2.categoryName}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
@@ -56,11 +57,12 @@
 			</p:column>
 		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-				partialSubmit="true" update="restrictedPnlId" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, restrictedPnlId" partialSubmit="true"
+				update="restrictedPnlId" icon="ui-icon-add"
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				icon="ui-icon-delete"
+				process="@this, restrictedPnlId" icon="ui-icon-delete"
 				action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction}"
 				update="restrictedPnlId" />
 		</div>
