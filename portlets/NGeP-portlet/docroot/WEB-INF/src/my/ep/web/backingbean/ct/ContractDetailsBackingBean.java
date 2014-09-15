@@ -327,24 +327,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	        if(this.getManagedBean().getContractVer().getCtAgencies() != null && this.getManagedBean().getContractVer().getCtAgencies().size() > 0 )
 		           Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());
 	  
-	        if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0){
-		         if(this.getManagedBean().getCtItemList().size() == 0 && this.getManagedBean().getCtItemServiceList().size() == 0) {
-		    	     for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
-				            if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-				        	          Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-					                  this.getManagedBean().getCtItemServiceList().add(item);
-				           }  else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
-				        	         Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-				        	         if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0)
-				        	        	  Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
-		        	                this.getManagedBean().getCtItemList().add(item);
-				           }
-			         } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
-			               Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
-		    	 
-		    	      if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) 
-				           Collections.sort(this.getManagedBean().getCtItemServiceList(), new CtContractItem());
-	            } 
+	        if(this.getManagedBean().getContractVer().getCtContractItems().size() > 0) {
+	        	this.getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
+ 		        this.getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+ 		        this.getManagedBean().setSelectedItem(null);
+ 		        this.getManagedBean().setSelectedServiceItem(null);
+	    	    for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+			            if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+			        	          Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+				                  this.getManagedBean().getCtItemServiceList().add(item);
+			           }  else if(item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
+			        	         Collections.sort(item.getCtItemPrices(), new CtItemPrice());
+			        	         if(item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0)
+			        	        	  Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+	        	                this.getManagedBean().getCtItemList().add(item);
+			           }
+		         } if(this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) 
+		               Collections.sort(this.getManagedBean().getCtItemList(), new CtContractItem());
+	    	 
+	    	      if(this.getManagedBean().getCtItemServiceList() != null && this.getManagedBean().getCtItemServiceList().size() > 0) 
+			           Collections.sort(this.getManagedBean().getCtItemServiceList(), new CtContractItem());
 		   }
 		 
 		 if(this.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
