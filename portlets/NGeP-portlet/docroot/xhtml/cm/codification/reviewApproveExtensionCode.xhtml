@@ -12,8 +12,9 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="extensionApprovalMsgId" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
-
+				<p:messages showDetail="true" autoUpdate="true" closable="true"
+			showSummary="false"></p:messages>
+			
 		<h:panelGroup id="extensionFlowReviewID">
 
 
@@ -82,7 +83,7 @@
 					</f:facet>
 
 						<div style="width:100%; ">
-							<p:inputText value="#{review.reviewedTypeName}"
+							<p:inputText value="#{review.reviewedTypeName}" id="reviewedTypeNameId"
 								disabled="#{!review.requestType}" required="true" label="#{lbl['lbl.cm.type']}">
 								<p:ajax event="blur" update=":form:dt:typeremark1 :form:dt:typeremarkmsg"></p:ajax>
 							</p:inputText>
@@ -146,16 +147,17 @@
                  <p:column>
 
 						<div style="width:100%;">
-							<p:message id="typeremarkmsg" for="typeremark1"></p:message>
+							<p:message id="typeremarkmsg" for="typeremark1" display="icon"></p:message>
+						
 						</div>
 						<div style="width:100%;height: 25px;">
-							<p:message id="brandremarkmsg" for="brandRemark1"></p:message>
+							<p:message id="brandremarkmsg" for="brandRemark1" display="icon"></p:message>
 						</div>
 						<div style="width:100%;height: 25px;">
-							<p:message id="measurementremarkmsg" for="measurementRemark1"></p:message>
+							<p:message id="measurementremarkmsg" for="measurementRemark1" display="icon"></p:message>
 						</div>
 						<div style="width:100%;height: 20px;">
-							<p:message id="colorremarkmsg" for="colorRemark1"></p:message>
+							<p:message id="colorremarkmsg" for="colorRemark1" display="icon"></p:message>
 						</div>
 						
 					</p:column>
