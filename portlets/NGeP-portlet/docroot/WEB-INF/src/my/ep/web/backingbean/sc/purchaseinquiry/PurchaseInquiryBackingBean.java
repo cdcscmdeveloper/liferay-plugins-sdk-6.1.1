@@ -674,7 +674,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						if(scRequestNoteDtl.getAssignedUser() == null){
 							scRequestNoteDtl.setAssignedUser(new PmUser());
 						}
-						scRequestNoteDtl.getScRequestSupplierItem().setSupplierItemId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
+						scRequestNoteDtl.getScRequestSupplierItem().setSupplierId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
 
 						if (scRequestNoteDtl.getJustificationType() != null){
 							requestNoteBackingBean.getManagedBean().setJustificationType(scRequestNoteDtl.getProcurementType().getParameterCode());
@@ -686,8 +686,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
-						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemId(),
-								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, Boolean.TRUE, scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
+						requestNoteBackingBean.supplierLister(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),
+								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId() ,scRequestNoteDtl.getDeliverTermType().getParameterId());
 						
 						// fulfilmentTypeEvent
 						requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);

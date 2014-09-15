@@ -76,7 +76,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean itemCheck; // For checking item whether service or product
     private SelectItem[] justDropdown; // justification drop down
     private SelectItem[] priceTypes; // price type drop down for add to cart
-    private SelectItem[] procurementTypes; // for procuremment type dropdown
+    private SelectItem[] procurementTypes; // for procurement type dropdown
     private String processName;
     private String requestNoteStatus;
     private boolean required = Boolean.FALSE;
@@ -112,7 +112,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean piRNChecker = Boolean.TRUE;
     
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-    private	List<ScSupplierItemPrice>	storedSupplierItemPrices	=	new ArrayList<ScSupplierItemPrice>();
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -847,18 +846,4 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 			List<ScRequestNoteDtl> deleteRequestNoteDtls) {
 		this.deleteRequestNoteDtls = deleteRequestNoteDtls;
 	}
-	/**
-	 * @return the storedSupplierItemPrices
-	 */
-	public List<ScSupplierItemPrice> getStoredSupplierItemPrices() {
-		return storedSupplierItemPrices;
-	}
-	/**
-	 * @param storedSupplierItemPrices the storedSupplierItemPrices to set
-	 */
-	public void setStoredSupplierItemPrices(
-			List<ScSupplierItemPrice> storedSupplierItemPrices) {
-		this.storedSupplierItemPrices = storedSupplierItemPrices;
-	}
-	
 }

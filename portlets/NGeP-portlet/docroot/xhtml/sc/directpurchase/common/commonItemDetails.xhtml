@@ -90,18 +90,19 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
 					</f:facet>
 				
-				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierItemId}" 
+				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierId}" 
 				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}" disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}"
 				        style="width:125px;" required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					   <f:selectItems
+					
+                        <f:selectItems
 							value="#{requestNoteDtl.requestItem.supplierItems}" 
 							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
-							itemValue="#{supplierItem.requestSupplierItemId}"></f:selectItems>
+							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
 							
 							<p:ajax event="change" update="priceType ,offerPriceId ,supplierViewId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, true , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					<p:spacer width="2px"></p:spacer>
 					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
@@ -133,7 +134,7 @@
 							
 							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -184,7 +185,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
@@ -209,7 +210,7 @@
 						
 						<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierItemId, requestNoteDtl.priceType.parameterId, requestNoteDtl, false , requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
