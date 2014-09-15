@@ -16,38 +16,38 @@
 					<td style="width: 139px"><p:outputLabel
 							value="#{lbl['lbl.fl.ministry']}" /></td>
 					<td><p:inputText size="50"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 							disabled="true" /></td>
 					<td rowspan="3" valign="top" style="width: 140px;"><p:outputLabel
 							value="#{lbl['lbl.fl.title']}" /></td>
 					<td rowspan="3" colspan="3"><p:inputTextarea cols="40"
 							rows="4" style=" margin-bottom:5px;"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.title}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.title}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
+							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 						<p:spacer width="5" /> <p:inputText size="39"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.preparedOrgProfile.orgName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
+							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 						<p:spacer width="5" /> <p:inputText size="39"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.issuedOrgProfile.orgName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
+							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 						<p:spacer width="5" /> <p:inputText
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.chargeOrgProfile.orgName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"
 							size="39" disabled="true" /></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.supp.inv.no']}" /></td>
@@ -58,7 +58,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.requisitioner']}" /></td>
 					<td><p:inputText size="50"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.requistioner.userName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
 							disabled="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']}" /></td>
 					<td><p:inputText size="20"
@@ -70,7 +70,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 					<td><p:inputText size="25"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.ctContract.contractNo}"
 							disabled="true" /></td>
 				</tr>
 			</table>
@@ -84,10 +84,10 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.regNo}" /></td>
+										value="#{danBackingBean.managedBean.adjustment.flRequest.smSupplier.regNo}" /></td>
 								<td style="width: 65px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}"/></td>
+								<td><p:inputText size="20" disabled="true" value="#{danBackingBean.retrieveMofNo(danBackingBean.managedBean.adjustment.flRequest.smSupplier)}"/></td>
 							</tr>
 						</table></td>
 						
@@ -103,19 +103,19 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
 					<td><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.smSupplier.companyName}"
+							value="#{danBackingBean.managedBean.adjustment.flRequest.smSupplier.companyName}"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 					<td><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.branchName}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.branchName}" /></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width: 137px;"><p:outputLabel
 							value="Address" /></td>
 					<td><p:inputTextarea rows="5" cols="50"
-							value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.smAddress)}"
+							value="#{danBackingBean.getFullAddress(danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.smAddress)}"
 							style="margin-bottom:5px;" disabled="true" /></td>
 				</tr>
 				<tr>
@@ -125,11 +125,11 @@
 							<tr>
 								<td style="width: 25px;"><p:inputText size="15"
 										disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.phoneNo}" /></td>
+										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.phoneNo}" /></td>
 								<td style="width: 65px;"><p:outputLabel
 										value="#{lbl['lbl.fl.fax.no']}" /></td>
 								<td><p:inputText size="20" disabled="true"
-										value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.faxNo}" /></td>
+										value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.faxNo}" /></td>
 							</tr>
 						</table></td>
 				</tr>
@@ -137,19 +137,19 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 					<td><p:inputText size="50" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.contactPerson}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactPerson}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
 					<td><p:inputText size="50"  disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.contactEmail}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactEmail}" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 					<td><p:inputText size="15" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.flFulfilmentRequest.flSupplierDtl.contactPhoneNo}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -158,7 +158,7 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
-					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.flFulfilmentOrder.pmFinancialOrg.finOrgName}"/></td>
+					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.pmFinancialOrg.finOrgName}"/></td>
 					<td style="width: 133px;"><p:outputLabel
 							value="#{lbl['lbl.fl.payment.bank.name']}" /></td>
 					<td><p:inputText size="40" disabled="true"
