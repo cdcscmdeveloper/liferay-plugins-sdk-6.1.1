@@ -1271,11 +1271,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} else {
 			List<Long> itemIds = new ArrayList<Long>();
 			for (ScRequestNoteDtl noteDtl : getManagedBean().getRequestNoteDtls()) {
-				itemIds.add(noteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId());
+				itemIds.add(noteDtl.getRequestItem().getCmItem().getItemId());
 			}
 			if (itemIds.size() > 0) {
-				if(itemIds.contains(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId())){
-					throw new EpException(MessageConst.INFO_700027, new String[]{scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemName(),""});
+				if(itemIds.contains(scRequestNoteDtl.getRequestItem().getCmItem().getItemId())){
+					throw new EpException(MessageConst.INFO_700027, new String[]{scRequestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
 				} else {
 					requestNoteDtls.add(scRequestNoteDtl);
 					// set by default selected price type , rec.supplier and offer price
@@ -1701,13 +1701,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0){
 				for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteDtls()) {
 					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
-					ScRequestItem requestItem = requestSupplierItem.getRequestNoteItem();
-					requestItem.setCmItem(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem());
+					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
 					// TODO selected ptj id for non contract item for pid
 					
-					purchaseInDefaultReqDTO.setOrgProfileId(scRequestNoteDtl.getScRequestNote().getPmOrgProfile().getOrgProfileId());
-					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPricing().getCmSupplierItem().getCmItem().getItemId()) ;
+					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
+					purchaseInDefaultReqDTO.setItemId(scRequestNoteDtl.getRequestItem().getCmItem().getItemId()) ;
 					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemId(purchaseInDefaultReqDTO);
 
 					// pid to request note
