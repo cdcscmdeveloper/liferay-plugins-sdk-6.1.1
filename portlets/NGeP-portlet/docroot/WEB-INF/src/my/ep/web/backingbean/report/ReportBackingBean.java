@@ -15,6 +15,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+
+
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.ModuleCodeConst;
@@ -37,6 +39,31 @@ import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletResponse;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -128,7 +155,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String mofRegNoFrom;
 	private String mofRegNoTo;
 	private String registrationStatus;
-	private String capitalNaccum;
+	private String capitalNaccumFrm;
+	private String capitalNaccumTo;	
 	private String paidUpCapitalNaccumShare;
 	private String category;
 	private String noOfCategory;
@@ -153,8 +181,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String caseNo;
 	private String compApplStatus;
 	private String generatedURL;
+	private StreamedContent pdfData;
+	
 	/*SM end*/
 	
+	public StreamedContent getPdfData() {
+		if(null==pdfData){
+			return new DefaultStreamedContent();
+		}
+		return pdfData;
+	}
+	public void setPdfData(StreamedContent pdfData) {
+		this.pdfData = pdfData;
+	}
 	public String getGeneratedURL() {
 		return generatedURL;
 	}
@@ -215,11 +254,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setRegistrationStatus(String registrationStatus) {
 		this.registrationStatus = registrationStatus;
 	}
-	public String getCapitalNaccum() {
-		return capitalNaccum;
+	public String getCapitalNaccumFrm() {
+		return capitalNaccumFrm;
 	}
-	public void setCapitalNaccum(String capitalNaccum) {
-		this.capitalNaccum = capitalNaccum;
+	public void setCapitalNaccumFrm(String capitalNaccumFrm) {
+		this.capitalNaccumFrm = capitalNaccumFrm;
+	}
+	public String getCapitalNaccumTo() {
+		return capitalNaccumTo;
+	}
+	public void setCapitalNaccumTo(String capitalNaccumTo) {
+		this.capitalNaccumTo = capitalNaccumTo;
 	}
 	public String getPaidUpCapitalNaccumShare() {
 		return paidUpCapitalNaccumShare;
@@ -1823,7 +1868,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        case ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL:
 	        	rptGenBean.setZoneView(true);
 	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMofRegNoView(true);
+	        	rptGenBean.setMofRegNoFromView(true);
+	        	rptGenBean.setMofRegNoToView(true);
 	        	rptGenBean.setCompanyNameView(true);	        	
 	        	rptGenBean.setRoleView(true);
 				rptGenBean.setFromDateView(true);
@@ -1858,7 +1904,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);				
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_NAME));			
 	            break;
-	        case ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL:	        	
+	        case ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL:	
+	        	rptGenBean.setExtraTwoColumnView(true);
 	        	rptGenBean.setProofIdentityView(true);	        	
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);				
@@ -2034,6 +2081,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL:
+	           	rptGenBean.setExtraTwoColumnView(true);
 	        	rptGenBean.setZoneView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
@@ -2050,7 +2098,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        case ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL:
 	        	rptGenBean.setSupplierNameView(true);
 	        	rptGenBean.setCaseNoView(true);
-	        	rptGenBean.setDocStatusView(true);
 	        	rptGenBean.setRegistrationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
@@ -2064,7 +2111,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);	
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME));			
 	            break;
-	        case ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL:	        		        	
+	        case ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL:
+	        	rptGenBean.setExtraTwoColumnView(true);
 	        	rptGenBean.setProofIdentityView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
@@ -3170,12 +3218,32 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				generateCMReport();			
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				generateFLReport();
-			}			
+			}
+			//Code for getting the report from the Oracle Report Server.
+			if(null!=generatedURL && !"".equals(generatedURL)){
+				loadReport();
+			}
 		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam("reportInValid", "true");  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
+	}
+	private void loadReport() {
+		InputStream input = null;
+		try {			
+			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
+			String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
+			String baseUrl=serverDetails+FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String path=baseUrl+"/ReportViewServlet";			
+			log.info(path);
+			req.getSession().setAttribute("generatedUrl", generatedURL);
+			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);			
+		} catch (Exception e) {
+			e.printStackTrace();
+		
+		}
 	}
 	/*
 	 *Generate SC module report  
@@ -3187,13 +3255,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL)){
 				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);	
 			}			
-			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;	
-			/*try {
-				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);				
-			} catch (IOException e) {				
-				e.printStackTrace();
-			}	*/	
+			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;				
 			setGeneratedURL(url);
 			log.info(url);
 		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
@@ -3235,18 +3297,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.FINANCE_POSITION_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);
-			
+			urlSCReportJsps.put(ReportConst.FINANCE_POSITION_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);			
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));			
-			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;	
-			/*try {
-				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);			
-				
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}*/	
+			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;			
 			setGeneratedURL(url);
 			log.info(url);
 		}else{
@@ -3340,14 +3393,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;			
-			
-			/*try {
-				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-				externalContext.redirect(url);				
-			} catch (IOException e) {				
-				e.printStackTrace();
-			}	*/	
+			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
 			setGeneratedURL(url);
 			log.info(url);
 		}else{
@@ -3553,8 +3599,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
-			} catch (IOException e) {
-				
+			} catch (IOException e) {				
 				e.printStackTrace();
 			}*/
 			setGeneratedURL(url);
@@ -3692,5 +3737,46 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setBusinessRegNo(null);
 		this.setMofNumber(null);
 		checkVariableValueExist();
-	}	
+	}
+	
+	public File newDownloadingFile(String url) throws IOException {		
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + "abc.pdf" + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		File localFile = new File("C:\\Jangari\\abc.pdf");
+		if(url!=null) {
+			InputStream input = null;
+			try {
+				URL obj = new URL(url);
+				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();				
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	        byte[] buf = new byte[1024];
+	        try {
+	            for (int readNum; (readNum = input.read(buf)) != -1;) {
+	                bos.write(buf, 0, readNum); 
+	                System.out.println("read " + readNum + " bytes,");
+	            }
+	        } catch (IOException ex) {
+	        	ex.printStackTrace();
+	        }
+	        byte[] bytes = bos.toByteArray();	        
+	        FileOutputStream fos = new FileOutputStream(localFile);
+	        fos.write(bytes);
+	        fos.flush();
+	        fos.close();			
+			input.close();	
+		}				
+		out.flush();
+		out.close(); 		
+		return localFile;
+	}
+	
 }

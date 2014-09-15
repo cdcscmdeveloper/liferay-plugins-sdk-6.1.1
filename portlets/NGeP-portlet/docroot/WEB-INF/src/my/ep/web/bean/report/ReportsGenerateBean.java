@@ -89,8 +89,7 @@ public class ReportsGenerateBean {
 		private boolean caseNoView = false;
 		private boolean extraTwoColumnView = false;	
 		private boolean compApplStatusView = false;		
-		private boolean smCompanyNameView = false;
-		
+		private boolean smCompanyNameView = false;		
 		/*SM end*/
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;

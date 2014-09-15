@@ -455,9 +455,13 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
 										<p:ajax event="change" listener="#{reportBackingBean.checkVariableValueExist()}"
 					 				partialSubmit="true" update="rptbtnGroup"/>												
-									</p:selectOneMenu>
-									<p:outputLabel value=""  style="margin-top:5px;width:115px;"/>
-									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+									</p:selectOneMenu>									
+								  </c:if>
+								  
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.caseNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.caseNo']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.caseNo}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.registrationNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.registrationNo']}"  style="margin-top:5px;width:115px;"/>
@@ -466,6 +470,11 @@
 					 				partialSubmit="true" update="rptbtnGroup"/>
 					 				</p:inputText>
 									</c:if>	
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.complaintNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.complaintNo']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.complaintNo}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}"  style="margin-top:5px;width:115px;"/>
 									<p:inputText value="#{reportBackingBean.mofRegNo}"  style="margin-top:5px;width:290px;">
@@ -510,11 +519,10 @@
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.capitalNaccumView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.paidUpCapitalNaccum']}"  style="margin-top:5px;width:115px;"/>
-									<p:inputText value="#{reportBackingBean.capitalNaccum}"  style="margin-top:5px;width:290px;">
-									<p:ajax event="blur" listener="#{reportBackingBean.checkVariableValueExist()}"
-					 				partialSubmit="true" update="rptbtnGroup"/>
-					 				</p:inputText>
+									<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumFrm']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.capitalNaccumFrm}"  style="margin-top:5px;width:290px;"/>									
+					 				<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumTo']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.capitalNaccumTo}"  style="margin-top:5px;width:290px;"/>				 				
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.stateView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.state']}" style="margin-top:5px;width:115px;"/>									
@@ -645,14 +653,39 @@
 					 				partialSubmit="true" update="rptbtnGroup"/>												
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.organizationTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.organizationType']}" style="margin-top:5px;width:115px;"/>									
+									<p:selectOneMenu value="#{reportBackingBean.organizationType}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.kerajaanPersekutuan']}" itemValue="#{lbl['lbl.rpt.kerajaanPersekutuan']}"></f:selectItem>																				
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.badanBerkanun']}" itemValue="#{lbl['lbl.rpt.badanBerkanun']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.syarikatBerkaitandenganKerajaan']}" itemValue="#{lbl['lbl.rpt.syarikatBerkaitandenganKerajaan']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.kerajaanNegeri']}" itemValue="#{lbl['lbl.rpt.kerajaanNegeri']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pihakBerkuasaTempatan']}" itemValue="#{lbl['lbl.rpt.pihakBerkuasaTempatan']}"></f:selectItem>																						
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.kementerianView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.kementerian']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.kementerian}"  style="margin-top:5px;width:290px;"/>									
+								   </c:if>
+								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.namAgensiView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.namAgensi']}"  style="margin-top:5px;width:115px;"/>
+									<p:inputText value="#{reportBackingBean.namAgensi}"  style="margin-top:5px;width:290px;"/>									
+								   </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.compApplStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.compApplStatus']}" style="margin-top:5px;width:115px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.compApplStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>
-										<p:ajax event="change" listener="#{reportBackingBean.checkVariableValueExist()}"
-					 				partialSubmit="true" update="rptbtnGroup"/>												
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.rejected']}" itemValue="#{lbl['lbl.rpt.rejected']}"></f:selectItem>																						
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.companyStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.companyStatus']}" style="margin-top:5px;width:115px;"/>									
+									<p:selectOneMenu value="#{reportBackingBean.companyStatus}" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{lbl['lbl.rpt.inactive']}"></f:selectItem>																						
 									</p:selectOneMenu>
 								  </c:if>								  
 								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
@@ -695,8 +728,7 @@
 		            </div>
 		           <h:panelGroup id="rptbtnGroup">
 		            <div align="right">		            		                    	
-		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" 
-					process="@this" update="@(.reportResultStyle)" oncomplete="handleLocalesDialogComplete(xhr, status, args)">				   
+		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)">
 				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" update="@form">
@@ -706,29 +738,28 @@
 				   </h:panelGroup>
 
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
-						modal="true" header="Report" width="1200" height="550"
+						modal="true" header="Report" width="900" height="500"
 						resizable="false" position="right" closable="true"
 						closeOnEscape="true" draggable="true" onHide="closeDialogBox(this)">
 						<h:panelGroup id="reportResult" styleClass="reportResultStyle">
-							<iframe frameborder="0" align="left"
-								src="#{reportBackingBean.generatedURL}" name="reportGenIfrm"
-								id="reportGenIfrm" scrolling="auto" width="1200" height="550"
-								marginheight="5" marginwidth="10" class="reportIframe"> </iframe>
+							<p:media id="pdfViewer" player="pdf" data="#{reportBackingBean.pdfData}" width="900" height="500" rendered="#{pdf.selectedPdf != null}" />
 						</h:panelGroup>
 						
 					</p:dialog>
+					
 
 			<script type="text/javascript">
 			/*Function to hide the Iframe*/
 			function closeDialogBox(obj){
-				$('.reportIframe').hide();
+				//$('.reportIframe').hide();
 			}
 			function handleLocalesDialogComplete(xhr, status, args)
 			{
+				//alert(args.reportViewUrl);
 			   if (args) {
 			      var reportInValid = args.reportInValid;
 			     if(!reportInValid){
-			    	 reportGenDialog.show(); 
+			    	 window.open(args.reportViewUrl,'_blank');
 			     }
 			   }
 			}
