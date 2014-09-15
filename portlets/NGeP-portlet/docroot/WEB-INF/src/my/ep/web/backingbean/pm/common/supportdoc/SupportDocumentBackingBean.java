@@ -20,7 +20,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
-import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -31,20 +30,14 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
-import my.ep.dto.pm.common.reason.ReasonReqDTO;
-import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
-import my.ep.persistence.entity.pm.authorization.PmUserRole;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmDocumentRestr;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmSupplierReason;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -60,8 +53,6 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import weblogic.wsee.util.StringUtil;
 
 /**
  * Backing Bean for Support Document
