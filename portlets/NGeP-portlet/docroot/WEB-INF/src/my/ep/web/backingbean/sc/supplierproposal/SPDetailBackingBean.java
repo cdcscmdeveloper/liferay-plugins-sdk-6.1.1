@@ -1,9 +1,21 @@
 package my.ep.web.backingbean.sc.supplierproposal;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,6 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -42,6 +58,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
@@ -72,6 +89,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
+import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -87,6 +105,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -752,6 +771,59 @@ public class SPDetailBackingBean extends
 		}
 	}
 
+	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
+			throws FileNotFoundException, IOException {
+		String fileName = file.getFileName();
+//		byte[] fileBytes = file.getContents();
+		FileInputStream fis = (FileInputStream) file.getInputstream();
+		attachment.setFileName(fileName);
+		attachment.setFileDesc("File uploded");
+
+		populateAttachmentDetails(attachment);
+
+		FileOutputStream fos;
+		fos = new FileOutputStream(getActualFilePath(attachment));
+//		fos.write(fileBytes);
+//		fos.close();
+        BouncyCastleProvider_AES_CBC bc =
+                new BouncyCastleProvider_AES_CBC();
+        try {
+			bc.InitCiphers();
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchProviderException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        //encryption
+        try {
+			bc.CBCEncrypt(fis, fos);
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"The file was uploaded successfully.", null);
+
+		FacesContext.getCurrentInstance().addMessage(null, message);
+	}
+
 	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws IOException {
 		debugLogger("downloadPTJFile");
@@ -787,7 +859,78 @@ public class SPDetailBackingBean extends
 
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 	}
+	public void downloadEncryptedFile(String filePath, String fileName)
+			throws IOException {
 
+		if (filePath != null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+            BouncyCastleProvider_AES_CBC bc =
+                    new BouncyCastleProvider_AES_CBC();
+            try {
+				bc.InitCiphers();
+			} catch (InvalidKeyException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NoSuchAlgorithmException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NoSuchProviderException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NoSuchPaddingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+            System.out.println("Test 1 !"+bc.generateKey());
+            //encryption
+        //    bc.CBCEncrypt(fis, fos);
+ 
+            FileOutputStream fos = new FileOutputStream(new File("C:\\Windows\\Temp\\PV.pdf"));
+
+ 
+            //decryption
+            try {
+				bc.CBCDecrypt(input, fos);
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+//			byte[] buffer = new byte[4096];
+//			int bytesRead;
+//			while ((bytesRead = input.read(buffer)) != -1) {
+//				out.write(buffer, 0,ytesRead);
+//				buffer = new byte[4096];
+//			}
+			input.close();
+			fos.flush();
+			fos.close();
+			
+			downloadFileByInputStream(input, fileName);
+		}
+//
+//		// use to upload back to database
+//		File file = new File(filePath);
+//		return file;
+	}
+	
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
 		debugLogger("downloadSPFile");
