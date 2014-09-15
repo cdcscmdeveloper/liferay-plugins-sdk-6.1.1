@@ -3303,7 +3303,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			setGeneratedURL(url);
 			log.info(url);
 		}else{
-			
+			RequestContext context = RequestContext.getCurrentInstance();  
+	        context.addCallbackParam("reportInValid", "true");
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -3605,7 +3606,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			setGeneratedURL(url);
 			log.info(url);
 		}else{
-			
+			RequestContext context = RequestContext.getCurrentInstance();  
+	        context.addCallbackParam("reportInValid", "true");
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
