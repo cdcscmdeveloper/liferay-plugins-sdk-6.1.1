@@ -238,6 +238,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
 					getManagedBean().setDocType(resDTO.getFulfilmentNote().getFlRequest().getDocType());
 				} else {
+					reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 					resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 					getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 					getManagedBean().getFulfilmentNote().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());

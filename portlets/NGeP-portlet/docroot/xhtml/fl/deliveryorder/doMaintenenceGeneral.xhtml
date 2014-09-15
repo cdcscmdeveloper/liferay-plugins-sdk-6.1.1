@@ -10,7 +10,7 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="51" id="doministry"
+				<td><p:inputText size="53" id="doministry"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
@@ -46,7 +46,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Requistioner" /></td>
-				<td><p:inputText size="51" disabled="true"
+				<td><p:inputText size="53" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.requistioner.userName}" />
 				</td>
 			</tr>
@@ -65,7 +65,8 @@
 							<td style="width: 92px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{createDOBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
+									value="#{createDOBackingBean.retrieveMofNo(createDOBackingBean.managedBean.fulfilmentRequest.smSupplier)}" />
+							</td>
 						</tr>
 					</table></td>
 					<td style="width: 184px;"><p:outputLabel

@@ -442,7 +442,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 	}
 	
-	private void populateChargeLineData(){
+	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		 
 		//Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
@@ -466,7 +466,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			List<FlPaymentItem> paymentItems = itemEntry.getValue();
 			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
 			flPaymentItem.setFlInvoiceItem((FlInvoiceItem) flPaymentItem.getFlInvoiceItem().cloneEntity());
-			flPaymentItem.setFlAdjustmentItem((FlAdjustmentItem) flPaymentItem.getFlAdjustmentItem().cloneEntity());
+			if(flPaymentItem.getFlAdjustmentItem()==null) {
+				flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+			} else {
+				flPaymentItem.setFlAdjustmentItem((FlAdjustmentItem) flPaymentItem.getFlAdjustmentItem().cloneEntity());
+			}
 			flPaymentItem.setParent(true);
 			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getCmItem().getExtensionCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
 			
@@ -481,7 +485,9 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
 				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
 				totalInvAmt=totalInvAmt.add(chargeLineItem.getFlInvoiceItem().getInvAmt());
-				totalDanAmt=totalDanAmt.add(chargeLineItem.getFlAdjustmentItem().getAdjustedAmt());
+				if(chargeLineItem.getFlAdjustmentItem()!=null) {
+					totalDanAmt=totalDanAmt.add(chargeLineItem.getFlAdjustmentItem().getAdjustedAmt());
+				}
 			}			
 
 			flPaymentItem.getFlInvoiceItem().setOrderedAmt(totalOrderAmt);

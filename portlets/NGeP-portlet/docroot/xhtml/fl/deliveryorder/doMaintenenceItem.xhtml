@@ -5,7 +5,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+	
+	<table>
+		<tr>
+			<td valign="top"><p:outputLabel
+					value="#{lbl['lbl.fl.delivery.address']}" /></td>
+			<td><p:inputTextarea cols="50" rows="3"
+					style=" margin-bottom:5px;" disabled="true"
+					value="#{createDOBackingBean.getFullAddress(createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.pmAddress)}" />
+			</td>
+		</tr>
+	</table>
+		
+	<p:panel header="DELIVERY ITEMS" toggleable="true">
 		<p:dataTable id="doItems" var="doItems" rowIndexVar="index"
 			rowKey="#{flItem}"
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">

@@ -144,11 +144,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			if(isFlFulfilmentSupplier()) {
 				reqDTO.setSupplier(Boolean.TRUE);
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				reqDTO.setPmUser(getManagedBean().getPmUser());
-			}else{
-				reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			}
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
@@ -456,7 +452,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 				getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
-				getManagedBean().setPmUser(reqDTO.getPmUser());
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setTaskId(taskId);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();

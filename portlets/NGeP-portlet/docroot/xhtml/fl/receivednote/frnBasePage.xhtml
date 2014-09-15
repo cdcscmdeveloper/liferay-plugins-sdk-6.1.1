@@ -20,32 +20,30 @@
 				<td><p:commandButton value="Back" immediate="true"
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="location.replace(document.referrer);" /></td>
-				<td colspan="4" style="text-align: right"><ui:repeat
+				<td colspan="4" style="text-align: right">
+					<ui:repeat
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{receivedNoteBackingBean.submitAction(bpmAction)}" />
-					</ui:repeat></td>
-			</tr>
-		</table>
-		<table style="width: 100%;">
-			<tr>
-				<c:if
-					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE"
-							action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton></td>
-				</c:if>
-				<c:if
-					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL"
-							action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton></td>
-				</c:if>
+					</ui:repeat>
+					<c:if
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
+						<td colspan="4" style="text-align: right"><p:commandButton
+								value="UPDATE"
+								action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
+								<f:param name="actionName" value="UPDATE" />
+							</p:commandButton></td>
+					</c:if>
+					<c:if
+						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
+						<td colspan="4" style="text-align: right"><p:commandButton
+								value="CANCEL"
+								action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
+								<f:param name="actionName" value="CANCEL" />
+							</p:commandButton></td>
+					</c:if>					
+				</td>
 			</tr>
 		</table>
 		<ui:include src="frnReviewHeaderPage.xhtml" />
