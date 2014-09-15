@@ -13,7 +13,7 @@
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgProfile.pmPtjGroup.ptjGroupId}"
 				style="margin-bottom: 5px;">
-				<f:selectItem itemValue="0" itemLabel="---Select---" />
+				<f:selectItem itemValue="" itemLabel="---Select---" />
 				<f:selectItems var="ptjLs"
 					value="#{organisationBackingBean.managedBean.ptjGroup}"
 					itemLabel="#{ptjLs.groupName}" itemValue="#{ptjLs.groupCode}" />
@@ -24,7 +24,7 @@
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgProfile.pmAgOffice.agOfficeId}"
 				required="true" style="margin-bottom: 5px;">
-				<f:selectItem itemValue="0" itemLabel="---Select---" />
+				<f:selectItem itemValue="" itemLabel="---Select---" />
 				<f:selectItems var="agOfficeLs"
 					value="#{organisationBackingBean.managedBean.agOffice}"
 					itemLabel="#{agOfficeLs.officeName}" itemValue="#{agOfficeLs.officeCode}" />
@@ -35,9 +35,9 @@
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgProfileId}"
 				required="true" style="margin-bottom: 5px;">
-				<f:selectItem itemValue="0" itemLabel="---Select---" />
+				<f:selectItem itemValue="" itemLabel="---Select---" />
 				<f:selectItems var="orgProfileLs"
-					value="#{organisationBackingBean.managedBean.pmOrgProfile}"
+					value="#{organisationBackingBean.managedBean.orgProfileList}"
 					itemLabel="#{orgProfileLs.pmOrgValidity.orgName}" itemValue="#{orgProfileLs.pmOrgValidity.orgCode}" />
 
 			</p:selectOneMenu>

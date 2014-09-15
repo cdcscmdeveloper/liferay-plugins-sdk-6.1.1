@@ -12,24 +12,16 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
 			toggleable="true">
-			<h:panelGrid id="organisationSearchr" style="width:100%;">
-				<h:column>
-					<!-- <p:tabView>
-						<p:tab id="definedSearch"
-							title="#{lbl['lbl.pm.header.general.org.defsearch']}">
-							<ui:include
-								src="/xhtml/pm/organisation/organisationDefinedSearch.xhtml" />
-						</p:tab>
-						<p:tab id="advancedSearch" title="#{lbl['lbl.pm.header.general.org.advsearch']}">
-							<ui:include
-								src="/xhtml/pm/organisation/organisationAdvancedSearch.xhtml" />
-						</p:tab>
-					</p:tabView> -->
-					<ui:include
-						src="/xhtml/pm/organisation/organisationDefinedSearch.xhtml" />
-				</h:column>
+			<h:panelGrid id="organisationSearchr"  columns="2">
 				<h:column>
 
+					<ui:include src="/xhtml/pm/organisation/organisationSearch.xhtml" />
+				</h:column>
+
+			</h:panelGrid>
+			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
+				width="100%">
+				<h:column>
 					<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
 						style="float:right;"
 						action="#{organisationBackingBean.resetOrganisation}"
@@ -76,7 +68,8 @@
 				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 					style="width :5%">
 					<p:commandLink
-						action="#{organisationBackingBean.editOrganization(organisation)}">
+						action="#{organisationBackingBean.editOrganization(organisation)}"
+						update="@form">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							title="Edit Organisation"
 							value="/resources/ep/images/design/edit.png" />

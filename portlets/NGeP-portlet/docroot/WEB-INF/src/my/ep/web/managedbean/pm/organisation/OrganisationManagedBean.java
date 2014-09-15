@@ -7,20 +7,16 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
-import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmPtjGroup;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -32,392 +28,212 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private static final long serialVersionUID = 1L;
 	private int activeIndex = 0;
 	private int organisationActiveIndex;
+	// Organization Search
 	private String orgTypeCode;
 	private String orgCode;
 	private String orgName;
 	private String orgStatus;
 	private String orgType;
-	private String status;
-	private PmOrgValidity orgValidity;
-	private PmOrgProfile orgProfile;
-	private List<PmOrgProfile> orgProfileList;
-	private PmOrgValidity pmOrgValidity;
-	private List<PmPtjGroup> ptjGroup;
-	private PmPtjGroup pmPtjGroup;
-	private List<PmAgOffice> agOffice;
-	private List<PmOrgProfile> pmOrgProfile;
-	private List<PmOrgProfile> selectedPmOrgProfile;
-	private List<PmOrgValidity> pmorgValidityList;
-	private List<PmOrgValidity> selectedOrgValidityList;
-	private List<PmState> states;
-	private List<PmCountry> countries;
-	private List<PmDistrict> districts;
-	private List<PmCity> citys;
-	private List<PmZone> zones;
+	// Org Details
+	private PmOrgProfile orgProfile = new PmOrgProfile();
+	private PmOrgValidity orgValidity = new PmOrgValidity();
+	private Date currentDate = new Date();
+	private List<PmZone> zoneList;
+	private PmZone zone= new PmZone();
 	private Long zoneId;
+	// Office Address
+	private List<PmAddressType> officeAddressTypeList;
+	private List<PmContact> contactList;
 	private PmAddressType pmAddressType;
-	private PmAddress pmAddress;	
-	private PmContact contactPerson;
-	private List<PmContact> pmContacts;
-	private List<PmAddress> address;
-	private List<PmAddress> selectAddress;
-	private PmAddress selectedAddress;
-	private List<PmAddressType> addressTypes;
-	private List<PmAddressType>selectedAddressTypes;
-	private PmAddressType selectedPmAddressType;
-	private List<SelectItem> selections;
-	private Date expDate;
-	private Date effDate;
-	private Date currentDate= new Date();
-	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
-	private List<PmFinancialAcc> pmFinancialAcc =  new ArrayList<PmFinancialAcc>();
-	private List<PmFinancialAcc> selectedPmFinancialAcc;
+	private PmAddress officeAddress;
+	private PmContact officeContactPerson;
+	private List<PmCountry> countryList;
+	private List<PmState> stateList;
+	private List<PmDivision> divisionList;
+	private List<PmCity> cityList;
+	private List<PmDistrict> districtList;
 
-	/**
-	 * @return the pmFinancialAcc
-	 */
-	public List<PmFinancialAcc> getPmFinancialAcc() {
-		return pmFinancialAcc;
-	}
-
-	/**
-	 * @param pmFinancialAcc the pmFinancialAcc to set
-	 */
-	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
-		this.pmFinancialAcc = pmFinancialAcc;
-	}
-
-	/**
-	 * @return the selectedPmFinancialAcc
-	 */
-	public List<PmFinancialAcc> getSelectedPmFinancialAcc() {
-		return selectedPmFinancialAcc;
-	}
-
-	/**
-	 * @param selectedPmFinancialAcc the selectedPmFinancialAcc to set
-	 */
-	public void setSelectedPmFinancialAcc(
-			List<PmFinancialAcc> selectedPmFinancialAcc) {
-		this.selectedPmFinancialAcc = selectedPmFinancialAcc;
-	}
+	// Delivery Address
+	private PmAddress deliveryAddress;
+	private PmContact deliveryContactPerson;
+	private List<PmAddressType> deliveryAddressTypeList;
+	private List<PmAddressType> selectedDelAddressTypes;
+	private PmAddressType selectedDeliveryAddressType;
 
 	public OrganisationManagedBean() {
-		setPmOrgValidity(new PmOrgValidity());		
-		orgProfile = new PmOrgProfile();
-		pmAddress = new PmAddress();
-		pmPtjGroup = new PmPtjGroup();
+
 		pmAddressType = new PmAddressType();
-		contactPerson = new PmContact();
-		//addressTypes.add(pmAddressType);
-		pmAddress.setPmCity(new PmCity());
-		pmAddress.setPmDistrict(new PmDistrict());
-		pmAddress.setPmCountry(new PmCountry());
-		pmAddress.setPmState(new PmState());
-		pmAddressType.setPmAddress(pmAddress);
-		pmAddressType.setPmContacts(pmContacts);		
-		orgProfile.setPmOrgValidity(pmOrgValidity);
+		officeContactPerson= new PmContact();
+		
+		pmAddressType.setPmAddress(officeAddress);
+		officeAddressTypeList= new ArrayList<PmAddressType>();
+		contactList= new ArrayList<PmContact>();
 
 	}
 
 	/**
-	 * @return the states
+	 * @return the contactList
 	 */
-	public List<PmState> getStates() {
-		return states;
+	public List<PmContact> getContactList() {
+		return contactList;
 	}
 
 	/**
-	 * @param states
-	 *            the states to set
+	 * @param contactList the contactList to set
 	 */
-	public void setStates(List<PmState> states) {
-		this.states = states;
+	public void setContactList(List<PmContact> contactList) {
+		this.contactList = contactList;
 	}
 
 	/**
-	 * @return the countries
+	 * @return the deliveryAddress
 	 */
-	public List<PmCountry> getCountries() {
-		return countries;
+	public PmAddress getDeliveryAddress() {
+		return deliveryAddress;
 	}
 
 	/**
-	 * @param countries
-	 *            the countries to set
+	 * @return the deliveryAddressTypeList
 	 */
-	public void setCountries(List<PmCountry> countries) {
-		this.countries = countries;
+	public List<PmAddressType> getDeliveryAddressTypeList() {
+		return deliveryAddressTypeList;
 	}
 
 	/**
-	 * @return the districts
+	 * @param deliveryAddressTypeList
+	 *            the deliveryAddressTypeList to set
 	 */
-	public List<PmDistrict> getDistricts() {
-		return districts;
+	public void setDeliveryAddressTypeList(
+			List<PmAddressType> deliveryAddressTypeList) {
+		this.deliveryAddressTypeList = deliveryAddressTypeList;
 	}
 
 	/**
-	 * @param districts
-	 *            the districts to set
+	 * @param deliveryAddress
+	 *            the deliveryAddress to set
 	 */
-	public void setDistricts(List<PmDistrict> districts) {
-		this.districts = districts;
+	public void setDeliveryAddress(PmAddress deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
 	}
 
 	/**
-	 * @return the citys
+	 * @return the deliveryContactPerson
 	 */
-	public List<PmCity> getCitys() {
-		return citys;
+	public PmContact getDeliveryContactPerson() {
+		return deliveryContactPerson;
 	}
 
 	/**
-	 * @param citys
-	 *            the citys to set
+	 * @param deliveryContactPerson
+	 *            the deliveryContactPerson to set
 	 */
-	public void setCitys(List<PmCity> citys) {
-		this.citys = citys;
+	public void setDeliveryContactPerson(PmContact deliveryContactPerson) {
+		this.deliveryContactPerson = deliveryContactPerson;
 	}
 
 	/**
-	 * @return the pmAddressType
+	 * @return the countryList
 	 */
-	public PmAddressType getPmAddressType() {
-		return pmAddressType;
+	public List<PmCountry> getCountryList() {
+		return countryList;
 	}
 
 	/**
-	 * @param pmAddressType
-	 *            the pmAddressType to set
+	 * @param countryList
+	 *            the countryList to set
 	 */
-	public void setPmAddressType(PmAddressType pmAddressType) {
-		this.pmAddressType = pmAddressType;
+	public void setCountryList(List<PmCountry> countryList) {
+		this.countryList = countryList;
 	}
 
 	/**
-	 * @return the pmAddress
+	 * @return the stateList
 	 */
-	public PmAddress getPmAddress() {
-		return pmAddress;
+	public List<PmState> getStateList() {
+		return stateList;
 	}
 
 	/**
-	 * @param pmAddress
-	 *            the pmAddress to set
+	 * @param stateList
+	 *            the stateList to set
 	 */
-	public void setPmAddress(PmAddress pmAddress) {
-		this.pmAddress = pmAddress;
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
 	}
 
 	/**
-	 * @return the contactPerson
+	 * @return the divisionList
 	 */
-	public PmContact getContactPerson() {
-		return contactPerson;
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
 	}
 
 	/**
-	 * @param contactPerson
-	 *            the contactPerson to set
+	 * @param divisionList
+	 *            the divisionList to set
 	 */
-	public void setContactPerson(PmContact contactPerson) {
-		this.contactPerson = contactPerson;
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
 	}
 
 	/**
-	 * @return the status
+	 * @return the cityList
 	 */
-	public String getStatus() {
-		return status;
+	public List<PmCity> getCityList() {
+		return cityList;
 	}
 
 	/**
-	 * @param status
-	 *            the status to set
+	 * @param cityList
+	 *            the cityList to set
 	 */
-	public void setStatus(String status) {
-		this.status = status;
+	public void setCityList(List<PmCity> cityList) {
+		this.cityList = cityList;
 	}
 
 	/**
-	 * @return the orgCode
+	 * @return the districtList
 	 */
-	public String getOrgCode() {
-		return orgCode;
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
 	}
 
 	/**
-	 * @param orgCode
-	 *            the orgCode to set
+	 * @param districtList
+	 *            the districtList to set
 	 */
-	public void setOrgCode(String orgCode) {
-		this.orgCode = orgCode;
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
 	}
 
 	/**
-	 * @return the orgName
+	 * @return the officeAddress
 	 */
-	public String getOrgName() {
-		return orgName;
+	public PmAddress getOfficeAddress() {
+		return officeAddress;
 	}
 
 	/**
-	 * @param orgName
-	 *            the orgName to set
+	 * @param officeAddress
+	 *            the officeAddress to set
 	 */
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
+	public void setOfficeAddress(PmAddress officeAddress) {
+		this.officeAddress = officeAddress;
 	}
 
 	/**
-	 * @return the orgType
+	 * @return the officeContactPerson
 	 */
-	public String getOrgType() {
-		return orgType;
+	public PmContact getOfficeContactPerson() {
+		return officeContactPerson;
 	}
 
 	/**
-	 * @param orgType
-	 *            the orgType to set
+	 * @param officeContactPerson
+	 *            the officeContactPerson to set
 	 */
-	public void setOrgType(String orgType) {
-		this.orgType = orgType;
-	}
-
-	/**
-	 * @return the orgValidity
-	 */
-	public PmOrgValidity getOrgValidity() {
-		return orgValidity;
-	}
-
-	/**
-	 * @param orgValidity
-	 *            the orgValidity to set
-	 */
-	public void setOrgValidity(PmOrgValidity orgValidity) {
-		this.orgValidity = orgValidity;
-	}
-
-	/**
-	 * @return the orgProfile
-	 */
-	public PmOrgProfile getOrgProfile() {
-		return orgProfile;
-	}
-
-	/**
-	 * @param orgProfile
-	 *            the orgProfile to set
-	 */
-	public void setOrgProfile(PmOrgProfile orgProfile) {
-		this.orgProfile = orgProfile;
-	}
-
-	/**
-	 * @return the ptjGroup
-	 */
-	public List<PmPtjGroup> getPtjGroup() {
-		return ptjGroup;
-	}
-
-	/**
-	 * @param ptjGroup
-	 *            the ptjGroup to set
-	 */
-	public void setPtjGroup(List<PmPtjGroup> ptjGroup) {
-		this.ptjGroup = ptjGroup;
-	}
-
-	/**
-	 * @return the agOffice
-	 */
-	public List<PmAgOffice> getAgOffice() {
-		return agOffice;
-	}
-
-	/**
-	 * @param agOffice
-	 *            the agOffice to set
-	 */
-	public void setAgOffice(List<PmAgOffice> agOffice) {
-		this.agOffice = agOffice;
-	}
-
-	/**
-	 * @return the pmOrgProfile
-	 */
-	public List<PmOrgProfile> getPmOrgProfile() {
-		return pmOrgProfile;
-	}
-
-	/**
-	 * @param pmOrgProfile
-	 *            the pmOrgProfile to set
-	 */
-	public void setPmOrgProfile(List<PmOrgProfile> pmOrgProfile) {
-		this.pmOrgProfile = pmOrgProfile;
-	}
-
-	/**
-	 * @return the address
-	 */
-	public List<PmAddress> getAddress() {
-		return address;
-	}
-
-	/**
-	 * @param address
-	 *            the address to set
-	 */
-	public void setAddress(List<PmAddress> address) {
-		this.address = address;
-	}
-
-	/**
-	 * @return the addressTypes
-	 */
-	public List<PmAddressType> getAddressTypes() {
-		return addressTypes;
-	}
-
-	/**
-	 * @param addressTypes
-	 *            the addressTypes to set
-	 */
-	public void setAddressTypes(List<PmAddressType> addressTypes) {
-		this.addressTypes = addressTypes;
-	}
-
-	/**
-	 * @return the selectAddress
-	 */
-	public List<PmAddress> getSelectAddress() {
-		return selectAddress;
-	}
-
-	/**
-	 * @param selectAddress
-	 *            the selectAddress to set
-	 */
-	public void setSelectAddress(List<PmAddress> selectAddress) {
-		this.selectAddress = selectAddress;
-	}
-
-	/**
-	 * @return the selections
-	 */
-	public List<SelectItem> getSelections() {
-		return selections;
-	}
-
-	/**
-	 * @param selections
-	 *            the selections to set
-	 */
-	public void setSelections(List<SelectItem> selections) {
-		this.selections = selections;
+	public void setOfficeContactPerson(PmContact officeContactPerson) {
+		this.officeContactPerson = officeContactPerson;
 	}
 
 	/**
@@ -451,165 +267,48 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @return the pmPtjGroup
+	 * @return the orgTypeCode
 	 */
-	public PmPtjGroup getPmPtjGroup() {
-		return pmPtjGroup;
+	public String getOrgTypeCode() {
+		return orgTypeCode;
 	}
 
 	/**
-	 * @param pmPtjGroup
-	 *            the pmPtjGroup to set
+	 * @param orgTypeCode
+	 *            the orgTypeCode to set
 	 */
-	public void setPmPtjGroup(PmPtjGroup pmPtjGroup) {
-		this.pmPtjGroup = pmPtjGroup;
+	public void setOrgTypeCode(String orgTypeCode) {
+		this.orgTypeCode = orgTypeCode;
 	}
 
 	/**
-	 * @return the pmorgValidityList
+	 * @return the orgCode
 	 */
-	public List<PmOrgValidity> getPmorgValidityList() {
-		return pmorgValidityList;
+	public String getOrgCode() {
+		return orgCode;
 	}
 
 	/**
-	 * @param pmorgValidityList
-	 *            the pmorgValidityList to set
+	 * @param orgCode
+	 *            the orgCode to set
 	 */
-	public void setPmorgValidityList(List<PmOrgValidity> pmorgValidityList) {
-		this.pmorgValidityList = pmorgValidityList;
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
 	}
 
 	/**
-	 * @return the selectedOrgValidityList
+	 * @return the orgName
 	 */
-	public List<PmOrgValidity> getSelectedOrgValidityList() {
-		return selectedOrgValidityList;
+	public String getOrgName() {
+		return orgName;
 	}
 
 	/**
-	 * @param selectedOrgValidityList
-	 *            the selectedOrgValidityList to set
+	 * @param orgName
+	 *            the orgName to set
 	 */
-	public void setSelectedOrgValidityList(
-			List<PmOrgValidity> selectedOrgValidityList) {
-		this.selectedOrgValidityList = selectedOrgValidityList;
-	}
-
-	/**
-	 * @return the selectedPmOrgProfile
-	 */
-	public List<PmOrgProfile> getSelectedPmOrgProfile() {
-		return selectedPmOrgProfile;
-	}
-
-	/**
-	 * @param selectedPmOrgProfile
-	 *            the selectedPmOrgProfile to set
-	 */
-	public void setSelectedPmOrgProfile(List<PmOrgProfile> selectedPmOrgProfile) {
-		this.selectedPmOrgProfile = selectedPmOrgProfile;
-	}
-
-	/**
-	 * @return the pmOrgValidity
-	 */
-	public PmOrgValidity getPmOrgValidity() {
-		return pmOrgValidity;
-	}
-
-	/**
-	 * @param pmOrgValidity
-	 *            the pmOrgValidity to set
-	 */
-	public void setPmOrgValidity(PmOrgValidity pmOrgValidity) {
-		this.pmOrgValidity = pmOrgValidity;
-	}
-
-	/**
-	 * @return the expDate
-	 */
-	public Date getExpDate() {
-		return expDate;
-	}
-
-	/**
-	 * @param expDate
-	 *            the expDate to set
-	 */
-	public void setExpDate(Date expDate) {
-		this.expDate = expDate;
-	}
-
-	/**
-	 * @return the effDate
-	 */
-	public Date getEffDate() {
-		return effDate;
-	}
-
-	/**
-	 * @param effDate
-	 *            the effDate to set
-	 */
-	public void setEffDate(Date effDate) {
-		this.effDate = effDate;
-	}
-
-	/**
-	 * @return the pmContacts
-	 */
-	public List<PmContact> getPmContacts() {
-		return pmContacts;
-	}
-
-	/**
-	 * @param pmContacts the pmContacts to set
-	 */
-	public void setPmContacts(List<PmContact> pmContacts) {
-		this.pmContacts = pmContacts;
-	}
-
-	/**
-	 * @return the selectedAddressTypes
-	 */
-	public List<PmAddressType> getSelectedAddressTypes() {
-		return selectedAddressTypes;
-	}
-
-	/**
-	 * @param selectedAddressTypes the selectedAddressTypes to set
-	 */
-	public void setSelectedAddressTypes(List<PmAddressType> selectedAddressTypes) {
-		this.selectedAddressTypes = selectedAddressTypes;
-	}
-
-	/**
-	 * @return the zones
-	 */
-	public List<PmZone> getZones() {
-		return zones;
-	}
-
-	/**
-	 * @param zones the zones to set
-	 */
-	public void setZones(List<PmZone> zones) {
-		this.zones = zones;
-	}
-
-	/**
-	 * @return the zoneId
-	 */
-	public Long getZoneId() {
-		return zoneId;
-	}
-
-	/**
-	 * @param zoneId the zoneId to set
-	 */
-	public void setZoneId(Long zoneId) {
-		this.zoneId = zoneId;
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
 	}
 
 	/**
@@ -620,24 +319,56 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param orgStatus the orgStatus to set
+	 * @param orgStatus
+	 *            the orgStatus to set
 	 */
 	public void setOrgStatus(String orgStatus) {
 		this.orgStatus = orgStatus;
 	}
 
 	/**
-	 * @return the orgTypeCode
+	 * @return the orgType
 	 */
-	public String getOrgTypeCode() {
-		return orgTypeCode;
+	public String getOrgType() {
+		return orgType;
 	}
 
 	/**
-	 * @param orgTypeCode the orgTypeCode to set
+	 * @param orgType
+	 *            the orgType to set
 	 */
-	public void setOrgTypeCode(String orgTypeCode) {
-		this.orgTypeCode = orgTypeCode;
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+
+	/**
+	 * @param orgProfile
+	 *            the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
+	}
+
+	/**
+	 * @return the orgValidity
+	 */
+	public PmOrgValidity getOrgValidity() {
+		return orgValidity;
+	}
+
+	/**
+	 * @param orgValidity
+	 *            the orgValidity to set
+	 */
+	public void setOrgValidity(PmOrgValidity orgValidity) {
+		this.orgValidity = orgValidity;
 	}
 
 	/**
@@ -648,68 +379,116 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	}
 
 	/**
-	 * @param currentDate the currentDate to set
+	 * @param currentDate
+	 *            the currentDate to set
 	 */
 	public void setCurrentDate(Date currentDate) {
 		this.currentDate = currentDate;
 	}
 
 	/**
-	 * @return the selectedAddress
+	 * @return the zoneList
 	 */
-	public PmAddress getSelectedAddress() {
-		return selectedAddress;
+	public List<PmZone> getZoneList() {
+		return zoneList;
 	}
 
 	/**
-	 * @param selectedAddress the selectedAddress to set
+	 * @param zoneList
+	 *            the zoneList to set
 	 */
-	public void setSelectedAddress(PmAddress selectedAddress) {
-		this.selectedAddress = selectedAddress;
+	public void setZoneList(List<PmZone> zoneList) {
+		this.zoneList = zoneList;
 	}
 
 	/**
-	 * @return the selectedPmAddressType
+	 * @return the pmAddressType
 	 */
-	public PmAddressType getSelectedPmAddressType() {
-		return selectedPmAddressType;
+	public PmAddressType getPmAddressType() {
+		return pmAddressType;
 	}
 
 	/**
-	 * @param selectedPmAddressType the selectedPmAddressType to set
+	 * @param pmAddressType
+	 *            the pmAddressType to set
 	 */
-	public void setSelectedPmAddressType(PmAddressType selectedPmAddressType) {
-		this.selectedPmAddressType = selectedPmAddressType;
+	public void setPmAddressType(PmAddressType pmAddressType) {
+		this.pmAddressType = pmAddressType;
 	}
 
 	/**
-	 * @return the pmFinancialOrg
+	 * @return the zoneId
 	 */
-	public List<PmFinancialOrg> getPmFinancialOrg() {
-		return pmFinancialOrg;
+	public Long getZoneId() {
+		return zoneId;
 	}
 
 	/**
-	 * @param pmFinancialOrg the pmFinancialOrg to set
+	 * @param zoneId
+	 *            the zoneId to set
 	 */
-	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
-		this.pmFinancialOrg = pmFinancialOrg;
+	public void setZoneId(Long zoneId) {
+		this.zoneId = zoneId;
 	}
 
 	/**
-	 * @return the orgProfileList
+	 * @return the selectedDelAddressTypes
 	 */
-	public List<PmOrgProfile> getOrgProfileList() {
-		return orgProfileList;
+	public List<PmAddressType> getSelectedDelAddressTypes() {
+		return selectedDelAddressTypes;
 	}
 
 	/**
-	 * @param orgProfileList the orgProfileList to set
+	 * @param selectedDelAddressTypes
+	 *            the selectedDelAddressTypes to set
 	 */
-	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
-		this.orgProfileList = orgProfileList;
+	public void setSelectedDelAddressTypes(
+			List<PmAddressType> selectedDelAddressTypes) {
+		this.selectedDelAddressTypes = selectedDelAddressTypes;
 	}
 
+	/**
+	 * @return the selectedDeliveryAddressType
+	 */
+	public PmAddressType getSelectedDeliveryAddressType() {
+		return selectedDeliveryAddressType;
+	}
 
+	/**
+	 * @param selectedDeliveryAddressType
+	 *            the selectedDeliveryAddressType to set
+	 */
+	public void setSelectedDeliveryAddressType(
+			PmAddressType selectedDeliveryAddressType) {
+		this.selectedDeliveryAddressType = selectedDeliveryAddressType;
+	}
+
+	/**
+	 * @return the zone
+	 */
+	public PmZone getZone() {
+		return zone;
+	}
+
+	/**
+	 * @param zone the zone to set
+	 */
+	public void setZone(PmZone zone) {
+		this.zone = zone;
+	}
+
+	/**
+	 * @return the officeAddressTypeList
+	 */
+	public List<PmAddressType> getOfficeAddressTypeList() {
+		return officeAddressTypeList;
+	}
+
+	/**
+	 * @param officeAddressTypeList the officeAddressTypeList to set
+	 */
+	public void setOfficeAddressTypeList(List<PmAddressType> officeAddressTypeList) {
+		this.officeAddressTypeList = officeAddressTypeList;
+	}
 
 }

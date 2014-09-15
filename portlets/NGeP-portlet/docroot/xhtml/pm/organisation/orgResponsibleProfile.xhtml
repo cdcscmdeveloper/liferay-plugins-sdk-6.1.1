@@ -3,52 +3,54 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-<ac:lovPopup />
-	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
-		toggleable="true">
-		<p:dataTable id="openPnlId" var="org"
-			value="#{organisationBackingBean.managedBean.pmOrgProfile}"
-			rowIndexVar="index" styleClass="openPnlId"
+
+		<p:panel>
+		<p:dataTable id="govtSellerId" var="data" rowKey="#{data}"
+			rowIndexVar="index"
 			selection="#{organisationBackingBean.managedBean.selectedPmOrgProfile}"
-			rowKey="#{cateGory}">
+			value="#{organisationBackingBean.managedBean.pmOrgProfile}">
+			<ac:paginator for="govtSellerId" />
+			<p:column selectionMode="multiple" style="width:2%" />
+			
 
-			<p:column selectionMode="multiple" style="width:2%"></p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
-				style="width:15%">
-				 <ac:lov id="openPtj" lovId="PM_ORG_PROFILE"
-					headerText="Category Lov"
-					saveObject="organisationBackingBean.managedBean.pmOrgProfile[#{index}].pmOrgValidity"
-					value="#{org.pmOrgValidity.orgCode}"
-					update=":form:openPnlId">
-				</ac:lov> 
-				
+			<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.org.type']}"
+				style="width:10%">
+				<h:outputText
+					value="#{data.pmOrgValidity.orgCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
-				style="width:15%; white-space: normal;">
-				<h:outputText value="#{org.pmOrgValidity.orgCode}" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
-				style="width:15%; white-space: normal;">
-				<h:outputText value="#{org.pmOrgValidity.orgName}" />
-			</p:column>
-
+			
 
 		</p:dataTable>
-		<div align="right">
+
+		<div>
 			
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
-				update="openPnlId" icon="ui-icon-add"
-				actionListener="#{organisationBackingBean.addNewPtjAction}" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" process="@this,openPnlId" partialSubmit="true"
-				action="#{organisationBackingBean.deletePtjAction}"
-				update="openPnlId" />
+				<table style="width: 100%">
+					<tr>
+						<td class="TableFieldLeft" width="80%"></td>
+						<td>
+							<table>
+								<tr>
+									<td class="TableFieldLeft"><ac:lov id="govtSeller"
+											lovId="PM_ORG_PROFILE"
+											postUpdateListener="organisationBackingBean.ptjGroupListener(organisationBackingBean.managedBean.orgProfileList)"
+											headerText="Government Seller" buttonLabel="Add"
+											buttonIcon="ui-icon-add" selectionMode="multiple"
+											saveObject="organisationBackingBean.managedBean.orgProfileList"
+											conditionField="recordStatus^1" update="@form" /></td>
+									<td><p:commandButton
+											value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
+											process="@this,govtSellerId" partialSubmit="true"
+											action="#{organisationBackingBean.deletePtjGroup}"
+											update="govtSellerId" icon="ui-icon-delete" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			
 		</div>
-
+		<ac:lovPopup />
 	</p:panel>
 	<p:spacer height="1" />
 

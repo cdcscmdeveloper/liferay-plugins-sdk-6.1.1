@@ -76,8 +76,12 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-
+<ac:lovPopup />
 		<div class="ppRightBtn">
+			<ac:lov id="supplier" lovId="PM_SUB_SETIA" headerText="User Selection"
+				buttonLabel="Add" buttonIcon="ui-icon-add" selectionMode="multiple"
+				saveObject="locationBackingBean.managedBean.signatoryUser"
+				update="@form" />
 
 			<p:commandButton id="addLocation"
 				value="#{lbl['lbl.pm.create.location']}" icon="ui-icon-add"

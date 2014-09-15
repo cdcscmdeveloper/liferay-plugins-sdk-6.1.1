@@ -4,5 +4,58 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:panel>
+		<p:dataTable id="govorgid" var="financialacc"
+			value="#{organisationBackingBean.managedBean.pmFinancialAcc}"
+			rowKey="#{financialacc}" rowIndexVar="rowIndex"
+			selection="#{organisationBackingBean.managedBean.selectedPmFinancialAcc}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="financialacc" />
+			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
+				<p:selectOneMenu
+							value="#{financialacc.financialAccId}" id="finorgn"
+							label="#{lbl['lbl.pm.financialorg.paymentbankname']}" required="true"
+							style="margin-bottom: 5px;">
+							<f:selectItem itemValue=" " itemLabel="---Select---" />
+							<f:selectItems var="finorgLs"
+								value="#{organisationBackingBean.managedBean.pmFinancialOrg}"
+								itemLabel="#{finorgLs.finOrgName}"
+								itemValue="#{finorgLs.financialOrgId}" />
+
+						</p:selectOneMenu> <p:message id="finorgnMsg" for="finorgn" display="icon" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
+
+				<p:inputText value="#{financialacc.accountNo}" size="15" />
+			</p:column>			
+			
+			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
+				<p:selectOneMenu
+					value="#{financialacc.recordStatusFlg}"
+					required="true" style="margin-bottom: 5px;">
+					<f:selectItems
+						value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				</p:selectOneMenu>
+
+			</p:column>
+
+		</p:dataTable>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,govorgid" partialSubmit="true"
+				action="#{organisationBackingBean.addFinancialAcc}"
+				update="govorgid" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}"
+				icon="ui-icon-delete" update="govorgid"
+				process="@this,govorgid" partialSubmit="true"
+				action="#{organisationBackingBean.deleteFinancialAcc}" />
+
+		</div>
+
+
+	</p:panel>
 	
 </ui:composition>

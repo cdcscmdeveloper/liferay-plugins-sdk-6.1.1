@@ -10,6 +10,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.VPmLocation;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -51,6 +52,7 @@ public class LocationManagedBean extends BaseManagedBean {
 	private List<PmCity> cites;
 
 	private List<VPmLocation> vPmLocation;
+	private List <PmSubSetia> signatoryUser;
 
 	private int status;
 
@@ -239,6 +241,20 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setDivisionStates(List<PmState> divisionStates) {
 		this.divisionStates = divisionStates;
+	}
+
+	/**
+	 * @return the signatoryUser
+	 */
+	public List <PmSubSetia> getSignatoryUser() {
+		return signatoryUser;
+	}
+
+	/**
+	 * @param signatoryUser the signatoryUser to set
+	 */
+	public void setSignatoryUser(List <PmSubSetia> signatoryUser) {
+		this.signatoryUser = signatoryUser;
 	}
 
 }
