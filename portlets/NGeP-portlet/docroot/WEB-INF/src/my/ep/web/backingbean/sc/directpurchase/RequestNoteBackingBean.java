@@ -1165,9 +1165,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    				}
 		    			}
 		    		}
-		    		// Add selected supplier item from compare 
-		    		supplierItems.add(requestSupplierItem);
+		    		
 		    	}
+		    	// Add selected supplier item from compare 
+	    		supplierItems.add(requestSupplierItem);
 		    } else{
 		    	// adding suppliers from search catalogue 
 		    	catalogueReqDTO = new CatalogueReqDTO();
@@ -1502,8 +1503,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}
 			}
-			scRequestSupplierItem.setSupplierItemPrices(supplierItemPrices);
-			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
+			scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 			getManagedBean().setPricingList(supplierItemPrices);
 		}
 	}

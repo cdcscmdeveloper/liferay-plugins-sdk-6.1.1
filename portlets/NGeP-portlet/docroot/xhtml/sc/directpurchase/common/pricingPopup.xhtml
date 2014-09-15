@@ -5,36 +5,38 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
      <p:dialog  id="pricingPopup" widgetVar="pricingPopup" modal="true" header="#{lbl['lbl.sc.pricing']}"
-		width="700" height="380" resizable="false" >
+        dynamic="true" styleClass="pop_up_top" 
+		width="700" height="380" resizable="false" closable="false">
+		
 	   <h:panelGroup>
 		<table style="width: 550px">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
 				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName}" /></td>
 			</tr>
 
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
 				<td><p:inputTextarea disabled="true" rows="2" cols="55" style="margin-bottom: 5px; width: 300px;"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.itemDesc}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemDesc}" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.managedBean.requestSupplierItem.requestNoteItem.uom.uomName}" /></td>
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomName}" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
 				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestSupplierItem.supplierItemPrice.priceType)}" /></td>
+						value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType)}" /></td>
 			</tr>
 		</table>
 		</h:panelGroup>
