@@ -219,8 +219,8 @@ public class SalutationBackingBean extends
 	 * 
 	 */
 	 public String saveSaluationDtls(){
-	
-	try {
+		 debugLogger("saveSaluationDtls");
+		 
 		 PmSalutation salutation= this.getManagedBean().getPmSalutation();
 		 validationMessage(salutation);
 		 
@@ -238,16 +238,8 @@ public class SalutationBackingBean extends
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			}
-	    } catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							"Record Save failed."));
-			throw e;
-		}
 		
-		  return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		  return "/xhtml/pm/salutation/salutationMain.xhtml";
 	 }
 	 
 	 
