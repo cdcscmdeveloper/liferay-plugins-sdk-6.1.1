@@ -12,6 +12,7 @@ import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.pm.taskassign.TaskAssignmentManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 /**
  * Backing Bean for Task Assignment
  * 
@@ -63,7 +64,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 * @param id
 	 * @return xhtml
 	 */
-	public String redirectToTaskReassign(Long id){
+	public void redirectToTaskReassign(Long id){
 		log.info("redirectToTaskReassign - Start");
 		try{
 //			if(id!=null && id>0){
@@ -74,7 +75,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			
 		}
 		log.info("redirectToTaskReassign - End");
-		return NAV_TO_MAINTAIN;
+//		return NAV_TO_MAINTAIN;
+		
+		RequestContext.getCurrentInstance().execute("dlTaskReassignment.show()");
 	}
 	
 }

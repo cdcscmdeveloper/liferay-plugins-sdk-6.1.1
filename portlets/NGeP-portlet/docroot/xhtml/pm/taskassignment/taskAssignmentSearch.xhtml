@@ -15,15 +15,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.ta.ministry']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somMinistry" label="#{lbl['lbl.pm.ta.ministry']}" styleClass="ppDropDownWidthM"  
-						>
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
-					</p:selectOneMenu>
-					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ministry']}"/>
-				</td>
-				<th>
+				 	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="20" 
+		            	update=":form:pTaskAssignSearch" readonly="true" 
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.pmOrgValidity.orgCode}" 
+						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry"
+						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1"/>
+						&#160;
 					
-				</th>
+				</td>
+				<td>
+					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ministry']}" disabled="true"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.pmOrgValidity.orgName}"/>
+				</td>
 				<td>
 					
 				</td>
@@ -33,15 +37,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.ta.ptj']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somPtj" label="#{lbl['lbl.pm.ta.ptj']}" styleClass="ppDropDownWidthM"  
-						>
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
-					</p:selectOneMenu>
-					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ptj']}"/>
+					<ac:lov id="lovPtj" lovId="PM_ORG_PROFILE" size="20" 
+		            	update=":form:pTaskAssignSearch" readonly="true" 
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.pmOrgValidity.orgCode}" 
+						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj"
+						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1"/>
+						&#160;
 				</td>
-				<th>
-					
-				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ptj']}" disabled="true"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.pmOrgValidity.orgName}"/>
+				</td>
 				<td>
 				
 				</td>
@@ -51,7 +58,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.username']}"/>
+					<p:selectOneMenu id="somPtj" label="#{lbl['lbl.pm.ta.username']}" styleClass="ppDropDownWidthM"  
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.userId}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
+					</p:selectOneMenu>
 				</td>
 				<th>
 					

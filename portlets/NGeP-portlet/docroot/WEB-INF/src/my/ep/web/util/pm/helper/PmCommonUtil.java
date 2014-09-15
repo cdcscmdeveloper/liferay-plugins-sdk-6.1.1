@@ -12,6 +12,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -31,6 +32,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -54,6 +57,7 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
 import my.ep.persistence.entity.pm.authorization.PmUserNotification;
@@ -598,5 +602,25 @@ public class PmCommonUtil {
 		return pmParameter;
 	}
 	
+	/**
+	 * retrieve org profile
+	 * @param id
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrievePmOrgProfile(Long id){
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		OrgProfileResDTO resDTO = null;
+		reqDTO.setUserId(id);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+		if(resDTO.isSuccessful()){
+			pmOrgProfile = resDTO.getPmOrgProfile();
+		}
+				
+			
+		return pmOrgProfile;
+	}
 
 }

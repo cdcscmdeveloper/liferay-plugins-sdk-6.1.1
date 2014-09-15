@@ -34,4 +34,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	   	</p:dataTable> 
 	
 	</p:panel>
+	  			 <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(null)}" >
+					<p:graphicImage value="/css/images/design/edit.png"/>
+				</p:commandLink> 	
+	<!-- Task Selection Popup -->
+	<ui:include src="/xhtml/pm/taskassignment/taskReassignPopup.xhtml" />
 </ui:composition>

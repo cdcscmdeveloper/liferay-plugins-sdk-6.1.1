@@ -7,41 +7,46 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
-
-	<p:outputPanel id="opTaskReassign" header="#{lbl['lbl.pm.ta.result']}" toggleable="true">
-		<table class="ppTwoTable">
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}"/>
-				</th>
-				<td>
-					<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.type']}"/>
-				</td>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
-				</th>
-				<td>
-					<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.no']}"/>
-				</td>
-			</tr>
-		</table>
-		<br/>
-		<p:dataTable id="dtTaskReassign" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			 >
-			<ac:paginator for="dtTaskReassign" />
-	        <p:column headerText="#{lbl['lbl.pm.ta.name']}">  
-		    	
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.ta.designation']}">  
-	            
-	        </p:column> 
-	   	</p:dataTable> 
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}" 
-				immediate="true"/>
-			&#160;
-			<p:commandButton id="cbSuppDelete" value="#{lbl['lbl.btn.cancel']}"
-				immediate="true" />
-		</div>
-	</p:outputPanel>
+	<p:dialog id="dlTaskReassignment" header="#{lbl['lbl.pm.ta.task.reassignment']}" 
+		widgetVar="dlTaskReassignment" dynamic="true" width="1000" height="300">
+		<!-- Validation Message -->
+		<p:messages id="messagesRole" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+	
+		<p:outputPanel id="opTaskReassign" header="#{lbl['lbl.pm.ta.result']}" toggleable="true">
+			<table class="ppTwoTable">
+				<tr>
+					<th>
+						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}"/>
+					</th>
+					<td>
+						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"/>
+					</td>
+					<th>
+						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
+					</th>
+					<td>
+						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.no']}"  disabled="true"/>
+					</td>
+				</tr>
+			</table>
+			<br/>
+			<p:dataTable id="dtTaskReassign" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				 >
+				<ac:paginator for="dtTaskReassign" />
+		        <p:column headerText="#{lbl['lbl.pm.ta.name']}">  
+			    	
+		        </p:column>  
+		        <p:column headerText="#{lbl['lbl.pm.ta.designation']}">  
+		            
+		        </p:column> 
+		   	</p:dataTable> 
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}" oncomplete="dlTaskReassignment.hide()"
+					immediate="true"/>
+				&#160;
+				<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"
+					immediate="true" />
+			</div>
+		</p:outputPanel>
+	</p:dialog>
 </ui:composition>
