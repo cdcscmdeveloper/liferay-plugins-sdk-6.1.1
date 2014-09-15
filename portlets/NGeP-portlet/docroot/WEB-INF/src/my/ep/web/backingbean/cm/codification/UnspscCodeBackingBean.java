@@ -165,23 +165,24 @@ public class UnspscCodeBackingBean extends
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
 
-			// this block is to identify the request from Catalogue Admin or Supplier
-			if(isAllSupplier()) {
+			// this block is to identify the request from Catalogue Admin or
+			// Supplier
+			if (isAllSupplier()) {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
-				
+
 				if (smResDTO.getResultBean().getResultList().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_721017);
 				}
 				log.info("getSmSupplier: "
 						+ smResDTO.getResultBean().getResultList().get(0));
 				this.getManagedBean()
-				.getRequestCode()
-				.setSmSupplier(
-						smResDTO.getResultBean().getResultList().get(0));
-				
+						.getRequestCode()
+						.setSmSupplier(
+								smResDTO.getResultBean().getResultList().get(0));
+
 				reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
-				
+
 				log.info("normal unspsc request");
 			} else {
 				reqDTO.setProcessId(CDProcessNameConst.CA_UNSPSC_CODE_REQUEST_PROCESS_ID);
@@ -1118,6 +1119,16 @@ public class UnspscCodeBackingBean extends
 					return "reviewBeforeCreateTempCode";
 
 				}
+				// checking hierarchy of segment, family, class and commodity
+				if(!validateUnspscCodeHierarchy(this.getManagedBean()
+						.getSelectedLovUnspscSegment().getUnspscCode(), this
+						.getManagedBean().getSelectedLovUnspscfamily()
+						.getUnspscCode(), this.getManagedBean()
+						.getSelectedLovUnspscClass().getUnspscCode(), this
+						.getManagedBean().getSelectedLovUnspsc()
+						.getUnspscCode())){
+					return "reviewBeforeCreateTempCode";
+				}
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1167,10 +1178,7 @@ public class UnspscCodeBackingBean extends
 
 			System.out.println("***************Exception*****************");
 
-			throw new EpException(MessageConst.EP_MAJ_00001,
-					new String[] { ResourceBundleUtils.getMessage(null,
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
+			throw new EpException(MessageConst.EP_MAJ_00001);
 
 			// return "reviewBeforeCreateTempCode";
 		}
@@ -1187,6 +1195,106 @@ public class UnspscCodeBackingBean extends
 
 		// return "taskListView";
 		return "BPMtesting";
+
+	}
+
+	public boolean validateUnspscCodeHierarchy(String segnment, String family,
+			String classC, String comodity) {
+		String segmentIdentifier = segnment.substring(0, 2);
+		String familyIdentifier = family.substring(0, 4);
+		String classIdentifier = classC.substring(0, 6);
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+
+		if (!family.startsWith(segmentIdentifier)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716011,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		} else if (!classC.startsWith(familyIdentifier)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716011,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		} else if (!comodity.startsWith(classIdentifier)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716011,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+		//checking codes validity
+		if(!segnment.substring(2).equals("000000")){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716013,
+									new String[] { "Segment" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+       if(!family.substring(4).equals("0000")){
+    	   FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716013,
+									new String[] { "family" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+    	   return false;
+		}
+       if(!classC.substring(6).equals("00")){
+    	   FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716013,
+									new String[] { "Class" },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+    	   return false;
+       }
+		// checking for not redundant segment, familiy, class and commodity
+		segmentIdentifier = segmentIdentifier + "00";
+		if (segmentIdentifier.equals(familyIdentifier)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716012,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+		familyIdentifier = familyIdentifier + "00";
+		if (familyIdentifier.equals(classIdentifier)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716012,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+		classIdentifier = classIdentifier + "00";
+		if (classIdentifier.equals(comodity)) {
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_716012,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			return false;
+		}
+
+		return true;
 
 	}
 
@@ -1405,7 +1513,7 @@ public class UnspscCodeBackingBean extends
 		 * ().getServiceObject("cm",ICodificationSO.class); CodificationReqDTO
 		 * reqDTO = new CodificationReqDTO(); CodificationResDTO resDTO = null;
 		 */
-		
+
 		// ///check that there be at least one new request
 		if (!this.getManagedBean().getRequestExtCode().isRequestType()
 				&& !this.getManagedBean().getRequestExtCode().isRequestBrand()
@@ -1413,7 +1521,6 @@ public class UnspscCodeBackingBean extends
 						.isRequestMeasurement()
 				&& !this.getManagedBean().getRequestExtCode().isRequestColor()) {
 			throw new EpException(MessageConst.ERROR_716010);
-	
 
 		}
 		// //////////checking for redundancy
@@ -1441,8 +1548,6 @@ public class UnspscCodeBackingBean extends
 			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
 					.getColorName());
 		}
-		
-		
 
 		/*
 		 * if (this.getManagedBean().isTypeRedundancy()) { throw new
@@ -2121,11 +2226,11 @@ public class UnspscCodeBackingBean extends
 
 	public void preRenderView() {
 		log.debug("**********preRenderView**************");
-        this.getManagedBean().setSelectedLovUnspscSegment(null);
-        this.getManagedBean().setSelectedLovUnspscfamily(null);
-        this.getManagedBean().setSelectedLovUnspscClass(null);
-        this.getManagedBean().setSelectedLovUnspsc(null);
-        
+		this.getManagedBean().setSelectedLovUnspscSegment(null);
+		this.getManagedBean().setSelectedLovUnspscfamily(null);
+		this.getManagedBean().setSelectedLovUnspscClass(null);
+		this.getManagedBean().setSelectedLovUnspsc(null);
+
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
@@ -2221,11 +2326,11 @@ public class UnspscCodeBackingBean extends
 					.handleNavigation(fc, null,
 							"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
-				FacesContext fc = FacesContext.getCurrentInstance();
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"unspscResultNotification.xhtml");
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"unspscResultNotification.xhtml");
 		} else {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -2359,11 +2464,11 @@ public class UnspscCodeBackingBean extends
 				.remove(index);
 
 	}
-	
+
 	public void removeExtensionRecord() {
 
-		this.getManagedBean().getRequestExtCodeList()
-				.remove(0);//there is only one record
+		this.getManagedBean().getRequestExtCodeList().remove(0);// there is only
+																// one record
 
 	}
 
@@ -2557,16 +2662,19 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().setTypeRedundancy(false);
 		if (typeInput != null && !typeInput.equals("")) {
 			for (CmType type : this.getManagedBean().getTypeList()) {
-				if(!StringUtils.isBlank(type.getTypeName())) {
+				if (!StringUtils.isBlank(type.getTypeName())) {
 					if (type.getTypeName().toLowerCase()
 							.equals(typeInput.toLowerCase())) {
 						this.getManagedBean().setTypeRedundancy(true);
-	
-						throw new EpException(MessageConst.ERROR_716009,
-								new String[] { ResourceBundleUtils.getMessage(
-										"lbl.cm.type",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
+
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.type",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
 					}
 				}
 			}
@@ -2578,17 +2686,20 @@ public class UnspscCodeBackingBean extends
 		this.getManagedBean().setBarndRedundancy(false);
 		if (brandInput != null && !brandInput.equals("")) {
 			for (CmBrand brand : this.getManagedBean().getBrandList()) {
-				if(!StringUtils.isBlank(brand.getBrandName())) {
+				if (!StringUtils.isBlank(brand.getBrandName())) {
 					if (brand.getBrandName().toLowerCase()
 							.equals(brandInput.toLowerCase())) {
-	
+
 						this.getManagedBean().setBarndRedundancy(true);
-	
-						throw new EpException(MessageConst.ERROR_716009,
-								new String[] { ResourceBundleUtils.getMessage(
-										"lbl.cm.brand",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
+
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.brand",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
 					}
 				}
 			}
@@ -2602,45 +2713,51 @@ public class UnspscCodeBackingBean extends
 		if (MeasurmentInput != null && !MeasurmentInput.equals("")) {
 			for (CmMeasurement measur : this.getManagedBean()
 					.getMeasurementList()) {
-				
-				if(!StringUtils.isBlank(measur.getMeasurementName())) {
+
+				if (!StringUtils.isBlank(measur.getMeasurementName())) {
 					if (measur.getMeasurementName().toLowerCase()
 							.equals(MeasurmentInput.toLowerCase())) {
 						this.getManagedBean().setMeasurRedundancy(true);
-	
-						throw new EpException(MessageConst.ERROR_716009,
-								new String[] { ResourceBundleUtils.getMessage(
-										"lbl.cm.measurement",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
+
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.measurement",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
 					}
 				}
 			}
 		}
 	}
-	
-	public String backToPendingCodified(){
+
+	public String backToPendingCodified() {
 		return "searchUnspscToAssign";
 	}
-	
+
 	public void checkingColorRedundency(String colorInput) {
 		log.info(".....checking redundancy for colorInput=" + colorInput);
 		log.info("colorList " + this.getManagedBean().getColorList());
 		this.getManagedBean().setColorRedundancy(false);
 		if (colorInput != null && !colorInput.equals("")) {
 			for (CmColor color : this.getManagedBean().getColorList()) {
-				if(!StringUtils.isBlank(color.getColorName())) {
+				if (!StringUtils.isBlank(color.getColorName())) {
 					if (color.getColorName().toLowerCase()
 							.equals(colorInput.toLowerCase())) {
 						this.getManagedBean().setColorRedundancy(true);
 						log.info("this.getManagedBean().isColorRedundancy()="
 								+ this.getManagedBean().isColorRedundancy());
-						throw new EpException(MessageConst.ERROR_716009,
-								new String[] { ResourceBundleUtils.getMessage(
-										"lbl.cm.color",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										new FacesScopes().getUserLocale()) });
-	
+						throw new EpException(
+								MessageConst.ERROR_716009,
+								new String[] { ResourceBundleUtils
+										.getMessage(
+												"lbl.cm.color",
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes()
+														.getUserLocale()) });
+
 					}
 				}
 			}
