@@ -131,7 +131,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  catReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
 		  ScPrInquiry scPrInquiry = new ScPrInquiry(); 
 		  ScRequestItem requestItem = createRequestItem(cmSupplierItem);
-		  if(cmSupplierItem != null && cmSupplierItem.getCmPricings().size() > 0) {
+		  if(cmSupplierItem != null) {
 			  ScSupplierItemPrice supplierItemPrice = new ScSupplierItemPrice();
 			  // TODO Check active CmPricings
 			  CatalogueResDTO catResDTO = catalogueSO.findActivePricing(catReqDTO);
@@ -139,7 +139,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			  cmSupplierItem.setCmPricings(pricings);
 			  this.getManagedBean().setSupplierItem(cmSupplierItem);
 			  
-			  if(cmSupplierItem.getCmPricings() != null && cmSupplierItem.getCmPricings() .size() > 0){
+			  if(cmSupplierItem.getCmPricings() != null && cmSupplierItem.getCmPricings().size() > 0){
 				  supplierItemPrice.setPricing(cmSupplierItem.getCmPricings().get(0));
 				  // price type
 				  parameterReqDTO = new ParameterReqDTO();
@@ -171,13 +171,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  requestNoteDtl.setJustificationType(pmParameter);
 		  
 		  // TODO check supplier is government seller or not 
-		  if(cmSupplierItem.getSmSupplier().getPmOrgProfile() != null &&
-				  cmSupplierItem.getSmSupplier().getPmOrgProfile().isGovtSeller()){
+		  if(isGovtSellerOrNot(cmSupplierItem)){
 			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_G2G);
 			  requestNoteDtl.setProcurementType(pmParameter);
 			  getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.TRUE));
 
 		  } else {
+			  
 			  pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 			  requestNoteDtl.setProcurementType(pmParameter);
 			  getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE , Boolean.FALSE));
@@ -271,6 +271,23 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				}
 			}
 		  return "prInquiryMain";		 
+	  }
+	  
+	  private boolean isGovtSellerOrNot(CmSupplierItem  cmSupplierItem){
+		  Boolean isg2g = Boolean.FALSE;
+		  IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		  OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		  reqDTO.setOrgProfileId(cmSupplierItem.getSmSupplier().getSupplierId());
+		  OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
+
+		  if(resDTO.getPmOrgProfile() != null){
+			  if(resDTO.getPmOrgProfile().isGovtSeller()){
+				  isg2g = Boolean.TRUE;
+			  } else {
+				  isg2g = Boolean.FALSE;
+			  }
+		  }
+		  return isg2g;
 	  }
 
 	  private ScRequestSupplierItem createScRequestSupplierItem(ScRequestItem requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
