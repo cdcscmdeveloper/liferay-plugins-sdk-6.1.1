@@ -156,7 +156,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			managedBean = facesContext.getApplication().evaluateExpressionGet(
 					facesContext, "#{" + managedBeanName + "}", managedBeanClazz);
 			
-			log.info("managedBean:" + managedBean);
+			if (log.isDebugEnabled()) {
+				log.debug("managedBean:" + managedBean);
+			}
 		}
 		
 		return managedBean;
