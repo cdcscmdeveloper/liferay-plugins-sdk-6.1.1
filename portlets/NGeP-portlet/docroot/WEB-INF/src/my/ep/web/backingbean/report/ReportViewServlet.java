@@ -55,7 +55,7 @@ public class ReportViewServlet extends HttpServlet {
 			}
 			bufferedInputStream.close();
 			outputStream.write(content);
-			response.setContentType("application/octet-stream");
+			response.setContentType("application/pdf");
 			response.setContentLength(urlConnection.getContentLength());
 			response.setHeader("Content-Disposition",
 					"inline; filename=NgePReport.pdf");
