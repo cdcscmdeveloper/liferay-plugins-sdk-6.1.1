@@ -3230,7 +3230,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}		
 	}
 	private void loadReport() {
-		InputStream input = null;
 		try {			
 			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
@@ -3246,6 +3245,101 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}
 	}
 	/*
+	 *Generate SM module report  
+	 */	
+	public void generateSMReport(){	
+		String url="";
+		if(((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL))||((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL))||((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL))||((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL))||((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL))){
+			
+			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
+			}
+			if((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getItemType());
+			}
+			if((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getItemStatus());
+			}
+			if((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getUnspscCode());
+			}
+			if((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getUnspscTitle());
+			}			
+			if((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getExtentionType());
+			}
+			if((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ+this.getExtentionBrand());
+			}
+			if((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ+this.getExtentionMeasurment());
+			}
+			if((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ+this.getExtentionColour());
+			}				
+			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
+			}
+			if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getRegistrationType());
+			}
+			if((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getItemCategory());
+			}
+			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
+			}
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
+			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
+			}
+			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+			}
+			if((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setEpNumberTotVar(ReportConst.AMP_EP_NO_EQ+this.getEpNumber());
+			}
+			if((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setBusinessRegNoTotVar(ReportConst.AMP_BUSI_REG_NO_EQ+this.getBusinessRegNo());
+			}
+			if((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setIcNumberTotVar(ReportConst.AMP_IC_NO_EQ+this.getIcNumber());
+			}
+			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
+			}
+			//-----------
+			Map<String, String> urlCMReportNameJsps = new HashMap<String, String>();
+			urlCMReportNameJsps.put(ReportConst.LST_PUB_CAT_ITM_RPT_VAL, ReportConst.CM_PUB_CAT_ITM_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_REJ_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlCMReportNameJsps.put(ReportConst.LST_EXP_CAT_ITM_RPT_VAL, ReportConst.CM_EXP_CAT_ITM_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_STS_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_STWISE_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_UNSPSCWISE_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_STD_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_TIER_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_TIER_PRC_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL, ReportConst.EMPTY_VAL);			
+			urlCMReportNameJsps.put(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL, ReportConst.CM_REJ_CAT_ITM_SMRY_JSP);			
+			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL, ReportConst.CM_APPR_N_REJ_CAT_ITM_JSP);			
+			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL, ReportConst.CM_UNSPSC_CODE_REQ_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.CM_NEW_EXT_CODE_CREAT_JSP);
+			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
+			//-----------			
+			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
+			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+			setGeneratedURL(url);
+			log.info(url);
+		}else{
+			RequestContext context = RequestContext.getCurrentInstance();  
+	        context.addCallbackParam("reportInValid", "true");  
+			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+		}
+	}
+	/*
 	 *Generate SC module report  
 	 */
 	public void generateSCReport(){
@@ -3255,9 +3349,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL)){
 				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);	
 			}			
-			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;				
-			setGeneratedURL(url);
-			log.info(url);
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;				
+				setGeneratedURL(url);
+				log.info(url);
+			}else{
+				RequestContext context = RequestContext.getCurrentInstance();  
+		        context.addCallbackParam("reportInValid", "true");
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}
 		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
 			if((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getQuotationId());
@@ -3298,10 +3398,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.FINANCE_POSITION_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);			
-			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));			
-			String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;			
-			setGeneratedURL(url);
-			log.info(url);
+			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));						
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				String url =ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+				setGeneratedURL(url);
+				log.info(url);
+			}else{
+				RequestContext context = RequestContext.getCurrentInstance();  
+		        context.addCallbackParam("reportInValid", "true");
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}			
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam("reportInValid", "true");
@@ -3393,9 +3499,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.CM_NEW_EXT_CODE_CREAT_JSP);
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
-			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-			setGeneratedURL(url);
+			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+				setGeneratedURL(url);
+			}else{
+				RequestContext context = RequestContext.getCurrentInstance();  
+		        context.addCallbackParam("reportInValid", "true");
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}
 			log.info(url);
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
@@ -3595,16 +3707,21 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlFLReportNameJsps.put(ReportConst.SUP_PERF_RPT_PO_VAL, ReportConst.EMPTY_VAL);
 			urlFLReportNameJsps.put(ReportConst.SUMM_RPT_PAN_ITM_VAL, ReportConst.EMPTY_VAL);			
 			rptGenBean.setUrlReportJSPName(urlFLReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			
-			String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				String url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;				
+				setGeneratedURL(url);
+				log.info(url);
+			}else{
+				RequestContext context = RequestContext.getCurrentInstance();  
+		        context.addCallbackParam("reportInValid", "true");
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}			
 			/*try {
 				ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 				externalContext.redirect(url);				
 			} catch (IOException e) {				
 				e.printStackTrace();
-			}*/
-			setGeneratedURL(url);
-			log.info(url);
+			}*/			
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam("reportInValid", "true");
@@ -3763,8 +3880,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        byte[] buf = new byte[1024];
 	        try {
 	            for (int readNum; (readNum = input.read(buf)) != -1;) {
-	                bos.write(buf, 0, readNum); 
-	                System.out.println("read " + readNum + " bytes,");
+	                bos.write(buf, 0, readNum); 	               
 	            }
 	        } catch (IOException ex) {
 	        	ex.printStackTrace();

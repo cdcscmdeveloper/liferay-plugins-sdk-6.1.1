@@ -446,5 +446,6 @@ public class ReportConst {
 	public static final String DISC_SECRETARY_HQ = "DISC_SECRETARY_HQ";
 	public static final String DISC_SECRETARY_SA = "DISC_SECRETARY_SA";
 	public static final String DISC_SECRETARY_SK = "DISC_SECRETARY_SK";
-	public static final String DISC_SECRETARY = "DISC_SECRETARY";	
+	public static final String DISC_SECRETARY = "DISC_SECRETARY";
+	public static final String NO_URL_PROVIDED_FOR_THIS_RPT = "lbl.rpt.search.criteria.NO_URL_PROVIDED_FOR_THIS_RPT";
 }
