@@ -1640,15 +1640,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					String subSetiaCode = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getSubSetiaCode();
 					getManagedBean().setSubSetiaCode((subSetiaCode));
 					
-					if(childData.getPmSubSetia().getPmSetia()!=null) {
-						//String setiaCode = setiaCodeMap.get(childData.getPmSubSetia().getPmSetia().getSetiaId()).getSetiaCode();
-						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
-						
-//						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
-//							String projectCode = projectCodeMap.get(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId()).getProjectCode();
-							getManagedBean().setProjectCode("test kk");
-//						}
-					}
+						getManagedBean().setSetiaCode("setiaCODE");
+						getManagedBean().setProjectCode("test kk");
 					getManagedBean().setFinancingTypeCode("TEST KK");
 				}
 			}
