@@ -235,7 +235,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			docCategoryChange();
 		}catch (Exception e){
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve document. " + e.toString()); //TODO
+			throw new EpException(MessageConst.ERROR_770062, new String[]{e.getMessage()});
+
 		}
 		log.info("loadSupportDoc - End");
 	}
@@ -395,7 +396,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().getDeleteAppTypeRestrictions().clear();
 
 			}else{
-				throw new EpException("At least one restriction must be selected.");
+				throw new EpException(MessageConst.ERROR_770063);
 			}
 		}else if(restrictionType == RESTR_COMP){
 			if(this.getManagedBean().getDeleteComTypeRestrictions()!=null && !this.getManagedBean().getDeleteComTypeRestrictions().isEmpty()){
@@ -408,7 +409,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().getDeleteComTypeRestrictions().clear();
 
 			}else{
-				throw new EpException("At least one restriction must be selected.");
+				throw new EpException(MessageConst.ERROR_770063);
 			}
 		}else if(restrictionType == RESTR_SUPP){
 			if(this.getManagedBean().getDeleteSuppTypeRestrictions()!=null && !this.getManagedBean().getDeleteSuppTypeRestrictions().isEmpty()){
@@ -421,7 +422,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().getDeleteSuppTypeRestrictions().clear();
 
 			}else{
-				throw new EpException("At least one restriction must be selected.");
+				throw new EpException(MessageConst.ERROR_770063);
 			}
 		}else if(restrictionType == RESTR_CATEGORY){
 			if(this.getManagedBean().getDeleteCategoryRestrictions()!=null && !this.getManagedBean().getDeleteCategoryRestrictions().isEmpty()){
@@ -434,7 +435,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().getDeleteCategoryRestrictions().clear();
 
 			}else{
-				throw new EpException("At least one restriction must be selected.");
+				throw new EpException(MessageConst.ERROR_770063);
 			}
 		}else if(restrictionType == CHECKLIST){
 			if(this.getManagedBean().getDeleteCheckListRestrictions()!=null && !this.getManagedBean().getDeleteCheckListRestrictions().isEmpty()){
@@ -447,7 +448,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				this.getManagedBean().getDeleteCheckListRestrictions().clear();
 
 			}else{
-				throw new EpException("At least one restriction must be selected.");
+				throw new EpException(MessageConst.ERROR_770063);
 			}
 		}
 	}
@@ -470,7 +471,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				}
 				this.getManagedBean().getSelectedCategoryL3s().clear();
 			}else{
-				throw new EpException("Duplicate CategoryL3s are selected.");
+				throw new EpException(MessageConst.ERROR_770064);
 			}
 		}
 	}
@@ -489,13 +490,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				
 				for(PmDocumentRestr pmDocumentRestr: this.getManagedBean().getCategoryRestrictions()){
 					if(DbValueConst.RECORD_STATUS_ACTIVE == pmDocumentRestr.getRecordStatusFlg()){
-						System.out.println("getCategoryRestrictions.getCategoryL3Id()>>>>" +pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
 						categoryL3Id.add(pmDocumentRestr.getPmCategoryL3().getCategoryL3Id());
 					}
 				}	
 			
 				for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedCategoryL3s()){
-					System.out.println("getSelectedCategoryL3s.getCategoryL3Id()>>>>" + pmCategoryL3.getCategoryL3Id());
 					if(categoryL3Id.contains(pmCategoryL3.getCategoryL3Id())){
 						isUnique = false;
 						break;
@@ -532,7 +531,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 				
 		} catch (Exception e) {
-			throw new EpException("Unable to retrieve document: ", new String[]{e.getMessage()}); //TODO
+			throw new EpException(MessageConst.ERROR_770062, new String[]{e.getMessage()});
 		}
 		log.info("retrieveDocumentById - End");
 		return pmDocument;
@@ -619,7 +618,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve zone list."); //TODO
+			throw new EpException(MessageConst.ERROR_770065, new String[]{e.getMessage()});
 		}
 		return zoneList;
 	}
@@ -690,7 +689,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve pmCategoryL3."); //TODO
+			throw new EpException(MessageConst.ERROR_770066, new String[]{e.getMessage()});
 		}
 		return pmCategoryL3;
 	}
@@ -785,27 +784,27 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			//throw validation message accordingly
 			if(!isSelected){
 				if(RESTR_APP == restrictType){
-					throw new EpException(" Please select Application Type.");
+					throw new EpException(MessageConst.ERROR_770067);
 				}else if(RESTR_COMP == restrictType){
-					throw new EpException(" Please select Company Type.");
+					throw new EpException(MessageConst.ERROR_770068);
 				}else if(RESTR_SUPP == restrictType){
-					throw new EpException(" Please select Supplier Type.");
+					throw new EpException(MessageConst.ERROR_770069);
 				}else if(RESTR_CATEGORY == restrictType){
-					throw new EpException(" Please select Category Type.");
+					throw new EpException(MessageConst.ERROR_770070);
 				}else if(CHECKLIST == restrictType){
-					throw new EpException(" Please select Procurement Type.");
+					throw new EpException(MessageConst.ERROR_770071);
 				}
 			}else if(!isNotEmpty){
 				if(RESTR_APP == restrictType){
-					throw new EpException("At least one Application Type is required.");
+					throw new EpException(MessageConst.ERROR_770072);
 				}else if(RESTR_COMP == restrictType){
-					throw new EpException("At least one Company Type is required.");
+					throw new EpException(MessageConst.ERROR_770073);
 				}else if(RESTR_SUPP == restrictType){
-					throw new EpException("At least one Supplier Type is required.");
+					throw new EpException(MessageConst.ERROR_770074);
 				}else if(RESTR_CATEGORY == restrictType){
-					throw new EpException("At least one Category Type is required.");
+					throw new EpException(MessageConst.ERROR_770075);
 				}else if(CHECKLIST == restrictType){
-					throw new EpException("At least one Procurement Type is required.");
+					throw new EpException(MessageConst.ERROR_770076);
 				}
 			}
 //		}		
@@ -824,19 +823,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		List <PmDocumentRestr> pmDocumentRestrs = null; 
 		if(RESTR_APP == restrictType){
 			pmDocumentRestrs = this.getManagedBean().getAppTypeRestrictions();
-			errorMesg = "Duplicate Application Type being added to the list.";
 		}else if(RESTR_COMP == restrictType){
 			pmDocumentRestrs = this.getManagedBean().getComTypeRestrictions();
-			errorMesg = "Duplicate Company Type being added to the list.";
 		}else if(RESTR_SUPP == restrictType){
 			pmDocumentRestrs = this.getManagedBean().getSuppTypeRestrictions();
-			errorMesg = "Duplicate Supplier Type being added to the list.";
 		}else if(RESTR_CATEGORY == restrictType){
 			pmDocumentRestrs = this.getManagedBean().getCategoryRestrictions();
-			errorMesg = "Duplicate Category Type being added to the list.";
 		}else if(CHECKLIST == restrictType){
 			pmDocumentRestrs = this.getManagedBean().getCheckListRestrictions();
-			errorMesg = "Duplicate Procurement Type being added to the list.";
 		}
 
 		//Validation for unique restriction
@@ -861,7 +855,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			Set<Long> tempRestrictIdSet = new HashSet<Long>(tempRestrictIdList);
 			if(!tempRestrictIdList.isEmpty() && (tempRestrictIdSet.size()!=tempRestrictIdList.size())){
 				isUnique = false;
-				throw new EpException(errorMesg);
+				if(RESTR_APP == restrictType){
+					throw new EpException(MessageConst.ERROR_770077);
+				}else if(RESTR_COMP == restrictType){
+					throw new EpException(MessageConst.ERROR_770078);
+				}else if(RESTR_SUPP == restrictType){
+					throw new EpException(MessageConst.ERROR_770079);
+				}else if(RESTR_CATEGORY == restrictType){
+					throw new EpException(MessageConst.ERROR_770080);
+				}else if(CHECKLIST == restrictType){
+					throw new EpException(MessageConst.ERROR_770081);
+				}
 			}
 			
 		}
@@ -934,7 +938,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			
 		}catch(Exception e){
 			e.printStackTrace();
-			throw new EpException(MessageConst.ERROR_770001, new String[]{e.getMessage()}); //TODO
+			throw new EpException(MessageConst.ERROR_770082, new String[]{e.getMessage()}); 
 
 		}
 	}
@@ -946,12 +950,12 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	private void validateDocument(PmDocument pmDocument){
 		log.info("validateDocument");
 		if(pmDocument.getDocCategoryCode().getParameterId()==null){
-			throw new EpException("Document Category is mandatory.");
+			throw new EpException(MessageConst.ERROR_770083);
 		}
 		
 		if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 			if(StringUtils.isBlank(pmDocument.getDocName())){ 
-				throw new EpException("Document Name is mandatory.");
+				throw new EpException(MessageConst.ERROR_770084);
 			}else{
 				//doc name unique
 				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
@@ -983,13 +987,13 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 									pmDocument.getDocumentId()));
 				}
 				if(searchDocument(searchBean)){
-					throw new EpException("Document Name is duplicated in the same Document Category.");
+					throw new EpException(MessageConst.ERROR_770085);
 				}
 			}
 			
 			
 			if(pmDocument.getDisplaySeq()==null || pmDocument.getDisplaySeq()<=0){
-				throw new EpException("Display Seq is mandatory.");
+				throw new EpException(MessageConst.ERROR_770086);
 			}else{
 				//display seq unique
 				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
@@ -1020,17 +1024,17 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 									pmDocument.getDocumentId()));
 				}
 				if(searchDocument(searchBean)){
-					throw new EpException("Display Seq is duplicated in the same Document Category.");
+					throw new EpException(MessageConst.ERROR_770087);
 				}
 			}
 			
 		}else{
 			if(StringUtils.isBlank(pmDocument.getDocName())){ 
-				throw new EpException("Document Name is mandatory.");
+				throw new EpException(MessageConst.ERROR_770084);
 			}
 
 			if(pmDocument.getPmZone().getZoneId()==null){
-				throw new EpException("Supplier Zone is mandatory.");
+				throw new EpException(MessageConst.ERROR_770088);
 			}
 			
 			//doc name unique + zone id unique
@@ -1076,7 +1080,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 								pmDocument.getDocumentId()));
 			}
 			if(searchDocument(searchBean)){
-				throw new EpException("Document Name and Supplier Zone is duplicated in the same Document Category.");
+				throw new EpException(MessageConst.ERROR_770089);
 			}
 			
 		}
@@ -1118,14 +1122,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			resDTO = reqSO.saveDocument(reqDTO);
 			if(resDTO.isSuccessful()){
 				loadSupportDoc(resDTO.getDocument().getDocumentId());
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(
-						    FacesMessage.SEVERITY_INFO,
-						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getDocument().getDocName()},  //TODO
-					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					    		new FacesScopes().getUserLocale())
-				    		));
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+			    FacesMessage.SEVERITY_INFO,
+			    null,
+			    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				
 			}
 		} catch (Exception e) {
@@ -1290,7 +1290,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-//				throw new EpException(MessageConst.ERROR_770005); //TODO
 			}
 
 			return null;
