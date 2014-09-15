@@ -1311,23 +1311,12 @@ public class SPDetailBackingBean extends
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
-			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
-			ScQtCheckList scQtCheckList = scQtProposalChecklist
-					.getScQtCheckList();
-			ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
+			ScQt scQt = getManagedBean().getQt();
+			ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
 			this.getManagedBean().setScQtDoc(scQtDoc);
-
-			ScQt scQt = this.getManagedBean().getQt();
-			getManagedBean().setQt(scQt);
-
-			reqDTO.setQtId(scQt.getQtId());
-
-			// To retrieve financial spec details
-			ProposalResDTO resDTO = proposalSO
-					.retrieveFinancialSpecDtls(reqDTO);
 
 			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
 			TemplateSpecBean templateSpecBean = getManagedBean()
@@ -1335,12 +1324,20 @@ public class SPDetailBackingBean extends
 			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
 			templateSpecBean.setSpecMaster(specMaster);
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			templateSpecBean.setSupplier(scQtProposalChecklist
-					.getScQtProposal().getScQtSupplier().getSmSupplier());
-			templateSpecBackingBean
-					.retrieveTemplateSpecMaster(templateSpecBean);
+			templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(getManagedBean().getSupplierId());
+			templateSpecBean.setSupplier(smSupplier);
+			
+			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
+			
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+
+			// To retrieve financial spec details
+			ProposalResDTO resDTO = proposalSO
+					.retrieveFinancialSpecDtls(reqDTO);
 
 			if (scQt.getMaxProposal() > 1) {
 				if (scQt.isZonal()) {
