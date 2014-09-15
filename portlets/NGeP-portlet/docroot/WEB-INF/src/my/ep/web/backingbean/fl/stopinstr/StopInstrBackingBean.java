@@ -152,7 +152,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			FulfilmentResDTO resDTO = getFulfilmentOrderSO().retrieveStopInstruction(flReqDTO);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+			populateChargeLineData();
 			
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			if(resDTO.getFlStopInstr().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
@@ -285,7 +287,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			if(null==getManagedBean().getChargeLineItemRoot()){
-				 populateChargeLineData();
+//				 populateChargeLineData();
 			}
 		}
 	}

@@ -287,6 +287,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 		} else if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) { 
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
@@ -303,6 +304,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				stopInstrBB.renewSesionObject();
 				stopInstrBB.getManagedBean().setStopInstr(flStopInstr);
 				stopInstrBB.populateStopInstrItem();
+				stopInstrBB.populateChargeLineData();
 				
 				if(resDTO.getFlOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
