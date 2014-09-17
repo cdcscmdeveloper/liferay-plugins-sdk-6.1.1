@@ -777,8 +777,14 @@ public void ConstructSideTabMenu(){
 			        if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 				     	renewSesionObject();
 					    return CommonUIConst.ACKNOWLEDGE_PAGE;
-				    } else {
-				    	setValidateContractField(resDTO);
+				    }
+			        else {				    	
+				    	ContractReqDTO ctReqDTO = new ContractReqDTO();
+				    	ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+				    	ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+				    	
+				    	ContractResDTO ctResDTO = contractSO.retrieveContractVer(ctReqDTO);
+				    	setValidateContractField(ctResDTO);
 				    	ConstructSideTabMenu();
 			    	}
 			  }

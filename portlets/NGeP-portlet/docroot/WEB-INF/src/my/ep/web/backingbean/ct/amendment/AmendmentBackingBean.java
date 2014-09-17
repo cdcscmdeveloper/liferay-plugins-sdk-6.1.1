@@ -571,9 +571,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			             if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
 					           renewSesionObject();
 					           return CommonUIConst.ACKNOWLEDGE_PAGE;
-				         } else{
-					           setAmendmentContractVer(resDTO);
-					           ConstructTabSideMenu();
+				         }
+			             else {
+			            	 ContractReqDTO ctReqDTO = new ContractReqDTO();
+						     ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+						     ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+						    
+						     ContractResDTO ctResDTO = contractSO.retrieveContractVer(ctReqDTO);
+						     setAmendmentContractVer(ctResDTO);
+						     ConstructTabSideMenu();
 				         }
 		       	   } else {
 				         throw new EpException("Failed.");
