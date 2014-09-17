@@ -27,7 +27,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
@@ -56,8 +55,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
@@ -629,7 +626,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		IQuoteSO quoteSO = null;
 		ScRequestNote requestNote = null;
 		try {
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
@@ -654,38 +650,27 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setRequestNote(requestNote);
 			}
 
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-			parameterReqDTO.setParameterCode(quote.getProcurementType().getParameterCode());
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-			quote.setProcurementType(resDTO.getPmParameter());
+			quote.setProcurementType(getParameterByTypeAndCode(
+					ParameterTypeConst.PROCUREMENT_TYPE, quote.getProcurementType().getParameterCode()));
 
 			// location level 
 			if(getManagedBean().getLocationLevel() != null){
-				parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				quote.setZoneLocatonLevel(resDTO.getPmParameter());
+				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
 			}
 			
 			// justification type
-			parameterReqDTO = new ParameterReqDTO();
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
 				if(quote.getJustificationType().getParameterCode() != null){
-					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
-					resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-					quote.setJustificationType(resDTO.getPmParameter());
+					quote.setJustificationType(getParameterByTypeAndCode(
+							ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC, quote.getJustificationType().getParameterCode()));
 				}
 			} else if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
 				if(quote.getJustificationType().getParameterCode() != null){
-					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
-					resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-					quote.setJustificationType(resDTO.getPmParameter());
+					quote.setJustificationType(getParameterByTypeAndCode(
+							ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY, quote.getJustificationType().getParameterCode()));
 				}
 			} else {
 				quote.setJustificationType(null);
@@ -858,9 +843,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		try {
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
-			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
 			
 			if(quote.getRequestItems() == null){
@@ -880,46 +863,34 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setRequestNote(requestNote);
 			}
 			
-				parameterReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE);
-				parameterReqDTO.setParameterCode(getManagedBean().getScQuote().getProcurementType().getParameterCode());
-				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				quote.setProcurementType(resDTO.getPmParameter());
+			quote.setProcurementType(getParameterByTypeAndCode(
+					ParameterTypeConst.PROCUREMENT_TYPE, getManagedBean().getScQuote().getProcurementType().getParameterCode()));
 			
 			// location level
 			if(getManagedBean().getLocationLevel() != null){
-				parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				parameterReqDTO.setParameterCode(getManagedBean().getLocationLevel());
-				 resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				quote.setZoneLocatonLevel(resDTO.getPmParameter());
+				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
 			}
 			
 			// justification type
-			parameterReqDTO = new ParameterReqDTO();
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC);
 				
-				if(quote.getJustificationType().getParameterCode() !=null){
-					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
-				} else{
+				if(quote.getJustificationType().getParameterCode() == null){
 					throw new EpException("Justification is madatory.");
 				}
 				
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				quote.setJustificationType(resDTO.getPmParameter());
+				quote.setJustificationType(getParameterByTypeAndCode(
+						ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC, quote.getJustificationType().getParameterCode()));
 			} else if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-				parameterReqDTO.setParameterType(ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY);
 				
-				if(quote.getJustificationType().getParameterCode() !=null){
-					parameterReqDTO.setParameterCode(quote.getJustificationType().getParameterCode());
-				} else{
+				if(quote.getJustificationType().getParameterCode() == null){
 					throw new EpException("Justification is madatory.");
 				}
 				
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-				quote.setJustificationType(resDTO.getPmParameter());
+				quote.setJustificationType(getParameterByTypeAndCode(
+						ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY, quote.getJustificationType().getParameterCode()));
 
 			} else{
 				quote.setJustificationType(null);

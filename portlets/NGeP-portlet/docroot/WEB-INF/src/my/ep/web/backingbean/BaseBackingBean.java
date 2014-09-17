@@ -427,6 +427,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 	
 	/**
+	 * Get parameter by parameter type and code.
+	 * 
+	 * @param parameterType
+	 * 		the parameter type
+	 * @param parameterCode
+	 * 		the parameter code
+	 * @return the PmParameter instance
+	 */
+	public PmParameter getParameterByTypeAndCode(String parameterType, String parameterCode) {
+		return ParameterHelper.getInstance().getParameterByTypeAndCode(parameterType, parameterCode);
+	}
+	
+	/**
 	 * Get status select items by module and doc type for dropdown.
 	 * 
 	 * @param parameterType

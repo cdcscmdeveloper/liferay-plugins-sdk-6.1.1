@@ -18,6 +18,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmDataRestrValue;
 import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -121,6 +122,36 @@ public class ParameterHelper {
 	public String getParameterDesc(String parameterType, String parameterCode) {
 		debugLogger("getParameterDescList.parameterType: " + parameterType + ", parameterCode: " + parameterCode);
 		
+		PmParameterDesc pmParameterDesc = getParameterDescByTypeAndCode(parameterType, parameterCode);
+		
+		if (pmParameterDesc != null) {
+			return pmParameterDesc.getCodeName();
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Get parameter by parameter type and code.
+	 * 
+	 * @param parameterType
+	 * 		the parameter type
+	 * @param parameterCode
+	 * 		the parameter code
+	 * @return the PmParameter instance
+	 */
+	public PmParameter getParameterByTypeAndCode(String parameterType, String parameterCode) {
+		PmParameterDesc pmParameterDesc = getParameterDescByTypeAndCode(parameterType, parameterCode);
+		
+		if (pmParameterDesc != null) {
+			return pmParameterDesc.getPmParameter();
+		} else {
+			return null;
+		}
+	}
+	
+	private PmParameterDesc getParameterDescByTypeAndCode(String parameterType, String parameterCode) {
+		
 		String languageCode = new FacesScopes().getUserLocale().getLanguage();
 		StringBuilder key = new StringBuilder()
 			.append(parameterType)
@@ -140,7 +171,7 @@ public class ParameterHelper {
 				// compare matched parameterCode.
 				if (pmParameterDesc.getPmParameter().getParameterCode()
 						.equals(parameterCode)) {
-					return pmParameterDesc.getCodeName();
+					return pmParameterDesc;
 				}
 			}
 			
@@ -163,7 +194,7 @@ public class ParameterHelper {
 				List<PmParameterDesc> list = getParameterDescFromCache(parameterDescIds);
 				
 				if (list.size() > 0) {
-					return list.get(0).getCodeName();
+					return list.get(0);
 				}
 			}
 		}
