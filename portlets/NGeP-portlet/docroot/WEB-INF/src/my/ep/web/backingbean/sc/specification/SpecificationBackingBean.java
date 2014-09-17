@@ -2058,6 +2058,7 @@ public class SpecificationBackingBean extends
 					if (null == list.getQtScoreWeightage()) {
 						ScQtScoreWeightage scoreWeightage = new ScQtScoreWeightage();
 						scoreWeightage.setScore(new BigDecimal(0));
+						// scoreWeightage.setScQtScoreOfferPrices(null);
 						setUserDetails(scoreWeightage);
 						list.setQtScoreWeightage(scoreWeightage);
 
@@ -2102,7 +2103,7 @@ public class SpecificationBackingBean extends
 					}
 					tmpCheckList.setTitle(sb.toString());
 
-					List<ScQtScoreOfferPrice> offerPrice = tmpCheckList
+					List<ScQtScoreOfferPrice> offerPrice = specChecklist.get(0)
 							.getQtScoreWeightage().getScQtScoreOfferPrices();
 					if (null == offerPrice || offerPrice.isEmpty()) {
 						offerPrice = new ArrayList<ScQtScoreOfferPrice>();
@@ -3301,7 +3302,7 @@ public class SpecificationBackingBean extends
 
 							}
 							if (getManagedBean().getIndex() == -1) {
-								
+
 								getManagedBean().getZoneTrees().add(
 										LocationSingleton.getInstance()
 												.buildLocationTree(null,
@@ -5422,13 +5423,28 @@ public class SpecificationBackingBean extends
 	}
 
 	public void deliveryAccept() {
-
+		IAddressSO addressSo = null;
 		try {
-			List<PmAddressType> deliveryList = this.getManagedBean()
+			List<PmAddressType> SelectdeliveryList = this.getManagedBean()
 					.getDeliveryAddressSelect();
-			if (deliveryList == null) {
-				deliveryList = new ArrayList<PmAddressType>();
+			if (SelectdeliveryList == null) {
+				SelectdeliveryList = new ArrayList<PmAddressType>();
 			}
+			List<PmAddressType> deliveryList = new ArrayList<PmAddressType>();
+			addressSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			List<Long> addresstypeId = new ArrayList<Long>();
+			if (null != SelectdeliveryList && !SelectdeliveryList.isEmpty()) {
+				for (PmAddressType addressType : SelectdeliveryList) {
+					addresstypeId.add(addressType.getAddressTypeId());
+				}
+				reqDTO.setAddressTypeIds(addresstypeId);
+				AddressResDTO resDTO = addressSo
+						.retrieveAddressTypeDtlListById(reqDTO);
+				deliveryList.addAll(resDTO.getAddressTypeList());
+			}
+
 			// List<ScQtDeliveryLoc> nonZone=new ArrayList<ScQtDeliveryLoc>();
 
 			List<BriefingZoneBean> zoneBean = this.getManagedBean()
@@ -5548,6 +5564,7 @@ public class SpecificationBackingBean extends
 					nonZone = new ArrayList<ScQtDeliveryLoc>();
 				}
 				for (PmAddressType addressType : deliveryList) {
+
 					ScQtDeliveryLoc loc = new ScQtDeliveryLoc();
 					loc.setPmAddressType(addressType);
 					String address1 = addressType.getPmAddress().getAddress1();
@@ -6141,7 +6158,7 @@ public class SpecificationBackingBean extends
 			try {
 				checkList.getScQtCheckListValue().setFromDate(
 						df.parse(fromdate));
-				//checkList.setScQt(this.getManagedBean().getScQt());
+				// checkList.setScQt(this.getManagedBean().getScQt());
 				checkList.getScQtCheckListValue().setToDate(df.parse(toDate));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -7310,7 +7327,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					scQt.setSampleReq(true);
-					break;
+
 				}
 
 			}
