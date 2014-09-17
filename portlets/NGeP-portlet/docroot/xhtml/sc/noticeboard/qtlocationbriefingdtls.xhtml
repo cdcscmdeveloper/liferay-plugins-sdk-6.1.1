@@ -54,7 +54,7 @@
 					style="width:100px;">
 					<p:commandLink style="margin-right:20px;;"
 						actionListener="#{noticeBoardBackingBean.showLocationDtls(brfsitdtl)}"
-						oncomplete="popupLoc.show()" update="(.locationpopup)">
+						oncomplete="popupLoc.show()" update="@(.locationpopup)">
 						<h:outputText value="#{brfsitdtl.location}" />
 					</p:commandLink>
 				</p:column>
