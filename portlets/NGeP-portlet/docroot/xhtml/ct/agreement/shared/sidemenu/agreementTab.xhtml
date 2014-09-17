@@ -46,7 +46,7 @@
 					<p:menuitem value="#{lbl['lbl.ct.ag.signeddtls']}" update="@form" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
-					 <p:menuitem value="#{lbl['lbl.ct.set.aprsetting']}" update="@form"
+					 <p:menuitem value="#{lbl['lbl.ct.menu.approver.setting']}" update="@form"
 					    rendered="#{!agreementBackingBean.isApprover() and agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>

@@ -490,8 +490,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 	private void validateAgreement(String outcome) {
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0 ||
-					getManagedBean().getCtAgreement().getSignAgreementRemark().length() == 0) {
+			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
 				throw new EpException(MessageConst.ERROR_100022,
 						new String[] { "Remark" });
 			}
