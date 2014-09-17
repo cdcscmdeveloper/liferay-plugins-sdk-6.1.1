@@ -3843,7 +3843,7 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 				System.out.println("view.getDocId()" + view.getDocId());
 				reqDTO.setDocId(view.getDocId());
 	
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItem(reqDTO);
 	
 				System.out.println("*****************end********************");
 	
