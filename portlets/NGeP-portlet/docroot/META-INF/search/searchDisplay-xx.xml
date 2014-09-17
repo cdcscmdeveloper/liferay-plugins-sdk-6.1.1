@@ -593,4 +593,52 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="PM_PROJECT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="doId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.projectsetia.SubSetiaDAO" />
+		<property name="searchMethod" value="retrieveSubSetiaDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmSetia.setiaCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.setia.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="subSetiaCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.sub.setia.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_PRG_ACTIVITY" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="prgActivityId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.programactivity.PrgActivityDAO" />
+		<property name="searchMethod" value="retrievePrgActivityDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="prgActivityCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.prog.activity.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.prog.activity.desc" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>
