@@ -43,7 +43,8 @@
 	    	<td class="ppRightBtn">
 	    		<c:if test="#{!terminationBackingBean.managedBean.viewContract}">
 				  	<ui:repeat var="outcome" value="#{terminationBackingBean.managedBean.action}">
-				        <p:commandButton value="#{outcome}"  process="@form" styleClass="ui-button" ajax="false" validateClient="true" 
+				        <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}"  process="@form" styleClass="ui-button" ajax="false" validateClient="true" 
 				         icon="ui-icon-#{fn:toLowerCase(outcome)}" action="#{terminationBackingBean.saveContractTermination(outcome)}" />
 			        </ui:repeat>  
 		        </c:if>   			

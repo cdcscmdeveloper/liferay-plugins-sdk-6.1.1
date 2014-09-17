@@ -46,7 +46,8 @@
 					<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" rendered="#{suspensionBackingBean.managedBean.taskId==null}" action="#{suspensionBackingBean.backAction}"/></td>
 					<td class="ppRightBtn">
 						<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" process="@form"
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+							<p:commandButton value="#{lbl[buttonLabel]}" process="@form"
 								styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
 								action="#{suspensionBackingBean.saveContractSuspension(outcome)}" />
 						</ui:repeat>

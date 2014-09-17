@@ -13,7 +13,8 @@
     <p:panel>
 	 <div class="ppRightBtn"> 
 	  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{panelBackingBean.saveCircular(action)}" />
+	  				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" process="@this" styleClass="ui-button" actionListener="#{panelBackingBean.saveCircular(action)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>

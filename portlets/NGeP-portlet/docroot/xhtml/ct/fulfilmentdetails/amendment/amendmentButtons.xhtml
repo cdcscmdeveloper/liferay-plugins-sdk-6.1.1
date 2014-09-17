@@ -9,7 +9,8 @@
 	     <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" rendered="#{amendmentBackingBean.managedBean.taskId==null}" action="#{amendmentBackingBean.backAction}" /></td>
 		 <td class="ppRightBtn">
 			<ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
-			  <p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
+			  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+			  <p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}" 
 				 action="#{amendmentBackingBean.saveContractAmendment(outcome)}" rendered="#{!amendmentBackingBean.managedBean.memberSignOff}" />						
 			</ui:repeat>
 		  </td>

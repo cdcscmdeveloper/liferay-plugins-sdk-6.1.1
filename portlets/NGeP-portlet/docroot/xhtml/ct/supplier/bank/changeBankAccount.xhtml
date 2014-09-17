@@ -21,7 +21,8 @@
 	    			    oncomplete="window.history.back();" rendered="false" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button"
+	    				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button"
 							   icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form" action="#{supplierBackingBean.saveChangeBankRequest(outcome)}"/>
 						</ui:repeat>	    			
 	    			</td>

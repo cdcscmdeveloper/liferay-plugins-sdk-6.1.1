@@ -19,7 +19,8 @@
 	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="false" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
-							<p:commandButton value="#{outcome}" ajax="false" styleClass="ui-button" process="@form" 
+	    				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" process="@form" 
 							icon="ui-icon-#{fn:toLowerCase(outcome)}" action="#{supplierBackingBean.saveFactoringRequest(outcome)}" />
 						</ui:repeat>	    			
 	    			</td>

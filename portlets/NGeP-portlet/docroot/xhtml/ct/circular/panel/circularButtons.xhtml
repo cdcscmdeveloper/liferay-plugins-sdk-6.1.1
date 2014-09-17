@@ -10,7 +10,8 @@
 	    <td class="ppRightBtn">
 	         <f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
 			 <ui:repeat var="action" value="#{panelBackingBean.managedBean.outComes}">
-			    <p:commandButton value="#{action}" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" update="@form" 
+			    <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" update="@form" 
 				   action="#{panelBackingBean.savePanelCircular(action)}" />
 			 </ui:repeat>	    			
 	    </td>

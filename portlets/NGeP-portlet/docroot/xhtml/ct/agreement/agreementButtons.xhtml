@@ -12,7 +12,8 @@
 			</td>
 			<td class="ppRightBtn">
 				<ui:repeat var="outcome" value="#{agreementBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" ajax="false" process="@form"
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+					<p:commandButton value="#{lbl[buttonLabel]}" ajax="false" process="@form"
 						styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(outcome)}"
 						  action="#{agreementBackingBean.saveAgreement(outcome)}" />
 				</ui:repeat>

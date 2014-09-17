@@ -10,7 +10,8 @@
 	    	<td class="ppRightBtn">
 	    	  <c:if test="#{!contractDetailsBackingBean.managedBean.viewContract}">
 			  	<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.action}">
-				  <p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
+			  	  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(action)}" />
+				  <p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
 					action="#{contractDetailsBackingBean.saveContract(action)}">
 				  </p:commandButton>
 				</ui:repeat>	
