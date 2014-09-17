@@ -94,7 +94,7 @@
 						<div align="right" style="width: 100%">
 						 <c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">	
 							<p:commandButton value="#{lbl['lbl.sc.sq.supp.criteria.add.btn']}"
-								process="@this ,locLevels" update="@([id$=locPopupPanel])"
+								process="@this ,locLevels" update="@form"
 								partialSubmit="true" oncomplete="locationPopup.show();"
 								actionListener="#{simpleQuoteBackingBean.showLocationPopup}"
 								icon="ui-icon-add"/>

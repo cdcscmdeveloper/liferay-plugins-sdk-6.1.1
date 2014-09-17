@@ -43,7 +43,7 @@
 				<p:column width="60%" style="text-align:right">
 					<p:commandButton
 						value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-						process="@all"  update="locPopupPanel,locationDataTable"
+						process="@all"  update="@form"
 						partialSubmit="true" icon="ui-icon-submit"
 						actionListener="#{simpleQuoteBackingBean.updateLocation}" />
 						
