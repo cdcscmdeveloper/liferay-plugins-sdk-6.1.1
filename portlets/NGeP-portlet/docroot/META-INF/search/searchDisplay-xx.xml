@@ -665,4 +665,28 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="PM_GL_ACCOUNT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="glAccountId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.glaccount.GlAccountDAO" />
+		<property name="searchMethod" value="retrieveGlAccountDtlList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="glAccCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.account.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.gl.account.desc" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>
