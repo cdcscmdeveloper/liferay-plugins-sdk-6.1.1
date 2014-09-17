@@ -25,21 +25,21 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
 				style="width:15%">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code}"></h:outputText>
+					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
-				style="width:15%">
+				style="width:15%;white-space: normal;">
 				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryL2Code}"></h:outputText>
+					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
-				style="width:20%">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryL3Code}"></h:outputText>
+				style="width:20%;white-space: normal;">
+				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.type']}"
-				style="width:20%">
+				style="width:20%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}"></h:outputText>
 			</p:column>

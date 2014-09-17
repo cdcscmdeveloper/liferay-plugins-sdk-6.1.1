@@ -387,96 +387,95 @@ public class SpecificationBackingBean extends
 	}
 
 	public void validateBusinessOwner(boolean isSpecComplete) {
-		
-			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
-			int activeIndex = this.getManagedBean().getActiveIndex();
 
-			SpecificationResDTO resDTO = null;
-			String taskId = this.getManagedBean().getTaskId();
-			String[] outComes = this.getManagedBean().getOutComes();
-			boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
-			CtPanelItem panelItem = null;
-			CtCircularVer circularVer = null;
-			List<CtPanelItem> panelList = this.getManagedBean()
-					.getSelectpanelItem();
+		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSpecSO.class);
+		int activeIndex = this.getManagedBean().getActiveIndex();
 
-			panelItem = this.getManagedBean().getCtPanelItem();
+		SpecificationResDTO resDTO = null;
+		String taskId = this.getManagedBean().getTaskId();
+		String[] outComes = this.getManagedBean().getOutComes();
+		boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
+		CtPanelItem panelItem = null;
+		CtCircularVer circularVer = null;
+		List<CtPanelItem> panelList = this.getManagedBean()
+				.getSelectpanelItem();
 
-			circularVer = this.getManagedBean().getCtCircularVer();
+		panelItem = this.getManagedBean().getCtPanelItem();
 
-			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-			switch (activeIndex) {
-			case 0:
-				ScQt scQt = prepareSpecReq().getScQt();
-				specReqDTO.setScQt(scQt);
-				specSO.validateBoGeneralInfo(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
+		circularVer = this.getManagedBean().getCtCircularVer();
+
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		switch (activeIndex) {
+		case 0:
+			ScQt scQt = prepareSpecReq().getScQt();
+			specReqDTO.setScQt(scQt);
+			specSO.validateBoGeneralInfo(specReqDTO);
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			renewSesionObject();
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+			setProcurementMode(resDTO.getScQt());
+			// this.getManagedBean().setQt(resDTO.getQtDetail());
+			break;
+		case 1:
+			ScQt scQtSupplier = prepareSpecReq().getScQt();
+			specReqDTO.setScQt(scQtSupplier);
+			specSO.validateSupplierQulificationInfo(specReqDTO);
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			renewSesionObject();
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveBusinessOwnerQualificationCriteri();
+
+			break;
+		case 2:
+			ScQt techSpec = prepareSpecReq().getScQt();
+
+			specReqDTO.setScQt(techSpec);
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			if (!isSpecComplete) {
 				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				setProcurementMode(resDTO.getScQt());
-				// this.getManagedBean().setQt(resDTO.getQtDetail());
-				break;
-			case 1:
-				ScQt scQtSupplier = prepareSpecReq().getScQt();
-				specReqDTO.setScQt(scQtSupplier);
-				specSO.validateSupplierQulificationInfo(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveBusinessOwnerQualificationCriteri();
-
-				break;
-			case 2:
-				ScQt techSpec = prepareSpecReq().getScQt();
-
-				specReqDTO.setScQt(techSpec);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				if (!isSpecComplete) {
-					renewSesionObject();
-				}
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
-				retriveTechnicalSpecification();
-				break;
-			case 3:
-				ScQt finSpec = prepareSpecReq().getScQt();
-
-				specReqDTO.setScQt(finSpec);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				if (!isSpecComplete) {
-					renewSesionObject();
-				}
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
-				retriveTechnicalSpecification();
-				retriveFinancialSpecification();
-				break;
-			case 4:
-				ScQt remarks = prepareSpecReq().getScQt();
-
-				specReqDTO.setScQt(remarks);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveApprovalRemarks();
-				break;
 			}
-			if (getManagedBean().getTempIndex() < activeIndex) {
-				getManagedBean().setTempIndex(activeIndex);
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+			retriveBusinessOwnerQualificationCriteri();
+			retriveTechnicalSpecification();
+			break;
+		case 3:
+			ScQt finSpec = prepareSpecReq().getScQt();
+
+			specReqDTO.setScQt(finSpec);
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			if (!isSpecComplete) {
+				renewSesionObject();
 			}
-			this.getManagedBean().setSelectPanelItem(selectPanelItem);
-			this.getManagedBean().setActiveIndex(activeIndex);
-			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setOutComes(outComes);
-			this.getManagedBean().setCtPanelItem(panelItem);
-			this.getManagedBean().setCtCircularVer(circularVer);
-			this.getManagedBean().setSelectpanelItem(panelList);
-		
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+			retriveBusinessOwnerQualificationCriteri();
+			retriveTechnicalSpecification();
+			retriveFinancialSpecification();
+			break;
+		case 4:
+			ScQt remarks = prepareSpecReq().getScQt();
+
+			specReqDTO.setScQt(remarks);
+			resDTO = specSO.saveQTDtl(specReqDTO);
+			renewSesionObject();
+			this.getManagedBean().setScQt(resDTO.getScQt());
+			retriveApprovalRemarks();
+			break;
+		}
+		if (getManagedBean().getTempIndex() < activeIndex) {
+			getManagedBean().setTempIndex(activeIndex);
+		}
+		this.getManagedBean().setSelectPanelItem(selectPanelItem);
+		this.getManagedBean().setActiveIndex(activeIndex);
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setOutComes(outComes);
+		this.getManagedBean().setCtPanelItem(panelItem);
+		this.getManagedBean().setCtCircularVer(circularVer);
+		this.getManagedBean().setSelectpanelItem(panelList);
 
 	}
 
@@ -3193,7 +3192,7 @@ public class SpecificationBackingBean extends
 							divisions.clear();
 							districts.clear();
 							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
-
+								division.setPmState(state);
 								// divisions.add(division);
 								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
 										.get(division);
@@ -3245,7 +3244,7 @@ public class SpecificationBackingBean extends
 								&& !districtsCitiesKeySet.isEmpty()) {
 							districts.clear();
 							for (PmDistrict district : districtsCitiesKeySet) {
-
+								district.setPmState(state);
 								districts.add(district);
 
 							}
@@ -3281,6 +3280,7 @@ public class SpecificationBackingBean extends
 		else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
 				.getManagedBean().getLocalLevelCode())) {
 			if (null != divisions && !divisions.isEmpty()) {
+
 				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
 						.getInstance().getUniqueStatesDivision(divisions);
 				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
@@ -3296,11 +3296,12 @@ public class SpecificationBackingBean extends
 								.get(state);
 						if (divisions1 != null && !divisions1.isEmpty()) {
 							for (PmDivision division : divisions1) {
+								division.setPmState(state);
 								divisions.add(division);
 
 							}
 							if (getManagedBean().getIndex() == -1) {
-
+								
 								getManagedBean().getZoneTrees().add(
 										LocationSingleton.getInstance()
 												.buildLocationTree(null,
@@ -3312,6 +3313,7 @@ public class SpecificationBackingBean extends
 
 								getManagedBean().getZoneTrees().remove(
 										getManagedBean().getIndex());
+
 								getManagedBean().getZoneTrees().add(
 										getManagedBean().getIndex(),
 										LocationSingleton.getInstance()
@@ -4564,6 +4566,8 @@ public class SpecificationBackingBean extends
 		IQTSpecSO specSo = null;
 		SpecificationResDTO resDTO = new SpecificationResDTO();
 		this.getManagedBean().setScQtChecklist(checkList);
+		this.getManagedBean().setIndex(index);
+		this.getManagedBean().setSpecType(specType);
 		try {
 			this.getManagedBean().setIndex(index);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
@@ -6137,7 +6141,7 @@ public class SpecificationBackingBean extends
 			try {
 				checkList.getScQtCheckListValue().setFromDate(
 						df.parse(fromdate));
-				checkList.setScQt(this.getManagedBean().getScQt());
+				//checkList.setScQt(this.getManagedBean().getScQt());
 				checkList.getScQtCheckListValue().setToDate(df.parse(toDate));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
@@ -6513,6 +6517,12 @@ public class SpecificationBackingBean extends
 				}
 				SmPersonnel supplierHQPersonnel = this.getManagedBean()
 						.getPersonnel();
+				if (null != supplierHQPersonnel) {
+					getManagedBean().setSupplierContact(
+							supplierHQPersonnel.getName());
+					getManagedBean().setSupplierEmail(
+							supplierHQPersonnel.getEmail());
+				}
 				// SmAppl appll= supplierHQPersonnel.getSmAppl();
 
 				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
@@ -6531,10 +6541,7 @@ public class SpecificationBackingBean extends
 									getManagedBean().setSupplierBranch("HQ");
 									getManagedBean().setSupplierAddress(
 											smCompanyAddress.getSmAddress());
-									getManagedBean().setSupplierContact(
-											supplierHQPersonnel.getName());
-									getManagedBean().setSupplierEmail(
-											supplierHQPersonnel.getEmail());
+
 									break;
 								}
 						}
@@ -7264,8 +7271,8 @@ public class SpecificationBackingBean extends
 					&& null != this.getManagedBean().getScQt()
 							.getFulfilmentType().getParameterId()) {
 
-				loadPrepareSpecCommitteeDetails(quotationTenderDataType
-						.getQtId().longValue(), getDocTypeByTaskName(taskName));
+				// loadPrepareSpecCommitteeDetails(quotationTenderDataType
+				// .getQtId().longValue(), getDocTypeByTaskName(taskName));
 
 			}
 			fc.getApplication()
