@@ -12,7 +12,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:190px;" required="true" label="#{lbl['lbl.ct.cc.cno']}"
+					<p:inputText id="circularNoTxt" style="width:170px;" required="true" label="#{lbl['lbl.ct.cc.cno']}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" maxlength="50" />
 				</td>
 				<td>
@@ -23,7 +23,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt" rows="3" style="width:180px; margin-bottom:5px;" label="#{lbl['lbl.ct.cc.cname']}"
+					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px; margin-bottom:5px;" label="#{lbl['lbl.ct.cc.cname']}"
 						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" maxlength="200" />
 				</td>
 				<td>
@@ -32,18 +32,18 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
-				<td><p:inputText  style="width:190px;"
+				<td><p:inputText  style="width:170px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" maxlength="50" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal"
-				   style="width:190px;" disabled="true">
+				   style="width:170px;" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
 				<td></td>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
 			    <td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
-			    style="width:180px;" disabled="true">
+			    style="width:170px;" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
 				<td></td>
 			</tr>

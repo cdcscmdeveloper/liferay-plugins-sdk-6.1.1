@@ -169,17 +169,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
-			System.out.println("**********preRenderView**************");
+			log.info("**********preRenderView**************");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(getFacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
-			System.out.println("taskId:" + taskId);
-			System.out.println("Action:" + getManagedBean().getAction());
 			if(taskId==null) {
 				return;
 			}
 			
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularSO.class);
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
@@ -472,11 +470,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				if(resDTO.isSuccessful()) {
 					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
 						for(CtCircularVer circularVer : resDTO.getCircularVerResultBean().getResultList()) {
-							CircularReqDTO circularReqDTO = new CircularReqDTO();
+							/*CircularReqDTO circularReqDTO = new CircularReqDTO();
 							circularReqDTO.setCircularId(circularVer.getCtCircular().getCircularId());
 							circularVer.getCtCircular().setLatestCircularVer(
 									circularSO.getLatestCircularVer(circularReqDTO).getCircularVer());
-							
+						*/	
 							if(circularVer.getCtCircular().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_CANCELLED) {
 								PmStatus cancelStatus = new PmStatus();
 								cancelStatus.setStatusId(0L);
@@ -694,7 +692,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		log.info("Action :"+action+" Id :"+circularVerId);
 		ICircularSO circularSO = null;
 		try {
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);

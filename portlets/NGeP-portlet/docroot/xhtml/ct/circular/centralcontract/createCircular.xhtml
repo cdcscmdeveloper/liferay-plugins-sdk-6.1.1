@@ -19,20 +19,20 @@
 		<p:dataTable id="contactPersonDt" var="contactPersonsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
 		 	rowKey="#{contactPersonsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
-			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}">
+			<p:column selectionMode="multiple" style="width:5%" />
+			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}" style="width:20%;">
 				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
-				   style="width:150px;" label="#{lbl['lbl.ct.pc.cperson']}" />
+				   style="width:90%;" label="#{lbl['lbl.ct.pc.cperson']}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}">
-				<p:inputText value="#{contactPersonsVar.address}" style="width:250px;" maxlength="200" />
+			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}" style="width:40%;">
+				<p:inputText value="#{contactPersonsVar.address}" style="width:90%;" maxlength="200" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}">
+			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}" style="width:20%;">
 				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-				     style="width:120px;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
+				     style="width:90%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.pc.pno']}">
-				<p:inputText id="validPhone" style="width:120px;" label="#{lbl['lbl.ct.pc.pno']}" maxlength="100"
+			<p:column headerText="#{lbl['lbl.ct.pc.pno']}" style="width:15%;">
+				<p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.pc.pno']}" maxlength="100"
 				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}" />
 			</p:column>
 		</p:dataTable>
