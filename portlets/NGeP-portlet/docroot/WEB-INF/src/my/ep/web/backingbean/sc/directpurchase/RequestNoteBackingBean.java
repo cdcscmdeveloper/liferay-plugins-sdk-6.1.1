@@ -1509,6 +1509,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
+	public boolean isPurchaseInquiry(ScRequestNoteDtl requestNoteDtl) {
+		Boolean isPurchaseInq= Boolean.FALSE;
+		if(requestNoteDtl.getRequestItem() != null){
+			if(requestNoteDtl.getRequestItem().getSupplierItems() != null && requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
+				for (ScRequestSupplierItem scRequestSupplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
+					if(scRequestSupplierItem.getScPrInquiy() != null){
+						isPurchaseInq = Boolean.TRUE;
+						break;
+					} else{
+						isPurchaseInq = Boolean.FALSE;
+					}
+				}
+			}
+		}
+		return isPurchaseInq;
+	}
+	
 	/**
 	 * Event for fulfilment type drop down in request note
 	 */
