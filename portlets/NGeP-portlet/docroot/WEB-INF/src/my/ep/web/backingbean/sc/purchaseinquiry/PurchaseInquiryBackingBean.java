@@ -78,6 +78,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.purchaseinquiry.PurchaseInquiryManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
@@ -334,9 +335,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		try {
 			items = new SelectItem[priceTypes.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (String priceTypeCode : priceTypes) {
 				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(

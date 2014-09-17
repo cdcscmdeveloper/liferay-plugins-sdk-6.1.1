@@ -115,6 +115,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -1081,24 +1082,32 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   }
 	   } 
 
-	
-	 public void byLocAndBusinessEvent() {
-		 debugLogger("byBusinessEvent");
-		 if (getManagedBean().isByLocality()) {
-			 getManagedBean().setTabActiveIndex(0);
-		 } else{
-			 getManagedBean().setByLocality(Boolean.FALSE);
-		 }
-		 
-		 if (getManagedBean().isByBusinessNature()) {
-			 getManagedBean().setTabActiveIndex(1);
-		 } 
-		 
-		 if(!getManagedBean().isByBusinessNature() && !getManagedBean().isByBusinessNature()){
-			 getManagedBean().setTabActiveIndex(0); 
-		 }
-		 
-	 }
+	   public void byLocAndBusinessEvent() {
+		   debugLogger("byBusinessEvent");
+		   if (getManagedBean().isByLocality()) {
+			   getManagedBean().setTabActiveIndex(0);
+		   } else{
+			   getManagedBean().setByLocality(Boolean.FALSE);
+			   localityLocLevelEvent(getManagedBean().getLocationLevel());
+		   }
+
+		   if (getManagedBean().isByBusinessNature()) {
+			   getManagedBean().setTabActiveIndex(1);
+
+		   } else{
+			   localityLocLevelEvent(getManagedBean().getLocationLevel());
+			   if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
+				   getManagedBean().getBusinessNatureCriterias().clear();
+			   }
+			   if(getManagedBean().getBusinessNatures() != null && getManagedBean().getBusinessNatures().size() >0){
+				   getManagedBean().getBusinessNatures().clear();
+			   }
+		   }
+
+		   if(!getManagedBean().isByBusinessNature() && !getManagedBean().isByBusinessNature()){
+			   getManagedBean().setTabActiveIndex(0); 
+		   }
+	   }
 
 	/**
 	 * initializing remarks in simpleQuote
@@ -1955,9 +1964,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		try {
 			items = new SelectItem[priceTypes.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (String priceTypeCode : priceTypes) {
 				items[i++] = new SelectItem(priceTypeCode, getParameterDesc(
@@ -2013,11 +2023,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_STATE);
 		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_DIVISION);
 		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
-
+		 FacesScopes face = new FacesScopes();
 		 SelectItem[] items = null;
 		 try {
 			 items = new SelectItem[parameterCodes.size() + 1];
-			 items[0] = new SelectItem(null, "- Select One -");
+			 items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			 int i = 1;
 			 for (String parameterCode : parameterCodes) {
 				 List<PmParameterDesc> localParamDesc =
@@ -3117,10 +3127,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 
-   
 	public void localityLocLevelEvent(String locationLevel){
-		getManagedBean().getLocationTrees().clear();
-		getManagedBean().getTplSpecZoneLocs().clear();
+		if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
+			getManagedBean().getLocationTrees().clear();
+		}
+		
+		if(getManagedBean().getTplSpecZoneLocs() != null && getManagedBean().getTplSpecZoneLocs().size()>0){
+			getManagedBean().getTplSpecZoneLocs().clear();
+		}
+		
 		this.getManagedBean().setLocIndex(-1);
 		ptjLocality(locationLevel);
 	}

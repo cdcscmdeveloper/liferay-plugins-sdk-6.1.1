@@ -116,6 +116,7 @@ import my.ep.web.managedbean.sc.directpurchase.RequestNoteManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
@@ -982,9 +983,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public SelectItem[] getPriceTypeDropdownValues(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		try {
 			items = new SelectItem[priceTypes.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (String priceTypeCode : priceTypes) {
 				items[i++] = new SelectItem(priceTypeCode,getParameterDesc(parameterType,
@@ -1000,9 +1002,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public SelectItem[] getPriceTypes(String parameterType,
 			List<String> priceTypes) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		try {
 			items = new SelectItem[priceTypes.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 			int i = 1;
 			for (String priceTypeCode : priceTypes) {
 				items[i++] = new SelectItem(getPmParameterById(parameterType,

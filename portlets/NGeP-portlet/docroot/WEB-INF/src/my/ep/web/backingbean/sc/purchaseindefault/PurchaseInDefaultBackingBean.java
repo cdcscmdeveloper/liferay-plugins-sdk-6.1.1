@@ -74,6 +74,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -498,9 +499,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 
    public SelectItem[] getDropdownCodeValues(List<PmReasonDesc> list) {
 	   SelectItem[] items = null;
+	   FacesScopes face = new FacesScopes();
 	   try {
 		   items = new SelectItem[list.size()+1];
-		   items[0] = new SelectItem(null, "- Select One -");
+		   items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		   int i = 1;
 		   for(PmReasonDesc reasonDesc : list) {
 			   items[i++] = new SelectItem(
