@@ -88,11 +88,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td colspan="4">
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}" 
+							id="cbSearchTask" widgetVar="cbSearchTask"
 							process="pTaskAssignSearch" action="#{taskAssignBackingBean.searchTaskAssign}"
 							update="dtTaskAssignResult" 
-							
+							onclick="cbSearchTask.disable();cbResetTask.disable()"  
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
 							/>&#160;
-						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{taskAssignBackingBean.resetTaskAssignSearchBean}"
+						<p:commandButton id="cbResetTask" widgetVar="cbResetTask"
+							onclick="cbSearchTask.disable();cbResetTask.disable()"  
+			  				oncomplete="cbSearchTask.enable();cbResetTask.enable()"
+							value="#{lbl['lbl.btn.reset']}" action="#{taskAssignBackingBean.resetTaskAssignSearchBean}"
 							update="pTaskAssignSearch" 
 							/> 
 					</div>
