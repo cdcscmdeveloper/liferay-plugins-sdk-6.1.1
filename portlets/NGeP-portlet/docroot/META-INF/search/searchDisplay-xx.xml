@@ -594,7 +594,7 @@
 		</property>
 	</bean>
 	<bean id="PM_PROJECT" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="doId" />
+		<property name="pk" value="subSetiaId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.common.projectsetia.SubSetiaDAO" />
 		<property name="searchMethod" value="retrieveSubSetiaDtlList" />
