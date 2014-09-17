@@ -131,6 +131,7 @@ public class NoticeBoardBackingBean extends
 		PmParameterDesc desc = (PmParameterDesc) event.getData();
 		this.getManagedBean().setSelectedTab(
 				desc.getPmParameter().getParameterCode());
+		searchNoticeBoard();
 	}
 
 	/**
@@ -148,6 +149,7 @@ public class NoticeBoardBackingBean extends
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
+			
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
@@ -205,7 +207,7 @@ public class NoticeBoardBackingBean extends
 			 * specReqDTO.setProcurementCatCode(this.getManagedBean().getScQt()
 			 * .getPmProcurementCategory().getParameterCode());
 			 */
-			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			specReqDTO.setScQt(this.getManagedBean().getScQt());
 			SpecificationResDTO specResDTO = iqtSpecSO
 					.retrieveCheckLists(specReqDTO);
 
@@ -227,7 +229,7 @@ public class NoticeBoardBackingBean extends
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.debug("Exception"+e.getMessage());
 		} finally {
 			qtNoticeBoardSO = null;
 		}
@@ -1089,12 +1091,10 @@ public class NoticeBoardBackingBean extends
 
 				QuationTenderResDTO qtResDTO = detailSO
 						.getQuationTenders(qtReqDTO);
-
-				System.out.println("qtResDTO:"
-						+ qtResDTO.getQtResultBean().getTotalRecord());
+				
 				return qtResDTO.getQtResultBean();
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				log.debug("Exception"+ex.getMessage());
 			} finally {
 				detailSO = null;
 			}
