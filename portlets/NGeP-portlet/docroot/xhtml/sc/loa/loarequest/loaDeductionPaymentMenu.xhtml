@@ -8,27 +8,32 @@
 
 	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" toggleable="true">
 
-		<p:dataTable id="deductTbl" widgetVar="deductTblWidget" var="scQtDeduction"
+		<p:dataTable id="deductTbl" widgetVar="deductTblWidget"
+			var="scQtDeduction"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scQtDeductions}"
 			selection="#{lOADetailBackingBean.managedBean.selectedScQtDeduction}"
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
 			selectionMode="single">
-			
-			<p:ajax event="rowSelect" partialSubmit="true" process="@this" update=":form:clausePnl" />
-			<p:ajax event="rowUnselect" partialSubmit="true" process="@this" update=":form:clausePnl" />
+
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
 
 			<ac:paginator for="deductTbl" />
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" rendered="#{isEditableStatus}" />
-					<h:outputText value="#{lbl['lbl.sc.deduction.type']}"/>
+					<h:outputText value="* " styleClass="mandatory"
+						rendered="#{isEditableStatus}" />
+					<h:outputText value="#{lbl['lbl.sc.deduction.type']}" />
 				</f:facet>
-				
+
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="deductionType" value="#{scQtDeduction.deductionType.parameterId}"
-						required="true">
-						<f:selectItems value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
+					<p:selectOneMenu id="deductionType"
+						value="#{scQtDeduction.deductionType.parameterId}" required="true">
+						<f:selectItems
+							value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							update=":form:clausePnl"
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
@@ -42,7 +47,7 @@
 			</p:column>
 
 		</p:dataTable>
-		
+
 		<c:if test="#{isEditableStatus}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -57,42 +62,41 @@
 					update="deductTbl" />
 			</div>
 		</c:if>
-		
+
 		<c:if test="#{!isEditableStatus}">
 			<br />
 		</c:if>
-		
-		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}" toggleable="true">
-		
-			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget" var="scQtDeductionClause"
+
+		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
+			toggleable="true">
+
+			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
+				var="scQtDeductionClause"
 				value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 				selection="#{lOADetailBackingBean.managedBean.selectedDeductionClauses}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
-	
+
 				<ac:paginator for="deductClauseTbl" />
-	
+
 				<p:column selectionMode="multiple" style="width:2%" />
-	
+
 				<p:column>
 					<f:facet name="header">
-						<h:outputText value="* " styleClass="mandatory" rendered="#{isEditableStatus}" />
-						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}"/>
+						<h:outputText value="* " styleClass="mandatory"
+							rendered="#{isEditableStatus}" />
+						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
-				
-					<c:if test="#{isEditableStatus}">
-						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}" cols="170" rows="2"
-							maxlength="500" 
-							style=" margin-bottom:5px;" />
-					</c:if>
-					<c:if test="#{!isEditableStatus}">
-						#{scQtDeductionClause.clauseDesc}
-					</c:if>
+					<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+						cols="150" rows="8" maxlength="500" style=" margin-bottom:5px;"
+						disabled="#{!isEditableStatus}" />
+
 				</p:column>
 
 			</p:dataTable>
-			
+
 			<div class="ppRightBtn">
-				<h:panelGroup rendered="#{!empty lOADetailBackingBean.managedBean.selectedScQtDeduction and lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
+				<h:panelGroup
+					rendered="#{!empty lOADetailBackingBean.managedBean.selectedScQtDeduction and lOADetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{lOADetailBackingBean.addDeductionClauseAction}"
