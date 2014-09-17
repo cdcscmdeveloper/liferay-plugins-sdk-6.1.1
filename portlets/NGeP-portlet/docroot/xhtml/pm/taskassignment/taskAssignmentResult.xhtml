@@ -7,36 +7,52 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
+	<script type="text/javascript">
+          function resetPaginator() {
+          	taskListTableWidget.paginator.setPage(0);
+          }
+	</script>
 
 	<p:panel id="pTaskAssignResult" header="#{lbl['lbl.pm.ta.result']}" toggleable="true">
-		<p:dataTable id="dtTaskAssignResult"
-			 >
-			<ac:paginator for="dtTaskAssignResult" />
-	        <p:column headerText="#{lbl['lbl.pm.ta.created.date']}">  
-		    	
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pm.ta.document.type']}"  style="width:20%">  
-	            
+		<div class="clear"></div>
+		<h:panelGroup id="taskListID">
+		<div style="text-align: left; margin-right: 2px; float: right;">
+			<p:commandButton action="#{taskAssignBackingBean.refreshTaskList}"
+				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset"
+				update="dtTaskAssignResult"></p:commandButton>
+		</div>
+		<div class="clear"></div>
+		<p:dataTable
+			value="#{taskAssignBackingBean.taskListDataModel}"
+			lazy="true" rowIndexVar="rowIndex" rows="10" id="dtTaskAssignResult"
+			style="width:100%;" var="tasks" widgetVar="taskListTableWidget">
+			<ac:paginator for="dtTaskAssignResult"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.pm.ta.created.date']}" width="15%;">  
+				<h:outputText value="#{tasks.createDate.time}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.ta.document.type']}"  width="15%;">  
+	            #{taskAssignBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, tasks.docType)}
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.ta.document.no']}">  
-	            
+	        <p:column headerText="#{lbl['lbl.pm.ta.document.no']}" width="15%;">  
+	            #{tasks.docNumber}
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pm.ta.document.amt']}">  
+	        <p:column headerText="#{lbl['lbl.pm.ta.document.amt']}" width="15%;">  
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.ta.status']}">  
-	            
+	        <p:column headerText="#{lbl['lbl.pm.ta.status']}" width="15%;">  
+	            #{taskAssignBackingBean.applicationStatus(tasks.docStatus)}
 	        </p:column>
-	        <p:column headerText="#{lbl['lbl.pm.action']}">  
-      		   <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(null)}" >
+	        <p:column headerText="#{lbl['lbl.pm.action']}" width="15%;">  
+      		   <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(tasks)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>  
-	   	</p:dataTable> 
-	
+		</p:dataTable>
+	</h:panelGroup>
 	</p:panel>
-	  			 <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(null)}" >
-					<p:graphicImage value="/css/images/design/edit.png"/>
-				</p:commandLink> 	
 	<!-- Task Selection Popup -->
 	<ui:include src="/xhtml/pm/taskassignment/taskReassignPopup.xhtml" />
 </ui:composition>

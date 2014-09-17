@@ -19,13 +19,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.type']}"/>
 					</th>
 					<td>
-						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"/>
+						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.type']}" disabled="true"
+							value="#{taskAssignBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, taskAssignBackingBean.managedBean.selectedTask.docType)}" />
+
 					</td>
 					<th>
 						<p:outputLabel value="#{lbl['lbl.pm.ta.doc.no']}"/>
 					</th>
 					<td>
-						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.no']}"  disabled="true"/>
+						<p:inputText styleClass="ppDisplayTextM" label="#{lbl['lbl.pm.ta.doc.no']}"  disabled="true"
+							value="#{taskAssignBackingBean.managedBean.selectedTask.docNumber}"/>
 					</td>
 				</tr>
 			</table>

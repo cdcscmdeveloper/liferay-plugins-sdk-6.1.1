@@ -5,6 +5,7 @@ package my.ep.web.managedbean.pm.taskassign;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -21,6 +22,7 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
 	private TaskAssignmentSearchBean taskAssignmentSearchBean;
+	private WorklistItemVO selectedTask;
 
 	/**
 	 * @return the taskAssignmentSearchBean
@@ -35,6 +37,20 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	public void setTaskAssignmentSearchBean(
 			TaskAssignmentSearchBean taskAssignmentSearchBean) {
 		this.taskAssignmentSearchBean = taskAssignmentSearchBean;
+	}
+
+	/**
+	 * @return the selectedTask
+	 */
+	public WorklistItemVO getSelectedTask() {
+		return selectedTask;
+	}
+
+	/**
+	 * @param selectedTask the selectedTask to set
+	 */
+	public void setSelectedTask(WorklistItemVO selectedTask) {
+		this.selectedTask = selectedTask;
 	}
 	
 	

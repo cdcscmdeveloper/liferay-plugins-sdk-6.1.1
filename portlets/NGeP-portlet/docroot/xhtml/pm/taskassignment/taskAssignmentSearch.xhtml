@@ -11,62 +11,76 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
 		<table class="ppTwoTable">
 			<tr>
-				<th>
+				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.ministry']}"/>
 				</th>
-				<td>
+				<td width="15%">
 				 	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="20" 
 		            	update=":form:pTaskAssignSearch" readonly="true" 
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.pmOrgValidity.orgCode}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry"
 						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1"/>
-						&#160;
-					
 				</td>
 				<td>
 					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ministry']}" disabled="true"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.pmOrgValidity.orgName}"/>
 				</td>
-				<td>
+				<td width="40%">
 					
 				</td>
 			</tr>
 			<tr>
-				<th>
+				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.ptj']}"/>
 				</th>
-				<td>
+				<td width="15%">
 					<ac:lov id="lovPtj" lovId="PM_ORG_PROFILE" size="20" 
 		            	update=":form:pTaskAssignSearch" readonly="true" 
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.pmOrgValidity.orgCode}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj"
-						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1"/>
-						&#160;
+						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|parentOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.orgProfileId}|recordStatus^1"/>
 				</td>
 				<td>
 					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.ptj']}" disabled="true"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.pmOrgValidity.orgName}"/>
 				</td>
-				<td>
+				<td width="40%">
 				
 				</td>
 			</tr>
 			<tr>
-				<th>
+				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}"/>
 				</th>
-				<td>
-					<p:selectOneMenu id="somPtj" label="#{lbl['lbl.pm.ta.username']}" styleClass="ppDropDownWidthM"  
-						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.userId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
-					</p:selectOneMenu>
-				</td>
-				<th>
+				<td width="15%">
+					<c:choose>
+						<c:when test="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj!=null and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.orgProfileId!=null}">
+							<ac:lov id="lovUser" lovId="PM_USER" size="20" 
+				            	update=":form:pTaskAssignSearch" readonly="true" 
+								headerText="#{lbl['lbl.pm.ta.user.lov']}"
+								value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId}" 
+								saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
+								conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.orgProfileId}|recordStatus^1"/>		
+						</c:when>
+						<c:otherwise>
+							<ac:lov id="lovUser" lovId="PM_USER" size="20" 
+				            	update=":form:pTaskAssignSearch" readonly="true" 
+								headerText="#{lbl['lbl.pm.ta.user.lov']}"
+								value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId}" 
+								saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
+								conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.orgProfileId}|recordStatus^1"/>							
+						</c:otherwise>
+					</c:choose>
 					
-				</th>
+					
+				</td>
 				<td>
+					<p:inputText styleClass="ppDisplayTextL" label="#{lbl['lbl.pm.ta.username']}" disabled="true"
+						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName}"/>
+				</td>
+				<td width="40%">
 					
 				</td>
 			</tr>
