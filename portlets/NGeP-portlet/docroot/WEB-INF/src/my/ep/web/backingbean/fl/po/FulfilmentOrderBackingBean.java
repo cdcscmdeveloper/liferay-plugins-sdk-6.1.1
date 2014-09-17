@@ -306,12 +306,15 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				FLFactoringRemoveReqType removeReqType = (FLFactoringRemoveReqType)obj;
+				flReqDTO.setDocType(ParameterConst.DOCTYPE_FACTORING_COMPANY);
 				flReqDTO.setFlOrderId(removeReqType.getOrderId());
 				resDTO = getFulfilmentOrderSO().retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-				if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
-					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
-				}
+				if(null != resDTO.getFlOrder().getPmFinancialBranch()){
+					getRfcAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
+				} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+					getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
+				}				
 				getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
@@ -483,7 +486,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 	}
 	
-	 public void getRfcAddress(Long financialOrgId){
+	 public void getRfcAddress(Long financialOrgId, Long financialBranchId){
 		 IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 		
 		 getManagedBean().setRfcAddress(null);
@@ -495,6 +498,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 if(financialOrgId!=null) {
 				AddressReqDTO reqDTO = new AddressReqDTO();
 				reqDTO.setFinancialOrgId(financialOrgId);
+				reqDTO.setFinancialBranchId(financialBranchId);
 				reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				
 				AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
@@ -551,14 +555,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
-			if(null==getManagedBean().getChargeLineItemRoot()){
-				 getManagedBean().populateChargeLineData();
-			}
 			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) {
 				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}
-			
 		}
 	}
 

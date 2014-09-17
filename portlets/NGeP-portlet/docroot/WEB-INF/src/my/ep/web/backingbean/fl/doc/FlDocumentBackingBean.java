@@ -4,9 +4,7 @@
 package my.ep.web.backingbean.fl.doc;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -49,7 +47,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.VFlDocument;
@@ -58,7 +55,6 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
@@ -301,6 +297,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			PurchaseRequestBackingBean PrBB=new PurchaseRequestBackingBean();
+			PrBB.getManagedBean().setSelectedTabIndex(0);
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
 			PrBB.getManagedBean().setFlDocId(flDocId);
@@ -330,6 +327,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			crBB.renewSesionObject();
 			crBB = new ContractRequestBackingBean();
+			crBB.getManagedBean().setSelectedTabIndex(0);
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
@@ -370,6 +368,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				StopInstrBackingBean stopInstrBB = new StopInstrBackingBean();
 				stopInstrBB.renewSesionObject();
 				stopInstrBB.getManagedBean().setStopInstr(flStopInstr);
+				stopInstrBB.getManagedBean().setSelectedTabIndex(0);
 				stopInstrBB.populateStopInstrItem();
 				stopInstrBB.populateChargeLineData();
 				
@@ -383,11 +382,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO) && buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_FACTORING_COMPANY);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setButtonVal(null);
 			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -398,13 +399,14 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(resDTO.getFlOrder().isFactored()){
 				flOrderBB.getManagedBean().setRemoveFactoring(true);
 			}
-			if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
-				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
+			if(null != resDTO.getFlOrder().getPmFinancialBranch()){
+				flOrderBB.getRfcAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
+			} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
+				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
 			}
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
-			flOrderBB.getManagedBean().getFulfilmentOrder();
 			flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
 		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO)){
@@ -424,6 +426,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flOrderBB.getManagedBean().setOutComes(outcome);
 			}
 			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setRemoveFactoring(false);
@@ -450,6 +453,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(flReqId);
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
+			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
