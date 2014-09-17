@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.URL;
@@ -234,6 +233,9 @@ public class SPDetailBackingBean extends
 			List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
 			
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
+			setUserDetails(scQtProposal);
+			scQtProposal.setSubmitted(true);
+			
 			scQtProposalChecklists.addAll(technicalChecklist);
 			scQtProposalChecklists.addAll(financialChecklist);
 			scQtProposal.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(scQtProposalChecklists));
