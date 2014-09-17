@@ -837,7 +837,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 			
-			templateSpecSO.validateTierQty(specTierQties);
+			templateSpecSO.validateTierQty(templateSpecBean.getSelectedSpecQuestion(), specTierQties);
 			
 		} finally {
 			templateSpecSO = null;
