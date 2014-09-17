@@ -17,16 +17,16 @@
 
 			<ui:include src="DocumentHeader.xhtml" />
 
-			<p:panel header="Request Info" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 				<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
-						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;">
-								<f:selectItem itemValue="P" itemLabel="Product " />
-								<f:selectItem itemValue="S" itemLabel="Service" />
+								<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+								<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -71,17 +71,17 @@
 
 			</p:panel>
 
-			<p:panel header="SEARCH" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 				<table style="width: 100%;">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:autoComplete size="40"
-								title="UNSPSC Code is 8 digits"
+								title="#{lbl['lbl.cm.eight.digits']}"
 								value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 								completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
 								maxResults="15" dropdown="false" forceSelection="true" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-						<td><p:inputText title="Unspsc title only in English"
+						<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
 								value="#{codificationBackingBean.titleFilterBean.searchValue}"
 								size="40" /></td>
 					</tr>
@@ -90,13 +90,13 @@
 
 
 			<div style="text-align: right;">
-				<p:commandButton icon="ui-icon-search" value="Search"
+				<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
 					update="cmUNSPSCsearchID">
 					<f:param name="itemType"
 						value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" />
 				</p:commandButton>
-				<p:commandButton value="Back" icon="ui-icon-back"
+				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToReviewUnspsc}">
 					<f:param name="currentTaskName"
 						value="#{unspscCodeBackingBean.managedBean.taskName}" />
@@ -109,7 +109,7 @@
 				action="#{codificationBackingBean.goToExtensionSearch}" />
 
 
-			<p:panel header="SEARCH RESULTS" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 				<p:dataTable id="unspscTableID" lazy="true"
 				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
@@ -163,7 +163,7 @@
 			</p:panel>
 
 			<p:dialog id="unspscPopUp" widgetVar="unspscPopUp" modal="true"
-				header="Codification Search" width="800" height="500">
+				header="#{lbl['lbl.cm.codification.search']}" width="800" height="500">
 
 				<ui:include src="recommendSearchPopUp.xhtml"></ui:include>
 

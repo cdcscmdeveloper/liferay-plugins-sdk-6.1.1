@@ -29,16 +29,16 @@
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
-			<p:panel header="Request Info" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 				<table style="width: 100%; margin-bottom: 4px;">
 					<tr>
-						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 						<td><p:selectOneMenu disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;">
-								<f:selectItem itemValue="P" itemLabel="Product " />
-								<f:selectItem itemValue="S" itemLabel="Service" />
+								<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+							<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -81,7 +81,7 @@
 
 			</p:panel>
 
-			<p:panel header="Select and Recommend" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.instruction2']}" toggleable="true">
 
 
 
@@ -96,7 +96,7 @@
 
 					<p:column>
 						<f:facet name="header">
-					Recommended Item Code
+					#{lbl['lbl.cm.recommended.item.code']}
 				</f:facet>
 
 				
@@ -107,7 +107,7 @@
 				</p:column>
 					<p:column>
 						<f:facet name="header">
-					Recommended Item Name
+					#{lbl['lbl.cm.recommended.item.name']}
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>

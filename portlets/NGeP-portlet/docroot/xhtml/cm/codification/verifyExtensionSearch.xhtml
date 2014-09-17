@@ -14,23 +14,23 @@
 		<p:messages showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 
 		<div style="text-align: right;">
-			<p:commandButton value="REQUEST EXTENSION"
+			<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
 				action="#{codificationBackingBean.requestExtensionWithUNSPSC()}" />
 		</div>
 
 		<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 
-		<p:panel header="Request Info" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 			<table style="width: 100%; margin-bottom: 4px;">
 				<tr>
-					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 					<td><p:selectOneMenu
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 							style="width:228px;">
-							<f:selectItem itemValue="P" itemLabel="Product " />
-							<f:selectItem itemValue="S" itemLabel="Service" />
+							<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+							<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 						</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
@@ -75,7 +75,7 @@
 
 		<h:panelGroup id="cmExtensionSearchID">
 
-			<p:panel header="SEARCH" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -120,7 +120,7 @@
 					</tr>
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
-								value="Extension Attribute"></h:outputText></td>
+								value="#{lbl['lbl.cm.extension.attr']}"></h:outputText></td>
 					</tr>
 
 					<tr>
@@ -128,7 +128,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.typeFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.typeCriteria}" />
 							</p:selectOneMenu></td>
@@ -136,7 +136,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.brandFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.brandCriteria}" />
 							</p:selectOneMenu></td>
@@ -147,7 +147,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
 							</p:selectOneMenu></td>
@@ -155,7 +155,7 @@
 						<td><p:selectOneMenu
 								value="#{codificationBackingBean.colorFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.colorCriteria}" />
 							</p:selectOneMenu></td>
@@ -164,15 +164,15 @@
 			</p:panel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="Search" icon="ui-icon-search"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search"
 					action="#{codificationBackingBean.extensionCodeSearch}"
 					update="itemTableID" />
-				<p:commandButton value="Back" icon="ui-icon-back"
+				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToVerifyUnspsc}" />
 			</div>
 
 
-			<p:panel header="SEARCH RESULTS" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
@@ -217,7 +217,7 @@
 						</f:facet>
 						<table>
 							<tr>
-								<td width="2px"><p:commandLink title="Recommend"
+								<td width="2px"><p:commandLink title="#{lbl['lbl.ss.item.detail.recommend']}"
 										action="#{codificationBackingBean.recommendItemCode(obj)}">
 										<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 									</p:commandLink></td>

@@ -45,12 +45,12 @@
 
 			<table style="width: 100%;" id="unspscFormId">
 				<tr>
-					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 					<td><p:selectOneMenu
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 							style="width:228px;">
-							<f:selectItem itemValue="P" itemLabel="Product " />
-							<f:selectItem itemValue="S" itemLabel="Service" />
+							<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
+							<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
 							<p:ajax event="valueChange" process="@this" update=":form:cmUNSPSCrequestID" partialSubmit="true" />
 						</p:selectOneMenu></td>
 					<td></td>
