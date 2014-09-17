@@ -93,6 +93,7 @@
 			<portlet id="scQtLoaList" />
 			<portlet id="scLoaReview" />
 			<portlet id="scLoaSupplierResponse" />
+			<portlet id="scSupplierA1Form" />
 			<portlet id="scEvaluation Stage2" />
 			<portlet id="Proposal Evaluation" />
 			<portlet id="Evaluation Meeting" />

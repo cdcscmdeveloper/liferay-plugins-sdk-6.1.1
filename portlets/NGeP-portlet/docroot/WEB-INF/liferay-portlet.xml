@@ -625,6 +625,15 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>loa-supplier-response-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>scSupplierA1Form</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>loa-supplier-a1-portlet</css-class-wrapper>
+	</portlet>
 
 	<portlet>
 		<portlet-name>scEvaluation Stage2</portlet-name>
