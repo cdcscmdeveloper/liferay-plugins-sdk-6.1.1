@@ -54,7 +54,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -189,7 +188,7 @@ public class QTCommitteBackingBean extends
 			UserCommitteeSearchBean userCommitteeSearchBean,
 			ISearchBean<PmUser> userSearchBean) {
 		if (userCommitteeSearchBean != null) {
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+			//List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String name = userCommitteeSearchBean.getName();
 			if (!StringUtils.isBlank(name)) {
 				userSearchBean.getDataFilterBeans().add(
@@ -591,16 +590,14 @@ public class QTCommitteBackingBean extends
 				this.getManagedBean().getSelectedTabIndex(), bean);
 	}
 
-	public void addCloneToTecDtl() throws IllegalAccessException,
-			InstantiationException, InvocationTargetException,
-			NoSuchMethodException {
+	public void addCloneToTecDtl() {
 		debugLogger("addCloneToTecDtl");
 		TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = bean.getMembers();
 		if (null != selectedList && !selectedList.isEmpty()) {
 			List<TabBean> tabs = this.getManagedBean().getScCommitteeMemberTabList();
 			for (TabBean tabBean : tabs) {
-				log.info("Title Name : " + tabBean.getTitleName());
+				log.debug("Title Name : " + tabBean.getTitleName());
 				if (tabBean.getTitleName().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
 					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 					for (ScCommitteeMember member : selectedList) {
@@ -620,7 +617,11 @@ public class QTCommitteBackingBean extends
 							committeeMembersList.add(member1);
 						}
 					}
-					tabBean.getScQtCommittee().getScCommittee().setScCommitteeMembers(committeeMembersList);
+					if (null != tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers()) {
+						 tabBean.getScQtCommittee().getScCommittee().getScCommitteeMembers().addAll(committeeMembersList);
+					} else {
+						tabBean.getScQtCommittee().getScCommittee().setScCommitteeMembers(committeeMembersList);
+					}
 					break;
 				}
 			}
@@ -1149,7 +1150,7 @@ public class QTCommitteBackingBean extends
 								.getParameterCode() });
 			}
 		}
-		if (status.getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+		if (!status.getStatusId().equals(QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) && status.getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 			for (ScCommittee committee : committes) {
 				if (ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
 						.equalsIgnoreCase(committee.getCommitteeType()
