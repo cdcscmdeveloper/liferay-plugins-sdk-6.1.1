@@ -593,7 +593,7 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="PM_PROJECT" class="my.ep.web.bean.LovBean">
+	<bean id="PM_SUB_SETIA" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="subSetiaId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.common.projectsetia.SubSetiaDAO" />
@@ -612,6 +612,30 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.sub.setia.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
+	<bean id="PM_PROJECT" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="projectId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.projectsetia.ProjectDAO" />
+		<property name="searchMethod" value="retrieveProjectList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="projectCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.proj.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="description" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.proj.desc" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
