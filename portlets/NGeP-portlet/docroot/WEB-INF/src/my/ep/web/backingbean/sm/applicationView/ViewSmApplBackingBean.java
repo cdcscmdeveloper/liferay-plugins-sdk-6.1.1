@@ -4,26 +4,34 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -59,14 +67,17 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSmApplManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -80,6 +91,8 @@ import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
+
+import com.liferay.compat.portal.util.PortalUtil;
 
 @ManagedBean(name = "viewSmApplBackingBean")
 @RequestScoped
@@ -98,10 +111,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		if (reloadPreviousApplication()) {
-			initPreviousApplication();
-		}
-		constructMessage();
+//		if (reloadPreviousApplication()) {
+//			initPreviousApplication();
+//		}
+//		constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -147,6 +160,89 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
+	public void navigateToRevAppl(){
+		
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String applNo = originalServletRequest.getParameter("applicationNo");
+		String revType = originalServletRequest.getParameter("revType");
+		
+		String redirectToAppl = "";
+		getManagedBean().setApplicationNoParam(applNo);
+		getManagedBean().setRevTypeParam(revType);
+		initApplication();
+		String applType = getManagedBean().getSmAppl().getApplType();
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+			redirectToAppl = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
+		} else if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
+			redirectToAppl = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
+		} else if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)){
+			redirectToAppl = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
+		} else if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)){
+			redirectToAppl = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
+		} else if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			redirectToAppl = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, redirectToAppl);
+//		return redirectToAppl;
+	}
+	
+	private void initApplication() {
+		ISmApplRevisionSO applRevisionSO = null;
+
+		try {
+			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISmApplRevisionSO.class);
+
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+			
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)
+					+ "/SM/" + getManagedBean().getApplicationNoParam()
+					+ "/Revision/";
+			String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+			tempDir += "/" + filePath;
+			
+			reqDTO.setDeSerFileName(tempDir + getManagedBean().getApplicationNoParam() + getManagedBean().getRevTypeParam() + SER_FILE_TYPE);
+			SmApplRevisionResDTO resDTO = applRevisionSO
+					.readApplicationHist(reqDTO);
+
+			getManagedBean().setSmAppl(resDTO.getSmAppl());
+			getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+			setSupplierBusinessType(getManagedBean().getSmSupplier());
+			getManagedBean()
+					.setSupplierBusinessTypeVal(
+							getDropDownViewOnlyValueByCode(
+									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+									getManagedBean().getSmSupplier()
+											.getBusinessType()));
+			setSmCompanyBasicCalculation();
+			setApplicationShareHolders(getManagedBean().getSmAppl()
+					.getSmPersonnels());
+			setCategoryTypeConfirm();
+			setApplicationFacilities(getManagedBean().getSmAppl()
+					.getSmFacilities());
+			setPersonnelInfoCalculationSummary();
+			setDefaultApproverReviewSection();
+			retrievePmCertBodyList();
+			setSupplierCancellationRemarks(getManagedBean().getSmAppl()
+					.getApplType(), getManagedBean().getSmAppl().getApplId());
+			setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId().toString());
+			getManagedBean().setReviewApplicationExist(true);
+		} catch (NullPointerException ne) {
+			getManagedBean().setReviewApplicationExist(false);
+		} finally {
+			constructMessage();
+			applRevisionSO = null;
+		}
+	}
+	
+	
+	// temp added for testing
 	public void changeVerifySection(Boolean isSectionVerified) {
 		if (getManagedBean().isPoUser()) {
 			getManagedBean().getPoSecReview();

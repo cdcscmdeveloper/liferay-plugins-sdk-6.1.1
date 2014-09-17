@@ -129,6 +129,8 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private List<SmFacility> applWorkShopFacilities;
 	private List<SmFacility> applStoreFacilities;
 	private List<PmState> basicOffFacStates;
+	
+	private String revTypeParam;
 
 	public ViewSmApplManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -800,5 +802,13 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setCurrentStatus(String currentStatus) {
 		this.currentStatus = currentStatus;
+	}
+
+	public String getRevTypeParam() {
+		return revTypeParam;
+	}
+
+	public void setRevTypeParam(String revTypeParam) {
+		this.revTypeParam = revTypeParam;
 	}
 }

@@ -13,58 +13,10 @@
 
 
 	<ui:define name="contentSection">
-		<p:outputPanel>
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{viewSmApplBackingBean.redirect}"></p:outputLabel></td>
-				</tr>
-				<tr>
-					<td>
-						<h:link value="View Previous Upgrade to MOF Application" target="_blank"
-							outcome="/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml">
-							<f:param name="applicationNo" value="Appl_KN-20140823-0016" />
-							<f:param name="tab" value="0" />
-						</h:link>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h:link value="View Previous Bumi Application" target="_blank" 
-							outcome="/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml">
-								<f:param name="applicationNo" value="Appl_KN-20140823-0016" />
-								<f:param name="tab" value="1" />
-						</h:link>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h:link value="View Previous New Category Application" target="_blank" 
-							outcome="/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml">
-								<f:param name="applicationNo" value="Appl_KN-20140823-0016" />
-								<f:param name="tab" value="2" />
-						</h:link>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h:link value="View Previous Renew MOF Account Application" target="_blank"
-							outcome="/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml">
-								<f:param name="applicationNo" value="Appl_KN-20140823-2222" />
-								<f:param name="tab" value="3" />
-						</h:link>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h:link value="View Previous MOF Profile Update Application" target="_blank"
-							outcome="/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml">
-								<f:param name="applicationNo" value="Appl_KN-20140823-1111" />
-								<f:param name="tab" value="4" />
-						</h:link>
-					</td>
-				</tr>
-			</table>
-		</p:outputPanel>
+		<h:panelGroup id="smRevViewId">
+			<f:event listener="#{viewSmApplBackingBean.navigateToRevAppl()}" 
+				type="preRenderView" />	
+		</h:panelGroup>
 	</ui:define>
 
 </ui:composition>

@@ -11,13 +11,8 @@
 		toggleable="true">
 		<table style="width: 30%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
-				<td><p:selectOneRadio id="offLnSuppDocs"
-						value="#{viewSmApplBackingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" itemValue="F" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}" itemValue="O" />
-						<p:ajax update="supDocPan" event="change" />
-					</p:selectOneRadio></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}:" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.suppDoc.offline']}" /></td>
 			</tr>
 
 		</table>

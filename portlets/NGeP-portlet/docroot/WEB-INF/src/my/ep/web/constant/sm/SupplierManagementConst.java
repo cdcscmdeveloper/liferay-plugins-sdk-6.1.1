@@ -319,6 +319,8 @@ public class SupplierManagementConst {
 	public static final int RECORD_STATUS_DELETED = 9;
 	public static final int RECORD_STATUS_SUSPENDED = 0;
 
+	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
+	
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
 	public static final String MALAYSIA_CODE = "MY";

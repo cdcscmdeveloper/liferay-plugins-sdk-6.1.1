@@ -355,38 +355,6 @@
 		<p:panel header="#{lbl['lbl.sm.person.composition.listDtHdr']}"
 			toggleable="true" id="smPersonnelParentPan">
 
-			<table style="width: 250px">
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-					<tr>
-						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-								value="#{viewSmApplBackingBean.managedBean.poSecReview.personnelVerified}"
-								id="poPersVer">
-								<p:ajax update=":form:tt:persInfPan"
-									event="change"
-									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.personnelVerified)}" />
-							</p:selectBooleanCheckbox></td>
-						<td valign="top"><h:outputText
-								value=" Section Verified By PO: "
-								title="For PO to highlight the verified section " /></td>
-
-					</tr>
-				</p:outputPanel>
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-					<tr>
-						<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-								value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified}"
-								id="apprPersVer">
-								<p:ajax update=":form:tt:persInfPan"
-									event="change"
-									listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified)}" />
-							</p:selectBooleanCheckbox></td>
-						<td valign="top"><h:outputText
-								value=" Section Verified By Approver: "
-								title="For Approver to highlight the verified section " /></td>
-					</tr>
-				</p:outputPanel>
-			</table>
-			<br />
 			<p:panel id="persInfPan">
 				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
 					id="poPersBlc"

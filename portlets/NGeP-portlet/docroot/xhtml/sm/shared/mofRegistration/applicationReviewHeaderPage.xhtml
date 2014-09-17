@@ -4,6 +4,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<script type="text/javascript">
+	function doPopup(url) {  
+	    //you can use the source to access a information that you need  
+		popup = window.open(url);                      
+		popup.focus();  
+	} 
+</script>	
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
@@ -71,4 +78,28 @@
 			</tr>
 		</p:outputPanel>
 	</table>
+	<p:outputPanel
+		rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage}">
+		<table style="width: 100%;">
+			<tr>
+				<td></td>
+				<td style="padding-right: 2px; text-align: center;">
+					<h:commandLink value="View Previous Approved Application" onclick="doPopup('/web/dashboard/view-revision-application?applicationNo=#{backingBean.managedBean.smAppl.applNo}?revType='_APP'');return false;" target="_blank">
+					</h:commandLink>
+				</td>
+			</tr>
+		</table>	
+	</p:outputPanel>
+	<p:outputPanel
+		rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
+		<table style="width: 100%;">
+			<tr>
+				<td style="padding-right: 2px; text-align: center;">				      
+					<h:commandLink value="View Original Application" onclick="doPopup('/web/dashboard/view-revision-application?applicationNo=#{backingBean.managedBean.smAppl.applNo}?revType='_SUP'');return false;" target="_blank">
+					</h:commandLink>
+				</td>
+			</tr>
+		</table>	
+	</p:outputPanel>
+	
 </ui:composition>
