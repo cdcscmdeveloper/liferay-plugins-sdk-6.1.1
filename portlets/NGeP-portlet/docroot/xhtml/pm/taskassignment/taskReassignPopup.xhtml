@@ -33,18 +33,22 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</tr>
 			</table>
 			<br/>
-			<p:dataTable id="dtTaskReassign" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			<p:dataTable id="dtTaskReassign" emptyMessage="#{lbl['lbl.pp.no.record.found']}"			
+				value="#{taskAssignBackingBean.managedBean.availableUsers}"
+				selection="#{taskAssignBackingBean.managedBean.selectedUser}"
+				rowIndexVar="index" rowKey="#{user}" var="user"
 				 >
 				<ac:paginator for="dtTaskReassign" />
 		        <p:column headerText="#{lbl['lbl.pm.ta.name']}">  
-			    	
+			    	#{user.userName}
 		        </p:column>  
 		        <p:column headerText="#{lbl['lbl.pm.ta.designation']}">  
-		            
+		            #{user.designation}
 		        </p:column> 
 		   	</p:dataTable> 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}" oncomplete="dlTaskReassignment.hide()"
+					action="#{taskAssignBackingBean.confirmReassignTask()}"
 					immediate="true"/>
 				&#160;
 				<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"

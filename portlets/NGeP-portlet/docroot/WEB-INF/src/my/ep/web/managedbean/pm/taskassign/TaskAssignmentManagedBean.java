@@ -2,10 +2,13 @@
  * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.managedbean.pm.taskassign;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -23,6 +26,9 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	
 	private TaskAssignmentSearchBean taskAssignmentSearchBean;
 	private WorklistItemVO selectedTask;
+//	private List<PmUser> selectedUsers;
+	private List<PmUser> availableUsers;
+	private PmUser selectedUser;
 
 	/**
 	 * @return the taskAssignmentSearchBean
@@ -52,7 +58,49 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	public void setSelectedTask(WorklistItemVO selectedTask) {
 		this.selectedTask = selectedTask;
 	}
-	
+
+	/**
+	 * @return the selectedUser
+	 */
+	public PmUser getSelectedUser() {
+		return selectedUser;
+	}
+
+	/**
+	 * @param selectedUser the selectedUser to set
+	 */
+	public void setSelectedUser(PmUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
+
+	/**
+	 * @return the availableUsers
+	 */
+	public List<PmUser> getAvailableUsers() {
+		return availableUsers;
+	}
+
+	/**
+	 * @param availableUsers the availableUsers to set
+	 */
+	public void setAvailableUsers(List<PmUser> availableUsers) {
+		this.availableUsers = availableUsers;
+	}
+
+//	/**
+//	 * @return the selectedUsers
+//	 */
+//	public List<PmUser> getSelectedUsers() {
+//		return selectedUsers;
+//	}
+//
+//	/**
+//	 * @param selectedUsers the selectedUsers to set
+//	 */
+//	public void setSelectedUsers(List<PmUser> selectedUsers) {
+//		this.selectedUsers = selectedUsers;
+//	}
+
 	
 	
 }
