@@ -2,6 +2,14 @@
 <!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
 	<portlet>
+		<portlet-name>auSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>au-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>tempUserSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
