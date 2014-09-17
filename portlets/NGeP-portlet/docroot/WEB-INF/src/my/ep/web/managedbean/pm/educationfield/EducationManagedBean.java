@@ -25,6 +25,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	
 	private PmEduField pmEduField;
 	
+	private List<PmEduFieldRestr> pmEduFieldRestr;
+	
 	private String fieldCodes;
 	
 	private String fieldNames;
@@ -49,6 +51,20 @@ public class EducationManagedBean extends BaseManagedBean {
 	 */
 	public void setPmEduField(PmEduField pmEduField) {
 		this.pmEduField = pmEduField;
+	}	
+	
+	/**
+	 * @return the pmEduFieldRestr
+	 */
+	public List<PmEduFieldRestr> getPmEduFieldRestr() {
+		return pmEduFieldRestr;
+	}
+	
+	/**
+	 * @param pmEduFieldRestr the pmEduFieldRestr to set
+	 */
+	public void setPmEduFieldRestr(List<PmEduFieldRestr> pmEduFieldRestr) {
+		this.pmEduFieldRestr = pmEduFieldRestr;
 	}
 
 	/**

@@ -76,7 +76,9 @@ public class EducationBackingBean extends
 	public String createEducation() {
 		debugLogger("createEducation");
 		PmEduField pmEduField = new PmEduField();
+		List<PmEduFieldRestr> refEduFieldRestr = new ArrayList<PmEduFieldRestr>();
 		this.getManagedBean().setPmEduField(pmEduField);
+		this.getManagedBean().setEduRestrList(refEduFieldRestr);
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 
@@ -188,7 +190,9 @@ public class EducationBackingBean extends
 	 */
 	public String goToMaintaincePage(PmEduField pmEduField) {
 		debugLogger("goToMaintaincePage");
+		
 		this.getManagedBean().setPmEduField(pmEduField);
+		this.getManagedBean().setEduRestrList(null);
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 	}	
@@ -212,10 +216,16 @@ public class EducationBackingBean extends
 	 * save and update education field details
 	 * 
 	 */
-	public void saveEducationDtls() {
+	public String saveEducationDtls() {
 		debugLogger("saveEducationDtls");
 		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
+		
+		//List<PmEduFieldRestr> edufieldRetrs = this.getManagedBean().getEduRestrList();
+		//if (edufieldRetrs != null && !edufieldRetrs.isEmpty()) {
+	//		eduField.setPmEduFieldRestrs(edufieldRetrs);
+	//	}
+		
 		validationMessage(eduField);
 		
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
@@ -232,7 +242,11 @@ public class EducationBackingBean extends
 				new FacesMessage(FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			 
 			}
-	 }
+		  		return "/xhtml/pm/educationfield/educationFieldMain.xhtml";
+		  		
+		}  	
+	
+	
 	
 	/**
 	 * add list of category into PmEduFieldRestr
