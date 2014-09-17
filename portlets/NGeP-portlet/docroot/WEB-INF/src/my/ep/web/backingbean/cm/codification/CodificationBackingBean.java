@@ -1195,7 +1195,7 @@ public class CodificationBackingBean extends
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
-										"request Items updated successfuly",
+										MessageConst.INFO_710009,
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 				System.out
@@ -1211,7 +1211,7 @@ public class CodificationBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														"To complete the progress, please assign item code to those which are empty",
+														MessageConst.INFO_710010,
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
 																.getUserLocale())));
@@ -1228,7 +1228,7 @@ public class CodificationBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													"Select a record form the result list to assign its code to the Item",
+													MessageConst.INFO_710011,
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
@@ -1333,8 +1333,13 @@ public class CodificationBackingBean extends
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 
-		facesContext.addMessage(null, new FacesMessage(
-				FacesMessage.SEVERITY_INFO, "Submitted Successfully", ""));
+		facesContext.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(
+								MessageConst.INFO_710001,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 		return "extensionSearch";
 
@@ -2471,7 +2476,7 @@ public class CodificationBackingBean extends
 								null,
 								MessageUtils
 										.getMessage(
-												"Extension Code Request successfully submited.",
+												MessageConst.INFO_710012,
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes()
 														.getUserLocale())));

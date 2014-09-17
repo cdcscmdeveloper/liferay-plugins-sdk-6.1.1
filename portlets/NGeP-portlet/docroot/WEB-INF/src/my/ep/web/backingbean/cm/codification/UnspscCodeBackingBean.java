@@ -332,9 +332,10 @@ public class UnspscCodeBackingBean extends
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(
-						FacesMessage.SEVERITY_INFO, "Submitted Successfully",
-						""));
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_710001,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
 
 				return "unspscRequestForm";
 
@@ -1237,7 +1238,7 @@ public class UnspscCodeBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_716013,
-									new String[] { "Segment" },
+									new String[] { ResourceBundleUtils.getMessage("lbl.cm.segment",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			return false;
@@ -1247,7 +1248,7 @@ public class UnspscCodeBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_716013,
-									new String[] { "family" },
+									new String[] { ResourceBundleUtils.getMessage("lbl.cm.family",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
     	   return false;
@@ -1257,7 +1258,7 @@ public class UnspscCodeBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_716013,
-									new String[] { "Class" },
+									new String[] { ResourceBundleUtils.getMessage("lbl.cm.class",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
     	   return false;
@@ -1909,9 +1910,10 @@ public class UnspscCodeBackingBean extends
 
 						FacesContext facesContext = FacesContext
 								.getCurrentInstance();
-						facesContext.addMessage(null, new FacesMessage(
-								FacesMessage.SEVERITY_ERROR,
-								"Remark Required2", ""));
+						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+								.getMessage(MessageConst.ERROR_716007,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 						return "reviewApproveExtensionCodeII";
 					}
 				} else {
