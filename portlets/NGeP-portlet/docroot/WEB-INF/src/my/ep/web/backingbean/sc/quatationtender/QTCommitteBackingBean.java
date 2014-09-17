@@ -604,7 +604,7 @@ public class QTCommitteBackingBean extends
 				if (tabBean.getTitleName().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE)) {
 					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 					for (ScCommitteeMember member : selectedList) {
-						ScCommitteeMember member1 = null;
+						ScCommitteeMember member1 = new ScCommitteeMember();
 						try {
 							member1 = (ScCommitteeMember) BeanUtils.cloneBean(member);
 						} catch (IllegalAccessException
@@ -616,7 +616,7 @@ public class QTCommitteBackingBean extends
 						if (null != member1) {
 							member1.setScCommittee(null);
 							// scCommittee = member1.getScCommittee();
-							member1.setScCommittee(tabBean.getScQtCommittee().getScCommittee());
+							//member1.setScCommittee(tabBean.getScQtCommittee().getScCommittee());
 							committeeMembersList.add(member1);
 						}
 					}
