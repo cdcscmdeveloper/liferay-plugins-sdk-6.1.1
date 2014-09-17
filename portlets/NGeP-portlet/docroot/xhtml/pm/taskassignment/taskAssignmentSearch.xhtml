@@ -36,7 +36,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td width="15%">
 					<ac:lov id="lovPtj" lovId="PM_ORG_PROFILE" size="20" 
-		            	update=":form:pTaskAssignSearch" readonly="true" 
+		            	update=":form:pTaskAssignSearch" readonly="true" disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry==null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.pmOrgValidity.orgCode}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj"
@@ -57,7 +57,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<td width="15%">
 					<c:choose>
 						<c:when test="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj!=null and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.orgProfileId!=null}">
-							<ac:lov id="lovUser" lovId="PM_USER" size="20" 
+							<ac:lov id="lovUser" lovId="PM_USER" size="20"  disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj==null}"
 				            	update=":form:pTaskAssignSearch" readonly="true" 
 								headerText="#{lbl['lbl.pm.ta.user.lov']}"
 								value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId}" 
@@ -65,9 +65,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 								conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ptj.orgProfileId}|recordStatus^1"/>		
 						</c:when>
 						<c:otherwise>
-							<ac:lov id="lovUser" lovId="PM_USER" size="20" 
+							<ac:lov id="lovUser" lovId="PM_USER" size="20" disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry==null}"
 				            	update=":form:pTaskAssignSearch" readonly="true" 
-								headerText="#{lbl['lbl.pm.ta.user.lov']}"
+								headerText="#{lbl['lbl.pm.ta.user.lov']}" 
 								value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId}" 
 								saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
 								conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.ministry.orgProfileId}|recordStatus^1"/>							

@@ -46,7 +46,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            #{taskAssignBackingBean.applicationStatus(tasks.docStatus)}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.action']}" width="15%;">  
-      		   <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(tasks)}" >
+      		   <p:commandLink action="#{taskAssignBackingBean.redirectToTaskReassign(tasks)}" update=":form:dlTaskReassignment" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>  
