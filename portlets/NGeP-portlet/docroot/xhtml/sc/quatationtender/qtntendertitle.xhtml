@@ -55,6 +55,7 @@
 				<td />
 				<td />
 			</tr>
+			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.justification']}" /></td>
@@ -63,6 +64,7 @@
 						rows="2" style=" margin-bottom:5px;" maxlength="200"
 						disabled="true" readonly="true" /></td>
 			</tr>
+			</ui:fragment>
 		</table>
 	</p:panel>
 	<p:spacer height="5" />
