@@ -879,17 +879,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			if (!isItemContains) {
 				flItemAddr = new FlFulfilmentItemAddr();
 				flItemAddr.setPriceType(purchaseItem.getPriceType());
-				flItemAddr.setItemType(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getItemType());
-				flItemAddr.setScRequestItem(purchaseItem.getScRequestSupplierItem().getRequestNoteItem());
-				flItemAddr.setCmItem(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getCmItem());
+				flItemAddr.setItemType(purchaseItem.getRequestItem().getItemType());
+				flItemAddr.setScRequestItem(purchaseItem.getRequestItem());
+				flItemAddr.setCmItem(purchaseItem.getRequestItem().getCmItem());
 				//zonal & zonal tier & zonal promo & tier promo
 				if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) 
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER)){
 					getManagedBean().setPmPriceType(purchaseItem.getPriceType());
-					if(!getManagedBean().getScRequestSupplierItemIdMap().containsKey(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getRequestNoteItemId())){
-						getManagedBean().getScRequestSupplierItemIdMap().put(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getRequestNoteItemId(), purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
+					if(!getManagedBean().getScRequestSupplierItemIdMap().containsKey(purchaseItem.getRequestItem().getRequestNoteItemId())){
+						getManagedBean().getScRequestSupplierItemIdMap().put(purchaseItem.getRequestItem().getRequestNoteItemId(), purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					}
 				}
 				//stand & stand promo & tier & tier promo
@@ -929,7 +929,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			return false;
 		}
 		for(FlFulfilmentItemAddr flFulItemAddress:showAllItemsRows){
-			if(purchaseItem.getScRequestSupplierItem().getRequestNoteItem().getRequestNoteItemId()==flFulItemAddress.getScRequestItem().getRequestNoteItemId()){
+			if(purchaseItem.getRequestItem().getRequestNoteItemId()==flFulItemAddress.getScRequestItem().getRequestNoteItemId()){
 				isContains=true;
 			}
 		}
