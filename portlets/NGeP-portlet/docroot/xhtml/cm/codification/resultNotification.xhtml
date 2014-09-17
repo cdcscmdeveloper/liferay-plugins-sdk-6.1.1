@@ -25,7 +25,7 @@
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
-			<p:panel header="Request Info" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 				<table style="width: 100%; border:none;">
 					<tr>
@@ -46,7 +46,7 @@
 
 					<p:column>
 						<f:facet name="header">
-						Extension
+						#{lbl['lbl.cm.extension']}
 					</f:facet>
 
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
@@ -58,7 +58,7 @@
 
 					<p:column>
 						<f:facet name="header">
-							Supplier
+							#{lbl['lbl.sc.supp.name']}
 						</f:facet>
 
 						<div style="width:100%; "><p:inputText value="#{review.reviewedTypeNameII}"	disabled="#{!review.requestType}" /></div>

@@ -25,7 +25,7 @@
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
-			<p:panel header="Request Info" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -46,7 +46,7 @@
 
 					<p:column>
 						<f:facet name="header">
-						Extension
+						#{lbl['lbl.cm.extension']}
 					</f:facet>
 
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
@@ -59,7 +59,7 @@
 
 					<p:column>
 						<f:facet name="header">
-							Supplier
+							#{lbl['lbl.sc.supp.name']}
 						</f:facet>
 
 						<div style="width:100%; ">
@@ -67,7 +67,7 @@
 											disabled="#{!review.requestType}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestType}"
 											style="width: 128px;" value="#{review.typeNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{unspscCodeBackingBean.managedBean.typeList}"
 												var="type" itemLabel="#{type.typeName}"
@@ -79,7 +79,7 @@
 											disabled="#{!review.requestBrand}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestBrand}"
 											style="width: 128px;" value="#{review.brandNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{unspscCodeBackingBean.managedBean.brandList}"
 												var="brand" itemLabel="#{brand.brandName}"
@@ -91,7 +91,7 @@
 											disabled="#{!review.requestMeasurement}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestMeasurement}"
 											style="width: 128px;" value="#{review.measurementNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{unspscCodeBackingBean.managedBean.measurementList}"
 												var="measurement" itemLabel="#{measurement.measurementName}"
@@ -103,7 +103,7 @@
 											disabled="#{!review.requestColor}"></p:inputText>
 										<p:selectOneMenu rendered="#{review.requestColor}"
 											style="width: 128px;" value="#{review.colorNameDD}">
-											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 											<f:selectItems
 												value="#{unspscCodeBackingBean.managedBean.colorList}"
 												var="color" itemLabel="#{color.colorName}"

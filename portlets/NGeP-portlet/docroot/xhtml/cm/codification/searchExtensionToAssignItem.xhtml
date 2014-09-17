@@ -16,11 +16,11 @@
 
 		
 
-		<p:panel header="Request Info" toggleable="true">
+		<p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 
 			<table style="width: 100%; margin-bottom: 4px;">
 				<tr>
-					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.type']}"></p:outputLabel></td>
 					<td><p:inputText disabled="true" size="20" 
 					value="#{codificationBackingBean.getParameterDesc(codificationBackingBean.managedBean.selectedRequestItem.itemType)}"/></td>
 					<td></td>
@@ -45,7 +45,7 @@
 
 		<h:panelGroup id="cmExtensionSearchID">
 
-			<p:panel header="SEARCH" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -90,7 +90,7 @@
 					</tr>
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
-								value="Extension Attribute"></h:outputText></td>
+								value="#{lbl['lbl.cm.extension.attr']}"></h:outputText></td>
 								
 					</tr>
 
@@ -99,7 +99,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.typeFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.typeCriteria}" />
 							</p:selectOneMenu></td>
@@ -107,7 +107,7 @@
 						<td><p:selectOneMenu
 								value="#{codificationBackingBean.brandFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.brandCriteria}" />
 							</p:selectOneMenu></td>
@@ -118,7 +118,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
 							</p:selectOneMenu></td>
@@ -126,7 +126,7 @@
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.colorFilterBean.searchValue}"
 								style="width:278px;">
-								<f:selectItem itemLabel="Select One" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.colorCriteria}" />
 							</p:selectOneMenu></td>
@@ -136,15 +136,15 @@
 			</p:panel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="Search" icon="ui-icon-search"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search"
 					action="#{codificationBackingBean.extensionCodeSearch}"
 					update="itemTableID" />
-				<p:commandButton value="Back" icon="ui-icon-back"
+				<p:commandButton value="#{lbl['lbl.btn.back']}" icon="ui-icon-back"
 					action="#{codificationBackingBean.backToSearchUnspscToAssign}" />
 			</div>
 
 
-			<p:panel header="SEARCH RESULTS" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
@@ -196,7 +196,7 @@
 
 		<div class="clear"></div>
 		<div style="text-align: right;">
-			<p:commandButton value="REQUEST EXTENSION"
+			<p:commandButton value="#{lbl['lbl.cm.request.extension.code']}"
 				action="#{codificationBackingBean.requestExtensionCodeII}" />
 		
 			<p:commandButton value="#{lbl['lbl.cm.assign']}"

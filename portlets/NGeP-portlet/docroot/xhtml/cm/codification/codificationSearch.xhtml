@@ -42,12 +42,12 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 					<td colspan="1"><p:autoComplete size="40"
-							title="UNSPSC Code is 8 digits" maxlength="8"
+							title="#{lbl['lbl.cm.eight.digits']}" maxlength="8"
 							value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode.unspscCode}"
 							completeMethod="#{codificationBackingBean.autoCompleteUnspsc}"
 							maxResults="15" dropdown="false" forceSelection="true" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td><p:inputText title="UNSPSC title only in English"
+					<td><p:inputText title="#{lbl['lbl.cm.title.english']}"
 							value="#{codificationBackingBean.titleFilterBean.searchValue}"
 							size="40" /></td>
 				</tr>

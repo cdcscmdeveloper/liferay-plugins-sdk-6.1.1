@@ -29,7 +29,7 @@
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
 
 
-			<p:panel header="Extension Code Request" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.extension.code.request']}" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -50,7 +50,7 @@
 
 					<p:column width="10%">
 						<f:facet name="header">
-						Extension
+						#{lbl['lbl.cm.extension']}
 					</f:facet>
 
 						<div style="width:100%; padding-bottom: 9px;">#{lbl['lbl.cm.type']}</div>
@@ -62,7 +62,7 @@
 
 					<p:column width="10%">
 						<f:facet name="header">
-							Supplier
+							#{lbl['lbl.sc.supp.name']}
 						</f:facet>
 
 						<div style="width:100%; "><p:inputText value="#{review.typeName}" disabled="true" /></div>
@@ -73,7 +73,7 @@
 					</p:column>
 					<p:column width="10%">
 						<f:facet name="header">
-						Review By
+						#{lbl['lbl.cm.review.by']}
 					</f:facet>
 					
 						<div style="width:100%; "><p:inputText value="#{review.reviewedTypeName}" disabled="true" /></div>
@@ -85,7 +85,7 @@
 
 					<p:column width="10%">
 						<f:facet name="header">
-						Remark
+						#{lbl['lbl.txt.remarks']}
 					</f:facet>
 
 						<div style="width:100%; "><p:inputText value="#{review.typeRemark}" disabled="true"	size="30" /></div>
@@ -97,7 +97,7 @@
 
 					<p:column width="10%">
 						<f:facet name="header">
-						Endorse By
+						#{lbl['lbl.cm.endorse.by']}
 					</f:facet>
 
 						<div style="width:100%; ">
@@ -132,12 +132,12 @@
 
 					<p:column>
 						<f:facet name="header">
-						Remark
+						#{lbl['lbl.txt.remarks']}
 					</f:facet>
 
 						<div style="width:100%; ">
 							<p:inputText value="#{review.typeRemarkII}" size="30"
-								requiredMessage="Type Remark is required!"
+								requiredMessage="#{lbl['lbl.cm.error.error10']}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)))}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedTypeNameII, review.reviewedTypeName)}"
 								id="typeremark2" />
@@ -145,21 +145,21 @@
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.brandRemarkII}" size="30"
-								id="brandRemark2" requiredMessage="Brand Remark is required!"
+								id="brandRemark2" requiredMessage="#{lbl['lbl.cm.error.error11']}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedBrandNameII, review.reviewedBrandName)))}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.measurementRemarkII}" size="30"
-								id="measurementRemark2" requiredMessage="Measurement Remark is required!"
+								id="measurementRemark2" requiredMessage="#{lbl['lbl.cm.error.error12']}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedMeasurementNameII, review.reviewedMeasurementName)))}"></p:inputText>
 							
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.colorRemarkII}" size="30"
-								id="colorRemark2" requiredMessage="Color Remark is required!"
+								id="colorRemark2" requiredMessage="#{lbl['lbl.cm.error.error13']}"
 								required="#{unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)}"
 								disabled="#{(unspscCodeBackingBean.codeAdmin) or (!unspscCodeBackingBean.codeAdmin and !(unspscCodeBackingBean.checkRemark(review.reviewedColorNameII, review.reviewedColorName)))}"></p:inputText>
 							

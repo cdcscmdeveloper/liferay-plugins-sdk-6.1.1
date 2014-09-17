@@ -13,12 +13,12 @@
 		<h:panelGroup id="contractedItemID">
             
             <div style="text-align: left;">
-				<p:commandButton value="Back" icon="ui-icon-prev"
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-prev"
 					action="#{codificationBackingBean.backToContractedItem}" />
 
 			</div>
 				
-        <p:panel header="REQUEST DETAIL" toggleable="true">
+        <p:panel header="#{lbl['lbl.cm.request.info']}" toggleable="true">
 			<table width="100%;" >
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.doc.no']}"></p:outputLabel></td>
@@ -47,7 +47,7 @@
 			</table>
     </p:panel>
 		
-	<p:panel header="ITEM LIST" toggleable="true">
+	<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
 			<p:dataTable value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}" var="requestItem" 
 				 id="contractedTableId">
 				<p:column>

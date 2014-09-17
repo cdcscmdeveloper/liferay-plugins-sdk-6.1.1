@@ -16,7 +16,7 @@
 				value="#{lbl['lbl.cm.edit.extension.code']}"></p:outputLabel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="cancel"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					action="#{codificationBackingBean.backToPrevious}"></p:commandButton>
 				<p:commandButton value="save" action="#{codificationBackingBean.saveEditedCode}" update="@form"></p:commandButton>
 			</div>
