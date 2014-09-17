@@ -37,6 +37,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
@@ -319,13 +320,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	public SelectItem[] getDropdownValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
-		
+		FacesScopes face = new FacesScopes();
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 					.getParameterDescListBySearchBean(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		    int i = 1;
 		    for(PmParameterDesc parameterDesc : parameterDescs) {
 		    	items[i++] = new SelectItem(
@@ -366,13 +367,15 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 */
 	public SelectItem[] getDropdownCodeValuesBySearchBean(String parameterType, ISearchBean<PmParameterDesc> searchBean) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		
 		try {
 			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 					.getParameterDescListBySearchBean(parameterType, searchBean);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		    int i = 1;
 		    for(PmParameterDesc parameterDesc : parameterDescs) {
 		    	items[i++] = new SelectItem(
@@ -433,13 +436,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public SelectItem[] getStatusDropdownValues(String moduleCode, 
 			String docType) {
 		SelectItem[] items = null;
+		FacesScopes face = new FacesScopes();
 		
 		try {
 			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
 					.getStatusDescList(moduleCode, docType);
 			
 		    items = new SelectItem[statusDescs.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 		    int i = 1;
 		    for(PmStatusDesc statusDesc : statusDescs) {
 		    	items[i++] = new SelectItem(
