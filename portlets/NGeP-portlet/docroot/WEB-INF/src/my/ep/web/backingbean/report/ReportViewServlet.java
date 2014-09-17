@@ -58,9 +58,11 @@ public class ReportViewServlet extends HttpServlet {
 			response.setContentType("application/pdf");
 			response.setContentLength(urlConnection.getContentLength());
 			response.setHeader("Content-Disposition",
-					"inline; filename=NgePReport.pdf");
-			response.setHeader("Cache-Control", "cache, must-revalidate");
-			response.setHeader("Pragma", "public");
+					"attachment; filename=NgePReport.pdf");
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+			//response.setHeader("Cache-Control", "cache, must-revalidate");
+			//response.setHeader("Pragma", "public");
 			request.getSession().removeAttribute("generatedUrl");
 			outputStream.flush();
 		} catch (Exception e) {

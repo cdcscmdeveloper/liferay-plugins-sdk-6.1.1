@@ -145,7 +145,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
    /*SM start*/
 	private String supportingDocument;	
 	private String docStatus;
-	private String SuppDocStatus;
+	private String suppDocStatus;	
 	private String registrationNo;
 	private String ePNo;
 	private String applicationNo;
@@ -185,6 +185,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	
 	/*SM end*/
 	
+	public String getSuppDocStatus() {
+		return suppDocStatus;
+	}
+	public void setSuppDocStatus(String suppDocStatus) {
+		this.suppDocStatus = suppDocStatus;
+	}
 	public StreamedContent getPdfData() {
 		if(null==pdfData){
 			return new DefaultStreamedContent();
@@ -392,12 +398,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setDocStatus(String docStatus) {
 		this.docStatus = docStatus;
 	}
-	public String getSuppDocStatus() {
-		return SuppDocStatus;
-	}
-	public void setSuppDocStatus(String suppDocStatus) {
-		SuppDocStatus = suppDocStatus;
-	}
+	
 	public String getRegistrationNo() {
 		return registrationNo;
 	}
@@ -790,7 +791,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SM_TTL));
 		selectItem3.setValue(ModuleCodeConst.SUPPLIER_MANAGEMENT);
 		moduleList.add(selectItem3);
-		checkVariableValueExist();
+		//checkVariableValueExist();
 		return moduleList;
 	}
 	/*
@@ -3177,16 +3178,25 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	
 	public void enableRegistrationType(){
+		this.setEpNumber(null);
+		this.setIcNumber(null);
+		this.setBusinessRegNo(null);
+		this.setMofNumber(null);
+		getManagedBean().getRptGenBean().setMofRegView(false);
+		getManagedBean().getRptGenBean().setBasicRegView(false);
 		if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){			
 			if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)){
 				getManagedBean().getRptGenBean().setBasicRegView(true);
 				getManagedBean().getRptGenBean().setMofRegView(false);
 				this.setMofNumber(null);
-				this.setEpNumber(null);
+				this.setEpNumber(null);				
+				this.setIcNumber(null);
+				this.setBusinessRegNo(null);
 			}else if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_MOF)){
 				getManagedBean().getRptGenBean().setMofRegView(true);
 				getManagedBean().getRptGenBean().setBasicRegView(false);
-				this.setEpNumber(null);
+				this.setMofNumber(null);
+				this.setEpNumber(null);				
 				this.setIcNumber(null);
 				this.setBusinessRegNo(null);
 			}			
@@ -3198,7 +3208,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			this.setBusinessRegNo(null);
 			this.setMofNumber(null);
 		}
-		checkVariableValueExist();
+		//checkVariableValueExist();
 	}
 	/*
 	 *Generate all modules reports 
@@ -3208,7 +3218,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
 				if(((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null))){		
 					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam("reportInValid", "true");  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
@@ -3225,7 +3235,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam("reportInValid", "true");  
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
@@ -3240,8 +3250,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			req.getSession().setAttribute("generatedUrl", gnrtdURL);
 			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);			
 		} catch (Exception e) {
-			e.printStackTrace();
-		
+			e.printStackTrace();		
 		}
 	}
 	/*
@@ -3249,46 +3258,47 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */	
 	public void generateSMReport(){	
 		String url="";
-		if(((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL))||((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL))||((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL))||((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL))||((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL))){
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
+		if(((this.getSupportingDocument()!=null)&&(this.getSupportingDocument()!=ReportConst.EMPTY_VAL))||((this.getDocStatus()!=null)&&(this.getDocStatus()!=ReportConst.EMPTY_VAL))||((this.getSuppDocStatus()!=null)&&(this.getSuppDocStatus()!=ReportConst.EMPTY_VAL))||((this.getRegistrationNo()!=null)&&(this.getRegistrationNo()!=ReportConst.EMPTY_VAL))||((this.getePNo()!=null)&&(this.getePNo()!=ReportConst.EMPTY_VAL))||((this.getApplicationNo()!=null)&&(this.getApplicationNo()!=ReportConst.EMPTY_VAL))||((this.getZone()!=null)&&(this.getZone()!=ReportConst.EMPTY_VAL))||((this.getSupplierType()!=null)&&(this.getSupplierType()!=ReportConst.EMPTY_VAL))||((this.getMofRegNo()!=null)&&(this.getMofRegNo()!=ReportConst.EMPTY_VAL))||((this.getMofRegNoFrom()!=null)&&(this.getMofRegNoFrom()!=ReportConst.EMPTY_VAL))||((this.getMofRegNoTo()!=null)&&(this.getMofRegNoTo()!=ReportConst.EMPTY_VAL))||((this.getRegistrationStatus()!=null)&&(this.getRegistrationStatus()!=ReportConst.EMPTY_VAL))||((this.getCapitalNaccumFrm()!=null)&&(this.getCapitalNaccumFrm()!=ReportConst.EMPTY_VAL))||((this.getCapitalNaccumTo()!=null)&&(this.getCapitalNaccumTo().toString()!=ReportConst.EMPTY_VAL))||((this.getPaidUpCapitalNaccumShare()!=null)&&(this.getPaidUpCapitalNaccumShare().toString()!=ReportConst.EMPTY_VAL))||((this.getCategory()!=null)&&(this.getCategory()!=ReportConst.EMPTY_VAL))||((this.getNoOfCategory()!=null)&&(this.getNoOfCategory()!=ReportConst.EMPTY_VAL))||((this.getMainCategory()!=null)&&(this.getMainCategory()!=ReportConst.EMPTY_VAL))||((this.getSubCategory()!=null)&&(this.getSubCategory()!=ReportConst.EMPTY_VAL))||((this.getSubCategoryDivision()!=null)&&(this.getSubCategoryDivision()!=ReportConst.EMPTY_VAL))||((this.getRole()!=null)&&(this.getRole()!=ReportConst.EMPTY_VAL))||((this.getApplicationStatus()!=null)&&(this.getApplicationStatus()!=ReportConst.EMPTY_VAL))||((this.getState()!=null)&&(this.getState()!=ReportConst.EMPTY_VAL))||((this.getDistrict()!=null)&&(this.getDistrict()!=ReportConst.EMPTY_VAL))||((this.getSupplierName()!=null)&&(this.getSupplierName()!=ReportConst.EMPTY_VAL))||((this.getReportType()!=null)&&(this.getReportType()!=ReportConst.EMPTY_VAL))||((this.getOrganizationType()!=null)&&(this.getOrganizationType()!=ReportConst.EMPTY_VAL))||((this.getKementerian()!=null)&&(this.getKementerian()!=ReportConst.EMPTY_VAL))||((this.getNamAgensi()!=null)&&(this.getNamAgensi()!=ReportConst.EMPTY_VAL))||((this.getComplaintNo()!=null)&&(this.getComplaintNo()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getCompanyStatus()!=null)&&(this.getCompanyStatus()!=ReportConst.EMPTY_VAL))||((this.getCaseNo()!=null)&&(this.getCaseNo()!=ReportConst.EMPTY_VAL))||((this.getCompApplStatus()!=null)&&(this.getCompApplStatus()!=ReportConst.EMPTY_VAL))){
 			
-			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
+			if((this.getSupportingDocument()!=null)&&(this.getSupportingDocument()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemNameTotVar(""+this.getSupportingDocument());
 			}
-			if((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getItemType());
+			if((this.getDocStatus()!=null)&&(this.getDocStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemTypeTotVar(""+this.getDocStatus());
 			}
-			if((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getItemStatus());
+			if((this.getSuppDocStatus()!=null)&&(this.getSuppDocStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemStatusTotVar(""+this.getSuppDocStatus());
 			}
-			if((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getUnspscCode());
+			if((this.getRegistrationNo()!=null)&&(this.getRegistrationNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscCodeTotVar(""+this.getRegistrationNo());
 			}
-			if((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getUnspscTitle());
+			if((this.getePNo()!=null)&&(this.getePNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscTitleTotVar(""+this.getePNo());
 			}			
-			if((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getExtentionType());
+			if((this.getApplicationNo()!=null)&&(this.getApplicationNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionTypeTotVar(""+this.getApplicationNo());
 			}
-			if((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ+this.getExtentionBrand());
+			if((this.getZone()!=null)&&(this.getZone()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionBrandTotVar(""+this.getZone());
 			}
-			if((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ+this.getExtentionMeasurment());
+			if((this.getSupplierType()!=null)&&(this.getSupplierType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionMeasurmentTotVar(""+this.getSupplierType());
 			}
-			if((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ+this.getExtentionColour());
+			if((this.getMofRegNo()!=null)&&(this.getMofRegNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionColourTotVar(""+this.getMofRegNo());
 			}				
-			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
+			if((this.getMofRegNoFrom()!=null)&&(this.getMofRegNoFrom()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompanyNameTotVar(""+this.getMofRegNoFrom());
 			}
-			if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getRegistrationType());
+			if((this.getMofRegNoTo()!=null)&&(this.getMofRegNoTo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationTypeTotVar(""+this.getMofRegNoTo());
 			}
-			if((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getItemCategory());
+			if((this.getMofRegNoTo()!=null)&&(this.getMofRegNoTo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemCategoryTotVar(""+this.getMofRegNoTo());
 			}
-			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
+			if((this.getRegistrationStatus()!=null)&&(this.getRegistrationStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setProofIdentityTotVar(""+this.getRegistrationStatus());
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
@@ -3297,14 +3307,77 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
 			}
-			if((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setEpNumberTotVar(ReportConst.AMP_EP_NO_EQ+this.getEpNumber());
+			if((this.getCapitalNaccumFrm()!=null)&&(this.getCapitalNaccumFrm()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setEpNumberTotVar(""+this.getCapitalNaccumFrm());
 			}
-			if((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setBusinessRegNoTotVar(ReportConst.AMP_BUSI_REG_NO_EQ+this.getBusinessRegNo());
+			if((this.getCapitalNaccumTo()!=null)&&(this.getCapitalNaccumTo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setBusinessRegNoTotVar(""+this.getCapitalNaccumTo());
 			}
-			if((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setIcNumberTotVar(ReportConst.AMP_IC_NO_EQ+this.getIcNumber());
+			if((this.getPaidUpCapitalNaccumShare()!=null)&&(this.getPaidUpCapitalNaccumShare()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setIcNumberTotVar(""+this.getPaidUpCapitalNaccumShare());
+			}
+			if((this.getCategory()!=null)&&(this.getCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getCategory());
+			}
+			if((this.getNoOfCategory()!=null)&&(this.getNoOfCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getNoOfCategory());
+			}
+			if((this.getMainCategory()!=null)&&(this.getMainCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getMainCategory());
+			}
+			if((this.getSubCategory()!=null)&&(this.getSubCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getSubCategory());
+			}
+			if((this.getSubCategoryDivision()!=null)&&(this.getSubCategoryDivision()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getSubCategoryDivision());
+			}
+			if((this.getRole()!=null)&&(this.getRole()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getRole());
+			}
+			if((this.getApplicationStatus()!=null)&&(this.getApplicationStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getApplicationStatus());
+			}
+			if((this.getState()!=null)&&(this.getState()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getState());
+			}
+			if((this.getDistrict()!=null)&&(this.getDistrict()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getDistrict());
+			}
+			if((this.getSupplierName()!=null)&&(this.getSupplierName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getSupplierName());
+			}
+			if((this.getReportType()!=null)&&(this.getReportType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getReportType());
+			}
+			if((this.getOrganizationType()!=null)&&(this.getOrganizationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getOrganizationType());
+			}
+			if((this.getKementerian()!=null)&&(this.getKementerian()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getKementerian());
+			}
+			if((this.getNamAgensi()!=null)&&(this.getNamAgensi()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getNamAgensi());
+			}			
+			if((this.getComplaintNo()!=null)&&(this.getComplaintNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getComplaintNo());
+			}
+			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getProofIdentity());
+			}
+			if((this.getCompanyStatus()!=null)&&(this.getCompanyStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getCompanyStatus());
+			}
+			if((this.getCaseNo()!=null)&&(this.getCaseNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getCaseNo());
+			}
+			if((this.getCompApplStatus()!=null)&&(this.getCompApplStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getCompApplStatus());
+			}
+			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
+			}
+			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
 			}
 			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
 				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
@@ -3330,12 +3403,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
-			url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-			setGeneratedURL(url);
-			log.info(url);
+			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
+				url=ReportConst.EXC_PREV_URL+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
+				setGeneratedURL(url);
+				log.info(url);
+			}else{
+				RequestContext context = RequestContext.getCurrentInstance();  
+		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
+				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+			}
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam("reportInValid", "true");  
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -3355,7 +3434,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam("reportInValid", "true");
+		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
@@ -3405,12 +3484,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam("reportInValid", "true");
+		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam("reportInValid", "true");
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -3505,13 +3584,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				setGeneratedURL(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam("reportInValid", "true");
+		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 			log.info(url);
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam("reportInValid", "true");  
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -3713,7 +3792,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam("reportInValid", "true");
+		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
 			/*try {
@@ -3724,7 +3803,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}*/			
 		}else{
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam("reportInValid", "true");
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -3798,7 +3877,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	    	this.setQuotationNo(null);
 	    	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
 	    }
-	    checkVariableValueExist();
+	    //checkVariableValueExist();
 	}
 	/*
 	 *Clear report criteria 
@@ -3855,7 +3934,44 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setIcNumber(null);
 		this.setBusinessRegNo(null);
 		this.setMofNumber(null);
-		checkVariableValueExist();
+		this.setSupportingDocument(null);	
+		this.setDocStatus(null);
+		this.setSuppDocStatus(null);
+		this.setRegistrationNo(null);
+		this.setePNo(null);
+		this.setApplicationNo(null);
+		this.setZone(null);
+		this.setSupplierType(null);
+		this.setMofRegNo(null);
+		this.setMofRegNoFrom(null);
+		this.setMofRegNoTo(null);
+		this.setRegistrationStatus(null);
+		this.setCapitalNaccumFrm(null);
+		this.setCapitalNaccumTo(null);	
+		this.setPaidUpCapitalNaccumShare(null);
+		this.setCategory(null);
+		this.setNoOfCategory(null);
+		this.setMainCategory(null);
+		this.setSubCategory(null);
+		this.setSubCategoryDivision(null);
+		this.setRole(null);
+		this.setApplicationStatus(null);
+		this.setCancelledBy(null);
+		this.setPaymentType(null);
+		this.setApplicationType(null);
+		this.setState(null);
+		this.setDistrict(null);
+		this.setSupplierName(null);
+		this.setReportType(null);
+		this.setOrganizationType(null);
+		this.setKementerian(null);
+		this.setNamAgensi(null);
+		this.setComplaintNo(null);
+		this.setProofIdentity(null);
+		this.setCompanyStatus(null);
+		this.setCaseNo(null);
+		this.setCompApplStatus(null);
+		//checkVariableValueExist();
 	}
 	
 	public File newDownloadingFile(String url) throws IOException {		

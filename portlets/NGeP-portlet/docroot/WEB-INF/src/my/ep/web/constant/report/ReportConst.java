@@ -448,4 +448,6 @@ public class ReportConst {
 	public static final String DISC_SECRETARY_SK = "DISC_SECRETARY_SK";
 	public static final String DISC_SECRETARY = "DISC_SECRETARY";
 	public static final String NO_URL_PROVIDED_FOR_THIS_RPT = "lbl.rpt.search.criteria.NO_URL_PROVIDED_FOR_THIS_RPT";
+	public static final String RPT_IN_VALID = "reportInValid";
+	public static final String RPT_TRUE = "true";
 }
