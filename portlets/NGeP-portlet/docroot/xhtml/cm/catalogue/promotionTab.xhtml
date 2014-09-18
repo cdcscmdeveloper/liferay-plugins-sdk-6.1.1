@@ -70,7 +70,7 @@
 			</p:column>
 			<p:column>
 				<p:panel id="promotionErrorLink" styleClass="noBorders tr,noBorders td">
-					<p:commandLink title="Error" update=":form"
+					<p:commandLink title="#{lbl['lbl.txt.error']}" update=":form"
 						oncomplete="errorDialog.show();"
 						actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
 						rendered="#{!catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">

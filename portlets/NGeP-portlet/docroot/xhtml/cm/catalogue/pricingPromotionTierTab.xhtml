@@ -96,7 +96,7 @@
 					<tr>
 
 						<td style="text-align: right;"><p:commandLink
-								style="margin-left: 10px;" title="Delete"
+								style="margin-left: 10px;" title="#{lbl['lbl.btn.delete']}"
 								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
@@ -104,7 +104,7 @@
 							</p:commandLink></td>
 						<td style="text-align: right;">
 							<p:panel id="pTErrorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="Error" process="@this"
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 									actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
 									update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
 									oncomplete="errorDialog.show();"
