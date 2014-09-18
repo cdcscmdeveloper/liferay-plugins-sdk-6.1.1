@@ -142,15 +142,16 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					<td><p:selectOneMenu id="locationLevels" style="width: 178px;"
 							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
 							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change" listener="#{panelBackingBean.selectLocation}"></p:ajax>
+							<p:ajax event="change" listener="#{panelBackingBean.selectLocation}" process="@this" update=":form:zoneGeneralDataTable"/>
 						</p:selectOneMenu>
 					</td>
 				</tr>
 			</table>
 		  
 		      <p:spacer height="20" />
-		     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" var="panelZoneVar"
-		        selectionMode="single" selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
+		     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
+		        var="panelZoneVar" selectionMode="single" 
+		        selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" process="@this"  />	
 					<p:column headerText="Location" style="width:60%">
