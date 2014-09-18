@@ -17,11 +17,11 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td style="text-align: left;"><p:commandButton value="Back"
+				<td style="text-align: left;"><p:commandButton value="#{lbl['lbl.cm.back']}"
 						icon="ui-icon-back"
 						action="#{catalogueBackingBean.backTocatalogueSearch}" /></td>
 				<td style="text-align: right;"><p:commandButton
-						value="Contract Request" action="#{catalogueBackingBean.navigateToCR}"/></td>
+						value="#{lbl['lbl.cm.contract.request']}" action="#{catalogueBackingBean.navigateToCR}"/></td>
 			</tr>
 		</table>
 
@@ -61,7 +61,7 @@
 							#{contractObj.uomName}
 							</p:column>
 
-				<p:column headerText="Action" width="2%">
+				<p:column headerText="#{lbl['lbl.cm.action']}" width="2%">
 					<p:commandLink
 						action="#{catalogueBackingBean.deleteContractRequestItem(rowIndex)}"
 						update=":form:contractRequestId">

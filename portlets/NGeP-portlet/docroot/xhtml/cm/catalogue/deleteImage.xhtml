@@ -26,7 +26,7 @@
 			<f:facet name="header">
 					#{lbl['lbl.cm.action']}
 				</f:facet>
-			<p:commandLink title="Delete" update=":form:deleteImageId"
+			<p:commandLink title="#{lbl['lbl.btn.delete']}" update=":form:deleteImageId"
 				action="#{catalogueBackingBean.deleteImage(rowIndex)}">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 			</p:commandLink>
