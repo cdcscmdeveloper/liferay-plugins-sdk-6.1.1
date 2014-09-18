@@ -1449,16 +1449,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-	public boolean isPurchaseInquiry(ScRequestNoteDtl requestNoteDtl) {
+	public boolean showPurchaseInqIcon(ScRequestNoteDtl requestNoteDtl) {
+		log.info("showPurchaseInqIcon");
 		Boolean isPurchaseInq= Boolean.FALSE;
-		if(requestNoteDtl.getRequestItem() != null){
-			if(requestNoteDtl.getRequestItem().getSupplierItems() != null && requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
-				for (ScRequestSupplierItem scRequestSupplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
-					if(scRequestSupplierItem.getScPrInquiy() != null){
-						isPurchaseInq = Boolean.TRUE;
-						break;
-					} else{
-						isPurchaseInq = Boolean.FALSE;
+		if(requestNoteDtl != null){
+			if(requestNoteDtl.getRequestItem() != null){
+				if(requestNoteDtl.getRequestItem().getSupplierItems() != null && requestNoteDtl.getRequestItem().getSupplierItems().size()>0){
+					for (ScRequestSupplierItem scRequestSupplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
+						if(scRequestSupplierItem.getScPrInquiy() != null){
+							isPurchaseInq = Boolean.TRUE;
+							break;
+						} else{
+							isPurchaseInq = Boolean.FALSE;
+						}
 					}
 				}
 			}
