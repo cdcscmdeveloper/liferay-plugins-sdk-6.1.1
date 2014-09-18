@@ -119,6 +119,7 @@
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="5"
+								disabled="#{doItems.delQtyDisabled}"
 								maxlength="15" styleClass="colFloatRight"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber
