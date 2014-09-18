@@ -3188,11 +3188,12 @@ public class SpecificationBackingBean extends
 
 						getManagedBean().getZoneTrees().remove(
 								getManagedBean().getIndex());
-						localList.add(LocationSingleton.getInstance()
-								.buildLocationTree(null, states, districts,
-										divisions, cities,
-										ScQtLocCriteria.class));
-						getManagedBean().getZoneTrees().addAll(localList);
+						getManagedBean().getZoneTrees().add(
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, localStaeList,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+
 					}
 				}
 
