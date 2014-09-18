@@ -116,7 +116,7 @@ public class LocationSingleton {
 					if (division.getPmDistricts() != null
 							&& !division.getPmDistricts().isEmpty()) {
 						for (PmDistrict district : division.getPmDistricts()) {
-							//district.setPmState(pmState);
+							// district.setPmState(pmState);
 							if (district.getPmCities() != null
 									&& !district.getPmCities().isEmpty()) {
 								for (PmCity city : district.getPmCities()) {
@@ -1980,36 +1980,42 @@ public class LocationSingleton {
 		return rootNode;
 	}
 
-	public TreeNode constuctPanelTreeNodes(List<CtPanelZone> ctPanelZones) {
+	public TreeNode constuctPanelTreeNodes(CtPanelZone ctPanelZones,List<CtPanelZoneDtl> panelZoneDtls) {
 		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
 		if (null != ctPanelZones) {
-			for (CtPanelZone ctPanelZone : ctPanelZones) {
+			//for (CtPanelZone ctPanelZone : ctPanelZones) {
+				TplSpecZoneDtl specZoneDtl = new TplSpecZoneDtl();
+				specZoneDtl.setZoneName(ctPanelZones.getName());
+				specZoneDtl.setPanelZone(ctPanelZones);
 				TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
-						ctPanelZone, root);
+						specZoneDtl, root);
 				List<PmState> states = new ArrayList<PmState>();
 
 				TreeNode stateNode = null;
-				List<CtPanelZoneDtl> panelZoneDtls = ctPanelZone
-						.getPanelZoneDtls();
+				//List<CtPanelZoneDtl> panelZoneDtls = ctPanelZones
+						//.getPanelZoneDtls();
 
 				for (CtPanelZoneDtl panelZoneDtl : panelZoneDtls) {
+					TplSpecZoneLoc zoneLoc = new TplSpecZoneLoc();
 					PmState pmState = panelZoneDtl.getStateId();
 
 					if (null != pmState && !states.contains(pmState)) {
+						zoneLoc.setPmState(pmState);
 						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
-								panelZoneDtl, zoneNode);
+								zoneLoc, zoneNode);
 
 					}
 					PmDistrict pmDistrict = panelZoneDtl.getDistrictId();
 					if (pmDistrict != null) {
-						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
-								panelZoneDtl, stateNode);
+						zoneLoc.setPmDistrict(pmDistrict);
+						new DefaultTreeNode(QTConstants.NODE_DISTRICT, zoneLoc,
+								stateNode);
 
 					}
 					states.add(pmState);
 				}
 
-			}
+			//}
 		}
 		return root;
 	}
