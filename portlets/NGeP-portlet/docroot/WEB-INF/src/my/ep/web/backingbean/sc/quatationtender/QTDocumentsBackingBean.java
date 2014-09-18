@@ -444,7 +444,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return "/xhtml/sc/quatationtender/quatationtendercreation.xhtml?faces-redirect=true";
 	}
 	
-	public void downloadReport(ScQtDocReport scQtDocReport) throws IOException {
+	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
 		debugLogger("downloadReport");
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
 		if (scQtDocReportAttachment == null) {
@@ -453,7 +453,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		downloadFile(scQtDocReportAttachment);
 	}
 	
-	public void downloadAllReports() throws IOException {
+	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
@@ -470,12 +470,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	/**
 	 * @param scQtReport
 	 * @return
+	 * @throws Exception 
 	 */
-	private ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) {
+	private ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) throws Exception {
 		String definitionType = scQtDocReport.getDefinationType().getParameterCode();
 		ScQtDocReportAttachment scQtDocReportAttachment = null;
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
-			try {
+			//try {
 				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
 				scQtDocReportAttachment = new ScQtDocReportAttachment();
 				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
@@ -510,10 +511,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				} else if (SourcingConstants.DOC_DEF_KEY_DELIVERY_SERVICE_ADDRESS.equals(docDefinitionKey)) {
 					generateDeliveryAddressPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				}
-			} catch (Exception e) {
+			/*} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
-			}
+			}*/
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 		return scQtDocReportAttachment;
@@ -588,10 +589,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setScQt(qt);
 			reqDTO.setSpecType(QTConstants.FINANCIAL_DOC_TYPE);
 			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
-			financeSpecList = resDto.getSpecResultBean().getResultList();
+			financeSpecList = resDto.getFinancialCheckLists();
 		} finally {
 			specSO = null;
 		}
@@ -624,10 +625,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setScQt(qt);
 			reqDTO.setSpecType(QTConstants.TECHNICAL_DOC_TYPE);
 			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
-			techSpecList = resDto.getSpecResultBean().getResultList();
+			techSpecList = resDto.getTechnicalCheckList();
 		} finally {
 			specSO = null;
 		}
@@ -799,14 +800,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		context.put("localGoods", localGoods);
 		if (tplSpecQuestionsList != null) {
 			tplSpecQuestionsList = master.getTplSpecQuestions();
-			for (TplSpecQuestion tplSpecQuestion : tplSpecQuestionsList) {
-				TplSpecQuestion question = null;
+			for (TplSpecQuestion question : tplSpecQuestionsList) {
+				/*TplSpecQuestion question = null;
 				try {
 					question = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);
 				} catch (IllegalAccessException | InstantiationException
 						| InvocationTargetException | NoSuchMethodException e) {
 					e.printStackTrace();
-				}
+				}*/
 				if (question.getClItem() == null){
 					question.setClItem("");
 				}

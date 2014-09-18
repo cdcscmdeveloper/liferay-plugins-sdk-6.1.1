@@ -1475,10 +1475,6 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setQuotationTenderDataType(obj);
 		this.getManagedBean().setProcessName(res.getProcessName());
 		
-		/*Long qtId = 2649L;
-		retrieveFinalizationSecratryDtl(qtId);
-		retrieveQuationTenderDetails(new Long(qtId), null);*/
-
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.MAINTANANCE_PAGE);
