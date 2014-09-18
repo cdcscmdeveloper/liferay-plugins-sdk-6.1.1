@@ -610,6 +610,35 @@ public class CodificationBackingBean extends
 		this.getManagedBean().getSelectedUNSPSCObj()
 				.setUnspscTitle(unspscObj.getUnspscTitle());*/
 
+
+
+		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
+			if (!StringUtils.isBlank(brand.getBrandName())) {
+				this.getManagedBean()
+						.getBrandCriteria()
+						.add(new SelectItem(brand.getBrandId(), brand
+								.getBrandName()));
+			}
+		}
+
+		for (CmType type : resDTO.getCommodityObj().getCmType()) {
+			if (!StringUtils.isBlank(type.getTypeName())) {
+				this.getManagedBean()
+						.getTypeCriteria()
+						.add(new SelectItem(type.getTypeId(), type
+								.getTypeName()));
+			}
+		}
+
+		for (CmMeasurement measurement : resDTO.getCommodityObj().getCmMeasurement()) {
+			if (!StringUtils.isBlank(measurement.getMeasurementName())) {
+				this.getManagedBean()
+						.getMeasurementCriteria()
+						.add(new SelectItem(measurement.getMeasurementId(),
+								measurement.getMeasurementName()));
+			}
+		}
+
 		resDTO = unspscSO.searchColor(reqDTO);
 
 		for (CmColor color : resDTO.getColorList()) {
@@ -622,34 +651,7 @@ public class CodificationBackingBean extends
 								.getColorName()));
 			}
 		}
-
-		for (CmBrand brand : unspscObj.getCmBrand()) {
-			if (!StringUtils.isBlank(brand.getBrandName())) {
-				this.getManagedBean()
-						.getBrandCriteria()
-						.add(new SelectItem(brand.getBrandId(), brand
-								.getBrandName()));
-			}
-		}
-
-		for (CmType type : unspscObj.getCmType()) {
-			if (!StringUtils.isBlank(type.getTypeName())) {
-				this.getManagedBean()
-						.getTypeCriteria()
-						.add(new SelectItem(type.getTypeId(), type
-								.getTypeName()));
-			}
-		}
-
-		for (CmMeasurement measurement : unspscObj.getCmMeasurement()) {
-			if (!StringUtils.isBlank(measurement.getMeasurementName())) {
-				this.getManagedBean()
-						.getMeasurementCriteria()
-						.add(new SelectItem(measurement.getMeasurementId(),
-								measurement.getMeasurementName()));
-			}
-		}
-
+		
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 
