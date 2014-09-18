@@ -5,7 +5,6 @@ package my.ep.web.backingbean.fl.paymentmatch;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +65,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
@@ -378,10 +376,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 		
-		if(getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
-			getManagedBean().setBranchName(getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
+		if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
+			getManagedBean().setBranchName(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialBranch().getBranchName());
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
+			reqDTO.setFinancialBranchId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
@@ -397,13 +395,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
-			for (PmFinancialAcc financialAcc : getManagedBean().getPaymentAdvice().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getPaymentAdvice().getFlInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getPaymentAdvice().getFlInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					break;
-				}
-	        }
 		} else { //reset back to HQ info
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialOrgId(getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
@@ -421,14 +412,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
-			
-			for (PmFinancialAcc financialAcc : getManagedBean().getPaymentAdvice().getFulfilmentOrder().getPmFinancialOrg().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getPaymentAdvice().getFlInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getPaymentAdvice().getFlInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					break;
-				}
-	        }
 		}
 	}
 	public void onTabChange(int selectedTabIndex){
