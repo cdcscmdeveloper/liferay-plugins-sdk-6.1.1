@@ -107,11 +107,11 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandLink title="Edit" 
+			<p:commandLink title="#{lbl['lbl.cm.zm.edit']}" 
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
 				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-			<p:commandLink style="margin-left: 10px;" title="Delete" oncomplete="confirmation1.show();" action="#{catalogueBackingBean.setRowIndex}" >
+			<p:commandLink style="margin-left: 10px;" title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();" action="#{catalogueBackingBean.setRowIndex}" >
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				<f:param name="index" value="#{rowIndex}"></f:param>
 			</p:commandLink>
@@ -136,7 +136,7 @@
 			cancelLabel="#{lbl['lbl.btn.cancel']}" uploadLabel="#{lbl['lbl.btn.upload']}" label="#{lbl['lbl.btn.choose']}"
 			widgetVar="fileUploadWidget" mode="advanced" id="upload"
 			allowTypes="/(\.|\/)(xls|flv|xlsx)$/" update="@form"
-			invalidFileMessage="Only XLS files are accepted">
+			invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
 		</p:fileUpload>
 
 	</p:dialog>

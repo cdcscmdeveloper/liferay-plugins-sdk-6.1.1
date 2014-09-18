@@ -80,7 +80,7 @@
 				<table width="5%">
 					<tr>
 						<td style="float: right;"><p:commandLink disabled="#{standard.standardDisabled}"
-								style="margin-left: 10px;" title="Delete"
+								style="margin-left: 10px;" title="#{lbl['lbl.btn.delete']}"
 								action="#{catalogueBackingBean.deleteZonalStandardPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalId:zStanPriceTableId">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -88,7 +88,7 @@
 
 						<td style="text-align: right;">
 							<p:panel id="zonalStanErrorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="Error" process="@this"
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 									actionListener="#{catalogueBackingBean.updateZonalStandardErrorDialog(rowIndex)}"
 									update=":form" oncomplete="errorDialog.show();"
 									rendered="#{(standard.price eq null or standard.startDate eq null or standard.endDate eq null or standard.startDate >= standard.endDate or standard.cmSupplierZone.suppZoneId == 0 or !standard.displayAction)}">

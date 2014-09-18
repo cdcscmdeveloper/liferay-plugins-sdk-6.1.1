@@ -98,19 +98,19 @@
 				
 				<table width="5%">
 					<tr>
-						<td><p:commandLink id="zTCloneLink" title="Clone" rendered="#{tier.showFlag}"
+						<td><p:commandLink id="zTCloneLink" title="#{lbl['lbl.btn.clone']}" rendered="#{tier.showFlag}"
 								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
 								action="#{catalogueBackingBean.cloneZonalTierPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
-						<td style="text-align: right;"><p:commandLink title="Delete" id="zTDeleteLink" rendered="#{tier.showFlag}" 
+						<td style="text-align: right;"><p:commandLink title="#{lbl['lbl.btn.delete']}" id="zTDeleteLink" rendered="#{tier.showFlag}" 
 								action="#{catalogueBackingBean.setZonalRowIndex}" oncomplete="confirmationZonal.show()"
 								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
-						<td><p:commandLink id="zTPromoLink" title="Promotion" rendered="#{tier.showFlag}"
+						<td><p:commandLink id="zTPromoLink" title="#{lbl['lbl.cm.promotion']}" rendered="#{tier.showFlag}"
 								disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}" 
 								action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalTierId">
@@ -118,7 +118,7 @@
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:panel id="zTErrorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="Error" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
 									rendered="#{(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"
 									oncomplete="errorDialog.show();">
 									<f:param name="index" value="#{rowIndex}"></f:param>

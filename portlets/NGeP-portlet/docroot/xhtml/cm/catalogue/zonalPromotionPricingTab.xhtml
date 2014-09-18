@@ -20,11 +20,11 @@
 
 			<p:column>
 				<f:facet name="header">
-					Zone Name
+					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
 				<p:selectOneMenu value="#{zPromotion.cmSupplierZone.suppZoneId}" disabled="#{zPromotion.standardDisabled}"
 					style="width: 128px;">
-					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
 						var="zone" itemLabel="#{zone.suppZoneName}"
@@ -76,7 +76,7 @@
 				<table width="5%">
 					<tr>
 						<td style="float: right;"><p:commandLink
-								style="margin-left: 10px;" title="Delete" disabled="#{zPromotion.standardDisabled}"
+								style="margin-left: 10px;" title="#{lbl['lbl.btn.delete']}" disabled="#{zPromotion.standardDisabled}"
 								action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -84,7 +84,7 @@
 
 						<td style="text-align: right;">
 							<p:panel id="zonalPromoErrorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="Error" process="@this"
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
 									actionListener="#{catalogueBackingBean.updateZonalPromoErrorDialog(rowIndex)}"
 									update=":form" oncomplete="errorDialog.show();"
 									rendered="#{(zPromotion.price eq null or zPromotion.startDate eq null or zPromotion.endDate eq null or zPromotion.startDate >= zPromotion.endDate or zPromotion.cmSupplierZone.suppZoneId == 0 or !zPromotion.displayAction)}">

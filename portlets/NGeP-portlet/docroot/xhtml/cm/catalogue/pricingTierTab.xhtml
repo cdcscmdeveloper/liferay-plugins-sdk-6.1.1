@@ -77,19 +77,19 @@
 				</f:facet>
 				<table width="5%">
 					<tr>
-						<td><p:commandLink id="cloneLink" title="Clone" rendered="#{price.showFlag}"
+						<td><p:commandLink id="cloneLink" title="#{lbl['lbl.btn.clone']}" rendered="#{price.showFlag}"
 								disabled="#{price.standardDisabled or price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								action="#{catalogueBackingBean.cloneTierPrice(rowIndex)}"
 								update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:addTierButton">
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
-							<p:commandLink id="deleteLink" title="Delete" action="#{catalogueBackingBean.setRowIndex}" 
+							<p:commandLink id="deleteLink" title="#{lbl['lbl.btn.delete']}" action="#{catalogueBackingBean.setRowIndex}" 
 							rendered="#{price.showFlag}" oncomplete="confirmation.show()" disabled="#{!price.displayAction}">
 								<f:param name="index" value="#{rowIndex}"></f:param>
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 							</p:commandLink></td>
-						<td><p:commandLink id="promoLink" title="Promotion"
+						<td><p:commandLink id="promoLink" title="#{lbl['lbl.cm.promotion']}"
 								disabled="#{price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction}" 
 								rendered="#{price.showFlag}"
 								action="#{catalogueBackingBean.addToPromotion(rowIndex)}"
@@ -98,7 +98,7 @@
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
 							<p:panel id="errorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="Error" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
+								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this" actionListener="#{catalogueBackingBean.updateErrorDialog(rowIndex)}" update=":form" 
 									oncomplete="errorDialog.show();" 
 									rendered="#{(price.price eq null or price.fromQty eq null or price.toQty eq null or price.fromQty >= price.toQty or price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate or !price.displayAction or !price.checkOk)}" >
 									<f:param name="index" value="#{rowIndex}"></f:param>
