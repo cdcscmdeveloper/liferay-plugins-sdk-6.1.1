@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<table style="width: 100%;">
 	 <tr>
-	   <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" action="#{panelBackingBean.backAction}" rendered="#{panelBackingBean.managedBean.action != null}" /></td>
+	   <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" 
+	             action="#{panelBackingBean.backAction}" rendered="#{panelBackingBean.managedBean.action != null}" /></td>
 	    <td class="ppRightBtn">
 	         <f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
 			 <ui:repeat var="action" value="#{panelBackingBean.managedBean.outComes}">
