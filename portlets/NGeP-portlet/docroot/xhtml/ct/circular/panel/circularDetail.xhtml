@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="pc" header="#{lbl['lbl.ct.pc.panel.pcd']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
-		<h:panelGroup rendered="#{!panelBackingBean.managedBean.updateAction and (panelBackingBean.managedBean.circularVer.extendStartDate == null)}">
+		<h:panelGroup rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.extendStartDate == null }">
 			<ui:include src="createCircularDetail.xhtml" />
 		</h:panelGroup>
-		<h:panelGroup rendered="#{panelBackingBean.managedBean.updateAction || (panelBackingBean.managedBean.circularVer.extendStartDate != null)}">
+		<h:panelGroup rendered="#{panelBackingBean.managedBean.updateAction || panelBackingBean.managedBean.circularVer.extendStartDate != null }">
 			<ui:include src="updateCircularDetail.xhtml" />
 		</h:panelGroup>	
 	</p:panel>

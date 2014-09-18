@@ -49,20 +49,17 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			
 			  <p:column headerText="UOM" style="width: 11%;">
-			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
-				       value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
-				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
-			       </ac:lov>
+			      <p:inputText id="uomLovId" style="width:95%;" value="#{panelItemsVar.pmUom.uomName}"/>
 			  </p:column>
 			  
 			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:8%;">
-			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:90%;text-align:right;" label="Min. Order Qty">
+			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:95%;text-align:right;" label="Min. Order Qty">
 			           <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, panelItemsVar.pmUom.uomCode)}" /> 
 			       </p:inputText>
 			  </p:column>
 			 
 			  <p:column headerText="Purchase Limit (RM)" style="white-space:pre-line;width:7%;">
-			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:90%;text-align:right;" label="Had Pembelian Luar Kontrak">
+			       <p:inputText value="#{panelItemsVar.maxProcureAmt}" style="width:95%;text-align:right;" label="Had Pembelian Luar Kontrak">
 			          <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			       </p:inputText>
 			  </p:column>
