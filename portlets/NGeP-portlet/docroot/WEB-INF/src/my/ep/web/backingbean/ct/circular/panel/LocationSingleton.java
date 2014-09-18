@@ -18,8 +18,6 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.web.backingbean.sc.directpurchase.LocationDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.DefaultTreeNode;
@@ -70,7 +68,7 @@ public class LocationSingleton {
 		for (PmState pmState : listStates) {
 			
 		
-			Map<PmDivision, List<PmDistrict>>	uniqueDivisionDistrict	=	getUniqueDivisionDistricts(pmState.getPmDistricts());
+			/*Map<PmDivision, List<PmDistrict>>	uniqueDivisionDistrict	=	getUniqueDivisionDistricts(pmState.getPmDistricts());
 			
 			Set<PmDivision>	divisionKeySet	=	uniqueDivisionDistrict.keySet();
 			if(divisionKeySet != null && !divisionKeySet.isEmpty()){
@@ -81,22 +79,22 @@ public class LocationSingleton {
 				pmState.setPmDivisions(new ArrayList<PmDivision>(divisionKeySet));
 			}else{
 				pmState.setPmDivisions(null);
-			}
+			}*/
 			//update the relationship for the parent
 			if(pmState.getPmDistricts() != null && !pmState.getPmDistricts().isEmpty()){
 				for(PmDistrict district: pmState.getPmDistricts()){
 					district.setPmState(pmState);
 					
-					if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
+					/*if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
 						
 						for(PmCity city: district.getPmCities()){
 							
 							city.setPmDistrict(district);
 						}
-					}
+					}*/
 				}
 			}
-			if(pmState.getPmDivisions() != null && !pmState.getPmDivisions().isEmpty()){
+			/*if(pmState.getPmDivisions() != null && !pmState.getPmDivisions().isEmpty()){
 				for(PmDivision division: pmState.getPmDivisions()){
 					division.setPmState(pmState);
 					if(division.getPmDistricts() != null && !division.getPmDistricts().isEmpty()){
@@ -111,7 +109,7 @@ public class LocationSingleton {
 						}
 					}
 				}
-			}
+			}*/
 		}
 		mapStates.put(countryId, listStates);
 		return listStates;
@@ -166,10 +164,7 @@ public class LocationSingleton {
 				if(ParameterConst.LOCATION_LEVEL_DISTRICT.equals(locationLevelCode)){
 					
 					for (PmDistrict district : state.getPmDistricts()) {
-						if(district.getPmDivision() == null){
-							
-					
-							
+						
 							CtPanelZoneDtl criteria = locClass.newInstance();
 							criteria.setDistrictId(district);
 							TreeNode districtNode = new DefaultTreeNode("district",criteria, stateNode);
@@ -177,7 +172,6 @@ public class LocationSingleton {
 							if (districtIds.contains(district.getDistrictId())) {
 								districtNode.setSelected(Boolean.TRUE);
 							}
-						}
 					}
 	
 					if (stateIds.contains(state.getStateId())) {
@@ -195,7 +189,7 @@ public class LocationSingleton {
 		return rootLocationTree;
 	}
 	
-   private Map<PmDivision, List<PmDistrict>> getUniqueDivisionDistricts(List<PmDistrict> pmDistricts) {
+   /*private Map<PmDivision, List<PmDistrict>> getUniqueDivisionDistricts(List<PmDistrict> pmDistricts) {
 		
 		Map<PmDivision, List<PmDistrict>> results = new HashMap<PmDivision, List<PmDistrict>>();
 		for (PmDistrict district : pmDistricts) {
@@ -214,7 +208,7 @@ public class LocationSingleton {
 		}
 		return results;
 	}
-   
+   */
    
    private Map<PmState, List<PmDistrict>> getUniqueStateDistrictsCities(List<PmDistrict> districts) {
 		

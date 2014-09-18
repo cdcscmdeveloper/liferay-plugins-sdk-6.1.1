@@ -12,7 +12,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt1" style="width:190px;"  required="true" maxlength="50"
+					<p:inputText id="circularNoTxt1" style="width:170px;"  required="true" maxlength="50"
 					label="#{lbl['lbl.ct.cc.cno']}" value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 				</td>
 				<td>
@@ -23,7 +23,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt1" rows="3" style="width:190px;" maxlength="200"
+					<p:inputTextarea id="circularNameTxt1" rows="3" style="width:170px;" maxlength="200"
 					   required="true" label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
@@ -32,7 +32,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
-				<td><p:inputText  style="width:190px;" maxlength="50"
+				<td><p:inputText  style="width:170px;" maxlength="50"
 					  value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
 			<tr>
@@ -61,14 +61,16 @@
 			<tr>
 		   	     <td><h:outputLabel value="#{lbl['lbl.ct.pc.compdeadline']}" /></td>
 			     <td><h:panelGroup>
-				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" maxlength="4" style="margin-top:2px;text-align:right; width:50px;" />
+				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
+				       maxlength="4" style="margin-top:2px;text-align:right; width:50px;" />
 				     <p:spacer width="5" />
 				     <h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			        </h:panelGroup>	</td>
 			       <td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.paymentday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" maxlength="4" style="margin-top:2px;text-align:right; width:50px;" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
+				  maxlength="4" style="margin-top:2px;text-align:right; width:50px;" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
@@ -78,7 +80,8 @@
 			<tr>
 			<td><h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" maxlength="4" style="text-align:right; width:50px;">
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
+				    maxlength="4" style="text-align:right; width:50px;">
 				</p:inputText>
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
@@ -86,7 +89,8 @@
 			<td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.lastreqday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" maxlength="4" style="text-align:right; width:50px;" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
+				   maxlength="4" style="text-align:right; width:50px;" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
@@ -96,14 +100,16 @@
 			<tr>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.replacementday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" maxlength="4" style="text-align:right; width:50px;" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
+				  maxlength="4" style="text-align:right; width:50px;" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup>	</td>
 			<td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.warrantyperiod']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" maxlength="4" style="text-align:right; width:50px;" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}"
+				   maxlength="4" style="text-align:right; width:50px;" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			</h:panelGroup>	</td>
@@ -131,14 +137,14 @@
 			<tr>
 			<td><p:outputLabel value="#{lbl['lbl.ct.pc.extstartdt']}" /></td>
 			<td>
-			  <p:calendar style="width:180px;" value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
-			    disabled="true" size="24" id="popupButtonCal5" showOn="button"
+			  <p:calendar  value="#{panelBackingBean.managedBean.circularVer.extendStartDate}" 
+			    disabled="true" size="17" id="popupButtonCal5" showOn="button"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" >
 		       </p:calendar>
 		    </td>
 			<td> </td>	
 			<td><p:outputLabel value="#{lbl['lbl.ct.pc.extenddt']}" /></td>
-			<td><p:calendar size="24" value="#{panelBackingBean.managedBean.circularVer.extendEndDate}" disabled="true"
+			<td><p:calendar size="17" value="#{panelBackingBean.managedBean.circularVer.extendEndDate}" disabled="true"
 				 pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" showOn="button" id="popupButtonCal6" >
 				</p:calendar>
 			</td>

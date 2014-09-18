@@ -12,7 +12,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:190px; margin-top:2px;" label="#{lbl['lbl.ct.cc.cno']}"
+					<p:inputText id="circularNoTxt" style="width:170px; margin-top:2px;" label="#{lbl['lbl.ct.cc.cno']}"
 					 required="true" maxlength="50"
 						value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 				</td>
@@ -24,7 +24,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt" rows="3" style="width:190px;" maxlength="200" required="true" 
+					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px;" maxlength="200" required="true" 
 						label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
@@ -33,7 +33,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
-				<td><p:inputText  style="width:190px;" maxlength="50"
+				<td><p:inputText  style="width:170px;" maxlength="50"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
 			<tr>
@@ -44,7 +44,7 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			       		navigator="true" size="22" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
+			       		navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
 			       	 <p:ajax event="dateSelect" update="popupButtonCal1" />
 			       	</p:calendar> 
 			   </td>
@@ -58,7 +58,7 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="22" navigator="true"
+			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
 			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}">
 			         	 <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                          <f:validator validatorId="primeDateRangeValidator" />
@@ -71,14 +71,16 @@
 			<tr>
 		   	     <td><h:outputLabel value="#{lbl['lbl.ct.pc.compdeadline']}" /></td>
 			     <td><h:panelGroup>
-				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.pc.compdeadline']}" />
+				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
+				       maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.pc.compdeadline']}" />
 				     <p:spacer width="5" />
 				     <h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			        </h:panelGroup>	</td>
 			       <td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.paymentday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.pc.paymentday']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
+				    maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.pc.paymentday']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
@@ -88,14 +90,16 @@
 			<tr>
 			<td><h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.delivery.period']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
+				    maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.delivery.period']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup>	</td>
 			<td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.lastreqday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.lastreqday']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
+				     maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.lastreqday']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup></td>
@@ -105,14 +109,16 @@
 			<tr>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.replacementday']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.replacementday']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
+				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.replacementday']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
 			</h:panelGroup>	</td>
 			<td></td>
 			<td><h:outputLabel value="#{lbl['lbl.ct.pc.warrantyperiod']}" /></td>
 			<td><h:panelGroup>
-				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.warrantyperiod']}" />
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" 
+				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.warrantyperiod']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.pc.months']}" />
 			</h:panelGroup>	</td>

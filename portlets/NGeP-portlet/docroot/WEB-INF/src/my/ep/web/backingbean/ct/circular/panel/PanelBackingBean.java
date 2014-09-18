@@ -317,7 +317,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    else 
 				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			
-			
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
@@ -1281,7 +1280,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 				getManagedBean().setRootZoanlTree(
 						LocationSingleton.getInstance().buildLocationPopupTree(
-								1L, null, null, null, null,
+								1L, null, null,
 								paramDesc.getPmParameter().getParameterCode(),
 								CtPanelZoneDtl.class));
 			}
@@ -1501,7 +1500,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 	public void selectLocation(AjaxBehaviorEvent event) {
 		Long location = (Long) event.getComponent().getAttributes().get("value");
-		this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
+		getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(location);
+		getManagedBean().getSelectedPanelItems().getCtPanelZones().clear();
+		if(getManagedBean().getSelectedPanelZone() != null && 
+		    getManagedBean().getSelectedPanelZone().getCtPanelSuppliers() != null 
+			&& getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().size() > 0)
+	      	getManagedBean().getSelectedPanelZone().getCtPanelSuppliers().clear();
 	}
 	
 	public void bulkUpdateItem(){
