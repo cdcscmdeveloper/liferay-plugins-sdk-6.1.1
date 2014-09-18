@@ -3,8 +3,9 @@
  */
 package my.ep.web.bean.pm;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmZone;
 
 /**
  * Search Bean for Support Document 
@@ -14,44 +15,54 @@ import my.ep.persistence.entity.pm.common.PmZone;
  *
  */
 public class TaskAssignmentSearchBean {
-	private Long ministryId;
-	private Long ptjId;
-	private String userId;
+	
+	private PmOrgProfile orgProfile;
+	private PmUser user;
+	private PmParameter orgType;
+	
+//	private PmOrgProfile ptj;
+//	private Long ministryId;
+//	private Long ptjId;
+//	private String userId;
+	
+
 	/**
-	 * @return the ministryId
+	 * @return the user
 	 */
-	public Long getMinistryId() {
-		return ministryId;
+	public PmUser getUser() {
+		return user;
 	}
 	/**
-	 * @param ministryId the ministryId to set
+	 * @param user the user to set
 	 */
-	public void setMinistryId(Long ministryId) {
-		this.ministryId = ministryId;
+	public void setUser(PmUser user) {
+		this.user = user;
 	}
 	/**
-	 * @return the ptjId
+	 * @return the orgType
 	 */
-	public Long getPtjId() {
-		return ptjId;
+	public PmParameter getOrgType() {
+		if(orgType==null)
+			orgType = new PmParameter();
+		return orgType;
 	}
 	/**
-	 * @param ptjId the ptjId to set
+	 * @param orgType the orgType to set
 	 */
-	public void setPtjId(Long ptjId) {
-		this.ptjId = ptjId;
+	public void setOrgType(PmParameter orgType) {
+		this.orgType = orgType;
 	}
 	/**
-	 * @return the userId
+	 * @return the orgProfile
 	 */
-	public String getUserId() {
-		return userId;
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
 	}
 	/**
-	 * @param userId the userId to set
+	 * @param orgProfile the orgProfile to set
 	 */
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
 	}
 
 	

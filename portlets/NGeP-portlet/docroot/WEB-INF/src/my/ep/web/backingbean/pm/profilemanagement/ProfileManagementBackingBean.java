@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -536,7 +537,9 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 */
 	public List<PmParameterDesc> getOrgTypeList() {
 		logger.info("getOrgTypeList");
-		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES);
+		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES
+				, new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE))
+				, null);
 	}
 	
 	/**
