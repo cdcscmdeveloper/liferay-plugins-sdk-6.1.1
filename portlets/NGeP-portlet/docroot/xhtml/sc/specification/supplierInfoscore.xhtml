@@ -59,7 +59,7 @@
 					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this,#{scoringPnlId}" partialSubmit="true"
+							process="@this,#{scoringPnlId}" 
 							oncomplete="scoreWidget.paginator.endLink.click();"
 							update="#{scoringPnlId}" icon="ui-icon-add"
 							actionListener="#{specificationBackingBean.addScoring(30)}" />

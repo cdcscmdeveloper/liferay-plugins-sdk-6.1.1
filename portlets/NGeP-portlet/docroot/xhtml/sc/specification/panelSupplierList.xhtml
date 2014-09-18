@@ -15,7 +15,7 @@
 
 
 			<p:dataTable id="ctSupplierZones"
-				value="#{specificationBackingBean.managedBean.ctZoneSuppliers}"
+				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 				var="Zones" rowIndexVar="index"
 				selection="#{specificationBackingBean.managedBean.panelZoneSelect}"
 				dynamic="true">
@@ -29,13 +29,13 @@
 							listener="#{specificationBackingBean.retriveZoneBySupplier}" />
 
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.name}" />
+							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
 						<p:treeNode type="state">
-							<h:outputText value="#{location.stateId.stateName}" />
+							<h:outputText value="#{location.pmState.stateName}" />
 						</p:treeNode>
 						<p:treeNode type="district">
-							<h:outputText value="#{location.districtId.districtName}" />
+							<h:outputText value="#{location.pmDistrict.districtName}" />
 						</p:treeNode>
 					</p:tree>
 				</p:column>

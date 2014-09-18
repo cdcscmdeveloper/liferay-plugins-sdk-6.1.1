@@ -207,8 +207,8 @@
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-						update="@([id$=zonePopupPanel])" oncomplete="ZoneLocation.show();"
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+						update="@([id$=zonePopupPanel])" 
 						disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
