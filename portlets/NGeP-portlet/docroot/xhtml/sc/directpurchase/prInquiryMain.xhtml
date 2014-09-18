@@ -29,21 +29,20 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					icon="ui-icon-submit"  update="@form"/>
 	    </c:if>
 
-	   <c:if test="#{purchaseInquiryBackingBean.managedBean.taskId ne null}">
+	 
 	     <table style="width:100%">
 			<tr>
 				<td align="right">
-		     	<c:choose>
+	           <!-- view back button --> 
+	          
+			      <p:commandButton immediate="true"
+						 rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
+					     value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
+						 style="float:left;"
+						 action="#{purchaseInquiryBackingBean.backToPervious}" />
+								
+			  <c:choose>
 				<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-				
-				    <!-- 	view back button -->
-					  <c:if test="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
-						   <p:commandButton immediate="true"
-								value="#{lbl['lbl.sc.common.back']}"
-								icon="ui-icon-back" style="float:left;"
-								action="#{purchaseInquiryBackingBean.backToPervious}" />
-					 </c:if> 
-					 
 					 <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending RN Creation'}">
 	                  
 	                       <c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
@@ -81,7 +80,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	       </td>
 		 </tr>
 	 </table>
-	</c:if>
 	</div>
 	   <table style="border: 0px;align:center;width:100%;">
 			<tr>
