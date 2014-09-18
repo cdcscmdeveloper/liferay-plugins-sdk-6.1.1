@@ -22,17 +22,17 @@
 			<p:column selectionMode="multiple" style="width:5%" />
 			<p:column headerText="#{lbl['lbl.ct.pc.cperson']}" style="width:20%;">
 				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
-				   style="width:90%;" label="#{lbl['lbl.ct.pc.cperson']}" />
+				   style="width:95%;" label="#{lbl['lbl.ct.pc.cperson']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.caddress']}" style="width:40%;">
-				<p:inputText value="#{contactPersonsVar.address}" style="width:90%;" maxlength="200" />
+				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.cemail']}" style="width:20%;">
 				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-				     style="width:90%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
+				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.pc.cemail']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.pc.pno']}" style="width:15%;">
-				<p:inputText id="validPhone" style="width:90%;" label="#{lbl['lbl.ct.pc.pno']}" maxlength="100"
+				<p:inputText id="validPhone" style="width:95%;" label="#{lbl['lbl.ct.pc.pno']}" maxlength="100"
 				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}" />
 			</p:column>
 		</p:dataTable>
