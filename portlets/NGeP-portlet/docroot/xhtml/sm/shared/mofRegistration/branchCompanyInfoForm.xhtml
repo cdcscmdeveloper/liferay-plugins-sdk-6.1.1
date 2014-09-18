@@ -58,9 +58,15 @@
 					<h:outputText value="#{branchBean.branchName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"  style="width :350px;white-space : normal">
-					<h:outputText
-						value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
+				<p:column headerText="#{lbl['lbl.sm.companyaddress']}"
+					style="width :350px;white-space : normal">
+					<p:outputLabel
+						value="#{backingBean.getFullAddress(branchBean.smAddress)}"
+						style="float : left" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}"
+					style="width :150px;white-space : normal">
+					<h:outputText value="#{branchBean.smPersonnel.name}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink id="selectButton" update=":form:tt:banchDialog"

@@ -8,14 +8,16 @@
 
 	<p:panel
 		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
-		toggleable="true">
+		toggleable="true" id="offSupDocPanelHdr">
 		<table style="width: 30%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
 				<td><p:selectOneRadio id="offLnSuppDocs"
 						value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}" itemValue="F" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+							itemValue="F" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+							itemValue="O" />
 						<p:ajax update="supDocPan" event="change" />
 					</p:selectOneRadio></td>
 			</tr>
@@ -122,7 +124,7 @@
 		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.printList']}">
-				<p:printer target=":form:tt:supDocPan" />
+				<p:printer target=":form:tt:offSupDocPanelHdr" />
 			</p:commandButton>
 		</div>
 

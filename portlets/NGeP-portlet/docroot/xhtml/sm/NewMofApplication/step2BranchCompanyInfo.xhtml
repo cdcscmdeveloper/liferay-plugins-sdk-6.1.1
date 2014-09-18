@@ -12,8 +12,6 @@
 				<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
 				<td><ui:include
-						src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
-					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/associatedCompanyInfoForm.xhtml" />
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/companyProjectsExperienceInfoForm.xhtml" />
@@ -41,8 +39,7 @@
 	</c:if>
 
 	<c:if test="#{backingBean.managedBean.supplierUser}">
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
+		
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/associatedCompanyInfoForm.xhtml" />
 		<ui:include
