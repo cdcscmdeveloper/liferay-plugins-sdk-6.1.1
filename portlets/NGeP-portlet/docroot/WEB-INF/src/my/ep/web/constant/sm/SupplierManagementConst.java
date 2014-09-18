@@ -232,6 +232,9 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_HGHR_ROLENAME = "Higher Management";
 	public static final String PERSONNEL_DIR_ROLENAME = "Director";
 	public static final String PERSONNEL_EQUI_OWNER = "Share Holder";
+	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
+	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
+	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
 
 	public static final String PERSONNEL_MANAGEMENT_STAFF_CONTRACTOR_PARAMCODE = "1";
 	public static final String PERSONNEL_NORMAL_STAFF_CONTRACTOR_PARAMCODE = "2";

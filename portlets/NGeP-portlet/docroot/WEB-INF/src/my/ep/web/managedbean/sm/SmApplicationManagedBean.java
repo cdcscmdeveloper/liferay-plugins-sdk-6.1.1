@@ -334,6 +334,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
 		selectedBranch.setSmAddress(defaultAddr);
+		selectedBranch.setSmPersonnel(new SmPersonnel());
 		selectedBranches = new ArrayList<SmSupplierBranch>();
 		selectedAssocCompany = new SmAssociateCompany();
 		selectedAssocCompany.setSmAddress(defaultAddr);
@@ -458,7 +459,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 			defPmCountry = new PmCountry();
 		}
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
-		DateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		DateFormat df = new SimpleDateFormat(
+				CommonConstants.DEFAULT_DATE_FORMAT);
 		today = df.format(new Date());
 		System.out.println("*** Date String *** " + df.format(new Date()));
 	}
