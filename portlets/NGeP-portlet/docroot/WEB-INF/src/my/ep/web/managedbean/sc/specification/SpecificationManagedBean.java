@@ -67,7 +67,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> scQtCheckSt2techProposal;
 
 	private List<ScQtCheckList> scQtCheckSt2financeProposalList;
-	
 
 	private ScRemark scRemark;
 
@@ -291,6 +290,24 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String otherCriteriaType;
 	private String checkListTitle;
 	private String LocalLevelCode;
+	private List<ScQtDeliveryLoc> deliveryLocRemoveList;
+	private List<ScQtCheckList> checklistRemoveList;
+
+	public List<ScQtDeliveryLoc> getDeliveryLocRemoveList() {
+		return deliveryLocRemoveList;
+	}
+
+	public void setDeliveryLocRemoveList(List<ScQtDeliveryLoc> deliveryLocRemoveList) {
+		this.deliveryLocRemoveList = deliveryLocRemoveList;
+	}
+
+	public List<ScQtCheckList> getChecklistRemoveList() {
+		return checklistRemoveList;
+	}
+
+	public void setChecklistRemoveList(List<ScQtCheckList> checklistRemoveList) {
+		this.checklistRemoveList = checklistRemoveList;
+	}
 
 	public SpecificationManagedBean() {
 
@@ -2993,7 +3010,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkListTitle the checkListTitle to set
+	 * @param checkListTitle
+	 *            the checkListTitle to set
 	 */
 	public void setCheckListTitle(String checkListTitle) {
 		this.checkListTitle = checkListTitle;
@@ -3007,11 +3025,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param localLevelCode the localLevelCode to set
+	 * @param localLevelCode
+	 *            the localLevelCode to set
 	 */
 	public void setLocalLevelCode(String localLevelCode) {
 		LocalLevelCode = localLevelCode;
 	}
 
-	
 }
