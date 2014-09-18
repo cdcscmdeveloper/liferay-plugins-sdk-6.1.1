@@ -18,7 +18,7 @@
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-					<p:inputText
+					<p:inputText disabled="#{!isEditableStatus}"
 						value="#{lOADetailBackingBean.managedBean.totalFrequency}">
 						<p:ajax event="blur" update="frequencySchedule"
 							partialSubmit="true" process="@this"
@@ -27,25 +27,16 @@
 				</h:panelGrid>
 				<p:dataTable id="frequencySchedule" var="frequency"
 					rowIndexVar="index"
-					value="#{lOADetailBackingBean.managedBean.scheduleList}">
+					value="#{lOADetailBackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
-					<p:column style="width:40%">
-
-						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
-						</f:facet>
-						<p:inputText value="#{frequency.scheduleNo}" required="true"
-							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
-							id="scheduleNum">
-							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
-						</p:inputText>
-						<p:message id="freqScheduledid" for="scheduleNum" display="icon"></p:message>
+					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}" style="width:25%">
+						<h:outputText value="#{frequency.scheduleNo}"  id="scheduleNum">
+						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:10%">
-						<p:selectOneMenu style="width:100px;" required="true"
+						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"
@@ -55,7 +46,7 @@
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.startYear}"
+						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
 							style="width:100px;" required="true">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"
@@ -65,7 +56,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:25%">
-						<p:selectOneMenu style="width:100px;" required="true"
+						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -75,9 +66,9 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
+					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" 
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;"
+						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" disabled="#{!isEditableStatus}"
 							required="true">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -100,7 +91,7 @@
 							<h:outputText value="#{lbl['lbl.ct.fulfilment.type']}" />
 						</f:facet>
 
-						<p:selectOneMenu style="width:120px;" required="true"
+						<p:selectOneMenu style="width:120px;" required="true" disabled="#{!isEditableStatus}"
 							id="scheduledTypeId" label="#{lbl['lbl.ct.fulfilment.type']}"
 							value="#{frequency.scheduleType.parameterId}">
 

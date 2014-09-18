@@ -1,20 +1,19 @@
 package my.ep.web.backingbean.sc.loa;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -24,18 +23,20 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -44,8 +45,6 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.dtl.ContractItemReqDTO;
-import my.ep.dto.ct.dtl.ContractItemResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -58,13 +57,9 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.specification.SpecificationReqDTO;
-import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
-import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
-import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -86,7 +81,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -101,6 +95,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -114,15 +109,16 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import org.springframework.util.CollectionUtils;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author Viswanath
@@ -287,7 +283,20 @@ public class LOADetailBackingBean extends
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
 			super.renewSesionObject();
 			getManagedBean().setSourceId(sourceId);
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+			
+			FacesScopes face = new FacesScopes();
+			String token = face.getBPMAuthenticationCtxToken();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);			
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			getManagedBean().setOutComes(res.getAction());	
+			getManagedBean().setTaskId(taskId);
 			/*
 			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
 			 * BpmOutcomeConst.BPM_REJECT};
@@ -329,7 +338,7 @@ public class LOADetailBackingBean extends
 		ScLoaWitness loaSupplierWitness = null;
 		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
 			String partyType = scLoaWitness.getPartyType();
-			scLoaWitness.setScLoa(scLoa);
+			// scLoaWitness.setScLoa(scLoa);
 			if (ParameterConst.WITNESS_PARTY_TYPE_AGENCY.equals(partyType)) {
 				loaAgencyWitness = scLoaWitness;
 			} else if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER
@@ -346,130 +355,233 @@ public class LOADetailBackingBean extends
 
 		// Fulfilment Schedule
 
-		List<ScQtSchedule> scheduleList = this.getManagedBean()
-				.getScheduleList();
+		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
 
-		if (scheduleList == null) {
-			scheduleList = new ArrayList<ScQtSchedule>();
-			if (null != scLoa.getScQtSchedules()
-					&& !scLoa.getScQtSchedules().isEmpty()) {
+		if (null != scheduleList && !scheduleList.isEmpty()) {
 
-				this.getManagedBean().setTotalFrequency(
-						scLoa.getScQtSchedules().size());
-				String startMonth = "";
-				String endMonth = "";
-				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
+			this.getManagedBean().setTotalFrequency(scheduleList.size());
+			String startMonth = "";
+			String endMonth = "";
+			for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-					String fromdate = dateFormat.format(scQtSchedule
-							.getFromDate());
-					String todate = dateFormat.format(scQtSchedule.getToDate());
-					String startdate = fromdate.substring(3, 5);
-					String startYear = fromdate.substring(6, fromdate.length());
-					String enddate = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
+				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
+				String todate = dateFormat.format(scQtSchedule.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
 
-					if (startdate.equalsIgnoreCase("01")) {
-						startMonth = "0";
-					}
-					if (startdate.equalsIgnoreCase("02")) {
-						startMonth = "1";
-					}
-					if (startdate.equalsIgnoreCase("03")) {
-						startMonth = "2";
-					}
-					if (startdate.equalsIgnoreCase("04")) {
-						startMonth = "3";
-					}
-					if (startdate.equalsIgnoreCase("05")) {
-						startMonth = "4";
-					}
-					if (startdate.equalsIgnoreCase("06")) {
-						startMonth = "5";
-					}
+				if (startdate.equalsIgnoreCase("01")) {
+					startMonth = "0";
+				}
+				if (startdate.equalsIgnoreCase("02")) {
+					startMonth = "1";
+				}
+				if (startdate.equalsIgnoreCase("03")) {
+					startMonth = "2";
+				}
+				if (startdate.equalsIgnoreCase("04")) {
+					startMonth = "3";
+				}
+				if (startdate.equalsIgnoreCase("05")) {
+					startMonth = "4";
+				}
+				if (startdate.equalsIgnoreCase("06")) {
+					startMonth = "5";
+				}
 
-					if (startdate.equalsIgnoreCase("07")) {
-						startMonth = "6";
-					}
-					if (startdate.equalsIgnoreCase("08")) {
-						startMonth = "7";
-					}
-					if (startdate.equalsIgnoreCase("09")) {
-						startMonth = "8";
-					}
-					if (startdate.equalsIgnoreCase("10")) {
-						startMonth = "9";
-					}
-					if (startdate.equalsIgnoreCase("11")) {
-						startMonth = "10";
-					}
-					if (startdate.equalsIgnoreCase("12")) {
-						startMonth = "11";
-					}
+				if (startdate.equalsIgnoreCase("07")) {
+					startMonth = "6";
+				}
+				if (startdate.equalsIgnoreCase("08")) {
+					startMonth = "7";
+				}
+				if (startdate.equalsIgnoreCase("09")) {
+					startMonth = "8";
+				}
+				if (startdate.equalsIgnoreCase("10")) {
+					startMonth = "9";
+				}
+				if (startdate.equalsIgnoreCase("11")) {
+					startMonth = "10";
+				}
+				if (startdate.equalsIgnoreCase("12")) {
+					startMonth = "11";
+				}
 
-					if (enddate.equalsIgnoreCase("01")) {
-						endMonth = "0";
-					}
-					if (enddate.equalsIgnoreCase("02")) {
-						endMonth = "1";
-					}
-					if (enddate.equalsIgnoreCase("03")) {
-						endMonth = "2";
-					}
-					if (enddate.equalsIgnoreCase("04")) {
-						endMonth = "3";
-					}
-					if (enddate.equalsIgnoreCase("05")) {
-						endMonth = "4";
-					}
-					if (enddate.equalsIgnoreCase("06")) {
-						endMonth = "5";
-					}
+				if (enddate.equalsIgnoreCase("01")) {
+					endMonth = "0";
+				}
+				if (enddate.equalsIgnoreCase("02")) {
+					endMonth = "1";
+				}
+				if (enddate.equalsIgnoreCase("03")) {
+					endMonth = "2";
+				}
+				if (enddate.equalsIgnoreCase("04")) {
+					endMonth = "3";
+				}
+				if (enddate.equalsIgnoreCase("05")) {
+					endMonth = "4";
+				}
+				if (enddate.equalsIgnoreCase("06")) {
+					endMonth = "5";
+				}
 
-					if (enddate.equalsIgnoreCase("07")) {
-						endMonth = "6";
-					}
-					if (enddate.equalsIgnoreCase("08")) {
-						endMonth = "7";
-					}
-					if (enddate.equalsIgnoreCase("09")) {
-						endMonth = "8";
-					}
-					if (enddate.equalsIgnoreCase("11")) {
-						endMonth = "10";
-					}
-					if (enddate.equalsIgnoreCase("12")) {
-						endMonth = "11";
-					}
-					int start = Integer.parseInt(startMonth);
-					int end = Integer.parseInt(endMonth);
-					int sYear = Integer.parseInt(startYear);
-					int eYear = Integer.parseInt(endYear);
-					int diffYear = 0;
-					int count = 0;
+				if (enddate.equalsIgnoreCase("07")) {
+					endMonth = "6";
+				}
+				if (enddate.equalsIgnoreCase("08")) {
+					endMonth = "7";
+				}
+				if (enddate.equalsIgnoreCase("09")) {
+					endMonth = "8";
+				}
+				if (enddate.equalsIgnoreCase("11")) {
+					endMonth = "10";
+				}
+				if (enddate.equalsIgnoreCase("12")) {
+					endMonth = "11";
+				}
+				int start = Integer.parseInt(startMonth);
+				int end = Integer.parseInt(endMonth);
+				int sYear = Integer.parseInt(startYear);
+				int eYear = Integer.parseInt(endYear);
+				int diffYear = 0;
+				int count = 0;
 
-					if (eYear >= sYear) {
-						if (endYear != startYear) {
-							diffYear = eYear - sYear;
+				if (eYear >= sYear) {
+					if (endYear != startYear) {
+						diffYear = eYear - sYear;
+					}
+					for (int i = start + 1; i <= end + 1; i++) {
+						count++;
+					}
+					count = count + (diffYear * 12);
+					scQtSchedule.setTotalMonths(new BigDecimal(count));
+				} else {
+					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+				}
+				scQtSchedule.setStartMonth(startMonth);
+				scQtSchedule.setEndMonth(endMonth);
+				scQtSchedule.setStartYear(startYear);
+				scQtSchedule.setEndYear(endYear);
+			}
+			this.sortFrequentScheduleList(scLoa.getScQtSchedules());
+
+			// this.getManagedBean().setScheduleList(scheduleList);
+		}
+
+		if (getManagedBean().getScQt() != null) {
+			List<ScQtProgressivePayment> progressivePayment = this
+					.getManagedBean().getProgressivePaymentList();
+			if (progressivePayment == null) {
+				progressivePayment = new ArrayList<ScQtProgressivePayment>();
+
+				if (null != scLoa.getScQtProgPayments()
+						&& !scLoa.getScQtProgPayments().isEmpty()) {
+					this.getManagedBean().setTotalProgressivePayment(
+							scLoa.getScQtProgPayments().size());
+					String startMonth = "";
+					String endMonth = "";
+					for (ScQtProgressivePayment scQtProgressivePayment : scLoa
+							.getScQtProgPayments()) {
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy");
+
+						String fromdate = dateFormat
+								.format(scQtProgressivePayment.getFromDate());
+						String todate = dateFormat
+								.format(scQtProgressivePayment.getToDate());
+						String startdate = fromdate.substring(3, 5);
+						String startYear = fromdate.substring(6,
+								fromdate.length());
+						String enddate = todate.substring(3, 5);
+						String endYear = todate.substring(6, todate.length());
+
+						if (startdate.equalsIgnoreCase("01")) {
+							startMonth = "0";
 						}
-						for (int i = start + 1; i <= end + 1; i++) {
-							count++;
+						if (startdate.equalsIgnoreCase("02")) {
+							startMonth = "1";
 						}
-						count = count + (diffYear * 12);
-						scQtSchedule.setTotalMonths(new BigDecimal(count));
-					} else {
-						scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+						if (startdate.equalsIgnoreCase("03")) {
+							startMonth = "2";
+						}
+						if (startdate.equalsIgnoreCase("04")) {
+							startMonth = "3";
+						}
+						if (startdate.equalsIgnoreCase("05")) {
+							startMonth = "4";
+						}
+						if (startdate.equalsIgnoreCase("06")) {
+							startMonth = "5";
+						}
+
+						if (startdate.equalsIgnoreCase("07")) {
+							startMonth = "6";
+						}
+						if (startdate.equalsIgnoreCase("08")) {
+							startMonth = "7";
+						}
+						if (startdate.equalsIgnoreCase("09")) {
+							startMonth = "8";
+						}
+						if (startdate.equalsIgnoreCase("10")) {
+							startMonth = "9";
+						}
+						if (startdate.equalsIgnoreCase("11")) {
+							startMonth = "10";
+						}
+						if (startdate.equalsIgnoreCase("12")) {
+							startMonth = "11";
+						}
+
+						if (enddate.equalsIgnoreCase("01")) {
+							endMonth = "0";
+						}
+						if (enddate.equalsIgnoreCase("02")) {
+							endMonth = "1";
+						}
+						if (enddate.equalsIgnoreCase("03")) {
+							endMonth = "2";
+						}
+						if (enddate.equalsIgnoreCase("04")) {
+							endMonth = "3";
+						}
+						if (enddate.equalsIgnoreCase("05")) {
+							endMonth = "4";
+						}
+						if (enddate.equalsIgnoreCase("06")) {
+							endMonth = "5";
+						}
+
+						if (enddate.equalsIgnoreCase("07")) {
+							endMonth = "6";
+						}
+						if (enddate.equalsIgnoreCase("08")) {
+							endMonth = "7";
+						}
+						if (enddate.equalsIgnoreCase("09")) {
+							endMonth = "8";
+						}
+						if (enddate.equalsIgnoreCase("11")) {
+							endMonth = "10";
+						}
+						if (enddate.equalsIgnoreCase("12")) {
+							endMonth = "11";
+						}
+						scQtProgressivePayment.setStartMonth(startMonth);
+						scQtProgressivePayment.setEndMonth(endMonth);
+						scQtProgressivePayment.setStartYear(startYear);
+						scQtProgressivePayment.setEndYear(endYear);
+						progressivePayment.add(scQtProgressivePayment);
+
 					}
-
-					scQtSchedule.setStartMonth(startMonth);
-					scQtSchedule.setEndMonth(endMonth);
-					scQtSchedule.setStartYear(startYear);
-					scQtSchedule.setEndYear(endYear);
-					scheduleList.add(scQtSchedule);
-
-					this.getManagedBean().setScheduleList(scheduleList);
-
+					this.sortProgressivePaymentList(progressivePayment);
+					this.getManagedBean().setProgressivePaymentList(
+							progressivePayment);
 				}
 			}
 		}
@@ -1330,14 +1442,15 @@ public class LOADetailBackingBean extends
 		Long selectedBankId = null;
 		SupplierBankFK loaSupplierBankFK = new SupplierBankFK(scLoa);
 		List<SmSupplierBank> bankList = this.getManagedBean().getBankList();
+		if (bankList != null) {
+			for (SmSupplierBank supplierBank : bankList) {
+				if (new SupplierBankFK(supplierBank).equals(loaSupplierBankFK)) {
+					log.info("found supplier bank");
 
-		for (SmSupplierBank supplierBank : bankList) {
-			if (new SupplierBankFK(supplierBank).equals(loaSupplierBankFK)) {
-				log.info("found supplier bank");
+					selectedBankId = supplierBank.getSupplierBankId();
 
-				selectedBankId = supplierBank.getSupplierBankId();
-
-				break;
+					break;
+				}
 			}
 		}
 
@@ -1869,11 +1982,10 @@ public class LOADetailBackingBean extends
 		try {
 
 			int year = Calendar.getInstance().get(Calendar.YEAR);
-			List<ScQtSchedule> freqSchedule = this.getManagedBean()
-					.getScheduleList();
+			List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+					.getScQtSchedules();
 			if (null == freqSchedule) {
 				freqSchedule = new ArrayList<ScQtSchedule>();
-
 			}
 
 			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
@@ -1883,7 +1995,8 @@ public class LOADetailBackingBean extends
 					localSchedule.add(freqSchedule.get(j));
 
 				}
-				this.getManagedBean().setScheduleList(localSchedule);
+				this.getManagedBean().getScLoa()
+						.setScQtSchedules(localSchedule);
 			} else {
 				for (int i = freqSchedule.size(); i < this.getManagedBean()
 						.getTotalFrequency(); i++) {
@@ -1891,12 +2004,13 @@ public class LOADetailBackingBean extends
 					ScQtSchedule schedule = new ScQtSchedule();
 					schedule.setStartYear(String.valueOf(year));
 					schedule.setEndYear(String.valueOf(year));
+					schedule.setScheduleNo(BigDecimal.valueOf(i + 1));
 					PmParameter parameter = new PmParameter();
 					schedule.setScheduleType(parameter);
 					setUserDetails(schedule);
 					freqSchedule.add(schedule);
 				}
-				this.getManagedBean().setScheduleList(freqSchedule);
+				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 			}
 
 		} finally {
@@ -1958,8 +2072,8 @@ public class LOADetailBackingBean extends
 
 	public void calculateScheduleMonths(ScQtSchedule schedule) {
 
-		List<ScQtSchedule> freqSchedule = this.getManagedBean()
-				.getScheduleList();
+		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
 		if (null == freqSchedule) {
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
@@ -1994,39 +2108,39 @@ public class LOADetailBackingBean extends
 	}
 
 	private void saveScheduleList() {
-		List<ScQtSchedule> freqschedule = this.getManagedBean()
-				.getScheduleList();
+		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
-			String Startmonth = "";
+			String startMonth = "";
 			String endmonth = "";
 			for (ScQtSchedule schedule : freqschedule) {
 				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-					Startmonth = "01";
+					startMonth = "01";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-					Startmonth = "02";
+					startMonth = "02";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-					Startmonth = "03";
+					startMonth = "03";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-					Startmonth = "04";
+					startMonth = "04";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-					Startmonth = "05";
+					startMonth = "05";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-					Startmonth = "06";
+					startMonth = "06";
 				}
 
 				else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-					Startmonth = "07";
+					startMonth = "07";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-					Startmonth = "08";
+					startMonth = "08";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-					Startmonth = "09";
+					startMonth = "09";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-					Startmonth = "10";
+					startMonth = "10";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-					Startmonth = "11";
+					startMonth = "11";
 				} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-					Startmonth = "12";
+					startMonth = "12";
 				}
 				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
 					endmonth = "01";
@@ -2063,7 +2177,7 @@ public class LOADetailBackingBean extends
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String localDate = format.format(d1);
 				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + Startmonth + "/"
+				String fromdate = date + "/" + startMonth + "/"
 						+ schedule.getStartYear();
 				String toDate = date + "/" + endmonth + "/"
 						+ schedule.getEndYear();
@@ -2081,8 +2195,9 @@ public class LOADetailBackingBean extends
 					// TODO Auto-generated catch block
 					throw new EpException(e.toString());
 				}
-
-				schedule.setScLoa(this.getManagedBean().getScLoa());
+				if (schedule.getScLoa() == null) {
+					schedule.setScLoa(this.getManagedBean().getScLoa());
+				}
 				localScheduleList.add(schedule);
 			}
 			getManagedBean().getScLoa().setScQtSchedules(localScheduleList);
@@ -2336,31 +2451,45 @@ public class LOADetailBackingBean extends
 	}
 
 	public void generateSuppLoiLoaList() {
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			SuppLoiLoaBean suppLoaLoi = null;
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			AwardSupplierResDTO resDTO = null;
+			List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
+			if (getManagedBean().getSelectedLoiLoa() != null) {
+				for (ScLoi scLoi : getManagedBean().getSelectedLoiLoa()
+						.getScLois()) {
+					suppLoaLoi = new SuppLoiLoaBean();
+					suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
+					suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
+					// suppLoaLoi.setStatus(getStatusDescById(scLoi.get()
+					// .getStatusId()));
+					suppLoaLoi.setScLoi(scLoi);
+					suppLoiLoaList.add(suppLoaLoi);
+				}
 
-		SuppLoiLoaBean suppLoaLoi = null;
-		List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
-		if (getManagedBean().getSelectedLoiLoa() != null) {
-			for (ScLoi scLoi : getManagedBean().getSelectedLoiLoa().getScLois()) {
-				suppLoaLoi = new SuppLoiLoaBean();
-				suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
-				suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
-				// suppLoaLoi.setStatus(getStatusDescById(scLoi.get()
-				// .getStatusId()));
-				suppLoaLoi.setScLoi(scLoi);
-				suppLoiLoaList.add(suppLoaLoi);
+				for (ScLoa scLoa : getManagedBean().getSelectedLoiLoa()
+						.getScloas()) {
+					suppLoaLoi = new SuppLoiLoaBean();
+					suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
+					suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
+					// suppLoaLoi.setStatus(getStatusDescById(scLoa.getPmStatus()
+					// .getStatusId()));
+					reqDTO.setLoaId(scLoa.getLoaId());
+					resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
+					suppLoaLoi.setScLoa(resDTO.getScLoa());
+					suppLoiLoaList.add(suppLoaLoi);
+				}
+
+				getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
 			}
-
-			for (ScLoa scLoa : getManagedBean().getSelectedLoiLoa().getScloas()) {
-				suppLoaLoi = new SuppLoiLoaBean();
-				suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
-				suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
-				// suppLoaLoi.setStatus(getStatusDescById(scLoa.getPmStatus()
-				// .getStatusId()));
-				suppLoaLoi.setScLoa(scLoa);
-				suppLoiLoaList.add(suppLoaLoi);
-			}
-
-			getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			qtAwardSO = null;
 		}
 	}
 
@@ -2387,10 +2516,12 @@ public class LOADetailBackingBean extends
 			if (resDTO != null) {
 				if (resDTO.getScLoa() != null) {
 					suppLoiLoaBean.setScLoa(resDTO.getScLoa());
-					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoa().getScLoiLoaItems());
+					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoa()
+							.getScLoiLoaItems());
 				} else if (resDTO.getScLoi() != null) {
 					suppLoiLoaBean.setScLoi(resDTO.getScLoi());
-					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoi().getScLoiLoaItems());
+					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoi()
+							.getScLoiLoaItems());
 				}
 			}
 
@@ -2480,33 +2611,33 @@ public class LOADetailBackingBean extends
 				.getProgressivePaymentList();
 		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
 		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			String Startmonth = "";
+			String startMonth = "";
 			String endmonth = "";
 			for (ScQtProgressivePayment payment : progressivePayemnt) {
 				if (payment.getStartMonth().equalsIgnoreCase("0")) {
-					Startmonth = "01";
+					startMonth = "01";
 				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
-					Startmonth = "02";
+					startMonth = "02";
 				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
-					Startmonth = "03";
+					startMonth = "03";
 				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
-					Startmonth = "04";
+					startMonth = "04";
 				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
-					Startmonth = "05";
+					startMonth = "05";
 				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
-					Startmonth = "06";
+					startMonth = "06";
 				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
-					Startmonth = "07";
+					startMonth = "07";
 				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
-					Startmonth = "08";
+					startMonth = "08";
 				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
-					Startmonth = "09";
+					startMonth = "09";
 				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
-					Startmonth = "10";
+					startMonth = "10";
 				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
-					Startmonth = "11";
+					startMonth = "11";
 				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
-					Startmonth = "12";
+					startMonth = "12";
 				}
 				if (payment.getEndMonth().equalsIgnoreCase("0")) {
 					endmonth = "01";
@@ -2543,7 +2674,7 @@ public class LOADetailBackingBean extends
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String localDate = format.format(d1);
 				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + Startmonth + "/"
+				String fromdate = date + "/" + startMonth + "/"
 						+ payment.getStartYear();
 				String toDate = date + "/" + endmonth + "/"
 						+ payment.getEndYear();
@@ -2558,6 +2689,7 @@ public class LOADetailBackingBean extends
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				getManagedBean().getScLoa().getScQtProgPayments();
 				payment.setScLoa(getManagedBean().getScLoa());
 				paymentList.add(payment);
 			}
@@ -2569,21 +2701,19 @@ public class LOADetailBackingBean extends
 	}
 
 	public StreamedContent getBondLetterStreamContent() throws Exception {
-		
+
 		ScPbAttachment pbAttachment = new ScPbAttachment();
-		pbAttachment.setDocNo(getManagedBean().getScLoa()
-				.getLoaNo());
+		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
 		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
-				pbAttachment,
-				CommonConstants.FILE_CONTENT_TYPE_PDF);
+				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
 		return pbStreamContent;
 
 	}
-	
-	private void generateBondLetterFromVelocityToPdf(
-			ScAttachment attachment) throws Exception {
+
+	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment)
+			throws Exception {
 		attachment.setFileName("Bond Letter.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
@@ -2591,5 +2721,29 @@ public class LOADetailBackingBean extends
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_BOND_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void sortProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
+			@Override
+			public int compare(ScQtProgressivePayment o1,
+					ScQtProgressivePayment o2) {
+				return new CompareToBuilder().append(o1.getPhaseNo(),
+						o2.getPhaseNo()).toComparison();
+			}
+		};
+		Collections.sort(progressivePaymentList, comparator);
+	}
+
+	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
+		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
+			@Override
+			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
+				return new CompareToBuilder().append(o1.getScheduleNo(),
+						o2.getScheduleNo()).toComparison();
+			}
+		};
+		Collections.sort(scQtScheduleList, comparator);
 	}
 }
