@@ -171,6 +171,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
 		IPanelSupplierSO panelSupplierSO	=	(IPanelSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
 		if(scQuote == null){
 			scQuote = new ScQuote();
@@ -261,8 +262,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
 
 					// for checking govt.seller 
-					if(selectedSupplierItem.getSmSupplier().getPmOrgProfile() != null){
-						scQuote = checkGovtSeller(selectedSupplierItem.getSmSupplier().getPmOrgProfile(), scQuote);
+					if(selectedSupplierItem.getSmSupplier() != null){
+						OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+						profileReqDTO.setOrgProfileId(selectedSupplierItem.getSmSupplier().getSupplierId());
+						OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileByProfileId(profileReqDTO);
+						scQuote = checkGovtSeller(orgProfileResDTO.getPmOrgProfile(), scQuote);
 					}
 
 					// copy all selected suppliers from the catalogue search
@@ -339,8 +343,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
 			profileReqDTO.setUserId(user.getUserId());
 			profileReqDTO.setOrgType(OrganizationType.DIVISION.value());
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO orgProfileResDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(profileReqDTO);
 			if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){

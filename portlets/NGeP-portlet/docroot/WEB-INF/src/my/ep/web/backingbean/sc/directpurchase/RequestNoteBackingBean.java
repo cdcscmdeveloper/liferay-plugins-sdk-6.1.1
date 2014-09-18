@@ -1781,7 +1781,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// get selected supplier 
 					ScRequestSupplierItem requestSupplierItem = prInquiry.getScRequestSupplierItems().get(0);
 					ScRequestNoteDtl requestNoteDtl = requestSupplierItem.getScRequestNoteDtl().get(0);
-
+					prInquiry.setRequestSupplierItem(requestSupplierItem);
+					
 					// lead time 
 					if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
 						requestSupplierItem.getRequestNoteItem().setLeadTime( requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
