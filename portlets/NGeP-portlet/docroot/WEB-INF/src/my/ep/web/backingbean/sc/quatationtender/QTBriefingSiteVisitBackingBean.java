@@ -512,10 +512,8 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * Method to add briefing details to site visit details.
 	 */
 	public void addToSiteVisitDtl() {
-		BriefingZoneBean briefingZoneBean = this.getManagedBean()
-				.getBsvDtlBean();
-		List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean
-				.getSelectedBriefingDtls();
+ 		BriefingZoneBean briefingZoneBean = this.getManagedBean().getBsvDtlBean();
+		List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean.getSelectedBriefingDtls();
 		List<ScQtBsvDtl> siteVisitDetails = briefingZoneBean.getSitevisitList();
 		if (null == siteVisitDetails) {
 			siteVisitDetails = new ArrayList<ScQtBsvDtl>();
@@ -529,17 +527,13 @@ public class QTBriefingSiteVisitBackingBean extends
 			}					
 	
 			for (ScQtBsvDtl bsvDtl : selectedBsvDtls) {
-				
 				try {
-					ScQtBsvDtl siteVisitDtl = (ScQtBsvDtl) BeanUtils
-							.cloneBean(bsvDtl);
-					siteVisitDtl
-							.setBsvType(SourcingConstants.BSV_TYPE_SITEVISIT);
+					ScQtBsvDtl siteVisitDtl = new ScQtBsvDtl();
+					siteVisitDtl = (ScQtBsvDtl) BeanUtils.cloneBean(bsvDtl);
+					siteVisitDtl.setBsvType(SourcingConstants.BSV_TYPE_SITEVISIT);
 					siteVisitDetails.add(siteVisitDtl);
 				} catch (Exception e) {
-
 				}
-
 			}
 			briefingZoneBean.setSitevisitList(siteVisitDetails);
 		} else {
