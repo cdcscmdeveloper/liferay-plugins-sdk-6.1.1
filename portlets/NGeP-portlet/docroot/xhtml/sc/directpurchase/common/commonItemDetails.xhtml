@@ -44,7 +44,7 @@
 					  <p:spacer width="2px;"/>
 					<p:commandLink partialSubmit="true" process="@this"
 						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}"
-						rendered="#{requestNoteBackingBean.isPurchaseInquiry(requestNoteDtl)}">
+						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 					</p:commandLink>
@@ -78,7 +78,7 @@
 				    <p:spacer width="2px;"/>
 				   <h:commandLink immediate="true" 
 						action="#{requestNoteBackingBean.downloadPurchaseInqReport(requestNoteDtl)}"
-						rendered="#{requestNoteBackingBean.isPurchaseInquiry(requestNoteDtl)}">
+						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 					</h:commandLink> 
