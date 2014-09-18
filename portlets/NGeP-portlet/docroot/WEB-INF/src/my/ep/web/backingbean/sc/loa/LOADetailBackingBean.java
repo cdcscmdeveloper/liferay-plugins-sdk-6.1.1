@@ -23,7 +23,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -34,9 +33,6 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -95,7 +91,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -117,8 +112,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author Viswanath
@@ -249,20 +242,31 @@ public class LOADetailBackingBean extends
 
 	public void preRenderView() {
 		debugLogger("preRenderView");
-
+		IQTAwardSO qtAwardSO = null;
 		try {
+			super.renewSesionObject();
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
 
-			super.renewSesionObject();
 			getManagedBean().setSourceId(sourceId);
 
 			// Long loaId = 299L;
 
 			ScLoa scLoa = new ScLoa();
-			scLoa.setLoaId(loaId);
+//			scLoa.setLoaId(loaId);
+
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoaId(loaId);
+			AwardSupplierResDTO resDTO = qtAwardSO
+					.retrieveLOADtlByLoaId(reqDTO);
+			if (resDTO.getScLoa() != null) {
+				scLoa = resDTO.getScLoa();
+			}
 			editLOAAction(scLoa);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -277,26 +281,12 @@ public class LOADetailBackingBean extends
 		debugLogger("preRenderSupplierView");
 
 		try {
+			super.renewSesionObject();
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
-			super.renewSesionObject();
 			getManagedBean().setSourceId(sourceId);
-			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-			String taskId = originalServletRequest.getParameter("taskId");
-			
-			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);			
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			getManagedBean().setOutComes(res.getAction());	
-			getManagedBean().setTaskId(taskId);
 			/*
 			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
 			 * BpmOutcomeConst.BPM_REJECT};
@@ -1011,6 +1001,7 @@ public class LOADetailBackingBean extends
 
 		IAddressSO addressSO = null;
 		PmAddressType pmAddressType = null;
+		IOrgProfileSO orgProfileSO = null;
 		try {
 			addressSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
@@ -1023,11 +1014,26 @@ public class LOADetailBackingBean extends
 			if (resDTO.getAddressTypeList().size() > 0) {
 				pmAddressType = resDTO.getAddressTypeList().get(0);
 			}
+
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO
+					.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+
+			if (orgProfileResDTO.getPmOrgProfile() != null) {
+				context.put("agency", orgProfileResDTO.getPmOrgProfile()
+						.getOrgName());
+				context.put("ministry", orgProfileResDTO.getPmOrgProfile()
+						.getParentOrgProfile().getOrgName());
+			}
+
 		} finally {
 			addressSO = null;
+			orgProfileSO = null;
 		}
-		context.put("agency", pmOrgProfile.getOrgName());
-		context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
 
 		String agencyAddress = "";
 		String agencyPhoneNo = "";

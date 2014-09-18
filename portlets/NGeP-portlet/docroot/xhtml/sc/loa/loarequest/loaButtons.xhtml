@@ -21,13 +21,11 @@
 				<ui:repeat var="bpmAction" value="#{lOADetailBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-					
-					<p:commandButton value="#{lbl[buttonLabel]}"  
-						styleClass="ui-button"
+
+					<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 						icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 						action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
-						partialSubmit="true"
-						process="#{isReject ? '@this' : '@form'}"
+						partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 						update="#{isReject ? '@this' : '@form'}" />
 				</ui:repeat>
 			</c:when>
