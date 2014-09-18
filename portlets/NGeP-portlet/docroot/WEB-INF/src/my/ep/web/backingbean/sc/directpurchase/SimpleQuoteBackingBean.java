@@ -1086,16 +1086,31 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   debugLogger("byBusinessEvent");
 		   if (getManagedBean().isByLocality()) {
 			   getManagedBean().setTabActiveIndex(0);
+			   localityLocLevelEvent(getManagedBean().getLocationLevel());
 		   } else{
 			   getManagedBean().setByLocality(Boolean.FALSE);
-			   localityLocLevelEvent(getManagedBean().getLocationLevel());
+			   if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
+				   getManagedBean().getLocationTrees().clear();
+			   }
+			   
+			   if(getManagedBean().getTplSpecZoneLocs() != null && getManagedBean().getTplSpecZoneLocs().size()>0){
+				   getManagedBean().getTplSpecZoneLocs().clear();
+			   }
+			   
+			   if(getManagedBean().getScQuote().getLocationStateCriterias() != null && getManagedBean().getScQuote().getLocationStateCriterias().size()>0){
+				   getManagedBean().getScQuote().getLocationStateCriterias().clear();
+			   }
+			   if(getManagedBean().getScQuote().getLocationDivisionCriterias() != null && getManagedBean().getScQuote().getLocationDivisionCriterias().size()>0){
+				   getManagedBean().getScQuote().getLocationDivisionCriterias().clear();
+			   }
+			   if(getManagedBean().getScQuote().getLocationDistrictCriterias() != null && getManagedBean().getScQuote().getLocationDistrictCriterias().size()>0){
+				   getManagedBean().getScQuote().getLocationDistrictCriterias().clear();
+			   }
 		   }
 
 		   if (getManagedBean().isByBusinessNature()) {
 			   getManagedBean().setTabActiveIndex(1);
-
 		   } else{
-			   localityLocLevelEvent(getManagedBean().getLocationLevel());
 			   if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
 				   getManagedBean().getBusinessNatureCriterias().clear();
 			   }
@@ -2163,13 +2178,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setActiveIndex(2);
 		} else if(activeIndex.equals(3)){
 			getManagedBean().setActiveIndex(3);
+			ptjLocality(getManagedBean().getLocationLevel());
 		}
 		
 		// location level by default - district 
 		if(getManagedBean().getLocationLevel() == null){
 			getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 		}
-		ptjLocality(getManagedBean().getLocationLevel());
 		procurementTypeEvent();
 	}
 	
@@ -2655,7 +2670,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			List<PmDivision> divisions = new ArrayList<PmDivision>();
 			if(scQuote.getLocationDivisionCriterias() != null) {
 				if(scQuote.getLocationDivisionCriterias().size() >0){
-				
 					for (ScLocationDivisionCriteria locationDivisionCriteria : scQuote.getLocationDivisionCriterias() ) {
 						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						divisions.add(locationDivisionCriteria.getPmDivision());
@@ -2667,7 +2681,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			List<PmDistrict> districts = new ArrayList<PmDistrict>();
 			if(scQuote.getLocationDistrictCriterias() != null) {
 				if(scQuote.getLocationDistrictCriterias().size() >0){
-					getManagedBean().setByLocality(Boolean.TRUE);
+					
 					for (ScLocationDistrictCriteria locationDistrictCriteria : scQuote.getLocationDistrictCriterias() ) {
 						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						districts.add(locationDistrictCriteria.getPmDistrict());
@@ -2681,7 +2695,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(districts.isEmpty() && divisions.isEmpty()){
 				if(scQuote.getLocationStateCriterias() != null) {
 					if(scQuote.getLocationStateCriterias().size() >0){
-						getManagedBean().setByLocality(Boolean.TRUE);
 						for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
 							states.add(locationStateCriteria.getPmState());
 							TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
@@ -2693,10 +2706,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
+				getManagedBean().setByLocality(Boolean.TRUE);
 				 List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
 				 LocTrees.add(LocationSingleton.getInstance().constuctLocationTree("", states,
 									districts, divisions, null,TplSpecZoneLoc.class));
 				getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
+			} else{
+				getManagedBean().setByLocality(Boolean.FALSE);
 			}
 
 			if(scQuote.getProcurementType() != null){
@@ -2749,11 +2765,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
 			CountryResDTO resDTO = reqSO.retrieveCountryByCode(countryReqDTO);
 			getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
-            
-			// location level
-			if(scQuote.getZoneLocatonLevel() != null){
-				getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
-			}
 
 			// panel item 
 			if(scQuote.getPanelItem() != null){
