@@ -5,7 +5,6 @@ package my.ep.web.backingbean.fl.dan;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -36,7 +35,6 @@ import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
@@ -198,10 +196,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 		
-		if(getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
-			getManagedBean().setBranchName(getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
+		if(getManagedBean().getAdjustment().getFlOrder().getPmFinancialBranch()!=null && getManagedBean().getAdjustment().getFlOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
+			getManagedBean().setBranchName(getManagedBean().getAdjustment().getFlOrder().getPmFinancialBranch().getBranchName());
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
+			reqDTO.setFinancialBranchId(getManagedBean().getAdjustment().getFlOrder().getPmFinancialBranch().getFinancialBranchId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(!resDTO.getAddressTypeList().isEmpty()){
@@ -215,17 +213,10 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
-			for (PmFinancialAcc financialAcc : getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getAdjustment().getFlInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getAdjustment().getFlInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
-					break;
-				}
-	        }
+			getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
 		} else { //reset back to HQ info
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialOrgId(getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+			reqDTO.setFinancialOrgId(getManagedBean().getAdjustment().getFlOrder().getPmFinancialOrg().getFinancialOrgId());
 			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(!resDTO.getAddressTypeList().isEmpty()){
@@ -239,13 +230,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
-			for (PmFinancialAcc financialAcc : getManagedBean().getAdjustment().getFlInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getAdjustment().getFlInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getAdjustment().getFlInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					break;
-				}
-	        }
+			getManagedBean().setAccountNoName(getManagedBean().getAdjustment().getFlInvoice().getAccountNo()+"  "+getManagedBean().getAdjustment().getFlInvoice().getPaymentBank().getFinOrgName());
 		}
 	}
 	
