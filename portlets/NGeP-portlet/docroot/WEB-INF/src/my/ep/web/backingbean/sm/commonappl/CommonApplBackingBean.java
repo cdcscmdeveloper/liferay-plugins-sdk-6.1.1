@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.commonappl;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;

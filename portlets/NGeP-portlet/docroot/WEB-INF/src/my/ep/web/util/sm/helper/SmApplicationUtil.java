@@ -1,6 +1,7 @@
 package my.ep.web.util.sm.helper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
@@ -1268,6 +1270,16 @@ public class SmApplicationUtil {
 		}
 	}
 
+	private static PmCountry retrievePmCountryById(Long countryId) {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICountrySO.class);
+		CountryReqDTO reqDTO = new CountryReqDTO();
+		reqDTO.setCountryId(countryId);
+		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
+
+		return resDTO.getPmCountry();
+	}
+
 	public static MofRegistrationResDTO retriveApplicationById(int applId) {
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
@@ -1531,4 +1543,146 @@ public class SmApplicationUtil {
 		return appl;
 	}
 
+	public static void calculateShareHolderPercent(
+			SmApplicationManagedBean managedBean) {
+		System.out.println("********* calculateShareHolderPercent ********  ");
+		System.out.println(" *** Non Bumi Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic()
+						.getNonBumiEquity());
+		System.out.println(" *** Bumi Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic()
+						.getBumiEquity());
+		System.out.println(" *** Non MY Equity **** "
+				+ managedBean.getSmAppl().getSmCompanyBasic()
+						.getForeignerEquity());
+		
+		IPersonnelSO perSO = null;
+		String perType = null;
+		List<SmPersonnel> selPerList = new ArrayList<SmPersonnel>();
+		try {
+			if (managedBean.getSelectedShareHolder().getShareAmt() != null) {
+				managedBean.getSelectedShareHolder().setShareAmt(
+						managedBean.getSelectedShareHolder().getShareAmt()
+								.setScale(2, RoundingMode.HALF_UP));
+			} else {
+				managedBean.getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0));
+			}
+			managedBean.setEquiPerCapTotal(new BigDecimal(0));
+			perSO = (IPersonnelSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IPersonnelSO.class);
+			PersonnelReqDTO reqDto = new PersonnelReqDTO();
+			reqDto.setApplId(managedBean.getSmAppl().getApplId());
+			PersonnelResDTO resDto = new PersonnelResDTO();
+			String countryCode = "";
+			if (managedBean.getSelectedShareHolder().getPmCountry() == null
+					|| managedBean.getSelectedShareHolder().getPmCountry() != null
+					&& managedBean.getSelectedShareHolder().getPmCountry()
+							.getCountryId() == null) {
+				managedBean.getSelectedShareHolder().setSharePercentage(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				managedBean.getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				throw new EpException(
+						"Please select the nationality to add the shareholding amount");
+			} else {
+				PmCountry cntry = new PmCountry();
+				cntry = retrievePmCountryById(managedBean
+						.getSelectedShareHolder().getPmCountry().getCountryId());
+				if (cntry != null && cntry.getCountryCode() != null) {
+					countryCode = cntry.getCountryCode();
+				}
+			}
+			if (!countryCode.equalsIgnoreCase("MY")) {
+				resDto = perSO.retrieveNonMalaysianShareHoldersByApplId(reqDto);
+				perType = SupplierManagementConst.PERSONNEL_TYPE_FRGNR;
+			} else {
+				if (managedBean.getSelectedShareHolder().getBumiFlg() == 1) {
+					resDto = perSO.retrieveBumiShareHoldersByApplId(reqDto);
+					perType = SupplierManagementConst.PERSONNEL_TYPE_BUMI;
+				} else {
+					perType = SupplierManagementConst.PERSONNEL_TYPE_NON_BUMI;
+					resDto = perSO.retrieveNonBumiShareHoldersByApplId(reqDto);
+				}
+			}
+			if (resDto.getSmPersonnelList() != null) {
+				selPerList = resDto.getSmPersonnelList();
+				System.out.println("*** List retrieved *** "+selPerList.size());
+			}
+			for (SmPersonnel per : selPerList) {
+				if ((per.getShareAmt() == null)) {
+					per.setShareAmt(new BigDecimal(0));
+				}
+				if (per.isEquityOwner()
+						&& !per.getPersonnelId().equals(
+								managedBean.getSelectedShareHolder()
+										.getPersonnelId())) {
+					managedBean.setEquiPerCapTotal(managedBean
+							.getEquiPerCapTotal().add(per.getShareAmt())
+							.setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			managedBean.setEquiPerCapTotal(managedBean.getEquiPerCapTotal()
+					.add(managedBean.getSelectedShareHolder().getShareAmt())
+					.setScale(2, RoundingMode.HALF_UP));
+			Boolean validAmt = true;
+			if (perType
+					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_BUMI)) {
+				if (managedBean.getEquiPerCapTotal().compareTo(
+						managedBean.getSmAppl().getSmCompanyBasic()
+								.getBumiEquity()) <= 0) {
+					validAmt = true;
+				} else {
+					validAmt = false;
+				}
+			} else if (perType
+					.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_NON_BUMI)) {
+				if (managedBean.getEquiPerCapTotal().compareTo(
+						managedBean.getSmAppl().getSmCompanyBasic()
+								.getNonBumiEquity()) <= 0) {
+					validAmt = true;
+				} else {
+					validAmt = false;
+				}
+
+			} else {
+				if (managedBean.getEquiPerCapTotal().compareTo(
+						managedBean.getSmAppl().getSmCompanyBasic()
+								.getForeignerEquity()) <= 0) {
+					validAmt = true;
+				} else {
+					validAmt = false;
+				}
+			}
+			if (validAmt) {
+				BigDecimal mul = new BigDecimal(100);
+				if (managedBean.getSmAppl().getSmCompanyBasic()
+						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+					managedBean.getSelectedShareHolder().setSharePercentage(
+							managedBean
+									.getSelectedShareHolder()
+									.getShareAmt()
+									.divide(managedBean.getSmAppl()
+											.getSmCompanyBasic()
+											.getPaidUpCapital(), 4,
+											RoundingMode.HALF_UP).multiply(mul)
+									.setScale(2, RoundingMode.HALF_UP));
+				}
+
+			} else {
+				managedBean.getSelectedShareHolder().setSharePercentage(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				managedBean.getSelectedShareHolder().setShareAmt(
+						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
+				throw new EpException(MessageConst.ERROR_722551, new String[] {
+						"Personnel", "personnel", perType });
+			}
+		} catch (NumberFormatException ne) {
+			// ne.printStackTrace();
+			throw new EpException(MessageConst.ERROR_722522);
+		} finally {
+			perSO = null;
+			selPerList = null;
+		}
+	}
 }

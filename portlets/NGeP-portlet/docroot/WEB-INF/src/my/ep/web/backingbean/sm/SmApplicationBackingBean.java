@@ -1293,10 +1293,30 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Branches Start
 	public void addOrUpdateBranchToSmAppl() {
-
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
 				.contains(getManagedBean().getSelectedBranch())) {
-
+			retriveLatestApplAfterUpdate("", "");
+			for (int i = 0; i < getManagedBean().getSmAppl()
+					.getSmSupplierBranches().size(); i++) {
+				if (getManagedBean()
+						.getSmAppl()
+						.getSmSupplierBranches()
+						.get(i)
+						.getSupplierBranchId()
+						.equals(getManagedBean().getSelectedBranch()
+								.getSupplierBranchId())) {
+					getManagedBean().getSmAppl().getSmSupplierBranches()
+							.set(i, getManagedBean().getSelectedBranch());
+				}
+			}
+			// for (SmPersonnel per : getManagedBean().getSmAppl()
+			// .getSmPersonnels()) {
+			// if (per.getPersonnelId().equals(
+			// getManagedBean().getSelectedBranch().getSmPersonnel()
+			// .getPersonnelId())) {
+			// getManagedBean().getSelectedBranch().setSmPersonnel(per);
+			// }
+			// }
 			// TODO if any validation reqd for branch info
 		} else {
 			getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -1304,8 +1324,10 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"suppBrnachDtWidVar.paginator.endLink.click()");
 		}
+		saveOrUpdateAppl();
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
+		calcPersonnelListCount();
 	}
 
 	public void assignSelBranch(SmSupplierBranch branchBean, int index) {
@@ -1315,6 +1337,15 @@ public class SmApplicationBackingBean extends
 				.getPmState().getStateId(), branchBean.getSmAddress()
 				.getPmDistrict().getDistrictId(),
 				SupplierManagementConst.SM_BRANCH_PANEL);
+		if (branchBean.getSmPersonnel() == null) {
+			branchBean.setSmPersonnel(new SmPersonnel());
+		}
+		if (!branchBean.getBranchName().equalsIgnoreCase(
+				(getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getCompanyName()))) {
+			branchBean.setBranchName(getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getCompanyName());
+		}
 		getManagedBean()
 				.setSelectedBranchPrev(
 						getManagedBean().getSmAppl().getSmSupplierBranches()
@@ -1328,18 +1359,20 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewBranchBean() {
-		getManagedBean().setSelectedBranch(new SmSupplierBranch());
-		getManagedBean().getSelectedBranch().setRevNo(1);
-		getManagedBean().getSelectedBranch().setSmAddress(
-				(SmApplicationUtil.setDefaultAddr(getManagedBean()
-						.getDefPmCountry())));
-		getManagedBean().getSelectedBranch().setSmAppl(
-				getManagedBean().getSmAppl());
+		SmSupplierBranch br = new SmSupplierBranch();
+		br.setBranchName(getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getCompanyName());
+		br.setRevNo(1);
+		br.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
+				.getDefPmCountry()));
+		br.setSmAppl(getManagedBean().getSmAppl());
+		br.setSmPersonnel(new SmPersonnel());
 		getManagedBean().setBranchCompanyStates(
 				retrievePmStateList(getManagedBean().getSelectedBranch()
 						.getSmAddress().getPmCountry().getCountryId()));
 		getManagedBean().setBranchCompanyDistricts(new ArrayList<PmDistrict>());
 		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
+		getManagedBean().setSelectedBranch(br);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
@@ -2541,6 +2574,11 @@ public class SmApplicationBackingBean extends
 	// -- Process Share Holder Personnel Start
 	public void addOrUpdateShareHolderToSmAppl() throws ParseException {
 		boolean validShrHldr = true;
+		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+			calculateShareHolderPercent();
+		}
+		
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder()
@@ -5100,69 +5138,7 @@ public class SmApplicationBackingBean extends
 
 	public void calculateShareHolderPercent() {
 		System.out.println("********* calculateShareHolderPercent ********  ");
-		try {
-			if (getManagedBean().getSelectedShareHolder().getShareAmt() != null) {
-				getManagedBean().getSelectedShareHolder().setShareAmt(
-						getManagedBean().getSelectedShareHolder().getShareAmt()
-								.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSelectedShareHolder().setShareAmt(
-						new BigDecimal(0));
-			}
-			getManagedBean().setEquiPerCapTotal(new BigDecimal(0));
-			for (SmPersonnel per : getManagedBean().getSmAppl()
-					.getSmPersonnels()) {
-				if ((per.getShareAmt() == null)) {
-					per.setShareAmt(new BigDecimal(0));
-				}
-				if (per.isEquityOwner()
-						&& !per.getPersonnelId().equals(
-								getManagedBean().getSelectedShareHolder()
-										.getPersonnelId())) {
-					getManagedBean().setEquiPerCapTotal(
-							getManagedBean().getEquiPerCapTotal()
-									.add(per.getShareAmt())
-									.setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-			getManagedBean().setEquiPerCapTotal(
-					getManagedBean()
-							.getEquiPerCapTotal()
-							.add(getManagedBean().getSelectedShareHolder()
-									.getShareAmt())
-							.setScale(2, RoundingMode.HALF_UP));
-			if (getManagedBean().getEquiPerCapTotal().compareTo(
-					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital()) <= 0) {
-				BigDecimal mul = new BigDecimal(100);
-				if (getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
-					getManagedBean().getSelectedShareHolder()
-							.setSharePercentage(
-									getManagedBean()
-											.getSelectedShareHolder()
-											.getShareAmt()
-											.divide(getManagedBean()
-													.getSmAppl()
-													.getSmCompanyBasic()
-													.getPaidUpCapital(), 4,
-													RoundingMode.HALF_UP)
-											.multiply(mul)
-											.setScale(2, RoundingMode.HALF_UP));
-				}
-
-			} else {
-				getManagedBean().getSelectedShareHolder().setSharePercentage(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				getManagedBean().getSelectedShareHolder().setShareAmt(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(MessageConst.ERROR_722521, new String[] {
-						"Personnel", "personnel" });
-			}
-		} catch (NumberFormatException ne) {
-			// ne.printStackTrace();
-			throw new EpException(MessageConst.ERROR_722522);
-		}
+		SmApplicationUtil.calculateShareHolderPercent(getManagedBean());
 	}
 
 	public void calculateEquityCompanyPercent() {
