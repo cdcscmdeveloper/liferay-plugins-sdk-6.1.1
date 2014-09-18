@@ -271,8 +271,8 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
-					update="@([id$=zonePopupGeneral])" oncomplete="ZoneGeneral.show();"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+					update="@([id$=zonePopupGeneral])" 
 					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
