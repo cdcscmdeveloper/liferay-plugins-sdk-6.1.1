@@ -363,16 +363,28 @@ public class PmCommonUtil {
 
 	/**
 	 * retrieve filtered org type list
-	 * @param stateId
-	 * @return List<PmDistrict>
+	 * @param paramType
+	 * @param notInOrg
+	 * @param inOrg
+	 * @returnList<PmParameterDesc>
 	 */
-	public static List<PmParameterDesc> retrieveFilteredOrgTypes(String paramType) {
+	public static List<PmParameterDesc> retrieveFilteredOrgTypes(String paramType, List<String>notInOrg, List<String>inOrg) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		SearchFilterBean bean = new SearchFilterBean();
-		bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
-		bean.setSearchField("pmParameter.parameterCode");
-		bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
-		searchBean.getDataFilterBeans().add(bean);
+		if(notInOrg!=null && !notInOrg.isEmpty()){
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(notInOrg);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		if(inOrg!=null && !inOrg.isEmpty()){
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+			bean.setSearchField("pmParameter.parameterCode");
+			bean.setSearchValue(inOrg);
+			searchBean.getDataFilterBeans().add(bean);
+		}
+		
 		return ParameterHelper.getInstance().getParameterDescListBySearchBean(paramType, searchBean);
 	}
 	
