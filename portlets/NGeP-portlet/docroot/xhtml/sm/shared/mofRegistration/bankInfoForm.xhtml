@@ -61,11 +61,11 @@
 
 				<p:column headerText="#{lbl['lbl.sm.bankDtls.acctPurpose']}"
 					style="text-align: center;width: 15%">
-					<h:outputText value="Payment"
+					<h:outputText value="#{lbl['lbl.sm.paymentLbl']}"
 						rendered="#{bankBean.accountPurpose eq 'P'}" />
-					<h:outputText value="Registration"
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.registration']}"
 						rendered="#{bankBean.accountPurpose eq 'R'}" />
-					<h:outputText value="Both (Payment,Registration)"
+					<h:outputText value="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
 						rendered="#{bankBean.accountPurpose eq 'B'}" />
 				</p:column>
 
@@ -116,9 +116,9 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
-						<h:outputText value="Yes"
+						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
-						<h:outputText value="Yes"
+						<h:outputText value="#{lbl['lbl.txt.yes']}"
 							rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
 					</p:column>
 
@@ -172,9 +172,9 @@
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
-							<f:selectItem itemLabel="Registration" itemValue="R" />
-							<f:selectItem itemLabel="Payment" itemValue="P" />
-							<f:selectItem itemLabel="Both" itemValue="B" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}" itemValue="R" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}" itemValue="P" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.both.regandpay']}" itemValue="B" />
 							<p:ajax event="change" update="bankDetailsPanel"
 								listener="#{backingBean.retrieveBankFinOrgListByType}" />
 						</p:selectOneMenu> <p:message id="smBankAcctPurposeValMsg"

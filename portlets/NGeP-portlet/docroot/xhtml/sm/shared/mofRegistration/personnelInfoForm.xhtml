@@ -407,8 +407,8 @@
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
-							<h:outputText value="Yes" rendered="#{person.equityOwner}" />
-							<h:outputText value="No" rendered="#{!person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{!person.equityOwner}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"

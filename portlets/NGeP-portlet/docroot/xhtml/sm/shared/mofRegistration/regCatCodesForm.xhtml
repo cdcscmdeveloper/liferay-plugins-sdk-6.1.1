@@ -417,10 +417,10 @@
 		header="#{lbl['lbl.sm.catCodes.cmfrmHdr']}"
 		widgetVar="typeConfirmation">
 
-		<p:commandButton id="conf" value="Yes" update="@form"
+		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}" update="@form"
 			action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
-		<p:commandButton id="decline" value="No" process="@this"
+		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}" process="@this"
 			partialSubmit="true" update=":form:tt:catCodeInfPan"
 			action="#{backingBean.resetApplnCategoryType}" />
 
