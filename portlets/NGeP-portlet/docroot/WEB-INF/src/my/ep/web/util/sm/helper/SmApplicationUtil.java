@@ -13,6 +13,7 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -32,6 +33,8 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -57,6 +60,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -611,33 +615,56 @@ public class SmApplicationUtil {
 					SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (per.isClerical() && per.getEpfNo() != null
 						&& per.getEpfNo() != "") {
-					// for (SmStaffAcademic aca : per.getSmStaffAcademics())
-					// {
-					// if (aca.getQualificationLevelId() == 123) {
-					// staffCount = staffCount + 1;
-					// break;
-					// }
-					// }
-					System.out.println("*** is staff **** ");
-					staffCount = staffCount + 1;
+					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
+						PmParameter param = retrievePmParameterById(aca
+								.getQualificationLevelId().longValue());
+						String qual = "";
+						if (param != null && param.getParameterCode() != null) {
+							qual = param.getParameterCode();
+							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_BACHELORS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_MASTERS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_PHD)) {
+								staffCount = staffCount + 1;
+								break;
+							}
+						}
+					}
 
 				} else if (per.isProf() && per.getEpfNo() != null
 						&& per.getEpfNo() != "") {
 					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
-						if (aca.getQualificationLevelId() >= 83
-								&& aca.getQualificationLevelId() <= 85) {
-							profCount = profCount + 1;
-							break;
+						PmParameter param = retrievePmParameterById(aca
+								.getQualificationLevelId().longValue());
+						String qual = "";
+						if (param != null && param.getParameterCode() != null) {
+							qual = param.getParameterCode();
+							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_BACHELORS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_MASTERS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_PHD)) {
+								profCount = profCount + 1;
+								break;
+							}
 						}
 					}
 
 				} else if (per.isSemiProf() && per.getEpfNo() != null
 						&& per.getEpfNo() != "") {
 					for (SmStaffAcademic aca : per.getSmStaffAcademics()) {
-						if (aca.getQualificationLevelId() >= 83
-								&& aca.getQualificationLevelId() <= 86) {
-							semiProfCount = semiProfCount + 1;
-							break;
+						PmParameter param = retrievePmParameterById(aca
+								.getQualificationLevelId().longValue());
+						String qual = "";
+						if (param != null && param.getParameterCode() != null) {
+							qual = param.getParameterCode();
+							if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_BACHELORS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_MASTERS)
+									|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_PHD)) {
+								semiProfCount = semiProfCount + 1;
+								break;
+							}
 						}
 					}
 				}
@@ -1550,12 +1577,11 @@ public class SmApplicationUtil {
 				+ managedBean.getSmAppl().getSmCompanyBasic()
 						.getNonBumiEquity());
 		System.out.println(" *** Bumi Equity **** "
-				+ managedBean.getSmAppl().getSmCompanyBasic()
-						.getBumiEquity());
+				+ managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity());
 		System.out.println(" *** Non MY Equity **** "
 				+ managedBean.getSmAppl().getSmCompanyBasic()
 						.getForeignerEquity());
-		
+
 		IPersonnelSO perSO = null;
 		String perType = null;
 		List<SmPersonnel> selPerList = new ArrayList<SmPersonnel>();
@@ -1607,7 +1633,8 @@ public class SmApplicationUtil {
 			}
 			if (resDto.getSmPersonnelList() != null) {
 				selPerList = resDto.getSmPersonnelList();
-				System.out.println("*** List retrieved *** "+selPerList.size());
+				System.out.println("*** List retrieved *** "
+						+ selPerList.size());
 			}
 			for (SmPersonnel per : selPerList) {
 				if ((per.getShareAmt() == null)) {
@@ -1685,4 +1712,15 @@ public class SmApplicationUtil {
 			selPerList = null;
 		}
 	}
+
+	public static PmParameter retrievePmParameterById(Long paramId) {
+		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IParameterSO.class);
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterId(paramId);
+		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
+
+		return resDTO.getPmParameter();
+	}
+
 }
