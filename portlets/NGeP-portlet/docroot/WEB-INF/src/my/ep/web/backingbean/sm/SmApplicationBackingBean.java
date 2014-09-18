@@ -24,7 +24,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -47,8 +46,6 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -201,7 +198,7 @@ public class SmApplicationBackingBean extends
 
 	public String getMaxDate() {
 		DateFormat df = new SimpleDateFormat();
-		System.out.println("*** Date String *** " + df.format(new Date()));
+		log.debug("*** Date String *** " + df.format(new Date()));
 		return df.format(new Date());
 	}
 
@@ -210,7 +207,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
 		if (!applicationType.equalsIgnoreCase("C")) {
-			System.out.println("*** Today ****" + getManagedBean().getToday());
+			log.debug("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
 			getManagedBean().setCertBodyLs(
@@ -265,7 +262,7 @@ public class SmApplicationBackingBean extends
 					return SmApplicationUtil
 							.setExceptionNavigationForAppl(applicationType);
 				} else {
-					System.out.println("****** Before Clone supp id *****"
+					log.debug("****** Before Clone supp id *****"
 							+ currSupp.getSupplierId());
 					resDto = cloneSmApplicationDraft(currSupp.getSupplierId(),
 							applicationType, smAppl.getSupplierType());
@@ -277,7 +274,7 @@ public class SmApplicationBackingBean extends
 					smApplSupplier = resDto.getSmSupplier();
 					log.debug(" *** After clone Supplier Id ******* "
 							+ smApplSupplier.getSupplierId());
-					System.out.println("**** After clone appl id *** "
+					log.debug("**** After clone appl id *** "
 							+ resDto.getSmAppl().getApplId() + " -- "
 							+ resDto.getSmAppl().getApplNo());
 					if (resDto.isErrorCaued()) {
@@ -295,17 +292,13 @@ public class SmApplicationBackingBean extends
 							smAppl.getSmCompanyBasic().setAnnualRevenue(0);
 						}
 					}
-					System.out
-							.println("****** After retrieve the appl is ********"
-									+ smAppl.getApplId()
-									+ " *** Num ***"
-									+ smAppl.getApplNo()
-									+ "*** Bank Size *** "
-									+ smAppl.getSmSupplierBanks().size());
+					log.debug("****** After retrieve the appl is ********"
+							+ smAppl.getApplId() + " *** Num ***"
+							+ smAppl.getApplNo() + "*** Bank Size *** "
+							+ smAppl.getSmSupplierBanks().size());
 				}
 			} else {
-				System.out
-						.println("******* This is PO or Approver from BPM ************");
+				log.debug("******* This is PO or Approver from BPM ************");
 				smApplSupplier = supp;
 				smAppl = appl;
 			}
@@ -348,13 +341,12 @@ public class SmApplicationBackingBean extends
 					smAppl.getSmCompanyBasic().setSmCompanyAddresses(addrs);
 				}
 			} else {
-				System.out
-						.println("******** My Company Basic is null ********");
+				log.debug("******** My Company Basic is null ********");
 			}
 
 			getManagedBean().setSmAppl(smAppl);
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
-				System.out.println("*** Empty list of staff *****"
+				log.debug("*** Empty list of staff *****"
 						+ smAppl.getSupplierType());
 				getManagedBean().getSmAppl().setSmStaffTotals(
 						SmApplicationUtil.getStaffList(smAppl));
@@ -369,17 +361,15 @@ public class SmApplicationBackingBean extends
 						.getApplId());
 				if (sts != null && sts.getPmStatus() != null
 						&& sts.getPmStatus().getStatusId() != null) {
-					System.out
-							.println("** PM Status retrived from work flow *******");
+					log.debug("** PM Status retrived from work flow *******");
 					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
-					System.out.println("*** Status ******* "
+					log.debug("*** Status ******* "
 							+ getManagedBean().getCurrentStatus());
 				} else {
-					System.out
-							.println("** PM Status retrived from SM appl only *******");
+					log.debug("** PM Status retrived from SM appl only *******");
 					setPmStatusDesc(smAppl.getPmStatus().getStatusId()
 							.toString());
-					System.out.println("*** SM appl  Status ******* "
+					log.debug("*** SM appl  Status ******* "
 							+ getManagedBean().getCurrentStatus());
 				}
 			}
@@ -422,7 +412,7 @@ public class SmApplicationBackingBean extends
 					&& smAppl.getSmFacilities().isEmpty()
 					&& !smAppl.getApplType().equalsIgnoreCase(
 							ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				System.out.println("*** Empty Facility******");
+				log.debug("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
 				if (smAppl.getApplType().equalsIgnoreCase(
 						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
@@ -476,7 +466,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private SmWorkflowStatus getCurrentActiveWokFlowStatus(Long applId) {
-		System.out.println("*** This is resubmit to get po ****** ");
+		log.debug("*** This is resubmit to get po ****** ");
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		reqDTO.setApplId(applId);
 		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
@@ -499,7 +489,7 @@ public class SmApplicationBackingBean extends
 			// .getSmSupplier();
 
 			SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
-			System.out.println("****** Testing the delete pending *********"
+			log.debug("****** Testing the delete pending *********"
 					+ smSupplier.getSupplierId());
 			getManagedBean().setSmSupplier(smSupplier);
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
@@ -534,16 +524,16 @@ public class SmApplicationBackingBean extends
 
 	public void updateSmAppl() throws Exception {
 		try {
-			System.out.println("**** ENTER ACTION METHOD BEAN *************"
+			log.debug("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
 
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 			} else {
-				System.out.println(" ****** REMAIN PREV VALUE ********");
+				log.debug(" ****** REMAIN PREV VALUE ********");
 			}
 			getManagedBean().setTabActiveIndex(outputTab);
-			System.out.println("Value ----"
+			log.debug("Value ----"
 					+ getManagedBean().getSmAppl().getSupportingDocMode());
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
@@ -569,7 +559,7 @@ public class SmApplicationBackingBean extends
 		} else if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
 				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
 						.isEmpty()) {
-			System.out.println("*** Clear the rejection list ******* ");
+			log.debug("*** Clear the rejection list ******* ");
 			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
 		}
 		if (currentPageType
@@ -581,9 +571,8 @@ public class SmApplicationBackingBean extends
 			validateSupportingDocs();
 		}
 		testUpdateSmAppl(applType, currentPageType, outputPageType, false);
-		System.out
-				.println("******* Current page AFTER in managed bean ********"
-						+ getManagedBean().getCurrentPageType());
+		log.debug("******* Current page AFTER in managed bean ********"
+				+ getManagedBean().getCurrentPageType());
 	}
 
 	public boolean testUpdateSmAppl(String applType, String currentPageType,
@@ -591,14 +580,13 @@ public class SmApplicationBackingBean extends
 		boolean valid = false;
 		// boolean isError = false;
 		IMofRegistrationSO mofRegistrationSO = null;
-		System.out.println(" ***** Business  Type After hard code *********"
+		log.debug(" ***** Business  Type After hard code *********"
 				+ getManagedBean().getSmAppl().getSmSupplier()
 						.getBusinessType());
 		getManagedBean().setTabActiveIndex(outputTab);
 		try {
 
-			System.out.println("******* IS PO *******"
-					+ getManagedBean().isPoUser());
+			log.debug("******* IS PO *******" + getManagedBean().isPoUser());
 			if (getManagedBean().isPoUser()
 					|| getManagedBean().isApproverUser()) {
 				setPoOrApprvrSectionReview();
@@ -612,7 +600,7 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 			} else {
-				System.out.println(" ****** REMAIN PREV VALUE ********");
+				log.debug(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
 				// Save or update to DB
@@ -664,8 +652,7 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& valid) {
-				System.out
-						.println("*********OUPUT IS CAPITAL PAGE Values is capital *******");
+				log.debug("*********OUPUT IS CAPITAL PAGE Values is capital *******");
 				calculateCapital();
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
@@ -690,9 +677,8 @@ public class SmApplicationBackingBean extends
 
 			MofRegistrationReqDTO finReqDto = new MofRegistrationReqDTO();
 			finReqDto.setApplId(getManagedBean().getSmAppl().getApplId());
-			System.out.println("********* Final Block Id *****"
-					+ finReqDto.getApplId());
-			System.out.println("***** Its a valid ************");
+			log.debug("********* Final Block Id *****" + finReqDto.getApplId());
+			log.debug("***** Its a valid ************");
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.retrieveCurrentDraftApplication(finReqDto);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -718,7 +704,7 @@ public class SmApplicationBackingBean extends
 				setDefaultApproverReviewSection();
 			}
 			// if (getManagedBean().getSmAppl().getPmStatus() != null) {
-			// System.out.println("***** After final Retrieve ****"
+			// log.debug("***** After final Retrieve ****"
 			// + getManagedBean().getSmAppl().getPmStatus()
 			// .getStatusId());
 			// }
@@ -778,7 +764,7 @@ public class SmApplicationBackingBean extends
 					rej.setPmReason(desc.getPmReason());
 					rej.setSmAppl(getManagedBean().getSmAppl());
 					resList.add(rej);
-					System.out.println("Reason Id === " + resId);
+					log.debug("Reason Id === " + resId);
 					sb.append(++count).append(".)");
 					sb.append(desc.getReasonDesc());
 					sb.append("\n");
@@ -789,11 +775,11 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmApplRejectReasons() != null
 				&& !getManagedBean().getSmAppl().getSmApplRejectReasons()
 						.isEmpty()) {
-			System.out.println(" ***** Already exisiting records ******* "
+			log.debug(" ***** Already exisiting records ******* "
 					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
 							.size());
 			getManagedBean().getSmAppl().getSmApplRejectReasons().clear();
-			System.out.println(" *****Size after reset******* "
+			log.debug(" *****Size after reset******* "
 					+ getManagedBean().getSmAppl().getSmApplRejectReasons()
 							.size());
 		}
@@ -801,7 +787,7 @@ public class SmApplicationBackingBean extends
 
 		// for (SmApplRejectReason res : getManagedBean().getSmAppl()
 		// .getSmApplRejectReasons()) {
-		// System.out.println("Reason Id === "
+		// log.debug("Reason Id === "
 		// + res.getPmReason().getReasonId());
 		// PmReasonDesc desc = retrieveReasonDescriptionByReasonId(res
 		// .getPmReason().getReasonId());
@@ -819,7 +805,7 @@ public class SmApplicationBackingBean extends
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
 		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
 		svTask.setSmAppl(getManagedBean().getSmAppl());
-		System.out.println("** Basic Office ***"
+		log.debug("** Basic Office ***"
 				+ getManagedBean().getBasicCompanyFacility().getSmAddress()
 						.getAddress1() + " -- Id -- "
 				+ getManagedBean().getBasicCompanyFacility().getFacilityId());
@@ -925,13 +911,13 @@ public class SmApplicationBackingBean extends
 				if (rev.getApplSectionReviewId().equals(
 						getManagedBean().getPoSecReview()
 								.getApplSectionReviewId())) {
-					System.out.println("**** Existing po remarks *******"
+					log.debug("**** Existing po remarks *******"
 							+ getManagedBean().getPoSecReview()
 									.getApplSectionReviewId());
-					System.out.println("**** Baisc po remarks *******"
+					log.debug("**** Baisc po remarks *******"
 							+ getManagedBean().getPoSecReview()
 									.getBasicRemark());
-					System.out.println("**** Baisc verified po remarks *******"
+					log.debug("**** Baisc verified po remarks *******"
 							+ getManagedBean().getPoSecReview()
 									.isBasicVerified());
 					getManagedBean()
@@ -947,7 +933,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().isApproverUser()
 				&& getManagedBean().getApprvrSecReview()
 						.getApplSectionReviewId() != null) {
-			System.out.println("**** Existing Apprvr remarks *******");
+			log.debug("**** Existing Apprvr remarks *******");
 			for (SmApplSectionReview revs : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
 				if (revs.getApplSectionReviewId().equals(
@@ -965,7 +951,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private Boolean validateBeforeSave(String applType, String currentPageType) {
-		System.out.println("******* Page Type ********" + currentPageType);
+		log.debug("******* Page Type ********" + currentPageType);
 		boolean validSave = true;
 		switch (currentPageType) {
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC:
@@ -1001,7 +987,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void assignApplicationSupportingDocs() {
-		System.out.println(" ** For Suporting Docs ** ");
+		log.debug(" ** For Suporting Docs ** ");
 		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
 			getManagedBean().getSmAppl().setSmApplSupportDocs(
 					new ArrayList<SmApplSupportDoc>());
@@ -1018,7 +1004,7 @@ public class SmApplicationBackingBean extends
 				catL3Ids.add(cat.getPmCategoryL3().getCategoryL3Id());
 			}
 			rqDto.setCategoryL3Ids(catL3Ids);
-			System.out.println(" **** Total categories sent to Doc So ***"
+			log.debug(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
 		}
 
@@ -1031,18 +1017,17 @@ public class SmApplicationBackingBean extends
 				&& !rqDto.getCategoryL3Ids().isEmpty()) {
 			rsDTO = retrieveSupportingDocumentList(rqDto);
 		} else {
-			System.out
-					.println(" **** Not calling supporting doc API as there are not categories for this supplier **** ");
+			log.debug(" **** Not calling supporting doc API as there are not categories for this supplier **** ");
 		}
 
 		if (rsDTO != null && rsDTO.getDocumentList() != null
 				&& !rsDTO.getDocumentList().isEmpty()) {
-			System.out.println("*** Not Empty list ****"
+			log.debug("*** Not Empty list ****"
 					+ rsDTO.getDocumentList().size());
 			List<SmApplSupportDoc> docs = new ArrayList<>();
 
 			if (getManagedBean().getSmAppl().getSmApplSupportDocs().isEmpty()) {
-				System.out.println(" ******* Empty Doc List *****");
+				log.debug(" ******* Empty Doc List *****");
 				for (PmDocument doc : rsDTO.getDocumentList()) {
 					docs.add(SmApplicationUtil.getDefaultSmApplSupportingDoc(
 							doc, getManagedBean().getSmAppl()));
@@ -1069,7 +1054,7 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().getSmAppl().setSmApplSupportDocs(docs);
 		} else {
-			System.out.println("*** Empty Supporting doc list **** ");
+			log.debug("*** Empty Supporting doc list **** ");
 		}
 	}
 
@@ -1168,7 +1153,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
-		System.out.println("**** Enter Share Holder privilege ******");
+		log.debug("**** Enter Share Holder privilege ******");
 		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
@@ -1255,7 +1240,7 @@ public class SmApplicationBackingBean extends
 		sb.append("NOTE : '").append(desc)
 				.append("' categories can only be added in this applicaiton'");
 		getManagedBean().setCatTypeConfirm(sb.toString());
-		System.out.println("***** After confirm +++++++"
+		log.debug("***** After confirm +++++++"
 				+ getManagedBean().getSmAppl().getSupportingDocMode());
 		// TODO fix the bug and remove this hard code
 		if (getManagedBean().getSmAppl().getSupportingDocMode() == null
@@ -1267,7 +1252,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void resetApplnCategoryType() {
-		System.out.println("********* Reset the Values ********");
+		log.debug("********* Reset the Values ********");
 		if (getManagedBean().getSmAppl().getApplCategoryType() != null
 				&& getManagedBean().getSmAppl().getApplCategoryType()
 						.equals("S")) {
@@ -1286,7 +1271,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	// public void svcSelected(AjaxBehaviorEvent e) {
-	// System.out.println(" ******* On Change Office Facility ***** "
+	// log.debug(" ******* On Change Office Facility ***** "
 	// + getManagedBean().getPoSiteVisitType());
 	//
 	// }
@@ -1449,7 +1434,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedAssocCompanies() {
-		System.out.println("*** Delete Assoc Companies ******* "
+		log.debug("*** Delete Assoc Companies ******* "
 				+ getManagedBean().getSelectedAssocCompanies().size());
 		if (getManagedBean().getSelectedAssocCompanies().size() > 0) {
 			for (SmAssociateCompany assoc : getManagedBean()
@@ -1568,7 +1553,7 @@ public class SmApplicationBackingBean extends
 
 	public void deleteSelectedAssocBodies() {
 
-		System.out.println("*** Delete AssocBodies ******* "
+		log.debug("*** Delete AssocBodies ******* "
 				+ getManagedBean().getSelectedAssocBodyList().size());
 		if (getManagedBean().getSelectedAssocBodyList().size() > 0) {
 			for (SmAssociationBody assoc : getManagedBean()
@@ -1605,8 +1590,7 @@ public class SmApplicationBackingBean extends
 				.contains(getManagedBean().getSelectedCompanyExperience())) {
 			// TODO if any validation reqd for branch info
 		} else {
-			System.out
-					.println(" **** THIS IS AN ADD FOR Consultant Prjs******");
+			log.debug(" **** THIS IS AN ADD FOR Consultant Prjs******");
 			getManagedBean().getSmAppl().getSmCompanyExperiences()
 					.add(getManagedBean().getSelectedCompanyExperience());
 			if (getManagedBean().getSmAppl().getSupplierType()
@@ -1689,10 +1673,10 @@ public class SmApplicationBackingBean extends
 
 	public void checkDuplicateCategoryForProject(SmCompanyExperienceCat expCat,
 			SmCompanyExperience exp) {
-		System.out.println("**** Validate the category Codes ********** ");
+		log.debug("**** Validate the category Codes ********** ");
 		for (SmCompanyExperienceCat cat : exp.getSmCompanyExperienceCats()) {
 			if (expCat.equals(cat)) {
-				System.out.println(" *** Same Obj ****"
+				log.debug(" *** Same Obj ****"
 						+ cat.getPmCategoryL1().getCategoryL1Code() + " -- --"
 						+ expCat.getPmCategoryL1().getCategoryL1Code());
 
@@ -1729,7 +1713,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewCompanyExperience() {
-		System.out.println("***** Assign New Company Exp ***********");
+		log.debug("***** Assign New Company Exp ***********");
 		SmCompanyExperience exp = new SmCompanyExperience();
 		exp.setRevNo(1);
 		exp.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
@@ -1776,8 +1760,7 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().getSelectedCompanyExperiences().clear();
 		} else {
-			System.out
-					.println(" ******** NO Record selected please select atleast one ");
+			log.debug(" ******** NO Record selected please select atleast one ");
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Company Project" });
 		}
@@ -1917,14 +1900,14 @@ public class SmApplicationBackingBean extends
 	public void changeSubChildCategory(AjaxBehaviorEvent e) {
 		String selPmCatL3 = getManagedBean().getSelectedSubChildCat();
 		if (selPmCatL3 == null) {
-			System.out.println(" --- Selected is a null --- ");
+			log.debug(" --- Selected is a null --- ");
 			PmCategoryL3 p3 = new PmCategoryL3();
 			getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
 		} else {
 			for (PmCategoryL3 p3 : getManagedBean().getSelectedCategory()
 					.getPmCategoryL2().getPmCategoryL3s()) {
 				if (p3.getCategoryL3Code().equalsIgnoreCase(selPmCatL3)) {
-					System.out.println("***** Selected Child is ********"
+					log.debug("***** Selected Child is ********"
 							+ p3.getCategoryL3Code() + " --- Name ----"
 							+ p3.getCategoryName());
 					if (p3.getCategoryL3Code().equals("1")) {
@@ -1943,7 +1926,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void changeCatEntryModeValues(AjaxBehaviorEvent e) {
-		// System.out.println("**** ENTER THE CHANGE OF CATEGORY TYPE **** "
+		// log.debug("**** ENTER THE CHANGE OF CATEGORY TYPE **** "
 		// + getManagedBean().getSelectedCategory().getEntryMode());
 		resetSelectedCategoryParams();
 
@@ -2129,8 +2112,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
 			if (getManagedBean().getApplFactoryFacilities().contains(smFac)) {
-				System.out
-						.println(" ******* THIS IS EDIT FOR EXISITING FACTORY **********");
+				log.debug(" ******* THIS IS EDIT FOR EXISITING FACTORY **********");
 			}
 
 		} else {
@@ -2151,7 +2133,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {
-		System.out.println("******** Selected value ******"
+		log.debug("******** Selected value ******"
 				+ facilityBean.getSmAddress().getAddress1());
 		assignStateDistAndCityForSelVal(facilityBean.getSmAddress()
 				.getPmCountry().getCountryId(), facilityBean.getSmAddress()
@@ -2184,7 +2166,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void factoryOwnerTypeSel(AjaxBehaviorEvent e) {
-		System.out.println("Selected Owner type === "
+		log.debug("Selected Owner type === "
 				+ getManagedBean().getSelectedFactoryFacility()
 						.getOwnershipType());
 	}
@@ -2264,7 +2246,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void dockOwnerTypeSel(AjaxBehaviorEvent e) {
-		System.out.println("Selected Owner type === "
+		log.debug("Selected Owner type === "
 				+ getManagedBean().getSelectedDockyardFacility()
 						.getOwnershipType());
 	}
@@ -2292,8 +2274,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
 			if (getManagedBean().getApplWorkShopFacilities().contains(smFac)) {
-				System.out
-						.println(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+				log.debug(" ******* THIS IS EDIT FOR EXISITING workshop **********");
 			}
 
 		} else {
@@ -2344,7 +2325,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void workShopOwnerTypeSel(AjaxBehaviorEvent e) {
-		System.out.println("Selected Owner type === "
+		log.debug("Selected Owner type === "
 				+ getManagedBean().getSelectedWorkShopFacility()
 						.getOwnershipType());
 	}
@@ -2371,8 +2352,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmFacilities().contains(smFac)) {
 
 			if (getManagedBean().getApplStoreFacilities().contains(smFac)) {
-				System.out
-						.println(" ******* THIS IS EDIT FOR EXISITING workshop **********");
+				log.debug(" ******* THIS IS EDIT FOR EXISITING workshop **********");
 			}
 
 		} else {
@@ -2423,7 +2403,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void storeOwnerTypeSel(AjaxBehaviorEvent e) {
-		System.out.println("Selected Owner type === "
+		log.debug("Selected Owner type === "
 				+ getManagedBean().getSelectedStoreFacility()
 						.getOwnershipType());
 	}
@@ -2459,7 +2439,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmManufacturingDtls()
 				.contains(getManagedBean().getSelectedManufacturer())) {
 
-			System.out.println(" **** THIS IS AN UPDATE For manufacturer******"
+			log.debug(" **** THIS IS AN UPDATE For manufacturer******"
 					+ getManagedBean().getSelectedManufacturer().getBrand());
 		} else {
 
@@ -2485,7 +2465,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewManufacturerBean() {
-		System.out.println("**** Add new Manufacturer *********");
+		log.debug("**** Add new Manufacturer *********");
 		SmManufacturingDtl manu = new SmManufacturingDtl();
 		manu.setPmUom(new PmUom());
 		manu.setRevNo(1);
@@ -2493,7 +2473,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setSelectedManufacturer(manu);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("manufactorDialog.show()");
-		System.out.println("****** After **********"
+		log.debug("****** After **********"
 				+ getManagedBean().getSelectedManufacturer().getPmUom()
 						.getUomName());
 
@@ -2522,7 +2502,7 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSmMachineDtls()
 				.contains(getManagedBean().getSelectedMachine())) {
 
-			System.out.println(" **** THIS IS AN UPDATE For machinery ******"
+			log.debug(" **** THIS IS AN UPDATE For machinery ******"
 					+ getManagedBean().getSelectedMachine().getBrandName());
 		} else {
 
@@ -2578,7 +2558,7 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			calculateShareHolderPercent();
 		}
-		
+
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder()
@@ -2607,7 +2587,7 @@ public class SmApplicationBackingBean extends
 												.getSelectedShareHolder()),
 								getManagedBean().getSelectedShareHolder());
 
-				System.out.println(" **** THIS IS AN UPDATE Personnel ******");
+				log.debug(" **** THIS IS AN UPDATE Personnel ******");
 			} else {
 				if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 						&& getManagedBean()
@@ -2634,7 +2614,7 @@ public class SmApplicationBackingBean extends
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-				System.out.println("****** Calc countf ******* ");
+				log.debug("****** Calc countf ******* ");
 				calcPersonnelListCount();
 				getManagedBean().setRedirectToPersonPage(false);
 
@@ -2663,7 +2643,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void backFromPersonnelPage() {
-		System.out.println("*** Back to perssonel page ******");
+		log.debug("*** Back to perssonel page ******");
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			calculateCapital();
@@ -2740,9 +2720,9 @@ public class SmApplicationBackingBean extends
 		managePersonnelRoles();
 		manageEquityLimit(getManagedBean().getSelectedShareHolder());
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
-			getManagedBean().getSelectedShareHolder()
-					.setIdentificationType(
-							retrievePmParameterById(getManagedBean()
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					SmApplicationUtil
+							.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
@@ -2878,7 +2858,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewShareHolder(String personelType) {
-		System.out.println("********* assignNewShareHolder *****");
+		log.debug("********* assignNewShareHolder *****");
 		// getManagedBean().setAuthPerCount(getAuthUserCount());
 		SmPersonnel shr = new SmPersonnel();
 		shr.setEpRole("");
@@ -2931,7 +2911,7 @@ public class SmApplicationBackingBean extends
 				}
 			}
 		}
-		System.out.println("*** Delete Share Holders ******* "
+		log.debug("*** Delete Share Holders ******* "
 				+ getManagedBean().getSelectedShareHolders().size());
 		if (getManagedBean().getSelectedShareHolders().size() > 0) {
 			if (personType
@@ -2960,9 +2940,8 @@ public class SmApplicationBackingBean extends
 	// -- Process Share Holder Personnel End
 	// -- Process Common for both Personnel and Share Holder Start --
 	public void addShrHldrJobFunction() {
-		System.out
-				.println("******* getManagedBean().getSelectedShareHolder() **********"
-						+ getManagedBean().getSelectedShareHolder().getName());
+		log.debug("******* getManagedBean().getSelectedShareHolder() **********"
+				+ getManagedBean().getSelectedShareHolder().getName());
 		SmStaffExperience exp = new SmStaffExperience();
 		exp.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 		getManagedBean().setSelectedJobFunction(exp);
@@ -2972,8 +2951,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelShrHldrJobFunc(SmStaffExperience exp) {
-		System.out.println("*********** Selected value *********"
-				+ exp.getDesignation());
+		log.debug("*********** Selected value *********" + exp.getDesignation());
 		getManagedBean().setSelectedJobFunction(exp);
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(
@@ -3016,7 +2994,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedShrHldrJobFunction() {
-		System.out.println(" ******* The is size of job holders is ********* "
+		log.debug(" ******* The is size of job holders is ********* "
 				+ getManagedBean().getSelectedShrHldrJobFunctions().size());
 		if (getManagedBean().getSelectedShrHldrJobFunctions().size() > 0) {
 			for (SmStaffExperience exp : getManagedBean()
@@ -3233,9 +3211,9 @@ public class SmApplicationBackingBean extends
 
 	public void assignPersonIdentType(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
-			getManagedBean().getSelectedShareHolder()
-					.setIdentificationType(
-							retrievePmParameterById(getManagedBean()
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					SmApplicationUtil
+							.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 			if (getManagedBean().getSelectedShareHolder()
@@ -3548,7 +3526,7 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_VERIFICATION);
 			}
 			getManagedBean().getSmAppl().setApplSubmitDate(new Date());
-			System.out.println(" **** SUPPORTING DOC MODE ****"
+			log.debug(" **** SUPPORTING DOC MODE ****"
 					+ bpmAppl.getSupportingDocMode());
 
 			if (bpmAppl.getSupportingDocMode() == null) {
@@ -3556,11 +3534,11 @@ public class SmApplicationBackingBean extends
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
-			System.out.println(" ****** The task list id ss *********"
+			log.debug(" ****** The task list id ss *********"
 					+ getManagedBean().getTaskId());
 			if (getManagedBean().getTaskId() != null
 					&& !getManagedBean().getTaskId().equalsIgnoreCase("")) {
-				System.out.println("***** Update the task *******");
+				log.debug("***** Update the task *******");
 				reqDTO.setUpdateTask(true);
 				reqDTO.setTaskId(getManagedBean().getTaskId());
 			} else {
@@ -3585,12 +3563,12 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("R")) {
 				reqDTO.setUserList(new ArrayList<String>());
-				System.out.println("User List Size for pass to BPM:"
+				log.debug("User List Size for pass to BPM:"
 						+ reqDTO.getUserList().size());
 				// if (reqDTO.getUserList().size() == 0) {
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				reqDTO.getUserList().add(pmUser.getLoginId());
-				System.out.println("Login user added to the user list to BPM");
+				log.debug("Login user added to the user list to BPM");
 				// throw new EpException(MessageConst.ERROR_722546);
 				// }
 
@@ -3616,7 +3594,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String resubmitSmApplInquiryToBpm(String applType) {
-		System.out.println("*** Resubmit for send inquiry **** ");
+		log.debug("*** Resubmit for send inquiry **** ");
 		if (getManagedBean().getSmAppl().getSupportingDocMode() != null
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("O")) {
@@ -3643,7 +3621,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			msgConst = MessageConst.INFO_700005;
 		}
-		System.out.println("Message value === " + msgConst);
+		log.debug("Message value === " + msgConst);
 		FacesContext
 				.getCurrentInstance()
 				.addMessage(
@@ -3670,7 +3648,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String submitCancelMofApplToBpm() {
-		System.out.println(" Call Cancel ---------------->>>>>>>>>>");
+		log.debug(" Call Cancel ---------------->>>>>>>>>>");
 		try {
 			SmRemark remark = new SmRemark();
 			remark.setDocId(getManagedBean().getSmAppl().getApplId());
@@ -3799,7 +3777,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String saveApplicationAsDraft(String applType, String currentPageType) {
-		System.out.println("****** Save As Draft **********" + currentPageType
+		log.debug("****** Save As Draft **********" + currentPageType
 				+ currentTab);
 		boolean valid = false;
 		try {
@@ -3842,7 +3820,7 @@ public class SmApplicationBackingBean extends
 
 	@SuppressWarnings("finally")
 	private boolean intializeSaveDraftBpm(String currentPageType) {
-		System.out.println("*********  intializeSaveDraftBpm ************* ");
+		log.debug("*********  intializeSaveDraftBpm ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = false;
 		try {
@@ -3863,9 +3841,8 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
-			System.out
-					.println("******* Save as draft User List to BPM Size *******"
-							+ reqDTO.getUserList());
+			log.debug("******* Save as draft User List to BPM Size *******"
+					+ reqDTO.getUserList());
 			if (reqDTO.getOutcome().equals("")) {
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}
@@ -3874,15 +3851,14 @@ public class SmApplicationBackingBean extends
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
 			if (resDTO != null) {
-				System.out.println("******* From SO ******** "
-						+ resDTO.isBpmSuccess());
+				log.debug("******* From SO ******** " + resDTO.isBpmSuccess());
 				valid = resDTO.isBpmSuccess();
 				if (!valid) {
-					System.out.println("******* Process No Valid ******");
+					log.debug("******* Process No Valid ******");
 					throw new EpException(MessageConst.ERROR_700020);
 				}
 			} else {
-				System.out.println("*** The Save as draft returned null **** ");
+				log.debug("*** The Save as draft returned null **** ");
 				valid = false;
 				throw new EpException(MessageConst.ERROR_722519);
 			}
@@ -3903,8 +3879,7 @@ public class SmApplicationBackingBean extends
 
 	@SuppressWarnings("finally")
 	private boolean deleteDraftApplciationTask() {
-		System.out
-				.println("*********  Delete draft applicaiton task ************* ");
+		log.debug("*********  Delete draft applicaiton task ************* ");
 		IMofRegistrationSO regSo = null;
 		boolean valid = true;
 		try {
@@ -3923,17 +3898,17 @@ public class SmApplicationBackingBean extends
 			if (resDTO != null) {
 				valid = resDTO.isBpmSuccess();
 				if (!valid) {
-					System.out.println("******* Process No Valid ******");
+					log.debug("******* Process No Valid ******");
 					throw new EpException(MessageConst.ERROR_700020);
 				}
 			} else {
-				System.out.println("*** The Save as draft returned null **** ");
+				log.debug("*** The Save as draft returned null **** ");
 				valid = false;
 				throw new EpException(MessageConst.ERROR_722519);
 			}
 			return valid;
 		} catch (Exception e) {
-			System.out.println("***Error in Delete Draft  **** ");
+			log.debug("***Error in Delete Draft  **** ");
 			retriveLatestApplAfterUpdate(getManagedBean().getCurrentPageType(),
 					"");
 			throw new EpException(MessageConst.ERROR_722519);
@@ -3977,7 +3952,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignMissingDocsList() {
-		System.out.println("*** Send Inquiry **** ");
+		log.debug("*** Send Inquiry **** ");
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
@@ -3985,7 +3960,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getMissinDocs().add(doc);
 			}
 		}
-		System.out.println("**** Send Inquiry List Size ***** "
+		log.debug("**** Send Inquiry List Size ***** "
 				+ getManagedBean().getMissinDocs().size());
 		RequestContext.getCurrentInstance().execute("sendInqDialog.show()");
 	}
@@ -4009,7 +3984,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignFinalApproveOrReject(String dialog) {
-		System.out.println("**** assignFinalApproveOrReject *** ");
+		log.debug("**** assignFinalApproveOrReject *** ");
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
@@ -4024,7 +3999,7 @@ public class SmApplicationBackingBean extends
 			String decision) {
 		List<String> updateIds = new ArrayList<String>();
 		updateIds.add(":form");
-		System.out.println("*** Submit Approve *** " + decision);
+		log.debug("*** Submit Approve *** " + decision);
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute(dialog + ".hide()");
 		RequestContext.getCurrentInstance().update(updateIds);
@@ -4040,12 +4015,11 @@ public class SmApplicationBackingBean extends
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			retriveCurrentAppl();
-			System.out.println(" **** After retrieve ***"
+			log.debug(" **** After retrieve ***"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
 					+ res);
-			System.out.println(" **** The Value from screen of approval ***"
-					+ pmStatId);
+			log.debug(" **** The Value from screen of approval ***" + pmStatId);
 			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IReviewApplicationSO.class);
@@ -4065,13 +4039,11 @@ public class SmApplicationBackingBean extends
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
 			if (getManagedBean().getSupplierToPOList() != null) {
-				System.out
-						.println("**** LIST of supp from BPM earlier task *******"
-								+ getManagedBean().getSupplierToPOList().size());
+				log.debug("**** LIST of supp from BPM earlier task *******"
+						+ getManagedBean().getSupplierToPOList().size());
 				reqDTO.setUserList(getManagedBean().getSupplierToPOList());
 			} else {
-				System.out
-						.println("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
+				log.debug("***** NO SUPPLIER LIST FROM BPM TO DECISION ***** ");
 				reqDTO.setUserList(new ArrayList<String>());
 			}
 
@@ -4163,7 +4135,7 @@ public class SmApplicationBackingBean extends
 
 			}
 
-			System.out.println("Before final decision ---"
+			log.debug("Before final decision ---"
 					+ getManagedBean().getSmAppl().getPmStatus().getStatusId());
 			validSiteVisit = testSmAppl(getManagedBean().getSmAppl()
 					.getApplType(),
@@ -4177,7 +4149,7 @@ public class SmApplicationBackingBean extends
 				String msgConst = "";
 				if (getManagedBean().isPoUser()
 						|| getManagedBean().isApproverUser()) {
-					System.out.println(" **** Final Decision from PO ****");
+					log.debug(" **** Final Decision from PO ****");
 					if (res.equalsIgnoreCase("Approve")) {
 						msgConst = MessageConst.INFO_700007;
 					} else if (res.equalsIgnoreCase("Reject")) {
@@ -4273,7 +4245,7 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
 				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 			} else {
-				System.out.println(" ****** REMAIN PREV VALUE ********");
+				log.debug(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
 				// Save or update to DB
@@ -4371,16 +4343,6 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	private PmParameter retrievePmParameterById(Long paramId) {
-		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterId(paramId);
-		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
-
-		return resDTO.getPmParameter();
-	}
-
 	private DocumentResDTO retrieveSupportingDocumentList(DocumentReqDTO reqDTO) {
 		DocumentResDTO resDto = new DocumentResDTO();
 		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
@@ -4393,7 +4355,7 @@ public class SmApplicationBackingBean extends
 	public void retrieveBankFinOrgListByType() {
 		boolean runQuery = true;
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-		System.out.println("******* Selected Value **********"
+		log.debug("******* Selected Value **********"
 				+ getManagedBean().getSelectedBank().getAccountPurpose());
 		if (getManagedBean().getSelectedBank().getAccountPurpose()
 				.equalsIgnoreCase("P")) {
@@ -4413,8 +4375,7 @@ public class SmApplicationBackingBean extends
 			IFinancialOrgSO reqSO = (IFinancialOrgSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("pm", IFinancialOrgSO.class);
-			System.out.println("******* Service Type ********"
-					+ reqDTO.getServiceType());
+			log.debug("******* Service Type ********" + reqDTO.getServiceType());
 			FinancialOrgResDTO resDTO = reqSO
 					.retrieveFinancialOrgListByServiceType(reqDTO);
 
@@ -4428,23 +4389,23 @@ public class SmApplicationBackingBean extends
 				// new SmSupplierBranch());
 			}
 		}
-		System.out.println("****** After getting the fin org list *******"
+		log.debug("****** After getting the fin org list *******"
 				+ getManagedBean().getFinOrgLs().size());
 	}
 
 	public void assignSelectedSupportDoc(SmApplSupportDoc doc) {
-		System.out.println("****** Assign Supporting Doc *******");
+		log.debug("****** Assign Supporting Doc *******");
 		getManagedBean().setSupportDoc(doc);
 	}
 
 	public void handleSupDocFileAttachment(FileUploadEvent event) {
-		System.out.println("********handleFileAttachment********");
+		log.debug("********handleFileAttachment********");
 		if (event.getFile() != null) {
-			System.out.println("***** File attached *******"
+			log.debug("***** File attached *******"
 					+ event.getFile().getFileName());
 			if (getManagedBean().getSmAppl().getSmApplSupportDocs()
 					.contains(getManagedBean().getSupportDoc())) {
-				System.out.println("******* Contains selected file ****");
+				log.debug("******* Contains selected file ****");
 				SmApplSupportDoc doc = getManagedBean().getSupportDoc();
 				doc.getSmApplDocFiles().get(0)
 						.setFileName(event.getFile().getFileName());
@@ -4460,7 +4421,7 @@ public class SmApplicationBackingBean extends
 						+ "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
-					System.out.println(" *** The name is ****"
+					log.debug(" *** The name is ****"
 							+ docs.getSmApplDocFiles().get(0).getFileName());
 					docs.getSmApplDocFiles().get(0).setFilePath(filePath);
 				}
@@ -4479,7 +4440,7 @@ public class SmApplicationBackingBean extends
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescById(reqDTO);
 		if (resDTO.getReasonDesc() != null) {
-			System.out.println(" *** Reject Description ****** "
+			log.debug(" *** Reject Description ****** "
 					+ resDTO.getReasonDesc().getReasonDesc());
 		}
 		return resDTO.getReasonDesc();
@@ -4545,9 +4506,9 @@ public class SmApplicationBackingBean extends
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
-		System.out.println("** getSupplierType type ***"
+		log.debug("** getSupplierType type ***"
 				+ getManagedBean().getSmAppl().getSupplierType());
-		System.out.println("** getApplCategoryType type ***"
+		log.debug("** getApplCategoryType type ***"
 				+ getManagedBean().getSmAppl().getApplCategoryType());
 		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
 				.getSupplierType());
@@ -4582,7 +4543,7 @@ public class SmApplicationBackingBean extends
 			return resDTO;
 
 		} catch (Exception e) {
-			System.out.println("**** THIS IS THE EXCEPTION IN CLONE APPL ****");
+			log.debug("**** THIS IS THE EXCEPTION IN CLONE APPL ****");
 			e.printStackTrace();
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			resDTO.setErrorCaued(Boolean.TRUE);
@@ -4729,7 +4690,7 @@ public class SmApplicationBackingBean extends
 						new ArrayList<PmCity>());
 				break;
 			default:
-				System.out.println("**** This is an unknown panel ***** ");
+				log.debug("**** This is an unknown panel ***** ");
 				break;
 			}
 			resetState(state);
@@ -4837,7 +4798,7 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setBankCities(new ArrayList<PmCity>());
 				break;
 			default:
-				System.out.println("**** This is an unknown panel ***** ");
+				log.debug("**** This is an unknown panel ***** ");
 				break;
 			}
 			resetDistrict(district);
@@ -4906,7 +4867,7 @@ public class SmApplicationBackingBean extends
 				this.getManagedBean().setBankCities(cityLs);
 				break;
 			default:
-				System.out.println("**** This is an unknown panel ***** ");
+				log.debug("**** This is an unknown panel ***** ");
 				break;
 			}
 			resetCity(city);
@@ -5005,7 +4966,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setApplicationFailities(List<SmFacility> smFacilities) {
-		System.out.println("*** Existing Facility******");
+		log.debug("*** Existing Facility******");
 		getManagedBean().setApplFactoryFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplDockyardFacilities(new ArrayList<SmFacility>());
 		getManagedBean().setApplWorkShopFacilities(new ArrayList<SmFacility>());
@@ -5022,8 +4983,7 @@ public class SmApplicationBackingBean extends
 							retrievePmStateList(smFac.getSmAddress()
 									.getPmCountry().getCountryId()));
 				}
-				System.out
-						.println("*********Setting Basic company value **********");
+				log.debug("*********Setting Basic company value **********");
 				this.getManagedBean().setBasicCompanyFacility(smFac);
 				if (smFac.getSmAddress() != null
 						&& smFac.getSmAddress().getPmCountry() != null
@@ -5137,7 +5097,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void calculateShareHolderPercent() {
-		System.out.println("********* calculateShareHolderPercent ********  ");
+		log.debug("********* calculateShareHolderPercent ********  ");
 		SmApplicationUtil.calculateShareHolderPercent(getManagedBean());
 	}
 
@@ -5267,7 +5227,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	private void setPmStatusDesc(String statusId) {
-		System.out.println("****** Status Id ******" + statusId);
+		log.debug("****** Status Id ******" + statusId);
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(Long.parseLong(statusId));
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
@@ -5318,11 +5278,10 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void managePersonnelRoles() {
-		System.out.println("**** Enter Manage Roles  ******");
+		log.debug("**** Enter Manage Roles  ******");
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) {
-			System.out
-					.println(" **** Role management for contractor ***********");
+			log.debug(" **** Role management for contractor ***********");
 			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 					|| getManagedBean().getSelectedShareHolder().isDirector()
 					|| getManagedBean().getSelectedShareHolder()
@@ -5337,8 +5296,7 @@ public class SmApplicationBackingBean extends
 
 		} else if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			System.out
-					.println(" **** Role management for consultant ***********");
+			log.debug(" **** Role management for consultant ***********");
 			if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 					|| getManagedBean().getSelectedShareHolder().isDirector()
 					|| getManagedBean().getSelectedShareHolder()
