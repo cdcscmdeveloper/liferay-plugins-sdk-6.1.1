@@ -29,6 +29,7 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 //	private List<PmUser> selectedUsers;
 	private List<PmUser> availableUsers;
 	private PmUser selectedUser;
+	private boolean orgProfileRequired;
 
 	/**
 	 * @return the taskAssignmentSearchBean
@@ -85,6 +86,20 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setAvailableUsers(List<PmUser> availableUsers) {
 		this.availableUsers = availableUsers;
+	}
+
+	/**
+	 * @return the orgProfileRequired
+	 */
+	public boolean isOrgProfileRequired() {
+		return orgProfileRequired;
+	}
+
+	/**
+	 * @param orgProfileRequired the orgProfileRequired to set
+	 */
+	public void setOrgProfileRequired(boolean orgProfileRequired) {
+		this.orgProfileRequired = orgProfileRequired;
 	}
 
 //	/**
