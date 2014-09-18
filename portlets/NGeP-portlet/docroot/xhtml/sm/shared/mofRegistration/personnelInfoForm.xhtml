@@ -460,42 +460,11 @@
 						<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 							process="persInfoDtPanel" partialSubmit="true"
 							action="#{backingBean.deleteSelectedShareHolders(SupplierManagementConst.PERSONNEL_TYPE_STAFF)}"
-							update=":form:tt:personDt , :form:tt:stfSummaryPan ,:form:tt:persBranMapInfo" />
+							update=":form:tt:personDt , :form:tt:stfSummaryPan " />
 					</div>
 				</p:panel>
-				<p:panel id="persBranMapInfo"
-					header="#{lbl['lbl.sm.person.composition.brnchPoc']}"
-					rendered="#{backingBean.managedBean.smAppl.smSupplierBranches.size() gt 0}">
-					<p:dataTable var="branch" id="perBrDt"
-						value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-						rowIndexVar="index">
-						<ac:paginator for="perBrDt" />
-
-
-						<p:column
-							headerText="#{lbl['lbl.sm.person.composition.brnName']} ">
-							<h:outputText value="#{branch.branchName}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}">
-							<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-								required="true"
-								label="#{lbl['lbl.sm.person.composition.poc']} : #{branch.branchName}"
-								id="brnPerVal" value="#{branch.contactPersonId}">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-								<f:selectItems
-									value="#{backingBean.managedBean.smAppl.smPersonnels}"
-									var="brPerBean" itemLabel="#{brPerBean.name}"
-									itemValue="#{brPerBean.personnelId}" />
-								<p:ajax event="change" partialSubmit="true" process="@this"
-									listener="#{backingBean.assignPersonForBranch(branch)}"
-									update=":form:tt:persBranMapInfo,:form:tt:persInfPan" />
-							</p:selectOneMenu>
-							<p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
-								showDetail="false" display="icon" />
-						</p:column>
-
-					</p:dataTable>
-				</p:panel>
+				<ui:include
+						src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
 				<br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<table style="width: 50%">

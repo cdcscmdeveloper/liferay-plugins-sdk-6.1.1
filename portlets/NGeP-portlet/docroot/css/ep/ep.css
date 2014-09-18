@@ -3051,7 +3051,7 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 
 .menu-text li {
 	float: left;
-	width: 100px;
+	width: 115px;
 	text-align: center;
 	font-family: Arial;
 	font-size: 11px;
@@ -3075,7 +3075,7 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 }
 
 .menu-line .space {
-	margin-right: 85px;
+	margin-right: 100px;
 }
 
 .menu-line .red-dot {

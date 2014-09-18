@@ -9,7 +9,7 @@
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.branch.branchName']}" />
 				<p:outputLabel value="*" styleClass="mandatory" /></td>
-			<td><p:inputText required="#{backingBean.managedBean.valueReqd}"
+			<td><p:inputText readonly="true"
 					label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
 					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
@@ -157,6 +157,21 @@
 					maxlength="12">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 				</p:inputText> <p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
+					showDetail="false" display="icon" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel
+					value="#{lbl['lbl.sm.person.composition.poc']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					required="#{backingBean.managedBean.valueReqd}"
+					label="#{lbl['lbl.sm.person.composition.poc']}" id="brnPerVal"
+					value="#{backingBean.managedBean.selectedBranch.smPersonnel.personnelId}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems
+						value="#{backingBean.managedBean.smAppl.smPersonnels}"
+						var="brPerBean" itemLabel="#{brPerBean.name}"
+						itemValue="#{brPerBean.personnelId}" />
+				</p:selectOneMenu> <p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
 
