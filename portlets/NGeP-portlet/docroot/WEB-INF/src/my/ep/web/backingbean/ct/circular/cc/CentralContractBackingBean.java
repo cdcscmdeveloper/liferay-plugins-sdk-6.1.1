@@ -519,7 +519,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			validateCircular(action);
+		
+			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+			}
+			
+			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
+			       validateCircular(action);
 			
 			CtCircular circular = this.getManagedBean().getCircular();
 			if(circular==null) {
@@ -592,13 +598,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private void validateCircular(String outcome) {
 		ICircularDetailSO circularDetailSO = null;
-		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularDetailSO.class);
+		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularDetailSO.class);
 		
-		//if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
-			}
-			
+		
 		/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
