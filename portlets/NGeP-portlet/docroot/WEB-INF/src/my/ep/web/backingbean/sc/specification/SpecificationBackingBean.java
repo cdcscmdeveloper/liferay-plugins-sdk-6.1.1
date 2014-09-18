@@ -5659,7 +5659,11 @@ public class SpecificationBackingBean extends
 	public void deleteDeliveryZone(String deliveryZoneName) {
 		List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 				.getDeliveryLocBean();
-
+		List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean()
+				.getDeliveryLocRemoveList();
+		if (null == locationRemoveList) {
+			locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
+		}
 		if (!this.getManagedBean().getScQt().isPanel()) {
 			for (BriefingZoneBean zonebean : deliveryBean) {
 				if (zonebean.getTplSpecZoneDtl().getZoneName()
@@ -5670,7 +5674,7 @@ public class SpecificationBackingBean extends
 
 					List<ScQtDeliveryLoc> selectdeliveryList = this
 							.getManagedBean().getSelectDeliveryList();
-
+					locationRemoveList.addAll(selectdeliveryList);
 					if (deliveryList.size() == selectdeliveryList.size()) {
 
 						deliveryList.clear();
@@ -5683,6 +5687,8 @@ public class SpecificationBackingBean extends
 						}
 					}
 				}
+				this.getManagedBean().getDeliveryLocRemoveList()
+						.addAll(locationRemoveList);
 			}
 		} else {
 			for (BriefingZoneBean zonebean : deliveryBean) {
@@ -5693,7 +5699,7 @@ public class SpecificationBackingBean extends
 
 					List<ScQtDeliveryLoc> selectdeliveryList = this
 							.getManagedBean().getSelectDeliveryList();
-
+					locationRemoveList.addAll(selectdeliveryList);
 					if (deliveryList.size() == selectdeliveryList.size()) {
 
 						deliveryList.clear();
@@ -5705,6 +5711,8 @@ public class SpecificationBackingBean extends
 						}
 					}
 				}
+				this.getManagedBean().getDeliveryLocRemoveList()
+						.addAll(locationRemoveList);
 			}
 		}
 
@@ -5717,8 +5725,14 @@ public class SpecificationBackingBean extends
 			if (null == nonzone) {
 				nonzone = new ArrayList<ScQtDeliveryLoc>();
 			}
+			List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean()
+					.getDeliveryLocRemoveList();
+			if (null == locationRemoveList) {
+				locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
+			}
 			List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean()
 					.getSelectDeliveryList();
+			locationRemoveList.addAll(selectdeliveryList);
 
 			if (nonzone.size() == selectdeliveryList.size()) {
 
@@ -5730,6 +5744,8 @@ public class SpecificationBackingBean extends
 					nonzone.remove(delLoc);
 				}
 			}
+			this.getManagedBean().getDeliveryLocRemoveList()
+					.addAll(locationRemoveList);
 		} finally {
 
 		}
@@ -6649,26 +6665,40 @@ public class SpecificationBackingBean extends
 				.getScQtCheckSt2techProposal();
 		List<ScQtCheckList> selects2Tenical = getManagedBean()
 				.getS2TechSelect();
-
+		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
+				.getChecklistRemoveList();
+		if (null == checklistRemoveList) {
+			checklistRemoveList = new ArrayList<ScQtCheckList>();
+		}
+		checklistRemoveList.addAll(selects2Tenical);
 		if (s2Technical.size() == selects2Tenical.size()) {
 			s2Technical.clear();
 		} else {
 			for (ScQtCheckList checkList : selects2Tenical)
 				s2Technical.remove(checkList);
 		}
-
+		this.getManagedBean().getChecklistRemoveList()
+				.addAll(checklistRemoveList);
 	}
 
 	public void deleteS2Fin() {
 		List<ScQtCheckList> s2Fin = getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		List<ScQtCheckList> selects2Fin = getManagedBean().getS2FinSelect();
+		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
+				.getChecklistRemoveList();
+		if (null == checklistRemoveList) {
+			checklistRemoveList = new ArrayList<ScQtCheckList>();
+		}
+		checklistRemoveList.addAll(selects2Fin);
 		if (s2Fin.size() == selects2Fin.size()) {
 			s2Fin.clear();
 		} else {
 			for (ScQtCheckList checkList : selects2Fin)
 				s2Fin.remove(checkList);
 		}
+		this.getManagedBean().getChecklistRemoveList()
+				.addAll(checklistRemoveList);
 
 	}
 
@@ -7728,6 +7758,17 @@ public class SpecificationBackingBean extends
 			} else {
 				scQt.setScQtDeliveryLocs(null);
 			}
+		}
+		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
+				.getDeliveryLocRemoveList();
+		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
+			reqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
+		}
+
+		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
+				.getChecklistRemoveList();
+		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			reqDTO.setTobeRemoveList(checklistRemoveList);
 		}
 
 		scQt.setScQtCommittees(null);
