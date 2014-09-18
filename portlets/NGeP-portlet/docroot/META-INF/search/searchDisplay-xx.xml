@@ -612,7 +612,7 @@
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.proj.desc" />
-					<!-- <property name="columnWidth" value="150" /> -->
+					<property name="searchable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmSetia.setiaCode" />
@@ -629,10 +629,11 @@
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="financingType.parameterId" />
+					<property name="columnName" value="financingType.pmParameterDescs[0].codeName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.proj.cp" />
+					<property name="searchable" value="false" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
