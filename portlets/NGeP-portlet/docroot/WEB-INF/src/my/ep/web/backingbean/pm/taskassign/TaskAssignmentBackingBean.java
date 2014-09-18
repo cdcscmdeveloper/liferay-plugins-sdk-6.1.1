@@ -1,20 +1,25 @@
 /*
  * Copyright © 2014 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
-package my.ep.web.backingbean.pm.common.taskassign;
+package my.ep.web.backingbean.pm.taskassign;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletSession;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -22,13 +27,23 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -39,6 +54,7 @@ import my.ep.web.managedbean.pm.taskassign.TaskAssignmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -64,13 +80,18 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public static final String DOC_TYPE = "";
 	public static final String STATE = "ASSIGNED";
 	
+	//Mapper for DDL object
+	private static Map<Long, Object> orgTypeMapper;
 	
+	//List for Paging
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 
 		
 	public void preLoading(){
 		log.info("preLoading");
+		this.retrieveOrgTypeMap();
 		this.resetTaskAssignSearchBean();
+		this.getManagedBean().setOrgProfileRequired(true);
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -101,7 +122,102 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		log.info("searchDocument - End");
 		
 	}
+
 	
+	private void retrieveOrgTypeMap(){
+		log.info("retrieveOrgTypeMap");
+		List<PmParameterDesc> parameterDescs = getOrgTypeList();
+		orgTypeMapper = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			orgTypeMapper.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+	}
+	
+	/**
+	 * Retrieve Org. Type from PM
+	 * @return List<PmParameterDesc> 
+	 */
+	public List<PmParameterDesc> getOrgTypeList() {
+		log.info("getOrgTypeList");
+		return PmCommonUtil.retrieveFilteredOrgTypes(ParameterTypeConst.ORGANISATION_TYPES
+				, null
+				, new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
+	}
+	
+	public void changeOrgType() {
+		log.info("changeOrgType");
+		if(this.getManagedBean().getTaskAssignmentSearchBean()!=null){
+			
+			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()==null){
+				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(new PmOrgProfile());
+			}
+			this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName("");
+			
+			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId()!=null){
+				PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId());
+				this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().setParameterCode(pmParameter.getParameterCode());
+				
+				
+				if(ParameterConst.ORG_TYPE_SM_BPK_HQ.equals(pmParameter.getParameterCode())
+					|| ParameterConst.ORG_TYPE_SM_PMS_SABAH.equals(pmParameter.getParameterCode())
+					|| ParameterConst.ORG_TYPE_SM_PMS_SARAWAK.equals(pmParameter.getParameterCode())){
+					this.getManagedBean().setOrgProfileRequired(false);
+					//default org profile
+					PmOrgValidity pmOrgValidity = getOrgProfile(pmParameter.getParameterCode());
+					
+					this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName(pmOrgValidity.getOrgName());
+				}else{
+					this.getManagedBean().setOrgProfileRequired(true);
+				}
+			}
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @param paramCode
+	 * @return
+	 */
+	private PmOrgValidity getOrgProfile(String paramCode){
+		ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+		
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("orgTypeCode.parameterCode");
+		bean.setSearchValue(paramCode);
+		searchBean.getDataFilterBeans().add(bean);
+		
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("recordStatusFlg");
+		bean.setSearchValue(1);
+		searchBean.getDataFilterBeans().add(bean);
+		
+		bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		bean.setSearchField("pmOrgValidity.recordStatusFlg");
+		bean.setSearchValue(1);
+		searchBean.getDataFilterBeans().add(bean);
+		
+		PmOrgValidity pmOrgValidity = new PmOrgValidity();
+
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		OrgProfileResDTO resDTO = null;
+		reqDTO.setOrgType(paramCode);
+//		reqDTO.setOrgProfileSearchBean(searchBean);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		resDTO = orgProfileSO.retrieveValidOrgProfile(reqDTO);
+		if(resDTO.isSuccessful()){
+			pmOrgValidity = resDTO.getPmOrgValidity();
+//			System.out.println("size>>>>" + resDTO.getOrgProfileResultBean().getResultList().size()); searchOrgProfile
+//			for(PmOrgProfile temp:resDTO.getOrgProfileResultBean().getResultList()){
+//				System.out.println(temp.getPmOrgValidity().getOrgName());
+//			}
+		}
+		return pmOrgValidity;
+			
+	}
 	/**
 	 * Redirect to Task Re-assignment Details
 	 * @param item WorklistItemVO
@@ -241,7 +357,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			SearchResultBean<WorklistItemVO> resultBean = null;
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
-				userName = taskSearchBean.getUserId();
+//				userName = taskSearchBean.getUserId();
 				reqDTO = new BpmRequestDTO();
 				token = getFacesScopes().getBPMAuthenticationCtxToken();
 
