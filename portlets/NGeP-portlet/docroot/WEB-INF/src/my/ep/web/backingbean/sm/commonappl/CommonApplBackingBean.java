@@ -223,6 +223,8 @@ public class CommonApplBackingBean extends
 		} else if (resDTO.getTaskName().equalsIgnoreCase(
 				"Review Application (Escalated)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")
+				|| resDTO.getTaskName().equalsIgnoreCase(
+						"Review Application(Special Category)")
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
@@ -248,7 +250,20 @@ public class CommonApplBackingBean extends
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-
+				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Application(Special Category)")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Verify Application")) {
+					smApplBB.getManagedBean().setPoUser(true);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(false);
+				} else if (resDTO.getTaskName().equalsIgnoreCase(
+						"Review Application (Escalated)")) {
+					smApplBB.getManagedBean().setPoUser(false);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(true);
+				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
 
