@@ -133,10 +133,10 @@
 
 			</h:panelGrid>
 
-			<p:dialog id="morePrice" widgetVar="morePrice" modal="true" header="More Price" width="800" height="250">
+			<p:dialog id="morePrice" widgetVar="morePrice" modal="true" header="#{lbl['lbl.cm.pricing']}" width="800" height="250">
 
 				<p:tabView id="catalogueViewPricingId" activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
-					<p:tab title="Normal">
+					<p:tab title="#{lbl['lbl.cm.normal']}">
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>
 					
