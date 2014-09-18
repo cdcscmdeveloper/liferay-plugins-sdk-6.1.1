@@ -13,24 +13,24 @@
 		<h:panelGroup id="viewCartListId">
 
 			<div style="text-align: right;">
-				<p:commandButton value="Back" icon="ui-icon-prev"
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-prev"
 					action="#{catalogueBackingBean.backToPrev}" />
 
 			</div>
 			<p:dataTable var="cartList" rowIndexVar="rowIndex"
 				value="#{catalogueBackingBean.managedBean.cartList}">
 
-				<p:column headerText="Item Name">
+				<p:column headerText="#{lbl['lbl.cm.item.name']}">
 				
 				#{cartList.cmItem.itemName}
 				</p:column>
 
-				<p:column headerText="Supplier Name">
+				<p:column headerText="#{lbl['lbl.cm.supplier.name']}">
 				
 				#{cartList.smSupplier.supplierName}
 				</p:column>
 
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.cm.action']}">
 
 					<p:commandLink
 						action="#{catalogueBackingBean.deleteCartItem(rowIndex)}"
