@@ -1325,18 +1325,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				
 				//new
 				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
-				reqDTO.setGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
-				resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
-				List<String> source = new ArrayList<String>();
-				
-				for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-						getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
-						if(getManagedBean().getApproverModel().getSource().size()==0) {
-							getManagedBean().getApproverModel().setSource(source);
+				if(resDTO.getUserGroupList().size()>0) {
+					reqDTO.setGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+					List<String> source = new ArrayList<String>();
+					
+					for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
+							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
+							if(getManagedBean().getApproverModel().getSource().size()==0) {
+								getManagedBean().getApproverModel().setSource(source);
+							}
+							source.add(groupUser.getPmUser().getUserName());
 						}
-						source.add(groupUser.getPmUser().getUserName());
-					}
-				getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+				}
 				
 				//end
 				getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
@@ -2214,6 +2216,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void getAgAccount(){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
+		getManagedBean().setApproverModel(null);
 		initializeApproverGroup();
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -2289,12 +2292,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
 		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
 		if(supplierBranchId!=null) {
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
-			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-			reqDTO.setBranchId(new Long(supplierBranchId));
-			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setSupplierBranchId(new Long(supplierBranchId));
+			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
 			
-			SmSupplierBranch supplierBranch = resDTO.getSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
 			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
 			supplierDtl.setBranchName(supplierBranch.getBranchName());
 			supplierDtl.setFaxNo(supplierBranch.getFaxNo());
@@ -2306,7 +2309,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
 			supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
 		} else { // reset to HQ info
-			SmSupplier supplier = getManagedBean().getFulfilmentRequest().getSmSupplier();
+			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getFulfilmentRequest().getSmSupplier().getSupplierId());
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
+			SmSupplier supplier = resDTO.getSmSupplier();
+			
 			FlSupplierDtl supplierDtl = getManagedBean().getFulfilmentRequest().getFlSupplierDtl();
 			supplierDtl.setSupplierName(supplier.getCompanyName());		
 			supplierDtl.setBranchCode(null);
