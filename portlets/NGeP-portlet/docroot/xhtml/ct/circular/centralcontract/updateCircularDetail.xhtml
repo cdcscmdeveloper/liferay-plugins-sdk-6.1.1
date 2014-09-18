@@ -42,12 +42,16 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
 		        <td>
-		           <p:calendar disabled="true"  value="#{centralContractBackingBean.managedBean.circularVer.startDate}"
-			       pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal3" size="24" showOn="button"
-			       navigator="true"   style="margin-bottom:5px;" /></td>
+		        <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal3"
+				   style="width:170px;" disabled="true">
+				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+				</td>
 		        <td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
-		        <td><p:calendar disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-			        navigator="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" size="24" id="popupButtonCal4" showOn="button" /></td>
+		        <td>
+		             <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal4" 
+			             style="width:170px;" disabled="true">
+				        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
+		        </td>
 			</tr>
 			
 			<tr>
@@ -73,17 +77,16 @@
 		  <tr>
 		    <td> <p:outputLabel value="#{lbl['lbl.ct.pc.extstartdt']}" /> </td>
 		    <td>
-		    <p:calendar value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" label="#{lbl['lbl.ct.pc.extstartdt']}"
-		       disabled="true" size="24" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal5" showOn="button">
-		    </p:calendar>
-		     
+		         <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendStartDate}" id="popupButtonCal5" 
+			             style="width:170px;" disabled="true">
+			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 		       </td>
 		  
 		    <td><p:outputLabel value="#{lbl['lbl.ct.pc.extenddt']}" /></td>
 		    <td>
-		      <p:calendar size="24" value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" 
-				disabled="true" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal6" showOn="button">
-			  </p:calendar>
+		       <p:inputText value="#{centralContractBackingBean.managedBean.circularVer.extendEndDate}" id="popupButtonCal6" 
+			             style="width:170px;" disabled="true">
+			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 		    </td>
 		  </tr>  
 	</table>
