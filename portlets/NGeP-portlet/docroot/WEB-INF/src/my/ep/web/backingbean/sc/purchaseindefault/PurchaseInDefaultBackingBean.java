@@ -53,7 +53,6 @@ import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.dto.NtfResponseDTO;
 import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmReason;
@@ -202,9 +201,12 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 				scPurchaseInDefault.setRecordStatus(Boolean.TRUE);
 				scPurchaseInDefault.setCreatedDate(DateUtils.getCurrentDate());
-				
 				// Target Approver
-				scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
+		    	if(scPurchaseInDefault.getApprovalUsers() == null || scPurchaseInDefault.getApprovalUsers().isEmpty()){
+		    		scPurchaseInDefault.setApprovalUsers(createTargetApprover(scPurchaseInDefault));
+		    	} else{
+		    		scPurchaseInDefault.getApprovalUsers().addAll(createTargetApprover(scPurchaseInDefault));
+		    	}
 				// WorkFlow Status 
 				scPurchaseInDefault.setWorkFlowStatuses(null);
 				
@@ -383,17 +385,36 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   }
 	   return results;
    }
-
+   
    /**
     * To get Approver Pick List  in Purchase In Default
     */
    private	List<ScPIDApprovalUser> createTargetApprover(ScPurchaseInDefault purchaseInDefault){
 	   List<ScPIDApprovalUser> results = new ArrayList<ScPIDApprovalUser>();
-	   for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
-		   ScPIDApprovalUser scPIDApprovalUser = new ScPIDApprovalUser();
-		   scPIDApprovalUser.setPmUser(pmUser);
-		   scPIDApprovalUser.setPurchaseInDefault(purchaseInDefault);
-		   results.add(scPIDApprovalUser);
+	   List<Long> userIds = new ArrayList<Long>();
+	   if(purchaseInDefault.getApprovalUsers() != null && purchaseInDefault.getApprovalUsers().size()>0){
+		   for (ScPIDApprovalUser scRequestNoteApprovalUser : purchaseInDefault.getApprovalUsers() ) {
+			   userIds.add(scRequestNoteApprovalUser.getPmUser().getUserId());
+		   }
+	   }
+
+	   if (this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0) {
+		   for (PmUser pmUser :  getManagedBean().getApprovalUsers().getTarget()) {
+			   if(userIds.isEmpty()){
+				   ScPIDApprovalUser approver = new ScPIDApprovalUser();
+				   approver.setPmUser(pmUser);
+				   approver.setPurchaseInDefault(purchaseInDefault);
+				   results.add(approver);
+			   } else {
+				   if(!userIds.contains(pmUser.getUserId())){
+					   ScPIDApprovalUser approver = new ScPIDApprovalUser();
+					   approver.setPmUser(pmUser);
+					   approver.setPurchaseInDefault(purchaseInDefault);
+					   purchaseInDefault.getApprovalUsers().add(approver);
+					   results.add(approver);
+				   } 
+			   }
+		   }
 	   }
 	   return results;
    }
