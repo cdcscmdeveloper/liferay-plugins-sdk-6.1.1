@@ -457,7 +457,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				reqDTO.setCircularVerSearchBean(searchBean);
 				reqDTO.setFilterStatusId(getManagedBean().getSearchStatusId());
 				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
 				if(resDTO.isSuccessful()) {
 					if(resDTO.getCircularVerResultBean() != null && resDTO.getCircularVerResultBean().getResultList() != null) {
@@ -493,7 +493,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 
 		ICircularSO circularSO = null;
 		try {
-			 validateCircular(action);
+			
+			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
+			}
+			
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+			      validateCircular(action);
+			}
 			  circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			  if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
@@ -654,14 +661,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	private void validateCircular(String outcome) {
-		//if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
-			}
+	
 			
-			if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
+			/*if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
-			}
+			}*/
 			
 			if(getManagedBean().getCircularVer().getCtPanelItems().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Panel Item"});
