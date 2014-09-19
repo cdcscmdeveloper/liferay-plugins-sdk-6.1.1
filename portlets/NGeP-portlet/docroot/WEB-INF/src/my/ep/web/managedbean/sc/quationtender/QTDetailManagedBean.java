@@ -436,6 +436,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int sampleAddressIndex;
 	private String actionType;
 	private String bsvZoneindx="0";
+	private List<ScQtApproval> toBeRemoveList;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2594,6 +2595,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setLocalLevelCode(String localLevelCode) {
 		LocalLevelCode = localLevelCode;
+	}
+
+	public List<ScQtApproval> getToBeRemoveList() {
+		return toBeRemoveList;
+	}
+
+	public void setToBeRemoveList(List<ScQtApproval> toBeRemoveList) {
+		this.toBeRemoveList = toBeRemoveList;
 	}
 
 }
