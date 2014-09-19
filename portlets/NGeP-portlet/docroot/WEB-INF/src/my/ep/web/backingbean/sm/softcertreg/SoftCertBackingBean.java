@@ -34,6 +34,7 @@ import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -105,9 +106,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean>{
 
 			Object bpmObj = new Object();
 			PaymentBackingBean paymentBB = new PaymentBackingBean();
-			bpmObj = (SMMOFRegDataType) resDTO.getPojo();
+			bpmObj = (SMUserAddDataType) resDTO.getPojo();
 			paymentBB.getManagedBean().setAppId(
-					(long) ((SMMOFRegDataType) bpmObj).getDocumentId());
+					(long) ((SMUserAddDataType) bpmObj).getDocumentId());
 			paymentBB.getManagedBean().setTaskId(taskId);
 			paymentBB.getManagedBean().setBpmPojo(bpmObj);
 
