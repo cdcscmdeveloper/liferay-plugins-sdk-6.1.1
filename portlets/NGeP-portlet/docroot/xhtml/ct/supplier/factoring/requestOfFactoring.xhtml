@@ -9,11 +9,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
 		<script>
-			$('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}');
+			 $('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}');
 		</script>
+		
 		<p:panel id="headerDetails">
-		    <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
-		   <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		     <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
+		     <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
 	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="false" /></td>
@@ -26,168 +27,182 @@
 	    			</td>
 	    		</tr>
 	    	</table>
+	    	
 	    	<div align="left" class="header-info">
 	          <table style="width: 100%">
-			   <tr>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}
-				</td>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.managedBean.ctContract.contractNo}
-				</td>
-				<td style="width: 10%">
-							<h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
-					</td>
-					<td style="width: 15%" class="header-info-text">
-						#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}
-					</td>		
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.status']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}
-				</td>
-			</tr>
-		</table>
-	</div> 	  		
-	</p:panel>
+			        <tr>
+				           <td style="width: 20%"><h:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+				           <td style="width: 10%" class="header-info-text">#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
+				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
+				           <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo} </td>
+				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /></td>
+					       <td style="width: 15%" class="header-info-text">
+						      #{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}</td>		
+				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+				           <td style="width: 15%" class="header-info-text">
+					           #{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.factoring.status.statusId)}</td>
+			        </tr>
+		      </table>
+	       </div> 	  		
+	  </p:panel>
+	 
 	  <p:panel id="loaId" header="LOA Details" toggleable="true"  toggleSpeed="500">
-	   <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
-			<h:panelGrid columns="2" style="float:right;">
-			   <p:outputLabel value="*" styleClass="mandatory" />
-			   <p:outputLabel value="LOA No." />
-			</h:panelGrid>  
-			  <h:panelGrid columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
-			     <p:selectOneMenu id="menuLoaId" style="width:210px;" value="#{supplierBackingBean.managedBean.loaId}"
-			         required="true" label="LOA No">
-			         <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
-			         <p:ajax event="change" process="@this" update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
-		          </p:selectOneMenu>
-		         <p:message for="menuLoaId" display="icon"/>
+	       <h:panelGrid columns="4" style="width:100%;" 
+	            columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+		
+		     	<h:panelGrid columns="2" style="float:right;">
+			         <p:outputLabel value="*" styleClass="mandatory" />
+			         <p:outputLabel value="LOA No." />
+			    </h:panelGrid>  
+			    <h:panelGrid columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
+			         <p:selectOneMenu id="menuLoaId" style="width:210px;" 
+			              value="#{supplierBackingBean.managedBean.loaId}" required="true" label="LOA No">
+			              <f:selectItems value="#{supplierBackingBean.getSupplierLoaDropdown()}"/>
+			                 <p:ajax event="change" process="@this" 
+			                     update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
+		              </p:selectOneMenu>
+		              <p:message for="menuLoaId" display="icon"/>
 		       </h:panelGrid>
-			 <p:inputText  style="width:200px;" disabled="true" 
-			    value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"
-			    rendered="#{supplierBackingBean.managedBean.taskId!=null}"/>
+			 <p:inputText  rendered="#{supplierBackingBean.managedBean.taskId!=null}"
+			      disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"/>
+		    
 		       <p:outputLabel value="LOA Date" />
 		       <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.loaDate}"> 
 		         	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 		       </p:inputText>
+		    
 		       <p:outputLabel value="Contract No." />
 		       <p:inputText style="width:200px;"  value="#{supplierBackingBean.managedBean.contractNo}" disabled="true"/>
+		    
 		       <p:outputLabel value="Contract Name" />
-		       <p:inputText style="width:200px;" disabled="true"
-		         value="#{supplierBackingBean.managedBean.contractName}"/> 
+		       <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.contractName}"/> 
+	        
 	           <p:outputLabel value="Contract Effective Date" />
 	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.effDate}" >
 	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	           </p:inputText> 
+	         
 	           <p:outputLabel value="Contract Expiry Date" />
 	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.expDate}"> 
 	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	           </p:inputText> 
-	  </h:panelGrid>
-   </p:panel>
-    <p:panel id="factoringPanel" header="#{lbl['lbl.ct.panel.factoring']}" toggleable="true"  toggleSpeed="500">
-      <h:panelGrid columns="4" style="width:100%;" columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
-        <h:panelGrid columns="2" style="float:right;">
-	     <p:outputLabel value="*" styleClass="mandatory" />
-            <p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/> 
-         </h:panelGrid>
-          <h:panelGrid columns="2">
-		      <p:selectOneMenu id="factoringId" disabled="#{supplierBackingBean.managedBean.removeFactoring}" required="true"
-		        style="width:260px;"  label="#{lbl['lbl.ct.factoring.company']}"  value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
-                   <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
-                  <p:ajax event="change" process="@this" update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
-               </p:selectOneMenu>
-              <p:message for="factoringId" display="icon"></p:message>
-           </h:panelGrid>
+	
+	       </h:panelGrid>
+        </p:panel>
+   
+         <p:panel id="factoringPanel" header="#{lbl['lbl.ct.panel.factoring']}" toggleable="true"  toggleSpeed="500">
+              <h:panelGrid columns="4" style="width:100%;"
+                  columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
+          
+                  <h:panelGrid columns="2" style="float:right;">
+	                  <p:outputLabel value="*" styleClass="mandatory" />
+                      <p:outputLabel  value="#{lbl['lbl.ct.factoring.company']}"/> 
+                  </h:panelGrid>
+        
+                  <h:panelGrid columns="2">
+		                 <p:selectOneMenu id="factoringId" label="#{lbl['lbl.ct.factoring.company']}"  
+		                      required="true"  disabled="#{supplierBackingBean.managedBean.removeFactoring}" 
+		                      style="width:260px;" value="#{supplierBackingBean.managedBean.factoring.financialOrg.financialOrgId}">
+                              <f:selectItems value="#{supplierBackingBean.retrieveFinancialOrgList()}" /> 
+                              <p:ajax event="change" process="@this" 
+                                   update="branchId,bankName,accNo,clausePanel" listener="#{supplierBackingBean.reset}"/>
+                         </p:selectOneMenu>
+                         <p:message for="factoringId" display="icon"></p:message>
+                   </h:panelGrid>
 		  
-		  <h:panelGrid columns="2" style="float:right;">
-			 <p:outputLabel value="*" styleClass="mandatory" />
-				 <p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}" />
-		  </h:panelGrid>
-		  <h:panelGrid columns="2">
-			 <p:inputText id="authRefNo" value="#{supplierBackingBean.managedBean.factoring.authRefNo}" maxlength="50"
-				style="width:200px;" label="#{lbl['lbl.ct.factoring.agreement.ref']}" required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
-				<p:message for="authRefNo" display="icon" />				
-		  </h:panelGrid>
-         <p:outputLabel value="#{lbl['lbl.ct.factoring.branch']}"/> 
-		     <p:selectOneMenu id="branchId" style="width:210px;" disabled="#{supplierBackingBean.managedBean.removeFactoring or
-		        supplierBackingBean.managedBean.financialBankBranch == null}" 
-		        value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
-               <f:selectItems value="#{supplierBackingBean.managedBean.financialBankBranch}"/> 
-               <p:ajax event="change" process="@this" update="bankName,accNo" listener="#{supplierBackingBean.resetBranch}"/>
-              </p:selectOneMenu>
-             <h:panelGrid columns="2" style="float:right;">
-					<p:outputLabel value="*" styleClass="mandatory" />         
-         			<p:outputLabel value="Start Date"/>
-         		</h:panelGrid>
-         		<h:panelGrid columns="2">
-         			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
-		    			value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" label="Start Date"
-		    			disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true"/>
-					 <p:message for="effdateCal" display="icon" />				
-				</h:panelGrid>		    			
-            <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/> 
-             <p:inputText id="bankName" value="#{supplierBackingBean.managedBean.factoringBankName}" 
-               style="width:200px;" disabled="true"/>
-				<h:panelGrid columns="2" style="float:right;">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="End Date" />
+		           <h:panelGrid columns="2" style="float:right;">
+			            <p:outputLabel value="*" styleClass="mandatory" />
+				        <p:outputLabel value="#{lbl['lbl.ct.factoring.agreement.ref']}" />
+		           </h:panelGrid>
+		 
+		           <h:panelGrid columns="2">
+			              <p:inputText  value="#{supplierBackingBean.managedBean.factoring.authRefNo}" 
+				               maxlength="50"  style="width:200px;" label="#{lbl['lbl.ct.factoring.agreement.ref']}"
+				               id="authRefNo" required="true" disabled="#{supplierBackingBean.managedBean.removeFactoring}" />
+				          <p:message for="authRefNo" display="icon" />				
+		           </h:panelGrid>
+                   
+                   <p:outputLabel value="#{lbl['lbl.ct.factoring.branch']}"/> 
+		            <p:selectOneMenu id="branchId" style="width:210px;" 
+		                disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.managedBean.financialBankBranch == null}" 
+		                value="#{supplierBackingBean.managedBean.factoring.pmFinancialBranch.financialBranchId}">
+                        <f:selectItems value="#{supplierBackingBean.managedBean.financialBankBranch}"/> 
+                           <p:ajax event="change" process="@this" update="bankName,accNo" listener="#{supplierBackingBean.resetBranch}"/>
+                    </p:selectOneMenu>
+            
+                    <h:panelGrid columns="2" style="float:right;">
+					     <p:outputLabel value="*" styleClass="mandatory" />         
+         			     <p:outputLabel value="Start Date"/>
+         		    </h:panelGrid>
+         		    <h:panelGrid columns="2">
+         			   <p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
+		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" label="Start Date"
+		    			    disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true"/>
+					        <p:message for="effdateCal" display="icon" />				
+				     </h:panelGrid>		    			
+           
+                   <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/> 
+                    <p:inputText id="bankName"  style="width:200px;" 
+                       value="#{supplierBackingBean.managedBean.factoringBankName}"   disabled="true"/>
+				
+				   <h:panelGrid columns="2" style="float:right;">
+				    	<p:outputLabel value="*" styleClass="mandatory" />
+					    <p:outputLabel value="End Date" />
 				</h:panelGrid>
+			
 				<h:panelGrid columns="2">
 		 			<p:calendar size="30" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
 		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" label="End Date"
 		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" />
 					 <p:message for="expdateCal" display="icon" />				
 				</h:panelGrid>		  		    			 
-		 <p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}"/> 
-         <p:inputText id="accNo" style="width:200px;"  disabled="true" value="#{supplierBackingBean.managedBean.accountNo}"/>
-				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
-				<f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
-				<p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
-				<p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}" disabled="true"
-					value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
+		       
+		        <p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}"/> 
+                <p:inputText id="accNo" style="width:200px;"  
+                    disabled="true" value="#{supplierBackingBean.managedBean.accountNo}"/>
+				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
+				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
+				    
+				 <p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
+				 <p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}"
+				         disabled="true" value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
 					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				</p:selectOneMenu>
+				
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="Factoring Agreement" />
 				</h:panelGrid>
 				<h:panelGroup id="uploadFactoringPg">
-           <h:panelGrid columns="3">
-			 <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" icon="iconAttachment" value="Upload"
-			 	disabled="#{supplierBackingBean.managedBean.removeFactoring}" update="factoringPanel" />	
-				<p:spacer width="1"/>
-		     <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
-		        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
-				action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}"/>		
-		    </h:panelGrid>		
-		  </h:panelGroup> 
-      </h:panelGrid>
-       <p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="false" resizable="false" width="700px" height="350" 
-	   	    styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-		    <p:ajax event="close" />
-	      	<p:fileUpload style="display:inline;" mode="advanced" 
-			  fileUploadListener="#{supplierBackingBean.fileUpload}" 
-			  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			  update="factoringPanel">
-		    </p:fileUpload> 
-	    </p:dialog>
-     </p:panel>
-     <p:panel id="clausePanel" header="Clause Details" toggleable="true"  toggleSpeed="500"
-      rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}" >
-       <p:spacer height="8"/>
-	      <table style="width: 100%">
-			 <tr>
+                    <h:panelGrid columns="3">
+			               <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" value="Upload"
+			                   icon="iconAttachment" disabled="#{supplierBackingBean.managedBean.removeFactoring}" update="factoringPanel" />	
+				              <p:spacer width="1"/>
+		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
+		                        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
+			                	action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}"/>		
+		             </h:panelGrid>		
+		        </h:panelGroup> 
+             </h:panelGrid>
+      
+              <p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="false"
+                  resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		          <p:ajax event="close" />
+	      	      <p:fileUpload style="display:inline;" mode="advanced" 
+			           fileUploadListener="#{supplierBackingBean.fileUpload}" 
+			           allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			           invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			           update="factoringPanel">
+		          </p:fileUpload> 
+	         </p:dialog>
+         </p:panel>
+        
+         <p:panel id="clausePanel" header="Clause Details" toggleable="true"  toggleSpeed="500"
+            rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}" >
+            <p:spacer height="8"/>
+	        <table style="width: 100%">
+			  <tr>
 				<td style="width: 15%;vertical-align: top;text-align: right"><p:selectBooleanCheckbox id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" /> </td>
 				  <td><h:panelGrid columns="2">
 				      <p:outputLabel
