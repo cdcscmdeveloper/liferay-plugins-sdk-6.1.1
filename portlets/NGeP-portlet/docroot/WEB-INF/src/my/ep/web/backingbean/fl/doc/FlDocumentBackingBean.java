@@ -168,92 +168,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		    for(SelectItem selectItem : items) {
 		    	itemList.add(selectItem);
 		    }
-			List<String> flDocTypes = new ArrayList<String>();
-			if(getManagedBean().getSearchOrderType()!=null) {
-				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
-					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
-					if(isFlFulfilmentRequisitioner()) {
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-					}else if(isFlFulfilmentApprover()){
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-						
-					}else if(isFlFulfilmentRecevingOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-						
-					}else if(isFlFulfilmentPaymentOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-					}
-				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-					if(isFlFulfilmentRequisitioner()) {
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						
-					}else if(isFlFulfilmentApprover()){
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-						
-					}else if(isFlFulfilmentRecevingOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-						
-					}else if(isFlFulfilmentPaymentOfficer()){
-						flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-						flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-						flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-						flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-						flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-						flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-						flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-					}
-				}
-				
-				if(isFlFulfilmentSupplier()) {
-					flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-					flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-					flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				}
-			}
+			List<String> flDocTypes = getDocTypeListByRole();
 			List<String> selectedItemCode = new ArrayList<String>();
 		    for(SelectItem selectItem : itemList) {
 		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
@@ -541,7 +456,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
-			recNoteBB.getManagedBean().getFulfilmentNote().setStatus(receivedNoteSO.retrieveReceivedNoteStatus(reqDTO).getPmStatus());
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
@@ -703,6 +617,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchOrderType()));
 				if(getManagedBean().getSearchDocType()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocType()));
+				} else {
+					List<String> flDocTypeList = getDocTypeListByRole();
+					if(flDocTypeList.size()>0) {
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),flDocTypeList));
+					}
 				}
 				if(getManagedBean().getSearchDocNo()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocNo()));
@@ -1044,6 +963,57 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			this.orderStatusId = orderStatusId;
 		}
 		
+	}
+	
+	private List<String> getDocTypeListByRole() {
+		List<String> flDocTypes = new ArrayList<String>();
+		if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+			if(isFlFulfilmentRequisitioner()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+			}else if(isFlFulfilmentApprover()){
+				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}else if(isFlFulfilmentRecevingOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			}else if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+		} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+			if(isFlFulfilmentRequisitioner()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+			}else if(isFlFulfilmentApprover()){
+				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}else if(isFlFulfilmentRecevingOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			}else if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+		}
+		if(isFlFulfilmentSupplier()) {
+			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+		}
+		return flDocTypes;
 	}
 	
 }
