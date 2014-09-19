@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -48,8 +47,6 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -834,33 +831,6 @@ public class SPDetailBackingBean extends
 				.getScQtCheckListAttachment());
 	}
 
-	public void onlineAction(ScQtProposalChecklist scQtProposalChecklist) {
-		debugLogger("onlineAction");
-
-		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
-
-		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
-
-		TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-		TemplateSpecBean templateSpecBean = getManagedBean()
-				.getTemplateSpecBean();
-		TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-
-		templateSpecBean.setSpecMaster(specMaster);
-		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-
-		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		/* Long userId = 1L; */
-		IRegistrationSO registrationSO = BusinessDelegate.getInstance()
-				.getServiceObject("sm", IRegistrationSO.class);
-		RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
-		registrationReqDTO.setSupplierId(userId);
-		RegistrationResDTO registrationResDTO = registrationSO
-				.retrieveSuppOnlineAcc(registrationReqDTO);
-		templateSpecBean.setSupplier(registrationResDTO.getSmSupp());
-
-		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-	}
 	public void downloadEncryptedFile(String filePath, String fileName)
 			throws IOException {
 
