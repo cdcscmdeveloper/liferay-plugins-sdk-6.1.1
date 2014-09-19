@@ -244,7 +244,6 @@ public class LOADetailBackingBean extends
 		debugLogger("preRenderView");
 		IQTAwardSO qtAwardSO = null;
 		try {
-			super.renewSesionObject();
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
@@ -255,7 +254,7 @@ public class LOADetailBackingBean extends
 			// Long loaId = 299L;
 
 			ScLoa scLoa = new ScLoa();
-//			scLoa.setLoaId(loaId);
+			// scLoa.setLoaId(loaId);
 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -281,7 +280,6 @@ public class LOADetailBackingBean extends
 		debugLogger("preRenderSupplierView");
 
 		try {
-			super.renewSesionObject();
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
@@ -1797,6 +1795,9 @@ public class LOADetailBackingBean extends
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+		} else {
+			saveScheduleList();
+			saveProgressivePaymntList();
 		}
 
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
@@ -1806,8 +1807,7 @@ public class LOADetailBackingBean extends
 		}
 
 		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
-		saveScheduleList();
-		saveProgressivePaymntList();
+
 	}
 
 	public void contractTypeChanged() {

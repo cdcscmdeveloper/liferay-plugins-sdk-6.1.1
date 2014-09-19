@@ -13,8 +13,9 @@
 				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				
 			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+				icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
 				action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+				rendered="#{dpLOABackingBean.managedBean.showBPMButtons}"
 				partialSubmit="true" process="@form"
 				update="@form" />
 		</ui:repeat>
