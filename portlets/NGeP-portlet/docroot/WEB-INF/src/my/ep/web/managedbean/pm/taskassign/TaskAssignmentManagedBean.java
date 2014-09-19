@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -30,6 +31,25 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	private List<PmUser> availableUsers;
 	private PmUser selectedUser;
 	private boolean orgProfileRequired;
+	
+	
+	private PmUser resultUser;
+	private PmOrgProfile resultOrgProfile;
+	
+
+	/**
+	 * @return the resultOrgProfile
+	 */
+	public PmOrgProfile getResultOrgProfile() {
+		return resultOrgProfile;
+	}
+
+	/**
+	 * @param resultOrgProfile the resultOrgProfile to set
+	 */
+	public void setResultOrgProfile(PmOrgProfile resultOrgProfile) {
+		this.resultOrgProfile = resultOrgProfile;
+	}
 
 	/**
 	 * @return the taskAssignmentSearchBean
@@ -101,6 +121,24 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	public void setOrgProfileRequired(boolean orgProfileRequired) {
 		this.orgProfileRequired = orgProfileRequired;
 	}
+
+	/**
+	 * @return the resultUser
+	 */
+	public PmUser getResultUser() {
+		return resultUser;
+	}
+
+	/**
+	 * @param resultUser the resultUser to set
+	 */
+	public void setResultUser(PmUser resultUser) {
+		this.resultUser = resultUser;
+	}
+
+	
+
+
 
 //	/**
 //	 * @return the selectedUsers
