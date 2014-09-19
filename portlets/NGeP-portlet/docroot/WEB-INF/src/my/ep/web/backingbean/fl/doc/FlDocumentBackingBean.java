@@ -599,7 +599,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		
 		// reset everything to false
 		//this.getManagedBean().setCheckDocNo(true);
-		if(id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
+		if(id!=null && id.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			this.getManagedBean().setCheckDocType(true);
 		}else{
 			this.getManagedBean().setCheckDocType(false);
