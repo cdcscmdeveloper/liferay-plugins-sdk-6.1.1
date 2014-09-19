@@ -7762,15 +7762,25 @@ public class SpecificationBackingBean extends
 		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 				.getDeliveryLocRemoveList();
 		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
-			reqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
+			for (int i = 0; i < deliveryRemoveList.size(); i++) {
+				if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
+					deliveryRemoveList.remove(i);
+				}
+			}
+
 		}
 
 		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
 				.getChecklistRemoveList();
 		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+			for (int i = 0; i < checklistRemoveList.size(); i++) {
+				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+					checklistRemoveList.remove(i);
+				}
+			}
 			reqDTO.setTobeRemoveList(checklistRemoveList);
 		}
-
+		reqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
