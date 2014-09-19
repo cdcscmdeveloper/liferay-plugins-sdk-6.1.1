@@ -1,0 +1,24 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="id" />
+		<cc:attribute name="value" />
+				
+	</cc:interface>
+
+	<cc:implementation>
+		<ui:param name="imgId" value="#{cc.attrs.id}Img" />
+		
+		<p:graphicImage id="#{imgId}" library="ep/images/design" name="tooltips.png" />
+		<p:tooltip id="#{cc.attrs.id}tt" for="#{imgId}">
+			<p:outputLabel escape="false" value="#{cc.attrs.value}"  />
+		</p:tooltip>
+		
+	</cc:implementation>
+	
+</ui:component>
