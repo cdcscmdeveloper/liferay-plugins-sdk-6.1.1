@@ -254,7 +254,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			     ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 			     ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			     resDTO = contractSO.retrieveContractVer(ctReqDTO);
+			     resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			     setAmendmentContractVer(resDTO);
 			     resetbooleanValue();
 			
@@ -577,7 +577,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 						     ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 						     ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
 						    
-						     ContractResDTO ctResDTO = contractSO.retrieveContractVer(ctReqDTO);
+						     ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 						     setAmendmentContractVer(ctResDTO);
 						     ConstructTabSideMenu();
 				         }

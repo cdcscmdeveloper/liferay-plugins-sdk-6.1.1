@@ -194,7 +194,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				      ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
 				    
 				      contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractSO.class);
-				      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+				      ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 				
 				      getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 				      getManagedBean().setContractVer(resDTO.getCtContractVer());
@@ -303,7 +303,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				reqDTO.setContractVerId(getManagedBean().getContractVerId());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 				reqDTO.setUpdateAction(true);
-				ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+				ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setContractVer(resDTO.getCtContractVer());
 					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());

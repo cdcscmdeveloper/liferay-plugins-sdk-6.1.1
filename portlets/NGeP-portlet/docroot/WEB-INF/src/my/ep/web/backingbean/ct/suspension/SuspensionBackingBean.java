@@ -108,7 +108,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 					  
 			          IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			          ctReqDTO.setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			          setSuspensionContractVer(contractSO.retrieveContractVer(ctReqDTO));
+			          setSuspensionContractVer(contractSO.retrieveContractVerDtls(ctReqDTO));
 			          
 	     } catch(Exception e){
 			  e.printStackTrace();

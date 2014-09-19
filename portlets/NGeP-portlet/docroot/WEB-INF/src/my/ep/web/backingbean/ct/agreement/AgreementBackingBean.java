@@ -234,7 +234,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 									ModuleCodeConst.CONTRACT_MANAGEMENT,
 									IContractSO.class);
 					ContractResDTO conResDTO = contractSO
-							.retrieveContractVer(conReqDTO);
+							.retrieveContractVerDtls(conReqDTO);
 					ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
 					resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
 					getManagedBean().setContractVer(
@@ -729,7 +729,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
 						IContractSO.class);
-		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.setValidateContractField(resDTO);
 		contractDetailsBB.getManagedBean().setViewContract(true);

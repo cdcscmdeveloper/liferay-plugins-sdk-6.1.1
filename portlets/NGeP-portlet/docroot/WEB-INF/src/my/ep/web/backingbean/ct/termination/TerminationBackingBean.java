@@ -153,7 +153,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			this.getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			
@@ -535,8 +535,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
     	Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
     	ContractReqDTO ctReqDTO = new ContractReqDTO();
     	ctReqDTO.setContractVerId(contractVerId);
+    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 
     	getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
