@@ -9,136 +9,132 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">   
 	<ui:define name="contentSection">
 	 <style>
-      .column-align-center { text-align: center !important;}
-      .top-aligned-columns td{ vertical-align: top;}
+        .column-align-center { text-align: center !important;}
+         .top-aligned-columns td{ vertical-align: top;}
     </style> 
+
 	<p:panel id="bankHeader">
-		 <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
-		   <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		    <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
+		    <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
-	    		<tr>
-	    			<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" 
-	    			    oncomplete="window.history.back();" rendered="false" /></td>
-	    			<td class="ppRightBtn">
-	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
-	    				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
-						<p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button"
-							   icon="ui-icon-#{fn:toLowerCase(outcome)}" process="@form" action="#{supplierBackingBean.saveChangeBankRequest(outcome)}"/>
-						</ui:repeat>	    			
-	    			</td>
-	    		</tr>
-	    	</table>
+	    	    	<tr>
+	    			      <td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+	    			                 icon="ui-icon-back"  oncomplete="window.history.back();" rendered="false" /></td>
+	    			      <td class="ppRightBtn">
+	    			                <ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
+	    				                  <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
+						                  <p:commandButton value="#{lbl[buttonLabel]}" ajax="false" styleClass="ui-button" process="@form" 
+							                   icon="ui-icon-#{fn:toLowerCase(outcome)}" action="#{supplierBackingBean.saveChangeBankRequest(outcome)}"/>
+						            </ui:repeat>	    			
+	    			      </td>
+	    		   </tr>
+	        </table>
+	    	
 	    	<div align="left" class="header-info">
-	          <table style="width: 100%">
-			   <tr>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}
-				</td>
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.managedBean.ctContract.contractNo}
-				</td>
-				<td style="width: 10%">
-							<h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
-					</td>
-					<td style="width: 15%" class="header-info-text">
-							#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}
-					</td>		
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.ct.status']}" />
-				</td>
-				<td style="width: 15%" class="header-info-text">
-					#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}
-				</td>
-			</tr>
-		</table>
-	</div> 	
-	</p:panel>
-    <p:panel id="fulfilmentDetail" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" toggleSpeed="500">
-        <p:outputPanel id="ChangeBankAcc">
-            <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
-                <h:panelGrid columns="2" style="float:right;">
-			      <p:outputLabel value="*" styleClass="mandatory" />
-                  <h:outputLabel for="contractId" value="Contract No." />
-                </h:panelGrid>
-                <h:panelGrid id="menuContractId" columns="2" rendered="#{supplierBackingBean.managedBean.taskId==null}">
-			      <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="Contract No"
-			         style="width:210px;margin-bottom: 3px;">
-			         	<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
-				        <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				        <p:ajax event="change" process="@this" update="fulfilmentDetail,bankHeader,accountId,bankId,supplierDetails" 
-				           listener="#{supplierBackingBean.changeContractActionListener}"/>
-				     </p:selectOneMenu>
-				   <p:message for="contractId" display="icon"/>
-				</h:panelGrid>
-			     <p:inputText value="#{supplierBackingBean.managedBean.ctContract.contractNo}" style="width:200px;" disabled="true"
-			       rendered="#{supplierBackingBean.managedBean.taskId != null}"/>
-			     <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-		         <p:inputText disabled="true" style="width:200px;"
-			        value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}"/>	
-			     <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
-			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />			           
-			     </p:inputText>
-			     <h:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
-			     <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
-			     	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			     </p:inputText>    
-		         <h:panelGroup>
-		            <div style="height: 40px; vertical-align: top;">
-			            <p:outputLabel  value="#{lbl['lbl.ct.contract.title']}"/>
-			        </div>
-		        </h:panelGroup>
-		        <h:panelGrid>
-		           <p:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.ctContract.contractName}" 
-			           rows="3" style="width:200px;" disabled="true" autoResize="false" />	
-			    </h:panelGrid>
-			 </h:panelGrid>
-		</p:outputPanel>
-	</p:panel>
-    <p:panel id="bankId" header="#{lbl['lbl.ct.panel.bank.info']}"  toggleable="true"  toggleSpeed="500">
-        <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20"
-          styleClass="top-aligned-columns">
-            <h:panelGrid columns="2" style="float:right;">
-			      <p:outputLabel value="*" styleClass="mandatory" />
-                  <p:outputLabel  value="#{lbl['lbl.ct.bank.account.name']}" />
-             </h:panelGrid>
-             <h:panelGrid id="menuBankId" columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
-              <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;" label="#{lbl['lbl.ct.bank.account.name']}"
-                value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}">
-			     <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
-			     <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
-			     <p:ajax event="change" process="@this"
-			         update="bankId,bankHeader"  listener="#{supplierBackingBean.changeAccountActionListener}"/>
-		   </p:selectOneMenu>
-		   <p:message for="accountId" display="icon"/>
-		  </h:panelGrid>
-		   <p:inputText style="width:200px;" disabled="true" rendered="#{supplierBackingBean.managedBean.taskId!=null}"
-		      value="#{supplierBackingBean.managedBean.accountNoAndName}"/> 
+	              <table style="width: 100%">
+			        <tr>
+				          <td style="width: 20%"> <h:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
+				          <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
+				          <td style="width: 10%"> <h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
+				          <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo}</td>
+				          <td style="width: 10%"> <h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /></td>
+					      <td style="width: 15%" class="header-info-text"> #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>		
+				          <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+				          <td style="width: 15%" class="header-info-text">#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
+			       </tr>
+		        </table>
+	        </div> 	
+	   </p:panel>
+   
+         <p:panel id="fulfilmentDetail" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" toggleSpeed="500">
+                <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+                    
+                       <h:panelGrid columns="2" style="float:right;">
+			                <p:outputLabel value="*" styleClass="mandatory" />
+                            <h:outputLabel for="contractId" value="Contract No." />
+                       </h:panelGrid>
+                      
+                       <h:panelGrid id="menuContractId" columns="2" rendered="#{supplierBackingBean.managedBean.taskId==null}">
+			                <p:selectOneMenu id="contractId"  style="width:210px;margin-bottom: 3px;"
+			                      value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="Contract No">
+			         	          <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+				                  <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
+				                 <p:ajax  update="contractName,physicalNo,effDate,expDate,bankHeader,bankId,supplierDetails" 
+				                      event="change" process="@this"   listener="#{supplierBackingBean.changeContractActionListener}"/>
+				            </p:selectOneMenu>
+				           <p:message for="contractId" display="icon"/>
+				    </h:panelGrid>
+			        <p:inputText id="contractNo" value="#{supplierBackingBean.managedBean.ctContract.contractNo}"
+			            style="width:200px;" disabled="true" rendered="#{supplierBackingBean.managedBean.taskId != null}"/>
+			       
+			        <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
+		            <p:inputText id="physicalNo"  disabled="true" style="width:200px;"
+			             value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}"/>	
+			    
+			         <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
+			         <p:inputText id="effDate" disabled="true" style="width:200px;" 
+			             value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}">
+					     <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />			           
+			          </p:inputText>
+			    
+			          <h:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
+			          <p:inputText id="expDate" disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+			     	           <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			          </p:inputText>    
+		      
+		              <h:panelGroup>
+		                  <div style="height: 40px; vertical-align: top;">
+			                   <p:outputLabel  value="#{lbl['lbl.ct.contract.title']}"/>
+			              </div>
+		              </h:panelGroup>
+		              <h:panelGrid>
+		                  <p:inputTextarea id="contractName" rows="3" style="width:200px;" 
+		                       value="#{supplierBackingBean.managedBean.ctContract.contractName}"  disabled="true" autoResize="false" />	
+			          </h:panelGrid>
+			     </h:panelGrid>
+	  </p:panel>
+      
+      <p:panel id="bankId" header="#{lbl['lbl.ct.panel.bank.info']}"  toggleable="true"  toggleSpeed="500">    
+             <h:panelGrid columns="4" style="width:100%;"  styleClass="top-aligned-columns"
+                    columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+              
+                 <h:panelGrid columns="2" style="float:right;">
+			          <p:outputLabel value="*" styleClass="mandatory" />
+                      <p:outputLabel  value="#{lbl['lbl.ct.bank.account.name']}" />
+                  </h:panelGrid>
+                  <h:panelGrid id="menuBankId" columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
+                       <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;"
+                           value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}" label="#{lbl['lbl.ct.bank.account.name']}">
+			               <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+			               <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
+			               <p:ajax event="change" process="@this" partialSubmit="true"
+			                   update="bankBranch,bankAddress"  listener="#{supplierBackingBean.changeAccountActionListener}"/>
+		              </p:selectOneMenu>
+		              <p:message for="accountId" display="icon"/>
+		         </h:panelGrid>
+		         <p:inputText  rendered="#{supplierBackingBean.managedBean.taskId!=null}"
+		              style="width:200px;"  disabled="true"  value="#{supplierBackingBean.managedBean.accountNoAndName}"/> 
 	   
-		   <p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" /> 
-		   <p:inputText id="bankBranch" disabled="true" style="width:200px;"
-		     value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />       	
+		          <p:outputLabel value="#{lbl['lbl.ct.bank.branch']}" /> 
+		          <p:inputText id="bankBranch" disabled="true" style="width:200px;"
+		              value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankBranch}" />       	
 		     
 		     <h:panelGroup>
-			 <div style="height:40px; vertical-align: top">
-				 <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
-			 </div>
-		   </h:panelGroup>
-		   <h:panelGrid>
+			    <div style="height:40px; vertical-align: top">
+				     <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
+			    </div>
+		     </h:panelGroup>
+		     <h:panelGrid>
 		       <p:inputTextarea id="bankAddress" rows="3" style="width:200px;" disabled="true" maxlength="250" autoResize="false" 
-		         value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
-		   </h:panelGrid>
-        </h:panelGrid>
+		            value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}"/>
+		     </h:panelGrid>
+         </h:panelGrid>
       </p:panel>
+	 
 	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
 	          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
+            
              <p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /> 
              <h:panelGrid columns="4" style="width:255px;">
                 <p:inputText disabled="true" style="width:70px;" 
@@ -148,27 +144,37 @@
                 <p:inputText disabled="true" style="width:70px;" 
                 	value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
              </h:panelGrid> 
+           
              <p:outputLabel value="Contact Person"/>  
-             <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}"/>
+             <p:inputText disabled="true" style="width:200px;" 
+                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}"/>
+            
              <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /> 
              <p:inputText disabled="true" style="width:230px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
+            
              <p:outputLabel  value="#{lbl['lbl.ct.tel']}" />
              <p:inputText disabled="true"  style="width:200px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
+            
              <p:outputLabel   value="Branch Name"/>
-             <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
+             <p:inputText disabled="true" style="width:200px;" 
+                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
+            
              <p:outputLabel  value="#{lbl['lbl.ct.fax']}"/>
-             <p:inputText   disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" /> 
+             <p:inputText   disabled="true" style="width:200px;" 
+                value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" /> 
              <h:panelGroup>
-			   <div style="height: 40px; vertical-align: top">
-			     <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.address']}" />
-			   </div>
+			     <div style="height: 40px; vertical-align: top">
+			         <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.address']}" />
+			     </div>
 			 </h:panelGroup>
+			 
 			 <h:panelGrid>
 				 <p:inputTextarea id="supplierAddress"  disabled="true"   rows="3" style="width:200px;" autoResize="false"  
 				     value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}"/>
 			 </h:panelGrid>
+			 
 			 <p:outputLabel  value="#{lbl['lbl.ct.email']}"/> 
 			 <p:inputText disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
 		</h:panelGrid>

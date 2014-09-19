@@ -271,97 +271,116 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     
 	public List<SelectItem> getPopulateContractList() {
 		
-		IContractSupplierSO supplierSO = null;
-		ContractSupplierReqDTO reqDTO = null;
-		List<SelectItem> populateContractList = new ArrayList<SelectItem>();
+		     IContractSupplierSO supplierSO = null;
+		     ContractSupplierReqDTO reqDTO = null;
+		     List<SelectItem> populateContractList = null;
+		     ContractSupplierResDTO resDTO = null;
+		     try {
+			          
+		    	     populateContractList = new ArrayList<SelectItem>();
+			         if(getManagedBean().getContractList().size() == 0) {
+			     	        supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+				         
+			     	       reqDTO = new ContractSupplierReqDTO();
+				           reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+				          
+				           resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+				           if (resDTO.getContractList() != null && !resDTO.getContractList().isEmpty()) 
+					                getManagedBean().getContractList().addAll(resDTO.getContractList());    
+		           	}
 		
-		try {
-			
-			  if (getManagedBean().getContractList().size() == 0) {
-			     	reqDTO = new ContractSupplierReqDTO();
-				    supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-				    reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-				    ContractSupplierResDTO resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-				    if (resDTO.getContractList() != null && !resDTO.getContractList().isEmpty()) 
-					       getManagedBean().getContractList().addAll(resDTO.getContractList());    
-		   	}
-			for (CtContract obj : getManagedBean().getContractList()) {
-				populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo()));
-			}
-		} finally {
-			supplierSO = null;
-		}
-		return populateContractList;
-	}
+			         for (CtContract obj : getManagedBean().getContractList()) 
+				          populateContractList.add(new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo()));
+			      
+		      } finally {
+		         	supplierSO = null;
+		         	reqDTO = null;
+		 		    resDTO = null;
+	      
+		      } return populateContractList;
+	    }
 
 	public void changeContractActionListener() {
-		IContractSO contractSO = null;
-		try {
-			if(getManagedBean().getContractVerId()!=null) {
-				ContractReqDTO reqDTO = new ContractReqDTO();
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-				reqDTO.setContractVerId(getManagedBean().getContractVerId());
-				reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-				reqDTO.setUpdateAction(true);
-				ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-				if (resDTO.isSuccessful()) {
-					getManagedBean().setContractVer(resDTO.getCtContractVer());
-					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-					getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-					if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
-						getPopulateBankAccountList();
-					}
-				}
-			} else {
-				CtContractVer ctContractVer = new CtContractVer();
-				CtContractValue ctContractValue = new CtContractValue();
-				ctContractVer.setCtContractValue(ctContractValue);
+		
+		    IContractSO contractSO = null;
+		    ContractReqDTO reqDTO  = null;
+		    ContractResDTO resDTO   = null;
+		    try {
+			 
+		    	    if (getManagedBean().getContractVerId()!=null) {
+				            contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				     
+				            reqDTO = new ContractReqDTO();
+				            reqDTO.setContractVerId(getManagedBean().getContractVerId());
+			 	            reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+				            reqDTO.setUpdateAction(true);
+				            
+				            resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+				            if (resDTO.isSuccessful()) {
+					               getManagedBean().setContractVer(resDTO.getCtContractVer());
+					               getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+					               getManagedBean().setOriginalAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+					               if(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo()!=null) {
+						                getPopulateBankAccountList();
+					               }
+				           }
+			        } else {
 				
-				getManagedBean().setContractVer(ctContractVer);
-				getManagedBean().setCtContract(null);
-				getManagedBean().setOriginalAccountNo(null);
-			}
-		} finally {
-			contractSO = null;
+			        	CtContractVer ctContractVer = new CtContractVer();
+				        CtContractValue ctContractValue = new CtContractValue();
+				        ctContractVer.setCtContractValue(ctContractValue);
+				
+				        getManagedBean().setContractVer(ctContractVer);
+				        getManagedBean().setCtContract(null);
+				        getManagedBean().setOriginalAccountNo(null);
+			     }
+		     } finally {
+		       	contractSO = null;
+		        reqDTO  = null;
+			    resDTO   = null;
 		}
 	}
     
-	private void setBankInfo() {
-		SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+	  private void setBankInfo() {
+	
+		     SmSupplierBank supplierBank = getManagedBean().getSupplierBankAccountMap().get(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+		     getManagedBean().getContractVer().getCtContractValue().setBankName(null);
+		     getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
+		     getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
 		
-		getManagedBean().getContractVer().getCtContractValue().setBankName(null);
-		getManagedBean().getContractVer().getCtContractValue().setBankBranch(null);
-		getManagedBean().getContractVer().getCtContractValue().setBankAddress(null);
-		
-		if(supplierBank!=null) {
-			getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
-			getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
-			getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
-			getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
-		}
-	}
+		     if(supplierBank!=null) {
+			      getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(getManagedBean().getContractVer().getCtContractValue().getBankAccountNo());
+			      getManagedBean().getContractVer().getCtContractValue().setBankName(supplierBank.getPmFinancialOrg().getFinOrgName());
+			      getManagedBean().getContractVer().getCtContractValue().setBankBranch(supplierBank.getBankBranch());
+			      getManagedBean().getContractVer().getCtContractValue().setBankAddress(supplierBank.getSmAddress());
+		     }
+	   }
 	 
-	public List<SelectItem> getPopulateBankAccountList() {
-		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
-		if (this.getManagedBean().getCtContract() != null) {
-			if (this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-					&& this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
-				List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
-				for (SmSupplierBank obj : supplierBank) {
-					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-						String account = obj.getAccountNo();
-						if (obj.getPmFinancialOrg() != null)
-							account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
-						populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
-						if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) {
-							getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
-						}
-					}
-				}
-			}
-		}
-		return populateBankAccountList;
-	}
+	   public List<SelectItem> getPopulateBankAccountList() {
+		    
+		       List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
+		       if (this.getManagedBean().getCtContract() != null) {
+			        
+		    	   if (this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
+				          && this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
+				          List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
+				         
+				          for(SmSupplierBank obj : supplierBank) {
+				            	if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+						              String account = obj.getAccountNo();
+						           
+						              if(obj.getPmFinancialOrg() != null)
+							               account = account + " / " + obj.getPmFinancialOrg().getFinOrgName();
+						                
+						              populateBankAccountList.add(new SelectItem(obj.getAccountNo(), account));
+						                 
+						              if(!getManagedBean().getSupplierBankAccountMap().containsKey(obj.getAccountNo())) 
+							                 getManagedBean().getSupplierBankAccountMap().put(obj.getAccountNo(), obj);
+						      }
+				        }
+			     }
+		     } return populateBankAccountList;
+	  }
 	 
 	public void changeAccountActionListener() {
 		setBankInfo();
@@ -734,60 +753,75 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	public SelectItem[] getSupplierLoaDropdown() {
-		SelectItem[] items = null;
-		IQTAwardSO qtAwardSO = null;
-		ISupplierSearchSO supplierSearchSO = null;
-		IContractAmendmentSO contractAmendmentSO = null;
-		IContractSupplierSO contractSupplierSO = null;
-		try {
-			supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			SupplierSearchReqDTO reqDTO1 = new SupplierSearchReqDTO();
-			reqDTO1.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			SupplierSearchResDTO resDTO1 = supplierSearchSO.retriveSupplierProfiles(reqDTO1);
-			List<Long> supplierIdList = new ArrayList<Long>();
-			for(SmSupplier smSupplier : resDTO1.getResultBean().getResultList()) {
-				supplierIdList.add(smSupplier.getSupplierId());
-			}
-			// Retrieve amendment loa list
-			contractAmendmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
-			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
-			amendmentReqDTO.setSupplierIds(supplierIdList);
-			ContractAmendmentResDTO amendmentResDTO = contractAmendmentSO.getAmendmentLoaIdsBySupplierIds(amendmentReqDTO);
+		      
+		       SelectItem[] items = null;
+		       IQTAwardSO qtAwardSO = null;
+		       ISupplierSearchSO supplierSearchSO = null;
+		       IContractAmendmentSO contractAmendmentSO = null;
+		       IContractSupplierSO contractSupplierSO = null;
+		       SupplierSearchReqDTO reqDTO  = null;
+		       List<Long> supplierIdList = null;
+		       AwardSupplierReqDTO reqDTO1 = null;
+		       ContractSupplierResDTO contractSupplierResDTO = null;
+		       ContractAmendmentResDTO amendmentResDTO = null;
+		       SupplierSearchResDTO resDTO = null;
+		       try {
+			
+		    	        supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			            
+		    	        reqDTO = new SupplierSearchReqDTO();
+			            reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			            supplierIdList = new ArrayList<Long>();
+			            
+			            resDTO = supplierSearchSO.retriveSupplierProfiles(reqDTO);
+			            for(SmSupplier smSupplier : resDTO.getResultBean().getResultList()) {
+				                supplierIdList.add(smSupplier.getSupplierId());
+			             }
+			           
+			            // Retrieve amendment loa list
+			            contractAmendmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			            ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			            amendmentReqDTO.setSupplierIds(supplierIdList);
+			            amendmentResDTO = contractAmendmentSO.getAmendmentLoaIdsBySupplierIds(amendmentReqDTO);
 
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			qtAwardSO = (IQTAwardSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			reqDTO.setSupplierIdList(supplierIdList);
-			if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
-				if(reqDTO.getExcludeLoaIdList() == null){
-					reqDTO.setExcludeLoaIdList(new ArrayList<Long>());
-				}
-				reqDTO.getExcludeLoaIdList().addAll(amendmentResDTO.getAmendmentLoaIds());
-			}
+			           reqDTO1 = new AwardSupplierReqDTO();
+			           qtAwardSO = (IQTAwardSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			           reqDTO1.setSupplierIdList(supplierIdList);
 			
-			// Retrieve in progress factoring loa list			
-			contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
-			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
-			contractSupplierReqDTO.setSupplierIds(supplierIdList);
-			ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveProgressingLoaList(contractSupplierReqDTO);
-			if(contractSupplierResDTO.getProgressigLoaIds()!=null && contractSupplierResDTO.getProgressigLoaIds().size()>0) {
-				if(reqDTO.getExcludeLoaIdList() == null){
-					reqDTO.setExcludeLoaIdList(new ArrayList<Long>());
-				}
-				reqDTO.getExcludeLoaIdList().addAll(contractSupplierResDTO.getProgressigLoaIds());
-			}
+			           if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
+				               if(reqDTO1.getExcludeLoaIdList() == null)
+					                  reqDTO1.setExcludeLoaIdList(new ArrayList<Long>());
+				               reqDTO1.getExcludeLoaIdList().addAll(amendmentResDTO.getAmendmentLoaIds());
+			           }
 			
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAListBySupplier(reqDTO);
-			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
-			items = new SelectItem[list.size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			int i = 1;
-			for (ScLoa loa : list) {
-				items[i++] = new SelectItem(loa.getLoaId(), loa.getLoaNo());
-			}
-		} finally {
-			supplierSearchSO = null;
-			qtAwardSO = null;
-			contractAmendmentSO = null;
+			          // Retrieve in progress factoring loa list			
+			          contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			          ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			          contractSupplierReqDTO.setSupplierIds(supplierIdList);
+			          contractSupplierResDTO = contractSupplierSO.retrieveProgressingLoaList(contractSupplierReqDTO);
+			          if(contractSupplierResDTO.getProgressigLoaIds()!=null && contractSupplierResDTO.getProgressigLoaIds().size()>0) {
+				            if(reqDTO1.getExcludeLoaIdList() == null)
+					            reqDTO1.setExcludeLoaIdList(new ArrayList<Long>());
+				            reqDTO1.getExcludeLoaIdList().addAll(contractSupplierResDTO.getProgressigLoaIds());
+			          }
+			
+			          AwardSupplierResDTO resDTO1 = qtAwardSO.retrieveLOILOAListBySupplier(reqDTO1);
+			          List<ScLoa> list = resDTO1.getLoaResultBean().getResultList();
+			          items = new SelectItem[list.size() + 1];
+			          items[0] = new SelectItem(null, "- Select One -");
+			          int i = 1;
+			          for (ScLoa loa : list) {
+				           items[i++] = new SelectItem(loa.getLoaId(), loa.getLoaNo());
+			          }
+		     } finally {
+			         supplierSearchSO = null;
+			         qtAwardSO = null;
+			         contractAmendmentSO = null;
+			         reqDTO  = null;
+		             reqDTO1 = null;
+		             contractSupplierResDTO = null;
+				     amendmentResDTO = null;
+				     resDTO = null;
 		}
 		return items;
 	}
