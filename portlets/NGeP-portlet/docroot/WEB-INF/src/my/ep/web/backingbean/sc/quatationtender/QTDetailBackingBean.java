@@ -809,8 +809,7 @@ public class QTDetailBackingBean extends
 						finalizeRemarks(tabBean.getScQtApproval()
 								.getScQtApprovalRemarks()));
 				// setUserDetails(tabBean.getScQtApproval());
-				tabBean.getScQtApproval()
-						.setScQt(this.getManagedBean().getQt());
+				
 				approvalList.add(tabBean.getScQtApproval());
 
 			}
@@ -1028,6 +1027,7 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+		quationTenderReqDTO.setToBeRemoveList(this.getManagedBean().getToBeRemoveList());
 		return quationTenderReqDTO;
 	}
 
@@ -1580,13 +1580,15 @@ public class QTDetailBackingBean extends
 	}
 
 	public void retrieveApprovalTabDtl() {
-		
-		//Added by Fara on 03092014 - Fix for Approval tab if user dint visit the Committee Appointment tab
-		List<TabBean> tabList = this.getManagedBean().getScCommitteeMemberTabList();
-		if(tabList == null || tabList.size() == 0){
+
+		// Added by Fara on 03092014 - Fix for Approval tab if user dint visit
+		// the Committee Appointment tab
+		List<TabBean> tabList = this.getManagedBean()
+				.getScCommitteeMemberTabList();
+		if (tabList == null || tabList.size() == 0) {
 			retrieveCommitteeAppointmentTabDtl();
 		}
-		
+
 		updateQtDtls();
 		debugLogger("retrieveApprovalTabDtl");
 		// this.getManagedBean().setActiveIndex(3);
@@ -1596,90 +1598,100 @@ public class QTDetailBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtdetail(this.getManagedBean().getQt());
+			
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQTApprovalDetails(reqDTO);
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
-			List<TabBean> existingApprovalTabs = this.getManagedBean()
-					.getTabList();
+			this.getManagedBean().setToBeRemoveList(
+					getToBeRemoveApprovals(requiredApproval));
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					 qtApproval = checkIsApprovalExists(qtApproval,
-					 existingApprovalTabs);
-					qtApproval.setApprovalType(ApprovalCategory
-							.getDisplayName(qtApproval.getApprovalCategory()
-									.getParameterCode()));
-					qtApproval.setScQtApprovalRemarks(initializeRemarks(
-							qtApproval, qtApproval.getScQtApprovalRemarks(),
-							ScQtApprovalRemark.class));
-					// qtApproval.setScQtApprovalAttachment(null);
-					qtApproval.setScQt(this.getManagedBean().getQt());
+					// qtApproval = checkIsApprovalExists(qtApproval,
+					// existingApprovalTabs);
+					if (!qtApproval.isDeleted()) {
+						qtApproval.setApprovalType(ApprovalCategory
+								.getDisplayName(qtApproval
+										.getApprovalCategory()
+										.getParameterCode()));
+						qtApproval.setScQtApprovalRemarks(initializeRemarks(
+								qtApproval,
+								qtApproval.getScQtApprovalRemarks(),
+								ScQtApprovalRemark.class));
+						// qtApproval.setScQtApprovalAttachment(null);
+						qtApproval.setScQt(this.getManagedBean().getQt());
 
-					/*
-					 * // BUDGET_APPROVAL if
-					 * (qtApproval.getApprovalCategory().getParameterCode()
-					 * .equals(ParameterConst.APPROVAL_CATEGORY_BUDGET)) {
-					 * tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-					 * qtApproval, approverSettingDtls(
-					 * RoleCode.BUDGET_APPROVER, qtApproval))); } else
-					 */if (qtApproval.getApprovalCategory().getParameterCode()
-							.equals(ParameterConst.APPROVAL_CATEGORY_BPK)) {
-						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-								qtApproval, null));
-					} else if (qtApproval.getApprovalCategory()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
-						if (SourcingConstants.APPROVE_ACTION
-								.equalsIgnoreCase(qtApproval
-										.getApproverAction())) {
-							DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
-									RoleCode.PUBLICATION_APPROVER, qtApproval);
+						/*
+						 * // BUDGET_APPROVAL if
+						 * (qtApproval.getApprovalCategory().getParameterCode()
+						 * .equals(ParameterConst.APPROVAL_CATEGORY_BUDGET)) {
+						 * tabBeans.add(new
+						 * TabBean(qtApproval.getApprovalType(), qtApproval,
+						 * approverSettingDtls( RoleCode.BUDGET_APPROVER,
+						 * qtApproval))); } else
+						 */if (qtApproval.getApprovalCategory()
+								.getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_BPK)) {
+							tabBeans.add(new TabBean(qtApproval
+									.getApprovalType(), qtApproval, null));
+						} else if (qtApproval.getApprovalCategory()
+								.getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_PTJ)) {
+							if (SourcingConstants.APPROVE_ACTION
+									.equalsIgnoreCase(qtApproval
+											.getApproverAction())) {
+								DualListModel<ScQtApproverSettings> ptjApprovals = approverSettingDtls(
+										RoleCode.PUBLICATION_APPROVER,
+										qtApproval);
+								tabBeans.add(new TabBean(qtApproval
+										.getApprovalType(), qtApproval,
+										ptjApprovals));
+							}
+						} else if (qtApproval
+								.getApprovalCategory()
+								.getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
+							tabBeans.add(new TabBean(qtApproval
+									.getApprovalType(), qtApproval, null));
+						} else if (qtApproval
+								.getApprovalCategory()
+								.getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
 							tabBeans.add(new TabBean(qtApproval
 									.getApprovalType(), qtApproval,
-									ptjApprovals));
-						}
-					} else if (qtApproval
-							.getApprovalCategory()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE)) {
-						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-								qtApproval, null));
-					} else if (qtApproval
-							.getApprovalCategory()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT)) {
-						tabBeans.add(new TabBean(
-								qtApproval.getApprovalType(),
-								qtApproval,
-								approverSettingDtls(
-										RoleCode.COMMITTEE_APPROVER, qtApproval)));
-					} else if (qtApproval.getApprovalCategory()
-							.getParameterCode()
-							.equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)) {
-						List<ScQtApprovalRequest> approvalRequest = qtApproval
-								.getScQtApprovalDtls();
-						if (null != approvalRequest
-								&& !approvalRequest.isEmpty()) {
-							for (int i = 0; i < approvalRequest.size(); i++) {
-								PmParameter parameter = approvalRequest.get(i)
-										.getDecessionType();
-								if (null == parameter) {
-									approvalRequest.get(i).setDecessionType(
-											new PmParameter());
-									ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
-									approvalRemark
-											.setApprovalRequest(approvalRequest
-													.get(i));
-									approvalRequest.get(i).setAppRequestRemark(
-											approvalRemark);
+									approverSettingDtls(
+											RoleCode.COMMITTEE_APPROVER,
+											qtApproval)));
+						} else if (qtApproval
+								.getApprovalCategory()
+								.getParameterCode()
+								.equals(ParameterConst.APPROVAL_CATEGORY_OTHERS)) {
+							List<ScQtApprovalRequest> approvalRequest = qtApproval
+									.getScQtApprovalDtls();
+							if (null != approvalRequest
+									&& !approvalRequest.isEmpty()) {
+								for (int i = 0; i < approvalRequest.size(); i++) {
+									PmParameter parameter = approvalRequest
+											.get(i).getDecessionType();
+									if (null == parameter) {
+										approvalRequest.get(i)
+												.setDecessionType(
+														new PmParameter());
+										ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+										approvalRemark
+												.setApprovalRequest(approvalRequest
+														.get(i));
+										approvalRequest.get(i)
+												.setAppRequestRemark(
+														approvalRemark);
+									}
 								}
 							}
+							tabBeans.add(new TabBean(qtApproval
+									.getApprovalType(), qtApproval, null));
 						}
-						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-								qtApproval, null));
 					}
-
 				}
 			}
 			int approvalTabIndex = 0;
@@ -1696,15 +1708,36 @@ public class QTDetailBackingBean extends
 				approvalTabIndex++;
 			}
 			this.getManagedBean().setApprovalMenuModel(menuModel);
-			
-			//Added by Fara on 03092014 - Fix for Approval tab if no data for approval
-			if( menuModel.getContents() != null && menuModel.getContents().size() > 0){
-				this.getManagedBean().setSelectedApprovalTabBean(tabBeans.get(0));
+
+			// Added by Fara on 03092014 - Fix for Approval tab if no data for
+			// approval
+			if (menuModel.getContents() != null
+					&& menuModel.getContents().size() > 0) {
+				this.getManagedBean().setSelectedApprovalTabBean(
+						tabBeans.get(0));
 				this.getManagedBean().setTabList(tabBeans);
 			}
 		} finally {
 			detailSO = null;
 		}
+	}
+
+	/**
+	 * @param requiredApproval
+	 * @return
+	 */
+	private List<ScQtApproval> getToBeRemoveApprovals(
+			List<ScQtApproval> requiredApproval) {
+		List<ScQtApproval>toBeRemoveList=null;
+		if(null != requiredApproval){
+			toBeRemoveList= new ArrayList<ScQtApproval>();
+			for(ScQtApproval approvals :  requiredApproval){
+				if(approvals.isDeleted()){
+					toBeRemoveList.add(approvals);
+				}
+			}
+		}
+		return toBeRemoveList;
 	}
 
 	public void retrieveSuppQualificationTabDtl() {
