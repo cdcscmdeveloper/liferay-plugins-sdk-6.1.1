@@ -6,10 +6,10 @@ package my.ep.web.backingbean.sc.common;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -44,20 +44,20 @@ public class SupplierDetailBackingBean extends SourcingBaseBackingBean<SupplierD
 		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
 		
 		if (smSupplier != null && (selectedSupplier == null || smSupplier.getSupplierId().longValue() != selectedSupplier.getSupplierId().longValue())) {
-			IRegistrationSO registrationSO = null;
+			IQTSupplierSO qtSupplierSO = null;
 			try {
-				registrationSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT, IRegistrationSO.class);
+				qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
 				
-				RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
-				registrationReqDTO.setSupplierId(smSupplier.getSupplierId());
+				QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+				reqDTO.setSupplierId(smSupplier.getSupplierId());
 				
-				RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
-				selectedSupplier = registrationResDTO.getSmSupp();
+				QTSupplierResDTO resDTO = qtSupplierSO.retrieveSupplierDtlById(reqDTO);
 				
-				getManagedBean().setSmSupplier(selectedSupplier);
+				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
+				getManagedBean().setMofNo(resDTO.getMofNo());
 			} finally {
-				registrationSO = null;
+				qtSupplierSO = null;
 			}	
 		} else if (smSupplier == null) {
 			log.warn("smSupplier is null.");
