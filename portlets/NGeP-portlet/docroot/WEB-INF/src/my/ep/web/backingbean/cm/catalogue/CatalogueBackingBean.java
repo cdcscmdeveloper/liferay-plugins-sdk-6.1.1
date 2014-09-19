@@ -774,18 +774,37 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 	}
 
 	public String navigateToExpiredItemDet(int index) {
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
-		this.getManagedBean().setSelectedMaintainItem(
-				this.getManagedBean().getExpiredItemList().get(index));
-		this.getManagedBean()
-				.getSelectedMaintainItem()
-				.setCompareDesc(
-						this.getManagedBean().getExpiredItemList().get(index)
-								.getItemDesc());
-		this.getManagedBean().setTabActiveIndex(5);
-		this.getManagedBean().setDisplayCatalogue(true);
-		this.getManagedBean().setPreviousScreen(1);//catMaintenance
-		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
+		try{
+			
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			reqDTO.setDocId(this.getManagedBean().getExpiredItemList().get(index).getSupplierItemId());
+			CatalogueResDTO resDTO = catalogueSO.viewSupplierItem(reqDTO);
+			CmSupplierItem a = resDTO.getSupplierItemList().get(0);
+			
+			CodificationReqDTO reqDTO2 = new CodificationReqDTO();
+			reqDTO2.setSupplierItemId(this.getManagedBean().getExpiredItemList().get(index).getSupplierItemId());
+			CodificationResDTO resDTO2 = codificationSO.getCmItemBySupplierItemId(reqDTO2);
+			a.setCmItem(resDTO2.getCmItem());
+			
+			this.getManagedBean().setSelectedMaintainItem(a);
+			this.getManagedBean()
+					.getSelectedMaintainItem()
+					.setCompareDesc(a
+									.getItemDesc());
+			this.getManagedBean().setTabActiveIndex(5);
+			this.getManagedBean().setDisplayCatalogue(true);
+			this.getManagedBean().setPreviousScreen(1);//catMaintenance
+			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally {
+			codificationSO = null;
+			catalogueSO = null;
+		}
 		//return "addCatalogItem";
 		return "editCatalogItem";
 	}
@@ -971,7 +990,7 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 			reqDTO.setDocId(supplierItem.getDocId());
 	
 			CatalogueResDTO resDTO = null;
-			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			resDTO = catalogueSO.viewSupplierItem(reqDTO);
 			this.getManagedBean().setDisplayCatalogue(true);
 			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 			
