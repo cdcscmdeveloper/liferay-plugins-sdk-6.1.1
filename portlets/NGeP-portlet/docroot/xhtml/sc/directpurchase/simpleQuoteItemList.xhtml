@@ -11,7 +11,8 @@
 	  <h:panelGroup id="productListId" style="width: 100%;">
 		<ac:templateSpec 
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
-			editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+			editable ="#{simpleQuoteBackingBean.managedBean.editableFlag}"
+			newable ="#{simpleQuoteBackingBean.managedBean.newableFlag}"
 			title="#{lbl['lbl.ss.simple.quote.product.list']}" />
 		
     </h:panelGroup>
@@ -19,15 +20,16 @@
 			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 			icon="ui-icon-clone" process="@this productListId"
 			update="@([id$=cloneItemSpec])"
-			rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+			rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}"
 			partialSubmit="true">
 		</p:commandButton>
 
 		<p:spacer height="35px" />
 	  <h:panelGroup  id="serviceListId" style="width: 100%;">
 		 <ac:templateSpec
-		    editable ="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
+		    editable ="#{simpleQuoteBackingBean.managedBean.editableFlag}"
 			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
+			newable ="#{simpleQuoteBackingBean.managedBean.newableFlag}"
 			title="#{lbl['lbl.ss.simple.quote.service.list']}" />
 		
       </h:panelGroup>

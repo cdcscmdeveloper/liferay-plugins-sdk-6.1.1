@@ -1965,6 +1965,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				// TODO current page url for page navigation from pid to request note
 				simpleQuoteBackingBean.getManagedBean().setRnToSQFlag(Boolean.FALSE);
+				simpleQuoteBackingBean.getManagedBean().setNewableFlag(Boolean.FALSE);
+				simpleQuoteBackingBean.getManagedBean().setEditableFlag(Boolean.FALSE);
 				simpleQuoteBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 				
 				// page navigation to simple quote

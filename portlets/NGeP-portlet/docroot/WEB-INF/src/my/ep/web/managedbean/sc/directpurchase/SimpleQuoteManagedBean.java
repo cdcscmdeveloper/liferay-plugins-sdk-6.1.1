@@ -156,6 +156,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean panelItemFlag = Boolean.TRUE;
 	private boolean panelItemBtnFlag = Boolean.TRUE;
 	
+	private boolean newableFlag = Boolean.TRUE;
+	private boolean editableFlag = Boolean.TRUE;
+	
 	private boolean supplierViewBtn = Boolean.TRUE;
 	private boolean required;
 	private List<TplSpecQuestion> prodQuestions = new ArrayList<TplSpecQuestion>();
@@ -1413,6 +1416,18 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setTplSpecZoneLocs(List<TplSpecZoneLoc> tplSpecZoneLocs) {
 		this.tplSpecZoneLocs = tplSpecZoneLocs;
+	}
+	public boolean isNewableFlag() {
+		return newableFlag;
+	}
+	public void setNewableFlag(boolean newableFlag) {
+		this.newableFlag = newableFlag;
+	}
+	public boolean isEditableFlag() {
+		return editableFlag;
+	}
+	public void setEditableFlag(boolean editableFlag) {
+		this.editableFlag = editableFlag;
 	}
 	
 }
