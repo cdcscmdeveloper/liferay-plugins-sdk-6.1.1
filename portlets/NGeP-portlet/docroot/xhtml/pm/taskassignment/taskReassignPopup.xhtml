@@ -37,7 +37,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				value="#{taskAssignBackingBean.managedBean.availableUsers}"
 				selection="#{taskAssignBackingBean.managedBean.selectedUser}"
 				rowIndexVar="index" rowKey="#{user}" var="user"
+			   selectionMode="single"
 				 >
+				<p:ajax event="rowSelect"/>
 				<ac:paginator for="dtTaskReassign" />
 		        <p:column headerText="#{lbl['lbl.pm.ta.name']}">  
 			    	#{user.userName}
