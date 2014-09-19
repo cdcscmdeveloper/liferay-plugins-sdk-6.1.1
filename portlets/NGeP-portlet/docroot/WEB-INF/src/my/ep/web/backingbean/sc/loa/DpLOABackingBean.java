@@ -18,6 +18,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.factory.EpLogger;
@@ -42,8 +43,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean
 @RequestScoped
-public class DpLOABackingBean extends
-		SourcingBaseBackingBean<DpLOAManagedBean> {
+public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> {
 	public static Logger log = EpLogger.getLogger(DpLOABackingBean.class);
 
 	public DpLOABackingBean() {
@@ -54,37 +54,26 @@ public class DpLOABackingBean extends
 			log.debug(message);
 		}
 	}
-	
+
 	public void preRenderView() {
 		debugLogger("preRenderView");
-		
+
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			
+
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			loaDetailBackingBean.renewSesionObject();
 			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
+			loaDetailBackingBean.getManagedBean().setOutComes(
+					getManagedBean().getOutComes());
 			retrieveLOAList(sourceId);
-			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-			String taskId = originalServletRequest.getParameter("taskId");
-			
-			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);			
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			loaDetailBackingBean.getManagedBean().setOutComes(res.getAction());		
-			
-			//retrieveLOAList(2122L);
-			
+			// retrieveLOAList(2122L);
+
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);	
+					.handleNavigation(fc, null, QTConstants.DP_LOA_LIST_PAGE);
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -98,10 +87,11 @@ public class DpLOABackingBean extends
 
 		IPurchaseRequestSO purchaseRequestSO = null;
 		try {
-			purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseRequestSO.class);
+			purchaseRequestSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IPurchaseRequestSO.class);
 			Long userId = new FacesScopes().getUserSessionBean().getUserId();
-			
+
 			PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 			reqDTO.setRequestNoteId(requestNoteId);
 			List<String> fulfilmentTypes = new ArrayList<String>();
@@ -110,16 +100,37 @@ public class DpLOABackingBean extends
 			reqDTO.setFulfillmentTypes(fulfilmentTypes);
 			reqDTO.setAssignedTo(userId);
 
-			PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequestsByReqNote(reqDTO);
-			
+			PurchaseRequestResDTO resDTO = purchaseRequestSO
+					.retrievePurchaseRequestsByReqNote(reqDTO);
+
 			if (resDTO.isSuccessful()) {
-				List<ScPurchaseRequest> purchaseRequestList = resDTO.getListPurchaseRequest();
-				if (purchaseRequestList != null && purchaseRequestList.size() > 0) {
-					ScPurchaseRequest purchaseRequest = purchaseRequestList.iterator().next();
-					
-					getManagedBean().setScRequestNote(purchaseRequest.getRequestNote());
-					getManagedBean().setPurchaseRequestList(purchaseRequestList);	
-				}	
+				List<ScPurchaseRequest> purchaseRequestList = resDTO
+						.getListPurchaseRequest();
+				if (purchaseRequestList != null
+						&& purchaseRequestList.size() > 0) {
+					ScPurchaseRequest purchaseRequest = purchaseRequestList
+							.iterator().next();
+					getManagedBean().setScRequestNote(
+							purchaseRequest.getRequestNote());
+					getManagedBean()
+							.setPurchaseRequestList(purchaseRequestList);
+
+					Long statusId = null;
+					for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
+						statusId = scPurchaseRequest.getScLoa().getPmStatus()
+								.getStatusId();
+						if (!QTStatusConst.LOA_PENDING_VERIFICATION
+								.equals(statusId)
+								&& !QTStatusConst.LOA_COMPLETED
+										.equals(statusId)
+								&& !QTStatusConst.LOA_REJECTED.equals(statusId)) {
+							getManagedBean().setShowBPMButtons(false);
+							break;
+						} else {
+							getManagedBean().setShowBPMButtons(true);
+						}
+					}
+				}
 			}
 
 		} finally {

@@ -25,6 +25,7 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	
 	private ScRequestNote scRequestNote;
 	private List<ScPurchaseRequest> purchaseRequestList;
+	private Boolean showBPMButtons;
 	
 	public DpLOAManagedBean() {
 	}
@@ -55,6 +56,14 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	 */
 	public void setPurchaseRequestList(List<ScPurchaseRequest> purchaseRequestList) {
 		this.purchaseRequestList = purchaseRequestList;
+	}
+
+	public Boolean getShowBPMButtons() {
+		return showBPMButtons;
+	}
+
+	public void setShowBPMButtons(Boolean showBPMButtons) {
+		this.showBPMButtons = showBPMButtons;
 	}
 
 }

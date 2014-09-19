@@ -8,7 +8,7 @@
 
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
-			action="#{lOADetailBackingBean.saveAction}" 
+			action="#{lOADetailBackingBean.saveAction}" rendered="#{isEditableStatus}"
 			process="@form" update="@form" />
 			
 		<c:choose>
