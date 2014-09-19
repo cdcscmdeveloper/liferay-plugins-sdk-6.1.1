@@ -143,7 +143,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.cm.add']}" id="addZonalTierButton" style="float:right;"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' ||
-							(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
+							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
 								disabled="#{catalogueBackingBean.disableAddZonalTier()}"
 								action="#{catalogueBackingBean.addNewZonalTierPricing()}" icon="ui-icon-add"
 								update="cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton" process="@this cmZonalTierPricingsId"></p:commandButton>

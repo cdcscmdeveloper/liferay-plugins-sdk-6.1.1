@@ -104,7 +104,7 @@
 		</p:dataTable>
 
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}"
+			<p:commandButton value="#{lbl['lbl.cm.add']}" rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R'}"
 				action="#{catalogueBackingBean.addNewZonalPromotionPricing}"
 				update="cmZonalPromotionPricingsId" icon="ui-icon-add"
 				process="cmZonalPromotionPricingsId @this"></p:commandButton>
