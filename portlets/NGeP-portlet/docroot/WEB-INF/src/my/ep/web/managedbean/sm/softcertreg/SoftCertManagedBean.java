@@ -41,6 +41,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private SmPersonnel loginUserPersonnelInfo;
 	private String loginRoleName;
 	private IPagingDataModel<SmPersonnel> softCertPagingDataModel = new SoftCertPagingDataModel();
+	private String taskName;
 	
 	public SoftCertManagedBean(){
 		super();
@@ -159,6 +160,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSoftCertPagingDataModel(IPagingDataModel<SmPersonnel> softCertPagingDataModel) {
 		this.softCertPagingDataModel = softCertPagingDataModel;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 }

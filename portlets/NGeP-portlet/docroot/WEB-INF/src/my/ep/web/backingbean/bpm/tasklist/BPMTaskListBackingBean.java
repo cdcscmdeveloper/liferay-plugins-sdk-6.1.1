@@ -69,6 +69,7 @@ public class BPMTaskListBackingBean extends
 		temp.put("Start MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation", "mof-application");
 		temp.put("MOF Application Cancellation", "mof-application");
+		temp.put("User Add Additional", "soft-cert-payment");
 
 		// s1 module
 		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE,
