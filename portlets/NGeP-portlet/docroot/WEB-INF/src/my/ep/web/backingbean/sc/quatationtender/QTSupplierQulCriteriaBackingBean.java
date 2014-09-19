@@ -45,7 +45,6 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -786,9 +785,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
-		CtPanelZone ctPanelzone = (CtPanelZone) event.getTreeNode().getData();
+		TplSpecZoneDtl tplSpecZoneDtl = (TplSpecZoneDtl) event.getTreeNode().getData();
 		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-		reqDTO.setCircularZoneId(ctPanelzone.getPanelZoneId());
+		reqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone().getPanelZoneId());
 		IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 		PanelSupplierResDTO resDTO = panelSupplierSO.retrieveSupplierByZone(reqDTO);
 		this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
