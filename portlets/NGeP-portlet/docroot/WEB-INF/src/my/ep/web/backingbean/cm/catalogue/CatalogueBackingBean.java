@@ -584,29 +584,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public String navigateToCatalogDet(int index) {
-log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaintainItemList()
-		.get(index).getSupplierId());
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		
 		this.getManagedBean().setPreviousScreen(1);//catMaintenance
 		
 		try{
-
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			
+			reqDTO.setSupplierItemId(this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
+			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+			reqDTO.setSupplierId(resDTO.getSupplierItem().getSupplierId());
 	
-			reqDTO.setSupplierId(this.getManagedBean().getMaintainItemList()
-					.get(index).getSupplierId());
+			CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 	
-			CatalogueResDTO resDTO = catalogueSO
-					.retrieveSupplierZoneBySuppId(reqDTO);
+			log.debug("size:" + resDTO2.getSupplierZoneLs().size());
 	
-			log.debug("size:" + resDTO.getSupplierZoneLs().size());
+			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
 	
-			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
-	
-			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this
-					.getManagedBean().getMaintainItemList().get(index));
+			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getMaintainItemList().get(index));
 	
 			this.getManagedBean().setCloneCmSupplierItem(clone);
 			this.getManagedBean().setCloneIndex(index);
@@ -614,8 +610,8 @@ log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getMaint
 			ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
 			bb.getManagedBean().setCatDetTabActiveIndex(0);
 	
-			reqDTO.setSupplierItemId(this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
-			resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
+			//reqDTO.setSupplierItemId(this.getManagedBean().getMaintainItemList().get(index).getSupplierItemId());
+			//resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 			this.getManagedBean()
 					.getSelectedMaintainItem()
