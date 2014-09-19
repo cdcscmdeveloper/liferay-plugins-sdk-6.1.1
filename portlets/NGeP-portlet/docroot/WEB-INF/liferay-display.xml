@@ -187,6 +187,7 @@
 			<portlet id="SoftCertReg"></portlet>
 			<portlet id="TaskSummary"></portlet>
 			<portlet id="SmApplRevisionView"></portlet>
+			<portlet id="SoftCertPayment"></portlet>
 		</category>
 
 		<category name="Template">

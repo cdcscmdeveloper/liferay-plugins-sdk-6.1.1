@@ -1,0 +1,16 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" >
+	
+    <ui:define name="contentSection">
+		<p:panel id="acknowledge" header="Record Acknowledgement" toggleable="true" toggleSpeed="500">
+		
+			<p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.eprole']}" />
+								Request processed successfully. To submit request for approval please pay the processing fee.To pay the processing select the item from your task list.
+		</p:panel>
+	</ui:define>
+		    
+</ui:composition>				
