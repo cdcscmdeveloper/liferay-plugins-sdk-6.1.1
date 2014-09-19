@@ -16,6 +16,7 @@
 				</th>
 				<td>	        
           			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
+          				label="#{lbl['lbl.pm.profiles.preferences.language']}"
           				value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
           				<!-- <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> -->  
 	            		<f:selectItems value="#{profilePersonalizationBackingBean.getLanguageList()}" 
@@ -35,7 +36,8 @@
 				</th>
 				<td>
 					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}"
-						value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" 
+						value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}"
+						label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}" 
 						size="5" maxlength="2">
 						<f:validateLongRange minimum="1"  disabled="#{empty param['disableValidation']}"/>
 					</p:inputText>

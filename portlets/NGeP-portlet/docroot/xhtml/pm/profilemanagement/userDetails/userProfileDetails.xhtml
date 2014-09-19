@@ -238,7 +238,7 @@
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profileManagementBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
-						<p:ajax event="change" update="somStateC" />
+						<p:ajax event="change" update="somStateC" listener="#{profilePersonalizationBackingBean.updateAddress(0)}"/>
                     </p:selectOneMenu>
                     <p:message id="somCountryMsg" for="somCountry" display="icon" />
                  </td>	  
@@ -355,7 +355,7 @@
 							value="#{profileManagementBackingBean.getDistrictList(profileManagementBackingBean.managedBean.userAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="somCityC"/>
+						<p:ajax event="change" update="somCityC" listener="#{profilePersonalizationBackingBean.updateAddress(2)}"/>
 				   </p:selectOneMenu>
 				   <p:message id="somDistrictCMsg" for="somDistrictC" display="icon" />
 			    </td>	

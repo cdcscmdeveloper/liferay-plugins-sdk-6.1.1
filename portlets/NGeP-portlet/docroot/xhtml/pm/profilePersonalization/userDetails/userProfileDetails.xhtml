@@ -178,7 +178,7 @@
     <br />	  
     
     <!-- Address & Contact -->
-	<p:panel header="#{lbl['lbl.pm.profiles.address.contact']}" toggleable="true">  		             				    		   		     
+	<p:panel id="pUserContact" header="#{lbl['lbl.pm.profiles.address.contact']}" toggleable="true">  		             				    		   		     
 		<table class="ppTwoTable">
 			<tr>		    
   				<th width="20%">
@@ -192,7 +192,7 @@
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profilePersonalizationBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
-						<p:ajax event="change" update="somStateC, somDivisionC, somDistrictC, somCityC" />
+						<p:ajax event="change" update="pUserContact" listener="#{profilePersonalizationBackingBean.updateAddress(0)}" />
                     </p:selectOneMenu>
                     <p:message id="somCountryMsg" for="somCountry" display="icon" />
                  </td>	  
@@ -264,7 +264,7 @@
 						  itemValue="#{state.stateId}"/>
 					  	<p:ajax event="change" listener="#{profilePersonalizationBackingBean.updateDivisionFlag(
 					  		profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}" 
-					  		update="somDistrictC, somDivisionC, somCityC" />
+					  		update="pUserContact" />
 			       </p:selectOneMenu>
 			       <p:message id="somStateCMsg" for="somStateC" display="icon" />
 		       	</td>						
@@ -281,7 +281,7 @@
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					 	<f:selectItems
 						  value="#{profilePersonalizationBackingBean.getDivisionList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}" 
-						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>     
+						  var="division" itemLabel="#{division.divisionName}" itemValue="#{division.divisionId}"/>
 				    </p:selectOneMenu>
 				    <p:message id="somDivisionCMsg" for="somDivisionC" display="icon" />
 			    </td>
@@ -302,7 +302,7 @@
 							value="#{profilePersonalizationBackingBean.getDistrictList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" update="somCityC"/>
+						<p:ajax event="change" listener="#{profilePersonalizationBackingBean.updateAddress(2)}" update="somCityC"/>     
 				   </p:selectOneMenu>
 				   <p:message id="somDistrictCMsg" for="somDistrictC" display="icon" />
 			    </td>	

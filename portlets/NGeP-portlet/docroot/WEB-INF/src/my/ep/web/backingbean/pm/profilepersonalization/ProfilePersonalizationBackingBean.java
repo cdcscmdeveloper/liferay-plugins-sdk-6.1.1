@@ -309,8 +309,27 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			this.getManagedBean().setDivisionFlagC(
 					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
 		}
+		updateAddress(1);
 	}
 	
+	/**
+	 * reset PmAddress accordingly
+	 * @param address
+	 */
+	public void updateAddress(int address){
+		if(0==address){ //country
+			this.getManagedBean().getUserAddress().setPmState(new PmState());
+			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
+			this.getManagedBean().getUserAddress().setPmDistrict(new PmDistrict());
+			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
+		}else if(1==address){ //state
+			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
+			this.getManagedBean().getUserAddress().setPmDistrict(new PmDistrict());
+			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
+		}else if(2==address){ //district);
+			this.getManagedBean().getUserAddress().setPmCity(new PmCity());
+		}
+	}
 
 	/**
 	 * retrieve identity type from PM
