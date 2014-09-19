@@ -49,8 +49,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  </p:column>
 			
 			  <p:column headerText="UOM" style="width: 11%;">
-			      <p:inputText id="uomLovId" style="width:95%;" value="#{panelItemsVar.pmUom.uomName}"/>
-			  </p:column>
+			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
+				       value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
+				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
+			       </ac:lov>
+			   </p:column>
 			  
 			  <p:column headerText="Min. Order Qty" style="white-space:pre-line;width:8%;">
 			       <p:inputText value="#{panelItemsVar.minimumOrderQty}" style="width:95%;text-align:right;" label="Min. Order Qty">
@@ -135,7 +138,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <div style="clear:both" />
 			 <table style="width: 100%">
 				<tr>
-					<td style="width: 94px"><p:outputLabel value="Location Level" /></td>
+					<td style="width: 120px;"><p:outputLabel value="Location Level" /></td>
 					<td><p:selectOneMenu id="locationLevels" style="width: 178px;"
 							value="#{panelBackingBean.managedBean.selectedPanelItems.locationLevelId.parameterId}">
 							<f:selectItems value="#{panelBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
@@ -181,22 +184,21 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		     onsuccess="delZoneDlg.show();"/>
 	    </div>	
 	  </h:panelGroup>
-	  <p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true"
-		width="600" position="top" height="400">
+	  <p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="600" position="top" height="500">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
 
-				<TR>
-					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></TD>
-					<TD width="80%"><p:inputText size="70"
+				<tr>
+					<td width="25%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></td>
+					<td width="70%"><p:inputText style="width:300px;"
 							value="#{panelBackingBean.managedBean.zoneName}"></p:inputText>
-					</TD>
-				</TR>
-				<TR>
-					<TD width="20%" valign="top"><p:outputLabel
-							value="Zone Location" /></TD>
-					<TD width="80%"><p:panel></p:panel>
-						<div style="height: 300px; overflow-y: scroll;">
+					</td>
+				</tr>
+				<tr>
+					<td width="25%" valign="top"><p:outputLabel value="Zone Location" /></td>
+					<td width="70%">
+				
+						<div style="height: 370px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"
 								value="#{panelBackingBean.managedBean.rootZoanlTree}"
 								var="location"
@@ -209,11 +211,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 									<h:outputText value="#{location.districtId.districtName}" />
 								</p:treeNode>
 							</p:tree>
-						</div></TD>
-				</TR>
+						</div></td>
+				</tr>
 			</table>
 		</p:panel>
-		
+		<p:spacer height="10"/>
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
 			style="float:right;" onclick="ZoneGeneral.hide();"
