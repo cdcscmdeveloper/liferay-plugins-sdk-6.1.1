@@ -18,7 +18,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td colspan="3">
 					<p:inputTextarea value="#{supportDocBackingBean.managedBean.selectedDocument.docName}"
-						label="#{lbl['lbl.pm.document.name']}"
+						label="#{lbl['lbl.pm.document.name']}" autoResize="false"
 				 		cols="50" rows="5" maxlength="255" required="true" id="itaDocName" />
 			 		<p:message id="itaDocNameMsg" for="itaDocName" display="icon" />
 				</td>
@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</th>
 				<td>
 					<p:inputText styleClass="ppDisplayTextS" required="true"
-						label="#{lbl['lbl.pm.display.sequence']}" id="itDisplaySeq"
+						label="#{lbl['lbl.pm.display.sequence']}" id="itDisplaySeq" maxlength="2"
 						value="#{supportDocBackingBean.managedBean.selectedDocument.displaySeq}"/>
 					<p:message id="itDisplaySeqMsg" for="itDisplaySeq" display="icon" />
 				</td>
