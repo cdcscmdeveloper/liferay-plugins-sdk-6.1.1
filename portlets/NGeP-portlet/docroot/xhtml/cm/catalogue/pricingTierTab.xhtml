@@ -122,7 +122,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add" id="addTierButton" style="float:right;"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || 
-							(catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
+							((catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R') and (unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier))}"
 								action="#{catalogueBackingBean.addNewTierPricing()}" disabled="#{catalogueBackingBean.disableAddTier()}"
 								update=":form:pricingTabID:headerTabId:tierId:pricingTierID, :form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:addTierButton"
 								process="@this :form:pricingTabID:headerTabId:tierId:pricingTierID"></p:commandButton>
