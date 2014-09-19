@@ -30,6 +30,7 @@ import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -50,6 +51,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -345,97 +347,159 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		this.getManagedBean().getCloneDocumentSearchBean().setQtStatus(null);
 	}
 
-	public String showTemplateAction(ScQtDocReport scQtDocReport) {
+	public String showTemplateAction(ScQtDocReport scQtDocReport) 
+		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
 		debugLogger("showTemplateAction");
-		IQTTemplateSO qtTemplateSO = null;
-		ITemplateDocSO templateSO = null;
+		
 		String templateDocUrl = null;
 		try {
-			getManagedBean().setScQtDocReport(scQtDocReport);
 			TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 			
-			templateSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject("cc", ITemplateDocSO.class);
-			TemplateDocReqDTO tmplateReqDTO = new TemplateDocReqDTO();
-			tmplateReqDTO.setDocMasterId(6l);
-			TemplateDocResDTO templateResDTO = templateSO.getTemplateMaster(tmplateReqDTO);
-			log.info("------------" + templateResDTO.getTplDocMaster());
-			TplDocMaster docMasters = templateResDTO.getTplDocMaster();
-			if(scQtDocReport.getTplDocMaster() == null) {
-				
-				// clone TplDocMaster Details
-				TplDocMaster tplDocMaster = (TplDocMaster) BeanUtils.cloneBean(docMasters);
-				tplDocMaster.setDocMasterId(null);
-				tplDocMaster.setChangedDate(null);
-				tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
-				setUserDetails(tplDocMaster);
-
-				//clone tplDocSection Details
-				List<TplDocSection> docSections = docMasters.getTplDocSections();
-				for (TplDocSection tplDocSection : docSections) {
-					TplDocSection section = (TplDocSection) BeanUtils.cloneBean(tplDocSection);
-					section.setDocSectionId(null);
-					section.setChangedDate(null);
-					section.setTplDocMaster(tplDocMaster);
-					setUserDetails(section);
-					tplDocMaster.getTplDocSections().add(section);
-				}
-				tplDocMaster.setTplDocSectionCollection(null);
-				
-				tplDocMaster.setDocTitle(scQtDocReport.getTitle());
-				tplDocMaster.setDocName(scQtDocReport.getTitle());
-				// Procurement Category
-				tplDocMaster.setProcurementCategory(scQtDocReport.getScQt().getPmProcurementCategory());
-				tplDocMaster.setOrgProfile(null);
-				// Process Type
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
-				reqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-				ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
-				tplDocMaster.setProcessType(resDTO.getPmParameter());
-				// Template Type
-				ParameterReqDTO reqDTO1 = new ParameterReqDTO();
-				reqDTO1.setParameterType(ParameterTypeConst.TEMPLATE_TYPE);
-				reqDTO1.setParameterCode(ParameterConst.TEMPLATE_TYPE_MINISTRY);
-				ParameterResDTO resDTO1 = getParameterSO().retrieveParameterByTypeAndCode(reqDTO1);
-				tplDocMaster.setTemplateType(resDTO1.getPmParameter());
-				// Status
-				PmStatus status = new PmStatus();
-				status.setStatusId(10001l);
-				tplDocMaster.setPmStatus(status);
-				
-				List<ScQtDocReport> reports = new ArrayList<ScQtDocReport>();
-				ScQtDocReport qtDocReport = getManagedBean().getScQtDocReport();
-				qtDocReport.setTplDocMaster(tplDocMaster);
-				reports.add(qtDocReport);
-				
-				// Saving
-				qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
-				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-				qtTemplateReqDTO.setReports(reports);
-				QTTemplateDocResDTO qtTemplateResDTO = qtTemplateSO.saveQtReports(qtTemplateReqDTO);
-				/*if (qtTemplateResDTO.isSuccessful()) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", "" ));
-				}*/
-				//getManagedBean().setScQtDocReportList(qtTemplateResDTO.getReports());
-				for (ScQtDocReport docReport : qtTemplateResDTO.getReports()) {
-					getManagedBean().setScQtDocReport(docReport);
-				}
-				TemplateDocReqDTO tmplateReqDTO1 = new TemplateDocReqDTO();
-				Long masterId = getManagedBean().getScQtDocReport().getTplDocMaster().getDocMasterId();
-				log.info("Master Id : " + masterId);
-				tmplateReqDTO1.setDocMasterId(masterId);
-				TemplateDocResDTO templateResDTO1 = templateSO.getTemplateMaster(tmplateReqDTO1);
-				TplDocMaster docMaster = templateResDTO1.getTplDocMaster();
-				
-				templateDocUrl = tplDocBB.goToMaint(docMaster);
-			} else {
-				templateDocUrl = tplDocBB.goToMaint(scQtDocReport.getTplDocMaster()); // Need to Change
+			getManagedBean().setScQtDocReport(scQtDocReport);
+			Long masterId = null;
+			
+			ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
+			if(qtDocReport != null){
+				scQtDocReport = qtDocReport;	
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			
+			//save to scQtDocReport
+			QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+			if(scQtDocReport.getQtReportId() == null) {
+				qTDetailBackingBean.validateQtDetails();
+				qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
+				if(qtDocReport != null){
+					scQtDocReport = qtDocReport;	
+				}
+			}
+					
+			if(scQtDocReport.getTplDocMaster() == null) {
+				//clone standard tplDocMaster
+				TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtDocReport);
+				scQtDocReport.setTplDocMaster(tplDocMaster);
+				//save clone to db
+				masterId = saveClonedTplDocMaster(scQtDocReport);
+			} else {
+				masterId = scQtDocReport.getTplDocMaster().getDocMasterId();
+			}
+			TplDocMaster docMaster = retrieveTplDocMasterById(masterId);
+			templateDocUrl = tplDocBB.goToMaint(docMaster);
+			
+		}finally {
 		}
 		return templateDocUrl;
+	}
+	
+	private ScQtDocReport retriveRulesAndRegulationReport(ScQtDocReport scQtDocReport){
+		IQTDetailSO qTDetailSO = null;
+		try {
+			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+		
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setScQtDocReport(scQtDocReport);
+			
+			QuationTenderResDTO resDTO = qTDetailSO.retriveScQtDocReportByDefKey(reqDTO);
+			ScQtDocReport qtDocReport = resDTO.getScQtDocReport();
+			return qtDocReport;
+		}finally{
+			qTDetailSO = null;
+		}
+	}
+	
+	private Long saveClonedTplDocMaster(ScQtDocReport scQtDocReport){
+		IQTTemplateSO qtTemplateSO = null;
+		try {
+			qtTemplateSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTTemplateSO.class);
+			
+			QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
+			reqDTO.setScQtDocReport(scQtDocReport);
+			
+			QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
+			getManagedBean().setScQtDocReport(resDTO.getScQtDocReport());
+			
+			Long masterId = getManagedBean().getScQtDocReport().getTplDocMaster().getDocMasterId();
+			return masterId;
+		}finally{
+			qtTemplateSO = null;
+		}
+	}
+	
+	private TplDocMaster cloneTplDocMasterDtls(ScQtDocReport scQtDocReport) 
+		throws IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException{
+		
+		//TODO - Temporarily hard coded
+		Long tplMasterId = 6L;
+		TplDocMaster templateDocMaster = retrieveTplDocMasterById(tplMasterId);
+		
+		// clone TplDocMaster Details
+		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster.cloneEntity();
+		tplDocMaster.setDocMasterId(null);
+		tplDocMaster.setOrgProfile(null);
+		tplDocMaster.setTplDocSectionCollection(null);
+		tplDocMaster.setDocTitle(scQtDocReport.getTitle());
+		tplDocMaster.setDocName(scQtDocReport.getTitle());
+		
+		setUserDetails(tplDocMaster);
+
+		//clone tplDocSection Details
+		tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
+		List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
+		for (TplDocSection tplDocSection : docSections) {
+			TplDocSection section = (TplDocSection) tplDocSection.cloneEntity();
+			section.setDocSectionId(null);
+			section.setTplDocMaster(tplDocMaster);
+			
+			setUserDetails(section);
+			tplDocMaster.getTplDocSections().add(section);
+		}
+		
+		// Procurement Category
+		PmParameter procurementCategory = scQtDocReport.getScQt().getPmProcurementCategory();
+		tplDocMaster.setProcurementCategory(procurementCategory);
+		
+		// Process Type
+		PmParameter processType = getPmParameter(ParameterTypeConst.TPL_DOC_PROCESS_TYPE, ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
+		tplDocMaster.setProcessType(processType);
+		
+		// Template Type
+		PmParameter templateType = getPmParameter(ParameterTypeConst.TEMPLATE_TYPE, ParameterConst.TEMPLATE_TYPE_MINISTRY);
+		tplDocMaster.setTemplateType(templateType);
+
+		// Status
+		PmStatus status = new PmStatus();
+		status.setStatusId(QTStatusConst.DOC_TEMPLATE_DEFAULT);
+		tplDocMaster.setPmStatus(status);
+		
+		tplDocMaster.setScReport(scQtDocReport);
+		
+		return tplDocMaster;
+	}
+	
+	public TplDocMaster retrieveTplDocMasterById(Long masterId){
+		ITemplateDocSO templateDocSO = null;
+		try {
+			templateDocSO = (ITemplateDocSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateDocSO.class);
+		
+			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+			reqDTO.setDocMasterId(masterId);
+			
+			TemplateDocResDTO resDTO = templateDocSO.getTemplateMaster(reqDTO);
+			TplDocMaster docMaster = resDTO.getTplDocMaster();
+			
+			return docMaster;
+		}finally{
+			templateDocSO = null;
+		}
+	}
+	
+	private PmParameter getPmParameter(String parameterType, String parameterCode){
+		ParameterReqDTO reqDTO = new ParameterReqDTO();
+		reqDTO.setParameterType(parameterType);
+		reqDTO.setParameterCode(parameterCode);
+		
+		ParameterResDTO resDTO = getParameterSO().retrieveParameterByTypeAndCode(reqDTO);
+		return resDTO.getPmParameter();
 	}
 
 	public String documentBackAction() {
