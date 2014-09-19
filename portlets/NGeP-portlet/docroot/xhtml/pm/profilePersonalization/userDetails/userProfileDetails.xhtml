@@ -187,7 +187,8 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		styleClass="ppDropDownWidthM" id="somCountry" required="#{!empty param['disableValidation']}">
+		        		styleClass="ppDropDownWidthM" id="somCountry" required="#{!empty param['disableValidation']}"
+		        		label="#{lbl['lbl.pm.profiles.userdetails.country']}" >
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profilePersonalizationBackingBean.getCountryList()}"
 							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />  
@@ -254,7 +255,8 @@
 		        <td>
 		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
-		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId}" >
+		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId}" 
+		        		label="#{lbl['lbl.pm.profiles.userdetails.state']}">
 					   	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 					   	<f:selectItems
 						  value="#{profilePersonalizationBackingBean.getStateList(profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId)}" 
@@ -274,6 +276,7 @@
 		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDivision.divisionId}" 
 		        		required="#{!empty param['disableValidation'] and profileManagementBackingBean.managedBean.divisionFlagC}"
+		        		label="#{lbl['lbl.pm.profiles.userdetails.division']}"
 		        		styleClass="ppDropDownWidthM"> 
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					 	<f:selectItems
@@ -292,6 +295,7 @@
 		        	<p:selectOneMenu id="somDistrictC" required="#{!empty param['disableValidation']}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId}"
+		        		label="#{lbl['lbl.pm.profiles.userdetails.district']}"
 		              	styleClass="ppDropDownWidthM"> 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 						<f:selectItems 
@@ -308,8 +312,10 @@
 		    	</td>
 		        <td>
 		        	<p:selectOneMenu id="somCityC" required="#{!empty param['disableValidation']}"
-		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
+		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null
+		        			or profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCity.cityId}"
+		        		label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
     					styleClass="ppDropDownWidthM"> 
 				        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 				        <f:selectItems 

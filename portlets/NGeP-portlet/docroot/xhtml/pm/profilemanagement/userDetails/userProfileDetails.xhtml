@@ -317,7 +317,7 @@
 						  itemValue="#{state.stateId}"/>
 					  	<p:ajax event="change" listener="#{profileManagementBackingBean.updateDivisionFlag(
 					  		profileManagementBackingBean.managedBean.userAddress.pmState.stateId)}" 
-					  		update="somDistrictC, somDivisionC" />
+					  		update="somDistrictC, somDivisionC, somCityC" />
 			       </p:selectOneMenu>
 			       <p:message id="somStateCMsg" for="somStateC" display="icon" />
 		       	</td>						
@@ -366,7 +366,8 @@
 		        <td>
 		        	<p:selectOneMenu id="somCityC" required="#{!empty param['disableValidation']}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
-		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
+		        		disabled="#{profileManagementBackingBean.managedBean.userAddress.pmDistrict.districtId==null
+		        			or profileManagementBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profileManagementBackingBean.managedBean.userAddress.pmCity.cityId}"
     					styleClass="ppDropDownWidthM"> 
 				        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
