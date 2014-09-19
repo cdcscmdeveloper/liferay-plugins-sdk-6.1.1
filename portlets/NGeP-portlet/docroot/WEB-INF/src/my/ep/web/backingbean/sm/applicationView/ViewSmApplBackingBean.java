@@ -167,11 +167,9 @@ public class ViewSmApplBackingBean extends
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
-		String revType = originalServletRequest.getParameter("revType");
 		
 		String redirectToAppl = "";
 		getManagedBean().setApplicationNoParam(applNo);
-		getManagedBean().setRevTypeParam(revType);
 		initApplication();
 		String applType = getManagedBean().getSmAppl().getApplType();
 		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
@@ -200,13 +198,15 @@ public class ViewSmApplBackingBean extends
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			
+			String appNo = getManagedBean().getApplicationNoParam().substring(0, getManagedBean().getApplicationNoParam().length() - 4);
+			
 			String filePath = Calendar.getInstance().get(Calendar.YEAR)
-					+ "/SM/" + getManagedBean().getApplicationNoParam()
+					+ "/SM/" + appNo
 					+ "/Revision/";
 			String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 			tempDir += "/" + filePath;
 			
-			reqDTO.setDeSerFileName(tempDir + getManagedBean().getApplicationNoParam() + getManagedBean().getRevTypeParam() + SER_FILE_TYPE);
+			reqDTO.setDeSerFileName(tempDir + getManagedBean().getApplicationNoParam() + SER_FILE_TYPE);
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
