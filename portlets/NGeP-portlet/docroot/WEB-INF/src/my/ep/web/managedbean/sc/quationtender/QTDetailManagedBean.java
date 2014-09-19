@@ -469,16 +469,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private void getPTJApproverNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
+		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
 		userReqDto.setRoleCode(RoleCode.APPROVER.value());
+		if(getPmOrgProfile()!= null){
+			userReqDto.setOrgProfileId(getPmOrgProfile().getOrgProfileId());
+		}
+		
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> availableApprover = userResDTO.getUserList();
+		
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
+		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,selectedApprover);
 	}
 
 	public PmOrgProfile getOrgProfile() {
