@@ -62,15 +62,17 @@
 			     	<h:outputText value="* " styleClass="mandatory" />
 			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" />
 			    </f:facet>
-			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" required="#{!empty param['disableValidation']}" 
-			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" 
+			  	<p:calendar id="effDateId" value="#{orgUnit.effDateDisplay}" styleClass="ppDisplayCalXS" 
+			  		required="#{!empty param['disableValidation']}" navigator="true" 
+			  		label="#{lbl['lbl.pm.profiles.resorg.table.effdate']}" readonlyInput="true" yearRange="-99:-16"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
 				<p:message id="effDateIdMsg" for="effDateId" display="icon" />
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.expdate']}" > 
-			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS"
+			  	<p:calendar id="expDateId" value="#{orgUnit.expDateDisplay}" styleClass="ppDisplayCalXS" navigator="true" 
+			  		readonlyInput="true" yearRange="-99:-16" label="#{lbl['lbl.pm.profiles.resorg.table.expdate']}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
