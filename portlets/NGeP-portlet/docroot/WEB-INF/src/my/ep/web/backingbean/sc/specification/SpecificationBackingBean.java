@@ -7778,8 +7778,9 @@ public class SpecificationBackingBean extends
 					checklistRemoveList.remove(i);
 				}
 			}
-			reqDTO.setTobeRemoveList(checklistRemoveList);
+
 		}
+		reqDTO.setTobeRemoveList(checklistRemoveList);
 		reqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
@@ -7805,365 +7806,376 @@ public class SpecificationBackingBean extends
 
 	// Prepare Qt Checklist Save related method
 	public void validatePrepareQtChecklist() {
+		try {
+			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSpecSO.class);
+			int activeIndex = this.getManagedBean().getActiveIndex();
 
-		IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTSpecSO.class);
-		int activeIndex = this.getManagedBean().getActiveIndex();
+			SpecificationResDTO resDTO = null;
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
 
-		SpecificationResDTO resDTO = null;
-		String taskId = this.getManagedBean().getTaskId();
-		String[] outComes = this.getManagedBean().getOutComes();
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			switch (activeIndex) {
+			case 0:
+				ScQt scQt = constructSpecCommitteDtls().getScQt();
+				specReqDTO.setScQt(scQt);
+				specSO.validateSpecCommitteGeneralInfo(specReqDTO);
+				resDTO = specSO.saveQTDtl(specReqDTO);
+				renewSesionObject();
+				this.getManagedBean().setScQt(resDTO.getScQt());
+				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+				getfulfilmentDtls(resDTO.getScQt());
+				break;
+			case 1:
+				ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
 
-		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-		switch (activeIndex) {
-		case 0:
-			ScQt scQt = constructSpecCommitteDtls().getScQt();
-			specReqDTO.setScQt(scQt);
-			specSO.validateSpecCommitteGeneralInfo(specReqDTO);
-			resDTO = specSO.saveQTDtl(specReqDTO);
-			renewSesionObject();
-			this.getManagedBean().setScQt(resDTO.getScQt());
-			retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-			getfulfilmentDtls(resDTO.getScQt());
-			break;
-		case 1:
-			ScQt scQtSupplier = constructSpecCommitteDtls().getScQt();
-
-			specReqDTO.setScQt(scQtSupplier);
-			// specSO.validateSupplierQulificationInfo(specReqDTO);
-			resDTO = specSO.saveQTDtl(specReqDTO);
-			renewSesionObject();
-			this.getManagedBean().setScQt(resDTO.getScQt());
-			getfulfilmentDtls(resDTO.getScQt());
-			retriveBusinessOwnerQualificationCriteri();
-
-			break;
-		case 2:
-
-			ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
-
-			if (QTConstants.EVALUATION_ONE_TIER
-					.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
-					&& !scQtTechChecklist.isTechEvaluationReq()) {
-
-				specReqDTO.setScQt(scQtTechChecklist);
+				specReqDTO.setScQt(scQtSupplier);
+				// specSO.validateSupplierQulificationInfo(specReqDTO);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
-				retriveTechnicalSpecification();
+				retriveBusinessOwnerQualificationCriteri();
 
-			}
+				break;
+			case 2:
 
-			else if (QTConstants.EVALUATION_TWO_TIER
-					.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(scQtTechChecklist
-									.getEvaluationType()) && scQtTechChecklist
-							.isTechEvaluationReq())) {
+				ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
 
-				specReqDTO.setScQt(scQtTechChecklist);
-				specSO.validateCheckList(specReqDTO);
+				if (QTConstants.EVALUATION_ONE_TIER
+						.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
+						&& !scQtTechChecklist.isTechEvaluationReq()) {
+
+					specReqDTO.setScQt(scQtTechChecklist);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveTechnicalSpecification();
+
+				}
+
+				else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(scQtTechChecklist
+										.getEvaluationType()) && scQtTechChecklist
+								.isTechEvaluationReq())) {
+
+					specReqDTO.setScQt(scQtTechChecklist);
+					specSO.validateCheckList(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveTechnicalCheckList();
+
+				}
+				break;
+			case 3:
+				ScQt finChecklist = constructSpecCommitteDtls().getScQt();
+
+				specReqDTO.setScQt(finChecklist);
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				renewSesionObject();
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
-				retriveTechnicalCheckList();
+				retriveFinancialCheckList();
+				break;
+			case 4:
+				ScQt scoring = constructSpecCommitteDtls().getScQt();
 
-			}
-			break;
-		case 3:
-			ScQt finChecklist = constructSpecCommitteDtls().getScQt();
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scoring
+						.getEvaluationType()) && !scoring.isTechEvaluationReq()) {
 
-			specReqDTO.setScQt(finChecklist);
-			resDTO = specSO.saveQTDtl(specReqDTO);
-			renewSesionObject();
-			this.getManagedBean().setScQt(resDTO.getScQt());
-			getfulfilmentDtls(resDTO.getScQt());
-			retriveFinancialCheckList();
-			break;
-		case 4:
-			ScQt scoring = constructSpecCommitteDtls().getScQt();
+					List<ScQtCheckList> financialScoring2 = this
+							.getManagedBean().getFinancialScoring();
+					ScQtScoreSetting financialScoreSetting = this
+							.getManagedBean().getFinancialScoreSetting();
 
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scoring
-					.getEvaluationType()) && !scoring.isTechEvaluationReq()) {
+					if (null != financialScoreSetting) {
+						specReqDTO.setScoreSetting(financialScoreSetting);
+					}
 
-				List<ScQtCheckList> financialScoring2 = this.getManagedBean()
-						.getFinancialScoring();
-				ScQtScoreSetting financialScoreSetting = this.getManagedBean()
-						.getFinancialScoreSetting();
-
-				if (null != financialScoreSetting) {
-					specReqDTO.setScoreSetting(financialScoreSetting);
-				}
-
-				specReqDTO.setCheckLists(financialScoring2);
-				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
-				specReqDTO.setScQt(scoring);
-				specSO.validateSCScoreSettings(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveFinancialScoring();
-
-			}
-
-			else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scoring
-					.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(scoring.getEvaluationType()) && scoring
-							.isTechEvaluationReq())) {
-
-				List<ScQtCheckList> technicalScoring = this.getManagedBean()
-						.getTechnicalScoring();
-				ScQtScoreSetting technicalScoreSetting = this.getManagedBean()
-						.getTechnicalScoreSetting();
-
-				if (technicalScoreSetting != null) {
-					specReqDTO.setScoreSetting(technicalScoreSetting);
-				}
-				ScQtScoreSetting demoScoreSetting = this.getManagedBean()
-						.getDemoScoreSetting();
-				if (demoScoreSetting != null) {
-					specReqDTO.setScoreSetting(demoScoreSetting);
-				}
-
-				specReqDTO.setCheckLists(technicalScoring);
-				specReqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
-				specReqDTO.setScQt(scoring);
-				specSO.validateSCScoreSettings(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveTechnicalScoring();
-
-			}
-			break;
-
-		case 5:
-			ScQt recommendation = constructSpecCommitteDtls().getScQt();
-
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(recommendation
-					.getEvaluationType())
-					&& !recommendation.isTechEvaluationReq()) {
-
-				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
-				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-						.getRecommendationPackageScore();
-				if (null != packageScoreSetting
-						&& packageScoreSetting.getSettingType() == 4) {
-					scoreSetting.add(packageScoreSetting);
+					specReqDTO.setCheckLists(financialScoring2);
+					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
+					specReqDTO.setScQt(scoring);
+					specSO.validateSCScoreSettings(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveFinancialScoring();
 
 				}
 
-				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-						.getRecommendationScore();
-				if (null != itemScoreSetting
-						&& itemScoreSetting.getSettingType() == 5) {
-					scoreSetting.add(itemScoreSetting);
+				else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(scoring.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(scoring.getEvaluationType()) && scoring
+								.isTechEvaluationReq())) {
+
+					List<ScQtCheckList> technicalScoring = this
+							.getManagedBean().getTechnicalScoring();
+					ScQtScoreSetting technicalScoreSetting = this
+							.getManagedBean().getTechnicalScoreSetting();
+
+					if (technicalScoreSetting != null) {
+						specReqDTO.setScoreSetting(technicalScoreSetting);
+					}
+					ScQtScoreSetting demoScoreSetting = this.getManagedBean()
+							.getDemoScoreSetting();
+					if (demoScoreSetting != null) {
+						specReqDTO.setScoreSetting(demoScoreSetting);
+					}
+
+					specReqDTO.setCheckLists(technicalScoring);
+					specReqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+					specReqDTO.setScQt(scoring);
+					specSO.validateSCScoreSettings(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveTechnicalScoring();
+
+				}
+				break;
+
+			case 5:
+				ScQt recommendation = constructSpecCommitteDtls().getScQt();
+
+				if (QTConstants.EVALUATION_ONE_TIER
+						.equalsIgnoreCase(recommendation.getEvaluationType())
+						&& !recommendation.isTechEvaluationReq()) {
+
+					List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
+					ScQtScoreSetting packageScoreSetting = this
+							.getManagedBean().getRecommendationPackageScore();
+					if (null != packageScoreSetting
+							&& packageScoreSetting.getSettingType() == 4) {
+						scoreSetting.add(packageScoreSetting);
+
+					}
+
+					ScQtScoreSetting itemScoreSetting = this.getManagedBean()
+							.getRecommendationScore();
+					if (null != itemScoreSetting
+							&& itemScoreSetting.getSettingType() == 5) {
+						scoreSetting.add(itemScoreSetting);
+
+					}
+
+					specReqDTO.setScoreSettings(scoreSetting);
+					specReqDTO.setScQt(this.getManagedBean().getScQt());
+					specSO.validateSCRecommandationSettings(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveRecommendationDetails();
 
 				}
 
-				specReqDTO.setScoreSettings(scoreSetting);
-				specReqDTO.setScQt(this.getManagedBean().getScQt());
-				specSO.validateSCRecommandationSettings(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveRecommendationDetails();
+				else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(recommendation.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(recommendation
+										.getEvaluationType()) && recommendation
+								.isTechEvaluationReq())) {
 
-			}
+					List<ScQtCheckList> financialScoring1 = this
+							.getManagedBean().getFinancialScoring();
+					ScQtScoreSetting financialScoreSetting = this
+							.getManagedBean().getFinancialScoreSetting();
 
-			else if (QTConstants.EVALUATION_TWO_TIER
-					.equalsIgnoreCase(recommendation.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(recommendation
-									.getEvaluationType()) && recommendation
-							.isTechEvaluationReq())) {
+					if (null != financialScoreSetting
+							&& financialScoreSetting.getSettingType() == 2) {
+						specReqDTO.setScoreSetting(financialScoreSetting);
+					}
 
-				List<ScQtCheckList> financialScoring1 = this.getManagedBean()
-						.getFinancialScoring();
-				ScQtScoreSetting financialScoreSetting = this.getManagedBean()
-						.getFinancialScoreSetting();
+					specReqDTO.setCheckLists(financialScoring1);
+					specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
+					specReqDTO.setScQt(recommendation);
+					specSO.validateSCScoreSettings(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveFinancialScoring();
 
-				if (null != financialScoreSetting
-						&& financialScoreSetting.getSettingType() == 2) {
-					specReqDTO.setScoreSetting(financialScoreSetting);
 				}
+				break;
 
-				specReqDTO.setCheckLists(financialScoring1);
-				specReqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
-				specReqDTO.setScQt(recommendation);
-				specSO.validateSCScoreSettings(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveFinancialScoring();
-
-			}
-			break;
-
-		case 6:
-			ScQt delivery = constructSpecCommitteDtls().getScQt();
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(delivery
-					.getEvaluationType()) && !delivery.isTechEvaluationReq()) {
-				if (delivery.isZonal()) {
-					if (null == delivery.getScQtDeliveryLocs()) {
-						List<BriefingZoneBean> zoneBean = this.getManagedBean()
-								.getDeliveryLocBean();
-						if (null != zoneBean) {
-							for (BriefingZoneBean deliverybean : zoneBean) {
-								if (null != deliverybean.getDeliveryLocList()) {
-									delivery.setScQtDeliveryLocs(deliverybean
-											.getDeliveryLocList());
+			case 6:
+				ScQt delivery = constructSpecCommitteDtls().getScQt();
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(delivery
+						.getEvaluationType())
+						&& !delivery.isTechEvaluationReq()) {
+					if (delivery.isZonal()) {
+						if (null == delivery.getScQtDeliveryLocs()) {
+							List<BriefingZoneBean> zoneBean = this
+									.getManagedBean().getDeliveryLocBean();
+							if (null != zoneBean) {
+								for (BriefingZoneBean deliverybean : zoneBean) {
+									if (null != deliverybean
+											.getDeliveryLocList()) {
+										delivery.setScQtDeliveryLocs(deliverybean
+												.getDeliveryLocList());
+									}
 								}
 							}
 						}
 					}
-				}
-				specReqDTO.setScQt(delivery);
-				specSO.validateSCdelieryLocs(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveDeliveryDetails();
-
-			}
-
-			else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(delivery
-					.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(delivery.getEvaluationType()) && delivery
-							.isTechEvaluationReq())) {
-
-				List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
-				ScQtScoreSetting packageScoreSetting = this.getManagedBean()
-						.getRecommendationPackageScore();
-				if (null != packageScoreSetting
-						&& packageScoreSetting.getSettingType() == 4) {
-					scoreSetting.add(packageScoreSetting);
+					specReqDTO.setScQt(delivery);
+					specSO.validateSCdelieryLocs(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveDeliveryDetails();
 
 				}
 
-				ScQtScoreSetting itemScoreSetting = this.getManagedBean()
-						.getRecommendationScore();
-				if (null != itemScoreSetting
-						&& itemScoreSetting.getSettingType() == 5) {
-					scoreSetting.add(itemScoreSetting);
+				else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(delivery.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(delivery.getEvaluationType()) && delivery
+								.isTechEvaluationReq())) {
+
+					List<ScQtScoreSetting> scoreSetting = new ArrayList<ScQtScoreSetting>();
+					ScQtScoreSetting packageScoreSetting = this
+							.getManagedBean().getRecommendationPackageScore();
+					if (null != packageScoreSetting
+							&& packageScoreSetting.getSettingType() == 4) {
+						scoreSetting.add(packageScoreSetting);
+
+					}
+
+					ScQtScoreSetting itemScoreSetting = this.getManagedBean()
+							.getRecommendationScore();
+					if (null != itemScoreSetting
+							&& itemScoreSetting.getSettingType() == 5) {
+						scoreSetting.add(itemScoreSetting);
+
+					}
+
+					specReqDTO.setScoreSettings(scoreSetting);
+					specReqDTO.setScQt(delivery);
+					specSO.validateSCRecommandationSettings(specReqDTO);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveRecommendationDetails();
+
+				}
+				break;
+
+			case 7:
+				ScQt fulfilMent = constructSpecCommitteDtls().getScQt();
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMent
+						.getEvaluationType())
+						&& !fulfilMent.isTechEvaluationReq()) {
+					if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+							.equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())
+							|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+									.equalsIgnoreCase(this.getManagedBean()
+											.getFulfilmentType())) {
+						specReqDTO.setScQt(fulfilMent);
+						specSO.validateSCFulfillmentSchedules(specReqDTO);
+						resDTO = specSO.saveQTDtl(specReqDTO);
+						renewSesionObject();
+						this.getManagedBean().setScQt(resDTO.getScQt());
+						getfulfilmentDtls(resDTO.getScQt());
+						retriveFulfilmentDtls();
+					}
 
 				}
 
-				specReqDTO.setScoreSettings(scoreSetting);
-				specReqDTO.setScQt(delivery);
-				specSO.validateSCRecommandationSettings(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveRecommendationDetails();
-
-			}
-			break;
-
-		case 7:
-			ScQt fulfilMent = constructSpecCommitteDtls().getScQt();
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMent
-					.getEvaluationType()) && !fulfilMent.isTechEvaluationReq()) {
-				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
-						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {
+				else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(fulfilMent.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(fulfilMent
+										.getEvaluationType()) && fulfilMent
+								.isTechEvaluationReq())) {
+					if (fulfilMent.isZonal()) {
+						if (null == fulfilMent.getScQtDeliveryLocs()) {
+							List<BriefingZoneBean> zoneBean = this
+									.getManagedBean().getDeliveryLocBean();
+							if (null != zoneBean) {
+								for (BriefingZoneBean deliverybean : zoneBean) {
+									if (null != deliverybean
+											.getDeliveryLocList()) {
+										fulfilMent
+												.setScQtDeliveryLocs(deliverybean
+														.getDeliveryLocList());
+									}
+								}
+							}
+						}
+					}
 					specReqDTO.setScQt(fulfilMent);
-					specSO.validateSCFulfillmentSchedules(specReqDTO);
+					specSO.validateSCdelieryLocs(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
-					retriveFulfilmentDtls();
+					retriveDeliveryDetails();
+
+				}
+				break;
+
+			case 8:
+				ScQt fulfilMentdtls = constructSpecCommitteDtls().getScQt();
+				if (QTConstants.EVALUATION_ONE_TIER
+						.equalsIgnoreCase(fulfilMentdtls.getEvaluationType())
+						&& !fulfilMentdtls.isTechEvaluationReq()) {
+
 				}
 
-			}
-
-			else if (QTConstants.EVALUATION_TWO_TIER
-					.equalsIgnoreCase(fulfilMent.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(fulfilMent.getEvaluationType()) && fulfilMent
-							.isTechEvaluationReq())) {
-				if (fulfilMent.isZonal()) {
-					if (null == fulfilMent.getScQtDeliveryLocs()) {
-						List<BriefingZoneBean> zoneBean = this.getManagedBean()
-								.getDeliveryLocBean();
-						if (null != zoneBean) {
-							for (BriefingZoneBean deliverybean : zoneBean) {
-								if (null != deliverybean.getDeliveryLocList()) {
-									fulfilMent.setScQtDeliveryLocs(deliverybean
-											.getDeliveryLocList());
-								}
-							}
-						}
+				if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(fulfilMentdtls.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(fulfilMentdtls
+										.getEvaluationType()) && fulfilMentdtls
+								.isTechEvaluationReq())) {
+					if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
+							.equalsIgnoreCase(this.getManagedBean()
+									.getFulfilmentType())
+							|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+									.equalsIgnoreCase(this.getManagedBean()
+											.getFulfilmentType())) {
+						specReqDTO.setScQt(fulfilMentdtls);
+						specSO.validateSCFulfillmentSchedules(specReqDTO);
+						resDTO = specSO.saveQTDtl(specReqDTO);
+						renewSesionObject();
+						this.getManagedBean().setScQt(resDTO.getScQt());
+						getfulfilmentDtls(resDTO.getScQt());
+						retriveFulfilmentDtls();
 					}
+
 				}
-				specReqDTO.setScQt(fulfilMent);
-				specSO.validateSCdelieryLocs(specReqDTO);
-				resDTO = specSO.saveQTDtl(specReqDTO);
-				renewSesionObject();
-				this.getManagedBean().setScQt(resDTO.getScQt());
-				getfulfilmentDtls(resDTO.getScQt());
-				retriveDeliveryDetails();
+				break;
+
+			case 9:
+				break;
 
 			}
-			break;
-
-		case 8:
-			ScQt fulfilMentdtls = constructSpecCommitteDtls().getScQt();
-			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMentdtls
-					.getEvaluationType())
-					&& !fulfilMentdtls.isTechEvaluationReq()) {
-
+			if (getManagedBean().getTempIndex() < activeIndex) {
+				getManagedBean().setTempIndex(activeIndex);
 			}
-
-			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(fulfilMentdtls
-					.getEvaluationType())
-					|| (QTConstants.EVALUATION_ONE_TIER
-							.equalsIgnoreCase(fulfilMentdtls
-									.getEvaluationType()) && fulfilMentdtls
-							.isTechEvaluationReq())) {
-				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
-						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
-								.equalsIgnoreCase(this.getManagedBean()
-										.getFulfilmentType())) {
-					specReqDTO.setScQt(fulfilMentdtls);
-					specSO.validateSCFulfillmentSchedules(specReqDTO);
-					resDTO = specSO.saveQTDtl(specReqDTO);
-					renewSesionObject();
-					this.getManagedBean().setScQt(resDTO.getScQt());
-					getfulfilmentDtls(resDTO.getScQt());
-					retriveFulfilmentDtls();
-				}
-
-			}
-			break;
-
-		case 9:
-			break;
-
+			this.getManagedBean().setActiveIndex(activeIndex);
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setOutComes(outComes);
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}finally{
+			
 		}
-		if (getManagedBean().getTempIndex() < activeIndex) {
-			getManagedBean().setTempIndex(activeIndex);
-		}
-		this.getManagedBean().setActiveIndex(activeIndex);
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setOutComes(outComes);
 		/*
 		 * this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
 		 * this
@@ -8883,7 +8895,9 @@ public class SpecificationBackingBean extends
 	 * @return
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
-		validateBusinessOwner(true);
+		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
+			validateBusinessOwner(true);
+		}
 		// retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 		// retriveBusinessOwnerQualificationCriteri();
 
