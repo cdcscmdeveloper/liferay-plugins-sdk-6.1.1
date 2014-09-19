@@ -263,7 +263,7 @@
 
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
-		<property name="searchMethod" value="retrieveOrgProfileList" />
+		<property name="searchMethod" value="retrieveOrgProfileDtlList" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
