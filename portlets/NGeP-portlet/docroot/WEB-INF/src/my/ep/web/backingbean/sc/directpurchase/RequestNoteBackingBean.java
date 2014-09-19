@@ -1899,7 +1899,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									districts, divisions, null,TplSpecZoneLoc.class));
 					}
 				}
-				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
+				
+				if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
+					getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNotes().get(0).getPmOrgProfile());
+				}
 				
 				// location level by default - district 
 				if(scQuote.getZoneLocatonLevel() != null){

@@ -357,7 +357,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		
-		// update tabmenu
+		// update tab menu
 		 RequestContext.getCurrentInstance().update("tabMenuId");
 		 return "simpleQuote";
 		 
@@ -487,7 +487,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	
 	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems , CmSupplierItem selectedSupplierItem) {
 		List<SmSupplier> suppliers = getManagedBean().getCompareSuppliers();
 		for(CmSupplierItem supplierItem : compareSupplierItems){
@@ -506,21 +505,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		// TODO check flag for panel item or non contract item
 		if(ctPanelItem != null){
-			
-			if(ctPanelItem.getScRequestItem().getCmItem() != null){
-				cmItem = ctPanelItem.getScRequestItem().getCmItem();
-				String extCode = cmItem.getExtensionCode();
-				CharSequence charSeq = extCode.subSequence(0, 2);
-				itemCode = Integer.valueOf(charSeq.toString());
-				ItemName = cmItem.getItemName();
-				
-			} else{
-				// panel item  - product by default when the cmItem is null
-				itemCode = 2;
-				uom = ctPanelItem.getPmUom();
-				ItemName= ctPanelItem.getItemName();
+			if(ctPanelItem.getScRequestItem() != null){
+				ScRequestItem scRequestItem = ctPanelItem.getScRequestItem();
+				cmItem = scRequestItem.getCmItem();
+				if(scRequestItem.getCmItem() != null){
+					String extCode = cmItem.getExtensionCode();
+					CharSequence charSeq = extCode.subSequence(0, 2);
+					itemCode = Integer.valueOf(charSeq.toString());
+					ItemName = cmItem.getItemName();
+
+				} else{
+					// panel item  - product by default when the cmItem is null
+					itemCode = 2;
+					uom = ctPanelItem.getPmUom();
+					ItemName= ctPanelItem.getItemName();
+				}
 			}
-			
 		} else if(cmSupplierItem !=null){
 			String extCode = cmSupplierItem.getCmItem().getExtensionCode();
 			CharSequence charSeq = extCode.subSequence(0, 2);
@@ -643,14 +643,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setRequestItems(requestItems);
 			}
 			
-			if(quote.getRequestNote() == null){
+			if(quote.getRequestNotes() == null || quote.getRequestNotes().isEmpty()){
+				List<ScRequestNote>	requestNotes = new ArrayList<ScRequestNote>();
 				requestNote = getManagedBean().getRequestNote();
 				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
 				requestNote.setQuote(quote);
-				quote.setRequestNote(requestNote);
+				requestNotes.add(requestNote);
+				quote.setRequestNotes(requestNotes);
 			}
 
 			quote.setProcurementType(getParameterByTypeAndCode(
@@ -856,14 +858,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				requestItems.add(requestItem);
 				quote.setRequestItems(requestItems);
 			}
-			if(quote.getRequestNote() == null){
+			if(quote.getRequestNotes() == null || quote.getRequestNotes().isEmpty()){
+				List<ScRequestNote>	requestNotes = new ArrayList<ScRequestNote>();
 				ScRequestNote requestNote = getManagedBean().getRequestNote();
 				setUserDetails(requestNote);
 				requestNote.setRequestNoteNo(directPurchaseSO.generateRequestNoteNo());
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 				requestNote.setWorkFlowStatuses(null);
 				requestNote.setQuote(quote);
-				quote.setRequestNote(requestNote);
+				requestNotes.add(requestNote);
+				quote.setRequestNotes(requestNotes);
 			}
 			
 			quote.setProcurementType(getParameterByTypeAndCode(
@@ -2725,7 +2729,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} 
 			}
 			
-			getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNote().getPmOrgProfile());
+			if(scQuote.getRequestNotes() != null && scQuote.getRequestNotes().size()>0){
+				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNotes().get(0).getPmOrgProfile());
+			}
 
 			// location level by default - district 
 			if(scQuote.getZoneLocatonLevel() != null){
