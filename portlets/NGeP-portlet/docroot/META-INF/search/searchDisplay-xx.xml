@@ -668,7 +668,7 @@
 		<property name="pk" value="glAccountId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.pm.common.glaccount.GlAccountDAO" />
-		<property name="searchMethod" value="retrieveGlAccountDtlList" />
+		<property name="searchMethod" value="retrieveValidGlAccountDtlList" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
