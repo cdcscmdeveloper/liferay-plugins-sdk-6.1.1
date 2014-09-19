@@ -3038,6 +3038,11 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	background-color: #F0EFEF;
 	font-weight: bold;
 }
+
+.instruction {
+	font-size: 10px;
+	font-style: italic;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
