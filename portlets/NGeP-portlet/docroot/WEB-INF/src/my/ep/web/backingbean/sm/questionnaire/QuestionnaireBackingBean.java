@@ -1,72 +1,35 @@
 package my.ep.web.backingbean.sm.questionnaire;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireReqDTO;
 import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAnswer;
-import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmMofCert;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
-import my.ep.persistence.entity.sm.SmSupplierCategory;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.primefaces.model.StreamedContent;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
-import com.liferay.portal.util.PortalUtil;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.pdf.PdfContentByte;
-import com.lowagie.text.pdf.PdfCopyFields;
-import com.lowagie.text.pdf.PdfImportedPage;
-import com.lowagie.text.pdf.PdfReader;
-import com.lowagie.text.pdf.PdfWriter;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -106,7 +69,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
-			//smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
+			smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
 			smSuppAns.setSmQuestion(smQues);
 			smSuppAns.setSmAnswer(new SmAnswer());
 			smSuppAnswerLs.add(smSuppAns);
@@ -118,6 +81,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 
 	public void submitQuestionnaire() {
 		log.info("***********submitQuestionnaire Start**************");
+		log.info("***********SM SUPPLIER ID******" + this.getManagedBean().getSmSupp().getSupplierId());
 		// this.getManagedBean().getSmSupp().setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 		// for(SmSupplierAnswer sa : this.getManagedBean().getSmSuppAnswerLs()){
@@ -129,6 +93,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
+	
 		QuestionnaireResDTO resDTO = reqSO.questionnaireSubmission(reqDTO);
 
 		//return "viewVirtualCert";
@@ -161,34 +126,31 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 	public void validateQuestionnaire(Long applId, String targetUrl){
 		System.out.println("********QuestionnaireBackingBean Start******");
 		if(applId != null && targetUrl != null){
-			//try{
-				SmSupplier supplier = getSmSupplier();
-				System.out.println("********QuestionnaireBackingBean isQuestionnaire******" + supplier.getSmAppl().isQuestionnaire());
-				if(!supplier.getSmAppl().isQuestionnaire()){
-					this.getManagedBean().setTargetUrl(targetUrl);
-					this.getManagedBean().setSmSupp(supplier);
-					this.getManagedBean().setSmAppl(supplier.getSmAppl());
-					System.out.println("********QuestionnaireBackingBean******" + applId);
-					//System.out.println("********QuestionnaireBackingBean type******" + type);
+			SmSupplier supplier = getSmSupplier();
+			System.out.println("********QuestionnaireBackingBean isQuestionnaire******" + supplier.getSmAppl().isQuestionnaire());
+			if(!supplier.getSmAppl().isQuestionnaire()){
+				this.getManagedBean().setTargetUrl(targetUrl);
+				this.getManagedBean().setSmSupp(supplier);
+				this.getManagedBean().setSmAppl(supplier.getSmAppl());
+				System.out.println("********QuestionnaireBackingBean******" + applId);
+				//System.out.println("********QuestionnaireBackingBean type******" + type);
 
-					retrieveQuestionnaire();
-					//this.getManagedBean().setTargetUrl(targetUrl);
-					this.getManagedBean().setSmSupp(supplier);
-					SmMofAccount mofAcc = retrieveLatestMofAccount();
-					this.getManagedBean().setSmMofAccount(mofAcc);
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+				retrieveQuestionnaire();
+				//this.getManagedBean().setTargetUrl(targetUrl);
+				this.getManagedBean().setSmSupp(supplier);
+				SmMofAccount mofAcc = retrieveLatestMofAccount();
+				this.getManagedBean().setSmMofAccount(mofAcc);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
 
-					return;
-					
-				}
-				else{
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,targetUrl);
-				}
-//			}catch(Exception ex){
-//				System.out.println("Exception>>>>" + ex.getMessage());
-//			}
+				return;
+
+			}
+			else{
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,targetUrl);
+			}
+
 		}
 	}
 	
@@ -216,9 +178,9 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 					}
 				}
 			}
-			
 		}catch(Exception ex){
-			System.out.println("**********retrieveLatestMofAccount exception>>>>>>" + ex.getMessage());
+			//System.out.println("**********retrieveLatestMofAccount exception>>>>>>" + ex.getMessage());
+			throw new EpException(ex.getMessage());
 		}
 		
 		return smMofAcc;
