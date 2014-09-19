@@ -310,9 +310,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 					itemAddr.setDeliveredQty(itemAddr.getFlTempDoItem().getDeliveryQty());
 					itemAddr.setDeliveredAmt(itemAddr.getFlTempDoItem().getDeliveryAmt());
 				}
-				Long remainOrderQty=itemAddr.getOrderedQty().longValue()-itemAddr.getChargeReceivedQty().longValue();
+				BigDecimal remainOrderQty=itemAddr.getOrderedQty().subtract(itemAddr.getSumDeliveredQty()).add(itemAddr.getRejectedQty());
 				itemAddr.setDelQtyDisabled(false);
-				if(remainOrderQty==0){
+				if(remainOrderQty.doubleValue()==0){
 					itemAddr.setDelQtyDisabled(true);
 				}
 				
