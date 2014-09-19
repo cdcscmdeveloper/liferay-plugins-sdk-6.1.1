@@ -46,7 +46,6 @@ import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
-import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -559,7 +558,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     		context.put("nonFixedDeduction", deductionType);
     	}
     	
-		
 		boolean isOneOff = false;
     	if (qt.getFulfilmentType().getParameterCode().equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
     		isOneOff = true;
@@ -569,8 +567,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     		context.put("fulfilmentType", isOneOff);
     	}
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-terma-kontrak.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_TERMA_KONTRAK, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -604,9 +601,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			}
 		}
 		context.put("uploadFinanceSpecList", uploadFinanceSpecList);
+		context.put("bean", this);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-senarai-semak-untuk-pematuhan-Kewangan.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_SENARAI_SEMAK_UNTUK_PEMATUHAN_KEWANGAN, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -640,9 +637,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			}
 		}
 		context.put("uploadTechSpecList", uploadTechSpecList);
+		context.put("bean", this);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-senarai-semak-untuk-pematuhan-teknikal.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_SENARAI_SEMAK_UNTUK_PEMATUHAN_TEKNIKAL, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -684,8 +681,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		context.put("isOneOff", isOneOff);
 		context.put("deliveryAddressBean", deliveryAddressBean);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-delivery-address.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_DELIVERY_ADDRESS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
 	/**
@@ -706,7 +702,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			resDTO = specSo.retrieveFulFilMentScheduleDtls(reqDTO);
-			scheduleList = resDTO.getScheduleResults().getResultList();	
+			if (resDTO.getScheduleResults() != null && !resDTO.getScheduleResults().getResultList().isEmpty()) {
+				scheduleList = resDTO.getScheduleResults().getResultList();
+			}
 		} finally {
 			specSo = null;
 		}
@@ -716,9 +714,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		context.put("totalFrequency", totalFrequency);
 		context.put("scheduleList", scheduleList);
+		context.put("bean", this);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-frequency-schedule.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_FREQUENCY_SCHEDULE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -752,8 +750,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		context.put("totalPhase", totalPhase);
 		context.put("paymentList", paymentList);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-progressive-payment.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_PROGRASSIVE_PAYMENT, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
@@ -837,8 +834,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		context.put("newTplSpecQuestionsList", newTplSpecQuestionsList);
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-spesifikasi.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_SPESIFIKASI, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/*private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
@@ -911,8 +907,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	}
     	context.put("estimatedPrice", estimatedPrice);
 
-    	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_SAMPLE_SURAT_SETUJU_TERIMA, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	private void generateSampleSuratPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
@@ -925,8 +920,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     	context.put("title", qt.getQtTitle());
     	context.put("qtNo", qt.getQtNo());
 
-    	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-akuan-pembida.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_SAMPLE_SURAT_AKUAN_PEMBIDA, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	private void generateKenyataanTawaranPembekalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
@@ -1032,8 +1026,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     		context.put("fulfilmentType", isOneOff);
     	}
     	
-    	DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-kenyataan-tawaran-pembekal.vm", 
-    			context, new FileOutputStream(getActualFilePath(attachment)));
+    	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.QT_DOC_KENYATAAN_TAWARAN_PEMBEKAL, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	private IParameterSO getParameterSO() {

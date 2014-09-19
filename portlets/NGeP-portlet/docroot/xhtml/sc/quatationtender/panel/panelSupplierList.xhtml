@@ -10,7 +10,7 @@
 		rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.ctzones eq 'true'}">
 		<p:panel id="ctZonepnlid" header="Location Details" toggleable="true">
 			<p:dataTable id="ctSupplierTreeZones"
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSuppliers}"
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneGeneralTrees}"
 				var="ctZones" rowIndexVar="index" dynamic="true">
 
 				<p:column headerText="#{lbl['lbl.sc.spec.supplier.zone']}"
@@ -19,13 +19,13 @@
 						<p:ajax event="select" update=":form:paneltabView:totalSupplierid"
 							listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" />
 						<p:treeNode type="zone">
-							<h:outputText value="#{location.name}" />
+							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
 						<p:treeNode type="state">
-							<h:outputText value="#{location.stateId.stateName}" />
+							<h:outputText value="#{location.pmState.stateName}" />
 						</p:treeNode>
 						<p:treeNode type="district">
-							<h:outputText value="#{location.districtId.districtName}" />
+							<h:outputText value="#{location.pmDistrict.districtName}" />
 						</p:treeNode>
 					</p:tree>
 				</p:column>
