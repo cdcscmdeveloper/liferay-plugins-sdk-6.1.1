@@ -301,7 +301,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				ctReqDTO.setDocType(dataType.getDocType());
 			}
 		    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-		    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		    setValidateContractField(resDTO);
 		    ConstructSideTabMenu();
 		    
@@ -783,7 +783,7 @@ public void ConstructSideTabMenu(){
 				    	ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 				    	ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
 				    	
-				    	ContractResDTO ctResDTO = contractSO.retrieveContractVer(ctReqDTO);
+				    	ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 				    	setValidateContractField(ctResDTO);
 				    	ConstructSideTabMenu();
 			    	}
@@ -1579,7 +1579,7 @@ public void ConstructSideTabMenu(){
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
-			resDTO = contractSO.retrieveContractVer(reqDTO);
+			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
 			
 			if(resDTO.getCtContractVer().getCtTermination()==null) {
@@ -1627,7 +1627,7 @@ public void ConstructSideTabMenu(){
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
-			resDTO = contractSO.retrieveContractVer(reqDTO);
+			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			
 			suspBB = new SuspensionBackingBean();
 			suspBB.setSuspensionContractVer(resDTO);
@@ -1661,7 +1661,7 @@ public void ConstructSideTabMenu(){
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			if (action.equalsIgnoreCase("update"))
 				reqDTO.setUpdateAction(true);
-			ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			amendBB = new AmendmentBackingBean();
 			amendBB.getManagedBean().setSelectedTabIndex(0);
 			amendBB.setAmendmentContractVer(resDTO);
@@ -1679,7 +1679,7 @@ public void ConstructSideTabMenu(){
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		
 	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 	    setValidateContractField(resDTO); 
 	    this.getManagedBean().setViewContract(true);
 	    this.getManagedBean().setSelectedTabIndex(0);
@@ -1706,7 +1706,7 @@ public void ConstructSideTabMenu(){
 			reqDTO.setUpdateAction(true);
 			getManagedBean().setUpdateContract(true);
 			
-		    ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
+		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 		    setValidateContractField(resDTO);
 		    
 		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});		    
