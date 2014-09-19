@@ -49,7 +49,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
 								<f:selectItems value="#{profilePersonalizationBackingBean.salutationOptions()}" />
 							</p:selectOneMenu>
@@ -64,7 +64,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="50"
+							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="50" label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}"/>
 						</td>
 						<th></th>
@@ -78,7 +78,8 @@
 						</th>
 						<td>
 							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationCode.parameterId}">
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationCode.parameterId}"
+								label="#{lbl['lbl.pm.profiles.userdetails.idtype']}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems value="#{profilePersonalizationBackingBean.getIdentityTypeList()}"/>
 							</p:selectOneMenu>
@@ -94,7 +95,8 @@
 						</th>
 						<td>
 							<p:inputText styleClass="ppDisplayTextM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}" maxlength="12">
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}" maxlength="12"
+								label="#{lbl['lbl.pm.profiles.userdetails.idno']}">
 								<p:ajax event="change" update="itLoginId" listener="#{profilePersonalizationBackingBean.updateLoginId()}"/>
 							</p:inputText>
 						</td>
@@ -109,7 +111,8 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true"
+							<p:selectOneMenu styleClass="ppDropDownWidthM" disabled="true" 
+								label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmCountry.countryId}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 								<f:selectItems
@@ -206,6 +209,7 @@
 				</th>	  
 			    <td>
 			    	<p:inputText id="itUserAdd1" value="#{profilePersonalizationBackingBean.managedBean.userAddress.address1}" 
+			    		label="#{lbl['lbl.pm.profiles.userdetails.addressone']}"
 			    		styleClass="ppDisplayTextL" maxlength="35" required="#{!empty param['disableValidation']}"/>
 			    	<p:message id="itUserAdd1Msg" for="itUserAdd1" display="icon" />	
 	    		</td>	
@@ -240,6 +244,7 @@
 				</th>	 
 		    	<td>
 		    		<p:inputText id="itPostcode" required="#{!empty param['disableValidation']}" 
+		    			label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
 		    			value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
 		    			styleClass="ppDisplayTextM"  maxlength="10" />
 	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
@@ -336,7 +341,8 @@
 			    <td>
 			    	<p:inputText id="itEmail" required="#{!empty param['disableValidation']}"
 			    		value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" 
-			    		styleClass="ppDisplayTextM" maxlength="80">
+			    		styleClass="ppDisplayTextM" maxlength="80"
+			    		validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 			    		<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 		    		</p:inputText>
@@ -353,7 +359,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
 			    <td>
 			    	<p:inputText id="itTelNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" 
-			    		styleClass="ppDisplayTextM"  maxlength="12">
+			    		styleClass="ppDisplayTextM"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
@@ -365,7 +371,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
 			    <td>
 			    	<p:inputText id="itFaxNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" 
-			    		styleClass="ppDisplayTextM" maxlength="12">
+			    		styleClass="ppDisplayTextM" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
@@ -377,7 +383,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
 			    <td>
 			    	<p:inputText id="itMobileNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" 
-			    		styleClass="ppDisplayTextM"  maxlength="12">
+			    		styleClass="ppDisplayTextM"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />

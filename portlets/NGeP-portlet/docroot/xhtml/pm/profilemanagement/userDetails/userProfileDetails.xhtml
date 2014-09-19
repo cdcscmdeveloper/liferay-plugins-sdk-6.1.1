@@ -407,7 +407,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
 			    <td>
 			    	<p:inputText id="itTelNo" value="#{profileManagementBackingBean.managedBean.selectedUser.phoneNo}"
-			    		styleClass="ppDisplayTextM" maxlength="12">
+			    		styleClass="ppDisplayTextM" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
@@ -419,7 +419,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
 			    <td>
 			    	<p:inputText id="itFaxNo" value="#{profileManagementBackingBean.managedBean.selectedUser.faxNo}" 
-			    		styleClass="ppDisplayTextM" maxlength="12">
+			    		styleClass="ppDisplayTextM" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
