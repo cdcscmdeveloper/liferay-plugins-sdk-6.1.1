@@ -1873,7 +1873,9 @@ table.ppTwoTable td {
 .ui-selectonemenu.ppDropDownWidthM {
 	width: 210px !important;
 }
-
+.ui-selectonemenu.ppDropDownWidthL{
+	width: 310px !important;
+}
 .ui-selectonemenu.ppDropDownWidthS {
 	width: 110px !important;
 }
