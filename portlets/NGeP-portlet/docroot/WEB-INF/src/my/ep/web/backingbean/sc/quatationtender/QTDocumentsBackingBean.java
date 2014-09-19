@@ -588,7 +588,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateTermaKontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Terma_Kontrak.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_CONTRACT_TERM);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -639,7 +639,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Senarai_Semak_Untuk_Pematuhan_Kewangan.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_FIN_COMPLIANCE_CHECKLIST);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -675,7 +675,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Senarai_Semak_Untuk_Pematuhan_Teknikal.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_TECH_COMPLIANCE_CHECKLIST);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -711,7 +711,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateDeliveryAddressPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Delivery_Address.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_DELIVERY_SERVICE_ADDRESS);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -753,7 +753,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateFrequencySchedulePdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Frequency_Schedule.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_FREQUENCY_SCHEDULES);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -788,7 +788,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateProgressivePaymentPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Progressive_Payment.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_PROGRESSIVE_PAYMENTS);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -822,7 +822,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Spesifikasi.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_SPECIFICATION);
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
@@ -918,7 +918,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @param qt
 	 */
 	private void generateSampleSuratSetujuTerimaPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Sample_Surat_Setuju_Terima.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_LOA_SAMPLE);
 		populateAttachmentDetails(attachment);
 		
 		PmOrgProfile pmOrgProfile = qt.getPmOrgProfile();
@@ -975,7 +975,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateSampleSuratPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Sample_Surat_Akuan_Pembida.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_DECLARION_SAMPLE);
 		populateAttachmentDetails(attachment);
 		
 		//CommonUtils commonUtils = new CommonUtils();
@@ -988,7 +988,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateKenyataanTawaranPembekalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Kenyataan_Tawaran_Pembekal.pdf");
+		attachment.setFileName(SourcingConstants.QT_DOC_SUPP_OFFER_STATEMENT);
 		populateAttachmentDetails(attachment);
 		
 		CommonUtils commonUtils = new CommonUtils();
