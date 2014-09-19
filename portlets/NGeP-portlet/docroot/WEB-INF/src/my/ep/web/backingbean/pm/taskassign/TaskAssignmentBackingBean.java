@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -34,6 +35,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpBpmException;
@@ -43,6 +46,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -57,6 +61,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 /**
  * Backing Bean for Task Assignment
@@ -86,12 +91,20 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	//List for Paging
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 
+	public TaskAssignmentBackingBean(){
+		//TODO
+		if(MDC.get(LogKey.USER_ID)==null) {
+			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
+		}
+	}
 		
 	public void preLoading(){
 		log.info("preLoading");
 		this.retrieveOrgTypeMap();
 		this.resetTaskAssignSearchBean();
 		this.getManagedBean().setOrgProfileRequired(true);
+		this.getManagedBean().setResultUser(null);
+		this.getManagedBean().setResultOrgProfile(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
@@ -118,12 +131,24 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	public void searchTaskAssign(){
 		log.info("searchDocument - Start");
+		if(!(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()!=null 
+				&& this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId()!=null)){
+			throw new EpException("Org. Name is required.");//TODO
+		}
+		if(!(this.getManagedBean().getTaskAssignmentSearchBean().getUser()!=null 
+				&& this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId()!=null)){
+			throw new EpException("User Name is required.");//TODO
+		}
+		this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
+		this.getManagedBean().setResultOrgProfile(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile());
 		this.taskListDataModel.reloadData();
 		log.info("searchDocument - End");
 		
 	}
 
-	
+	/**
+	 * retrieve and set org type mapper
+	 */
 	private void retrieveOrgTypeMap(){
 		log.info("retrieveOrgTypeMap");
 		List<PmParameterDesc> parameterDescs = getOrgTypeList();
@@ -144,6 +169,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				, new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
 	}
 	
+	/**
+	 * change organization type
+	 */
 	public void changeOrgType() {
 		log.info("changeOrgType");
 		if(this.getManagedBean().getTaskAssignmentSearchBean()!=null){
@@ -175,9 +203,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	}
 	
 	/**
-	 * 
+	 * retrieve valid org profile based on selected org type
 	 * @param paramCode
-	 * @return
+	 * @return PmOrgValidity
 	 */
 	private PmOrgValidity getOrgProfile(String paramCode){
 		ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
@@ -228,6 +256,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		try{
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
+			
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -257,6 +286,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		return resDTO.getPmStatusDesc() != null ? resDTO.getPmStatusDesc().getStatusName() : "Review";
 	}
 	
+	public void retrieveAvailableUsers(){
+		log.info("retrieveAvailableUsers");
+		if(this.getManagedBean().getAvailableUsers()==null){
+			this.getManagedBean().setAvailableUsers(new ArrayList<PmUser>());	
+		}
+		
+	}
 	/**
 	 * Reassign task to selected user
 	 */
@@ -269,6 +305,38 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		reassignTask(pmUser);
 	}
 	
+	public List<PmUser> retrieveAvaiableUsers(){
+		
+		List <PmUser> pmUsers = new ArrayList<PmUser>();
+//		try {
+//			this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
+//			this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
+//			ISearchBean<PmOrgProfile> searchBean = new SearchBean<PmOrgProfile>();
+//			
+//			SearchFilterBean bean = new SearchFilterBean();
+//			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+//			bean.setSearchField("orgTypeCode.parameterCode");
+//			bean.setSearchValue(paramCode);
+//			searchBean.getDataFilterBeans().add(bean);
+//			
+//			UserReqDTO reqDTO = new UserReqDTO();
+//			UserResDTO resDTO = null;
+//			reqDTO.setUserSearchBean(userSearchBean);
+//			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
+//			
+//			if(resDTO.isSuccessful()){
+////				resDTO.setUserResultBean(searchResultBean);
+//				pmUsers = resDTO.getUserList();
+//			}
+//				
+//		} catch (Exception e) {
+////			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
+////			TODO
+//		}		
+		return pmUsers;
+	}
+
 
 	
 	/**
@@ -352,12 +420,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			BpmResponseDTO responseDTO = null;
 			
 			String token = null;
-			String userName = null;
+			String loginId = null;
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
-//				userName = taskSearchBean.getUserId();
+//				loginId = taskSearchBean.user.getLoginId();
 				reqDTO = new BpmRequestDTO();
 				token = getFacesScopes().getBPMAuthenticationCtxToken();
 
@@ -402,11 +470,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
 					resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
 				}
-//			}catch(EpBpmException be){
-//				throw new EpException("Unable to retrieve task list: {0}.", new String[]{be.getMessage()});//TODO
 			}catch(Exception e){
 				e.printStackTrace();
-//				throw new EpException("Unable to retrieve task list: {0}.", new String[]{e.getMessage()});//TODO
 			} finally {
 				bpmSO = null;
 			}
