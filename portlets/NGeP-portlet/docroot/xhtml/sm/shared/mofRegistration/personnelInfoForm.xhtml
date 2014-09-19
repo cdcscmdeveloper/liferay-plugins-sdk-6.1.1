@@ -407,8 +407,10 @@
 							<h:outputText value="#{person.identificationNo}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isEqui']}">
-							<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{person.equityOwner}" />
-							<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{!person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.yes']}"
+								rendered="#{person.equityOwner}" />
+							<h:outputText value="#{lbl['lbl.txt.no']}"
+								rendered="#{!person.equityOwner}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.isAuth']}">
 							<h:outputText value="#{lbl['lbl.txt.yes']}"
@@ -418,11 +420,13 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
-							<h:outputText value="#{lbl['lbl.sm.person.composition.requested']}"
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.requested']}"
 								rendered="#{person.softcertFlg eq '2'}" />
 							<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
 								rendered="#{person.softcertFlg eq '1'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.notapplied']}"
+							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.notapplied']}"
 								rendered="#{person.softcertFlg eq '0'}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
@@ -463,8 +467,6 @@
 							update=":form:tt:personDt , :form:tt:stfSummaryPan " />
 					</div>
 				</p:panel>
-				<ui:include
-						src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
 				<br />
 				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 					<table style="width: 50%">
@@ -490,6 +492,8 @@
 					</table>
 				</p:outputPanel>
 			</p:panel>
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
 		</p:panel>
 	</h:panelGroup>
 
