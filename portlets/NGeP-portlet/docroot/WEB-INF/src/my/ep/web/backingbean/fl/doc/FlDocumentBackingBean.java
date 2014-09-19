@@ -801,7 +801,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										orderInfo.setRole( RoleCode.RECEIVING_OFFICER.value());
+										if(isFlFulfilmentRecevingOfficer()) {
+											orderInfo.setRole( RoleCode.RECEIVING_OFFICER.value());
+										}
 									}
 								}
 							}
@@ -820,7 +822,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										if(isFlFulfilmentSupplier()) {
+											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										}
 									}
 								}
 							}
@@ -840,7 +844,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 								if(null != resDTO.getFlOrder().getStatus()){
 									if(null !=resDTO.getFlOrder().getStatus().getStatusId()){
 										orderInfo.setOrderStatusId(resDTO.getFlOrder().getStatus().getStatusId());
-										orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										if(isFlFulfilmentSupplier()) {
+											orderInfo.setRole( RoleCode.BASIC_SUPPLIER_USER.value());
+										}
 									}
 								}
 							}
@@ -864,11 +870,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 								if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(docType)){
 									orderInfo.setFactored(resDTO.getFlOrder().isFactored());
 								}
-								
 							}
 						}
 					}
-					
 				}
 			}
 		}
