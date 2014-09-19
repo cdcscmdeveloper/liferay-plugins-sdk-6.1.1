@@ -237,6 +237,18 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean zonalTierPrice = false;
 	private boolean emailValidate = false;
 	
+	private boolean chargeLinePanel=false;
+	private boolean programLov=false;
+	private boolean projectLov=false;
+	private boolean votFundDisplay=false;
+	
+	private PmVotFund pmVoteFund;
+	private PmGlAccount gosodo;
+	private PmPrgActivity pmPrgActivity;
+	private PmProject pmProject;
+	private PmSetia pmSetia;
+	private PmSubSetia pmSubSetia;
+	
 /**
 	 * @return the chargeLineItemRoot
 	 */
@@ -1966,6 +1978,148 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setEmailValidate(boolean emailValidate) {
 		this.emailValidate = emailValidate;
 	}
+
+	/**
+	 * @return the chargeLinePanel
+	 */
+	public boolean isChargeLinePanel() {
+		return chargeLinePanel;
+	}
+
+	/**
+	 * @param chargeLinePanel the chargeLinePanel to set
+	 */
+	public void setChargeLinePanel(boolean chargeLinePanel) {
+		this.chargeLinePanel = chargeLinePanel;
+	}
+
+	/**
+	 * @return the pmVoteFund
+	 */
+	public PmVotFund getPmVoteFund() {
+		return pmVoteFund;
+	}
+
+	/**
+	 * @param pmVoteFund the pmVoteFund to set
+	 */
+	public void setPmVoteFund(PmVotFund pmVoteFund) {
+		this.pmVoteFund = pmVoteFund;
+	}
+
+	/**
+	 * @return the gosodo
+	 */
+	public PmGlAccount getGosodo() {
+		return gosodo;
+	}
+
+	/**
+	 * @param gosodo the gosodo to set
+	 */
+	public void setGosodo(PmGlAccount gosodo) {
+		this.gosodo = gosodo;
+	}
+
+	/**
+	 * @return the pmPrgActivity
+	 */
+	public PmPrgActivity getPmPrgActivity() {
+		return pmPrgActivity;
+	}
+
+	/**
+	 * @param pmPrgActivity the pmPrgActivity to set
+	 */
+	public void setPmPrgActivity(PmPrgActivity pmPrgActivity) {
+		this.pmPrgActivity = pmPrgActivity;
+	}
+
+	/**
+	 * @return the pmProject
+	 */
+	public PmProject getPmProject() {
+		return pmProject;
+	}
+
+	/**
+	 * @param pmProject the pmProject to set
+	 */
+	public void setPmProject(PmProject pmProject) {
+		this.pmProject = pmProject;
+	}
+
+	/**
+	 * @return the pmSetia
+	 */
+	public PmSetia getPmSetia() {
+		return pmSetia;
+	}
+
+	/**
+	 * @param pmSetia the pmSetia to set
+	 */
+	public void setPmSetia(PmSetia pmSetia) {
+		this.pmSetia = pmSetia;
+	}
+
+	/**
+	 * @return the pmSubSetia
+	 */
+	public PmSubSetia getPmSubSetia() {
+		return pmSubSetia;
+	}
+
+	/**
+	 * @param pmSubSetia the pmSubSetia to set
+	 */
+	public void setPmSubSetia(PmSubSetia pmSubSetia) {
+		this.pmSubSetia = pmSubSetia;
+	}
+
+	/**
+	 * @return the programLov
+	 */
+	public boolean isProgramLov() {
+		return programLov;
+	}
+
+	/**
+	 * @return the projectLov
+	 */
+	public boolean isProjectLov() {
+		return projectLov;
+	}
+
+	/**
+	 * @param programLov the programLov to set
+	 */
+	public void setProgramLov(boolean programLov) {
+		this.programLov = programLov;
+	}
+
+	/**
+	 * @param projectLov the projectLov to set
+	 */
+	public void setProjectLov(boolean projectLov) {
+		this.projectLov = projectLov;
+	}
+
+	/**
+	 * @return the votFundDisplay
+	 */
+	public boolean isVotFundDisplay() {
+		return votFundDisplay;
+	}
+
+	/**
+	 * @param votFundDisplay the votFundDisplay to set
+	 */
+	public void setVotFundDisplay(boolean votFundDisplay) {
+		this.votFundDisplay = votFundDisplay;
+	}
+
+	
 
 	
 }
