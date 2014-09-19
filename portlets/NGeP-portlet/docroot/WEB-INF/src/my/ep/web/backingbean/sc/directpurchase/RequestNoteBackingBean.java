@@ -1617,9 +1617,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 			List<PmUser> availableApprover	=	userResDTO.getUserList();
 			List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
-			approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
 			
-		    if ( requestNote != null && requestNote.getApprovalUsers().size() > 0) {
+			if ( requestNote != null && requestNote.getApprovalUsers().size() > 0) {
 			   for (int i = 0; i < requestNote.getApprovalUsers().size(); i++) {
 				    selectedApprover.add(requestNote.getApprovalUsers().get(i).getPmUser());
 				    for (int j = 0; j < availableApprover.size(); j++) {
