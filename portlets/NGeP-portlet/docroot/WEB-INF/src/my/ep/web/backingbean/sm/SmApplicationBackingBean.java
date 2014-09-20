@@ -17,6 +17,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -134,6 +135,10 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
+
 @ManagedBean(name = "backingBean")
 @RequestScoped
 public class SmApplicationBackingBean extends
@@ -149,7 +154,6 @@ public class SmApplicationBackingBean extends
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-
 	}
 
 	public void prerenderApplicationForResubmission() {
@@ -205,6 +209,7 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
+		setRevUrl();
 		assignValReqdToFalse();
 		if (!applicationType.equalsIgnoreCase("C")) {
 			log.debug("*** Today ****" + getManagedBean().getToday());
@@ -2785,8 +2790,24 @@ public class SmApplicationBackingBean extends
 
 			for (SmPersonnelAddress addr : shareHolderBean
 					.getSmPersonnelAddresses()) {
+				SmAddress address = new SmAddress();
+				address.setPmCountry(new PmCountry());
+				address.setPmState(new PmState());
+				address.setPmDistrict(new PmDistrict());
+				address.setPmCity(new PmCity());
+				address.setAddress1(addr.getSmAddress().getAddress1());
+				address.setAddress2(addr.getSmAddress().getAddress2());
+				address.setAddress3(addr.getSmAddress().getAddress3());
+				address.setAddress4(addr.getSmAddress().getAddress4());
+				address.getPmCountry().setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
+				address.getPmState().setStateId(addr.getSmAddress().getPmState().getStateId());
+				address.getPmDistrict().setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+				address.getPmCity().setCityId(addr.getSmAddress().getPmCity().getCityId());
+				address.setPostcode(addr.getSmAddress().getPostcode());
+				addr.setSmAddress(address);
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
+					getManagedBean().setShareHolderMailAddr(addr);
 					shareHolderBean.getSmPersonnelAddresses().set(
 							shareHolderBean.getSmPersonnelAddresses().indexOf(
 									addr),
@@ -2794,6 +2815,7 @@ public class SmApplicationBackingBean extends
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
+					getManagedBean().setShareHolderOffAddr(addr);
 					shareHolderBean.getSmPersonnelAddresses().set(
 							shareHolderBean.getSmPersonnelAddresses().indexOf(
 									addr),
@@ -2801,6 +2823,7 @@ public class SmApplicationBackingBean extends
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
+					getManagedBean().setShareHolderResdAddr(addr);
 					shareHolderBean.getSmPersonnelAddresses().set(
 							shareHolderBean.getSmPersonnelAddresses().indexOf(
 									addr),
@@ -2808,6 +2831,7 @@ public class SmApplicationBackingBean extends
 				}
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
+					getManagedBean().setShareHolderPermAddr(addr);
 					shareHolderBean.getSmPersonnelAddresses().set(
 							shareHolderBean.getSmPersonnelAddresses().indexOf(
 									addr),
@@ -5350,5 +5374,23 @@ public class SmApplicationBackingBean extends
 
 	public void setFile(StreamedContent file) {
 		this.file = file;
+	}
+	
+	public void setRevUrl(){
+		FacesContext fCtx = FacesContext.getCurrentInstance(); 
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext() .getRequest(); 
+		ThemeDisplay themeDisplay = (ThemeDisplay) req .getAttribute(WebKeys.THEME_DISPLAY);
+		Layout layout = themeDisplay.getLayout();
+		System.out.println("layout.getFriendlyURL():"+layout.getFriendlyURL());
+		
+		String portalUrl = themeDisplay.getURLPortal();
+		String currentUrl = themeDisplay.getURLCurrent();
+		currentUrl = currentUrl.substring(0, currentUrl.indexOf(layout.getFriendlyURL()));
+		
+		String revSupUrl = portalUrl + currentUrl + "/view-revision-application?applicationNo=" + getManagedBean().getSmAppl().getApplNo() + "_SUP";
+		String revAppUrl = portalUrl + currentUrl + "/view-revision-application?applicationNo=" + getManagedBean().getSmAppl().getApplNo() + "_APP";
+		
+		getManagedBean().setRevSupUrl(revSupUrl);
+		getManagedBean().setRevAppUrl(revAppUrl);
 	}
 }

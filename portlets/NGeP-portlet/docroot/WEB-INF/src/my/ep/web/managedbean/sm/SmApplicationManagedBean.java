@@ -272,6 +272,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean userWithRole;
 	private boolean validEquityLimit;
 	private String today;
+	private String revSupUrl;
+	private String revAppUrl;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2039,6 +2041,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCompExpCats(
 			List<SmCompanyExperienceCat> selectedCompExpCats) {
 		this.selectedCompExpCats = selectedCompExpCats;
+	}
+
+	public String getRevSupUrl() {
+		return revSupUrl;
+	}
+
+	public void setRevSupUrl(String revSupUrl) {
+		this.revSupUrl = revSupUrl;
+	}
+
+	public String getRevAppUrl() {
+		return revAppUrl;
+	}
+
+	public void setRevAppUrl(String revAppUrl) {
+		this.revAppUrl = revAppUrl;
 	}
 
 }

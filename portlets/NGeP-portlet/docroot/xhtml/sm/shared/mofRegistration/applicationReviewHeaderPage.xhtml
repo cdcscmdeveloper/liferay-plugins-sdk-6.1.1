@@ -84,7 +84,7 @@
 			<tr>
 				<td></td>
 				<td style="padding-right: 2px; text-align: center;">
-					<h:commandLink value="View Previous Approved Application" style="float: right;" onclick="doPopup('/web/dashboard/view-revision-application?applicationNo=#{backingBean.managedBean.smAppl.applNo}_APP');return false;" target="_blank">
+					<h:commandLink value="View Previous Approved Application" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revAppUrl}');return false;" target="_blank">
 					</h:commandLink>
 				</td>
 			</tr>
@@ -95,7 +95,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="padding-right: 2px; text-align: center;">				      
-					<h:commandLink value="View Original Application" style="float: right;" onclick="doPopup('/web/dashboard/view-revision-application?applicationNo=#{backingBean.managedBean.smAppl.applNo}_SUP');return false;" target="_blank">
+					<h:commandLink value="View Original Application" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revSupUrl}');return false;" target="_blank">
 					</h:commandLink>
 				</td>
 			</tr>
