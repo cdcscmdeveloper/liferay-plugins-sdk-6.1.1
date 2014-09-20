@@ -226,7 +226,7 @@
 						<p:selectOneRadio  id="stockAvailable"  label="#{lbl['lbl.sc.price.inquiry.stock.avail']}"
 						    disabled="#{purchaseInquiryBackingBean.managedBean.supplierFlag}"
 							value="#{purchaseInquiryBackingBean.managedBean.stockAvailable}"
-						     required="#{!unspscCodeBackingBean.isRequisitioner()}">
+						     required="#{!purchaseInquiryBackingBean.isRequisitioner()}">
 							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.yes']}" itemValue="1" />
 							<f:selectItem itemLabel="#{lbl['lbl.sc.price.inquiry.no']}" itemValue="0" />
 							 <p:ajax event="change" update="respDtl" process="@this" listener="#{purchaseInquiryBackingBean.stockAvailabilityEvent}"  partialSubmit="true"/>
