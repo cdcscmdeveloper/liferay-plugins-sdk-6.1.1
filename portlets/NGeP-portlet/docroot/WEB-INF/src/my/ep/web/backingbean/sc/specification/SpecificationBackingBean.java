@@ -437,7 +437,15 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
-				}
+				} /*
+				 * else {
+				 * 
+				 * if (!resDTO.getScQt().isPanel()) {
+				 * this.getManagedBean().setSuppCriteriaopenList( new
+				 * ArrayList<ScQtCategory>());
+				 * this.getManagedBean().setZoneGeneralTrees( new
+				 * ArrayList<TreeNode>()); } }
+				 */
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 				retriveBusinessOwnerQualificationCriteri();
@@ -450,7 +458,12 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
-				}
+				} /*
+				 * else { this.getManagedBean().setSuppCriteriaopenList( new
+				 * ArrayList<ScQtCategory>()); if (!resDTO.getScQt().isPanel())
+				 * { this.getManagedBean().setZoneGeneralTrees( new
+				 * ArrayList<TreeNode>()); } }
+				 */
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 				retriveBusinessOwnerQualificationCriteri();
@@ -1507,6 +1520,8 @@ public class SpecificationBackingBean extends
 
 					if (null != tenderResDTO.getZoneDetails()
 							&& !tenderResDTO.getZoneDetails().isEmpty()) {
+						this.getManagedBean().setZoneGeneralTrees(
+								new ArrayList<TreeNode>());
 						for (TplSpecZoneDtl zoneDtl : tenderResDTO
 								.getZoneDetails()) {
 							getManagedBean()
@@ -3649,6 +3664,7 @@ public class SpecificationBackingBean extends
 			// this.getManagedBean().setActiveIndex(0);
 			if ((null == this.getManagedBean().getScQt())
 					|| (this.getManagedBean().getScQt().isZonal()
+							&& !this.getManagedBean().getScQt().isPanel()
 							&& null != this.getManagedBean()
 									.getZoneGeneralTrees() && this
 							.getManagedBean().getZoneGeneralTrees().isEmpty())) {
@@ -8901,8 +8917,16 @@ public class SpecificationBackingBean extends
 	 * @return
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
-		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
+		ScQt scQt = this.getManagedBean().getScQt();
+		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
+				&& SourcingConstants.TECHNICAL_DOCTYPE
+						.equalsIgnoreCase(specType)) {
 			validateBusinessOwner(true);
+			this.getManagedBean().setSuppCriteriaopenList(
+					new ArrayList<ScQtCategory>());
+			this.getManagedBean()
+					.setZoneGeneralTrees(new ArrayList<TreeNode>());
+
 		}
 		// retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
 		// retriveBusinessOwnerQualificationCriteri();
@@ -8924,7 +8948,7 @@ public class SpecificationBackingBean extends
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			// Code to construct financial checklist..
-			ScQt scQt = this.getManagedBean().getScQt();
+
 			if (null == scQt) {
 				throw new EpException("Qt id should not be null");
 			}
