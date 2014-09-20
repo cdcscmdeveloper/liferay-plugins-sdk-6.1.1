@@ -5682,13 +5682,15 @@ public class SpecificationBackingBean extends
 					} else {
 
 						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+							delLoc.setDeleted(true);
 							deliveryList.remove(delLoc);
 
 						}
 					}
 				}
-				this.getManagedBean().getDeliveryLocRemoveList()
-						.addAll(locationRemoveList);
+				this.getManagedBean().setDeliveryLocRemoveList(
+						locationRemoveList);
+
 			}
 		} else {
 			for (BriefingZoneBean zonebean : deliveryBean) {
@@ -5707,12 +5709,13 @@ public class SpecificationBackingBean extends
 					} else {
 
 						for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+							delLoc.setDeleted(true);
 							deliveryList.remove(delLoc);
 						}
 					}
 				}
-				this.getManagedBean().getDeliveryLocRemoveList()
-						.addAll(locationRemoveList);
+				this.getManagedBean().setDeliveryLocRemoveList(
+						locationRemoveList);
 			}
 		}
 
@@ -5741,11 +5744,11 @@ public class SpecificationBackingBean extends
 			} else {
 
 				for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
+					delLoc.setDeleted(true);
 					nonzone.remove(delLoc);
 				}
 			}
-			this.getManagedBean().getDeliveryLocRemoveList()
-					.addAll(locationRemoveList);
+			this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 		} finally {
 
 		}
@@ -6674,11 +6677,12 @@ public class SpecificationBackingBean extends
 		if (s2Technical.size() == selects2Tenical.size()) {
 			s2Technical.clear();
 		} else {
-			for (ScQtCheckList checkList : selects2Tenical)
+			for (ScQtCheckList checkList : selects2Tenical) {
+				checkList.setDeleted(true);
 				s2Technical.remove(checkList);
+			}
 		}
-		this.getManagedBean().getChecklistRemoveList()
-				.addAll(checklistRemoveList);
+		this.getManagedBean().setChecklistRemoveList(checklistRemoveList);
 	}
 
 	public void deleteS2Fin() {
@@ -6694,11 +6698,12 @@ public class SpecificationBackingBean extends
 		if (s2Fin.size() == selects2Fin.size()) {
 			s2Fin.clear();
 		} else {
-			for (ScQtCheckList checkList : selects2Fin)
+			for (ScQtCheckList checkList : selects2Fin) {
+				checkList.setDeleted(true);
 				s2Fin.remove(checkList);
+			}
 		}
-		this.getManagedBean().getChecklistRemoveList()
-				.addAll(checklistRemoveList);
+		this.getManagedBean().setChecklistRemoveList(checklistRemoveList);
 
 	}
 
@@ -7759,29 +7764,7 @@ public class SpecificationBackingBean extends
 				scQt.setScQtDeliveryLocs(null);
 			}
 		}
-		List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
-				.getDeliveryLocRemoveList();
-		if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
-			for (int i = 0; i < deliveryRemoveList.size(); i++) {
-				if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
-					deliveryRemoveList.remove(i);
-				}
-			}
 
-		}
-
-		List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
-				.getChecklistRemoveList();
-		if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
-			for (int i = 0; i < checklistRemoveList.size(); i++) {
-				if (null == checklistRemoveList.get(i).getQtChecklistId()) {
-					checklistRemoveList.remove(i);
-				}
-			}
-
-		}
-		reqDTO.setTobeRemoveList(checklistRemoveList);
-		reqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
@@ -7817,6 +7800,29 @@ public class SpecificationBackingBean extends
 			String[] outComes = this.getManagedBean().getOutComes();
 
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
+					.getDeliveryLocRemoveList();
+			if (null != deliveryRemoveList && !deliveryRemoveList.isEmpty()) {
+				for (int i = 0; i < deliveryRemoveList.size(); i++) {
+					if (null == deliveryRemoveList.get(i).getQtDeliveryLocId()) {
+						deliveryRemoveList.remove(i);
+					}
+				}
+
+			}
+
+			List<ScQtCheckList> checklistRemoveList = this.getManagedBean()
+					.getChecklistRemoveList();
+			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+				for (int i = 0; i < checklistRemoveList.size(); i++) {
+					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+						checklistRemoveList.remove(i);
+					}
+				}
+
+			}
+			specReqDTO.setTobeRemoveList(checklistRemoveList);
+			specReqDTO.setTobeRemoveDeliveryLocs(deliveryRemoveList);
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = constructSpecCommitteDtls().getScQt();
@@ -8172,9 +8178,9 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
 		} catch (Exception e) {
-			//e.printStackTrace();
-		}finally{
-			
+			// e.printStackTrace();
+		} finally {
+
 		}
 		/*
 		 * this.getManagedBean().setScQtCheckSt2financeProposalList(checklist);
