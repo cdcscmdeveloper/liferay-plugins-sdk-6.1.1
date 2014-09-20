@@ -49,8 +49,12 @@
 							test="#{backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT}">
 							<ui:include
 								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHolderInfoForm.xhtml" />
-							<ui:include
-								src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+							<c:if
+								test="#{backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT or 
+										backingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
+								<ui:include
+									src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
+							</c:if>
 						</c:if>
 						<div class="nav-wrapper">
 							<table style="width: 100%">
