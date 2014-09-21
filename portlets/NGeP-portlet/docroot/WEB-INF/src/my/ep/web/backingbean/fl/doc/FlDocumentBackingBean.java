@@ -81,7 +81,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
 //import my.ep.constant.BpmOutcomeConst;
 
 /**
@@ -215,28 +214,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			PurchaseRequestBackingBean PrBB=new PurchaseRequestBackingBean();
-			PrBB.getManagedBean().setSelectedTabIndex(0);
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
 			PrBB.getManagedBean().setFlDocId(flDocId);
 			if(null!=buttonVal && !"".equals(buttonVal)){
 				PrBB.getManagedBean().setSubmitButtonStatus(false);
 			}
-			// for selected Approver List
-			if (PrBB.getManagedBean().getApproverModel() == null) {
-				//System.out.println("--renew--");
-				//List<String> source = getAvailableApproverList();
-				List<String> source = new ArrayList<String>();
-				List<String> target = new ArrayList<String>();
-				PrBB.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-			}
-			PrBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-			PrBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
-			PrBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			} else {
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+			}
 			navgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals(FulfilmentConst.DOC_TYPE_CR)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
@@ -259,7 +249,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			}	
+			} else {
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+			}
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -976,7 +968,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-			}else if(isFlFulfilmentApprover()){
+			}
+			if(isFlFulfilmentApprover()){
 				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -986,17 +979,20 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}else if(isFlFulfilmentRecevingOfficer()){
+			}
+			if(isFlFulfilmentRecevingOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-			}else if(isFlFulfilmentPaymentOfficer()){
+			}
+			if(isFlFulfilmentPaymentOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
 		} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-			}else if(isFlFulfilmentApprover()){
+			}
+			if(isFlFulfilmentApprover()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
@@ -1005,10 +1001,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}else if(isFlFulfilmentRecevingOfficer()){
+			}
+			if(isFlFulfilmentRecevingOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-			}else if(isFlFulfilmentPaymentOfficer()){
+			}
+			if(isFlFulfilmentPaymentOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
 		}

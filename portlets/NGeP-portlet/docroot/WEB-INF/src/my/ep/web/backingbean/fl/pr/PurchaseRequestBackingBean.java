@@ -267,7 +267,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
 		}
-		getManagedBean().setItemAddrVoteFundDisp(new FlFulfilmentItemAddr());
+//		getManagedBean().setItemAddrVoteFundDisp(new FlFulfilmentItemAddr());
 		getManagedBean().setDeleteButtonHide(true);
 		
 	}
@@ -350,7 +350,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	}
 
-	private void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
+	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		PurchaseRequestReqDTO scReqDTO = new PurchaseRequestReqDTO();
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
@@ -1664,7 +1664,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					}
 					PmSubSetia pmSubSetia = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId());
 					getManagedBean().setPmSubSetia(pmSubSetia);
-					
 				}
 			}
 		}
