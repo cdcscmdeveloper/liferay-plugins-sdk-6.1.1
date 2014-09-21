@@ -188,6 +188,9 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		List<FlStopInstrItem> stopInstrItems = new ArrayList<FlStopInstrItem>();
 		for (FlDeliveryAddress flDelAddress : getManagedBean().getStopInstr().getFlRequest().getFlDeliveryAddresses()) {
 			for (FlFulfilmentItemAddr itemAddr : flDelAddress.getFlFulfilmentItemAddr()) {
+				if(itemAddr.getOrderedQty().subtract(itemAddr.getChargeReceivedQty()).doubleValue()==0) {
+					continue;
+				}
 				flStopInstrItem = new FlStopInstrItem();
 				flStopInstrItem.setFlFulfilmentItemAddr(itemAddr);
 				flStopInstrItem.setFlFulfilmentItem(itemAddr.getFlFulfilmentItem());
