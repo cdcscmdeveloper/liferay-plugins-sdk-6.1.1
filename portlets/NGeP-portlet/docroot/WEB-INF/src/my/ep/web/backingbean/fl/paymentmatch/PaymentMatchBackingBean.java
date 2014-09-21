@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
@@ -54,7 +55,6 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
-import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
@@ -358,12 +358,14 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 	
 	private void setStopInstrNo(FlFulfilmentOrder flFulfilmentOrder) {
-	 	for(FlStopInstr stopInstr : flFulfilmentOrder.getFlStopInstr()) {
-	 		if(stopInstr.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
-	 			getManagedBean().setStopInstrNo(stopInstr.getStopInstrNo());
-	 			break;
-	 		}
-	 	}
+		IFulfilmentOrderSO fulfilmentOrderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFulfilmentOrderId(flFulfilmentOrder.getFulfilmentOrderId());
+		FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstructionByOrder(reqDTO);
+		if(resDTO.getFlStopInstr()!=null) {
+			getManagedBean().setStopInstrNo(resDTO.getFlStopInstr().getStopInstrNo());
+		}
 	}
 	
 	public void getFactoringBranchDtl(){
