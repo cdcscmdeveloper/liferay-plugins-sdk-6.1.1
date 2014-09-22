@@ -119,7 +119,7 @@
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
 						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.pmVoteFund"
-						update=":form:votCode1,:form:pmActiveLov,:form:projectLov"
+						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="purchaseRequestBackingBean.checkVotFundLov()" 
 						conditionField="votFundType^A"
@@ -159,12 +159,12 @@
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td> 
-					<td>
+					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
 						<p:inputText size="5" id="setiaCode"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="5" id="subSetiaCode"
 						readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" />
+						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td> 
 					<td>
