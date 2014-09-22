@@ -159,12 +159,15 @@
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
-			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
+			<p:tooltip id="tierQtyTtp" for="tierQtyBtn">
+				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}"  />
+			</p:tooltip>
 			<p:message id="qtyMsg" for="qty" display="icon" />
 		</h:panelGroup>
 	</p:column>
@@ -229,9 +232,12 @@
 	</p:column>
 	<p:column style="width:40px;" rendered="#{newable}">
 		<f:facet name="header">
-			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+			<p:commandButton id="addTopBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
+			<p:tooltip id="addTopTtp" for="addTopBtn">
+				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}"  />
+			</p:tooltip>
 		</f:facet>
 		<c:if test="#{isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;" />
@@ -245,15 +251,21 @@
 			</p:menu>
 		</c:if>
 		<c:if test="#{!isSpecificationReq}">
-			<p:commandButton icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
 				update="questionTbl" partialSubmit="true" process="questionTbl" />
 		</c:if>
-		<p:commandButton icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+		<p:tooltip id="addTtp" for="addBtn">
+			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}"  />
+		</p:tooltip>
+		<p:commandButton id="delBtn" icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 			immediate="true" process="@form" oncomplete="#{delConfirmPopup}.show();">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
+		<p:tooltip id="delTtp" for="delBtn">
+			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}"  />
+		</p:tooltip>
 	</p:column>
 </ui:composition>

@@ -61,12 +61,16 @@
 	</p:dataTable>
 	
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.add']}"
+		<p:commandButton id="addTierBtn" value="#{lbl['lbl.btn.add']}"
 			process="@this, tierQtyTbl" partialSubmit="true"
 			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 			oncomplete="tierQtyWidget.paginator.endLink.click();"
 			update="tierQtyTbl" icon="ui-icon-add"
 			rendered="#{editable}" />
+		<p:tooltip id="addTierTtp" for="addTierBtn">
+			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
+		</p:tooltip>
+		
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
 			process="@this, tierQtyTbl" partialSubmit="true"
 			icon="ui-icon-delete"
