@@ -248,6 +248,34 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		scQtDocReports.add(scQtDocReport);
 	}
+	
+	public void deleteDocumentList() {
+		debugLogger("deleteDocumentList");
+		List<ScQtDocReport> docReportsList = this.getManagedBean().getScQtDocReportList();
+		List<ScQtDocReport> selectedReportsList = this.getManagedBean().getSelectedScQtDocReports();
+		List<ScQtDocReport> removeDocumentList = this.getManagedBean().getRemoveDocReports();
+		if (null == removeDocumentList) {
+			removeDocumentList = new ArrayList<ScQtDocReport>();
+		}
+		removeDocumentList.addAll(selectedReportsList);
+		if (docReportsList.size() == selectedReportsList.size()) {
+			docReportsList.clear();
+		} else {
+			for (ScQtDocReport report : selectedReportsList) {
+				report.setDeleted(true);
+				docReportsList.remove(report);
+			}
+		}
+		if (null != removeDocumentList && !removeDocumentList.isEmpty()) {
+			for (int i = 0; i < removeDocumentList.size(); i++) {
+				if (null == removeDocumentList.get(i).getDocId()) {
+					removeDocumentList.remove(i);
+				}
+			}
+		}
+		this.getManagedBean().setScQtDocReportList(docReportsList);
+		this.getManagedBean().setRemoveDocReports(removeDocumentList);
+	}
 
 	public void handleFileAttachment(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileAttachment");
