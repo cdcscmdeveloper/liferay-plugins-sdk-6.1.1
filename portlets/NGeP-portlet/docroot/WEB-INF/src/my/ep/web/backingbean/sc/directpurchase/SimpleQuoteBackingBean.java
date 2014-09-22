@@ -1098,7 +1098,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		   debugLogger("byBusinessEvent");
 		   if (getManagedBean().isByLocality()) {
 			   getManagedBean().setTabActiveIndex(0);
-			   localityLocLevelEvent(getManagedBean().getLocationLevel());
+			   ptjLocality(getManagedBean().getLocationLevel());
 		   } else{
 			   getManagedBean().setByLocality(Boolean.FALSE);
 			   if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
@@ -2155,9 +2155,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				 .append("minute(s)")
 				 .append(" ")
 				 .append("Proceed?");
+				 getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
 				
 			 } else{
-				 message.append("End date is over than current time, please change the end date to more than current time."); 
+				 message.append("End date and time cannot be less than current date and time. Please change the end date and time to more than current time."); 
+				 getManagedBean().setConformDlgBtnFlag(Boolean.FALSE);
 			 }
 			 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
 			 getManagedBean().setPromptMessage(message.toString());
