@@ -337,8 +337,10 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	String cityName = smAddress.getPmCity().getCityName();
     	String stateName = smAddress.getPmState().getStateName();
     	String countryName = smAddress.getPmCountry().getCountryName();
-    	
     	String regDate = supplier.getCreatedDate().toString();
+    	
+    	FacesScopes fs = new FacesScopes();
+    	String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
     	
     	List<SmPersonnel> personnelList = new ArrayList<SmPersonnel>();
     	for(SmPersonnel personnel : supplier.getSmAppl().getSmPersonnels()) {
@@ -366,6 +368,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("registrationDate", regDate);
     	
     	context.put("personnelList", personnelList);
+    	context.put("hostUrl", hostUrl);
     	
     	StringWriter output = new StringWriter();
     	
