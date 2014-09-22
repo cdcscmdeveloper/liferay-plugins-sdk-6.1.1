@@ -632,7 +632,7 @@
 					<property name="columnName" value="financingType.pmParameterDescs[0].codeName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.sub.setia.code" />
+					<property name="bundleKey" value="lbl.fl.charge.cp" />
 					<property name="searchable" value="false" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
