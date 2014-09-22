@@ -3230,7 +3230,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		UserReqDTO reqDTO = new UserReqDTO();
 		if(createdBy != null){
 			reqDTO.setUserId(createdBy);
-			UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
+			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
 
 			if(resDTO.getPmUser() != null){
 				userName = resDTO.getPmUser().getUserName();
