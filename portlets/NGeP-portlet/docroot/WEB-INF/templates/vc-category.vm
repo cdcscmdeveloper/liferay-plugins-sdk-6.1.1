@@ -84,14 +84,16 @@
 		  	<th width='200' >KETERANGAN</th >
 		  	<th width='200' >STATUS</th >
 		 </tr>
+		#set( $count = 1 )	
 		#foreach( $supplierCategory in $categoryList )
 		 <tr >
-		  	<td width='20' >$foreach.index</td>
+		  	<td width='20' >$count</td>
 		  	<td width='200' >$supplierCategory.changedDate</td>
 		  	<td width='100' >$supplierCategory.pmCategoryL1.categoryL1Code$supplierCategory.pmCategoryL1.categoryL1Code$supplierCategory.pmCategoryL3.categoryL3Code</td>
 		  	<td width='400' >$supplierCategory.pmCategoryL3.categoryName</td>
 		  	<td width='100' >AKTIF</td>
 		 </tr>
+			#set( $count = $count + 1 )
 		#end
 		
 		</table>
