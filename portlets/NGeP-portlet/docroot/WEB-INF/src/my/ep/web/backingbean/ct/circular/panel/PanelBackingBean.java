@@ -1291,15 +1291,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void showGeneralZoneLocationPopup() {
 
 		try{
-	          
-			   Long locationLevel = this.getManagedBean().getSelectedPanelItems().getLocationLevelId().getParameterId();
-	            List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-		        for (PmParameterDesc paramDesc : localParamDesc) {
-		        	if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
-		                  getManagedBean().setRootZoanlTree(LocationSingleton.getInstance().buildLocationPopupTree(
-		                		  getCountryId(), null, null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class));
-			         }
-               }
+			    getManagedBean().setRootZoanlTree(LocationSingleton.getInstance().buildLocationPopupTree(
+		              getCountryId(), null, null,getManagedBean().getSelectedPanelItems().getLocationLevelId().getParameterCode(),CtPanelZoneDtl.class));
 		         this.getManagedBean().setZoneName(null);
 		         this.getManagedBean().setEditZone(false);
 		}catch(Exception ex){}
