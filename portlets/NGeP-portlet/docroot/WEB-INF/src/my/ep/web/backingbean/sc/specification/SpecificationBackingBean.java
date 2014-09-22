@@ -497,8 +497,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtPanelItem(panelItem);
 			this.getManagedBean().setCtCircularVer(circularVer);
 			this.getManagedBean().setSelectpanelItem(panelList);
-		} catch (Exception e) {
-			//e.printStackTrace();
 		} finally {
 
 		}
@@ -1753,6 +1751,7 @@ public class SpecificationBackingBean extends
 
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setPrepareSpec(false);
 
 			specSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -1781,6 +1780,7 @@ public class SpecificationBackingBean extends
 							.getScQtCheckSt2financeProposalList().isEmpty()) {
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setPrepareSpec(false);
 
 				specSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
