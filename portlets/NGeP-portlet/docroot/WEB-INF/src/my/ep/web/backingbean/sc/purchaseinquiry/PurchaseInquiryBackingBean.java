@@ -823,11 +823,12 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 initializeRemarks(prInquiry);
 		 
 		 // Weather stock is available or not
-		
-		 if(!prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
-			 FacesScopes face = new FacesScopes();
-			 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,
-					 null, ResourceBundleUtils.getMessage("lbl.sc.purchase.inquiry.out.of.stock", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		 if(prInquiry.getIsStockAvailable() != null) {
+			 if(!prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
+				 FacesScopes face = new FacesScopes();
+				 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,
+						 null, ResourceBundleUtils.getMessage("lbl.sc.purchase.inquiry.out.of.stock", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			 } 
 		 }
 		 
 		 getCurrentStatus(res.getDocStatus().longValue()); 
