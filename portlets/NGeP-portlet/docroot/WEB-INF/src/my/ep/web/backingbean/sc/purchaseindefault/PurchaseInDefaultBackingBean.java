@@ -273,7 +273,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(getManagedBean().getPurchaseInDefault().getCreatedBy());
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance().getOSBServiceObject(INtfSO.class);
 			FacesScopes facesScopes = new FacesScopes();

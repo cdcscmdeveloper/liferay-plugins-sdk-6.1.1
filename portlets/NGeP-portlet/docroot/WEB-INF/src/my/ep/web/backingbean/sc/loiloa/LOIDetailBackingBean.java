@@ -931,7 +931,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
 */
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
 			System.out.println("User id and Name" + user.getUserId() + "|"
@@ -1020,7 +1020,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
 */
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
 			System.out.println("User id and Name" + user.getUserId() + "|"
@@ -1133,7 +1133,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
 */
-			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
 			System.out.println("User id and Name" + user.getUserId() + "|"

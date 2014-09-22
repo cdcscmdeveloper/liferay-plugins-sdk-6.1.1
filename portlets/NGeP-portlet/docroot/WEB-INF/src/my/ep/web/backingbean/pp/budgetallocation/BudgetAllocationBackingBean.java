@@ -969,7 +969,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				UserReqDTO reqDTO = new UserReqDTO();
 				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 				reqDTO.setUserId(userId);
-				UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
+				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
 //				if(resDTO.isSuccessful()){
 					user = resDTO.getPmUser();
 //				}
