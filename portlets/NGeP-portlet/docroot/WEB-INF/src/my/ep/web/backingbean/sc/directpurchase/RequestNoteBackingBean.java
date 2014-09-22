@@ -1663,7 +1663,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		UserReqDTO reqDTO = new UserReqDTO();
 		if(createdBy != null){
 			reqDTO.setUserId(createdBy);
-			UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
+			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
 
 			if(resDTO.getPmUser() != null){
 				 user = resDTO.getPmUser();
