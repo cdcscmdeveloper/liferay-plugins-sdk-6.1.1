@@ -1167,6 +1167,8 @@ public class QTDetailBackingBean extends
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			reqDTO.setSpecType(QTConstants.FINANCIAL_SPEC_TYPE);
+			reqDTO.setPrepareSpec(true);
+			
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
 			if (resDto.getFinSpecResultBean().getResultList() != null && !resDto.getFinSpecResultBean().getResultList().isEmpty()) {
@@ -1185,6 +1187,8 @@ public class QTDetailBackingBean extends
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
 			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setPrepareSpec(true);
+			
 			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 			resDto = specSO.retrieveSpecDetails(reqDTO);
 			if (resDto.getSpecResultBean().getResultList() != null && !resDto.getSpecResultBean().getResultList().isEmpty()) {

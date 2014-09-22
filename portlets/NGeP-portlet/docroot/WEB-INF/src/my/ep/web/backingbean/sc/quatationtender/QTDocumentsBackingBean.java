@@ -872,6 +872,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 			reqDTO.setQtId(qt.getQtId());
 			reqDTO.setSpecType(QTConstants.TECHNICAL_SPEC_TYPE);
+			reqDTO.setPrepareSpec(true);
+			
 			SpecificationResDTO resDto = specSO.retrieveSpecDetails(reqDTO);
 			techSpecList = resDto.getSpecResultBean().getResultList();
 		} finally {
