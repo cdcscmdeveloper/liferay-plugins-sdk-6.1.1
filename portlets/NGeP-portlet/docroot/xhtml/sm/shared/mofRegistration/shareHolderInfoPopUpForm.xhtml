@@ -29,7 +29,8 @@
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{shrOffCountry.countryId}"
 							itemLabel="#{shrOffCountry.countryName}" />
-						<p:ajax event="change" partialSubmit="true" process="@this" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							listener="#{backingBean.assignPersonNationality}" />
 					</p:selectOneMenu> <p:message id="equiPerNationalMsg" for="equiPerNational"
 						showSummary="true" showDetail="false" display="icon" /></td>
 
