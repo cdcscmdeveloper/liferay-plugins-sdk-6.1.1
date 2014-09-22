@@ -25,15 +25,16 @@
 								update="@form"/>
 							
 							<ui:repeat var="bpmAction" value="#{suppFinalMeetingBackingBean.managedBean.outComes}">
-								<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-								
-								<p:commandButton value="#{lbl[buttonLabel]}"  
-									styleClass="ui-button"
-									icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-									action="#{suppFinalMeetingBackingBean.submitAction}"
-									partialSubmit="true"
-									process="@form"
-									update="@form" />
+								<ui:fragment rendered="#{bpmAction ne '~'}">
+									<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+									<p:commandButton value="#{lbl[buttonLabel]}" 
+										styleClass="ui-button"
+										style="float:right;" 
+										process="@all" 
+										partialSubmit="true"
+										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+										action="#{suppFinalMeetingBackingBean.submitAction(bpmAction)}" />
+								</ui:fragment>
 							</ui:repeat>
 						</div>
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
@@ -118,13 +119,18 @@
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
 									<h:outputText value="#{lbl['lbl.sc.chairperson']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
-									<h:outputText value="#{lbl['lbl.sc.secretary']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />
-									<h:outputText value="#{lbl['lbl.sc.member']}" rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}" />
+								
+									<p:selectOneMenu id="meetingRoleId" required="true" 
+										rendered="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson}"
+										value="#{committeeMember.memberRole.parameterCode}" style="width: 110px;margin-bottom: 5px;">
+										<f:selectItems value="#{suppFinalMeetingBackingBean.getMemberRoleTypeDropdownValues()}" />
+									</p:selectOneMenu>
+									<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
 									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
-										style="width: 110px;margin-bottom: 5px;"
+										style="width: 110px;margin-bottom: 5px;" required="true" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
 										<p:ajax event="change" 
