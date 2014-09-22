@@ -209,7 +209,6 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType, boolean fromBpm,
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
-		setRevUrl();
 		assignValReqdToFalse();
 		if (!applicationType.equalsIgnoreCase("C")) {
 			log.debug("*** Today ****" + getManagedBean().getToday());
@@ -357,7 +356,7 @@ public class SmApplicationBackingBean extends
 						SmApplicationUtil.getStaffList(smAppl));
 			}
 			// getManagedBean().setSmAppl(smAppl);
-
+			
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
@@ -381,6 +380,7 @@ public class SmApplicationBackingBean extends
 			if (fromBpm
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
+				setRevUrl();
 				getManagedBean()
 						.setMaxReviewCount(
 								assignMaxReviewCount(applicationType,
@@ -2790,21 +2790,21 @@ public class SmApplicationBackingBean extends
 
 			for (SmPersonnelAddress addr : shareHolderBean
 					.getSmPersonnelAddresses()) {
-				SmAddress address = new SmAddress();
-				address.setPmCountry(new PmCountry());
-				address.setPmState(new PmState());
-				address.setPmDistrict(new PmDistrict());
-				address.setPmCity(new PmCity());
-				address.setAddress1(addr.getSmAddress().getAddress1());
-				address.setAddress2(addr.getSmAddress().getAddress2());
-				address.setAddress3(addr.getSmAddress().getAddress3());
-				address.setAddress4(addr.getSmAddress().getAddress4());
-				address.getPmCountry().setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
-				address.getPmState().setStateId(addr.getSmAddress().getPmState().getStateId());
-				address.getPmDistrict().setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
-				address.getPmCity().setCityId(addr.getSmAddress().getPmCity().getCityId());
-				address.setPostcode(addr.getSmAddress().getPostcode());
-				addr.setSmAddress(address);
+//				SmAddress address = new SmAddress();
+//				address.setPmCountry(new PmCountry());
+//				address.setPmState(new PmState());
+//				address.setPmDistrict(new PmDistrict());
+//				address.setPmCity(new PmCity());
+//				address.setAddress1(addr.getSmAddress().getAddress1());
+//				address.setAddress2(addr.getSmAddress().getAddress2());
+//				address.setAddress3(addr.getSmAddress().getAddress3());
+//				address.setAddress4(addr.getSmAddress().getAddress4());
+//				address.getPmCountry().setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
+//				address.getPmState().setStateId(addr.getSmAddress().getPmState().getStateId());
+//				address.getPmDistrict().setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+//				address.getPmCity().setCityId(addr.getSmAddress().getPmCity().getCityId());
+//				address.setPostcode(addr.getSmAddress().getPostcode());
+//				addr.setSmAddress(address);
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
 					getManagedBean().setShareHolderMailAddr(addr);
