@@ -18,7 +18,7 @@
 <table>
     <tr align='center'>
         <td>
-            <img src='http://localhost:8080/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
+            <img src='http://$hostUrl/NGeP-portlet/resources/ep/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
         </td>
     </tr>
     <tr align='center'>
