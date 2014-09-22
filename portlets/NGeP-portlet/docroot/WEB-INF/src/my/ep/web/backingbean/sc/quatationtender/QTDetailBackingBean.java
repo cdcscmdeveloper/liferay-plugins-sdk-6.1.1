@@ -1036,6 +1036,7 @@ public class QTDetailBackingBean extends
 			}
 		}
 		quationTenderReqDTO.setRemoveDeductions(deductionRemoveList);
+		quationTenderReqDTO.setRemoveDocReports(this.getManagedBean().getRemoveDocReports());
 		return quationTenderReqDTO;
 	}
 
@@ -2521,28 +2522,41 @@ public class QTDetailBackingBean extends
 
 	public void retrieveSecretaryNameByCommType(AjaxBehaviorEvent event) {
 		debugLogger("retrieveSecretaryNameByCommType");
-		long id = (long) event.getComponent().getAttributes().get("value");
-		log.info("Id : " + id);
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterId(id);
-		ParameterResDTO parameterResDTO = getParameterSO().retrieveParameterById(parameterReqDTO);
-		String commType = parameterResDTO.getPmParameter().getParameterCode();
-		CommitteReqDTO reqDTO = new CommitteReqDTO();
-		reqDTO.setCommitteeType(commType);
-		reqDTO.setFinalizationSecratary(true);
-		CommitteResDTO resDTO = null;
-		ICommitteSO committeSO;
-		try {
-			committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-			resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
-			ScCommittee scCommittee = resDTO.getCommittee();
-			List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
-			/*ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
-			List<ScCommitteeMember> commMembers = resDTO
-					.getCommMemberResultBean().getResultList();*/
-			this.getManagedBean().getQt().setFinalizationSecratery(commMembers.get(0).getPmUser());
-		} finally {
-			committeSO = null;
+		Long id = (Long) event.getComponent().getAttributes().get("value");
+		if (id != null) {
+			List<PmParameter> list = this.getManagedBean().getFinalizationSecratary();
+			if (list != null) {
+				for (PmParameter parameter : list) {
+					if (parameter.getParameterId().equals(id)) {
+						this.getManagedBean().getQt().setFinalizationCommitte(parameter);
+					}
+				}
+			}
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterId(id);
+			ParameterResDTO parameterResDTO = getParameterSO().retrieveParameterById(parameterReqDTO);
+			String commType = parameterResDTO.getPmParameter().getParameterCode();
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setCommitteeType(commType);
+			reqDTO.setFinalizationSecratary(true);
+			CommitteResDTO resDTO = null;
+			ICommitteSO committeSO;
+			try {
+				committeSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				resDTO = committeSO.retrieveCommitteByQtIdNCommType(reqDTO);
+				if (resDTO.getCommittee() != null) {
+					ScCommittee scCommittee = resDTO.getCommittee();
+					List<ScCommitteeMember> commMembers = scCommittee.getScCommitteeMembers();
+					for (ScCommitteeMember member : commMembers) {
+						this.getManagedBean().getQt().setFinalizationSecratery(member.getPmUser());
+					}
+				}
+				/*ScQtCommittee qtCommitte = resDTO.getScQtCommittee();
+				List<ScCommitteeMember> commMembers = resDTO
+						.getCommMemberResultBean().getResultList();*/
+			} finally {
+				committeSO = null;
+			}
 		}
 	}
 
