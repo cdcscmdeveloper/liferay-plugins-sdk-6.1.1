@@ -6,6 +6,7 @@ package my.ep.web.managedbean.sc.directpurchase;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -34,6 +35,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -112,6 +114,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean piRNChecker = Boolean.TRUE;
     
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+    private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -845,5 +848,19 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setDeleteRequestNoteDtls(
 			List<ScRequestNoteDtl> deleteRequestNoteDtls) {
 		this.deleteRequestNoteDtls = deleteRequestNoteDtls;
+	}
+	
+	/**
+	 * @return the zoneDtlMap
+	 */
+	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
+		return zoneDtlMap;
+	}
+	
+	/**
+	 * @param zoneDtlMap the zoneDtlMap to set
+	 */
+	public void setZoneDtlMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
+		this.zoneDtlMap = zoneDtlMap;
 	}
 }
