@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -57,6 +58,8 @@ import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -1011,7 +1014,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStateSO.class);
 			StateReqDTO reqDTO = new StateReqDTO();
-			reqDTO.setCountryId(1l);
+			reqDTO.setCountryId(getCountryId());
 			StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
 			
 		    items = new SelectItem[resDTO.getStateList().size()+1];
@@ -1268,31 +1271,38 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     return null;   
 	}
 	
+	public Long getCountryId(){
+		
+		CountryReqDTO reqDTO= new CountryReqDTO();
+		ICountrySO countrySO = null;
+	
+		   try{
+	              reqDTO.setCountryCode("MY");
+	              countrySO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+	              CountryResDTO resDTO  = countrySO.retrieveCountryByCode(reqDTO);
+	              return resDTO.getPmCountry().getCountryId();
+		   }catch(Exception ex){}
+		   finally{
+			   countrySO = null;
+		   }
+	         return null;
+	}
+	
 	public void showGeneralZoneLocationPopup() {
 
-		Long locationLevel = this.getManagedBean().getSelectedPanelItems().getLocationLevelId().getParameterId();
-
-		if (locationLevel == null) {
-			locationLevel = 121L;
-		}
-
-		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
-		for (PmParameterDesc paramDesc : localParamDesc) {
-
-			if (paramDesc.getPmParameter().getParameterId()
-					.equals(locationLevel)) {
-
-				getManagedBean().setRootZoanlTree(
-						LocationSingleton.getInstance().buildLocationPopupTree(
-								1L, null, null,
-								paramDesc.getPmParameter().getParameterCode(),
-								CtPanelZoneDtl.class));
-			}
-
-		}
-		
-		this.getManagedBean().setZoneName(null);
-		this.getManagedBean().setEditZone(false);
+		try{
+	          
+			   Long locationLevel = this.getManagedBean().getSelectedPanelItems().getLocationLevelId().getParameterId();
+	            List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+		        for (PmParameterDesc paramDesc : localParamDesc) {
+		        	if (paramDesc.getPmParameter().getParameterId().equals(locationLevel)) {
+		                  getManagedBean().setRootZoanlTree(LocationSingleton.getInstance().buildLocationPopupTree(
+		                		  getCountryId(), null, null,paramDesc.getPmParameter().getParameterCode(),CtPanelZoneDtl.class));
+			         }
+               }
+		         this.getManagedBean().setZoneName(null);
+		         this.getManagedBean().setEditZone(false);
+		}catch(Exception ex){}
 
 	}
 	
@@ -1380,18 +1390,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		
 		if(districts  != null && districts.size() > 0){
 		   getManagedBean().setRootZoanlTree(
-				LocationSingleton.getInstance().buildLocationPopupTree(1L,
+				LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
 						states, districts,ParameterConst.LOCATION_LEVEL_DISTRICT,
 						CtPanelZoneDtl.class));
 		}else{
 			getManagedBean().setRootZoanlTree(
-					LocationSingleton.getInstance().buildLocationPopupTree(1L,
+					LocationSingleton.getInstance().buildLocationPopupTree(getCountryId(),
 							states, districts,ParameterConst.LOCATION_LEVEL_STATE,
 							CtPanelZoneDtl.class));
 		}
-		
-		
-		
+
 		int i = index;
 		
 		this.getManagedBean().setIndex(i);
