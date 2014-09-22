@@ -1364,7 +1364,7 @@ public class CommitteBackingBean extends
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(getManagedBean().getCommitteMember().getPmUser()
 				.getUserId());
-		UserResDTO userResDTO = iUserSO.retrieveUserDetails(reqDTO);
+		UserResDTO userResDTO = iUserSO.retrieveUserByUserId(reqDTO);
 		PmUser pmUser = userResDTO.getPmUser();
 
 		ScCommitteeMember committeeMember = getManagedBean()
