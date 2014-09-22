@@ -437,15 +437,17 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
-				} /*
-				 * else {
-				 * 
-				 * if (!resDTO.getScQt().isPanel()) {
-				 * this.getManagedBean().setSuppCriteriaopenList( new
-				 * ArrayList<ScQtCategory>());
-				 * this.getManagedBean().setZoneGeneralTrees( new
-				 * ArrayList<TreeNode>()); } }
-				 */
+				} else {
+
+					if (!resDTO.getScQt().isPanel()) {
+						this.getManagedBean().setSuppCriteriaopenList(
+								new ArrayList<ScQtCategory>());
+
+					}
+					this.getManagedBean().setZoneGeneralTrees(
+							new ArrayList<TreeNode>());
+				}
+
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
 				retriveBusinessOwnerQualificationCriteri();
@@ -458,16 +460,21 @@ public class SpecificationBackingBean extends
 				resDTO = specSO.saveQTDtl(specReqDTO);
 				if (!isSpecComplete) {
 					renewSesionObject();
-				} /*
-				 * else { this.getManagedBean().setSuppCriteriaopenList( new
-				 * ArrayList<ScQtCategory>()); if (!resDTO.getScQt().isPanel())
-				 * { this.getManagedBean().setZoneGeneralTrees( new
-				 * ArrayList<TreeNode>()); } }
-				 */
+				} else {
+
+					if (!resDTO.getScQt().isPanel()) {
+						this.getManagedBean().setSuppCriteriaopenList(
+								new ArrayList<ScQtCategory>());
+
+					}
+					this.getManagedBean().setZoneGeneralTrees(
+							new ArrayList<TreeNode>());
+				}
+
 				this.getManagedBean().setScQt(resDTO.getScQt());
-				retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
-				retriveBusinessOwnerQualificationCriteri();
-				retriveTechnicalSpecification();
+				// retriveSpecdetails(resDTO.getScQt().getQtId(), "QT");
+				// retriveBusinessOwnerQualificationCriteri();
+				// retriveTechnicalSpecification();
 				retriveFinancialSpecification();
 				break;
 			case 4:
@@ -490,6 +497,8 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtPanelItem(panelItem);
 			this.getManagedBean().setCtCircularVer(circularVer);
 			this.getManagedBean().setSelectpanelItem(panelList);
+		} catch (Exception e) {
+			//e.printStackTrace();
 		} finally {
 
 		}
@@ -8917,15 +8926,11 @@ public class SpecificationBackingBean extends
 	 * @return
 	 */
 	public String completeTemplateSpecDetails(String flowType, String specType) {
-		ScQt scQt = this.getManagedBean().getScQt();
+		
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
 			validateBusinessOwner(true);
-			this.getManagedBean().setSuppCriteriaopenList(
-					new ArrayList<ScQtCategory>());
-			this.getManagedBean()
-					.setZoneGeneralTrees(new ArrayList<TreeNode>());
 
 		}
 		// retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
@@ -8948,7 +8953,7 @@ public class SpecificationBackingBean extends
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
 			// Code to construct financial checklist..
-
+			ScQt scQt = this.getManagedBean().getScQt();
 			if (null == scQt) {
 				throw new EpException("Qt id should not be null");
 			}
