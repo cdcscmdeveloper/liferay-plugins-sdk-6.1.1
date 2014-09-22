@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="prInqPanel">
 	    <div align="left" class="header-info">
 		<table style="width: 100%">
@@ -121,6 +122,9 @@
 					  </table>
 
 					</td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" />
+					</td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel 
@@ -176,6 +180,9 @@
 									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
 							</p:selectOneRadio></td>
 						 <td><p:message id="procTypeMsg" for="procType" display="icon"/></td>	
+						 <td>
+							<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
+						</td>
 					  </tr>
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">

@@ -41,11 +41,17 @@
 		<div class="ppRightBtn">
 			<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 				<p:commandButton immediate="true"
+					id="backButton"
 					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 					icon="ui-icon-back" partialSubmit="true" process="@this"
 					style="float:left;"
 					rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
-					action="#{simpleQuoteBackingBean.backToPervious}" />
+					action="#{simpleQuoteBackingBean.backToPervious}" >
+					<p:tooltip for="backButton">
+						<h:outputText value="#{lbl['lbl.sc.itemsearch.tooltip']}" escape="false" />
+					</p:tooltip>
+					
+				</p:commandButton>
 
 				<p:commandButton immediate="true"
 					value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"

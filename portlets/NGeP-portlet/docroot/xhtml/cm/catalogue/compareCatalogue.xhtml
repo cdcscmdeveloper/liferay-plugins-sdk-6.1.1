@@ -55,10 +55,13 @@
 							<td colspan="5" style="background-color: #f5f5f5;width:270px;">
 							  
 								<p:menuButton value="">
-									<p:menuitem value="#{lbl['lbl.sc.sq']}" icon="ui-icon-plus"
+									<p:menuitem id="simpleQuoteId" value="#{lbl['lbl.sc.sq']}" icon="ui-icon-plus"
 										action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierItemId ,false , catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-										rendered="#{unspscCodeBackingBean.requisitioner}" />
+										rendered="#{unspscCodeBackingBean.requisitioner}" /> 
+										<p:tooltip for="simpleQuoteId">
+											<h:outputText value="#{lbl['lbl.sc.sq.tooltip']}" escape="false" />
+										</p:tooltip>
 									<p:menuitem value="#{lbl['lbl.sc.purchae.inquiry']}"
 										icon="ui-icon-plus"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

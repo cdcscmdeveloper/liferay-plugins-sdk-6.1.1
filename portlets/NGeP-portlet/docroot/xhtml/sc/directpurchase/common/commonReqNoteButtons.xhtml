@@ -9,9 +9,15 @@
 	  <div class="ppRightBtn">
 	   <c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" 
+	           	   id="backButton"
 	               icon="ui-icon-back" partialSubmit="true" process="@this"
 				   immediate="true" action="#{requestNoteBackingBean.backToPervious}"  
-				   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
+				   rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}">
+				
+					<p:tooltip for="backButton">
+						<h:outputText value="#{lbl['lbl.sc.itemsearch.tooltip']}" escape="false" />
+					</p:tooltip>
+				</p:commandButton>
 						
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
 				   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

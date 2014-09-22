@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:dialog id="addToCartPopup" widgetVar="addToCartPopup"
 		header="#{lbl['lbl.sc.add.to.cart']}" width="580 " height="480" resizable="true"
 		closable="false"
@@ -76,6 +77,9 @@
 							</tr>
 						</table>
 					</td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" />
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}"  /> 
@@ -90,6 +94,9 @@
 								listener="#{requestNoteBackingBean.procurementTypeEvent}"
 								process="@this" />
 						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
+					</td>
 				</tr>
 				
 				<tr>

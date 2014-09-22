@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="sqinfoId" header="#{lbl['lbl.ss.simple.quote.information']}" toggleable="true">
 	<p:spacer height="5px" />
 	  <table style="width:100%;">
@@ -17,6 +18,10 @@
 							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio>
 					<p:message id="panelMsg" for="panel" display="icon" /> </td>
+				<td>
+				
+					<ac:iconTooltip value="#{lbl['lbl.sc.sq.panel.tooltip']}" />
+				</td>
 
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.created.by']}" /></td>
@@ -51,6 +56,9 @@
 					</p:selectOneRadio>
 					<p:message id="procTypeMsg" for="procurementType" display="icon" />
 					</td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
+				</td>
 			</tr>
 			<tr>
 			<td colspan="4"><p:outputPanel id="justId">
@@ -100,6 +108,9 @@
 						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
 					</p:selectOneRadio>
 					<p:message id="zonalMsg" for="zonal" display="icon" /></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.sc.sq.zonal.tooltip']}" />
+					</td>
 			</tr>
 			
 			<tr>
@@ -169,6 +180,9 @@
 						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" partialSubmit="true" listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
 							
 					</p:selectOneRadio><p:message id="noofquoteMsg" for="noOfQuote" display="icon" /> </td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" />
+				</td>
 			</tr>
 		</table>
 	</p:panel>
