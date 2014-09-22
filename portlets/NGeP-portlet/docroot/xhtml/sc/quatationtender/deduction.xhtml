@@ -65,7 +65,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{qTDeductionPaymentBackingBean.deleteRowAction(qTDeductionPaymentBackingBean.managedBean.scQtDeductionList, qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction)}"
+				action="#{qTDeductionPaymentBackingBean.deleteDeductionPaymentAction}"
 				update="deductPaymentTblId" />
 		</div>
 
