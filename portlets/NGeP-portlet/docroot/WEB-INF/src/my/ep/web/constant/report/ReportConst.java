@@ -354,8 +354,20 @@ public class ReportConst {
 	public static final String SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL = "LstOfComplaintsAgainstSuppl";
 	public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME = "lbl.rpt.sm.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME";
 	public static final String SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL = "ListOfBlacklistedDirectorOrOwner";
-	public static final String SM_LST_CONTACT_PERSON_RPT_NAME = "lbl.rpt.sm.SM_LST_CONTACT_PERSON_RPT_NAME";
-	public static final String SM_LST_CONTACT_PERSON_RPT_VAL = "LstOfContactPerson";
+	public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME = "lbl.rpt.sm.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME";
+	public static final String SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_VAL = "LstOfContactPersonBnkAcBrnch";
+	public static final String SM_THRESHLD_SUPP_TRNS_VAL_RPT_NAME = "lbl.rpt.sm.SM_THRESHLD_SUPP_TRNS_VAL_RPT_NAME";
+	public static final String SM_THRESHLD_SUPP_TRNS_VAL_RPT_VAL = "ThresholdSupplierTransactionValueRpt";
+	public static final String SM_SUPP_PEROFRM_RPT_NAME = "lbl.rpt.sm.SM_SUPP_PEROFRM_RPT_NAME";
+	public static final String SM_SUPP_PEROFRM_RPT_VAL = "SupplierPerformanceRpt";
+	public static final String SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_NAME";	
+	public static final String SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_VAL = "LstOrStatOfApplReqFortheSiteVisit";
+	public static final String SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_NAME = "lbl.rpt.sm.SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_NAME";
+	public static final String SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_VAL = "LstOfSiteVisitOfficerAndSiteVisitLocationRpt";
+	public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME = "lbl.rpt.sm.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME";
+	public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL = "LstOrStatOfPendSiteVisit/PerformSiteVisit";
+	public static final String SM_DETAILS_OF_APPLICATION_RPT_NAME = "lbl.rpt.sm.SM_DETAILS_OF_APPLICATION_RPT_NAME";
+	public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";
 	//SM Module report end
 	public static final String EMPTY_VAL = "";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";

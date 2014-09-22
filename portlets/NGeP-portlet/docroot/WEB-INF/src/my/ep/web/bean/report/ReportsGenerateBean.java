@@ -1,4 +1,6 @@
 package my.ep.web.bean.report;
+
+
 import my.ep.web.constant.report.ReportConst;
 
 /**
@@ -89,7 +91,15 @@ public class ReportsGenerateBean {
 		private boolean caseNoView = false;
 		private boolean extraTwoColumnView = false;	
 		private boolean compApplStatusView = false;		
-		private boolean smCompanyNameView = false;		
+		private boolean smCompanyNameView = false;	
+		private boolean categoryCodeView = false;
+		private boolean siteVisitOfficerView = false;
+		private boolean releaseDateView = false;
+		private boolean applicationDateView = false;
+		private boolean receiveDateView = false;
+		private boolean expiryDateView = false;
+		private boolean printedDateView = false;
+		
 		/*SM end*/
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
@@ -140,7 +150,50 @@ public class ReportsGenerateBean {
 		private String pmoTotVar=ReportConst.EMPTY_VAL;
 		private String fromDateVar=ReportConst.EMPTY_VAL;
 		private String toDateVar=ReportConst.EMPTY_VAL;
+
 		
+		public boolean isPrintedDateView() {
+			return printedDateView;
+		}
+		public void setPrintedDateView(boolean printedDateView) {
+			this.printedDateView = printedDateView;
+		}
+		public boolean isExpiryDateView() {
+			return expiryDateView;
+		}
+		public void setExpiryDateView(boolean expiryDateView) {
+			this.expiryDateView = expiryDateView;
+		}
+		public boolean isReceiveDateView() {
+			return receiveDateView;
+		}
+		public void setReceiveDateView(boolean receiveDateView) {
+			this.receiveDateView = receiveDateView;
+		}
+		public boolean isApplicationDateView() {
+			return applicationDateView;
+		}
+		public void setApplicationDateView(boolean applicationDateView) {
+			this.applicationDateView = applicationDateView;
+		}
+		public boolean isReleaseDateView() {
+			return releaseDateView;
+		}
+		public void setReleaseDateView(boolean releaseDateView) {
+			this.releaseDateView = releaseDateView;
+		}
+		public boolean isSiteVisitOfficerView() {
+			return siteVisitOfficerView;
+		}
+		public void setSiteVisitOfficerView(boolean siteVisitOfficerView) {
+			this.siteVisitOfficerView = siteVisitOfficerView;
+		}
+		public boolean isCategoryCodeView() {
+			return categoryCodeView;
+		}
+		public void setCategoryCodeView(boolean categoryCodeView) {
+			this.categoryCodeView = categoryCodeView;
+		}
 		public boolean isSmCompanyNameView() {
 			return smCompanyNameView;
 		}
