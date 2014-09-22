@@ -748,7 +748,7 @@ public class SPDetailBackingBean extends
 				attachment.setPrefixFileName(getManagedBean()
 						.getQtProposal().getProposalNo());
 
-				uploadAttachment(event.getFile(), attachment);
+				uploadAttachmentWithEncryption(event.getFile(), attachment);
 
 				scQtProposalChecklist
 						.setScQtProposalChecklistAttachment(attachment);
@@ -770,7 +770,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	protected void uploadAttachment(UploadedFile file, ScAttachment attachment)
+	protected void uploadAttachmentWithEncryption(UploadedFile file, ScAttachment attachment)
 			throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
 //		byte[] fileBytes = file.getContents();
@@ -894,8 +894,8 @@ public class SPDetailBackingBean extends
 			input.close();
 			fos.flush();
 			fos.close();
-			
-			downloadFileByInputStream(input, fileName);
+			 FileInputStream input1 = new FileInputStream(new File("C:\\Windows\\Temp\\PV.pdf"));
+			downloadFileByInputStream(input1, fileName);
 		}
 //
 //		// use to upload back to database
