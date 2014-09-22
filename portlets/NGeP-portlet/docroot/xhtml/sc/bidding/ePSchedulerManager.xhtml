@@ -1,0 +1,115 @@
+<ui:composition 
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:poll update="@([id$=jobBeanDt])" interval="1"/>
+		
+		<p:panel header="#{schedulerManagerBB.managedBean.scheduler.schedulerName} jobs List" toggleable="true">
+		
+			<p:panel id="jobListPanel">
+				<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar" value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
+					rowKey="#{jobBean}" rowIndexVar="index">
+				
+				<ac:paginator for="jobBeanDt" />
+				
+				<p:column headerText="Job Name">
+					<h:outputText value="#{jobBean.jobKey.name}" />
+				</p:column>
+
+				<p:column headerText="Job Group">
+					<h:outputText value="#{jobBean.jobKey.group}" />
+				</p:column>
+				
+				<p:column headerText="Job Description">
+					<h:outputText value="#{jobBean.description}" />
+				</p:column>
+				
+				<p:column headerText="Status">
+					<h:outputText value="#{jobBean.status}" />
+				</p:column>
+				
+				<p:column headerText="Health State">
+					<h:outputText value="#{jobBean.state}" />
+				</p:column>
+				
+				<p:column headerText="Fired Time">
+					<h:outputText value="#{jobBean.trigger.previousFireTime}">
+				      <f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+				  </h:outputText>
+				</p:column>
+				
+				<p:column headerText="Next Fire Time">
+					<h:outputText value="#{jobBean.trigger.nextFireTime}" rendered="#{jobBean.trigger.nextFireTime!=null}">
+				      <f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+				  </h:outputText>
+				</p:column>
+				
+				<p:column headerText="Action">
+					<p:commandLink id="resumePauseActionId"
+						partialSubmit="true" process="@this"
+						action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}" update="@([id$=jobBeanDt])" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<h:outputText value="#{jobBean.action}" />
+					</p:commandLink>
+				</p:column>
+				
+				</p:dataTable>
+			</p:panel>
+		
+		</p:panel>
+		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
+		toggleable="true">
+
+		<p:dataTable id="biddingList"
+			value="#{schedulerManagerBB.managedBean.currentDayBids}" var="bid"
+			lazy="true">
+
+			<ac:paginator for="biddingList"></ac:paginator>
+
+			<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
+				<h:outputText value="#{bid.bidNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.document.no']}">
+				<h:outputText value="#{bid.scBid.docNo}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.document.title']}">
+				<h:outputText value="#{bid.scBid.docTitle}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bid.start']}">
+				<h:outputText id="bidStart"  value="#{bid.startDate}" >
+					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bid.end']}">
+
+				<h:outputText id="bidEnd" value="#{bid.endDate}">
+					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"  />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.status']}">
+
+				<p:outputLabel style="float : left"
+					value="#{schedulerManagerBB.getStatusDescById(bid.pmStatus.statusId)}" />
+			</p:column>
+			</p:dataTable>
+			</p:panel>
+		
+	</ui:define>
+	
+</ui:composition>
