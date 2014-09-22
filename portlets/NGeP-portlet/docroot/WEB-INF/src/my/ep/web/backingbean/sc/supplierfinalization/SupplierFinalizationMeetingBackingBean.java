@@ -52,6 +52,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -68,6 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchCondition;
@@ -129,10 +131,9 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		debugLogger("preRenderView");
 
 		try {
-			//SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
-			//Long qtId = Long.valueOf(dataType.getQtId());
-			
-			Long qtId = 2347L;
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			Long qtId = Long.valueOf(dataType.getQtId());
+
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
 
@@ -262,11 +263,22 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		try {
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			List<ScQtMeeting> selectedMeetingList = getManagedBean().getMeetingMultiSelect();
+			
+			
 			if (meetingList.size() == selectedMeetingList.size()) {
 				meetingList.clear();
 			} else {
-				for (ScQtMeeting meeting : selectedMeetingList)
+				for (ScQtMeeting meeting : selectedMeetingList){
+					List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
+					if(deletedMeetingList == null){
+						getManagedBean().setDeletedMeetingList(new ArrayList<ScQtMeeting>());
+					}
 					meetingList.remove(meeting);
+					
+					meeting.setDeleted(true);
+					getManagedBean().getDeletedMeetingList().add(meeting);
+				}
+				
 			}
 		} finally {
 		}
@@ -329,8 +341,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		return items;
 	}
 	
-public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String code) {
-		
+	public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String code) {
 		List<ScCommitteeMember> committeeMemberList = getManagedBean().getCommitteeMembersList();
 		for(ScCommitteeMember member : committeeMemberList){
 			if(scCommitteeMember.getPmUser().equals(member.getPmUser())){
@@ -382,29 +393,35 @@ public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String 
 	public void committeeSearchAction() {
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		
-		SearchFilterBean ministrySearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+		//temporarily comment out.
+		/*SearchFilterBean ministrySearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 		ministrySearchBean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
 		ministrySearchBean.setSearchValue(getManagedBean().getScQt().getPmOrgProfile().getOrgProfileId());
-		searchBean.getDataFilterBeans().add(ministrySearchBean);
+		searchBean.getDataFilterBeans().add(ministrySearchBean);*/
 		
-		SearchFilterBean roleCodeSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+		//should not filter by role, need to appoint the role, check how bo is done
+		/*SearchFilterBean roleCodeSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 		roleCodeSearchBean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
 		
 		String roleCode = "";
 		if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A) 
 			|| committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
 			roleCode = RoleCode.QC_MEMBER.value();
+			
 		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)){
 			roleCode = RoleCode.PBA_MEMBER.value();
+			
 		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)){
 			roleCode = RoleCode.PBB_MEMBER.value();
+			
 		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)){
 			roleCode = RoleCode.FPB_MEMBER.value();
+			
 		}else if(committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)){
 			roleCode = RoleCode.FPB_MEMBER.value();
 		}
 		roleCodeSearchBean.setSearchValue(roleCode);
-		searchBean.getDataFilterBeans().add(roleCodeSearchBean);
+		searchBean.getDataFilterBeans().add(roleCodeSearchBean);*/
 		
 		if (getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())) {
 			SearchFilterBean usernameSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -963,6 +980,9 @@ public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String 
 				scQtCommittee.setScQtMeetings(meetingList);
 			}
 			
+			List<ScQtMeeting> deletedMeetingList = this.getManagedBean().getDeletedMeetingList();
+			reqDTO.setDeletedMeetingList(deletedMeetingList);
+			
 			List<ScQtCommitteRemarks> remarksList=	this.getManagedBean().getQtCommitteeRemarks();
 			List<ScQtCommitteRemarks> committeeRemarks = null;
 			if (isNotNullOREmpty(remarksList)) {
@@ -1011,6 +1031,7 @@ public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String 
 			oldScCommittee.setRecordStatus(false);
 			
 			ScCommittee newScCommittee = new ScCommittee();
+			newScCommittee.setCommitteeId(null);
 			newScCommittee.setCommitteeType(oldScCommittee.getCommitteeType());
 			PmStatus status = new PmStatus();
 			status.setStatusId(QTStatusConst.CM_COMPLETE);
