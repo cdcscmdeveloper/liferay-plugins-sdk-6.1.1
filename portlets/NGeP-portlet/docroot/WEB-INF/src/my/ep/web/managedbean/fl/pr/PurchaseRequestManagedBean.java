@@ -44,6 +44,8 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
+import my.ep.web.backingbean.fl.pr.ZonesBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -249,6 +251,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmSetia pmSetia;
 	private PmSubSetia pmSubSetia;
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
+	
+	private	TreeNode	rootZoneTree;
+	private TreeNode selectedTreeNode;
+	private List<FLSupplierItemVO>	supplierItemPriceList = new ArrayList<FLSupplierItemVO>();
+	
+	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
+	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -2132,6 +2141,77 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemAddrVoteFundDisp(FlFulfilmentItemAddr itemAddrVoteFundDisp) {
 		this.itemAddrVoteFundDisp = itemAddrVoteFundDisp;
+	}
+
+	/**
+	 * @return the rootZoneTree
+	 */
+	public TreeNode getRootZoneTree() {
+		return rootZoneTree;
+	}
+
+	/**
+	 * @return the selectedTreeNode
+	 */
+	public TreeNode getSelectedTreeNode() {
+		return selectedTreeNode;
+	}
+
+	/**
+	 * @return the selectedZoneTree
+	 */
+	public List<TreeNode> getSelectedZoneTree() {
+		return selectedZoneTree;
+	}
+
+	/**
+	 * @param rootZoneTree the rootZoneTree to set
+	 */
+	public void setRootZoneTree(TreeNode rootZoneTree) {
+		this.rootZoneTree = rootZoneTree;
+	}
+
+	/**
+	 * @param selectedTreeNode the selectedTreeNode to set
+	 */
+	public void setSelectedTreeNode(TreeNode selectedTreeNode) {
+		this.selectedTreeNode = selectedTreeNode;
+	}
+
+
+	/**
+	 * @param selectedZoneTree the selectedZoneTree to set
+	 */
+	public void setSelectedZoneTree(List<TreeNode> selectedZoneTree) {
+		this.selectedZoneTree = selectedZoneTree;
+	}
+	
+	/**
+	 * @return the beans
+	 */
+	public List<ZonesBean> getBeans() {
+		return beans;
+	}
+	/**
+	 * @param beans the beans to set
+	 */
+	public void setBeans(List<ZonesBean> beans) {
+		this.beans = beans;
+	}
+
+	/**
+	 * @return the supplierItemPriceList
+	 */
+	public List<FLSupplierItemVO> getSupplierItemPriceList() {
+		return supplierItemPriceList;
+	}
+
+	/**
+	 * @param supplierItemPriceList the supplierItemPriceList to set
+	 */
+	public void setSupplierItemPriceList(
+			List<FLSupplierItemVO> supplierItemPriceList) {
+		this.supplierItemPriceList = supplierItemPriceList;
 	}
 
 	
