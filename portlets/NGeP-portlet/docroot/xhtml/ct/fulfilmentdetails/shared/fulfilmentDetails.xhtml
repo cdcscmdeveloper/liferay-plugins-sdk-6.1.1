@@ -30,7 +30,8 @@
 			</p:inputText>	
 			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}"  rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" />
 			<p:inputText for="signBy"  value="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.signedDate}"
-			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;">
+			   rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" style="width:170px;"
+			   label="#{lbl['lbl.ct.delivery.period']}" >
 			   <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
 			<h:panelGrid columns="2" style="float:right;" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
