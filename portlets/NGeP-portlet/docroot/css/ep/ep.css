@@ -1681,6 +1681,11 @@ important;
 	padding: 5px;
 }
 
+.flDocSearchWidth {
+	width: 180px;
+	padding: 5px;
+}
+
 .border0 {
 	border: 0px !important;
 }
