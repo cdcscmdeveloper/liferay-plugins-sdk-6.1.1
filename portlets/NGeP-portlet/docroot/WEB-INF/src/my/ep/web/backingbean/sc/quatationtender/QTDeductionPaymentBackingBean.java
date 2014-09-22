@@ -86,6 +86,35 @@ public class QTDeductionPaymentBackingBean extends
 		getManagedBean().setScQtDeductionList(scQtDeductions);
 	}
 
+	public void deleteDeductionPaymentAction() {
+		debugLogger("deleteDeductionPaymentAction");
+		List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
+		List<ScQtDeduction> selectedList = new ArrayList<ScQtDeduction>();
+		ScQtDeduction selectedDeduction = this.getManagedBean().getSelectedScQtDeduction();
+		selectedList.add(selectedDeduction);
+		List<ScQtDeduction> removeDeductionList = this.getManagedBean().getRemoveDeductions();
+		if (null == removeDeductionList) {
+			removeDeductionList = new ArrayList<ScQtDeduction>();
+		}
+		removeDeductionList.addAll(selectedList);
+		if (deductionList.size() == selectedList.size()) {
+			deductionList.clear();
+		} else {
+			for (ScQtDeduction qtDeduction : selectedList){
+				qtDeduction.setDeleted(true);
+				deductionList.remove(qtDeduction);
+				
+			}
+		}
+		/*if (null != selectedList && !selectedList.isEmpty()) {
+			for (int i = 0; i < selectedList.size(); i++) {
+				deductionList.remove(i);
+			}
+		}*/
+		this.getManagedBean().setScQtDeductionList(deductionList);
+		this.getManagedBean().setRemoveDeductions(removeDeductionList);
+	}
+	
 	public void addDeductionClauseAction() {
 		debugLogger("addDeductionClauseAction");
 		ScQtDeduction selectedScQtDeduction = this.getManagedBean()
