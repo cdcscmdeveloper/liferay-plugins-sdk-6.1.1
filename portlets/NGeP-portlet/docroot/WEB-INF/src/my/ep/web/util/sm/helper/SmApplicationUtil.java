@@ -21,10 +21,12 @@ import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
@@ -48,6 +50,8 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
+import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -88,6 +92,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.persistence.entity.sm.SmSvAddress;
+import my.ep.persistence.entity.sm.SmSvCategory;
+import my.ep.persistence.entity.sm.SmSvOffice;
+import my.ep.persistence.entity.sm.SmSvTask;
+import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -1297,7 +1306,7 @@ public class SmApplicationUtil {
 		}
 	}
 
-	private static PmCountry retrievePmCountryById(Long countryId) {
+	public static PmCountry retrievePmCountryById(Long countryId) {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
@@ -1721,6 +1730,107 @@ public class SmApplicationUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
 
 		return resDTO.getPmParameter();
+	}
+
+	public static boolean siteVisitDataUpdate(
+			SmApplicationManagedBean managedBean) {
+		SmSvTask svTask = new SmSvTask();
+		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
+		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
+		svTask.setSmAppl(managedBean.getSmAppl());
+		log.info("** Basic Office ***"
+				+ managedBean.getBasicCompanyFacility().getSmAddress()
+						.getAddress1() + " -- Id -- "
+				+ managedBean.getBasicCompanyFacility().getFacilityId());
+		SmSvOffice svOff = new SmSvOffice();
+		svOff.setSmSvTask(svTask);
+		svOff.setSmFacility(managedBean.getBasicCompanyFacility());
+		svTask.setSmSvOffice(svOff);
+		for (SmFacility fac : managedBean.getSelectedFactoryFacilities()) {
+			SmSvAddress facAddr = new SmSvAddress();
+			facAddr.setSmSvTask(svTask);
+			facAddr.setSmAddress(fac.getSmAddress());
+			addrList.add(facAddr);
+		}
+		for (SmSupplierBranch br : managedBean.getSelectedBranches()) {
+
+			SmSvAddress brAddr = new SmSvAddress();
+			brAddr.setSmSvTask(svTask);
+			brAddr.setSmAddress(br.getSmAddress());
+			addrList.add(brAddr);
+		}
+		for (SmAssociateCompany assoc : managedBean.getSelectedAssocCompanies()) {
+			SmSvAddress asocAddr = new SmSvAddress();
+			asocAddr.setSmSvTask(svTask);
+			asocAddr.setSmAddress(assoc.getSmAddress());
+			addrList.add(asocAddr);
+		}
+		svTask.setSmSvAddresses(addrList);
+		List<PmParameter> catParam = new ArrayList<PmParameter>();
+		for (SmSupplierCategory cat : managedBean.getSelectedCategories()) {
+			if (!catParam.contains(cat.getPmCategoryL3().getCategoryTypeCode())) {
+				catParam.add(cat.getPmCategoryL3().getCategoryTypeCode());
+
+			}
+			SmSvCategory svCat = new SmSvCategory();
+			svCat.setSmSvTask(svTask);
+			svCat.setPmCategoryL1(cat.getPmCategoryL1());
+			svCat.setPmCategoryL2(cat.getPmCategoryL2());
+			svCat.setPmCategoryL3(cat.getPmCategoryL3());
+			smSvCategories.add(svCat);
+
+		}
+		svTask.setSmSvCategories(smSvCategories);
+		List<SmSvTemplate> templates = new ArrayList<SmSvTemplate>();
+		for (PmParameter param : catParam) {
+			if (param.getParameterCode() == SupplierManagementConst.CAT_TYPE_TRANSPORTATION
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_WORKSHOP
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_INSURANCE
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_DOCKYARD
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_MANUFACTURING
+					|| param.getParameterCode() == SupplierManagementConst.CAT_TYPE_READING_MATERIAL_FROM_OVERSEA) {
+				SmSvTemplate temp = new SmSvTemplate();
+				temp.setPmParameter(param);
+				temp.setSmSvTask(svTask);
+				templates.add(temp);
+			}
+		}
+
+		if (managedBean.getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+			PmParameter applType = SmCommonUtil.retrieveParameterByTypeAndCode(
+					ParameterTypeConst.CATEGORY_TYPE,
+					SupplierManagementConst.CAT_TYPE_BUMIPUTERA,
+					new FacesScopes().getUserLocale().getLanguage());
+			SmSvTemplate temp = new SmSvTemplate();
+			temp.setPmParameter(applType);
+			temp.setSmSvTask(svTask);
+			templates.add(temp);
+		}
+		svTask.setSmSvTemplates(templates);
+		return updateSiteVisitTask(svTask);
+
+	}
+
+	private static boolean updateSiteVisitTask(SmSvTask svTask) {
+		ISiteAssignSO siteSO = null;
+		boolean updateSuccess = true;
+		try {
+			// Save or update to DB
+			siteSO = (ISiteAssignSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISiteAssignSO.class);
+			SiteAssignReqDTO reqDto = new SiteAssignReqDTO();
+			reqDto.setSmSvTask(svTask);
+			SiteAssignResDTO resDTO = siteSO.updateSiteVisitAssignment(reqDto);
+			updateSuccess = resDTO.isSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+			updateSuccess = false;
+			throw new EpException(MessageConst.ERROR_722506);
+		} finally {
+			siteSO = null;
+		}
+		return updateSuccess;
 	}
 
 }
