@@ -116,10 +116,12 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -141,6 +143,7 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
+import my.ep.web.util.fl.helper.LocationSingleton;
 //import my.ep.persistence.entity.pm.common.PmProject;
 
 /**
@@ -2657,6 +2660,21 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setPriceType(getManagedBean().getPmPriceType());
 		PurchaseRequestResDTO purResDTO = purchaseRequestSO.getSupplierItemByReqItemIdNSupplierId(reqDTO);
 		getManagedBean().setReqItemInfoList(purResDTO.getSupplierItemPriceList());
+		List<FLSupplierItemVO> supplierItems=new ArrayList<FLSupplierItemVO>();
+		if(purResDTO.getSupplierItemPriceList() != null && purResDTO.getSupplierItemPriceList().size() >0){
+			for (ScSupplierItemPrice scSupplierItemPrice : purResDTO.getSupplierItemPriceList() ) {
+				if(null != scSupplierItemPrice.getTplSpecZone()){
+					TplSpecZoneDtl tplSpecZoneDtl = scSupplierItemPrice.getTplSpecZone();
+						if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
+							FLSupplierItemVO itemPriceVO=new FLSupplierItemVO();
+							itemPriceVO.setSupplierItemPrice(scSupplierItemPrice);
+							itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+							supplierItems.add(itemPriceVO);
+						}
+					getManagedBean().setSupplierItemPriceList(supplierItems);
+				}
+			}
+		}	
 		
 	}
 	

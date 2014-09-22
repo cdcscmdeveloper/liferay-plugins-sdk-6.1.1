@@ -496,26 +496,40 @@
 		<h:panelGroup rendered="#{!purchaseRequestBackingBean.managedBean.standardPrice}">
 		<p:panel id="reqItemInfoPanel" header="ZONE/TIER PRICE DETAIL" toggleable="false" >
 		<p:dataTable id="reqItemInfoDt" var="reqItemInfoList"
-			value="#{purchaseRequestBackingBean.managedBean.reqItemInfoList}"
+			value="#{purchaseRequestBackingBean.managedBean.supplierItemPriceList}"
+			scrollable="true" scrollHeight="150"
 			rowKey="#{purchasedItem}">
 			<ac:paginator for="reqItemInfoDt" />
 			<p:column headerText="Zone" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
-				<h:outputText value="#{reqItemInfoList.tplSpecZone.zoneName}" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}"/>
+				<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
+							<p:treeNode type="state">
+								<h:outputText value="#{location.pmState.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.pmDivision.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.pmDistrict.districtName}" />
+							</p:treeNode>
+						</p:tree>
 			</p:column>
 			<p:column headerText="From Qty." style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice }">
-				<h:outputText value="#{reqItemInfoList.fromQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<h:outputText value="#{reqItemInfoList.supplierItemPrice.fromQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>			
 			</p:column>
 			<p:column headerText="To Qty" style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
-				<h:outputText value="#{reqItemInfoList.toQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+				<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>			
 			</p:column>
 			<p:column headerText="Price Offered(RM)" style="text-align:right" >
-				<h:outputText value="#{reqItemInfoList.itemPrice}" styleClass="colFloatRight" >
+				<h:outputText value="#{reqItemInfoList.supplierItemPrice.itemPrice}" styleClass="colFloatRight" >
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</h:outputText>
@@ -523,5 +537,7 @@
 		</p:dataTable>
 		</p:panel>
 		</h:panelGroup>
+			
+		
 	</p:dialog>
 </ui:composition>
