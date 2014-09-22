@@ -462,7 +462,7 @@
 	</p:dialog>
 	<p:dialog id="reqItemInfoDialog" header="REQUEST ITEM INFORMATION"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
-		modal="true" width="630" resizable="false">
+		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Item Name" /></td>
@@ -497,7 +497,7 @@
 		<p:panel id="reqItemInfoPanel" header="ZONE/TIER PRICE DETAIL" toggleable="false" >
 		<p:dataTable id="reqItemInfoDt" var="reqItemInfoList"
 			value="#{purchaseRequestBackingBean.managedBean.supplierItemPriceList}"
-			scrollable="true" scrollHeight="150"
+			scrollable="true" scrollHeight="200"
 			rowKey="#{purchasedItem}">
 			<ac:paginator for="reqItemInfoDt" />
 			<p:column headerText="Zone" rendered="#{purchaseRequestBackingBean.managedBean.zonalPrice || purchaseRequestBackingBean.managedBean.zonalTierPrice}">
