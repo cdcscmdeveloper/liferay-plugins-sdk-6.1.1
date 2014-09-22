@@ -45,7 +45,6 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.web.backingbean.fl.pr.FLSupplierItemVO;
-import my.ep.web.backingbean.fl.pr.ZonesBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -257,7 +256,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<FLSupplierItemVO>	supplierItemPriceList = new ArrayList<FLSupplierItemVO>();
 	
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
-	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -2185,19 +2183,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSelectedZoneTree(List<TreeNode> selectedZoneTree) {
 		this.selectedZoneTree = selectedZoneTree;
 	}
-	
-	/**
-	 * @return the beans
-	 */
-	public List<ZonesBean> getBeans() {
-		return beans;
-	}
-	/**
-	 * @param beans the beans to set
-	 */
-	public void setBeans(List<ZonesBean> beans) {
-		this.beans = beans;
-	}
 
 	/**
 	 * @return the supplierItemPriceList
@@ -2213,8 +2198,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 			List<FLSupplierItemVO> supplierItemPriceList) {
 		this.supplierItemPriceList = supplierItemPriceList;
 	}
-
-	
 
 	
 }
