@@ -69,7 +69,6 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1028,6 +1027,15 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setQtdetail(scQt);
 		quationTenderReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 		quationTenderReqDTO.setToBeRemoveList(this.getManagedBean().getToBeRemoveList());
+		List<ScQtDeduction> deductionRemoveList = this.getManagedBean().getRemoveDeductions();
+		if (null != deductionRemoveList && !deductionRemoveList.isEmpty()) {
+			for (int i = 0; i < deductionRemoveList.size(); i++) {
+				if (null == deductionRemoveList.get(i).getQtDeductionId()) {
+					deductionRemoveList.remove(i);
+				}
+			}
+		}
+		quationTenderReqDTO.setRemoveDeductions(deductionRemoveList);
 		return quationTenderReqDTO;
 	}
 
@@ -1620,7 +1628,7 @@ public class QTDetailBackingBean extends
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
 						// qtApproval.setScQtApprovalAttachment(null);
-						qtApproval.setScQt(this.getManagedBean().getQt());
+						//qtApproval.setScQt(this.getManagedBean().getQt());
 
 						/*
 						 * // BUDGET_APPROVAL if

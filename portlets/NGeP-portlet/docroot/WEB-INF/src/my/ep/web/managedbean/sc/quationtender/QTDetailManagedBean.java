@@ -437,6 +437,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String actionType;
 	private String bsvZoneindx="0";
 	private List<ScQtApproval> toBeRemoveList;
+	private List<ScQtDeduction> removeDeductions;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -469,18 +470,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 	private void getPTJApproverNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
 		userReqDto.setRoleCode(RoleCode.APPROVER.value());
-		if(getPmOrgProfile()!= null){
-			userReqDto.setOrgProfileId(getPmOrgProfile().getOrgProfileId());
-		}
-		
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> availableApprover = userResDTO.getUserList();
-		
 		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,selectedApprover);
+		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,
+				selectedApprover);
 	}
 
 	public PmOrgProfile getOrgProfile() {
@@ -2605,6 +2604,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setToBeRemoveList(List<ScQtApproval> toBeRemoveList) {
 		this.toBeRemoveList = toBeRemoveList;
+	}
+
+	public List<ScQtDeduction> getRemoveDeductions() {
+		return removeDeductions;
+	}
+
+	public void setRemoveDeductions(List<ScQtDeduction> removeDeductions) {
+		this.removeDeductions = removeDeductions;
 	}
 
 }
