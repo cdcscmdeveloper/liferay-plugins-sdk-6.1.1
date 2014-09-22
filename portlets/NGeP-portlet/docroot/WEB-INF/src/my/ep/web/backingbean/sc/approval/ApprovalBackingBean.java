@@ -228,6 +228,12 @@ public class ApprovalBackingBean extends
 	public void deleteUploadFile() {
 		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
 	}
+	
+	public void deleteFile() {
+		TabBean bean = this.getManagedBean().getSelectedApprovalTabBean();
+		this.getManagedBean().setScQtApproval(bean.getScQtApproval());
+		getManagedBean().getScQtApproval().setScQtApprovalAttachment(null);
+	}
 
 	/**
 	 * determineIcon for displaying image icon in pid
