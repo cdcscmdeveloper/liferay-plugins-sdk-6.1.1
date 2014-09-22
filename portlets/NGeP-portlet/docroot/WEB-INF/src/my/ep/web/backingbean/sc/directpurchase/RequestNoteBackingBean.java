@@ -2051,7 +2051,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setJustRequired(Boolean.FALSE);
 	}
 	
-	public void supplierLister(Long supplierId,Long priceTypeId , ScRequestNoteDtl requestNoteDtl , Long assignedUserId , Long deliveryTermId) {
+	public void supplierLister(Long supplierId, Long priceTypeId, ScRequestNoteDtl requestNoteDtl, Long assignedUserId, Long deliveryTermId) {
 		debugLogger("supplierLister");
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
@@ -2063,18 +2063,19 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 						if(requestSupplierItem.getRequestSupplierItemId() != null){
 							requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
-							RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
-							if(requestNoteResTO.getSupplierItem() != null ){
-								ScRequestSupplierItem scRequestSupplierItem = requestNoteResTO.getSupplierItem();
-								List<ScSupplierItemPrice>	supplierItemPrices  = scRequestSupplierItem.getSupplierItemPrices();
-								if(supplierItemPrices != null && supplierItemPrices.size()>0){
-									requestSupplierItem.setSupplierItemPrices(supplierItemPrices);
+							if(requestSupplierItem.getSupplierItemPrices() == null){
+								RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
+								if(requestNoteResTO.getSupplierItem() != null ){
+									ScRequestSupplierItem scRequestSupplierItem = requestNoteResTO.getSupplierItem();
+									List<ScSupplierItemPrice>	supplierItemPrices  = scRequestSupplierItem.getSupplierItemPrices();
+									if(supplierItemPrices != null && supplierItemPrices.size()>0){
+										requestSupplierItem.setSupplierItemPrices(supplierItemPrices);
+									}
 								}
 							}
 						}
 
 						if(priceTypeId != null && priceTypeId > 0){
-
 							if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size()>0){
 
 								for (ScSupplierItemPrice scSupplierItemPrice : requestSupplierItem.getSupplierItemPrices()) {

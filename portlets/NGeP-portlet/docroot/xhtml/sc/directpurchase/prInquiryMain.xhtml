@@ -47,6 +47,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	                  
 	                       <c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 								<p:commandButton
+								    rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable eq 1}"
 									value="#{lbl['lbl.sc.common.proceed.btn']}"
 									icon="ui-icon-submit"
 									onstart="blockWidget.show();" oncomplete="blockWidget.hide();"

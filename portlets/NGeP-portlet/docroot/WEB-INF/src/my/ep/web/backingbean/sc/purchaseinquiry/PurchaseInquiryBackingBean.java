@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -28,6 +29,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
+import my.ep.biz.service.tpl.spec.ISpecZoneLocSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -46,6 +48,8 @@ import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
+import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -98,6 +102,7 @@ import com.liferay.portal.util.PortalUtil;
 @RequestScoped
 public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<PurchaseInquiryManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseInquiryBackingBean.class);
+	public static final String ZONE_SEPARATOR = "_";
     public PurchaseInquiryBackingBean() {
 		super();
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -816,6 +821,15 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 		 getManagedBean().setScPrInquiry(prInquiry);
 		 initializeRemarks(prInquiry);
+		 
+		 // Weather stock is available or not
+		
+		 if(!prInquiry.getIsStockAvailable().equals(ParameterConst.PI_STOCK_AVAILABILITY)){
+			 FacesScopes face = new FacesScopes();
+			 FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,
+					 null, ResourceBundleUtils.getMessage("lbl.sc.purchase.inquiry.out.of.stock", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+		 }
+		 
 		 getCurrentStatus(res.getDocStatus().longValue()); 
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
@@ -940,27 +954,86 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 		private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
 			TplSpecZoneDtl specZoneDtl = null;
+			
 			if(supplierZone != null) {
-				if(supplierZone.getCmSupplierZoneDtls() != null) {
-					specZoneDtl = new TplSpecZoneDtl();
-					specZoneDtl.setZoneName(supplierZone.getSuppZoneName());
-					ScPIZone zone = getManagedBean().getScPIZone();
-					List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();
-					for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {
-						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
-						specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
-						specZoneLoc.setPmState(zoneDtl.getPmState());
-						specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
-						specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
-						zoneLocs.add(specZoneLoc);
+				if(supplierZone.getCmSupplierZoneDtls() != null && supplierZone.getCmSupplierZoneDtls().size()>0) {
+					Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
+					StringBuilder zoneKey = new StringBuilder();
+					String suppZoneName = supplierZone.getSuppZoneName();
+					ScPrInquiry scPrInquiry = getManagedBean().getScPrInquiry();
+
+					zoneKey.append(supplierZone.getSuppZoneId());
+					zoneKey.append(ZONE_SEPARATOR);
+					zoneKey.append(suppZoneName);
+					
+					if (zoneDtlMap == null) {
+						zoneDtlMap = new HashMap<String, TplSpecZoneDtl>();
+						
+						if (!scPrInquiry.isBrandNew()) {
+							putDBSpecZoneDtlsIntoMap(zoneDtlMap);
+						}
+						
+						getManagedBean().setZoneDtlMap(zoneDtlMap);
 					}
-					zone.setScPrInquiry(getManagedBean().getScPrInquiry());
-					specZoneDtl.setTplSpecZone(zone);
-					getManagedBean().getScPrInquiry().setScPIZone(zone);
-					specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+					
+					specZoneDtl = zoneDtlMap.get(zoneKey.toString());
+					
+					if (specZoneDtl == null) {
+						specZoneDtl = new TplSpecZoneDtl();
+						specZoneDtl.setZoneName(suppZoneName);
+						specZoneDtl.setSupplierZone(supplierZone);
+						
+						ScPIZone zone = getManagedBean().getScPIZone(); 
+						
+						zone.setScPrInquiry(getManagedBean().getScPrInquiry());
+						getManagedBean().getScPrInquiry().setScPIZone(zone);
+						specZoneDtl.setTplSpecZone(zone);
+						
+						List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
+						for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {						
+							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
+							specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
+							specZoneLoc.setPmState(zoneDtl.getPmState());
+							specZoneLoc.setPmDivision(zoneDtl.getPmDivision());
+							specZoneLoc.setTplSpecZoneDtl(specZoneDtl);
+							zoneLocs.add(specZoneLoc);
+						}
+						specZoneDtl.setTplSpecZoneLocs(zoneLocs);
+						
+						zoneDtlMap.put(zoneKey.toString(), specZoneDtl);
+					}
 				}
 			}
 			return specZoneDtl;
+		}
+		private void putDBSpecZoneDtlsIntoMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
+			ISpecZoneLocSO specZoneLocSO = null;
+			
+			try {
+				specZoneLocSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ISpecZoneLocSO.class);
+				
+				ScPIZone zone = getManagedBean().getScPIZone(); 
+				
+				SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
+				reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
+				reqDTO.setDocId(zone.getSpecZoneId());
+				//reqDTO.setDocId(3391L);
+				SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
+				
+				StringBuilder dbZoneKey = null;
+				List<TplSpecZoneDtl> dbSpecZoneDtls = resDTO.getZonesList();
+				
+				for (TplSpecZoneDtl dbSpecZoneDtl : dbSpecZoneDtls) {
+					dbZoneKey = new StringBuilder();
+					dbZoneKey.append(dbSpecZoneDtl.getSupplierZone().getSuppZoneId());
+					dbZoneKey.append(ZONE_SEPARATOR);
+					dbZoneKey.append(dbSpecZoneDtl.getZoneName());
+					
+					zoneDtlMap.put(dbZoneKey.toString(), dbSpecZoneDtl);
+				}
+			} finally {
+				specZoneLocSO = null;
+			}
 		}
 		
 		/**

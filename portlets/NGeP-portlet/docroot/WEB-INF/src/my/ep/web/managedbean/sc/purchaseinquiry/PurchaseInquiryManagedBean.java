@@ -5,6 +5,7 @@ package my.ep.web.managedbean.sc.purchaseinquiry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -20,6 +21,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -63,7 +65,16 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private boolean rnToPIFlag;
 	private ScPIZone scPIZone = new ScPIZone(); 
 	private	ScRequestNote	requestNote;
+    private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
 	
+	public Map<String, TplSpecZoneDtl> getZoneDtlMap() {
+		return zoneDtlMap;
+	}
+
+	public void setZoneDtlMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
+		this.zoneDtlMap = zoneDtlMap;
+	}
+
 	public PurchaseInquiryManagedBean() {
 		List<ScPRIRemark> remarks = new ArrayList<ScPRIRemark>();
 		scPrInquiry.setRemarks(remarks);
