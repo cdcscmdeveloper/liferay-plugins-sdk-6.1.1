@@ -59,7 +59,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this, doctbl" partialSubmit="true" action="#{qTDocumentsBackingBean.addDocumentList}"
 				oncomplete="documentWidget.paginator.endLink.click();" update="doctbl" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this, doctbl" partialSubmit="true" icon="ui-icon-delete"
-				action="#{qTDocumentsBackingBean.deleteRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.selectedScQtDocReports)}" update="doctbl" />
+				action="#{qTDocumentsBackingBean.deleteDocumentList}" update="doctbl" />
 		</div>
 	</p:panel>
 </ui:composition>

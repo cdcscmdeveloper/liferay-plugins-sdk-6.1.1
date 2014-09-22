@@ -407,6 +407,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtDocReport> cloneScQtDocReports;
 	private List<ScQtDocReport> selectedCloneScQtDocReports;
 	
+	private List<ScQtDocReport> removeDocReports;
+	
 	private TreeNode[] selectedGeneralTreeNodes;
 
 	public ScQtSupplierCriteria supplierCriteria;
@@ -2612,6 +2614,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setRemoveDeductions(List<ScQtDeduction> removeDeductions) {
 		this.removeDeductions = removeDeductions;
+	}
+
+	public List<ScQtDocReport> getRemoveDocReports() {
+		return removeDocReports;
+	}
+
+	public void setRemoveDocReports(List<ScQtDocReport> removeDocReports) {
+		this.removeDocReports = removeDocReports;
 	}
 
 }
