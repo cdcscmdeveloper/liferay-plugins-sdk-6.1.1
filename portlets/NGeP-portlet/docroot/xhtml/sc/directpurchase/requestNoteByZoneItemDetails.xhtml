@@ -77,7 +77,7 @@
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:120px;" 
 					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
 					   required="#{!requestNoteDtl.selected}">  
-					   <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
 							value="#{requestNoteBackingBean.managedBean.userList}" 
 							var="user" itemLabel="#{user.userName}"

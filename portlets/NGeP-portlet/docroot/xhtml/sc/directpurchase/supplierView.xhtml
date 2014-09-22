@@ -32,6 +32,9 @@
 		</table>
 	</div>
 	
+	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.submit.instruction']}">
+	</h:outputText>
+	
 	<p:panel id="suppViewDtl" header="#{lbl['lbl.sc.supplier.details']}"
 		toggleable="true">
 		<p:spacer height="10px" />
@@ -83,6 +86,15 @@
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
 							itemValue="false" />
 					</p:selectOneRadio></td>
+				<td>
+					<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq true}">
+						<ac:iconTooltip value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.panel ? 'lbl.sc.sq.panel.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
+					</h:panelGroup>
+				
+					<h:panelGroup rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq false}">
+						<ac:iconTooltip value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.zonal ? 'lbl.sc.sq.supplier.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
+					</h:panelGroup>
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /></td>
@@ -98,6 +110,9 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}" itemValue="false" />
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}" itemValue="true" />
 					</p:selectOneRadio></td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.sc.sq.supplier.quotetype.tooltip']}" />
+				</td>
 			</tr>
 
 		</table>

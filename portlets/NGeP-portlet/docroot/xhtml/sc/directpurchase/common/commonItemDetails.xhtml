@@ -3,8 +3,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.requestnote.instruction']}"/>
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
@@ -43,10 +45,14 @@
 					</p:commandLink>
 					  <p:spacer width="2px;"/>
 					<p:commandLink partialSubmit="true" process="@this"
+						id="prInquiryResponse"
 						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}"
 						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
+						<p:tooltip for="prInquiryResponse">
+							<h:outputText value="#{lbl['lbl.sc.pi.summary.tooltip']}" escape="false" />
+						</p:tooltip>
 					</p:commandLink>
 				</p:column>
 				  
@@ -71,16 +77,24 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%;">
-				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.downloadMarketResearchSummary(requestNoteDtl)}">
+				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.downloadMarketResearchSummary(requestNoteDtl)}"
+				    	id="marketSummaryIcon">
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
+						<p:tooltip for="marketSummaryIcon">
+							<h:outputText value="#{lbl['lbl.sc.summary.searchresult.tooltip']}" escape="false" />
+						</p:tooltip>
 				  </h:commandLink> 
 				    <p:spacer width="2px;"/>
 				   <h:commandLink immediate="true" 
 						action="#{requestNoteBackingBean.downloadPurchaseInqReport(requestNoteDtl)}"
+						id="prInquirySummaryIcon"
 						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
+						<p:tooltip for="prInquirySummaryIcon">
+							<h:outputText value="#{lbl['lbl.sc.summary.item.tooltip']}" escape="false" />
+						</p:tooltip>
 					</h:commandLink> 
 				</p:column>
 
@@ -164,8 +178,11 @@
 						</h:panelGroup>
 					</h:panelGroup>
 				</p:column>
-				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.fulfill.type']}"  style="width:8%;">
+				<p:column>
+					<f:facet name="header" style="width:8%;">
+						<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.sc.deliveryterm.tooltip']}" />
+					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
 					   disabled="true" size="6" style="margin-top: 8px;"  />
 				</p:column>

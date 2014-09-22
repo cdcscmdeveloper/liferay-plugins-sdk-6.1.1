@@ -3,8 +3,15 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="zonePanel" header="#{lbl['lbl.ss.simple.quote.delivery.location']}" toggleable="true">
+	
+	
+	<h:outputText styleClass="instruction" 
+		value="#{lbl['lbl.sc.sq.deliverylocation.instruction']}">
+	</h:outputText>
+	
 	 <table style="width: 100%">
 				<tr>
 					<td style="width: 160px"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.criteria.location.level']}" /></td>
@@ -16,6 +23,9 @@
 									process="@this"
 									listener="#{simpleQuoteBackingBean.zoneLocLevelEvent}" />
 					  </p:selectOneMenu></td>
+					  <td>
+					  	<ac:iconTooltip value="#{lbl['lbl.sc.locationlevel.tooltip']}" />
+					  </td>
 				</tr>
 	    </table>
 	    
@@ -46,7 +56,11 @@
 						</p:treeNode>
 					</p:tree>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.action']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.sq.supp.criteria.action']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.sc.sq.location.action.tooltip']}" />
+					</f:facet>
 					<p:commandLink
 						actionListener="#{simpleQuoteBackingBean.editZone(zoneTree,index)}"
 						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"

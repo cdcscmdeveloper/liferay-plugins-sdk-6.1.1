@@ -17,11 +17,16 @@
 		
     </h:panelGroup>
 		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
+			id="cloneButtonProduct"
 			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListProduct)}"
 			icon="ui-icon-clone" process="@this productListId"
 			update="@([id$=cloneItemSpec])"
 			rendered="#{simpleQuoteBackingBean.managedBean.editableFlag}"
 			partialSubmit="true">
+			<p:tooltip for="cloneButtonProduct">
+				<h:outputText value="#{lbl['lbl.sc.sq.clonebtn.tooltip']}" escape="false" />
+			</p:tooltip>
+			
 		</p:commandButton>
 
 		<p:spacer height="35px" />
@@ -35,11 +40,15 @@
       </h:panelGroup>
 
 		<p:commandButton value="#{lbl['lbl.sc.sq.clone']}" style="float:right;"
+			id="cloneButtonService"
 			action="#{simpleQuoteBackingBean.cloneAction(ParameterConst.itemListService)}"
 			icon="ui-icon-clone" process="@this serviceListId"
 			update="@([id$=cloneItemSpec])"
 			rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag and simpleQuoteBackingBean.managedBean.panelItemFlag}"
 			partialSubmit="true">
+			<p:tooltip for="cloneButtonService">
+				<h:outputText value="#{lbl['lbl.sc.sq.clonebtn.tooltip']}" escape="false" />
+			</p:tooltip>
 		</p:commandButton>
 
 		<ui:include src="/xhtml/sc/directpurchase/common/cloneItemSpecSearch.xhtml" />
