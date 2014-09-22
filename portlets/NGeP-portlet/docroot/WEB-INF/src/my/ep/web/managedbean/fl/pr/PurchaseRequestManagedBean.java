@@ -248,6 +248,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private PmProject pmProject;
 	private PmSetia pmSetia;
 	private PmSubSetia pmSubSetia;
+	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -2117,6 +2118,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setVotFundDisplay(boolean votFundDisplay) {
 		this.votFundDisplay = votFundDisplay;
+	}
+
+	/**
+	 * @return the itemAddrVoteFundDisp
+	 */
+	public FlFulfilmentItemAddr getItemAddrVoteFundDisp() {
+		return itemAddrVoteFundDisp;
+	}
+
+	/**
+	 * @param itemAddrVoteFundDisp the itemAddrVoteFundDisp to set
+	 */
+	public void setItemAddrVoteFundDisp(FlFulfilmentItemAddr itemAddrVoteFundDisp) {
+		this.itemAddrVoteFundDisp = itemAddrVoteFundDisp;
 	}
 
 	
