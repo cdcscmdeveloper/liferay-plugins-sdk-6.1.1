@@ -202,11 +202,16 @@
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" 
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/>
+					<p:outputLabel value="*" styleClass="mandatory" 
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/></td>
 				<td><p:selectOneMenu id="smPersnEpRole"
 						label="#{lbl['lbl.sm.userprofile.eprole']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
+						required="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
 						style="width: 207px;margin: 5px 0px 5px 0px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems value="#{backingBean.managedBean.ePRoleList}" />
@@ -220,20 +225,21 @@
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.softcertFlg}"
-						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"
+						disabled="#{backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN' or (backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}"
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="2" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.issued']}" itemValue="1" itemDisabled="true"/>
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" /></td>
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and backingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}">
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or backingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
