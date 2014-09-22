@@ -9,7 +9,6 @@
 
 		<ui:include src="addspecificationcommittee.xhtml" />
 
-
 		<ui:fragment
 			rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Business Owner'}">
 
@@ -51,11 +50,8 @@
 
 		<ui:fragment
 			rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Finalization Secretary'}">
-			<ui:param name="qtCommitte"
-				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee}" />
 			<ui:include src="finalizationSecretaryDetails.xhtml" />
 		</ui:fragment>
-
 
 	</p:panel>
 </ui:composition>

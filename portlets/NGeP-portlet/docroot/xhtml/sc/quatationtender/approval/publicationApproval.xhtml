@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel id="publicationapprovalTbl"
-		header="Publication Approver Setting" toggleable="true">
+		header="#{lbl['lbl.sc.publication.approval.setting']}"
+		toggleable="true">
 		<p:spacer height="3" />
 		<div style="width: 100%">
 			<p:pickList id="publicationapproverid"
@@ -19,7 +20,7 @@
 			</p:pickList>
 		</div>
 	</p:panel>
-	<p:panel header="Remark" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -52,13 +53,13 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="History" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.history']}" toggleable="true">
 		<p:dataTable>
-			<p:column headerText="Approved By">
+			<p:column headerText="#{lbl['lbl.sc.qt.appby']}">
 			</p:column>
-			<p:column headerText="Status">
+			<p:column headerText="#{lbl['lbl.sc.qt.status']}">
 			</p:column>
-			<p:column headerText="Date">
+			<p:column headerText="#{lbl['lbl.sc.qt.date']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>

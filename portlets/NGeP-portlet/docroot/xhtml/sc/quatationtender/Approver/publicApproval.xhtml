@@ -16,7 +16,7 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:panel header="Schedule Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.so.schedule.dtls']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
@@ -49,7 +49,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
-							value="#{approvalBackingBean.managedBean.qt.proposalStartDate}"
+							value="#{approvalBackingBean.managedBean.qt.sampleClosingDate}"
 							id="proposalPreparation" required="true"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 						<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
@@ -84,7 +84,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="Remark" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="publicremark">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
