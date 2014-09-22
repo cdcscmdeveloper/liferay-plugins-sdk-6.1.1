@@ -171,6 +171,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	// to store locality
 	private List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
+	
+	private boolean conformDlgBtnFlag;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1428,6 +1430,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 	public void setEditableFlag(boolean editableFlag) {
 		this.editableFlag = editableFlag;
+	}
+	public boolean isConformDlgBtnFlag() {
+		return conformDlgBtnFlag;
+	}
+	public void setConformDlgBtnFlag(boolean conformDlgBtnFlag) {
+		this.conformDlgBtnFlag = conformDlgBtnFlag;
 	}
 	
 }

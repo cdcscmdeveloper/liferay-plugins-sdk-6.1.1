@@ -25,13 +25,18 @@
 				<p:panelGrid styleClass="noBorders tr,noBorders td">
 					<p:row>
 						<p:column width="100%" style="text-align:right">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 								onstart="promptWidget.show()" oncomplete="promptWidget.hide();"
 								icon="ui-icon-accept" onsuccess="sqConformDlg.hide()"
 								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
-							<p:commandButton value="#{lbl['lbl.btn.no']}"
+						  <p:commandButton value="#{lbl['lbl.btn.no']}" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
 								partialSubmit="true" process="@this" icon="ui-icon-reject"
 								onclick="sqConformDlg.hide();" type="button" />
+								
+						   <p:commandButton value="#{lbl['lbl.sc.ok']}" rendered="#{!simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
+								partialSubmit="true" process="@this" icon="ui-icon-accept"
+								onclick="sqConformDlg.hide();" type="button" />
+								
 						</p:column>
 					</p:row>
 				</p:panelGrid>
@@ -68,7 +73,7 @@
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}"
 					actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
-					update="@form" process="@form" icon="ui-icon-submit"
+					update="@form" process="@all" icon="ui-icon-submit"
 					rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 
 					<ui:param name="action" value=""></ui:param>
