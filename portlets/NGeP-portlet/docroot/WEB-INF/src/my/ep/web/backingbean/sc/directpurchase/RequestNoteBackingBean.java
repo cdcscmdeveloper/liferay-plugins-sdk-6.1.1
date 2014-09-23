@@ -2037,7 +2037,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// status
 					if(scQuote.getWorkflowStatuses() != null && scQuote.getWorkflowStatuses().size() >0){
-						simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus().getStatusId());
+						simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus());
 					}
 
 					// procurement type drop down.

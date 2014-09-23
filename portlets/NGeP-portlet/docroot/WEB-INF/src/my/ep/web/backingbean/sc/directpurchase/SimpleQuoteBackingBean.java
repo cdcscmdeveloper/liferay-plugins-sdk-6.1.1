@@ -330,7 +330,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			scQuote.setQuoteNo(quoteSO.generateQuoteNo());
 		}
 		
-		getCurrentStatus(DPStatusConstants.SQ_PENDING_SUBMISSION);
+		IStatusSO statusSO = null;
+		try {
+			
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
+			
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			getCurrentStatus(statusResDTO.getPmStatus());
+			
+		} finally {
+			statusSO = null;
+		}
+		
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(scQuote));
 		this.getManagedBean().setScQuote(scQuote);
@@ -2038,12 +2054,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		 }
 	}
 
-	 public void  getCurrentStatus(Long statusId) {
-			if (statusId != null) {
-				 getManagedBean().setSimpleQuoteStatus(getStatusDescById(statusId));
-			 	
-			}
-		  }
+	 public void  getCurrentStatus(PmStatus pmStatus) {
+		 getManagedBean().setSimpleQuoteStatus(pmStatus);
+	 }
 
 	 public SelectItem[] getLocationLevelDropdown() {
 		 List<String> parameterCodes = new ArrayList<String>();
@@ -2797,7 +2810,24 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// duration calc
 			dateListener();
 			procurementTypeEvent();
-			getCurrentStatus(res.getDocStatus().longValue()); 
+			
+			IStatusSO statusSO = null;
+			try {
+				
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(res.getDocStatus().longValue());
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				getCurrentStatus(statusResDTO.getPmStatus());
+				
+			} finally {
+				statusSO = null;
+			}
+			
 			getManagedBean().setProcessName(res.getProcessName());
 			
 			 getManagedBean().setRnToSQFlag(Boolean.TRUE);

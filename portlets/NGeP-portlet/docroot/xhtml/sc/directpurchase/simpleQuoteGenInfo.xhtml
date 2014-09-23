@@ -1,4 +1,4 @@
-   <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -39,7 +39,7 @@
 						<tr>
 							<td><p:inputText size="95" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.sq.gen.info.title']}"
-									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+									disabled="#{isPendingRnCreationStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>
 							<td><p:message id="titleMsg" for="title" display="icon" /></td>
@@ -53,7 +53,7 @@
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
-									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+									disabled="#{isPendingRnCreationStatus}"
 									id="procurementType" required="true"
 									label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
@@ -81,7 +81,7 @@
 						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
-						         disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"     
+						         disabled="#{isPendingRnCreationStatus}" 
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
@@ -98,7 +98,7 @@
 							value="#{lbl['lbl.sc.just.rmks']}" /></td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 					          id="justificationRmk" label="#{lbl['lbl.sc.justification']}" maxlength="100"
-					           disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+					           disabled="#{isPendingRnCreationStatus}"
 					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 							rows="3" cols="122" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
@@ -116,7 +116,7 @@
 							<td><p:selectOneRadio id="zonal" required="true"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
 									label="#{lbl['lbl.sc.sq.gen.info.zonal']}"
-									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation' or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
+									disabled="#{isPendingRnCreationStatus or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
 									<f:selectItems
 										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 									<p:ajax event="change" update="@([id$=mainTabMenu])"
@@ -140,7 +140,7 @@
 							<p:calendar showOn="button" id="startDate"  
 							        mindate="#{simpleQuoteBackingBean.managedBean.today}"
 							        required="true"
-							        disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+							        disabled="#{isPendingRnCreationStatus}"
 									label="#{lbl['lbl.sc.sq.gen.info.start.date']}" 
 									readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
@@ -158,7 +158,7 @@
 				<td><p:calendar showOn="button" id="endDate" label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
 				       mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 				       readonlyInput="true"  required="true" 
-				       disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+				       disabled="#{isPendingRnCreationStatus}"
 				       pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 				       value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}">
 				     <p:ajax event="dateSelect" update="durationId"  process="@this" partialSubmit="true" 
@@ -193,7 +193,7 @@
 							<td><p:selectOneRadio id="noOfQuote"
 									label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}"
 									required="true"
-									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+									disabled="#{isPendingRnCreationStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
 									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
 										itemValue="false" />
@@ -238,7 +238,7 @@
 							<td></td>
 							<td>
 								<p:inputTextarea style="width:350px;" id="remarks" label="Remarks" maxlength="1000" value="#{remarkVar.remark}" 
-								  disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+								  disabled="#{isPendingRnCreationStatus}"
 								 rendered="#{remarkIndex==0}"/>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>

@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
@@ -86,7 +87,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private boolean byBusinessNature;
 	private boolean locAndBusinessFlag;
 	private boolean g2GFlag;
-	private String simpleQuoteStatus;
+	private PmStatus simpleQuoteStatus;
 
 	private	String	zoneName;
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
@@ -851,14 +852,14 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the simpleQuoteStatus
 	 */
-	public String getSimpleQuoteStatus() {
+	public PmStatus getSimpleQuoteStatus() {
 		return simpleQuoteStatus;
 	}
 
 	/**
 	 * @param simpleQuoteStatus the simpleQuoteStatus to set
 	 */
-	public void setSimpleQuoteStatus(String simpleQuoteStatus) {
+	public void setSimpleQuoteStatus(PmStatus simpleQuoteStatus) {
 		this.simpleQuoteStatus = simpleQuoteStatus;
 	}
 
