@@ -73,29 +73,33 @@
 											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
 									</p:selectOneMenu></td>
 								<td><p:message id="priceTypeMsg" for="priceType"
-										display="icon" /></td>
+										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 							</tr>
 						</table>
-					</td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.type']}"  /> 
 					   <p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio style="margin-bottom: 5px;"
-							id="procType" label="#{lbl['lbl.sc.procurement.type']}"
-							value="#{requestNoteBackingBean.managedBean.procurementType}"
-							required="#{requestNoteBackingBean.managedBean.required}">
-							<f:selectItems
-								value="#{requestNoteBackingBean.managedBean.procurementTypes}" />
-							<p:ajax event="change" update="justLabel ,justValue ,justRmksLabel,justRmksValue"
-								listener="#{requestNoteBackingBean.procurementTypeEvent}"
-								process="@this" />
-						</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon" /></td>
 					<td>
-						<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
+						<table>
+							<tr>
+								<td><p:selectOneRadio style="margin-bottom: 5px;"
+										id="procType" label="#{lbl['lbl.sc.procurement.type']}"
+										value="#{requestNoteBackingBean.managedBean.procurementType}"
+										required="#{requestNoteBackingBean.managedBean.required}">
+										<f:selectItems
+											value="#{requestNoteBackingBean.managedBean.procurementTypes}" />
+										<p:ajax event="change"
+											update="justLabel ,justValue ,justRmksLabel,justRmksValue"
+											listener="#{requestNoteBackingBean.procurementTypeEvent}"
+											process="@this" />
+									</p:selectOneRadio></td>
+								<td><p:message id="procTypeMsg" for="procType"
+										display="icon" /> <ac:iconTooltip
+										value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 				

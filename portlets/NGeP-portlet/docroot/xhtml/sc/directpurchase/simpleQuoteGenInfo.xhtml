@@ -11,16 +11,20 @@
 			<tr>
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
-				<td><p:selectOneRadio id="panel" required="true" 
-				         value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}" 
-				         label="#{lbl['lbl.sc.sq.gen.info.panel']}" disabled="true">
-						<f:selectItems
-							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-					</p:selectOneRadio>
-					<p:message id="panelMsg" for="panel" display="icon" /> </td>
 				<td>
-				
-					<ac:iconTooltip value="#{lbl['lbl.sc.sq.panel.tooltip']}" />
+					<table>
+						<tr>
+							<td><p:selectOneRadio id="panel" required="true"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
+									label="#{lbl['lbl.sc.sq.gen.info.panel']}" disabled="true">
+									<f:selectItems
+										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+								</p:selectOneRadio></td>
+
+							<td><p:message id="panelMsg" for="panel" display="icon" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.sq.panel.tooltip']}" /></td>
+						</tr>
+					</table>
 				</td>
 
 				<td style="width: 150px;"><p:outputLabel
@@ -45,19 +49,26 @@
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneRadio style="margin-bottom: 5px;"  disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
-				        id="procurementType" required="true"
-				        label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
-						value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
-						<f:selectItems 
-							value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
-							<p:ajax event="change" update="@([id$=justId])" 
-							listener="#{simpleQuoteBackingBean.procurementTypeEvent}" process="@this" />
-					</p:selectOneRadio>
-					<p:message id="procTypeMsg" for="procurementType" display="icon" />
-					</td>
 				<td>
-					<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
+					<table>
+						<tr>
+							<td><p:selectOneRadio style="margin-bottom: 5px;"
+									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+									id="procurementType" required="true"
+									label="#{lbl['lbl.sc.sq.gen.info.proc.type']}"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode}">
+									<f:selectItems
+										value="#{simpleQuoteBackingBean.managedBean.procurementTypes}" />
+									<p:ajax event="change" update="@([id$=justId])"
+										listener="#{simpleQuoteBackingBean.procurementTypeEvent}"
+										process="@this" />
+								</p:selectOneRadio></td>
+
+							<td><p:message id="procTypeMsg" for="procurementType"
+									display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
+						</tr>
+					</table>
 				</td>
 			</tr>
 			<tr>
@@ -100,17 +111,23 @@
 				<td style="width: 150px;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
-					<p:selectOneRadio id="zonal" required="true" 
-				         value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}" 
-				         label="#{lbl['lbl.sc.sq.gen.info.zonal']}" disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation' or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
-						<f:selectItems
-							value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
-					</p:selectOneRadio>
-					<p:message id="zonalMsg" for="zonal" display="icon" /></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.sc.sq.zonal.tooltip']}" />
-					</td>
+					<table>
+						<tr>
+							<td><p:selectOneRadio id="zonal" required="true"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
+									label="#{lbl['lbl.sc.sq.gen.info.zonal']}"
+									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation' or simpleQuoteBackingBean.managedBean.scQuote.panel eq 'true'}">
+									<f:selectItems
+										value="#{simpleQuoteBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+									<p:ajax event="change" update="@([id$=mainTabMenu])"
+										process="@this" listener="#{simpleQuoteBackingBean.zoneEvent}" />
+								</p:selectOneRadio></td>
+
+							<td><p:message id="zonalMsg" for="zonal" display="icon" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.sq.zonal.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 			
 			<tr>
@@ -170,19 +187,30 @@
 			<tr>
 				<td style="width: 150px;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneRadio id="noOfQuote" label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" required="true"
-				      disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
-				      value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
-							itemValue="false" />
-						<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
-							itemValue="true" />
-						<p:ajax event="change" update="@([id$=mainTabMenu])" process="@this" partialSubmit="true" listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
-							
-					</p:selectOneRadio><p:message id="noofquoteMsg" for="noOfQuote" display="icon" /> </td>
 				<td>
-					<ac:iconTooltip value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" />
+					<table>
+						<tr>
+							<td><p:selectOneRadio id="noOfQuote"
+									label="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}"
+									required="true"
+									disabled="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.single']}"
+										itemValue="false" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.gen.info.multiple']}"
+										itemValue="true" />
+									<p:ajax event="change" update="@([id$=mainTabMenu])"
+										process="@this" partialSubmit="true"
+										listener="#{simpleQuoteBackingBean.noOfQuoteEvent}" />
+								</p:selectOneRadio></td>
+
+							<td><p:message id="noofquoteMsg" for="noOfQuote"
+									display="icon" /> <ac:iconTooltip
+									value="#{lbl['lbl.sc.sq.quotetype.tooltip']}" /></td>
+						</tr>
+					</table>
 				</td>
+			
 			</tr>
 		</table>
 	</p:panel>
