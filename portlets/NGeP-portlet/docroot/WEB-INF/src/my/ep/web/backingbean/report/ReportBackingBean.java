@@ -2023,9 +2023,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMofRegNoView(true);
+	        	rptGenBean.setMandatoryZoneView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
+	        	rptGenBean.setMandatoryMofRegNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);				
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME));			
@@ -3416,8 +3416,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
             break;
 		}
 		
-	}
-	
+	}	
 	public void retrieveDates(){
 		if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
 			log.info("inside retrieveDates");
@@ -3429,7 +3428,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			newDate.setDate(1);
 			this.setFromDate(newDate);
 			this.setExpiryFromDate(newDate);
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);	
+			//SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);	
 		}
 	}
 	public void retrieveState(){
@@ -3463,7 +3462,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void retrieveCategoryLevOne(){
 		levOneCatLst = new ArrayList<SelectItem>();		
 		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
-		CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
+		//CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
 		//CategoryCodeResDTO	catCodeResDTO	=	new CategoryCodeResDTO();
 		CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
 		for(PmCategoryL1 catOne: catCodeResDTO.getCategoryL1List()){			
@@ -3615,7 +3614,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		try {			
 			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
-			String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
+			//String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
 			String baseUrl=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 			String path=baseUrl+"/ReportViewServlet";			
 			log.info(path);
