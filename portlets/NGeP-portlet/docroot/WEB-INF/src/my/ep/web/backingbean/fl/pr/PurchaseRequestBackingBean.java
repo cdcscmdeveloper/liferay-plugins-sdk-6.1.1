@@ -133,6 +133,7 @@ import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -143,8 +144,6 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
-import my.ep.web.util.fl.helper.LocationSingleton;
-//import my.ep.persistence.entity.pm.common.PmProject;
 
 /**
  * Backing Bean for Create Purchase Order
@@ -1611,17 +1610,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					if(childData.isVotFundDisplay()){
-						getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
-						getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
-					}else{
+					if("A".equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
 						getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
 						getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
+					}else{
+						getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+						getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
 					}
-					//getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
-					//getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
-					//getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
-					//getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
 				}
 				
 				if(childData.getAssetInd()!=null) {
@@ -1633,8 +1628,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					PmGlAccount pmGlAccount = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId());
 					getManagedBean().setGosodo(pmGlAccount);
 					getManagedBean().getGosodo().setGlAccCode(pmGlAccount.getGlAccCode());
-					
-					///.setGlAccountCode(glAccountCode);
 				}
 				
 				if(childData.getPmPrgActivity()!=null) {
@@ -1649,10 +1642,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						}
 					}
 					PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId());
-					getManagedBean().setPmPrgActivity(pmPrgActivity);
-					getManagedBean().getPmPrgActivity().setPrgActivityCode(pmPrgActivity.getPrgActivityCode());
-					
-					///.setPrgActivityCode(progActvCode);
+					//getManagedBean().setPmPrgActivity(pmPrgActivity);
+					getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
 				}
 				
 				if(childData.getPmSubSetia()!=null) {
@@ -1680,8 +1671,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setVotFundId(0L);
 		getManagedBean().setPmVoteFund(new PmVotFund());
 		getManagedBean().setPmSubSetia(new PmSubSetia());
-		//getManagedBean().getPmSubSetia().setFinancingType(new PmParameter());
-		//getManagedBean().getPmSubSetia().getFinancingType().setPmParameterDescs((new ArrayList<PmParameterDesc>()));
 		getManagedBean().getPmSubSetia().setPmSetia(new PmSetia());
 		getManagedBean().getPmSubSetia().getPmSetia().setPmProject(new PmProject());
 		getManagedBean().setPmPrgActivity(new PmPrgActivity());
@@ -1690,6 +1679,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setAssetIndId(0L);
 		getManagedBean().setGlAccountCode("");
 		getManagedBean().setPrgActivityCode("");
+		getManagedBean().setPrgActivityId(0L);
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
@@ -1911,7 +1901,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
 				if(itemAddress.getPmVotFund()!=null) {
-					votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
+					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
+						votFundType=itemAddress.getPmVotFund().getVotFundType();
+					}else{
+						votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
+					}
 					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
 						isVotSOrAmanahExist = true;
 						break;
@@ -2707,8 +2701,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}else{
 			getManagedBean().setChargeLinePanel(false);
 		}
-		updateSelectedTreeNodes();
-		getManagedBean().getSelectedNodes();
 	}
 	
 	public String retrieveMofNo(SmSupplier smSupplier) {
