@@ -107,7 +107,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String createdBy;
 	private	List<ScRequestNoteDtl>	supplierRecList	=	new ArrayList<ScRequestNoteDtl>();
 	private	List<ScSupplierItemPrice>	pricingList	=	new ArrayList<ScSupplierItemPrice>(); // For pricing pop to show all pricing
-    private ScQuote scQuote;
     
     private IPagingDataModel<ScRequestNote> reqNoteDataModel = new RequestNotePagingDataModel();
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
@@ -776,18 +775,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setPrInquiryId(Long prInquiryId) {
 		this.prInquiryId = prInquiryId;
 	}
-	/**
-	 * @return the scQuote
-	 */
-	public ScQuote getScQuote() {
-		return scQuote;
-	}
-	/**
-	 * @param scQuote the scQuote to set
-	 */
-	public void setScQuote(ScQuote scQuote) {
-		this.scQuote = scQuote;
-	}
+
 	/**
 	 * @return the scRNZone
 	 */
