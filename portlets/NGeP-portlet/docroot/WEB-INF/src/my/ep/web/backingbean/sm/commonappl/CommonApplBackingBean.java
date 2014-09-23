@@ -228,7 +228,6 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
-			// String applicationType = "";
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
 				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
@@ -238,18 +237,13 @@ public class CommonApplBackingBean extends
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
-
-				// applicationType =
-				// retriveApplicationById(smObj.getDocumentId());
-				System.out
-						.println("********Review Application Escalted for account maintain********"
-								+ appl.getSupplierType());
-				System.out.println("********getTaskId********" + taskId);
-				System.out.println("********getTaskName********"
+				log.info("********Review Application Escalted for account maintain********"
+						+ appl.getSupplierType());
+				log.info("********getTaskId********" + taskId);
+				log.info("********getTaskName********"
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
-				// TODO Change this impl to get values from DB and set
-				// smSupplier , smAppl of the managedBean
+				smApplBB.getManagedBean();
 				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
 						|| resDTO.getTaskName().equalsIgnoreCase(
 								"Review Application(Special Category)")
@@ -266,16 +260,11 @@ public class CommonApplBackingBean extends
 				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
-
-				// .setApplId(new Long(smObj.getDocumentId()));
-				// smApplBB.getManagedBean().setSmAppl(appl);
 				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
-					System.out
-							.println("*** This is po or approver action after site visit *** ");
+					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
-					System.out
-							.println("*** This is po or approver for normal review without site visit *** ");
+					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
 				if (smObj.getSupplierList() != null) {
@@ -289,37 +278,42 @@ public class CommonApplBackingBean extends
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
-				System.out
-						.println(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
-								+ resDTO.getDocNumber());
-				System.out.println("**** APPLICATION TYPE ******"
+				log.info(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+						+ resDTO.getDocNumber());
+				log.info("**** APPLICATION TYPE ******"
 						+ resDTO.getDocNumber().charAt(1));
-				System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
+				log.info(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
 				mofResDto = retriveApplicationById(smObj.getDocumentId());
 				SmAppl appl = mofResDto.getSmAppl();
-
-				// applicationType =
-				// retriveApplicationById(smObj.getDocumentId());
-				System.out
-						.println("********Review Application Escalted for new mof********");
-				System.out.println("********getTaskId********" + taskId);
-				System.out.println("********getTaskName********"
+				log.info("********Review Application Escalted for new mof********");
+				log.info("********getTaskId********" + taskId);
+				log.info("********getTaskName********"
 						+ this.getManagedBean().getTaskName());
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
-				// TODO Change this impl to get values from DB and set
-				// smSupplier , smAppl of the managedBean
-
+				smApplBB.getManagedBean();
+				if (resDTO.getTaskName().equalsIgnoreCase("Review Application")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Review Application(Special Category)")
+						|| resDTO.getTaskName().equalsIgnoreCase(
+								"Verify Application")) {
+					smApplBB.getManagedBean().setPoUser(true);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(false);
+				} else if (resDTO.getTaskName().equalsIgnoreCase(
+						"Review Application (Escalated)")) {
+					smApplBB.getManagedBean().setPoUser(false);
+					smApplBB.getManagedBean().setSupplierUser(false);
+					smApplBB.getManagedBean().setApproverUser(true);
+				}
 				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
 						appl, mofResDto.getSmSupplier());
 				if (resDTO.getTaskName().equalsIgnoreCase("Verify Application")) {
-					System.out
-							.println("*** This is po or approver action after site visit *** ");
+					log.info("*** This is po or approver action after site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(true);
 				} else {
-					System.out
-							.println("*** This is po or approver for normal review without site visit *** ");
+					log.info("*** This is po or approver for normal review without site visit *** ");
 					smApplBB.getManagedBean().setReviewSiteVisit(false);
 				}
 				if (smObj.getSupplierList() != null) {
