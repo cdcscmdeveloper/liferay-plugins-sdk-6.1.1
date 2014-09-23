@@ -79,7 +79,7 @@
 		</p:outputPanel>
 	</table>
 	<p:outputPanel
-		rendered="#{(backingBean.managedBean.poUser or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage}">
+		rendered="#{((backingBean.managedBean.poUser and backingBean.managedBean.smAppl.applType eq 'R') or backingBean.managedBean.approverUser) and !backingBean.managedBean.redirectToPersonPage}">
 		<table style="width: 100%;">
 			<tr>
 				<td></td>
