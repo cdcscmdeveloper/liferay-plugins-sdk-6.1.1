@@ -26,8 +26,8 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
-import my.ep.persistence.entity.sc.directpurchase.ScQuote;
 import my.ep.persistence.entity.sc.directpurchase.ScRNZone;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -80,7 +80,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private SelectItem[] priceTypes; // price type drop down for add to cart
     private SelectItem[] procurementTypes; // for procurement type dropdown
     private String processName;
-    private String requestNoteStatus;
+    private PmStatus requestNoteStatus;
     private boolean required = Boolean.FALSE;
     private boolean justRequired = Boolean.FALSE;
     private boolean addToCartFlag;
@@ -437,13 +437,13 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	/**
 	 * @return the requestNoteStatus
 	 */
-	public String getRequestNoteStatus() {
+	public PmStatus getRequestNoteStatus() {
 		return requestNoteStatus;
 	}
 	/**
 	 * @param requestNoteStatus the requestNoteStatus to set
 	 */
-	public void setRequestNoteStatus(String requestNoteStatus) {
+	public void setRequestNoteStatus(PmStatus requestNoteStatus) {
 		this.requestNoteStatus = requestNoteStatus;
 	}
 	public	boolean	isPrInquiry(){

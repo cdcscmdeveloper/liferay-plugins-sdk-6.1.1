@@ -42,7 +42,7 @@
 					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
-				  #{requestNoteBackingBean.managedBean.requestNoteStatus}
+				  #{requestNoteBackingBean.getStatusDescById(requestNoteBackingBean.managedBean.requestNoteStatus.statusId)}
 				</td>
 			</tr>
 		</table>
