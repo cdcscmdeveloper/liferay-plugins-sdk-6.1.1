@@ -229,13 +229,22 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	}
 	
+	public String retrieveParamDesc(String type, String code){
+		if(code!=null){
+			return getParameterDesc(type, code);
+		}
+		return null;
+	}
+
+
 	/**
 	 * retrieve salutation list
 	 * @return List<PmSalutation> 
 	 */
-	public SelectItem[] salutationOptions(){
+	public List<PmSalutation> salutationOptions(){
 		logger.info("salutationOptions");
-		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
+//		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
+		return PmCommonUtil.retrievePmSalutationList();
 	}
 	
 
