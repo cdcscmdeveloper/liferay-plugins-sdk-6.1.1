@@ -11,21 +11,26 @@
 
 	<ui:define name="contentSection">
 
-		<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
-			style="float:right;" icon="ui-icon-evaluate" update="@form"
-			rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
-			action="#{evaluationBackingBean.generateEvaluationStage}" />
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')}">
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
+				style="float:right;" icon="ui-icon-evaluate" update="@form"
+				rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"
+				action="#{evaluationBackingBean.generateEvaluationStage}" />
+		</ui:fragment>
 
-		<ui:repeat var="bpmAction"
-			value="#{evaluationBackingBean.managedBean.outComes}">
-			<ui:param name="buttonLabel"
-				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-				style="float:right;" process="@all" partialSubmit="true"
-				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-				action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
-		</ui:repeat>
-
+		<ui:fragment
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
+			<ui:repeat var="bpmAction"
+				value="#{evaluationBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel"
+					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					style="float:right;" process="@all" partialSubmit="true"
+					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
+			</ui:repeat>
+		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
 			style="float:right;"
 			action="#{evaluationBackingBean.saveMeetingDtls}" icon="ui-icon-save" />
@@ -62,7 +67,11 @@
 			<ui:include src="report.xhtml" />
 		</c:if>
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
-			<ui:include src="signoff.xhtml" />
+			<ui:param name="committeeActivityList"
+				value="#{evaluationBackingBean.managedBean.endorscommitteeMemberList}"></ui:param>
+
+			<ui:include src="/xhtml/sc/specification/specificationSignoff.xhtml" />
+			<!-- <ui:include src="signoff.xhtml" /> -->
 		</c:if>
 
 
