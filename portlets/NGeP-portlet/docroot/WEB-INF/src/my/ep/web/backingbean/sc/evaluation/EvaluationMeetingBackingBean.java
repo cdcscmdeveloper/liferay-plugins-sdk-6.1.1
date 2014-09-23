@@ -252,7 +252,7 @@ public class EvaluationMeetingBackingBean extends
 					List<ScQtCommitteRemarks> remark = initializeRemarks(this
 							.getManagedBean().getScQtCommittee(), qtRemarkList,
 							ScQtCommitteRemarks.class);
-					//qtRemarkList.addAll(remark);
+					// qtRemarkList.addAll(remark);
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 
 				}
@@ -671,7 +671,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 
 			}
-
+			metReqDtO.setDeletedMeetingList(meetingRemoveList);
 			List<ScQtCommitteeActivity> committeeRemoveList = this
 					.getManagedBean().getRemoveCommitteeList();
 			if (null != committeeRemoveList && !committeeRemoveList.isEmpty()) {
@@ -683,7 +683,7 @@ public class EvaluationMeetingBackingBean extends
 				}
 
 			}
-
+			metReqDtO.setDeletedCommitteeActivityList(committeeRemoveList);
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 
