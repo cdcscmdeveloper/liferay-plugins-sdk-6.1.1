@@ -15,6 +15,7 @@ import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.quartz.impl.StdSchedulerFactory;
@@ -62,5 +63,38 @@ public class EpSchedulerHelper {
 		}
 
 	}
-	
+
+	public static void scheduleStartupJob(ServletContext context,
+			JobKey jobKey, Class<? extends Job> jobClass, String jobDetailDesc) {
+		Scheduler scheduler = null;
+		try {
+
+			// get scheduler
+			scheduler = ((StdSchedulerFactory) context
+					.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY))
+					.getScheduler();
+
+			// specify the job' s details..
+			JobDetail job = scheduler.getJobDetail(jobKey);
+			// specify trigger
+			Trigger trigger = TriggerBuilder.newTrigger().startNow()
+					.forJob(job).build();
+			// start scheduler if not started yet
+			if (!scheduler.isStarted()) {
+				scheduler.start();
+			}
+
+			// schedule the job
+			scheduler.scheduleJob(trigger);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		finally {
+			scheduler = null;
+		}
+
+	}
+
 }
