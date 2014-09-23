@@ -1025,7 +1025,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 		if(lastStdGrpId > 0){
 			for(int i = 1; i <= lastStdGrpId; i++){
-				if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), i) < 2){
+				int countGroup = countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), i);
+				if(countGroup < 2 && countGroup>0){
 					disable = true;
 					break;
 				}
@@ -1043,7 +1044,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 		if(lastStdGrpId > 0){
 			for(int i = 1; i <= lastStdGrpId; i++){
-				if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), i) < 2){
+				int countGroup = countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), i);
+				if(countGroup < 2 && countGroup>0){
 					disable = true;
 					break;
 				}
@@ -2187,7 +2189,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				
 			if(lastStdGrpId > 0){
 				for(int iter = 1; iter <= lastStdGrpId; iter++){
-					if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), iter) < 2){
+					int countGroup = countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), iter);
+					if(countGroup < 2 && countGroup>0){
 						disable = true;
 						break;
 					}
@@ -2270,7 +2273,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				
 			if(lastStdGrpId > 0){
 				for(int iter = 1; iter <= lastStdGrpId; iter++){
-					if(countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), iter) < 2){
+					int countGroup = countTierPricesByStandGroupId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), iter);
+					if(countGroup < 2 && countGroup>0){
 						disable = true;
 						break;
 					}
@@ -3176,6 +3180,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					groupPrevious = tierPricing.getStand_group_id();
 				}
 				
+				//check at least 2 tier pricing
+				boolean disable = false;
+				int lastStdGrpId = 0;
+				if(catalog.getCmTierPricings() != null && catalog.getCmTierPricings().size() > 0){
+					lastStdGrpId = catalog.getCmTierPricings().get(catalog.getCmTierPricings().size() - 1).getStand_group_id();
+				}
+					
+				if(lastStdGrpId > 0){
+					for(int iter = 1; iter <= lastStdGrpId; iter++){
+						int countGroup = countTierPricesByStandGroupId(catalog.getCmTierPricings(), iter);
+						if(countGroup < 2 && countGroup>0){
+							disable = true;
+							break;
+						}
+					}
+				}
+				
+				if(disable){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715029,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "catalogMaintenanceFile";
+				}
+				//end check at least 2 tier pricing
+				
 				//Tier Promotion Pricing
 				groupPrevious = 0;
 				Collections.sort(catalog.getCmPromotionTierPricings(), new Comparator<CmPromotionTierPricing>(){
@@ -3259,6 +3291,33 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						}
 					groupPrevious = zonalTier.getStand_group_id();
 				}
+				
+				//check at least 2 zonal tier pricing
+				disable = false;
+				lastStdGrpId = 0;
+				if(catalog.getCmZonalTierPricings() != null && catalog.getCmZonalTierPricings().size() > 0){
+					lastStdGrpId = catalog.getCmZonalTierPricings().get(catalog.getCmZonalTierPricings().size() - 1).getStand_group_id();
+				}
+					
+				if(lastStdGrpId > 0){
+					for(int iter = 1; iter <= lastStdGrpId; iter++){
+						int countGroup = countTierPricesByStandGroupId(catalog.getCmZonalTierPricings(), iter);
+						if(countGroup < 2 && countGroup>0){
+							disable = true;
+							break;
+						}
+					}
+				}
+				if(disable){
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715029,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "catalogMaintenanceFile";
+				}
+				//end check at least 2 zonal tier pricing
 				
 				//Zonal Tier Promotion Pricing
 				groupPrevious = 0;
