@@ -10,8 +10,7 @@
 		toggleable="true">
 
 		<p:dataTable id="scEndorsement" var="committeActivity"
-			widgetVar="prepareCommittee"
-			value="#{specificationBackingBean.managedBean.committeeActivities}">
+			widgetVar="prepareCommittee" value="#{committeeActivityList}">
 			<ac:paginator for="scEndorsement" />
 
 			<p:column headerText="#{lbl['lbl.sc.eva.mtng.opn.cmt.name']}">
@@ -46,7 +45,8 @@
 					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
 
-				<h:outputText value="#{committeActivity.scCommitteeMember.grade}" />
+				<h:outputText
+					value="#{specificationBackingBean.getParameterDesc(committeActivity.scCommitteeMember.memberRole)}" />
 
 
 			</p:column>

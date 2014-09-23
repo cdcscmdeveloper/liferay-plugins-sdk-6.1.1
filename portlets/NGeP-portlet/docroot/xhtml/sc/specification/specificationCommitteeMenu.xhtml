@@ -126,12 +126,14 @@
 
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-
+							<ui:param name="committeeActivityList"
+								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 							<ui:include src="specificationSignoff.xhtml" />
 						</ui:fragment>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
-
+						<ui:param name="committeeActivityList"
+							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 						<ui:include src="specificationSignoff.xhtml" />
 					</c:if></td>
 			</tr>
@@ -256,12 +258,14 @@
 
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-
+							<ui:param name="committeeActivityList"
+								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 							<ui:include src="specificationSignoff.xhtml" />
 						</ui:fragment>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
-
+						<ui:param name="committeeActivityList"
+							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 						<ui:include src="specificationSignoff.xhtml" />
 					</c:if></td>
 			</tr>
