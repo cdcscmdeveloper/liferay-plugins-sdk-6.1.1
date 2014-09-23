@@ -462,4 +462,5 @@ public class ReportConst {
 	public static final String NO_URL_PROVIDED_FOR_THIS_RPT = "lbl.rpt.search.criteria.NO_URL_PROVIDED_FOR_THIS_RPT";
 	public static final String RPT_IN_VALID = "reportInValid";
 	public static final String RPT_TRUE = "true";
+	public static final String TO_DT_GTR_THN_FRM_DT = "lbl.rpt.search.date.TO_DT_GTR_THN_FRM_DT";
 }
