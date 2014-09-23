@@ -152,7 +152,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtScoreOfferPrice offerPricePackage;
 	private ScQtScoreOfferPrice offerPriceItem;
 	private List<SummaryZoneBaen> finSpecZoneBean;
-	private List<ScCommitteeMember> endorscommitteeMemberList;
+	private List<ScQtCommitteeActivity> endorscommitteeMemberList;
 	private String message;
 	private String subject;
 	private boolean generateEvaluationButton = false;
@@ -1411,19 +1411,14 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.finSpecZoneBean = finSpecZoneBean;
 	}
 
-	/**
-	 * @return the endorscommitteeMemberList
-	 */
-	public List<ScCommitteeMember> getEndorscommitteeMemberList() {
+	
+
+	public List<ScQtCommitteeActivity> getEndorscommitteeMemberList() {
 		return endorscommitteeMemberList;
 	}
 
-	/**
-	 * @param endorscommitteeMemberList
-	 *            the endorscommitteeMemberList to set
-	 */
 	public void setEndorscommitteeMemberList(
-			List<ScCommitteeMember> endorscommitteeMemberList) {
+			List<ScQtCommitteeActivity> endorscommitteeMemberList) {
 		this.endorscommitteeMemberList = endorscommitteeMemberList;
 	}
 

@@ -69,6 +69,7 @@ import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -401,13 +402,13 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	public String retriveMeetingDtls(Long qtId, String commType) {
+	public void retriveMeetingDtls(Long qtId, String commType, int index) {
 		IQTMeetingSO meetingSO;
 		IQTDetailSO qtDetailSo = null;
 
 		try {
 			this.getManagedBean().setCommitteeType(commType);
-			this.getManagedBean().setPrepareActiveIndex(0);
+			this.getManagedBean().setPrepareActiveIndex(index);
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			MeetingResDTO resDTO = new MeetingResDTO();
 
@@ -440,44 +441,7 @@ public class EvaluationBackingBean extends
 
 				}
 
-				ScQtCommittee committee = resDTO.getQtCommittee();
-				if (null == committee) {
-					committee = new ScQtCommittee();
-				}
-
-				this.getManagedBean().setScQtCommittee(committee);
-
-			}
-
-		} finally {
-			meetingSO = null;
-			qtDetailSo = null;
-		}
-		return "evaluationstage1view.xhtml";
-	}
-
-	public String retriveOpeningCommitteeDtls() {
-		IQTMeetingSO meetingSO = null;
-
-		this.getManagedBean().setPrepareActiveIndex(1);
-		try {
-
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			MeetingResDTO resDTO = new MeetingResDTO();
-
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			if (this.getManagedBean().getCommitteeMemberList() == null) {
-				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-
-				reqDTO.setCommitteType(this.getManagedBean().getCommitteeType());
-				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-
-				ScQtCommittee committee = resDTO.getQtCommittee();
-				if (null == committee) {
-					committee = new ScQtCommittee();
-				}
-
+				this.getManagedBean().setScQtCommittee(resDTO.getQtCommittee());
 				if (null != resDTO.getQtCommittee()) {
 
 					if (null != resDTO.getQtCommittee()
@@ -493,14 +457,10 @@ public class EvaluationBackingBean extends
 					}
 
 				}
+				List<ScQtCommitteRemarks> qtRemarkList = this.getManagedBean()
+						.getScQtCommittee().getQtCommitteRemarks();
 
-				List<ScQtCommitteRemarks> qtRemarkList = committee
-						.getQtCommitteRemarks();
-				if (qtRemarkList == null) {
-					qtRemarkList = new ArrayList<ScQtCommitteRemarks>();
-				}
-
-				if (this.getManagedBean().getQtCommitteeRemarks() == null) {
+				if (null == this.getManagedBean().getQtCommitteeRemarks()) {
 
 					List<ScQtCommitteRemarks> remarkList = new ArrayList<ScQtCommitteRemarks>();
 					for (ScRemark remark : qtRemarkList) {
@@ -512,59 +472,41 @@ public class EvaluationBackingBean extends
 
 					// initializeRemarks();
 				}
+
+				if (null != this.getManagedBean().getScQtCommittee()
+						.getMeetingAttendances()
+						&& !this.getManagedBean().getScQtCommittee()
+								.getMeetingAttendances().isEmpty()) {
+					this.getManagedBean().setMeetingAttendanceList(
+							this.getManagedBean().getScQtCommittee()
+									.getMeetingAttendances());
+				}
+
 			}
+
+		} finally {
+			meetingSO = null;
+			qtDetailSo = null;
+		}
+
+	}
+
+	public void retriveOpeningCommitteeDtls(int index) {
+
+		try {
+			this.getManagedBean().setPrepareActiveIndex(index);
 
 		} finally {
 
 		}
 
-		return "evaluationstage1view.xhtml";
 	}
 
-	public void initializeRemarks() {
-		FacesScopes facesScopes = new FacesScopes();
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		ScQtCommitteRemarks remark = null;
-		if (this.getManagedBean().getQtCommitteeRemarks() == null) {
-			this.getManagedBean().setQtCommitteeRemarks(
-					new ArrayList<ScQtCommitteRemarks>());
-		}
+	public String retriveTurutHadirDtls(int index) {
 
-		remark = new ScQtCommitteRemarks();
-		List<ScQtRemark> qtRemarkList = new ArrayList<ScQtRemark>();
-		remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		remark.setChangedBy(remark.getCreatedBy());
-		remark.setCreatedUser(facesScopes.getUserSessionBean());
-		remark.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-		PmStatus status = new PmStatus();
-		status.setStatusId(1L);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		if (status != null) {
-			statusReqDTO.setStatusId(status.getStatusId());
-			StatusResDTO statusResDTO = iStatusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			remark.setPmStatus(statusResDTO.getPmStatus());
-
-		}
-		// qtRemarkList.add(remark);
-		this.getManagedBean().getQtCommitteeRemarks().add(remark);
-	}
-
-	public String retriveTurutHadirDtls() {
-		this.getManagedBean().setPrepareActiveIndex(2);
 		try {
+			this.getManagedBean().setPrepareActiveIndex(index);
 
-			if (null != this.getManagedBean().getScQtCommittee()
-					.getMeetingAttendances()
-					&& !this.getManagedBean().getScQtCommittee()
-							.getMeetingAttendances().isEmpty()) {
-				this.getManagedBean().setMeetingAttendanceList(
-						this.getManagedBean().getScQtCommittee()
-								.getMeetingAttendances());
-			}
 		} finally {
 
 		}
@@ -2675,10 +2617,7 @@ public class EvaluationBackingBean extends
 
 			}
 			if (outputTab == 4) {
-				if (this.getManagedBean().getScQtEvaluationReport() == null) {
-					this.getManagedBean().setScQtEvaluationReport(
-							new ScQtEvaluationReport());
-				}
+
 				retrieveReportTabDtl();
 			}
 			if (outputTab == 5) {
@@ -2689,7 +2628,7 @@ public class EvaluationBackingBean extends
 			}
 			if (outputTab == 0) {
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
-						this.getManagedBean().getCommitteeType());
+						this.getManagedBean().getCommitteeType(), 0);
 			}
 
 			if (getManagedBean().getTempTab() < outputTab) {
@@ -2716,7 +2655,7 @@ public class EvaluationBackingBean extends
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setCommType(getManagedBean().getCommitteeType());
 			List<ScQtEvaluationReport> scQtEvaluationReports = new ArrayList<ScQtEvaluationReport>();
-			if (this.getManagedBean().getScQtEvaluationReportList() == null) {
+			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
 				resDTO = evaluationSO.retriveReportDetails(reqDTO);
 				if (resDTO.getReports() != null
 						&& !resDTO.getReports().isEmpty()) {
@@ -2774,15 +2713,12 @@ public class EvaluationBackingBean extends
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			PmParameter committeeType = this.getManagedBean().getScQt()
-					.getScQtCommittees().get(0).getScCommittee()
-					.getCommitteeType();
-			reqDTO.setCommitteeType(committeeType.getParameterCode());
-			resDTO = committeSO
-					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+
+			reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
+			resDTO = committeSO.retrieveCommitteActivityDtls(reqDTO);
 
 			this.getManagedBean().setEndorscommitteeMemberList(
-					resDTO.getCommMemberResultBean().getResultList());
+					resDTO.getCommitteActivities());
 
 		} finally {
 			committeSO = null;
@@ -2866,13 +2802,22 @@ public class EvaluationBackingBean extends
 	}
 
 	public void saveMeetingDtls() {
-		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+		IQTEvaluationSO evaluationSO = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTMeetingSO.class);
+						IQTEvaluationSO.class);
 		try {
-			MeetingReqDTO metReqDtO = evaluationPreparation();
+			EvaluationReqDTO reqDtO = evaluationPreparation();
 
-			meetingso.saveQTDtl(metReqDtO);
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
+			Long qtId = this.getManagedBean().getScQt().getQtId();
+			int index = this.getManagedBean().getPrepareActiveIndex();
+			String committeeType = this.getManagedBean().getCommitteeType();
+			evaluationSO.saveQTDtl(reqDtO);
+			renewSesionObject();
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setOutComes(outComes);
+			retriveMeetingDtls(qtId, committeeType, index);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -2884,8 +2829,8 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public MeetingReqDTO evaluationPreparation() {
-		MeetingReqDTO metReqDtO = new MeetingReqDTO();
+	public EvaluationReqDTO evaluationPreparation() {
+		EvaluationReqDTO reqDtO = new EvaluationReqDTO();
 		try {
 
 			ScQtCommittee qtCommittee = this.getManagedBean()
@@ -2917,7 +2862,7 @@ public class EvaluationBackingBean extends
 				}
 
 			}
-
+			reqDtO.setRemovedmeetingList(meetingRemoveList);
 			List<ScQtMeetingAttendance> meetingAttendanceRemoveList = this
 					.getManagedBean().getMeetingAttendanceRemoveList();
 			if (null != meetingAttendanceRemoveList
@@ -2930,13 +2875,35 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			reqDtO.setRemovedmeetingAttendanceList(meetingAttendanceRemoveList);
+			List<ScQtEvaluationReport> evaluationReport = this.getManagedBean()
+					.getScQtEvaluationReportList();
+			if (null != evaluationReport && !evaluationReport.isEmpty()) {
+				reqDtO.setEvaluationReportList(evaluationReport);
+			}
 
-			metReqDtO.setScQtCommitte(qtCommittee);
+			List<ScQtCommitteeActivity> committeActivities = this
+					.getManagedBean().getEndorscommitteeMemberList();
+			if (null != committeActivities) {
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				for (int i = 0; i < committeActivities.size(); i++) {
+					if (pmUser.getIdentificationNo().equals(
+							committeActivities.get(i).getScCommitteeMember()
+									.getPmUser().getIdentificationNo())) {
+						committeActivities.get(i).setSignedOff(true);
+						break;
+					}
+
+				}
+				qtCommittee.setCommitteeActivities(committeActivities);
+			}
+			reqDtO.setCommitteeMemberEndorsmentList(committeActivities);
+			reqDtO.setScQtCommitte(qtCommittee);
 
 		} finally {
 
 		}
-		return metReqDtO;
+		return reqDtO;
 
 	}
 
@@ -3165,7 +3132,7 @@ public class EvaluationBackingBean extends
 			IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTEvaluationSO.class);
-			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationReqDTO reqDTO = evaluationPreparation();
 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(ctxToken);
@@ -3216,7 +3183,7 @@ public class EvaluationBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
-				evaluationDataType.getCommitteeType());
+				evaluationDataType.getCommitteeType(), 0);
 
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
@@ -3229,6 +3196,24 @@ public class EvaluationBackingBean extends
 		} else if (SCProcessNameConst.FINALISE_OC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_OC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		} else if (SCProcessNameConst.FINALISE_TEC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_TEC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		}
+
+		else if (SCProcessNameConst.FINALISE_FEC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.UPDATE_FEC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
 					.getNavigationHandler()
