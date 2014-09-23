@@ -21,6 +21,7 @@ import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -44,6 +45,8 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 import my.ep.util.EpPropertiesUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import my.ep.constant.MessageConst;
 import javax.faces.context.FacesContext;
 import my.ep.util.MessageUtils;
@@ -52,7 +55,7 @@ import my.ep.util.MessageUtils;
 @SessionScoped
 public class CatalogueManagedBean extends BaseManagedBean {
 
-
+	private static Logger log = EpLogger.getLogger(CatalogueManagedBean.class);
 
 	private String itemName;
 	private String itemCode;
