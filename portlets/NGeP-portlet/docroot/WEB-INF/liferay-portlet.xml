@@ -397,6 +397,14 @@
 		<css-class-wrapper>committee-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>scSchedulerManager</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>bidding-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>scBidding</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
