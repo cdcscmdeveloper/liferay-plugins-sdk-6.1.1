@@ -17,30 +17,24 @@ import org.quartz.JobExecutionException;
  * @author Venkat Chanumolu
  */
 
-// this is the job that gets executed for every 5(interval not final) seconds
-// and iterates through the records of temporary table and changes the status by
+// this is the job that gets executed for every 60 seconds
+// and iterates through the records of ScBidSchedule List and updates the status by
 // comparing the start and end times
 public class ContinuousBidSchedulerJob implements Job {
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
-		System.out.println("********** inside execute method of ContinuousBidSchedulerJob **********");
-		System.out.println("***********job  to schedule bids and this job runs forever***********");
+		
 		List<ScBidSchedule> nextDayScheduledBids = null;
 		IBiddingSO biddingSO = null;
 		try {
 			biddingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-
-			// TODO need API to fetch all the records from the temporary table
-
 			
 			BiddingResDTO resDTO = new BiddingResDTO();
 			if (resDTO.isSuccessful()) {
-				// nextDayScheduledBids = resDTO.getActiveBidSchedules() ;
 			}
-			
 
 		} finally {
 			biddingSO = null;
