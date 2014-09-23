@@ -15,6 +15,7 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -48,7 +49,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private SelectItem[] justifications; //justification drop down 
 	private List<ScPurchaseInDefaultAttachment> attachments;
 	private String processName;
-	private String pidStatus;
+	private PmStatus pidStatus;
 	private String pageNavToRequestNote;
 	private PmReason pmReason;
 	private boolean checkContractItem;
@@ -224,14 +225,14 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	/**
 	 * @return the pidStatus
 	 */
-	public String getPidStatus() {
+	public PmStatus getPidStatus() {
 		return pidStatus;
 	}
 
 	/**
 	 * @param pidStatus the pidStatus to set
 	 */
-	public void setPidStatus(String pidStatus) {
+	public void setPidStatus(PmStatus pidStatus) {
 		this.pidStatus = pidStatus;
 	}
 

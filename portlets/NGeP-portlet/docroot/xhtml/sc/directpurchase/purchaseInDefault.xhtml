@@ -39,7 +39,7 @@
 					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.status']}" />
 				</td>
 				<td style="width: 15%" class="header-info-text">
-				  #{purchaseInDefaultBackingBean.managedBean.pidStatus}
+				  #{purchaseInDefaultBackingBean.getStatusDescById(purchaseInDefaultBackingBean.managedBean.pidStatus.statusId)}
 				</td>
 			</tr>
 		</table>
@@ -231,7 +231,7 @@
 							<tr>
 								<td><p:selectOneMenu id="justId"
 										label="#{lbl['lbl.sc.purchase.in.default.just']}"
-										disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}"
+										disabled="#{!isPendingSubmissionStatus}"
 										required="true"
 										value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.reasonType.reasonCode}"
 										style="margin-bottom: 5px;">
@@ -265,7 +265,7 @@
 			       label="#{lbl['lbl.sc.purchase.in.default.order.qty']}" 
 			       value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}" 
 			       styleClass="ppRightBtn" size="42"  
-			       disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}">
+			       disabled="#{!isPendingSubmissionStatus}">
 				 </p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 			</tr>
 		</table>
@@ -292,7 +292,7 @@
 				  </tr>
 				   <tr><td></td>
 					   <td><p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" maxlength="1000" label="Remarks" rendered="#{remarkIndex==0}" id="remark" 
-					          required="#{purchaseInDefaultBackingBean.managedBean.pidStatus eq 'Pending Submission'}"/>
+					          required="#{isPendingSubmissionStatus}"/>
 						   <h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"  style="display: inline-block; width:220px;word-wrap: break-word;" />
 					  </td>
 					  <td style="vertical-align: top;padding-right: 1px;text-align: right;"> 
@@ -312,7 +312,7 @@
 			     <p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.attachment']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 			<td class="TableFieldRight">
 			     <p:commandButton  oncomplete="uploadDlg.show();return false;" icon="iconAttachment"  update="attachmentId"
-				   disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}" value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" />
+				   disabled="#{!isPendingSubmissionStatus}" value="#{lbl['lbl.sc.purchase.in.default.choose.file']}" />
 		  </td>
 		</tr>
 		 <tr><td/>
@@ -332,7 +332,7 @@
 				 <tr>
 					<td><h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" immediate="true" action="#{purchaseInDefaultBackingBean.downloadFile(attachFile)}"/>
 						<p:commandLink action="#{purchaseInDefaultBackingBean.deleteUploadFile}" immediate="true"  update="attachId"  
-						disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}">
+						disabled="#{!isPendingSubmissionStatus}">
 			   			<h:graphicImage library="ep/images/design" name="trash.png" styleClass="tasklist_title1"/>
 			 	 		</p:commandLink>
 			 	  </td>
@@ -358,7 +358,7 @@
 				<td style="width: 250px;">
 				      <p:pickList id="approver"
 						label="#{lbl['lbl.sc.approve.list']}"
-						disabled="#{purchaseInDefaultBackingBean.managedBean.pidStatus ne 'Pending Submission'}"
+						disabled="#{!isPendingSubmissionStatus}"
 						value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
 						var="approverUser" showTargetControls="true" required="true"
 						itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"

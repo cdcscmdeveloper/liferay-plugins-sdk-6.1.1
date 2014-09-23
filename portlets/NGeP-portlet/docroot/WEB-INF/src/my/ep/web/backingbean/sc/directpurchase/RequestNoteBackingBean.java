@@ -1835,7 +1835,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				purchaseInDefaultBackingBean.initialInformation(purchaseInDefault);
 				purchaseInDefaultBackingBean.retrieveReasonDescListByCategory();
 				purchaseInDefaultBackingBean.justificationTypeEvent();
-				purchaseInDefaultBackingBean.getCurrentStatus(DPStatusConstants.PID_COMPLETED);
+				
+				IStatusSO statusSO = null;
+				try {
+					
+					statusSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+					
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(DPStatusConstants.PID_COMPLETED);
+					
+					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+					
+					purchaseInDefaultBackingBean.getCurrentStatus(statusResDTO.getPmStatus());
+					
+				} finally {
+					statusSO = null;
+				}
+				
 				List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 				ScPurchaseInDefaultAttachment attachment =purchaseInDefault.getScPurchaseInDefaultAttachment();
 				attachment.setUser(facesScopes.getUserSessionBean());

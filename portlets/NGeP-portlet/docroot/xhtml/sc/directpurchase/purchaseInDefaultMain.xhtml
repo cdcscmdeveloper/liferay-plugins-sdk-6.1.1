@@ -14,6 +14,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	</c:if>
     <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info"  showSummary="false"/>
     
+    <ui:param name="isPendingSubmissionStatus" value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
+    
       <p:blockUI block=":form"  widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
