@@ -172,7 +172,25 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String reportHeader;
 	private List<TechnicalStaffBean> smPersonnelsList;
 	private int totalNoOfYearsExperience;
+	private List<ScQtMeeting> meetingRemoveList;
+	private List<ScQtMeetingAttendance> meetingAttendanceRemoveList;
 
+	public List<ScQtMeeting> getMeetingRemoveList() {
+		return meetingRemoveList;
+	}
+
+	public void setMeetingRemoveList(List<ScQtMeeting> meetingRemoveList) {
+		this.meetingRemoveList = meetingRemoveList;
+	}
+
+	public List<ScQtMeetingAttendance> getMeetingAttendanceRemoveList() {
+		return meetingAttendanceRemoveList;
+	}
+
+	public void setMeetingAttendanceRemoveList(
+			List<ScQtMeetingAttendance> meetingAttendanceRemoveList) {
+		this.meetingAttendanceRemoveList = meetingAttendanceRemoveList;
+	}
 
 	// private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
@@ -1631,7 +1649,5 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
 		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
 	}
-
-	
 
 }
