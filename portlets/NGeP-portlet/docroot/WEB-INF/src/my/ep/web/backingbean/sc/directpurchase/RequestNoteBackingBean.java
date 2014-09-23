@@ -186,7 +186,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		scRequestNote = getManagedBean().getRequestNote();
 		
 		if (scRequestNote.getWorkFlowStatuses() != null && scRequestNote.getWorkFlowStatuses().size() > 0) {
-			getCurrentStatus(scRequestNote.getWorkFlowStatuses().iterator().next().getPmStatus().getStatusId());	
+			getCurrentStatus(scRequestNote.getWorkFlowStatuses().iterator().next().getPmStatus());	
 		}
 		
 		return "commonRequestNote";
@@ -520,15 +520,33 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 			getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		}
+		
 		// For status 
-		if(getStatusDescById(docStatusId).equalsIgnoreCase("Pending RN Creation")){
-			getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
-		} else {
-			// For status 
-			if(docStatusId != null){
-				getCurrentStatus(docStatusId);
+		if(docStatusId != null){
+			IStatusSO statusSO = null;
+			try {
+				
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				if (DPStatusConstants.PRI_PENDING_RN_CREATION.equals(docStatusId) || 
+						DPStatusConstants.PID_PENDING_RN_CREATION.equals(docStatusId) ||
+						DPStatusConstants.SQ_PENDING_RN_CREATION.equals(docStatusId)){
+					statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+				} else {
+					statusReqDTO.setStatusId(docStatusId);
+				}
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				getCurrentStatus(statusResDTO.getPmStatus());
+				
+			} finally {
+				statusSO = null;
 			}
 		}
+					
 		getManagedBean().setRequestNote(requestNote);
 		initialInformation(requestNote);
 	}
@@ -868,7 +886,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestSupplierItem(requestSupplierItem);
 		
 		getManagedBean().setJustRequired(Boolean.FALSE);
-		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+		
+		IStatusSO statusSO = null;
+		try {
+			
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+			
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			getCurrentStatus(statusResDTO.getPmStatus());
+			
+		} finally {
+			statusSO = null;
+		}		
 		
 		// clear the justification type and justification remarks
 		getManagedBean().setJustificationType("");
@@ -1313,7 +1347,23 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
-		getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+		IStatusSO statusSO = null;
+		try {
+			
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+			
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			getCurrentStatus(statusResDTO.getPmStatus());
+			
+		} finally {
+			statusSO = null;
+		}
+		
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
@@ -1641,10 +1691,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 
-	public void  getCurrentStatus(Long statusId) {
-		if (statusId != null) {
-			getManagedBean().setRequestNoteStatus(getStatusDescById(statusId));
-		}
+	public void  getCurrentStatus(PmStatus pmStatus) {
+		getManagedBean().setRequestNoteStatus(pmStatus);
 	}
 	
 	public PmUser  getCreatedBy(Long createdBy) {

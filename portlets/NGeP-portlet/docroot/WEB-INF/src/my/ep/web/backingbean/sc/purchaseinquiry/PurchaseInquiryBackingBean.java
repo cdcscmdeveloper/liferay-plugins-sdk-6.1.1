@@ -708,7 +708,22 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getCreatedBy(requestNote.getCreatedBy()).getUserName());
 				
 				requestNoteBackingBean.initialInformation(requestNote);
-				requestNoteBackingBean.getCurrentStatus(DPStatusConstants.RN_PENDING_SUBMISSION);
+				IStatusSO statusSO = null;
+				try {
+					
+					statusSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+					
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+					statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
+					
+					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+					
+					requestNoteBackingBean.getCurrentStatus(statusResDTO.getPmStatus());
+					
+				} finally {
+					statusSO = null;
+				}
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				
 				// back to search catalouge button hide

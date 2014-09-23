@@ -285,7 +285,7 @@
               </p:column>
                
 				<p:column width="100%" style="text-align:right">
-				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Revision'}">
+				 <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 						process="@this" partialSubmit="true"

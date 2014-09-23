@@ -41,16 +41,16 @@
 					<tr>
 						<td align="right">
 						      
-						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' }">
+						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
 					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" 
 						           style="float:left;"  immediate="true" 
 						           action="#{requestNoteBackingBean.backToPervious}"   
 						           rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
 						  </c:if>
 						
-						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Approval' 
-									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Submission' 
-									  or requestNoteBackingBean.managedBean.requestNoteStatus eq 'Pending Revision'}">
+						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
+									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission 
+									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
                               <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction('Save')}"
                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							       update="@([id$=requestNoteId])" process="@all" />

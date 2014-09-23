@@ -130,5 +130,11 @@
 		<managed-bean-class>my.ep.constant.sc.QTStatusConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<description>DP Status Constants</description>
+		<managed-bean-name>DPStatusConstants</managed-bean-name>
+		<managed-bean-class>my.ep.constant.sc.DPStatusConstants</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
 
