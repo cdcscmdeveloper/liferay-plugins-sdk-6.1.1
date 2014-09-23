@@ -273,6 +273,34 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					this.getManagedBean().setCommitteeList(scQtCommittee.getCommitteeActivities());
 				}
 				
+				List<ScQtCommitteeActivity> activityList = scQtCommittee.getCommitteeActivities();
+				List<ScCommitteeMember> memberList = scQtCommittee.getScCommittee().getScCommitteeMembers();
+				boolean isNotTally = false;
+				if(activityList != null){
+					if(memberList.size() > activityList.size()){
+						isNotTally = true;
+					}
+				}else{
+					isNotTally = true;
+				}
+				
+				if(isNotTally){
+					for(ScCommitteeMember member : memberList){
+						for(ScQtCommitteeActivity activityMember : activityList){
+							/*if(activityMember.getScCommitteeMember()){
+								
+							}*/
+						}
+					}
+				}
+				
+				
+				
+				//if activity list is not equal with members, add in to activity
+				
+				
+				
+				
 				//Meeting Attendance Details
 				if (scQtCommittee.getMeetingAttendances() != null && !scQtCommittee.getMeetingAttendances().isEmpty()) {
 					this.getManagedBean().setMeetingAttendanceList(scQtCommittee.getMeetingAttendances());
@@ -838,7 +866,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}
 	
-	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport) throws IOException {
+	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		debugLogger("downloadReport");
 		
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
@@ -848,59 +876,53 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		downloadFile(reportAttachment);	
 	}
 	
-	private ScQtFinalizationReportAttachment generateDocumentAttachment(ScQtFinalizationReport scQtFinalizationReport) {
+	private ScQtFinalizationReportAttachment generateDocumentAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		String definitionType = scQtFinalizationReport.getDefinationType().getParameterCode();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		
 		ScQtFinalizationReportAttachment reportAttachment = null;
 		
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
-			try {
-				String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
-				
-				reportAttachment = new ScQtFinalizationReportAttachment();
-				reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
-				ScAttachment attachment = (ScAttachment)reportAttachment;
-				
-				if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-					generateCoverPdf(attachment, scQtFinalization);	
-				
-				} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS.equals(docDefinitionKey)) {
-					generateOfferedAndQTDtlsPdf(attachment, scQtFinalization);
-
-				} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT.equals(docDefinitionKey)) {
-					//FIXME - get from evaluation report
-
-				} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD.equals(docDefinitionKey)) {
-					generateNoticeBoardPdf(attachment, scQtFinalization);
-
-				} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE.equals(docDefinitionKey)) {
-					generatePriceSchedulePdf(attachment, scQtFinalization);
-
-				} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
-					//FIXME - get from evaluation report
-
-				} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
-					//FIXME - get from evaluation report
-
-				} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
-					//FIXME - get from evaluation report
-
-				} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
-					//FIXME - get from evaluation report
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				throw new EpException(e.getMessage());
-			}
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument().getDocDefinitionKey();
 			
+			reportAttachment = new ScQtFinalizationReportAttachment();
+			reportAttachment.setScQtFinalizationReport(scQtFinalizationReport);
+			ScAttachment attachment = (ScAttachment)reportAttachment;
+			
+			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+				generateCoverPdf(attachment, scQtFinalization);	
+			
+			} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS.equals(docDefinitionKey)) {
+				generateOfferedAndQTDtlsPdf(attachment, scQtFinalization);
+
+			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT.equals(docDefinitionKey)) {
+				//FIXME - get from evaluation report
+
+			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD.equals(docDefinitionKey)) {
+				generateNoticeBoardPdf(attachment, scQtFinalization);
+
+			} else if (SourcingConstants.DOC_DEF_KEY_PRICE_SCHEDULE.equals(docDefinitionKey)) {
+				generatePriceSchedulePdf(attachment, scQtFinalization);
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT.equals(docDefinitionKey)) {
+				//FIXME - get from evaluation report
+
+			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT.equals(docDefinitionKey)) {
+				//FIXME - get from evaluation report
+
+			} else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+				//FIXME - get from evaluation report
+
+			} else if (SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT.equals(docDefinitionKey)) {
+				//FIXME - get from evaluation report
+			}
 			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		
 		return reportAttachment;
 	}
 	
-	public void downloadAllReports() throws IOException {
+	public void downloadAllReports() throws Exception {
 		debugLogger("downloadAllReports");
 
 		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getScQtFinalization().getScQtFinalizationReports();

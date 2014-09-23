@@ -41,7 +41,7 @@
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.status']}" />
 							</f:facet>
-							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="true" value="#{meetingDtl.meetingStatus.statusId}">
+							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatus.statusId}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}"/>
 							</p:selectOneMenu>
 						</p:column>
