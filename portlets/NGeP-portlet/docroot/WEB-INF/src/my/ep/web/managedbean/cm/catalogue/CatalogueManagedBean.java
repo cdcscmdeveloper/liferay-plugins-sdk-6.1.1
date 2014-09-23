@@ -228,7 +228,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					&&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
 					&&districtId == null) {
-				System.out.println("******SearchResultBean******");
+				log.debug("******SearchResultBean******");
 				return new SearchResultBean();
 			}
 
@@ -288,7 +288,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 				
 				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-				System.out.println("bb.isRequisitioner()"+bb.isRequisitioner());
+				log.info("bb.isRequisitioner()"+bb.isRequisitioner());
 				if(!bb.isRequisitioner()){
 					catTypeFilterBean.setSearchField("catType");
 					catTypeFilterBean.setSearchValue("XC");
@@ -297,13 +297,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				
 
 				setDistrictLs(new ArrayList<Long>());
-				System.out.println("districtId:"+districtId);
+				log.info("districtId:"+districtId);
 				for(Long district : districtId){
-					System.out.println("district:"+district);
+					log.info("district:"+district);
 					districtLs.add(district);
 				}
 
-				System.out.println("districtLs.size():"+districtLs.size());
+				log.debug("districtLs.size():"+districtLs.size());
 				if(districtLs != null && districtLs.size()>0){
 					districtFilterBean.setSearchField("districtId");
 					districtFilterBean.setSearchValue(districtLs);
@@ -312,10 +312,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				setStateLs(new ArrayList<Long>());
 				for(Long state : stateId){
-					System.out.println("state:"+state);
+					log.info("state:"+state);
 					stateLs.add(state);
 				}
-				System.out.println("districtLs"+districtLs);
+				log.info("districtLs"+districtLs);
 				if(districtLs.isEmpty()){
 					if(stateLs!=null && stateLs.size()>0){
 						stateFilterBean.setSearchField("stateId");
@@ -325,7 +325,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					}
 
 				}
-				System.out.println("stateLs"+stateLs);
+				log.debug("stateLs"+stateLs);
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
@@ -344,10 +344,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 				reqDTO.setUserId(userId);
-				System.out.println("*********b4***********");
+				log.debug("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
 				setViewSupplierItemList(resDTO.getViewSuppItemResultBean().getResultList());
-				System.out.println("*********after***********");
+				log.debug("*********after***********");
 				
 				return resDTO.getViewSuppItemResultBean();
 			}catch(Exception e){
