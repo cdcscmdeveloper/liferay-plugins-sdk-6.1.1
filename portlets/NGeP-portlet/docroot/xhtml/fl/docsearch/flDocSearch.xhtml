@@ -12,7 +12,10 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<style>
 				.column-align-center {
 				text-align: center !important;
@@ -125,9 +128,9 @@
 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lblfl.doc.search.btn.search']}"
-					action="#{flDocumentBackingBean.searchDocument}"
+					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					icon="ui-icon-search" update="resultPanel" />
-				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}"
+				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
 					update=":form" />
 			</div>

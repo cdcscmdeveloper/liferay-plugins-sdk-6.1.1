@@ -11,6 +11,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		<f:event listener="#{flOrderBB.preRenderViewCR}" type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
@@ -19,7 +22,7 @@
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" ajax='false'
+						<p:commandButton value="#{bpmAction}" ajax='false' onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>

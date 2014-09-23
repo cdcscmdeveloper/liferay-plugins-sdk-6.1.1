@@ -10,16 +10,20 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		<f:event listener="#{invoiceBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
-				<td colspan="4" style="text-align: right;"><p:commandButton
+				<td colspan="4" style="text-align: right;"><p:commandButton 
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						value="SUBMIT" action="#{invoiceBackingBean.submitAp59}"
 						icon="ui-icon-submit">
 					</p:commandButton>

@@ -11,6 +11,9 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		<script>
 			$('#portlet_flDeliveryOrder_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
@@ -23,17 +26,19 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						icon="ui-icon-back" action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
 							styleClass="ui-button" icon="ui-icon-save" value="Save"
-							ajax='false'
+							ajax='false' onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
 							styleClass="ui-button" icon="ui-icon-submit" value="Submit"
-							ajax='false'
+							ajax='false' onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
-						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel"
+						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							rendered="#{false and createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
 					</td>
@@ -44,8 +49,8 @@
 							var="bpmAction"
 							value="#{createDOBackingBean.managedBean.outComes}">
 							<p:commandButton value="#{bpmAction}" update="@form"
-								styleClass="ui-button"
-								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
 								action="#{createDOBackingBean.createDeliveryOrder(bpmAction)}" />
 						</ui:repeat></td>
 				</h:panelGroup>
@@ -53,7 +58,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE" icon="ui-icon-edit"
+							value="UPDATE" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -61,7 +66,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL" icon="ui-icon-cancel"
+							value="CANCEL" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
