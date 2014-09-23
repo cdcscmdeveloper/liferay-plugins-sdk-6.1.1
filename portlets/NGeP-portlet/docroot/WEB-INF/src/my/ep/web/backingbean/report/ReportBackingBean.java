@@ -2178,7 +2178,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				//rptGenBean.setSupplierTypeView(true);
 	        	rptGenBean.setMandatorySupplierTypeView(true);
 				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setExpiryDateView(true);
+				//rptGenBean.setExpiryDateView(true);
+				rptGenBean.setMandatoryExpiryDateView(true);
 				
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PRE_EXP_COMP_RPT_NAME));			
 	            break;
@@ -2205,7 +2206,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        	//rptGenBean.setSupplierTypeView(true);
 	        	rptGenBean.setMandatorySupplierTypeView(true);
 	        	rptGenBean.setCompApplStatusView(true);
-				rptGenBean.setPrintedDateView(true);				
+				//rptGenBean.setPrintedDateView(true);	
+	        	rptGenBean.setMandatoryPrintedDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMP_ADDR_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:
@@ -2243,10 +2245,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        	rptGenBean.setOrganizationTypeView(true);
 	        	rptGenBean.setKementerianView(true);
 	        	rptGenBean.setNamAgensiView(true);
-	        	rptGenBean.setCompApplStatusView(true);
+	        	//rptGenBean.setCompApplStatusView(true);
+	        	rptGenBean.setMandatoryApplicationStatusView(true);
 	        	rptGenBean.setCompanyStatusView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
+				rptGenBean.setMandatoryApplicationDateView(true);
+				
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_AGENCY_STAT_SUMM_RPT_VAL:		        	
