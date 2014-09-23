@@ -12,6 +12,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
 		<script>
 			$('#portlet_flDocumentMaintenance_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
@@ -22,7 +25,7 @@
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true"  
 						icon="ui-icon-back" oncomplete="location.replace(document.referrer);"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<c:if
@@ -30,7 +33,7 @@
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
-							styleClass="ui-button"
+							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}"
 							process="@this" />

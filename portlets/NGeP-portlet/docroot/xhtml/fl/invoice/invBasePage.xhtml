@@ -12,6 +12,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		<script>
 			$('#portlet_flInvoice_WAR_NGePportlet').find(
 					'.portlet-title-text').html(
@@ -23,20 +26,20 @@
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="location.replace(document.referrer);" /></td>
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"
-							styleClass="ui-button"
+							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{invoiceBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE" icon="ui-icon-edit"
+							value="UPDATE" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -44,7 +47,7 @@
 				<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL" icon="ui-icon-cancel"
+							value="CANCEL" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>

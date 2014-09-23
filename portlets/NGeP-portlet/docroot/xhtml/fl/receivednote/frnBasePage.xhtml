@@ -12,12 +12,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>	
 		<f:event listener="#{receivedNoteBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="location.replace(document.referrer);" /></td>
 				<td colspan="4" style="text-align: right">
@@ -25,12 +28,13 @@
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{receivedNoteBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat>
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
-								value="UPDATE"
+								value="UPDATE" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
 								<f:param name="actionName" value="UPDATE" />
 							</p:commandButton></td>
@@ -38,7 +42,7 @@
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
-								value="CANCEL"
+								value="CANCEL" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
 								<f:param name="actionName" value="CANCEL" />
 							</p:commandButton></td>
