@@ -959,9 +959,10 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			reqDTO.setOutcome(outCome);
 			
 			MeetingResDTO resDTO = meetingSO.updateBPMAction(reqDTO);
+			String qtNo = getManagedBean().getScQt().getQtNo();
 			renewSesionObject();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
 			String variable2 = CommonMethod.getMessageCommon("lbl.sc.meeting.confirmation");
 			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
 			
