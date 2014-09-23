@@ -395,7 +395,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				//save list of documents if its not yet save
 				saveScQtReportList(scQtDocReport);
 			}
-					
+				
+			scQtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
 			if(scQtDocReport.getTplDocMaster() == null) {
 				//clone standard tplDocMaster
 				TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtDocReport);
