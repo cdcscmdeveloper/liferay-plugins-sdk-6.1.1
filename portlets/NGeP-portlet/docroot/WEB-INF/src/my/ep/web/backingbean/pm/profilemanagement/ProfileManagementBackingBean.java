@@ -361,9 +361,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	 * retrieve salutation list
 	 * @return List<PmSalutation> 
 	 */
-	public SelectItem[] salutationOptions(){
+	public List<PmSalutation> salutationOptions(){
 		logger.info("salutationOptions");
-		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
+		return PmCommonUtil.retrievePmSalutationList();
+//		return getDropdownValues(ParameterTypeConst.SALUTATIONS);
 	}
 	
 

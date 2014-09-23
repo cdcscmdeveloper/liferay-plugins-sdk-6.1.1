@@ -60,7 +60,9 @@
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
-								<f:selectItems value="#{profileManagementBackingBean.salutationOptions()}" />
+								<f:selectItems value="#{profileManagementBackingBean.salutationOptions()}" 
+									var="salutation" itemLabel="#{salutation.salutationName}"
+									itemValue="#{salutation.salutationId}"/>
 							</p:selectOneMenu>
 							<p:message id="somSalutationMsg" for="somSalutation" display="icon" />
 						</td>
