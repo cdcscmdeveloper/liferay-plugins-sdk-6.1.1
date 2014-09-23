@@ -275,31 +275,21 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				
 				List<ScQtCommitteeActivity> activityList = scQtCommittee.getCommitteeActivities();
 				List<ScCommitteeMember> memberList = scQtCommittee.getScCommittee().getScCommitteeMembers();
-				boolean isNotTally = false;
 				if(activityList != null){
-					if(memberList.size() > activityList.size()){
-						isNotTally = true;
-					}
-				}else{
-					isNotTally = true;
-				}
-				
-				if(isNotTally){
-					for(ScCommitteeMember member : memberList){
-						for(ScQtCommitteeActivity activityMember : activityList){
-							/*if(activityMember.getScCommitteeMember()){
-								
-							}*/
+					if(memberList.size() != activityList.size()){
+						List<ScQtCommitteeActivity> scQtCommitteeActivitys = new ArrayList<ScQtCommitteeActivity>();
+						for(ScCommitteeMember member : memberList){
+							ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+							activity.setScQtCommittee(scQtCommittee);
+							activity.setScCommitteeMember(member);
+							setUserDetails(activity);
+							
+							scQtCommitteeActivitys.add(activity);
 						}
+						scQtCommittee.setCommitteeActivities(scQtCommitteeActivitys);
+						this.getManagedBean().setCommitteeList(scQtCommitteeActivitys);
 					}
 				}
-				
-				
-				
-				//if activity list is not equal with members, add in to activity
-				
-				
-				
 				
 				//Meeting Attendance Details
 				if (scQtCommittee.getMeetingAttendances() != null && !scQtCommittee.getMeetingAttendances().isEmpty()) {
@@ -383,9 +373,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		try {
 			this.getManagedBean().setPrepareActiveIndex(PREPARE_ACTIVE_INDEX_COMMITTEE);
 			
-			//Meeting Details
-			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-			getManagedBean().setMeetingList(meetingList);
+			//Committee Details
+			List<ScQtCommitteeActivity> committeeList = getManagedBean().getCommitteeList();
+			getManagedBean().setCommitteeList(committeeList);
 		} finally {
 		}
 	}
