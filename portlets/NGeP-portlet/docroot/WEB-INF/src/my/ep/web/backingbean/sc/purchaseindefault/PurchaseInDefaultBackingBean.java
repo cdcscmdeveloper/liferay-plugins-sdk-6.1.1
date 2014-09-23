@@ -160,7 +160,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
 			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
-			getCurrentStatus(status.getStatusId());  
+			getCurrentStatus(workFlowStatus.getPmStatus());  
 
 			// to get ptj
 			PmUser user = new FacesScopes().getUserSessionBean();
@@ -332,9 +332,11 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			 
 		   if(resDTO.isSuccessful()){
 			   if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-				   if(getManagedBean().getPidStatus().equalsIgnoreCase(ParameterConst.PID_PENDING_VERIFICATION)){
+				   Long statusId = getManagedBean().getPidStatus().getStatusId();
+				   
+				   if(DPStatusConstants.PID_PENDING_VERIFICATION.equals(statusId)){
 					   successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo()); 
-				   } else  if(getManagedBean().getPidStatus().equalsIgnoreCase(ParameterConst.PID_PENDING_APPROVAL)){
+				   } else  if(DPStatusConstants.PID_PENDING_APPROVAL.equals(statusId)){
 					   successMessage(MessageConst.INFO_700007, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_IN_DEFAULT, getManagedBean().getPurchaseInDefault().getPurchaseInDefaultNo());
 				   }
 			   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
@@ -422,10 +424,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
    /**
     * To get status for pid in Purchase In Default
     */
-   public void  getCurrentStatus(Long statusId) {
-	   if (statusId != null) {
-		   getManagedBean().setPidStatus(getStatusDescById(statusId));
-	   }
+   public void  getCurrentStatus(PmStatus pmStatus) {
+	   getManagedBean().setPidStatus(pmStatus);
    }   
    /**
     * Event for justification type drop down in pid
@@ -645,7 +645,23 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   getManagedBean().setOutComes(res.getAction());
 		   getManagedBean().setPurchaseInDefault(purchaseInDefault);
 		   getManagedBean().setAttachments(attachments);
-		   getCurrentStatus(res.getDocStatus().longValue()); 
+		   
+		   IStatusSO statusSO = null;
+			try {
+				
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(res.getDocStatus().longValue());
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				getCurrentStatus(statusResDTO.getPmStatus());
+				
+			} finally {
+				statusSO = null;
+			}
 
 		   initialInformation(purchaseInDefault);
 		   retrieveReasonDescListByCategory();
