@@ -15,6 +15,7 @@
 			selectionMode="single" rowKey="#{address}">
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 				update=":form:itemDetPanelGroup,:form:deleteAddrBtn"
 				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
 			<p:column>
@@ -140,7 +141,7 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						<p:ajax event="blur" update="subTotalTxt,@(.orderSummaryChange),unitPrice,orderedQty,itemDataTable"
-							process="@this" onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();"
+							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
 					<p:commandLink oncomplete="reqItemInfo.show();"
@@ -159,9 +160,6 @@
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
-			<p:blockUI widgetVar="blockTreeTable"  block="itemDataTable">  
-			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
-		</p:blockUI> 
 		</p:panel>
 	</h:panelGroup>
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"

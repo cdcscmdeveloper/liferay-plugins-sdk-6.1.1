@@ -13,8 +13,7 @@
 			selection="#{purchaseRequestBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
-			<p:ajax event="expand" 
-                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  
+			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
 				update="@(.chargeLineSection1)" />
@@ -77,10 +76,6 @@
 
 			</p:column>
 		</p:treeTable>
-		<p:blockUI widgetVar="blockTreeTable"  block="chargeLineTbl">  
-			<p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
-		</p:blockUI> 
-		
 		<br />
 		<br />
 		<br />

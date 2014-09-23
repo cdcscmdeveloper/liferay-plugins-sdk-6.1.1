@@ -12,6 +12,9 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<table style="width: 100%;">
 			<tr>
@@ -21,7 +24,7 @@
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form" 
-							styleClass="ui-button" 
+							styleClass="ui-button"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
 					</ui:repeat></td>
