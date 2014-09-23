@@ -216,8 +216,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private Date printedToDate;
 	
 	private String generatedURL;
-	private StreamedContent pdfData;
-	
+	private String reportURL;
 	/*SM end*/
 	
 	
@@ -330,15 +329,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setSuppDocStatus(String suppDocStatus) {
 		this.suppDocStatus = suppDocStatus;
 	}
-	public StreamedContent getPdfData() {
-		if(null==pdfData){
-			return new DefaultStreamedContent();
-		}
-		return pdfData;
-	}
-	public void setPdfData(StreamedContent pdfData) {
-		this.pdfData = pdfData;
-	}
 	public String getGeneratedURL() {
 		return generatedURL;
 	}
@@ -353,6 +343,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public String getCaseNo() {
 		return caseNo;
+	}
+	
+	public String getReportURL() {
+		return reportURL;
+	}
+	public void setReportURL(String reportURL) {
+		this.reportURL = reportURL;
 	}
 	public void setCaseNo(String caseNo) {
 		this.caseNo = caseNo;
@@ -2034,10 +2031,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMofRegNoFromView(true);
-	        	rptGenBean.setMofRegNoToView(true);
+	        	//rptGenBean.setZoneView(true);
+	        	rptGenBean.setMandatoryZoneView(true);
+	        	//rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
+	        	//rptGenBean.setMofRegNoFromView(true);
+	        	//rptGenBean.setMofRegNoToView(true);
+	        	rptGenBean.setMandatoryMofRegNoView(true);
 	        	rptGenBean.setCompanyNameView(true);
 	        	rptGenBean.setRegistrationTypeView(true);
 	        	rptGenBean.setRegistrationStatusView(true);
@@ -2061,8 +2061,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
+	        	
+	        	//rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
 	        	rptGenBean.setMofRegNoFromView(true);
 	        	rptGenBean.setMofRegNoToView(true);
 	        	rptGenBean.setCompanyNameView(true);	        	
@@ -2096,11 +2097,15 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL:	        	
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setApplicationStatusView(true);	
+	        	//rptGenBean.setZoneView(true);
+	        	rptGenBean.setMandatoryZoneView(true);
+	        	//rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
+	        	//rptGenBean.setApplicationStatusView(true);
+	        	rptGenBean.setMandatoryApplicationStatusView(true);
 	        	rptGenBean.setCancelledByView(true);
-	        	rptGenBean.setApplicationDateView(true);				
+	        	//rptGenBean.setApplicationDateView(true);
+	        	rptGenBean.setMandatoryApplicationDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL:	        	
@@ -2170,7 +2175,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL:	        	
-				rptGenBean.setSupplierTypeView(true);
+				//rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
 				rptGenBean.setCompanyNameView(true);
 				rptGenBean.setExpiryDateView(true);
 				
@@ -2196,7 +2202,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_LST_COMP_ADDR_RPT_VAL:	
-	        	rptGenBean.setSupplierTypeView(true);
+	        	//rptGenBean.setSupplierTypeView(true);
+	        	rptGenBean.setMandatorySupplierTypeView(true);
 	        	rptGenBean.setCompApplStatusView(true);
 				rptGenBean.setPrintedDateView(true);				
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMP_ADDR_RPT_NAME));			
@@ -2231,7 +2238,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_BPK_ADMIN_PROF_RPT_NAME));			
 	            break;
 	        case ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_VAL:	
-	        	rptGenBean.setZoneView(true);
+	        	//rptGenBean.setZoneView(true);
+	        	rptGenBean.setMandatoryZoneView(true);
 	        	rptGenBean.setOrganizationTypeView(true);
 	        	rptGenBean.setKementerianView(true);
 	        	rptGenBean.setNamAgensiView(true);
@@ -2266,7 +2274,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	            break;
 	        case ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL:
 	           	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setZoneView(true);
+	        	//rptGenBean.setZoneView(true);
+	           	rptGenBean.setMandatoryZoneView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_NAME));			
@@ -3559,11 +3568,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
 			String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
-			String baseUrl=serverDetails+FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String baseUrl=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 			String path=baseUrl+"/ReportViewServlet";			
 			log.info(path);
 			req.getSession().setAttribute("generatedUrl", gnrtdURL);
-			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);			
+			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
+			setReportURL(path);
 		} catch (Exception e) {
 			e.printStackTrace();		
 		}

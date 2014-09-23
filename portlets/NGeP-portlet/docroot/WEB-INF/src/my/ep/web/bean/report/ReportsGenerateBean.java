@@ -99,6 +99,11 @@ public class ReportsGenerateBean {
 		private boolean receiveDateView = false;
 		private boolean expiryDateView = false;
 		private boolean printedDateView = false;
+		private boolean mandatoryZoneView = false;
+		private boolean mandatorySupplierTypeView = false;
+		private boolean mandatoryApplicationDateView = false;
+		private boolean mandatoryApplicationStatusView = false;
+		private boolean mandatoryMofRegNoView = false;
 		
 		/*SM end*/
 	   //URL variables start
@@ -152,6 +157,38 @@ public class ReportsGenerateBean {
 		private String toDateVar=ReportConst.EMPTY_VAL;
 
 		
+		
+		public boolean isMandatoryMofRegNoView() {
+			return mandatoryMofRegNoView;
+		}
+		public void setMandatoryMofRegNoView(boolean mandatoryMofRegNoView) {
+			this.mandatoryMofRegNoView = mandatoryMofRegNoView;
+		}
+		public boolean isMandatoryApplicationDateView() {
+			return mandatoryApplicationDateView;
+		}
+		public void setMandatoryApplicationDateView(boolean mandatoryApplicationDateView) {
+			this.mandatoryApplicationDateView = mandatoryApplicationDateView;
+		}
+		public boolean isMandatoryApplicationStatusView() {
+			return mandatoryApplicationStatusView;
+		}
+		public void setMandatoryApplicationStatusView(
+				boolean mandatoryApplicationStatusView) {
+			this.mandatoryApplicationStatusView = mandatoryApplicationStatusView;
+		}
+		public boolean isMandatorySupplierTypeView() {
+			return mandatorySupplierTypeView;
+		}
+		public void setMandatorySupplierTypeView(boolean mandatorySupplierTypeView) {
+			this.mandatorySupplierTypeView = mandatorySupplierTypeView;
+		}
+		public boolean isMandatoryZoneView() {
+			return mandatoryZoneView;
+		}
+		public void setMandatoryZoneView(boolean mandatoryZoneView) {
+			this.mandatoryZoneView = mandatoryZoneView;
+		}
 		public boolean isPrintedDateView() {
 			return printedDateView;
 		}

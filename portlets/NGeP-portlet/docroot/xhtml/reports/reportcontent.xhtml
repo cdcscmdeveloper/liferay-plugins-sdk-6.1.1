@@ -339,16 +339,32 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.zoneView}">
-								  <p:column>								
-									<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:122px;"/>								
+								  <p:column>								  
+        								<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:122px;"/>	   															
 								  </p:column>
 									<p:column>								
-									<p:selectOneMenu id="rptZone" value="#{reportBackingBean.zone}" style="margin-top:5px;width:150px;">
+        								<p:selectOneMenu value="#{reportBackingBean.zone}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}" itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}" itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>	
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}" itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>																					
-									</p:selectOneMenu>																	
+									</p:selectOneMenu>	
+   																
+									</p:column>
+								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryZoneView}">
+								  <p:column>								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:84px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>														
+								  </p:column>
+								  <p:column>																
+									<p:selectOneMenu id="Zone" value="#{reportBackingBean.zone}"  required="true" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}" itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}" itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>	
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}" itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>																					
+									</p:selectOneMenu>
+									<p:message id="rptZoneMsg" for="Zone" display="icon" />														
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierTypeView}">
@@ -358,6 +374,20 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>																					
 									</p:selectOneMenu>									
+								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatorySupplierTypeView}">
+									<p:column>								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:37px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>														
+								  </p:column>
+								  <p:column>																
+									<p:selectOneMenu id="SupplierType" value="#{reportBackingBean.supplierType}" required="true" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>																					
+									</p:selectOneMenu>
+									<p:message id="supplierTypeMsg" for="SupplierType" display="icon" />														
+									</p:column>									
 								  </c:if>
 								  
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.caseNoView}">
@@ -390,7 +420,26 @@
 									<p:inputText value="#{reportBackingBean.mofRegNoTo}"  style="margin-top:5px;width:290px;">
 					 				</p:inputText>
 									</c:if>	
-										
+									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryMofRegNoView}">
+									<p:column>								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>														
+								  </p:column>
+								  <p:column>																
+									<p:inputText id="MOFRegNoFrom" value="#{reportBackingBean.mofRegNoFrom}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									<p:message id="rptZoneMsg" for="MOFRegNoFrom" display="icon" />														
+									</p:column>
+									<p:column>								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>														
+								  </p:column>
+								  <p:column>																
+									<p:inputText id="MOFRegNoTo" value="#{reportBackingBean.mofRegNoTo}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									<p:message id="rptZoneMsg" for="MOFRegNoTo" display="icon" />														
+									</p:column>
+									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ePNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:122px;"/>
 									<p:inputText value="#{reportBackingBean.epNumber}"  style="margin-top:5px;width:290px;">									
@@ -709,7 +758,7 @@
 		            </div>
 		           <h:panelGroup id="rptbtnGroup">
 		            <div align="right">		            		                    	
-		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)">
+		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult">
 				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
@@ -723,7 +772,8 @@
 						resizable="false" position="right" closable="true"
 						closeOnEscape="true" draggable="true" onHide="closeDialogBox(this)">
 						<h:panelGroup id="reportResult" styleClass="reportResultStyle">
-							<p:media id="pdfViewer" player="pdf" data="#{reportBackingBean.pdfData}" width="900" height="500" rendered="#{pdf.selectedPdf != null}" />
+							<object id="someId" data="#{reportBackingBean.reportURL}"
+								type="application/pdf" width="900" height="500" />
 						</h:panelGroup>
 						
 					</p:dialog>
@@ -740,7 +790,8 @@
 			   if (args) {
 			      var reportInValid = args.reportInValid;
 			     if(!reportInValid){
-			    	 window.open(args.reportViewUrl,'_blank');
+			    	 //window.open(args.reportViewUrl,'_blank');
+			    	 reportGenDialog.show();
 			     }
 			   }
 			}
