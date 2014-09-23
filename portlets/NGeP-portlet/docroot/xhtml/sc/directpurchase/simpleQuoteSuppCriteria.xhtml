@@ -12,7 +12,8 @@
 			rendered="#{simpleQuoteBackingBean.managedBean.locAndBusinessFlag}">
 			<h:panelGrid columns="3" style="margin-bottom:10px" cellpadding="5">
 				<p:selectBooleanCheckbox id="byLocId"
-					value="#{simpleQuoteBackingBean.managedBean.byLocality}">
+					value="#{simpleQuoteBackingBean.managedBean.byLocality}"
+					disabled="#{isPendingRnCreationStatus}">
 					<p:ajax event="change" update="suppCriteria"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byLocId" />
@@ -21,7 +22,8 @@
 				<ac:iconTooltip value="#{lbl['lbl.sc.sq.locality.tooltip']}" />
 
 				<p:selectBooleanCheckbox id="byBussNatureId"
-					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}">
+					value="#{simpleQuoteBackingBean.managedBean.byBusinessNature}"
+					disabled="#{isPendingRnCreationStatus}">
 					<p:ajax event="change" update="@([id$=suppCriteriasId])"
 						listener="#{simpleQuoteBackingBean.byLocAndBusinessEvent}"
 						process="@this byBussNatureId" />
@@ -45,7 +47,8 @@
 										value="#{lbl['lbl.sc.location.level']}" /></td>
 								<td><p:selectOneMenu id="locLevels"
 										value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
-										style="width: 140px;">
+										style="width: 140px;"
+										disabled="#{isPendingRnCreationStatus}">
 										<f:selectItems
 											value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 								<p:ajax event="change" update="locationDataTable" partialSubmit="true"

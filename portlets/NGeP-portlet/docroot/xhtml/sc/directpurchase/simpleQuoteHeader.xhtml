@@ -34,7 +34,7 @@
 					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.status']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-				 #{simpleQuoteBackingBean.managedBean.simpleQuoteStatus}
+				 #{simpleQuoteBackingBean.getStatusDescById(simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId)}
 				</td>
 				
 			</tr>

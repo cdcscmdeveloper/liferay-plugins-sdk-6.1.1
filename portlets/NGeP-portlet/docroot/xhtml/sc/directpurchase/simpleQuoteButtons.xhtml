@@ -50,7 +50,7 @@
 					value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 					icon="ui-icon-back" partialSubmit="true" process="@this"
 					style="float:left;"
-					rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
+					rendered="#{isPendingSubmissionStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" >
 					<p:tooltip for="backButton">
 						<h:outputText value="#{lbl['lbl.sc.itemsearch.tooltip']}" escape="false" />
@@ -61,7 +61,7 @@
 				<p:commandButton immediate="true"
 					value="#{lbl['lbl.sc.common.back']}" icon="ui-icon-back"
 					partialSubmit="true" process="@this" style="float:left;"
-					rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending RN Creation'}"
+					rendered="#{isPendingRnCreationStatus}"
 					action="#{simpleQuoteBackingBean.backToPervious}" />
 
 				<p:commandButton value="#{lbl['lbl.sc.common.save']}"
@@ -95,7 +95,7 @@
 				<table style="width: 100%">
 					<tr>
 						<td align="right"><c:if
-								test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+								test="#{isPendingSubmissionStatus}">
 								<p:commandButton immediate="true"
 									value="#{lbl['lbl.sc.action.back.to.search.catalogue']}"
 									icon="ui-icon-back" partialSubmit="true" process="@this"
@@ -104,8 +104,8 @@
 							</c:if> <!-- to view simple Quote from the request note header  Icon    -->
 							<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 								<c:if
-									test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Approval' 
-									  or simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}">
+									test="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus.statusId eq DPStatusConstants.rnPendingApproval 
+									  or isPendingSubmissionStatus}">
 									<p:commandButton value="#{lbl['lbl.sc.common.save']}"
 										icon="ui-icon-save" onstart="blockWidget.show();"
 										oncomplete="blockWidget.hide();"
@@ -120,7 +120,7 @@
 
 									<h:panelGroup rendered="#{bpmAction eq 'SUBMIT'}">
 										<p:commandButton value="#{lbl[buttonLabel]}"
-											rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
+											rendered="#{isPendingSubmissionStatus}"
 											styleClass="ui-button"
 											partialSubmit="true" process="@form"
 											icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
@@ -133,7 +133,7 @@
 									<h:panelGroup rendered="#{bpmAction eq 'CANCEL'}">
 										<p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 											update="@form"
-											rendered="#{simpleQuoteBackingBean.managedBean.simpleQuoteStatus eq 'Pending Submission'}"
+											rendered="#{isPendingSubmissionStatus}"
 											styleClass="ui-button"
 											icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 											onstart="blockWidget.show();"
