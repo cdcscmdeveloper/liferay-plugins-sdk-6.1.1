@@ -28,6 +28,8 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -43,6 +45,7 @@ import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -61,6 +64,7 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -88,6 +92,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
@@ -211,16 +217,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
 		if(getManagedBean().getActiveContractList()==null) {
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			ContractReqDTO ctReqDTO = new ContractReqDTO();
-			UserReqDTO reqDTO = new UserReqDTO();
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			ctReqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-			ContractResDTO ctResDTO = contractSO.retrieveActiveContractList(ctReqDTO);
-			getManagedBean().setActiveContractList(ctResDTO.getActiveContractList());
-			
+			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
+			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
+			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
 			populateContractListTree();
 		}
 		if(null == getManagedBean().getFlManulaAddress()){
@@ -257,9 +260,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if (isApprover()) {
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setApprover(facesScopes.getUserSessionBean().getLoginId());
-		}
-		if(getManagedBean().getUserGroupMap()==null && isRequisitioner()) {
-			initializeApproverGroup();
 		}
 		if(getManagedBean().getFlRequest().getPreparedOrgProfile().getPmOrgValidity() == null){
 			getManagedBean().getFlRequest().getPreparedOrgProfile().setPmOrgValidity(new PmOrgValidity());
@@ -334,16 +334,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					messageId = MessageConst.INFO_700009;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 					messageId = MessageConst.INFO_700008;
+				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+					messageId = MessageConst.INFO_700010;
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flRequest.getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700002, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}else {
+				} else {
+					reqDTO.setFlRequestId(resDTO.getFlRequestId());
+					resDTO = iFulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 					setFulfilmentRequestField(resDTO);
 				}
 			} 
@@ -383,9 +392,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 		getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 
-		if(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches() != null && !resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches().isEmpty()){
-			getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier().getSmAppl().getSmSupplierBranches());
-		}
+		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
 		
 		for(FlFulfilmentItem flItem : getManagedBean().getFlRequest().getFlFulfilmentItems()) { 
 			String key = flItem.getCmItem().getItemId().toString() + flItem.getUnitPrice().doubleValue() + "";
@@ -854,12 +861,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				
 			}
 			IUserSO profileSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-			UserResDTO userResDTO = profileSO.retrieveUserOrgListByUserId(userReqDTO);
-			getManagedBean().getFlRequest().setPreparedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
-			getManagedBean().getFlRequest().setChargeOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
-			getManagedBean().getFlRequest().setIssuedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+//			UserReqDTO userReqDTO = new UserReqDTO();
+//			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+//			UserResDTO userResDTO = profileSO.retrieveUserOrgListByUserId(userReqDTO);
+			getManagedBean().getFlRequest().setPreparedOrgProfile(getManagedBean().getPmOrgProfile());
+			getManagedBean().getFlRequest().setChargeOrgProfile(getManagedBean().getPmOrgProfile());
+			getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getPmOrgProfile());
 			getAgAccount();
 			getLoginUserOrg();
 			String[] outcome = new String[2];
@@ -1007,12 +1014,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				System.out.println("sumOrderedAmt: "+sumOrderedAmt);
 			}
 		}
-		IFulfilmentRequestSO iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setIssuedOrgId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		FulfilmentResDTO resDTO = iFulfilmentRequestSO.retrievePreviousSumOrderedAmtByPtj(reqDTO);
-		checkCeilingAmt = resDTO.getPrevSumAmt().add(sumOrderedAmt);
+		BigDecimal prevSumAmt = itemSummarySO.retrieveContractAgencyAccumulatedAmount(reqDTO);
+		checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 		
 		System.out.println("checkCeilingAmt total: "+checkCeilingAmt);
 		System.out.println("getAgencyCeilingAmount: "+ctResDTO.getAgencyCeilingAmount().intValue());
@@ -1040,16 +1047,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
 				System.out.println("sumOrderedQty: "+sumOrderedQty);
 			}
-			IFulfilmentRequestSO iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setIssuedOrgId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+			FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			FulfilmentResDTO resDTO = iFulfilmentRequestSO.retrievePreviousSumOrderedQtyByPtj(reqDTO);
-			checkCeilingQty = resDTO.getPrevSumQty().add(sumOrderedQty);
+			BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+			checkCeilingQty = prevSumQty.add(sumOrderedQty);
 
 			System.out.println("checkCeilingQty total: "+checkCeilingQty);
 			System.out.println("getAgencyCeilingAmount: "+ctResDTO.getItemCeilingQuantity());
 			if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
+				throw new EpException("Item "+ item.getCmItem().getItemName() +"  has been exceeded the quantity limit.");
 //				throw new EpException("Item "+ item.getQtItem().getItemName() +"  has been exceeded the quantity limit.");
 			}
 		}
@@ -1058,56 +1066,68 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	
 	private void initializeApproverGroup() {
-		IUserSO userSO = null;
+		IFulfilmentRequestSO requestSO = null;
 		try {
-			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
-			
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-			resDTO = userSO.retrieveUserGroupList(reqDTO);
-			
-			if(getManagedBean().getFlRequest().getPmUserGroup()==null) {
-				PmUserGroup pmUserGroup = new PmUserGroup();
-				getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
-			}
-			if(getManagedBean().getApproverModel()==null) {
-				List<String> source = new ArrayList<String>(); 
-		        List<String> target = new ArrayList<String>();  
-		        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-			}			
-			
-			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
-			int i = 0;
-			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
-				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
-				if(i==0) {
-					getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
-					List<String> source = new ArrayList<String>();
-					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
-						getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
-						source.add(user.getPmUser().getUserName());
-					}
-					getManagedBean().getApproverModel().setSource(source);
+			if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
+				requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTO = new FulfilmentResDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
+				
+				if(getManagedBean().getFlRequest().getPmUserGroup()==null) {
+					PmUserGroup pmUserGroup = new PmUserGroup();
+					getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 				}
-				i++;
+				if(getManagedBean().getApproverModel()==null) {
+					List<String> source = new ArrayList<String>(); 
+					List<String> target = new ArrayList<String>();  
+					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+				}			
+				getManagedBean().getUserGroupList().clear();
+				
+				//new
+				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
+				if(resDTO.getUserGroupList().size()>0) {
+					reqDTO.setGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+					List<String> source = new ArrayList<String>();
+					
+					for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
+							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
+							if(getManagedBean().getApproverModel().getSource().size()==0) {
+								getManagedBean().getApproverModel().setSource(source);
+							}
+							source.add(groupUser.getPmUser().getUserName());
+						}
+					getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+				}
+				
+				//end
+				getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			userSO = null;
+			requestSO = null;
 		}
 	}
 	
 	public void userGroupChangeListener() {
-		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		reqDTO.setGroupId(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId());
+		try {
+			resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		List<String> source = new ArrayList<String>(); 
         List<String> target = new ArrayList<String>();  
-		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
-			source.add(userGroupUser.getPmUser().getUserName());
+		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
+			source.add(groupUser.getPmUser().getUserName());
 		}
 		getManagedBean().getApproverModel().setSource(source);
 		getManagedBean().getApproverModel().setTarget(target);
@@ -1115,15 +1135,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
-		try {
-			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
-			int i = 0;
-			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) {
-				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		if(getManagedBean().getFlRequest().getPmUserGroup()==null) {
+			getManagedBean().getFlRequest().setPmUserGroup(new PmUserGroup());
+		}
+		items = new SelectItem[getManagedBean().getUserGroupList().size()];
+		int i = 0;
+		for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+			items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
 		}
 	    return items;
 	}
@@ -1349,6 +1367,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(getManagedBean().getSelectedDelAddr()==null) { 
 				retrieveCountryList();
 			}
+		}
+		if(selectedTabIndex==4){
+			initializeApproverGroup();
 		}
 	}
 	private void populateChargeLineData(boolean retainPreviousSelection) {
@@ -1709,28 +1730,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	}
 	
-	public OrgProfileResDTO getVotFundList(Long profileId){
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
-		IGlAccountSO glAccountSO = (IGlAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IGlAccountSO.class);
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+	public void getVotFundList(Long profileId){
+		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setOrgProfileId(profileId);
-		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
+		FulfilmentResDTO votFundRes = fulfilmentSO.retrieveVotFundListByOrgId(reqDTO);
 		
-		for (PmVotFund pmVotFund : resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds()) {
+		for (PmVotFund pmVotFund : votFundRes.getVotFundList()) {
 			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
 		
-		GlAccountReqDTO glAccountReqDTO = new GlAccountReqDTO();
-		glAccountReqDTO.setPtjGroupId(resDTO.getPmOrgProfile().getPmPtjGroup().getPtjGroupId());
-		GlAccountResDTO glAccountResDTO = glAccountSO.retrieveGlAccountList(glAccountReqDTO);
-		getManagedBean().setGlAccountList(glAccountResDTO.getGlAccountList());
-		for(PmGlAccount pmGlAcount : glAccountResDTO.getGlAccountList()) {
+		FulfilmentResDTO glAccountRes = fulfilmentSO.retrieveGlAccounts(reqDTO);
+		getManagedBean().setGlAccountList(glAccountRes.getGlAccountList());
+		for(PmGlAccount pmGlAcount : glAccountRes.getGlAccountList()) {
 			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount);
 		}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
-		getManagedBean().setVotFundList(resDTO.getPmOrgProfile().getPmPtjGroup().getPmVotFunds());
-		return resDTO;
+		getManagedBean().setVotFundList(votFundRes.getVotFundList());
+		
 	}
 	
 	public void getProjectList(AjaxBehaviorEvent e) {
@@ -2121,6 +2139,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public AgOfficeResDTO getAgAccount(){
+		checkPtjGroupAndInitialize();
+		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
+		initializeApproverGroup();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
 		AgOfficeReqDTO reqDTO = new AgOfficeReqDTO();
@@ -2132,6 +2153,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getFlRequest().setAgOffice(resDTO.getAgOffice());
 
 		return resDTO;
+	}
+	
+	private void checkPtjGroupAndInitialize() {
+		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFlRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
+		if(getManagedBean().getFlRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
+			if(getManagedBean().getFlRequest().getFlFulfilmentItems() != null && !getManagedBean().getFlRequest().getFlFulfilmentItems().isEmpty()){
+				for(FlFulfilmentItem fulfilmentItem : getManagedBean().getFlRequest().getFlFulfilmentItems()){
+					for(FlFulfilmentItemAddr itemAddr : fulfilmentItem.getFlFulfilmentItemAddr()){
+						itemAddr.setPmVotFund(null);
+						itemAddr.setPmGlAccount(null);
+						itemAddr.setPmSubSetia(null);
+						itemAddr.setPmPrgActivity(null);
+						itemAddr.setAssetInd(null);
+						itemAddr.setCoaValue("N");
+					}
+				}
+			}
+		}
 	}
 	
 	private void checkItemsFromSearchCatalogue(PmAddressType addrType,FlDeliveryAddress deliveryAddress){
@@ -2187,5 +2226,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 			flDeliveryAddress.setEndDate(getManagedBean().getFlRequest().getEndDate());
 		}
+	}
+	
+	private void getSupplierBranchesList(SmSupplier smSupplier){
+		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(reqDTO);
+		
+		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
+		for (SmSupplierBranch supplierBranch : resDTO.getSmSupplierBranchList()) {
+			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
+		}
+		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
 }
