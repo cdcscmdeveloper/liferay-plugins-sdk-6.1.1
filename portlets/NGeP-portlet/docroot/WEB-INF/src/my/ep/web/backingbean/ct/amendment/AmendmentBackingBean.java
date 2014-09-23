@@ -910,8 +910,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			      }downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 		    
 		    } else {
-		    	  if(loaReport.getScLoaReportAttachment().getFilePath() == null){
-		    		   throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getScLoaReportAttachment().getFileName()});
+		    	  if(loaReport.getScLoaReportAttachment() == null || loaReport.getScLoaReportAttachment().getFilePath() == null){
+		    		   throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getTitle()});
 		    	  }downloadFile(loaReport.getScLoaReportAttachment().getFilePath(), loaReport.getScLoaReportAttachment().getFileName());
 		    }
 		 }catch(UnsupportedEncodingException e) {
@@ -1340,7 +1340,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				context.put("fileNo", getManagedBean().getCtContract().getQuotationTender().getFileNo());
 				context.put("sourcingNo", getManagedBean().getCtContract().getLoa().getFileExtNo());
 				context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
-				context.put("successfulSupplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+				context.put("successfulSupplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 				context.put("contractValue",  getManagedBean().getContractVer().getCtContractValue().getContractAmount()+"");
 				double contractValue = this.getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount().doubleValue() + this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
 				context.put("newContractValue", contractValue + "");
