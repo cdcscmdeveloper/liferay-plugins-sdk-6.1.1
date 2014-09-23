@@ -422,22 +422,22 @@
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryMofRegNoView}">
 									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:16px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>														
 								  </p:column>
 								  <p:column>																
 									<p:inputText id="MOFRegNoFrom" value="#{reportBackingBean.mofRegNoFrom}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
-									<p:message id="rptZoneMsg" for="MOFRegNoFrom" display="icon" />														
+									<p:message id="MOFRegNoFromMsg" for="MOFRegNoFrom" display="icon" />														
 									</p:column>
 									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:23px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>														
 								  </p:column>
 								  <p:column>																
 									<p:inputText id="MOFRegNoTo" value="#{reportBackingBean.mofRegNoTo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
-									<p:message id="rptZoneMsg" for="MOFRegNoTo" display="icon" />														
+									<p:message id="MOFRegNoToMsg" for="MOFRegNoTo" display="icon" />														
 									</p:column>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ePNoView}">
