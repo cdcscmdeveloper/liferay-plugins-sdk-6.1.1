@@ -21,16 +21,15 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.lov.ILovSO;
-import my.ep.constant.MessageConst;
 import my.ep.dto.cc.lov.LovReqDTO;
 import my.ep.dto.cc.lov.LovResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.aut.AutUser;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.MessageUtils;
 import my.ep.web.bean.LovBean;
 import my.ep.web.bean.LovColumnBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -63,6 +62,7 @@ public class LovBackingBean implements Serializable {
 	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private String lovId = null;
 	private ISearchBean lovSearchBean = new SearchBean();
+	
 	private LovBean lovBean = null;
 	private List<SelectItem> searchOptions = new ArrayList<SelectItem>();
 	
@@ -149,7 +149,6 @@ public class LovBackingBean implements Serializable {
 	}
 
 	protected ISearchResultBean searchAction(ISearchBean searchBean, boolean isThis) {
-		
 		ILovSO lovSO = null;
 		try {				
 			LovReqDTO reqDTO = new LovReqDTO();
@@ -162,9 +161,24 @@ public class LovBackingBean implements Serializable {
 
 			// check if operator = LIKE, then set to case insensitive
 			for(int i = 0; i < searchBean.getDataFilterBeans().size(); i++) {
-				SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
-				if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
-					filterBean.setCaseInsensitive(true);
+				/* For OR condition - BEGIN */
+				if(searchBean.getDataFilterBeans().get(i) instanceof SearchMultiFilterBean){
+					SearchMultiFilterBean multiFilterBean = (SearchMultiFilterBean) searchBean.getDataFilterBeans().get(i);
+					SearchFilterBean filterBean1 = (SearchFilterBean) multiFilterBean.getSearchFilterBean1();
+					SearchFilterBean filterBean2 = (SearchFilterBean) multiFilterBean.getSearchFilterBean2();
+					
+					if(filterBean1.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+						filterBean1.setCaseInsensitive(true);
+					}
+					if(filterBean2.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+						filterBean2.setCaseInsensitive(true);
+					}
+				/* For OR condition - END */
+				}else{
+					SearchFilterBean filterBean = (SearchFilterBean) searchBean.getDataFilterBeans().get(i);
+					if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+						filterBean.setCaseInsensitive(true);
+					}
 				}
 			}
 			
@@ -339,52 +353,116 @@ public class LovBackingBean implements Serializable {
 //		this.setLovBean(new LovBean());
 	}
 	
+	
+	//OR: columnName1^value1*columnName1^value2
 	private void constructSearchBean(String conditionField, boolean isThis) {
-		debugLogger("In constructSearchBean");
+		debugLogger("In constructSearchBean");		
 		if(StringUtils.isNotBlank(conditionField)) {
 			debugLogger("conditionField: " + conditionField);
 			
 			String[] conditionFields = conditionField.split("\\|");
 			for(int i = 0; i < conditionFields.length; i++) {
-				String[] fieldMapping = conditionFields[i].split("\\^");
-				SearchFilterBean filterBean = new SearchFilterBean();
-				
-				filterBean.setSearchField(fieldMapping[0]);
-				
-				if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
-//					filterBean.setSearchValue(String.valueOf(filterBean.getSearchValue()).toLowerCase());
-					filterBean.setCaseInsensitive(true);
-				}
-				
-				if(fieldMapping.length >= 3) {
-					filterBean.setSearchOperator(Integer.parseInt(fieldMapping[2]));
+				debugLogger("conditionFields[" + i +"] " + conditionFields[i]);
+				/* For OR condition - BEGIN */
+				String[] orFields = conditionFields[i].split("\\*"); 
+				if(orFields!=null && orFields.length==2){
+					debugLogger("filter OR");
+					SearchFilterBean[] filterBeans = new SearchFilterBean[2];
 					
-					if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
-							|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
-						String[] listArray = fieldMapping[1].split("\\,");
-						List<String> list = new ArrayList<String>();
-						for(String obj : listArray) {
-							list.add(obj);
+					for(int j=0; j<orFields.length; j++){
+						debugLogger("orFields["+j+"] "+orFields[j]);
+						String[] fieldMapping =orFields[j].split("\\^");
+						SearchFilterBean filterBean = new SearchFilterBean();
+						
+						filterBean.setSearchField(fieldMapping[0]);
+						
+						if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+//							filterBean.setSearchValue(String.valueOf(filterBean.getSearchValue()).toLowerCase());
+							filterBean.setCaseInsensitive(true);
 						}
-						filterBean.setSearchValue(list);
-					} else {
-						filterBean.setSearchValue(fieldMapping[1]);
+						
+						if(fieldMapping.length >= 3) {
+							filterBean.setSearchOperator(Integer.parseInt(fieldMapping[2]));
+							
+							if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
+									|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
+								String[] listArray = fieldMapping[1].split("\\,");
+								List<String> list = new ArrayList<String>();
+								for(String obj : listArray) {
+									list.add(obj);
+								}
+								filterBean.setSearchValue(list);
+							} else {
+								filterBean.setSearchValue(fieldMapping[1]);
+							}
+							
+						} else {
+							if(!isThis && fieldMapping[1].equals("this")) {
+								continue;
+							} else if(!isThis) {
+								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+								filterBean.setSearchValue(fieldMapping[1]);
+							} else {
+								System.out.println("this 3");
+								filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+								filterBean.setSearchValue(fieldMapping[1]);
+								filterBean.setCaseInsensitive(true);
+							}
+						}
+						filterBeans[j] = filterBean;
 					}
+
+					filterBeans[1].setAndOr(SearchCondition.CONDITION_OR.value());
+					lovSearchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(
+									filterBeans[0],
+									filterBeans[1])
+							);
+				/* For OR condition - END */
+				}else{
+					debugLogger("filter AND");
+					String[] fieldMapping = conditionFields[i].split("\\^");
+					SearchFilterBean filterBean = new SearchFilterBean();
 					
-				} else {
-					if(!isThis && fieldMapping[1].equals("this")) {
-						continue;
-					} else if(!isThis) {
-						filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
-						filterBean.setSearchValue(fieldMapping[1]);
-					} else {
-						System.out.println("this 3");
-						filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-						filterBean.setSearchValue(fieldMapping[1]);
+					filterBean.setSearchField(fieldMapping[0]);
+					
+					if(filterBean.getSearchOperator() == SearchOperator.OPERATOR_LIKE.value()) {
+//						filterBean.setSearchValue(String.valueOf(filterBean.getSearchValue()).toLowerCase());
 						filterBean.setCaseInsensitive(true);
 					}
-				}				
-				lovSearchBean.getDataFilterBeans().add(filterBean);					
+					
+					if(fieldMapping.length >= 3) {
+						filterBean.setSearchOperator(Integer.parseInt(fieldMapping[2]));
+						
+						if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
+								|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
+							String[] listArray = fieldMapping[1].split("\\,");
+							List<String> list = new ArrayList<String>();
+							for(String obj : listArray) {
+								list.add(obj);
+							}
+							filterBean.setSearchValue(list);
+						} else {
+							filterBean.setSearchValue(fieldMapping[1]);
+						}
+						
+					} else {
+						if(!isThis && fieldMapping[1].equals("this")) {
+							continue;
+						} else if(!isThis) {
+							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+							filterBean.setSearchValue(fieldMapping[1]);
+						} else {
+							System.out.println("this 3");
+							filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+							filterBean.setSearchValue(fieldMapping[1]);
+							filterBean.setCaseInsensitive(true);
+						}
+					}				
+					lovSearchBean.getDataFilterBeans().add(filterBean);		
+				}
+				
+							
 			}
 		}
 	}
