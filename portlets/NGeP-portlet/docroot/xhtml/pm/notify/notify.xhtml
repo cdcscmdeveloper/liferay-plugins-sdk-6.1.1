@@ -29,23 +29,26 @@
 									<h:outputText value="#{lbl['lbl.portal.notify.unread']}"></h:outputText>
 								</p:commandLink></td>
 							<td style="text-align: right;"><p:commandButton
-									value="#{lbl['lbl.portal.notify.btn.refresh']}" icon="ui-icon-reset"
+									value="#{lbl['lbl.portal.notify.btn.refresh']}"
+									icon="ui-icon-reset"
 									action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.notify.btn.delete']}" icon="ui-icon-delete"
+									value="#{lbl['lbl.portal.notify.btn.delete']}"
+									icon="ui-icon-delete"
 									action="#{notifyBackingBean.removeNotifys}"
 									update=":form:notifyTable,:form:pnldetail" /></td>
 						</tr>
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
-									value="#{notifyBackingBean.managedBean.notifyLists}"
-									sortMode="multiple" var="notify" id="notifyTable"
-									rowIndexVar="index" width="100%" rowKey="#{notify}"
+									value="#{notifyBackingBean.notifyDataModel}" var="notify"
+									id="notifyTable" rows="5" rowIndexVar="index" width="100%"
+									rowKey="#{notify}" lazy="true"
 									selection="#{notifyBackingBean.managedBean.selectedNotifys}">
 
 									<ac:paginator for="notifyTable" />
 
 									<p:column selectionMode="multiple" style="width:7%" />
+
 									<p:column style="text-align: right;width:7%">
 										<h:graphicImage library="ep/images/design" name="mail.png"
 											value="/resources/ep/images/design/mail.png"
@@ -92,13 +95,14 @@
 							<c:if
 								test="#{not empty notifyBackingBean.managedBean.selectedNotify}">
 								<tr>
-									<td align="left" style="width: 60px; height: 30px;"><h:outputText
+									<td align="left" style="width: 70px; height: 30px;"><h:outputText
 											style="font-weight:bold;text-align: left"
 											value="#{lbl['lbl.portal.notify.sender']}"> : </h:outputText></td>
 									<td style="text-align: left"><h:outputText
 											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.pmUser.userName}"></h:outputText>
 									</td>
-									<td align="right" style="width: 200px;text-align: right;font-size: 12px;"><h:outputText
+									<td align="right"
+										style="width: 200px; text-align: right; font-size: 12px;"><h:outputText
 											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.createdDate}"
 											readonly="true">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
