@@ -34,7 +34,17 @@ public class NotifyManagedBean extends BaseManagedBean {
 	private PmNotifyUser[] selectedNotifys;
 	private PmNotifyUser selectedNotify;
 	private PmNotifyUser notify;
-	private boolean isInit = true; 
+	private boolean isInit = true;
+	private boolean isUnRead = false;
+
+	
+	public boolean isUnRead() {
+		return isUnRead;
+	}
+
+	public void setUnRead(boolean isUnRead) {
+		this.isUnRead = isUnRead;
+	}
 
 	public boolean isInit() {
 		return isInit;
