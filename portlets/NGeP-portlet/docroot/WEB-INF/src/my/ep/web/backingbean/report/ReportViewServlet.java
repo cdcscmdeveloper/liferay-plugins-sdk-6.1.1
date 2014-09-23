@@ -53,6 +53,7 @@ public class ReportViewServlet extends HttpServlet {
 				content[i] = byteRead;
 				i++;
 			}
+			
 			bufferedInputStream.close();
 			outputStream.write(content);
 			response.setContentType("application/pdf");
@@ -65,9 +66,7 @@ public class ReportViewServlet extends HttpServlet {
 			//response.setHeader("Pragma", "public");
 			request.getSession().removeAttribute("generatedUrl");
 			outputStream.flush();
-		} catch (Exception e) {
-			// Write logger
-			//Code for displaying EP Message.
+		} catch (Exception e) {			
 			generateErrorMsg(request,response);
 		} finally {
 			if (null != urlConnection) {
@@ -89,8 +88,7 @@ public class ReportViewServlet extends HttpServlet {
 			writer = response.getWriter();
 			writer.write("Service Down");
 			writer.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {		
 			e.printStackTrace();
 		} finally {
 			if(null!=writer){
