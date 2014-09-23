@@ -3549,6 +3549,49 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
+			if((this.getFromDate()!=null)&&(this.getToDate()!=null)){
+				if(this.getFromDate().after(this.getToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}				
+			}
+			if((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()!=null)){
+				if(this.getApplicationFromDate().after(this.getApplicationToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()!=null)){
+				if(this.getReceiveFromDate().after(this.getReceiveToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()!=null)){
+				if(this.getReleaseFromDate().after(this.getReleaseToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()!=null)){
+				if(this.getPrintedFromDate().after(this.getPrintedToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()!=null)){
+				if(this.getExpiryFromDate().after(this.getExpiryToDate())){
+					RequestContext context = RequestContext.getCurrentInstance();  
+			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			
 			if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
 				generateSCReport();			
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
