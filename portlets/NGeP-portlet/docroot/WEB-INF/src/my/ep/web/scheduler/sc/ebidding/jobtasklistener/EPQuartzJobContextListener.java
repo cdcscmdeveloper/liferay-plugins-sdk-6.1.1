@@ -4,14 +4,23 @@
 
 package my.ep.web.scheduler.sc.ebidding.jobtasklistener;
 
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import my.ep.factory.EpLogger;
+import my.ep.test.quartz.constant.EpQuartzConstant;
+import my.ep.test.quartz.job.sc.ScContinousJob;
+import my.ep.test.quartz.job.sc.ScDailyJob;
+import my.ep.test.quartz.job.servlet.EpJobServletInitializer;
+import my.ep.test.quartz.trigger.sc.EpScheduler;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.sc.ebidding.JobTasks.BidSchedulesPoolingCronJob;
+import my.ep.web.scheduler.sc.ebidding.JobTasks.ContinuousBidSchedulerJob;
 import my.ep.web.scheduler.sc.ebidding.constants.EPSchedulerConstants;
 import my.ep.web.scheduler.sc.ebidding.triggers.EPContinuousSimpleJobTrigger;
 import my.ep.web.scheduler.sc.ebidding.triggers.EPDailyCronJobTrigger;
 
+import org.apache.log4j.Logger;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.ee.servlet.QuartzInitializerListener;
@@ -24,64 +33,29 @@ import org.quartz.impl.matchers.KeyMatcher;
  */
 public class EPQuartzJobContextListener implements ServletContextListener {
 
-	private Scheduler scheduler;
-	private JobKey ePContinousJobKey = new JobKey(EPSchedulerConstants.EP_CONTINOUS_JOB,EPSchedulerConstants.EP_JOB_GROUP);
-    private JobKey ePDailyJobKey = new JobKey(EPSchedulerConstants.EP_DAILY_JOB,EPSchedulerConstants.EP_JOB_GROUP);
+	public static Logger log = EpLogger
+			.getLogger(EPQuartzJobContextListener.class);
 
 	@Override
-	public void contextDestroyed(ServletContextEvent contextEvent) {
-		System.out.println("**********Starting shutdown scheduler**********");
-		try {
-			if(scheduler.isStarted()){
-				scheduler.shutdown(false);
-			}
-		} catch (final Exception e) {
-			System.out.println("**********Failed to shutdown scheduler**********");
-		}
-
+	public void contextDestroyed(final ServletContextEvent arg0) {
+		log.debug("Context Destroy...");
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent contextEvent) {
-		try {
-			
-			System.out.println("**********Starting initialize scheduler***********");
-			
-			// initializing scheduler
-			
-			scheduler = ((StdSchedulerFactory) contextEvent.getServletContext()
-					.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY))
-					.getScheduler();
-			
-			 //add job key to listener
-            scheduler.getListenerManager().addJobListener(new EPQuartzJobListener(), KeyMatcher.keyEquals(ePContinousJobKey));
-            scheduler.getListenerManager().addJobListener(new EPQuartzJobListener(), KeyMatcher.keyEquals(ePDailyJobKey));
-			
-            //start scheduler
-            if(scheduler.isShutdown()){
-            	scheduler.start();
-            }
-            
-            //start executing jobs
-            EPContinuousSimpleJobTrigger.run(scheduler,ePContinousJobKey);
-            EPDailyCronJobTrigger.run(scheduler,ePDailyJobKey);
-            
-            // loop jobs by group
-         			for (String groupName : scheduler.getJobGroupNames()) {
+	public void contextInitialized(final ServletContextEvent ctx) {
+		// Sc Continous job
+		EpSchedulerHelper.scheduleJob(ctx.getServletContext(), new JobKey(
+				EPSchedulerConstants.EP_CONTINOUS_JOB,
+				EPSchedulerConstants.EP_JOB_GROUP),
+				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
+				"0/60 * * * * ?");
 
-         				// get jobkey
-         				for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher
-         						.jobGroupEquals(groupName))) {
-         					System.out
-         							.println("*****Job Group****"+groupName+ " job key is...."+jobKey.getName() );
-         				}
-         			}
-			
-         			System.out.println("**********Scheduler status********** "
-        					+ (scheduler.isStarted() ? "Started" : "Shutdown"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// Sc Daily job
+		EpSchedulerHelper.scheduleJob(ctx.getServletContext(), new JobKey(
+				EPSchedulerConstants.EP_DAILY_JOB,
+				EPSchedulerConstants.EP_JOB_GROUP),
+				BidSchedulesPoolingCronJob.class,
+				"Job run every day at 11:55 PM", "0 55 23 * * ?");
 
 	}
 }
