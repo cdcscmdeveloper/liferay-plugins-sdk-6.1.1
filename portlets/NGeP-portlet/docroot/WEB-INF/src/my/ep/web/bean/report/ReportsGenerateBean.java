@@ -104,6 +104,8 @@ public class ReportsGenerateBean {
 		private boolean mandatoryApplicationDateView = false;
 		private boolean mandatoryApplicationStatusView = false;
 		private boolean mandatoryMofRegNoView = false;
+		private boolean mandatoryExpiryDateView = false;
+		private boolean mandatoryPrintedDateView = false;
 		
 		/*SM end*/
 	   //URL variables start
@@ -158,6 +160,18 @@ public class ReportsGenerateBean {
 
 		
 		
+		public boolean isMandatoryExpiryDateView() {
+			return mandatoryExpiryDateView;
+		}
+		public void setMandatoryExpiryDateView(boolean mandatoryExpiryDateView) {
+			this.mandatoryExpiryDateView = mandatoryExpiryDateView;
+		}
+		public boolean isMandatoryPrintedDateView() {
+			return mandatoryPrintedDateView;
+		}
+		public void setMandatoryPrintedDateView(boolean mandatoryPrintedDateView) {
+			this.mandatoryPrintedDateView = mandatoryPrintedDateView;
+		}
 		public boolean isMandatoryMofRegNoView() {
 			return mandatoryMofRegNoView;
 		}
