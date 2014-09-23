@@ -25,7 +25,7 @@
 					<h:outputLabel value="#{lbl['lbl.sc.price.inquiry.status']}" />
 				</td>
 				<td style="width: 21%" class="header-info-text">
-				#{purchaseInquiryBackingBean.managedBean.priStatus}
+				#{purchaseInquiryBackingBean.getStatusDescById(purchaseInquiryBackingBean.managedBean.priStatus.statusId)}
 				</td>
 			</tr>
 		</table>
