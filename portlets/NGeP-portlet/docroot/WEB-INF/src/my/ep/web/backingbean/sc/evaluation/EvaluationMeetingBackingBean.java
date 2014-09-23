@@ -69,6 +69,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtRemark;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
@@ -249,9 +250,10 @@ public class EvaluationMeetingBackingBean extends
 								qtRemarkList);
 					}
 					List<ScQtCommitteRemarks> remark = initializeRemarks(this
-							.getManagedBean().getScQtCommittee(), this
-							.getManagedBean().getQtCommitteeRemarks(),
+							.getManagedBean().getScQtCommittee(), qtRemarkList,
 							ScQtCommitteRemarks.class);
+					//qtRemarkList.addAll(remark);
+					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
 
 				}
 
@@ -659,6 +661,29 @@ public class EvaluationMeetingBackingBean extends
 
 			}
 
+			List<ScQtMeeting> meetingRemoveList = this.getManagedBean()
+					.getMeetingRemoveList();
+			if (null != meetingRemoveList && !meetingRemoveList.isEmpty()) {
+				for (int i = 0; i < meetingRemoveList.size(); i++) {
+					if (null == meetingRemoveList.get(i).getQtMeetingId()) {
+						meetingRemoveList.remove(i);
+					}
+				}
+
+			}
+
+			List<ScQtCommitteeActivity> committeeRemoveList = this
+					.getManagedBean().getRemoveCommitteeList();
+			if (null != committeeRemoveList && !committeeRemoveList.isEmpty()) {
+				for (int i = 0; i < committeeRemoveList.size(); i++) {
+					if (null == committeeRemoveList.get(i)
+							.getQtCommitteeActivityId()) {
+						committeeRemoveList.remove(i);
+					}
+				}
+
+			}
+
 			qtCommittee.setMeetingAttendances(null);
 			metReqDtO.setScQtCommitte(qtCommittee);
 
@@ -796,13 +821,22 @@ public class EvaluationMeetingBackingBean extends
 			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
 			List<ScQtMeeting> selectMeeting = getManagedBean()
 					.getMeetingMultiSelect();
-
+			List<ScQtMeeting> removeMeetingList = this.getManagedBean()
+					.getMeetingRemoveList();
+			if (null == removeMeetingList) {
+				removeMeetingList = new ArrayList<ScQtMeeting>();
+			}
+			removeMeetingList.addAll(selectMeeting);
 			if (meetingList.size() == selectMeeting.size()) {
 				meetingList.clear();
 			} else {
-				for (ScQtMeeting meeting : selectMeeting)
+				for (ScQtMeeting meeting : selectMeeting) {
+					meeting.setDeleted(true);
 					meetingList.remove(meeting);
+				}
 			}
+			this.getManagedBean().setMeetingRemoveList(removeMeetingList);
+
 		} finally {
 
 		}
@@ -814,13 +848,23 @@ public class EvaluationMeetingBackingBean extends
 					.getCommitteeMemberActivity();
 			List<ScQtCommitteeActivity> selectCommitteeList = getManagedBean()
 					.getCommitteeActivitySelect();
+			List<ScQtCommitteeActivity> removeCommitteeList = this
+					.getManagedBean().getRemoveCommitteeList();
+			if (null == removeCommitteeList) {
+				removeCommitteeList = new ArrayList<ScQtCommitteeActivity>();
+			}
+			removeCommitteeList.addAll(selectCommitteeList);
 
 			if (committeeList.size() == selectCommitteeList.size()) {
 				committeeList.clear();
 			} else {
-				for (ScQtCommitteeActivity committeeMember : selectCommitteeList)
+				for (ScQtCommitteeActivity committeeMember : selectCommitteeList) {
+					committeeMember.setDeleted(true);
 					committeeList.remove(committeeMember);
+				}
 			}
+			this.getManagedBean().setRemoveCommitteeList(removeCommitteeList);
+
 		} finally {
 
 		}
