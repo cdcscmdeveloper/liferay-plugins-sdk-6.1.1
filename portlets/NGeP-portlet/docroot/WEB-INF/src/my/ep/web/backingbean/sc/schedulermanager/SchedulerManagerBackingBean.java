@@ -7,6 +7,7 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.logging.LogKey;
+import my.ep.test.quartz.constant.EpQuartzConstant;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.sc.ebidding.constants.EPSchedulerConstants;
@@ -19,6 +20,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.quartz.Trigger.TriggerState;
 import org.quartz.impl.matchers.GroupMatcher;
 
@@ -86,6 +88,23 @@ public class SchedulerManagerBackingBean extends
 				getManagedBean().getScheduler().pauseJob(epJobVO.getJobKey());
 			} else {
 				getManagedBean().getScheduler().resumeJob(epJobVO.getJobKey());
+			}
+		} catch (SchedulerException e) {
+			log.error(e.getMessage());
+		}
+	}
+	
+	public void runNowJob(EpJobVO epJobVO) {
+		try {
+			if (epJobVO.getStatus().equals(EPSchedulerConstants.JOB_WAIT)) {
+
+				// specify trigger
+				Trigger trigger = TriggerBuilder.newTrigger().startNow()
+						.forJob(getManagedBean().getScheduler().getJobDetail(epJobVO.getJobKey()))
+						.build();
+
+				// schedule the job
+				getManagedBean().getScheduler().scheduleJob(trigger);
 			}
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());

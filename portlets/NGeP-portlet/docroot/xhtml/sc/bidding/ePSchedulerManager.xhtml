@@ -67,6 +67,12 @@
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 						<h:outputText value="#{jobBean.action}" />
 					</p:commandLink>
+					<p:commandLink id="runNowActionId" rendered="#{jobBean.status eq 'WAIT'}"
+						partialSubmit="true" process="@this"
+						action="#{schedulerManagerBB.runNowJob(jobBean)}" update="@([id$=jobBeanDt])" 
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+						<h:outputText value=" | RUN NOW" />
+					</p:commandLink>
 				</p:column>
 				
 				</p:dataTable>
