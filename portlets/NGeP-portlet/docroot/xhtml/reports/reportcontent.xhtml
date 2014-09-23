@@ -520,6 +520,22 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendDeclAppl']}" itemValue="#{lbl['lbl.rpt.pendDeclAppl']}"></f:selectItem>																						
 									</p:selectOneMenu>
 								  </c:if>
+								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationStatusView}">
+								  <p:column>								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:49px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>														
+								  </p:column>
+								  <p:column>																
+									<p:selectOneMenu id="ApplicationStatus" value="#{reportBackingBean.applicationStatus}" required="true" style="margin-top:5px;width:300px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}" itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendPayAppl']}" itemValue="#{lbl['lbl.rpt.pendPayAppl']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendSuppDocAppl']}" itemValue="#{lbl['lbl.rpt.pendSuppDocAppl']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendDeclAppl']}" itemValue="#{lbl['lbl.rpt.pendDeclAppl']}"></f:selectItem>																						
+									</p:selectOneMenu>
+									<p:message id="appStatusMsg" for="ApplicationStatus" display="icon" />														
+									</p:column>
+								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.cancelledByView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.cancelledBy']}" style="margin-top:5px;width:122px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.cancelledBy}" style="margin-top:5px;width:300px;">
@@ -693,6 +709,30 @@
 							<TR>
 								<TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.applicationDt']}" style="margin-left:-18px;width:122px;"/>
+								</TD>
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.applicationFromDate}" 
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
+																				
+									</p:calendar>
+								</TD>				
+								<TD>
+									<p:calendar  showOn="button" value="#{reportBackingBean.applicationToDate}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
+																							
+									</p:calendar> 
+								</TD>
+							</TR>
+						</TABLE>
+						</c:if>							
+		            </div>
+		            <div>
+						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationDateView}">
+						<TABLE style="width:45%;">
+							<TR>
+								<TD>
+								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.applicationDt']}"/>									
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.applicationFromDate}" 
