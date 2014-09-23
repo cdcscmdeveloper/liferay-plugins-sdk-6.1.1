@@ -3,8 +3,10 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +32,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -88,6 +91,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	//List for Paging
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
+	
+	private String currentDate;
 
 	public TaskAssignmentBackingBean(){
 		//TODO
@@ -146,6 +151,15 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		
 	}
 
+	public String getCurrentDateStr(){
+//		conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}|recordStatus^1|pmOrgValidity.effDate^#{taskAssignBackingBean.getCurrentDateStr()}^6|pmOrgValidity.expDate^#{taskAssignBackingBean.getCurrentDateStr()}^4*pmOrgValidity.expDate^null^11"/>
+		if(this.currentDate==null){
+			currentDate = PmCommonUtil.getCurrentDateStr(new Date());
+		}
+		return currentDate;
+		
+	}
+	
 	/**
 	 * retrieve and set org type mapper
 	 */
@@ -300,6 +314,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	}
 	
 	private List<String> retrieveAvailableRoles(Long statusId){
+//		statusId = 50250L;
 		log.info("retrieveAvailableRoles");
 		List<String> statusRoles = new ArrayList<String>();
 		try {
@@ -316,6 +331,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		} catch (Exception e) {
 //			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
 //			TODO
+			e.printStackTrace();
 		}
 		return statusRoles;
 	}
@@ -325,11 +341,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 * @return List<PmUser>
 	 */
 	public List<PmUser> retrieveAvaiableUsers(){
-		
+		log.info("retrieveAvaiableUsers");
 		List <PmUser> pmUsers = new ArrayList<PmUser>();
 		try {
 			List<String> statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
-			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
+//			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
 			Long orgProfileId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
 			ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 			
@@ -356,13 +372,14 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			searchBean.getDataFilterBeans().add(bean);
 			
 		
-			// filter by role
+			// role code
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
-			bean.setSearchValue(new ArrayList(Arrays.asList(statusRoles)));
+			bean.setSearchValue(statusRoles);
 			searchBean.getDataFilterBeans().add(bean);
 			
+			// active user role
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
@@ -383,6 +400,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		} catch (Exception e) {
 //			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
 //			TODO
+			e.printStackTrace();
 		}		
 		return pmUsers;
 	}

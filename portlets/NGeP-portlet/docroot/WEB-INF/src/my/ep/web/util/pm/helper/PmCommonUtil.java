@@ -3,8 +3,10 @@ package my.ep.web.util.pm.helper;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -633,6 +635,20 @@ public class PmCommonUtil {
 				
 			
 		return pmOrgProfile;
+	}
+	
+	/**
+	 * Generate current date for LOV date format
+	 * @param date
+	 * @return String
+	 */
+	public static String getCurrentDateStr(Date date){
+		if(date!=null){
+			return new SimpleDateFormat("yyyy-MM-dd").format(date);
+		}else{
+			return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		}
+		
 	}
 
 }
