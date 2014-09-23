@@ -100,10 +100,10 @@
 		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
 	</listener>
 	
-	<!-- use to initialize Quartz Job from Servlet -->
+	<!-- use to initialize Quartz Jobs from Servlet -->
 	<servlet>
 		<servlet-name>EpBatchJobServlet</servlet-name>
-		<servlet-class>my.ep.sc.ebidding.scheduler.servlet.EpJobServletInitializer</servlet-class>
+		<servlet-class>my.ep.web.scheduler.sc.ebidding.servlet.EpJobServletInitializer</servlet-class>
 		<!-- Load this servlet at server startup time. Number not special. Just 
 			indicates the sequence of loading servlets -->
 		<load-on-startup>3</load-on-startup>
