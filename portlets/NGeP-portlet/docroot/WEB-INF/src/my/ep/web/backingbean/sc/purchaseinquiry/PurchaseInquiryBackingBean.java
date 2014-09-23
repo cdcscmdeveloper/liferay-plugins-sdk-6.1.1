@@ -247,8 +247,24 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  requestNoteDtl.setRequestItem(requestItem);
 		  requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 		  getManagedBean().setRequestNoteDtl(requestNoteDtl);
+		  
 		  // pr inquiry status
-		  getCurrentStatus(DPStatusConstants.PRI_PENDING_SUBMISSION);
+		  IStatusSO statusSO = null;
+		  try {
+				
+				statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				getCurrentStatus(statusResDTO.getPmStatus());
+				
+			} finally {
+				statusSO = null;
+			}
 		  
 		  //TODO default value to  price type drop down listing
 		  getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
@@ -373,7 +389,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 						if(scSupplierItemPrice.getPriceType().getParameterCode().equals(getManagedBean().getPriceType())){
                             
-							if(getManagedBean().getPriStatus().equalsIgnoreCase("Pending Supplier Response")){
+							if(DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(getManagedBean().getPriStatus().getStatusId())){
 								scSupplierItemPrice.setItemPrice(null);	
 								//scSupplierItemPrices.add(scSupplierItemPrice);
 								itemPricesMap.put(scSupplierItemPrice, scSupplierItemPrice);
@@ -846,7 +862,22 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			 } 
 		 }
 		 
-		 getCurrentStatus(res.getDocStatus().longValue()); 
+		 IStatusSO statusSO = null;
+		 try {
+			 statusSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				
+				StatusReqDTO statusReqDTO = new StatusReqDTO();
+				statusReqDTO.setStatusId(res.getDocStatus().longValue());
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				getCurrentStatus(statusResDTO.getPmStatus());
+				
+			} finally {
+				statusSO = null;
+			}
+		  
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);
 		 getManagedBean().setRnToPIFlag(Boolean.FALSE);
@@ -902,20 +933,20 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		log.info(message);
 	}
 	
-	 public void  getCurrentStatus(Long statusId) {
-		if (statusId != null) {
-			 getManagedBean().setPriStatus(getStatusDescById(statusId));
-		 	if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PRI_PENDING_SUBMISSION)){
-		 		getManagedBean().setRequisitionerFlag(false);
-		 		getManagedBean().setSupplierFlag(true);
-		 	} else if(getStatusDescById(statusId).equalsIgnoreCase(ParameterConst.PRI_PENDING_SUPP_RESPONSE)){
-		 		getManagedBean().setRequisitionerFlag(true);
-		 		getManagedBean().setSupplierFlag(false);
-		 	} else{
-		 		getManagedBean().setRequisitionerFlag(true);
-		 		getManagedBean().setSupplierFlag(true);
-		 	}
-		}
+	 public void  getCurrentStatus(PmStatus pmStatus) {
+		 getManagedBean().setPriStatus(pmStatus);
+		 
+		 Long statusId = pmStatus.getStatusId();
+		 if(DPStatusConstants.PRI_PENDING_SUBMISSION.equals(statusId)){
+		 	getManagedBean().setRequisitionerFlag(false);
+		 	getManagedBean().setSupplierFlag(true);
+		 } else if(DPStatusConstants.PRI_PENDING_SUPPLIER_RESPONSE.equals(statusId)){
+		 	getManagedBean().setRequisitionerFlag(true);
+		 	getManagedBean().setSupplierFlag(false);
+		 } else{
+		 	getManagedBean().setRequisitionerFlag(true);
+		 	getManagedBean().setSupplierFlag(true);
+		 }
 	  }
 	
 	private	List<ScSupplierItemPrice>	createScSupplierItemPrices(ScRequestSupplierItem	scRequestSupplierItem, List<CmPricing> pricings ,boolean selectedSupplierPrice){

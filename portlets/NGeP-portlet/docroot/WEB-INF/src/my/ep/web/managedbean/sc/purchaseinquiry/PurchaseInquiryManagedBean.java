@@ -15,6 +15,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
@@ -53,7 +54,7 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	private SelectItem[] justDropdown;
 	private SelectItem[] priceTypes; // price type drop down 
 	private String processName;
-	private String priStatus;
+	private PmStatus priStatus;
 	private boolean requisitionerFlag;
 	private boolean supplierFlag;
 	private Integer stockAvailable;
@@ -306,14 +307,14 @@ public class PurchaseInquiryManagedBean extends BaseManagedBean{
 	/**
 	 * @return the priStatus
 	 */
-	public String getPriStatus() {
+	public PmStatus getPriStatus() {
 		return priStatus;
 	}
 
 	/**
 	 * @param priStatus the priStatus to set
 	 */
-	public void setPriStatus(String priStatus) {
+	public void setPriStatus(PmStatus priStatus) {
 		this.priStatus = priStatus;
 	}
 

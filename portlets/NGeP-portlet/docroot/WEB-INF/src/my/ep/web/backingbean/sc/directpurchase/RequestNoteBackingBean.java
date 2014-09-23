@@ -1877,7 +1877,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScPrInquiry  prInquiry  = prInquiryResDTO.getPrInquiryDetail();
 				// status
 				if(prInquiry.getWorkflowStatuses() != null && prInquiry.getWorkflowStatuses().size() >0){
-					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getWorkflowStatuses().get(0).getPmStatus().getStatusId());
+					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getWorkflowStatuses().get(0).getPmStatus());
 				}
 				// remarks
 				prInquiry.setRemarks(purchaseInquiryBackingBean.initializeRemarks(prInquiry));

@@ -19,7 +19,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
   <p:messages showDetail="true" autoUpdate="true" closable="true"  showSummary="false" severity="error, info" id="mainMsg"/>
   <p:panel id="mainPanel">
      <div class="ppRightBtn">
-	     <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Submission'}">
+	     <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}">
 	            <p:commandButton  immediate="true" value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back"
 					 style="float:left;" action="#{purchaseInquiryBackingBean.backToPervious}" />
 
@@ -43,7 +43,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								
 			  <c:choose>
 				<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
-					 <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending RN Creation'}">
+					 <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingRnCreation}">
 	                  
 	                       <c:if test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 								<p:commandButton
@@ -63,7 +63,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 					<ui:repeat var="bpmAction" value="#{purchaseInquiryBackingBean.managedBean.outComes}">
 					   <ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 	
-	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus eq 'Pending Supplier Response'}">
+	                   <c:if test="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}">
 	                       <p:commandButton value="#{lbl[buttonLabel]}" process="@all"
 							        icon = "ui-icon-#{fn:toLowerCase(bpmAction)}"
 							        styleClass="ui-button"
