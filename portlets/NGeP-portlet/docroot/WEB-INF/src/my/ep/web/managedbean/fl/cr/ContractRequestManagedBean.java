@@ -81,6 +81,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress flManualAddress;
 	private List<SelectItem> supplierBranchesList;
 	private List<VCmSupplierItem> vCmSupplierItemList;
+	private List<PmUserGroup> userGroupList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -96,6 +97,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String orgProfileIds;
 	private String fulfilmentRequisitioner;
 	private Date maxDate;
+	private Long currentPtjGroupId;
+	private Long currentPreparedOrgId;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -1819,6 +1822,57 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setMaxDate(Date maxDate) {
 		this.maxDate = maxDate;
+	}
+
+
+	/**
+	 * @param userGroupList the userGroupList to set
+	 */
+	public void setUserGroupList(List<PmUserGroup> userGroupList) {
+		this.userGroupList = userGroupList;
+	}
+
+
+	/**
+	 * @return the userGroupList
+	 */
+	public List<PmUserGroup> getUserGroupList() {
+		if(userGroupList==null) {
+			userGroupList = new ArrayList<PmUserGroup>();
+		}
+		return userGroupList;
+	}
+
+
+	/**
+	 * @return the currentPtjGroupId
+	 */
+	public Long getCurrentPtjGroupId() {
+		return currentPtjGroupId;
+	}
+
+
+	/**
+	 * @param currentPtjGroupId the currentPtjGroupId to set
+	 */
+	public void setCurrentPtjGroupId(Long currentPtjGroupId) {
+		this.currentPtjGroupId = currentPtjGroupId;
+	}
+
+
+	/**
+	 * @return the currentPreparedOrgId
+	 */
+	public Long getCurrentPreparedOrgId() {
+		return currentPreparedOrgId;
+	}
+
+
+	/**
+	 * @param currentPreparedOrgId the currentPreparedOrgId to set
+	 */
+	public void setCurrentPreparedOrgId(Long currentPreparedOrgId) {
+		this.currentPreparedOrgId = currentPreparedOrgId;
 	}
 
 

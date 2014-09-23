@@ -60,7 +60,8 @@
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
-						<p:menuitem value="Approval Setting" update="@form" rendered="#{contractRequestBackingBean.isFlFulfilmentRequisitioner()}"
+						<p:menuitem value="Approval Setting" update="@form" actionListener="#{contractRequestBackingBean.onTabChange(4)}"
+						rendered="#{contractRequestBackingBean.isFlFulfilmentRequisitioner()}"
 							>
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"

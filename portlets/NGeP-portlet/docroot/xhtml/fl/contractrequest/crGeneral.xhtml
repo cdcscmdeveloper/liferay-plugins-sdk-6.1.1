@@ -146,7 +146,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="SUPPLIER DETAIL" toggleable="true">
+	<p:panel header="SUPPLIER DETAIL" toggleable="true" id="supplierPnl">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
@@ -170,8 +170,18 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.branchName}"
-						/></td>
+				<td><p:selectOneMenu id="suppBranch"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
+						style="width: 360px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="suppBranchList"
+							value="#{purchaseRequestBackingBean.managedBean.supplierBranchesList}"
+							itemLabel="#{suppBranchList.branchName}"
+							itemValue="#{suppBranchList.supplierBranchId}" />
+						<p:ajax event="change"
+							listener="#{purchaseRequestBackingBean.getSelectedSupplierBranchDtl}"
+							update="supplierPnl" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
