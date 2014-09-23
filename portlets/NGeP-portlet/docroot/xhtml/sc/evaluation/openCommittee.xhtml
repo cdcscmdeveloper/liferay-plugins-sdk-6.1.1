@@ -72,7 +72,8 @@
 				<h:outputText value="#{committeeMember.scCommitteeMember.grade}"></h:outputText>
 			</p:column>
 			<p:column>
-				<h:outputText value="#{committeeMember.scCommitteeMember.PNP}"></h:outputText>
+				<h:outputText
+					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
 			</p:column>
 			<p:column>
 				<h:outputText
