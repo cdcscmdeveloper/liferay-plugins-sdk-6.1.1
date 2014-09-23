@@ -117,13 +117,10 @@
 							                style="vertical-align:middle" />
 									</h:commandLink></td>
 								<td><p:message id="priceTypeMsg" for="priceType"
-										display="icon" /></td>
+										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 							</tr>
 					  </table>
 
-					</td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" />
 					</td>
 			</tr>
 			<tr>
@@ -178,11 +175,7 @@
 									value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
 									<p:ajax event="change" update="justiId" 
 									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
-							</p:selectOneRadio></td>
-						 <td><p:message id="procTypeMsg" for="procType" display="icon"/></td>	
-						 <td>
-							<ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" />
-						</td>
+							</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon"/><ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
 					  </tr>
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
