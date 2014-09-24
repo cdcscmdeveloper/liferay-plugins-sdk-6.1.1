@@ -8,25 +8,13 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import my.ep.factory.EpLogger;
-import my.ep.test.quartz.constant.EpQuartzConstant;
-import my.ep.test.quartz.helper.EpScheduler;
-import my.ep.test.quartz.job.sc.ScContinousJob;
-import my.ep.test.quartz.job.sc.ScDailyJob;
-import my.ep.test.quartz.job.servlet.EpJobServletInitializer;
+import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.sc.ebidding.JobTasks.BidSchedulesPoolingCronJob;
 import my.ep.web.scheduler.sc.ebidding.JobTasks.ContinuousBidSchedulerJob;
-import my.ep.web.scheduler.sc.ebidding.constants.EPSchedulerConstants;
-import my.ep.web.scheduler.sc.ebidding.triggers.EPContinuousSimpleJobTrigger;
-import my.ep.web.scheduler.sc.ebidding.triggers.EPDailyCronJobTrigger;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.ee.servlet.QuartzInitializerListener;
-import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.impl.matchers.KeyMatcher;
 
 /**
  * @author Venkat Chanumolu
