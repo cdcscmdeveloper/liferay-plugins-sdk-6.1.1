@@ -128,30 +128,8 @@ public class ViewSmApplBackingBean extends
 					+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE);
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
-
-			getManagedBean().setSmAppl(resDTO.getSmAppl());
-			getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
-			setSupplierBusinessType(getManagedBean().getSmSupplier());
-			getManagedBean()
-					.setSupplierBusinessTypeVal(
-							getDropDownViewOnlyValueByCode(
-									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-									getManagedBean().getSmSupplier()
-											.getBusinessType()));
-			setSmCompanyBasicCalculation();
-			setApplicationShareHolders(getManagedBean().getSmAppl()
-					.getSmPersonnels());
-			setCategoryTypeConfirm();
-			setApplicationFacilities();
-			setEquipments();
-			setPersonnelInfoCalculationSummary();
-			setDefaultApproverReviewSection();
-			retrievePmCertBodyList();
-			setSupplierCancellationRemarks(getManagedBean().getSmAppl()
-					.getApplType(), getManagedBean().getSmAppl().getApplId());
-			setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
-					.getStatusId().toString());
-			getManagedBean().setReviewApplicationExist(true);
+			
+			setApplication(resDTO);
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
@@ -260,29 +238,7 @@ public class ViewSmApplBackingBean extends
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
-			getManagedBean().setSmAppl(resDTO.getSmAppl());
-			getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
-			setSupplierBusinessType(getManagedBean().getSmSupplier());
-			getManagedBean()
-					.setSupplierBusinessTypeVal(
-							getDropDownViewOnlyValueByCode(
-									SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-									getManagedBean().getSmSupplier()
-											.getBusinessType()));
-			setSmCompanyBasicCalculation();
-			setApplicationShareHolders(getManagedBean().getSmAppl()
-					.getSmPersonnels());
-			setCategoryTypeConfirm();
-			setApplicationFacilities();
-			setEquipments();
-			setPersonnelInfoCalculationSummary();
-			setDefaultApproverReviewSection();
-			retrievePmCertBodyList();
-			setSupplierCancellationRemarks(getManagedBean().getSmAppl()
-					.getApplType(), getManagedBean().getSmAppl().getApplId());
-			setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
-					.getStatusId().toString());
-			getManagedBean().setReviewApplicationExist(true);
+			setApplication(resDTO);
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
 		} finally {
@@ -431,6 +387,32 @@ public class ViewSmApplBackingBean extends
 		addr.setPmDistrict(new PmDistrict());
 
 		return addr;
+	}
+	
+	private void setApplication(SmApplRevisionResDTO resDTO){
+		getManagedBean().setSmAppl(resDTO.getSmAppl());
+		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
+		setSupplierBusinessType(getManagedBean().getSmSupplier());
+		getManagedBean()
+				.setSupplierBusinessTypeVal(
+						getDropDownViewOnlyValueByCode(
+								SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+								getManagedBean().getSmSupplier()
+										.getBusinessType()));
+		setSmCompanyBasicCalculation();
+		setApplicationShareHolders(getManagedBean().getSmAppl()
+				.getSmPersonnels());
+		setCategoryTypeConfirm();
+		setApplicationFacilities();
+		setEquipments();
+		setPersonnelInfoCalculationSummary();
+		setDefaultApproverReviewSection();
+		retrievePmCertBodyList();
+		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
+				.getApplType(), getManagedBean().getSmAppl().getApplId());
+		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
+				.getStatusId().toString());
+		getManagedBean().setReviewApplicationExist(true);
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
@@ -1467,63 +1449,11 @@ public class ViewSmApplBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700054,
+							MessageUtils.getMessage(MessageConst.INFO_721211,
 									new String[] { getManagedBean()
 											.getApplicationNoParam() },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		}
-	}
-
-	private void redirectToViewBasePage() {
-		String pageType = new FacesScopes().getParameter("page");
-
-		if (pageType != null) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			switch (pageType) {
-			case "N":
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(
-								fc,
-								null,
-								"/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml");
-				break;
-			case "A":
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(
-								fc,
-								null,
-								"/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml");
-				break;
-			case "B":
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(
-								fc,
-								null,
-								"/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml");
-				break;
-			case "U":
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(
-								fc,
-								null,
-								"/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml");
-				break;
-			case "R":
-				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(
-								fc,
-								null,
-								"/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml");
-				break;
-			default:
-				break;
-			}
 		}
 	}
 
