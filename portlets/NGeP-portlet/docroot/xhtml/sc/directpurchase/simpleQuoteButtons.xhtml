@@ -51,10 +51,8 @@
 					icon="ui-icon-back" partialSubmit="true" process="@this"
 					style="float:left;"
 					rendered="#{isPendingSubmissionStatus}"
-					action="#{simpleQuoteBackingBean.backToPervious}" >
-					<p:tooltip for="backButton">
-						<h:outputText value="#{lbl['lbl.sc.itemsearch.tooltip']}" escape="false" />
-					</p:tooltip>
+					action="#{simpleQuoteBackingBean.backToPervious}" 
+					title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 					
 				</p:commandButton>
 

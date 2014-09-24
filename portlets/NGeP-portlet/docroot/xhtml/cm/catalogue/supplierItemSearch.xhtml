@@ -132,7 +132,7 @@
 
 								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions.size() + simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions.size()} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
 									action="#{simpleQuoteBackingBean.simpleQuoteAction('' , false , null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
-									title="#{lbl['lbl.sc.sq1.tooltip']}">
+									title="#{lbl['lbl.sc.sq.tooltip']}" escape="true">
 								</p:commandButton>
 
 
@@ -140,11 +140,9 @@
 									action="#{catalogueBackingBean.compareSupplierItem}"
 									value="#{lbl['lbl.cm.view.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}"
-									rendered="#{unspscCodeBackingBean.requisitioner}">
+									rendered="#{unspscCodeBackingBean.requisitioner}"
+									title="#{lbl['lbl.compare.tooltip']}">
 								</p:commandButton>
-								<p:tooltip for="compareButton">
-									<h:outputText value="#{lbl['lbl.compare.tooltip']}" escape="false" />
-								</p:tooltip>
 							</div>
 						</h:panelGroup>
 							<h:panelGroup id="searchViewId">
@@ -250,11 +248,9 @@
 									disabled="#{!supplierItem.pidRequired}"
 									rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }"
 									onstart="blockWidget.show();"
-									oncomplete="blockWidget.hide();">
+									oncomplete="blockWidget.hide();"
+									title="#{lbl['lbl.sc.pid.tooltip']}">
 								</p:commandButton>
-								<p:tooltip for="pidId">
-									<h:outputText value="#{lbl['lbl.sc.pid.tooltip']}" escape="false" />
-								</p:tooltip>
 									
 								<p:spacer width="5px" />
 							    
