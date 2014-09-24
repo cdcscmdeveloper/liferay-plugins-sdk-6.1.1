@@ -239,8 +239,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
-			crBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-			crBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
+			crBB.setFulfilmentRequestField(resDTO);
+			crBB.initializeApproverGroup();
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 				String[] outcome = new String[2];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -645,7 +645,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(getManagedBean().getSearchSuppInvRef()!=null && getManagedBean().getSearchSuppInvRef()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("supplierInvRef",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchSuppInvRef(), true));
 				}
-				if(getManagedBean().getSearchOrderNo()!=null) {
+				if(getManagedBean().getSearchOrderNo()!=null && getManagedBean().getSearchOrderNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("orderNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchOrderNo()));
 				}
 			

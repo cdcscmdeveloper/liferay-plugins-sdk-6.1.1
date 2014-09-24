@@ -367,7 +367,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		return null;
 	}
-	private void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
+	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
 		getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		getManagedBean().getFlRequest().setTitle(getManagedBean().getFlRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -1070,7 +1070,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	
-	private void initializeApproverGroup() {
+	public void initializeApproverGroup() {
 		IFulfilmentRequestSO requestSO = null;
 		try {
 			if(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
