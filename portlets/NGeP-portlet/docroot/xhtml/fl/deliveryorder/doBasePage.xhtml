@@ -32,10 +32,10 @@
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
 							styleClass="ui-button" icon="ui-icon-save" value="Save"
-							ajax='false' onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
 							styleClass="ui-button" icon="ui-icon-submit" value="Submit"
-							ajax='false' onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
 						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
