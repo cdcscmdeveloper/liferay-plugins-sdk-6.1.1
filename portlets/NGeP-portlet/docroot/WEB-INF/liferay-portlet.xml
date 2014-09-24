@@ -1773,6 +1773,18 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>softcertpayment-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>viewSupplierProfile</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			viewsupplierprofile-portlet
+		</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
