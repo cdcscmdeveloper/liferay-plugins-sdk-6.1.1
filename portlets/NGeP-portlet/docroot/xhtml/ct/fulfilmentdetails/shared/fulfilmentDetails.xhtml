@@ -158,13 +158,13 @@
 		    <div style="height:90px; width:157px; vertical-align:top;">
 		       <h:panelGrid columns="2" style="float:right;margin-right:-11px;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
-			   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification']}" />
+			   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}" />
 			   </h:panelGrid>
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:570px;" maxlength="200" label="#{lbl['lbl.ct.justification']}"
+		  rows="4" style="width:570px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
 		  required="true" autoResize="false">
 		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
 		   <p:message for="justificationLbl" display="icon"/>	

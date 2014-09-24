@@ -6,40 +6,40 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-     <p:panel id="committePanel" header="#{lbl['lbl.ct.amend.commmember']}" toggleable="true"  toggleSpeed="500">
+     <p:panel id="committePanel" header="#{lbl['lbl.ct.panel.committe.member']}" toggleable="true"  toggleSpeed="500">
             <p:dataTable id="committeTable" var="ctCommitteeVar" 
                 value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
                 selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{ctCommitteeVar}">
                 <ac:paginator for="committeTable" />
                 <p:column selectionMode="multiple" style="width:2%;" />
 			   
-			    <p:column style="width:20%;white-space:normal" headerText="Name">
+			    <p:column style="width:20%;white-space:normal" headerText="#{lbl['lbl.ct.name']}">
 				   <p:outputLabel value="#{ctCommitteeVar.memberName}" style="float:left;"/>
 				</p:column> 
 				 
-				 <p:column style="width:15%;" headerText="Identification No.">
+				 <p:column style="width:15%;" headerText="#{lbl['lbl.ct.identification.no']}">
 				    <p:outputLabel value="#{ctCommitteeVar.icPassport}" style="float:left;"/>
 				 </p:column>  
 				 
-				 <p:column style="width:20%;white-space:normal" headerText="Designation" >
+				 <p:column style="width:20%;white-space:normal" headerText="#{lbl['lbl.ct.designation']}" >
 				      <p:outputLabel value="#{ctCommitteeVar.designation}" style="float:left;"/>
 				 </p:column> 
 				
-				 <p:column style="width:20%;white-space:normal" headerText="Email">
+				 <p:column style="width:20%;white-space:normal" headerText="#{lbl['lbl.ct.email']}">
 				     <p:outputLabel value="#{ctCommitteeVar.email}" style="float:left;"/>
 				 </p:column> 
 			
-				 <p:column style="width:5%;" headerText="Grade">
+				 <p:column style="width:5%;" headerText="#{lbl['lbl.ct.grade']}">
 				     <p:outputLabel value="#{ctCommitteeVar.grade}" style="float:left;"/>
 				 </p:column> 
 				
-				 <p:column headerText="P&amp;P" style="width:5%;">
-				     <h:outputText value="#{ctCommitteeVar.pnp ? 'Yes' : 'No'}"  style="float:left;"/>
+				 <p:column headerText="#{lbl['lbl.ct.pnp']}" style="width:5%;">
+				     <h:outputText value="#{ctCommitteeVar.pnp ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"  style="float:left;"/>
 				 </p:column>
 				 
 				 <p:column headerText="Role" style="width:13%;">
 					 <ui:fragment rendered="#{ctCommitteeVar.pnp == true}">
-							<h:outputText value="Chairperson" />
+							<h:outputText value="#{lbl['lbl.ct.chairperson']}" />
 					 </ui:fragment>
 					<ui:fragment rendered="#{ctCommitteeVar.pnp == false}" >
 						<p:selectOneMenu id="appaction" value="#{ctCommitteeVar.memberRole.parameterId}"
@@ -75,13 +75,13 @@
              </p:dialog>
         </p:panel>
       
-         <p:dialog id="modelDialog" header="New Committee Member" widgetVar="dlg2" modal="true" width="875" height="525">
+         <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" modal="true" width="875" height="525">
 		    
 		       <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
-		            <p:outputLabel value="*Selection"/>
+		            <p:outputLabel value="#{lbl['lbl.ct.selection']}"/>
 		             <p:selectOneRadio id="radiOptions1" value="#{amendmentBackingBean.managedBean.selectedRadioButton}"  required="true">  
-                          <f:selectItem itemLabel="Existing List" itemValue="1"/>  
-                          <f:selectItem itemLabel="New" itemValue="2" /> 
+                          <f:selectItem itemLabel="#{lbl['lbl.ct.existing.list']}" itemValue="1"/>  
+                          <f:selectItem itemLabel="#{lbl['lbl.ct.new']}" itemValue="2" /> 
                           <p:ajax event="change"  process="@this" 
                              listener="#{amendmentBackingBean.radioButtonForMeeting}"  update=":form:changeCommitteMember"/> 
                      </p:selectOneRadio> 
@@ -90,31 +90,31 @@
 		       <p:spacer height="2"/>
 		       <p:outputPanel id="changeCommitteMember">
 		         
-		           <p:panel id="searchPanel" header="Search" toggleable="true"  
+		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"  
 		               toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.existingUsers}">
 		              
 		                <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
 		                  
-		                     <p:outputLabel for="nameId" value="Name" />
+		                     <p:outputLabel for="nameId" value="#{lbl['lbl.ct.name']}" />
 	                         <p:inputText id="nameId" value="#{amendmentBackingBean.managedBean.name}" style="width:260px;"/>
                            
-                             <p:outputLabel for="idenType" value="Identification Type" />
+                             <p:outputLabel for="idenType" value="#{lbl['lbl.ct.identification.type']}" />
 	                         <p:selectOneMenu id="idenType"  style="width:180px;margin-bottom: 5px;" value="#{amendmentBackingBean.managedBean.identificationType}">
 	                              <f:selectItems value="#{amendmentBackingBean.getDropdownCodeValues(ParameterTypeConst.identificationTypes)}"/>
 	                           </p:selectOneMenu>
-	                         <p:outputLabel for="idenNo" value="Identification No." />
+	                         <p:outputLabel for="idenNo" value="#{lbl['lbl.ct.identification.no']}" />
 	                         <p:inputText id="idenNo"  style="width:170px;" value="#{amendmentBackingBean.managedBean.identificationNo}"/>
                   
                       </h:panelGrid>  
                      
                        <div class="ppRightBtn"> 
-                  	      <p:commandButton value="Search" icon="ui-icon-search" process="@form" 
+                  	      <p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" process="@form" 
                   	          action="#{amendmentBackingBean.existingCommitteMemberList}" update=":form:newCommitteTable" />
-		                  <p:commandButton value="Reset"  icon="ui-icon-reset" action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
+		                  <p:commandButton value="#{lbl['lbl.btn.reset']}"  icon="ui-icon-reset" action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
 		               </div> 
 		         </p:panel>
 		         
-		         <p:panel id="searchResult" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true" 
+		         <p:panel id="searchResult" header="#{lbl['lbl.ct.search.result']}" toggleable="true" 
 		             toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.existingUsers}">
 		         
 		             <p:dataTable id="newCommitteTable" var="data" value="#{amendmentBackingBean.committeDataModel}"  
@@ -122,34 +122,34 @@
                            <ac:paginator for="newCommitteTable"/>
                            <p:column selectionMode="multiple" style="width:2%" />
                       
-				            <p:column style="width:20%;white-space:normal;" headerText="Name">
+				            <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.name']}">
 				                 <p:outputLabel value="#{data.userName}" style="float:left;"/>
 				            </p:column> 
 				      
-				            <p:column style="width:10%;" headerText="Identification No.">
+				            <p:column style="width:10%;" headerText="#{lbl['lbl.ct.identification.no']}">
 				                 <p:outputLabel value="#{data.identificationNo}" style="float:left;"/>
 				             </p:column> 
 				            
-				             <p:column style="width:25%;white-space:normal;" headerText="Designation">
+				             <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
 				                  <p:outputLabel value="#{data.designation}" style="float:left;"/>
 				             </p:column> 
 				    
-				             <p:column style="width:25%;white-space:normal;" headerText="Email">
+				             <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.email']}">
 				                  <p:outputLabel value="#{data.pmAddressTypes[0].pmAddress.email}" style="float:left;"/>
 				             </p:column> 
 				      
-				             <p:column style="width:10%;white-space:normal;" headerText="Grade">
+				             <p:column style="width:10%;white-space:normal;" headerText="#{lbl['lbl.ct.grade']}">
 				                  <p:outputLabel value="#{data.grade}" style="float:left;"/>
 				             </p:column> 
 				       
-				             <p:column style="width:7%;white-space:normal;" headerText="P&amp;P">
-				                 <p:outputLabel value="#{data.PMP ? 'Yes' : 'No'}" style="float:left;"/>
+				             <p:column style="width:7%;white-space:normal;" headerText="#{lbl['lbl.ct.pnp']}">
+				                 <p:outputLabel value="#{data.PMP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}" style="float:left;"/>
 				             </p:column> 
 	                </p:dataTable>
 	          
 	              <f:facet name="footer">
 			      <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
-				      <p:commandButton value="Ok" process="@this,modelDialog" icon="ui-icon-accept" 
+				      <p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,modelDialog" icon="ui-icon-accept" 
 				          action="#{amendmentBackingBean.okCommitteMembers}"  update="committeTable,modelDialog" onclick="dlg2.hide();"/>
                        <p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			      </h:panelGrid>
@@ -157,24 +157,24 @@
 		  
 		    </p:panel>
 	      
-	        <p:panel id="newUser" header="New User" toggleable="true"  toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.newUsers}">
+	        <p:panel id="newUser" header="#{lbl['lbl.ct.new.user']}" toggleable="true"  toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.newUsers}">
 		        <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
 		             
 		                <h:panelGrid columns="2">
 		                    <p:outputLabel value="*" styleClass="mandatory" />
-		                    <p:outputLabel for="newNameId" value="Name" />
+		                    <p:outputLabel for="newNameId" value="#{lbl['lbl.ct.name']}" />
 		                </h:panelGrid>
 	                         <p:inputText id="newNameId" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberName}"/>
 	                         
 	                     <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="loginId" value="Login Id" />
+	                         <p:outputLabel for="loginId" value="#{lbl['lbl.ct.login.id']}" />
 	                     </h:panelGrid>
 	                     <p:inputText id="loginId" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.loginId}"/>
                      
                          <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-                             <p:outputLabel for="newIdenType" value="Identification Type" />
+                             <p:outputLabel for="newIdenType" value="#{lbl['lbl.ct.identification.type']}" />
                          </h:panelGrid>
 	                      <p:selectOneMenu id="newIdenType" style="width:180px;margin-bottom: 5px;"
 	                         value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.identificationCode.parameterId}">
@@ -183,19 +183,19 @@
 	                      
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newIdenNo" value="Identification No." />
+	                         <p:outputLabel for="newIdenNo" value="#{lbl['lbl.ct.identification.no']}" />
 	                      </h:panelGrid>
 	                      <p:inputText id="newIdenNo" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.icPassport}"/>
 	                     
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newGrade" value="Grade" />
+	                         <p:outputLabel for="newGrade" value="#{lbl['lbl.ct.grade']}" />
 	                      </h:panelGrid>
 	                      <p:inputText id="newGrade" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.grade}"/>
 	                     
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newRole" value="Role" />
+	                         <p:outputLabel for="newRole" value="#{lbl['lbl.ct.role']}" />
 	                      </h:panelGrid>
 	                      <p:selectOneMenu id="newRole" style="width:180px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberRole.parameterId}">
 	                           <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}"/>
@@ -203,18 +203,18 @@
 	                   
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel value="P&amp;P"/>
+	                         <p:outputLabel value="#{lbl['lbl.ct.pnp']}"/>
 	                      </h:panelGrid>
 		                  <h:panelGrid columns="4">
 		                      <p:selectOneRadio id="pandp" required="true" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pnp}">  
-                                    <f:selectItem itemLabel="Yes" itemValue="true"/>  
-                                    <f:selectItem itemLabel="No" itemValue="false" /> 
+                                    <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true"/>  
+                                    <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" /> 
                               </p:selectOneRadio> 
 	                      </h:panelGrid>
 	                   
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="countryId" value="Country"/> 
+	                         <p:outputLabel for="countryId" value="#{lbl['lbl.ct.country']}"/> 
 	                      </h:panelGrid>
 	                       <p:selectOneMenu id="countryId" style="width:180px;margin-bottom: 5px;"
 	                           value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.pmCountry.countryId}">
@@ -223,13 +223,13 @@
                          
                            <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newDesignation" value="Designation" />
+	                         <p:outputLabel for="newDesignation" value="#{lbl['lbl.ct.designation']}" />
 	                       </h:panelGrid>
 	                      <p:inputText id="newDesignation" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.designation}"/>
 	                      
 	                      <h:panelGrid columns="2">
 		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newEmail" value="Email" />
+	                         <p:outputLabel for="newEmail" value="#{lbl['lbl.ct.email']}" />
 	                      </h:panelGrid>
 	                      <p:inputText id="newEmail" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.email}"/>
               
@@ -237,9 +237,9 @@
                 
                 <f:facet name="footer">
 			       <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
-			        <p:commandButton value="Ok" process="@this,modelDialog" action="#{amendmentBackingBean.addNewUserMemberCommitte}" 
+			        <p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,modelDialog" action="#{amendmentBackingBean.addNewUserMemberCommitte}" 
 				     update="committeTable,modelDialog" icon="ui-icon-accept" onclick="dlg2.hide();"/>
-			        <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="dlg2.hide();" type="button" />
+			        <p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onclick="dlg2.hide();" type="button" />
 		           </h:panelGrid>
 		         </f:facet>
 		    </p:panel>

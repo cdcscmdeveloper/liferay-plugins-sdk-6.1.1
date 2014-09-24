@@ -93,14 +93,14 @@
 		    <div style="height:90px; width:157px; vertical-align:top;">
 		       <h:panelGrid columns="2"  style="float:right;margin-right:-11px;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
-			   	   <p:outputLabel id="centralJustificationId" value="#{lbl['lbl.ct.justification']}" style="" />
+			   	   <p:outputLabel id="centralJustificationId" value="#{lbl['lbl.ct.justification.ap201']}" style="" />
 			   </h:panelGrid>
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
 		   rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" required="true" autoResize="false" 
-		    label="#{lbl['lbl.ct.justification']}">
+		    label="#{lbl['lbl.ct.justification.ap201']}">
 		  </p:inputTextarea>	
 	     <p:message for="centralJustificationLbl" display="icon"/>
 	  </h:panelGrid>		

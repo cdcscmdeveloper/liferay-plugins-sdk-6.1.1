@@ -13,17 +13,17 @@
                 <ac:paginator for="meetingTable" />
                 <p:column selectionMode="multiple" style="width:2%;"/>
                 
-                <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.amend.dtofmeeting']}">
+                <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.date.of.meeting']}">
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 			          </p:calendar>
 			    </p:column> 
 			 
-			     <p:column style="width:55%;white-space:normal;" headerText="#{lbl['lbl.ct.amend.locofmeeting']}">
+			     <p:column style="width:55%;white-space:normal;" headerText="#{lbl['lbl.ct.location.of.meeting']}">
 				      <p:inputText value="#{ctMeetingsVar.meetingLocation}" style="width:95%;"/>
 			     </p:column> 
 			   
-			     <p:column style="width:20%;white-space:normal;" headerText="Status">
+			     <p:column style="width:20%;white-space:normal;" headerText="#{lbl['lbl.ct.status']}">
 				      <p:selectOneMenu value="#{ctMeetingsVar.meetingStatusId}" style="with:150px;">
 			              <f:selectItems value="#{amendmentBackingBean.getMeetingStatusDropdown()}"/>
 			          </p:selectOneMenu>
@@ -33,8 +33,8 @@
             <div class="ppRightBtn"> 
 		       <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
 		          action="#{amendmentBackingBean.addPbQccMeetingDetails}"  update="meetingTable"/>
-		       <p:commandButton value="Delete" process="@form" partialSubmit="true"  
-		          onclick="dlgMeetingDetails.show();"  icon="ui-icon-delete" update="meetingTable"/>
+		       <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true"  
+		          onclick="dlgMeetingDetails.show();" icon="ui-icon-delete" update="meetingTable"/>
 		    </div>
 		    
 		    <p:dialog id="dlgMeetingDetails" widgetVar="dlgMeetingDetails" styleClass="screen-title" 
