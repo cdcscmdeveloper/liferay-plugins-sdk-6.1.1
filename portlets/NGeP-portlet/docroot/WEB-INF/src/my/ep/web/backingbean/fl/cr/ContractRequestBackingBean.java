@@ -45,6 +45,7 @@ import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -92,6 +93,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -128,6 +131,8 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.AddressType;
@@ -2240,5 +2245,56 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
+	}
+	
+	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
+		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
+		if(supplierBranchId!=null) {
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setSupplierBranchId(new Long(supplierBranchId));
+			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
+			
+			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
+			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
+			supplierDtl.setBranchName(supplierBranch.getBranchName());
+			supplierDtl.setFaxNo(supplierBranch.getFaxNo());
+			supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
+			supplierDtl.setSmAddress(supplierBranch.getSmAddress());
+			supplierDtl.setContactEmail(supplierBranch.getSmPersonnel().getEmail());
+			supplierDtl.setContactFaxNo(supplierBranch.getSmPersonnel().getFaxNo());
+			supplierDtl.setContactMobileNo(supplierBranch.getSmPersonnel().getMobileNo());
+			supplierDtl.setContactPerson(supplierBranch.getSmPersonnel().getName());
+			supplierDtl.setContactPhoneNo(supplierBranch.getSmPersonnel().getPhoneNo());
+		} else { // reset to HQ info
+			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+			reqDTO.setSupplierId(getManagedBean().getFlRequest().getSmSupplier().getSupplierId());
+			MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
+			SmSupplier supplier = resDTO.getSmSupplier();
+			
+			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
+			supplierDtl.setSupplierName(supplier.getCompanyName());		
+			supplierDtl.setBranchCode(null);
+			supplierDtl.setBranchName(null);
+			supplierDtl.setFaxNo(supplier.getSmAppl().getSmCompanyBasic().getFaxNo());
+			supplierDtl.setPhoneNo(supplier.getSmAppl().getSmCompanyBasic().getPhoneNo());
+			
+			for(SmPersonnel smPersonnel: supplier.getSmAppl().getSmPersonnels()){
+				if(smPersonnel.isContactPerson()){
+					supplierDtl.setContactEmail(smPersonnel.getEmail());
+					supplierDtl.setContactFaxNo(smPersonnel.getFaxNo());
+					supplierDtl.setContactMobileNo(smPersonnel.getMobileNo());
+					supplierDtl.setContactPerson(smPersonnel.getName());
+					supplierDtl.setContactPhoneNo(smPersonnel.getPhoneNo());
+					break;
+				}
+			}
+			for(SmCompanyAddress smCompanyAddress : supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+				if(smCompanyAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					supplierDtl.setSmAddress(smCompanyAddress.getSmAddress());
+				}
+			}
+		}
 	}
 }
