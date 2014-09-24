@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.zone;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +30,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -79,27 +77,17 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public void saveZone() {
-		log.info("Save or Update method");
-
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-		System.out.println("Zone idd :::"
-				+ getManagedBean().getPmZone().getZoneCode());
 		if (getManagedBean().getSelectedZones().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
 		List<PmZoneState> zones = getManagedBean().getSelectedZones();
 
-		PmZone zone = getManagedBean().getPmZone();
+		PmZone zone = this.getManagedBean().getPmZone();
 		if (zone.isBrandNew()) {
-			zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-			zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
-			zone.setZoneName(getManagedBean().getPmZone().getZoneName());
-			zone.setRecordStatusFlg(getManagedBean().getPmZone()
-					.getRecordStatusFlg());
 
 			List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
 
@@ -292,11 +280,6 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	public void setSearchZone(IPagingDataModel<PmZone> searchZone) {
 		this.searchZone = searchZone;
-	}
-
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
 	}
 
 	/**

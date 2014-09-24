@@ -1,7 +1,5 @@
 package my.ep.web.backingbean.pm.location;
 
-import java.sql.Timestamp;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -22,7 +20,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -43,7 +40,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.location.LocationManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -65,11 +61,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	}
 
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-
 	public void reset() {
 		this.getManagedBean().setLocationCode(null);
 		this.getManagedBean().setLocationName(null);
@@ -89,17 +80,9 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().getCity().setPmDistrict(new PmDistrict());
 
 	}
-	public SelectItem[] getStatusOptions() {
-		SelectItem[] items =  new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-	    return items;
-	}
-
 
 	public String backToSearch() {
 		reset();
-
 		return "/xhtml/pm/location/locationMain";
 	}
 
@@ -112,6 +95,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		return "/xhtml/pm/location/createLocationMain";
 	}
 
+	/**
+	 * save Location details
+	 * 
+	 */
 	public String saveLocation() {
 
 		try {
@@ -123,23 +110,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IStateSO.class);
-				PmState state = getManagedBean().getState();
-				ICountrySO countrySO = (ICountrySO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICountrySO.class);
-				CountryReqDTO countryReqDTO = new CountryReqDTO();
-				countryReqDTO.setCountryId(getManagedBean().getState()
-						.getPmCountry().getCountryId());
-				CountryResDTO countryResDTO = countrySO
-						.retrieveCountryById(countryReqDTO);
-				state.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				state.setCreatedBy(getFacesScopes().getUserSessionBean()
-						.getUserId());
-				state.setPmCountry(countryResDTO.getPmCountry());
-				state.setRecordStatusFlg(getManagedBean().getStatus());
-				state.setStateCode(getManagedBean().getState().getStateCode());
-				state.setStateName(getManagedBean().getState().getStateName());
+				PmState state = this.getManagedBean().getState();
+
 				reqDTO.setPmState(state);
 				StateResDTO resDTO = stateSO.saveOrUpdateStates(reqDTO);
 
@@ -165,24 +137,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDivisionSO.class);
 
-				PmDivision division = getManagedBean().getDivision();
-				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IStateSO.class);
-				StateReqDTO stateReqDTO = new StateReqDTO();
-				stateReqDTO
-						.setStateId(getManagedBean().getState().getStateId());
-				StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
-				division.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
-				division.setCreatedBy(getFacesScopes().getUserSessionBean()
-						.getUserId());
-				division.setPmState(stateResDTO.getPmState());
-				division.setRecordStatusFlg(getManagedBean().getStatus());
-				division.setDivisionCode(getManagedBean().getDivision()
-						.getDivisionCode());
-				division.setDivisionName(getManagedBean().getDivision()
-						.getDivisionName());
+				PmDivision division = this.getManagedBean().getDivision();
+
 				reqDTO.setPmDivision(division);
 				try {
 					DivisionResDTO resDTO = divisionSO
@@ -218,25 +174,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 								ModuleCodeConst.PROFILE_MANAGEMENT,
 								IDistrictSO.class);
 
-				PmDistrict district = getManagedBean().getDistrict();
-				IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IStateSO.class);
-				StateReqDTO stateReqDTO = new StateReqDTO();
-				stateReqDTO
-						.setStateId(getManagedBean().getState().getStateId());
-				StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
+				PmDistrict district = this.getManagedBean().getDistrict();
 
-				district.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
-				district.setCreatedBy(getFacesScopes().getUserSessionBean()
-						.getUserId());
-				district.setPmState(stateResDTO.getPmState());
-				district.setRecordStatusFlg(getManagedBean().getStatus());
-				district.setDistrictCode(getManagedBean().getDistrict()
-						.getDistrictCode());
-				district.setDistrictName(getManagedBean().getDistrict()
-						.getDistrictName());
 				reqDTO.setPmDistrict(district);
 				try {
 					DistrictResDTO resDTO = districtSO
@@ -271,24 +210,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								ICitySO.class);
 
-				PmCity city = getManagedBean().getCity();
-				IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IDistrictSO.class);
-				DistrictReqDTO districtReqDTO = new DistrictReqDTO();
-				districtReqDTO.setDistrictId(getManagedBean().getDistrict()
-						.getDistrictId());
-				DistrictResDTO districtResDTO = districtSO
-						.retriveDistrictByID(districtReqDTO);
+				PmCity city = this.getManagedBean().getCity();
 
-				city.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-				city.setCreatedBy(getFacesScopes().getUserSessionBean()
-						.getUserId());
-				city.setPmDistrict(districtResDTO.getPmDistrict());
-				city.setRecordStatusFlg(getManagedBean().getStatus());
-				city.setCityCode(getManagedBean().getCity().getCityCode());
-				city.setCityName(getManagedBean().getCity().getCityName());
 				reqDTO.setPmCity(city);
 				CityResDTO resDTO = citySO.saveOrUpdateCity(reqDTO);
 
@@ -318,6 +241,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	}
 
+	/**
+	 * Edit Location details
+	 * 
+	 */
 	public String editLocation(String locationType, Long locationId) {
 
 		getManagedBean().setSelectedType(locationType);
@@ -330,7 +257,6 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			StateResDTO resDTO = stateSO.retriveStateByID(stateReqDTO);
 			PmState state = resDTO.getPmState();
 			this.getManagedBean().setState(state);
-			log.info("Statsu Mang" + state.getRecordStatusFlg());
 
 		}
 		if (locationType
@@ -369,6 +295,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		return "/xhtml/pm/location/editLocationMain";
 	}
 
+	/**
+	 * update Location details
+	 * 
+	 */
 	public String updateLocation() {
 
 		try {
@@ -484,6 +414,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		return "/xhtml/pm/location/editLocationMain";
 	}
 
+	/**
+	 * search Location details
+	 * 
+	 */
 	private class SearchLocatonPagingDataModel extends
 			PagingDataModel<VPmLocation> {
 
@@ -608,6 +542,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DistrictResDTO resDTO = districtSO.retriveDistrictByID(reqDTO);
 		getManagedBean().setDistrict(resDTO.getPmDistrict());
 
+	}
+	public SelectItem[] getStatusOptions() {
+		SelectItem[] items = new SelectItem[2];
+		items[0] = new SelectItem(1, "Active");
+		items[1] = new SelectItem(0, "Inactive");
+		return items;
 	}
 
 	public IPagingDataModel<VPmLocation> getSearchLocation() {

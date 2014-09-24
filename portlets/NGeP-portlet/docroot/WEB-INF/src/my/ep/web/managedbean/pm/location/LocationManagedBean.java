@@ -42,8 +42,6 @@ public class LocationManagedBean extends BaseManagedBean {
 
 	private List<PmState> states;
 
-	private List<PmState> divisionStates;
-
 	private List<PmDivision> divisions;
 
 	private List<PmDistrict> districts;
@@ -224,21 +222,6 @@ public class LocationManagedBean extends BaseManagedBean {
 	 */
 	public void setLocation(VPmLocation location) {
 		this.location = location;
-	}
-
-	/**
-	 * @return the divisionStates
-	 */
-	public List<PmState> getDivisionStates() {
-		return divisionStates;
-	}
-
-	/**
-	 * @param divisionStates
-	 *            the divisionStates to set
-	 */
-	public void setDivisionStates(List<PmState> divisionStates) {
-		this.divisionStates = divisionStates;
 	}
 
 }
