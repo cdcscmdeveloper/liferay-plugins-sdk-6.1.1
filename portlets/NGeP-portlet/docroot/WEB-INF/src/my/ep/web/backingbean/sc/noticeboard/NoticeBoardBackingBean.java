@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,6 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -39,8 +39,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.specification.SpecificationReqDTO;
-import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -50,7 +48,6 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -58,7 +55,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -67,7 +65,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -99,7 +97,7 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "noticeBoardBackingBean")
 @ViewScoped
 public class NoticeBoardBackingBean extends
-		BaseBackingBean<NoticeBoardManagedBean> {
+		SourcingBaseBackingBean<NoticeBoardManagedBean> {
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 
@@ -192,38 +190,9 @@ public class NoticeBoardBackingBean extends
 
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
 			}
-			IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTSpecSO.class);
 
-			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
-
-			specReqDTO
-					.setCheckListTypeCode(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
-			/*
-			 * specReqDTO.setProcurementCatCode(this.getManagedBean().getScQt()
-			 * .getPmProcurementCategory().getParameterCode());
-			 */
-			specReqDTO.setScQt(this.getManagedBean().getScQt());
-			SpecificationResDTO specResDTO = iqtSpecSO
-					.retrieveCheckLists(specReqDTO);
-
-			if (specResDTO.getSpecResultBean() == null) {
-				List<ScQtCheckList> checkListList = new ArrayList<ScQtCheckList>();
-				for (PmDocument pmDoc : specResDTO.getDocumentResultBean()) {
-					ScQtCheckList checkList = new ScQtCheckList();
-					checkList.setTitle(pmDoc.getDocName());
-					checkList.setDefinationType(pmDoc
-							.getDocDefinitionTypeCode());
-					checkList.setManditory(true);
-					checkList.setAction(pmDoc.getChecklistActionCode());
-					checkListList.add(checkList);
-				}
-				this.getManagedBean().setDocuements(checkListList);
-			} else {
-				getManagedBean().setDocuements(
-						specResDTO.getSpecResultBean().getResultList());
-			}
+			getManagedBean().setScQtDocReports(
+					resDTO.getScQtDocReports());
 
 		} finally {
 			qtNoticeBoardSO = null;
@@ -536,15 +505,12 @@ public class NoticeBoardBackingBean extends
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		reqDTO.setUserId(pmUser.getUserId());
 		reqDTO.setQtId(qtId);
-		NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
+		NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveSupplierRegistrationDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
 
 		this.getManagedBean().setMofAccounts(resDTO.getMofAccounts());
 		if (!scQt.isZonal()) {
-			if (null != resDTO.getLocCriteria()) {
-				constructLocationTree(resDTO.getLocCriteria());
-			}
 			ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
 			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(null,
@@ -1353,6 +1319,21 @@ public class NoticeBoardBackingBean extends
 		}
 
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
+	}
+	
+	public void downloadAllDocuments() throws IOException {
+		
+		List<ScQtDocReport> scQtDocReports = getManagedBean()
+				.getScQtDocReports();
+		List<ScQtDocReportAttachment> attachments = new ArrayList<ScQtDocReportAttachment>();
+		for (ScQtDocReport scQtDocReport : scQtDocReports) {
+			ScQtDocReportAttachment docReportAttachment = scQtDocReport.getScQtDocReportAttachment();
+			if (docReportAttachment != null) {
+				attachments.add(docReportAttachment);
+			}
+			
+		}
+		downloadAllFiles("NGeP-QT-Documents", attachments);
 	}
 
 	public boolean isVisible() {

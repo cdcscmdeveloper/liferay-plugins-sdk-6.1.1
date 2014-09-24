@@ -15,8 +15,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalAmount;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -125,7 +125,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile>ptjList;
 	private ScQtBsv bsv;
 	
-	private List<ScQtCheckList> docuements;
+	private List<ScQtDocReport> scQtDocReports;
 	private List<SupplierQualificationBean> qualificationBean;
 	private boolean qualified;
 
@@ -556,12 +556,18 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.bsv = bsv;
 	}
 
-	public List<ScQtCheckList> getDocuements() {
-		return docuements;
+	/**
+	 * @return the scQtDocReports
+	 */
+	public List<ScQtDocReport> getScQtDocReports() {
+		return scQtDocReports;
 	}
 
-	public void setDocuements(List<ScQtCheckList> docuements) {
-		this.docuements = docuements;
+	/**
+	 * @param scQtDocReports the scQtDocReports to set
+	 */
+	public void setScQtDocReports(List<ScQtDocReport> scQtDocReports) {
+		this.scQtDocReports = scQtDocReports;
 	}
 
 	public List<SupplierQualificationBean> getQualificationBean() {
