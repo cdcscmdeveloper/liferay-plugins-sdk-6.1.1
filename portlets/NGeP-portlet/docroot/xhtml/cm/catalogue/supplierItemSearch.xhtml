@@ -131,10 +131,8 @@
 									disabled="#{fn:length(requestNoteBackingBean.managedBean.requestNote.requestNoteDtls) eq '0'}" />
 
 								<p:commandButton value="#{lbl['lbl.sc.sq']} ( #{simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specMaster.tplSpecQuestions.size() + simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specMaster.tplSpecQuestions.size()} )" rendered="#{unspscCodeBackingBean.requisitioner}" id="simpleQuoteId"
-									action="#{simpleQuoteBackingBean.simpleQuoteAction('' , false , null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}">
-									<p:tooltip for="simpleQuoteId">
-										<h:outputText value="#{lbl['lbl.sc.sq.tooltip']}" escape="false" />
-									</p:tooltip>
+									action="#{simpleQuoteBackingBean.simpleQuoteAction('' , false , null)}"  disabled="#{catalogueBackingBean.managedBean.simpleQuoteFlag}"
+									title="#{lbl['lbl.sc.sq1.tooltip']}">
 								</p:commandButton>
 
 
@@ -143,10 +141,10 @@
 									value="#{lbl['lbl.cm.view.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 									disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}"
 									rendered="#{unspscCodeBackingBean.requisitioner}">
-									<p:tooltip for="compareButton">
-										<h:outputText value="#{lbl['lbl.compare.tooltip']}" escape="false" />
-									</p:tooltip>
 								</p:commandButton>
+								<p:tooltip for="compareButton">
+									<h:outputText value="#{lbl['lbl.compare.tooltip']}" escape="false" />
+								</p:tooltip>
 							</div>
 						</h:panelGroup>
 							<h:panelGroup id="searchViewId">

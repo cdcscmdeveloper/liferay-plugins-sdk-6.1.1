@@ -62,12 +62,12 @@
 										<p:tooltip for="simpleQuoteId">
 											<h:outputText value="#{lbl['lbl.sc.sq.tooltip']}" escape="false" />
 										</p:tooltip>
-									<p:menuitem value="#{lbl['lbl.sc.purchae.inquiry']}"
+									<p:menuitem value="#{lbl['lbl.sc.pr.inquiry']}"
 										icon="ui-icon-plus"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem, catalogueBackingBean.managedBean.selectedSupplierItemList)}"
 										rendered="#{unspscCodeBackingBean.requisitioner}" />
-									<p:menuitem value="#{lbl['lbl.cm.catalogue.cart']}"
+									<p:menuitem value="#{lbl['lbl.sc.add.to.cart']}"
 										icon="ui-icon-plus"
 										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 										action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true ,catalogueBackingBean.managedBean.selectedSupplierItemList)}"
