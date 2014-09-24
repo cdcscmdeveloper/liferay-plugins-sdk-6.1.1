@@ -8,10 +8,11 @@
 
 	<p:panel header="#{lbl['lbl.sm.projDtls.catHdr']}" toggleable="true"
 		id="compExpCatPanHdr">
-		<p:dataTable var="catBean" widgetVar="suppExpCatCodesDtWidVar"
+		<p:dataTable var="expCategoryBean" widgetVar="suppExpCatCodesDtWidVar"
 			value="#{backingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}"
 			selection="#{backingBean.managedBean.selectedCompExpCats}"
-			rowKey="#{catBean}" rowIndexVar="index" id="suppExpCatCodesDtWidVar">
+			rowKey="#{expCategoryBean}" rowIndexVar="index"
+			id="suppExpCatCodesDtWidVar">
 			<ac:paginator for="suppExpCatCodesDtWidVar" />
 
 			<p:column selectionMode="multiple" width="5%" />
@@ -19,7 +20,7 @@
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.mainCat']}"
 					id="consultProjParCatCode"
-					value="#{catBean.pmCategoryL1.categoryL1Id}"
+					value="#{expCategoryBean.pmCategoryL1.categoryL1Id}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
@@ -27,9 +28,9 @@
 						var="parent" itemLabel="#{parent.categoryName}"
 						itemValue="#{parent.categoryL1Id}" />
 					<p:ajax event="change"
-						listener="#{backingBean.populateChildCategoryByParent(catBean.pmCategoryL1.categoryL1Id,
-								catBean.pmCategoryL2,
-								catBean.pmCategoryL3)}"
+						listener="#{backingBean.populateExperienceChildCategoryByParent(expCategoryBean.pmCategoryL1.categoryL1Id,
+								expCategoryBean.pmCategoryL2,
+								expCategoryBean.pmCategoryL3)}"
 						update="conslChild,conslSubChild" />
 				</p:selectOneMenu>
 				<p:message id="consultProjParCatCodeMsg" for="consultProjParCatCode"
@@ -40,14 +41,15 @@
 			<p:column headerText="#{lbl['lbl.sm.projDtls.subCat']}">
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCat']}"
-					value="#{catBean.pmCategoryL2.categoryL2Id}" id="conslChild"
-					style="width: 207px;margin-bottom: 5px;">
+					value="#{expCategoryBean.pmCategoryL2.categoryL2Id}"
+					id="conslChild" style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems value="#{catBean.pmCategoryL2.pmCategoryL2s}"
+					<f:selectItems
+						value="#{expCategoryBean.pmCategoryL2.pmCategoryL2s}"
 						var="conslChild" itemLabel="#{conslChild.categoryName}"
 						itemValue="#{conslChild.categoryL2Id}" />
 					<p:ajax event="change"
-						listener="#{backingBean.populateSubChildCategoryByChild(catBean.pmCategoryL2.categoryL2Id,catBean.pmCategoryL3)}"
+						listener="#{backingBean.populateExperienceSubChildCategoryByChild(expCategoryBean.pmCategoryL2.categoryL2Id,expCategoryBean.pmCategoryL3)}"
 						update="conslSubChild" />
 				</p:selectOneMenu>
 				<p:message id="conslChildMsg" for="conslChild" showSummary="true"
@@ -57,14 +59,15 @@
 			<p:column headerText="#{lbl['lbl.sm.projDtls.subCatDiv']}">
 				<p:selectOneMenu required="#{backingBean.managedBean.valueReqd}"
 					label="#{lbl['lbl.sm.projDtls.subCatDiv']}"
-					value="#{catBean.pmCategoryL3.categoryL3Id}" id="conslSubChild"
-					style="width: 207px;margin-bottom: 5px;">
+					value="#{expCategoryBean.pmCategoryL3.categoryL3Id}"
+					id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems value="#{catBean.pmCategoryL3.pmCategoryL3s}"
+					<f:selectItems
+						value="#{expCategoryBean.pmCategoryL3.pmCategoryL3s}"
 						var="conslSubChild" itemLabel="#{conslSubChild.categoryName}"
 						itemValue="#{conslSubChild.categoryL3Id}" />
 					<p:ajax event="change"
-						listener="#{backingBean.checkDuplicateCategoryForProject(catBean,backingBean.managedBean.selectedCompanyExperience)}"
+						listener="#{backingBean.checkDuplicateCategoryForProject(expCategoryBean,backingBean.managedBean.selectedCompanyExperience)}"
 						update="conslSubChild" />
 				</p:selectOneMenu>
 				<p:message id="conslSubChildMsg" for="conslSubChild"
