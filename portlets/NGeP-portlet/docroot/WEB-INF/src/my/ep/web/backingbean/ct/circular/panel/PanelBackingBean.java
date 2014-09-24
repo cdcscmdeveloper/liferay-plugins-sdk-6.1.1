@@ -1350,7 +1350,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void updateZoneGeneralLocation() {
-
+		
 		List<CtPanelZoneDtl> allNodes = new ArrayList<CtPanelZoneDtl>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedGeneralTreeNodes()) {
@@ -1362,24 +1362,38 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			if(this.getManagedBean().isEditZone()){
+				
+				if(!getManagedBean().getSelectedPanelItems().getCtPanelZones().get(getManagedBean().getIndex()).getName().equalsIgnoreCase(getManagedBean().getZoneName())){
+					for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
+						   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
+							   throw new EpException(MessageConst.WARN_752000);
+						   }
+				      }
+				}	
 				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).setName(getManagedBean().getZoneName());
 				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).getPanelZoneDtls().clear();
 				this.getManagedBean().getSelectedPanelItems().getCtPanelZones().get(this.getManagedBean().getIndex()).getPanelZoneDtls().addAll(allNodes);
 				this.getManagedBean().setEditZone(false);
 		
 			}else{
+				
+		          for(CtPanelZone panelZone : getManagedBean().getSelectedPanelItems().getCtPanelZones()){
+					   if(panelZone.getName().equalsIgnoreCase(getManagedBean().getZoneName())){
+						   throw new EpException(MessageConst.WARN_752000);
+					   }
+				   }
 			
-			CtPanelZone zone = new CtPanelZone();
-			zone.setName(getManagedBean().getZoneName());
-			getManagedBean().setZoneName(null);
-			if(zone.getPanelZoneDtls() == null){
-				zone.setPanelZoneDtls( new ArrayList<CtPanelZoneDtl>());	
-			} zone.getPanelZoneDtls().addAll(allNodes);
+			       CtPanelZone zone = new CtPanelZone();
+			       zone.setName(getManagedBean().getZoneName());
+			       getManagedBean().setZoneName(null);
+			       if(zone.getPanelZoneDtls() == null){
+				           zone.setPanelZoneDtls( new ArrayList<CtPanelZoneDtl>());	
+			       } zone.getPanelZoneDtls().addAll(allNodes);
 			
-			if(this.getManagedBean().getSelectedPanelItems().getCtPanelZones() == null)
+		    	if(this.getManagedBean().getSelectedPanelItems().getCtPanelZones() == null)
 				this.getManagedBean().getSelectedPanelItems().setCtPanelZones(new ArrayList<CtPanelZone>());
 			   
-			this.getManagedBean().getSelectedPanelItems().getCtPanelZones().add(zone);
+			    this.getManagedBean().getSelectedPanelItems().getCtPanelZones().add(zone);
 		  }
 		}
 	}

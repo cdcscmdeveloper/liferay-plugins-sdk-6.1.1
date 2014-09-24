@@ -92,7 +92,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
 		<p:commandButton value="Bulk Update" process="@this" update="bulkUpdateDlg" icon="ui-icon-add" action="#{panelBackingBean.bulkUpdateItem}" />
-		   <p:commandButton value="Add" process="@all" icon="ui-icon-add"
+		   <p:commandButton value="Add" process="@this" icon="ui-icon-add"
 		      update="@([id$=panelItemDt])" action="#{panelBackingBean.addPanelItem()}"/>
 		   <p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete"  process="@this"
 			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" />
@@ -155,7 +155,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" process="@this"  />	
 					<p:column headerText="Location" style="width:60%">
-					<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
+				    	<p:outputLabel value="#{panelZoneVar.name}" style="float:left;"/>	
 					</p:column>
                     <p:column headerText="Status" style="width:20%">
                       <p:selectOneMenu  value="#{panelZoneVar.recordStatusFlg}"  
@@ -187,11 +187,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	  <p:dialog header="ADD LOCATION" widgetVar="ZoneGeneral" modal="true" width="600" position="top" height="500">
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td">
-
 				<tr>
 					<td width="25%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel></td>
-					<td width="70%"><p:inputText style="width:300px;"
-							value="#{panelBackingBean.managedBean.zoneName}"></p:inputText>
+					<td width="70%"><p:inputText id="zoneName" style="width:300px;"
+							value="#{panelBackingBean.managedBean.zoneName}" required="true" label="Zone Name"></p:inputText>
+							<p:message display="icon" for="zoneName"/>
 					</td>
 				</tr>
 				<tr>
@@ -218,8 +218,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:spacer height="10"/>
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
-			style="float:right;" onclick="ZoneGeneral.hide();"
-			icon="ui-icon-cancel" />
+			style="float:right;" onclick="ZoneGeneral.hide();" icon="ui-icon-cancel" />
 		
 		<p:commandButton value="Ok"
 			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
