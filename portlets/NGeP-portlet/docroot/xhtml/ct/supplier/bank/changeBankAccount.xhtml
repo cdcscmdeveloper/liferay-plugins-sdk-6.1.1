@@ -57,9 +57,9 @@
                        <h:panelGrid id="menuContractId" columns="2" rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			                <p:selectOneMenu id="contractId"  style="width:210px;margin-bottom: 3px;"
 			                      value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="Contract No">
-			         	          <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
+			         	          <f:selectItem itemLabel="-Select One-" itemValue="123" />
 				                  <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				                 <p:ajax  update="contractName,physicalNo,effDate,expDate,bankHeader,bankId,supplierDetails" 
+				                 <p:ajax  update="fulfilmentDetail,bankHeader,bankId,supplierDetails" 
 				                      event="change" process="@this"   listener="#{supplierBackingBean.changeContractActionListener}"/>
 				            </p:selectOneMenu>
 				           <p:message for="contractId" display="icon"/>
