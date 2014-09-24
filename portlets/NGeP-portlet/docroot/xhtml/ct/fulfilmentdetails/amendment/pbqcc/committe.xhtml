@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-     <p:panel id="committePanel" header="#{lbl['lbl.ct.panel.committe.member']}" toggleable="true"  toggleSpeed="500">
+     <p:panel id="committePanel" header="#{lbl['lbl.ct.panel.committee.member']}" toggleable="true"  toggleSpeed="500">
             <p:dataTable id="committeTable" var="ctCommitteeVar" 
                 value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctCommitteeMembers}"
                 selection="#{amendmentBackingBean.selectedCommitteMembers}" rowKey="#{ctCommitteeVar}">
@@ -135,7 +135,7 @@
 				             </p:column> 
 				    
 				             <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.email']}">
-				                  <p:outputLabel value="#{data.pmAddressTypes[0].pmAddress.email}" style="float:left;"/>
+				                  <p:outputLabel value="#{data.email}" style="float:left;"/>
 				             </p:column> 
 				      
 				             <p:column style="width:10%;white-space:normal;" headerText="#{lbl['lbl.ct.grade']}">
