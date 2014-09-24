@@ -337,7 +337,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				outcome[0] = BpmOutcomeConst.BPM_STOP_FULFILMENT;
 				flOrderBB.getManagedBean().setOutComes(outcome);
 			}
-			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
