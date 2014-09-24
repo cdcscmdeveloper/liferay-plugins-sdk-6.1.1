@@ -110,10 +110,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		 if (reloadPreviousApplication()) {
-//		 initPreviousApplication();
-//		 }
-//		 constructMessage();
+		// if (reloadPreviousApplication()) {
+		// initPreviousApplication();
+		// }
+		// constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -306,16 +306,16 @@ public class ViewSmApplBackingBean extends
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
 	}
-	
-	private String getBasePage(String applicationType){
+
+	private String getBasePage(String applicationType) {
 		String basePage = "";
-		if(applicationType!=null){
+		if (applicationType != null) {
 			switch (applicationType) {
 			case ParameterConst.NEW_SM_APPLN_FOR_MOF:
 				basePage = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
 				break;
 			case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
-				basePage =  "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
+				basePage = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
 				break;
 			case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
 				basePage = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
@@ -332,7 +332,6 @@ public class ViewSmApplBackingBean extends
 		}
 		return basePage;
 	}
-		
 
 	private void setTabParam() {
 		String tabParam = new FacesScopes().getParameter("tab");
