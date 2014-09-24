@@ -33,14 +33,7 @@
 
 			</p:column>
 
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price.uom']}
-				</f:facet>
-				<p:inputText value="#{tier.price}" size="10" readonly="true" style="text-align:right">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</p:column>
+			
 
 			<p:column>
 				<f:facet name="header">
@@ -54,6 +47,14 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{tier.toQty}" readonly="true" size="4" style="text-align:right"></p:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price.uom']}
+				</f:facet>
+				<p:inputText value="#{tier.price}" size="10" readonly="true" style="text-align:right">
+				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
 			</p:column>
 
 			<p:column>
