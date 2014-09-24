@@ -10,11 +10,6 @@
 	<ui:define name="contentSection">
     <p:panel>
     	<f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
-	   	<h:panelGroup rendered="#{terminationBackingBean.managedBean.taskId==null}">
-			<div align="left" class="screen-title" style="border-bottom: 0px">
-			Termination / Remedy History
-			</div>	   
-		</h:panelGroup>
 	   	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	   	<table style="width: 100%;">
 	    	<tr>
@@ -169,11 +164,11 @@
 	    </h:panelGrid>
 	</h:panelGrid>
  	</p:panel>
- 	<p:panel id="terminationHistoryId"	header="#{lbl['lbl.ct.tr.panel.history']}" toggleable="true" toggleSpeed="500">
+ 	<p:panel id="terminationHistoryId"	header="#{lbl['lbl.ct.panel.termination.history']}" toggleable="true" toggleSpeed="500">
 			<div style="overflow-x: auto">
 				<p:dataTable id="dataTable" var="data" rowIndexVar="index" rowKey="#{data}" 
 					value="#{terminationBackingBean.managedBean.terminationList}" >
-					<p:column headerText="#{lbl['lbl.ct.createdDate']}" style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.created.date']}" style="width:10%;">
 						<p:commandLink action="#{terminationBackingBean.gotoTerminatePage}">
 						<h:outputText value="#{data.createdDate}">
 					        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -181,7 +176,7 @@
 						<f:param name="contractVerId" value="#{data.ctContractVer.contractVerId}" />
 						</p:commandLink>
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.tr.recom']}"  style="width:55%;">
+					<p:column headerText="#{lbl['lbl.ct.termination.decision']}"  style="width:55%;">
 						<h:outputText value="#{terminationBackingBean.getParameterDesc(data.decisionType)}" />
 					</p:column>
 				</p:dataTable>

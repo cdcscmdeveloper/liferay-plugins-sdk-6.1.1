@@ -19,7 +19,7 @@
 		   <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		 </p:column>
          <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.ptj']}">
-            <p:selectOneMenu id="ptj" value="#{agSignerVar.orgProfile.orgProfileId}"  style="width:320px;" label="#{lbl['lbl.ct.ag.view.ct.ptj']}" 
+            <p:selectOneMenu id="ptj" value="#{agSignerVar.orgProfile.orgProfileId}"  style="width:320px;" label="#{lbl['lbl.ct.ptj']}" 
             	rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null and
             		agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}" >
               <f:selectItems value="#{agreementBackingBean.getPtjCodeName()}"/>
