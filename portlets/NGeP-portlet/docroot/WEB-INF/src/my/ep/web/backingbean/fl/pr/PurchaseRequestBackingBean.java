@@ -2659,15 +2659,19 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for (ScSupplierItemPrice scSupplierItemPrice : purResDTO.getSupplierItemPriceList() ) {
 				if(null != scSupplierItemPrice.getTplSpecZone()){
 					TplSpecZoneDtl tplSpecZoneDtl = scSupplierItemPrice.getTplSpecZone();
-						if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
-							FLSupplierItemVO itemPriceVO=new FLSupplierItemVO();
-							itemPriceVO.setSupplierItemPrice(scSupplierItemPrice);
-							itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
-							supplierItems.add(itemPriceVO);
-						}
-					getManagedBean().setSupplierItemPriceList(supplierItems);
+					if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
+						FLSupplierItemVO itemPriceVO=new FLSupplierItemVO();
+						itemPriceVO.setSupplierItemPrice(scSupplierItemPrice);
+						itemPriceVO.setItemZoneTree(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+						supplierItems.add(itemPriceVO);
+					}
+				} else {
+					FLSupplierItemVO itemPriceVO=new FLSupplierItemVO();
+					itemPriceVO.setSupplierItemPrice(scSupplierItemPrice);
+					supplierItems.add(itemPriceVO);
 				}
 			}
+			getManagedBean().setSupplierItemPriceList(supplierItems);
 		}	
 		
 	}
