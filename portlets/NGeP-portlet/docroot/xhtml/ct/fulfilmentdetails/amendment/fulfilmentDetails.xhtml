@@ -144,7 +144,10 @@
 	       amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
 		    <div style="height:80px; width:157px; vertical-align:top;">
-			   <p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" />
+		    	<h:panelGrid columns="2" style="float:right;margin-right:-11px;">
+		        	<p:outputLabel value="*" styleClass="mandatory" />			   	   	
+			   		<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" />			   	   	
+			   	</h:panelGrid>
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid>
