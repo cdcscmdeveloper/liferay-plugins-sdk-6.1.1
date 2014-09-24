@@ -346,7 +346,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(frnItem.getReceivedAmt().doubleValue() < frnItem.getFlDelOrderItem().getDeliveredAmt().doubleValue()) {
 				frnItem.setRejectedAmt(frnItem.getFlDelOrderItem().getDeliveredAmt().subtract(frnItem.getReceivedAmt()));
 				if(frnItem.getRejectionRemark()==null || frnItem.getRejectionRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_745051, new String[]{"Remark",frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
+					throw new EpException(MessageConst.ERROR_745051, new String[]{frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getItemName()});
 				}
 			}			
 		}
