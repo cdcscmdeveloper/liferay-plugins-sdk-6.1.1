@@ -110,10 +110,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		// if (reloadPreviousApplication()) {
-		// initPreviousApplication();
-		// }
-		// constructMessage();
+		 if (reloadPreviousApplication()) {
+		 initPreviousApplication();
+		 }
+		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -145,25 +145,10 @@ public class ViewSmApplBackingBean extends
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
 
-		String redirectToAppl = "";
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication();
 		String applType = getManagedBean().getSmAppl().getApplType();
-		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-			redirectToAppl = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
-		} else if (applType
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			redirectToAppl = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
-		} else if (applType
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-			redirectToAppl = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
-		} else if (applType
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-			redirectToAppl = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
-		} else if (applType
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-			redirectToAppl = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
-		}
+		String redirectToAppl = getBasePage(applType);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, redirectToAppl);
@@ -183,26 +168,10 @@ public class ViewSmApplBackingBean extends
 		if (smResDTO.getSmAppl() != null) {
 
 			String applNo = smResDTO.getSmAppl().getApplNo();
-
-			String redirectToAppl = "";
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
-			if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-				redirectToAppl = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
-			} else if (applType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-				redirectToAppl = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
-			} else if (applType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
-				redirectToAppl = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
-			} else if (applType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
-				redirectToAppl = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
-			} else if (applType
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
-				redirectToAppl = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
-			}
+			String redirectToAppl = getBasePage(applType);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, redirectToAppl);
@@ -337,6 +306,33 @@ public class ViewSmApplBackingBean extends
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
 	}
+	
+	private String getBasePage(String applicationType){
+		String basePage = "";
+		if(applicationType!=null){
+			switch (applicationType) {
+			case ParameterConst.NEW_SM_APPLN_FOR_MOF:
+				basePage = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+				basePage =  "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+				basePage = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+				basePage = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+				basePage = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
+				break;
+			default:
+				break;
+			}
+		}
+		return basePage;
+	}
+		
 
 	private void setTabParam() {
 		String tabParam = new FacesScopes().getParameter("tab");
