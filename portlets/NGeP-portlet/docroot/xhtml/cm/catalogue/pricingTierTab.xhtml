@@ -36,11 +36,12 @@
                 </p:inputText>
             </p:column>
 			<p:column>
+				<p:focus for=":form:pricingTabID:headerTabId:tierId:pricingTierID:tierPriceId"></p:focus>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText value="#{price.price}" size="10" disabled="#{price.standardDisabled}" style="text-align:right">
-				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				<p:inputText id="tierPriceId" value="#{price.price}" size="10" disabled="#{price.standardDisabled}" style="text-align:right">
+				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink"/>
 				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
 			</p:column>
@@ -130,7 +131,7 @@
 					</td>			
 					<td style="width: 20px">
 						<p:graphicImage id="uidti"
-								value="/resources/ep/images/design/tooltips.png"  />
+								value="/css/images/design/tooltips.png"  />
 						<p:tooltip id="uidtt" for="uidti">
 							<p:outputLabel escape="false"
 								value="#{lbl['lbl.cm.addnew.tooltip']}" />
