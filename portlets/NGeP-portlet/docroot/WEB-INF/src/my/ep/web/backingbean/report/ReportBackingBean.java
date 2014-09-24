@@ -2572,12 +2572,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
-	            break;
-	       
+	            break;	       
 	        default:            
 	            break;
-		}
-		
+		}		
 	}
 	/*
 	 *Enable SC module criteria by report name 
@@ -3414,8 +3412,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			break;
 		default:            
             break;
-		}
-		
+		}		
 	}	
 	public void retrieveDates(){
 		if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
@@ -3501,8 +3498,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				levThreeCatLst.add(selectItem);			
 			}
 		}
-	}
-	
+	}	
 	public void enableRegistrationType(){
 		this.setEpNumber(null);
 		this.setIcNumber(null);
@@ -3526,15 +3522,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				this.setIcNumber(null);
 				this.setBusinessRegNo(null);
 			}			
-		}else{
-			getManagedBean().getRptGenBean().setMofRegView(false);
-			getManagedBean().getRptGenBean().setBasicRegView(false);
-			this.setEpNumber(null);
-			this.setIcNumber(null);
-			this.setBusinessRegNo(null);
-			this.setMofNumber(null);
-		}
-		//checkVariableValueExist();
+		}		
 	}
 	/*
 	 *Generate all modules reports 
@@ -4010,8 +3998,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
-	}
-	
+	}	
 	/*
 	 *Generate FL module report 
 	 */
@@ -4258,6 +4245,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			specialCharValidation();			
 		}		
 	}
+	public void specialCharValidation() {
+		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
+		Pattern pattern = Pattern.compile(ptString);
+	    Matcher match = pattern.matcher(this.getQuotationNo());
+	    if(match.matches()){
+	    	getQuotationNumber();
+	    }else{
+	    	this.setQuotationNo(null);
+	    	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
+	    }	  
+	}
 	/*
 	 *retrieve qtid based on qtno 
 	 */
@@ -4283,19 +4281,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			this.setQuotationNo(null);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
 		}
-	}
-	public void specialCharValidation() {
-		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
-		Pattern pattern = Pattern.compile(ptString);
-	    Matcher match = pattern.matcher(this.getQuotationNo());
-	    if(match.matches()){
-	    	getQuotationNumber();
-	    }else{
-	    	this.setQuotationNo(null);
-	    	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
-	    }
-	    //checkVariableValueExist();
-	}
+	}	
 	/*
 	 *Clear report criteria 
 	 */
@@ -4399,10 +4385,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		this.setExpiryFromDate(null);	
 		this.setExpiryToDate(null);
 		this.setPrintedFromDate(null);	
-		this.setPrintedToDate(null);
-		//checkVariableValueExist();
-	}
-	
+		this.setPrintedToDate(null);		
+	}	
 	public File newDownloadingFile(String url) throws IOException {		
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -4440,6 +4424,5 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		out.flush();
 		out.close(); 		
 		return localFile;
-	}
-	
+	}	
 }
