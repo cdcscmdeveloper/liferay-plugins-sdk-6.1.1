@@ -19,6 +19,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -72,6 +73,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	private String fileDirectory;
 	private String accountNoAndName;
+	private PmUser supplierPmUser;
 	
 	public SupplierManagedBean(){
 		
@@ -347,5 +349,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setAccountNoAndName(String accountNoAndName) {
 		this.accountNoAndName = accountNoAndName;
+	}
+
+	public PmUser getSupplierPmUser() {
+		return supplierPmUser;
+	}
+
+	public void setSupplierPmUser(PmUser supplierPmUser) {
+		this.supplierPmUser = supplierPmUser;
 	}
 }
