@@ -110,10 +110,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		 if (reloadPreviousApplication()) {
-		 initPreviousApplication();
-		 }
-		 constructMessage();
+//		 if (reloadPreviousApplication()) {
+//		 initPreviousApplication();
+//		 }
+//		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
