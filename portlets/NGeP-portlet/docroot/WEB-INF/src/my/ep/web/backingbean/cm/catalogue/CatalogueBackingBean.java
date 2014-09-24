@@ -763,6 +763,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		else
 			this.getManagedBean().getSelectedMaintainItem().setRecordStatus(false);
 			
+		//sort Tier
+		if(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), "S");
+		}
+		//sort Tier	Promotion		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), "P");
+		}
+		//sort Zonal Tier			
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), "S");
+		}
+		//sort Zonal Tier Promotion
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings() != null && !this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().isEmpty()){
+			groupPricesByTier(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), "P");
+		}
 		
 		updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 		//return "addCatalogItem";
