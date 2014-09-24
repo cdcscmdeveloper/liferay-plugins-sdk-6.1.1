@@ -4,16 +4,16 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="loaContents" header="#{lbl['lbl.ct.amend.loacontents']}" toggleable="true" toggleSpeed="500">
+	<p:panel id="loaContents" header="#{lbl['lbl.ct.panel.loa.contents']}" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="loaContentDt" var="data" 
 		     value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaReports}"
 		     selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedScLoaReports}" rowKey="#{data}">
 		     <p:ajax event="rowSelect" update=":form:delLoaContentBtn" />
-			 <p:column headerText="Content" style="width:50%;">
+			 <p:column headerText="#{lbl['lbl.ct.contents']}" style="width:50%;">
 			    <p:outputLabel value="#{data.title}" style="float:left;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}" />
 				<p:inputText value="#{data.title}" style="width:90%;" rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}"/>
 		     </p:column>
-			 <p:column headerText="Type" style="width:15%;">
+			 <p:column headerText="#{lbl['lbl.ct.type']}" style="width:15%;">
 				<p:outputLabel style="float:left;"
 					value="#{amendmentBackingBean.getParameterDesc(data.definationType)}" />
 			 </p:column>
@@ -29,17 +29,17 @@
 					</h:commandLink>
 				 </h:panelGroup>
 			 </p:column>
-			 <p:column headerText="Action" styleClass="column-align-center" style="width:10%;">
+			 <p:column headerText="#{lbl['lbl.btn.action']}" styleClass="column-align-center" style="width:10%;">
 			    <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
 			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
 				       <p:graphicImage library="ep/images/design" name="download.png"
-						   value="/css/images/design/download.png" title="File Download" />
+						   value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				   </h:commandLink>
 			    </h:panelGroup>
 			     <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
 			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(data)}">
 					    <p:graphicImage library="ep/images/design" name="download.png"
-						    value="/css/images/design/download.png" title="File Download" />
+						    value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				     </h:commandLink>
 			    </h:panelGroup>
 			  </p:column>
@@ -59,7 +59,7 @@
 			  <p:ajax event="close" />
 			  <p:fileUpload mode="advanced" fileUploadListener="#{amendmentBackingBean.contentLetterUpload}"
 				  allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"  style="display:inline;"
-				  invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted" update=":form:loaContentDt">
+				  invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:loaContentDt">
 			 </p:fileUpload>
 		 </p:dialog>
 		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="350"
@@ -100,7 +100,7 @@
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{amendmentBackingBean.letterOfAcceptenceUpload}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 				update=":form:uploadLoaPg">
 			</p:fileUpload>
 		</p:dialog>		

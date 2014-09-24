@@ -25,7 +25,7 @@
           process="@this,searchTxt,searchid"  icon="ui-icon-search"  update="dataTable"/>
       </h:panelGrid>
      </p:panel>
-     <p:panel id="searchResulId" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true" toggleSpeed="500">
+     <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
      <h:panelGrid style="width:100%;">
         <p:dataTable id="dataTable" var="data" value="#{contractTemplateBackingBean.managedBean.ctTemplatesList}" 
 	     dynamic="true" rowKey="#{data}" selection="#{contractTemplateBackingBean.selectedTemplates}">
