@@ -70,27 +70,23 @@
 			</p:column>
 			<p:column>
 				<p:panel id="standardErrorLink" styleClass="noBorders tr,noBorders td">
-					<p:commandLink title="#{lbl['lbl.txt.error']}" update=":form"
-						oncomplete="errorDialog.show();"
-						rendered="#{(catalogueBackingBean.managedBean.error1 or
+				
+					<c:choose>
+					    <c:when test="#{(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate eq null or catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate eq null or
 						catalogueBackingBean.managedBean.error2 or
-						catalogueBackingBean.managedBean.error3 or
-						catalogueBackingBean.managedBean.error4 or
-						catalogueBackingBean.managedBean.error5 or
-						catalogueBackingBean.managedBean.error6 or
 						catalogueBackingBean.managedBean.error7
 						)}">
-						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-					</p:commandLink>
-					<p:graphicImage value="/css/images/design/icon_success.png" 
-						rendered="#{!(catalogueBackingBean.managedBean.error1 or
-						catalogueBackingBean.managedBean.error2 or
-						catalogueBackingBean.managedBean.error3 or
-						catalogueBackingBean.managedBean.error4 or
-						catalogueBackingBean.managedBean.error5 or
-						catalogueBackingBean.managedBean.error6 or
-						catalogueBackingBean.managedBean.error7
-						)}"></p:graphicImage>
+					        <p:commandLink title="#{lbl['lbl.txt.error']}" update=":form" oncomplete="errorDialog.show();" >
+								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+							</p:commandLink>
+					    </c:when>
+					    <c:otherwise>
+					        <p:graphicImage value="/css/images/design/icon_success.png">
+							</p:graphicImage>
+					    </c:otherwise>
+					</c:choose>
+				
+					
 				</p:panel>
 			</p:column>
 		</p:row>
