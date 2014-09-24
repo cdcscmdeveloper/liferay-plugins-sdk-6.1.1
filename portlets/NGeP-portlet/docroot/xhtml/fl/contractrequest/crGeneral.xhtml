@@ -171,15 +171,15 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:selectOneMenu id="suppBranch"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchCode}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.branchCode}"
 						style="width: 360px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItems var="suppBranchList"
-							value="#{purchaseRequestBackingBean.managedBean.supplierBranchesList}"
+							value="#{contractRequestBackingBean.managedBean.supplierBranchesList}"
 							itemLabel="#{suppBranchList.branchName}"
 							itemValue="#{suppBranchList.supplierBranchId}" />
 						<p:ajax event="change"
-							listener="#{purchaseRequestBackingBean.getSelectedSupplierBranchDtl}"
+							listener="#{contractRequestBackingBean.getSelectedSupplierBranchDtl}"
 							update="supplierPnl" />
 					</p:selectOneMenu></td>
 			</tr>
