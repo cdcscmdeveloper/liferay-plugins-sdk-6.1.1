@@ -32,10 +32,6 @@
  
 	 <p:panel>
 	   <f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
-	   <h:panelGroup rendered="#{terminationBackingBean.managedBean.taskId==null}">
-			<div align="left" class="screen-title" style="border-bottom: 0px">
-			    Contract Termination</div>	   
-		</h:panelGroup>
 	  	<p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
 	   <table style="width: 100%;">
 	     <tr>
