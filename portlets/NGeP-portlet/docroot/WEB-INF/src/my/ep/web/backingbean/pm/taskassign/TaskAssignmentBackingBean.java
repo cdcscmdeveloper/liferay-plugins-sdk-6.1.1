@@ -3,7 +3,6 @@
  */
 package my.ep.web.backingbean.pm.taskassign;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -32,7 +31,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -271,7 +269,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			this.getManagedBean().setAvailableUsers(new ArrayList<PmUser>());
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
-			this.getManagedBean().setAvailableUsers(retrieveAvaiableUsers());
+			this.getManagedBean().setAvailableUsers(retrieveAvailableUsers());
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -332,21 +330,48 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 //			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
 //			TODO
 			e.printStackTrace();
+			throw new EpException("Unable to retrieve status role list.");
 		}
 		return statusRoles;
+	}
+	
+	/**
+	 * retrieve status id list for BPM
+	 * @return
+	 */
+	private List<Integer> retrieveAvailableStatusId(){
+		log.info("retrieveAvailableRoles");
+		List<Integer> statusIds = new ArrayList<Integer>();
+		try {
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			StatusResDTO resDTO = statusSO.retrieveStatusRoleByStatusId(reqDTO);
+			if(resDTO.isSuccessful()){
+				statusIds = resDTO.getStatusIds();
+			}
+			
+		} catch (Exception e) {
+//			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
+//			TODO
+			e.printStackTrace();
+			throw new EpException("Unable to retrieve status id list.");
+			
+		}
+		return statusIds;
 	}
 	
 	/**
 	 * retrieve available users
 	 * @return List<PmUser>
 	 */
-	public List<PmUser> retrieveAvaiableUsers(){
+	public List<PmUser> retrieveAvailableUsers(){
 		log.info("retrieveAvaiableUsers");
 		List <PmUser> pmUsers = new ArrayList<PmUser>();
 		try {
 			List<String> statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
 //			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
 			Long orgProfileId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
+			Long orgTypeId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId();
 			ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 			
 			
@@ -356,12 +381,19 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchField("recordStatusFlg");
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
-						
+				
 			// org profile id
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
 			bean.setSearchValue(orgProfileId);
+			searchBean.getDataFilterBeans().add(bean);
+			
+			// org type id
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId");
+			bean.setSearchValue(orgTypeId);
 			searchBean.getDataFilterBeans().add(bean);
 			
 			// active org group
@@ -371,7 +403,6 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
 			
-		
 			// role code
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
@@ -401,6 +432,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 //			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
 //			TODO
 			e.printStackTrace();
+			throw new EpException("Unable to retrieve available users.");
 		}		
 		return pmUsers;
 	}
@@ -489,11 +521,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			
 			String token = null;
 			String loginId = null;
+			List<Integer> statusIds = null;
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
 //				loginId = taskSearchBean.user.getLoginId();
+				statusIds = retrieveAvailableStatusId();
 				reqDTO = new BpmRequestDTO();
 				token = getFacesScopes().getBPMAuthenticationCtxToken();
 
@@ -511,7 +545,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				reqDTO.setState(STATE); 
-//				reqDTO.setUserName(userName);
+				
+//				reqDTO.setUserName(loginId);
+//				reqDTO.setStatusIds(statusIds);
+				
 //				if(!getDocType().isEmpty()){
 				  reqDTO.setDocType(DOC_TYPE);
 //				}
