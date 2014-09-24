@@ -183,10 +183,7 @@
 								<p:outputPanel style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
 								#{lbl['lbl.cm.no.image.available']}
 								</p:outputPanel>
-								
-								<ui:remove>
-									<img src="/NGeP-portlet/images/noImage.jpg" style="height: 80px; left: 0px !important;"/>
-								</ui:remove>
+
 								</h:panelGroup>
 								<h:panelGroup rendered="#{supplierItem.imagePath != null}">
 									<img src="/NGeP-portlet/image?imageName=#{supplierItem.epNo}/#{supplierItem.imagePath}" 
@@ -228,6 +225,10 @@
 								<h:outputLabel value="#{supplierItem.bestPrice}" >
 									<f:convertNumber pattern="#,###.##" />
 								</h:outputLabel>
+							</p:column>
+							
+							<p:column width="8%" headerText="#{lbl['lbl.sc.price.inquiry.price.type']}" style="white-space: normal">
+								<h:outputLabel value="#{catalogueBackingBean.getPriceType(supplierItem.docId)}" />
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.cm.action']}" rendered="#{unspscCodeBackingBean.requisitioner}">
