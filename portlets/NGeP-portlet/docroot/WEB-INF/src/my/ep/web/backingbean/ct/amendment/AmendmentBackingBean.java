@@ -599,7 +599,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   throw new EpException(MessageConst.ERROR_100022, new String[]{"Letter of Acceptance"});
 		   }
 		   
-		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || isBpkApprover()) {
+		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
+				   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
 				if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
 						(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
 						(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
@@ -1881,7 +1882,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		public void okCommitteMembers(){
 			
-			Map<String, CtCommitteeMember> duplicatePmUserMap = new HashMap<String, CtCommitteeMember>();
+			Map<Long, CtCommitteeMember> duplicatePmUserMap = new HashMap<Long, CtCommitteeMember>();
 			List<CtCommitteeMember> memberList = new ArrayList<CtCommitteeMember>();
 		
 			for(int i=0; i<selectedPmUser.length; i++) {
@@ -1901,7 +1902,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				    if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0)
 				          memberList.add(committeeMember);
 				    else
-				    	 duplicatePmUserMap.put(user.getIdentificationNo(), committeeMember);
+				    	 duplicatePmUserMap.put(user.getUserId(), committeeMember);
 			  } 
 			
 		 	if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() == 0){
@@ -1909,10 +1910,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			
 			} else {
 				        List<CtCommitteeMember> committeMember = new ArrayList<CtCommitteeMember>();
-				    	  for (Map.Entry<String, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
+				    	  for (Map.Entry<Long, CtCommitteeMember> entry : duplicatePmUserMap.entrySet()) {
 				    		    boolean chkDataDuplication = false;
 			         		    for(CtCommitteeMember ctMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()){
-			         	                 if(entry.getKey().equalsIgnoreCase(ctMember.getIcPassport())){
+			         	                 if(entry.getKey().equals(ctMember.getPmUser().getUserId())){
 			         	                	chkDataDuplication = true;
 				                         }
 			         		    } if(!chkDataDuplication){

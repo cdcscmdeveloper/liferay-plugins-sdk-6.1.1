@@ -29,7 +29,7 @@
 					</h:commandLink>
 				 </h:panelGroup>
 			 </p:column>
-			 <p:column headerText="#{lbl['lbl.btn.action']}" styleClass="column-align-center" style="width:10%;">
+			 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
 			    <h:panelGroup  rendered="#{data.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
 			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(data.scLoaReportAttachment.filePath, data.scLoaReportAttachment.fileName)}">
 				       <p:graphicImage library="ep/images/design" name="download.png"
