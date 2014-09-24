@@ -76,7 +76,8 @@
 						catalogueBackingBean.managedBean.error2 or
 						catalogueBackingBean.managedBean.error7
 						)}">
-					        <p:commandLink title="#{lbl['lbl.txt.error']}" update=":form" oncomplete="errorDialog.show();" >
+					        <p:commandLink title="#{lbl['lbl.txt.error']}" update=":form" oncomplete="errorDialog.show();" 
+					        actionListener="#{catalogueBackingBean.updateStandardErrorDialog(catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing)}">
 								<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
 							</p:commandLink>
 					    </c:when>

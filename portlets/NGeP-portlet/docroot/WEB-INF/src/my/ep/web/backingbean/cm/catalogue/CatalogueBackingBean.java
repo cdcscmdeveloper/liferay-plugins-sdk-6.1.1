@@ -5514,6 +5514,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return inValid;
 	}
 	
+	public void resetErrorDialog() {
+			this.getManagedBean().setError1(false);
+			this.getManagedBean().setError2(false);
+			this.getManagedBean().setError3(false);
+			this.getManagedBean().setError4(false);
+			this.getManagedBean().setError5(false);
+			this.getManagedBean().setError6(false);
+			this.getManagedBean().setError7(false);
+			this.getManagedBean().setError8(false);
+			this.getManagedBean().setError9(false);
+		}
+	
 	public void updateErrorDialog(int index) {
 		CmTierPricing cmTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
@@ -5603,6 +5615,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public void updateStandardErrorDialog(CmStandardPricing standardPricing) {
+		resetErrorDialog();
+		
 		if (standardPricing.getStartDate() != null
 				&& standardPricing.getEndDate() != null
 				&& standardPricing.getStartDate().compareTo(
@@ -5640,6 +5654,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public void updatePromotionErrorDialog() {
+		resetErrorDialog();
 
 		if (this.getManagedBean().getSelectedMaintainItem()
 				.getCmPromotionPricing().getPrice() != null
