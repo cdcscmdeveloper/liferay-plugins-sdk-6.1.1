@@ -101,7 +101,9 @@
 						<td><p:inputText id="rental"
 								value="#{backingBean.managedBean.basicCompanyFacility.rentalRate}"
 								size="35" required="true"
+								validatorMessage="#{lbl['lbl.sm.facility.monthRent']} - #{lbl['lbl.sm.minAmt.validMsg']}"
 								label="#{lbl['lbl.sm.facility.monthRent']}">
+								<f:validateDoubleRange minimum="1" />
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText> <p:message id="rentalMsg" for="rental" showSummary="true"

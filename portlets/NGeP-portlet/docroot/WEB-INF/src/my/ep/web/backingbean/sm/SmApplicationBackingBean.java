@@ -79,6 +79,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -227,6 +228,8 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrieveRegistrationStatusList());
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
+			getManagedBean().setRacesList(
+					SmApplicationUtil.retrievePmRaceList());
 		}
 		getManagedBean()
 				.setDefPmCountry(
@@ -360,6 +363,14 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
+				if (getManagedBean()
+						.getSmAppl()
+						.getSupplierType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.STYPE_CONTRACTOR)) {
+					getManagedBean().getSmAppl().getSmCompanyBasic()
+							.setWithFederal(true);
+				}
 			} else {
 				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
 						.getApplId());
@@ -428,6 +439,8 @@ public class SmApplicationBackingBean extends
 						.setDefaultAddr(getManagedBean().getDefPmCountry());
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
+				fac.setPurchasePrice(new BigDecimal(0));
+				fac.setRentalRate(new BigDecimal(0));
 				fac.setRevNo(1);
 				smAppl.getSmFacilities().add(fac);
 				this.getManagedBean().setBasicCompanyFacility(fac);
@@ -2609,6 +2622,9 @@ public class SmApplicationBackingBean extends
 		}
 		if (shareHolderBean.getPmCountry() == null) {
 			shareHolderBean.setPmCountry(new PmCountry());
+		}
+		if (shareHolderBean.getPmRace() == null) {
+			shareHolderBean.setPmRace(new PmRace());
 		}
 		if (shareHolderBean.getEpRole() == null) {
 			shareHolderBean.setEpRole("");
@@ -4896,6 +4912,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setApplStoreFacilities(new ArrayList<SmFacility>());
 
 		for (SmFacility smFac : smFacilities) {
+			if (smFac.getPurchasePrice() == null) {
+				smFac.setPurchasePrice(new BigDecimal(0));
+			}
+			if (smFac.getRentalRate() == null) {
+				smFac.setRentalRate(new BigDecimal(0));
+			}
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 					|| smFac.getFacilityType()
@@ -4955,6 +4977,7 @@ public class SmApplicationBackingBean extends
 		shr.setBumiFlg(1);
 		shr.setMuslimFlg(1);
 		shr.setPmCountry(new PmCountry());
+		shr.setPmRace(new PmRace());
 		shr.setIdentificationType(new PmParameter());
 		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
 		shr.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());

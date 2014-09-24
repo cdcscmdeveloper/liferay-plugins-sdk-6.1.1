@@ -47,7 +47,9 @@
 
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal}" /></td>
+							value="#{backingBean.managedBean.smAppl.smCompanyBasic.withFederal}"
+							disabled="#{backingBean.managedBean.smAppl.supplierType
+						eq SupplierManagementConst.STYPE_CONTRACTOR}" /></td>
 					<td valign="middle" width="150px;"><h:outputText
 							value="#{lbl['lbl.sm.busNtw.fdrGov']}" /></td>
 

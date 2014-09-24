@@ -89,11 +89,14 @@
 						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" />
 					<p:message id="equiPerDobMsg" for="equiPerDob" showSummary="true"
 						showDetail="false" display="icon" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']}" />
+					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText label="#{lbl['lbl.sm.person.designation']}"
-						maxlength="30"
+						id="smPerDesignation" maxlength="30" required="true"
 						value="#{backingBean.managedBean.selectedShareHolder.designation}"
-						size="35" /></td>
+						size="35" /> <p:message id="smPerDesignationMsg"
+						for="smPerDesignation" showSummary="true" showDetail="false"
+						display="icon" /></td>
 			</tr>
 
 			<tr>
@@ -178,6 +181,20 @@
 							itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}"
 							itemValue="0" />
 					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td><p:selectOneMenu label="#{lbl['lbl.sm.person.race']}"
+						id="equiPerRace" required="true"
+						value="#{backingBean.managedBean.selectedShareHolder.pmRace.raceId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="shrRace"
+							value="#{backingBean.managedBean.racesList}"
+							itemValue="#{shrRace.raceId}" itemLabel="#{shrRace.raceName}" />
+					</p:selectOneMenu> <p:message id="equiPerRaceMsg" for="equiPerRace"
+						showSummary="true" showDetail="false" display="icon" /></td>
 
 			</tr>
 
@@ -203,10 +220,10 @@
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}" 
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/>
-					<p:outputLabel value="*" styleClass="mandatory" 
-						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']}"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
+					<p:outputLabel value="*" styleClass="mandatory"
+						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" /></td>
 				<td><p:selectOneMenu id="smPersnEpRole"
 						label="#{lbl['lbl.sm.userprofile.eprole']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epRole}"
@@ -230,7 +247,8 @@
 						rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="2" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-						<f:selectItem itemLabel="#{lbl['lbl.txt.issued']}" itemValue="1" itemDisabled="true"/>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.issued']}" itemValue="1"
+							itemDisabled="true" />
 						<p:ajax event="change" update="shrPrivPanel"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
@@ -410,253 +428,257 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:panel header="#{lbl['lbl.sm.related.company.details']}"
-		toggleable="true" id="equiShrHldrRelComp">
+	<c:if
+		test="#{backingBean.managedBean.smAppl.supplierType
+						eq SupplierManagementConst.STYPE_CONSULTANT}">
+		<p:panel header="#{lbl['lbl.sm.related.company.details']}"
+			toggleable="true" id="equiShrHldrRelComp">
 
-		<p:dataTable id="shrRelCom"
-			value="#{backingBean.managedBean.selectedShareHolder.smRelatedCompanies}"
-			var="relCom" widgetVar="suppPrsnRelComDtWidVar"
-			selection="#{backingBean.managedBean.selectedShrHldrRelatedCompanies}"
-			rowIndexVar="rowIndex" rowKey="#{relCom}">
-			<ac:paginator for="shrRelCom" />
-			<p:column selectionMode="multiple" style="width:2%" />
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
-				</f:facet>
-				<h:outputText value="#{relCom.companyName}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.spec.roc.no']}" />
-				</f:facet>
-				<h:outputText value="#{relCom.regNo}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.shareholding.total.rm']}" />
-				</f:facet>
-				<h:outputText value="#{relCom.shareAmt}" />
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.mof.reg.no']}" />
-				</f:facet>
-				<h:outputText value="#{relCom.mofNo}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiRelCompInfo"
-					action="#{backingBean.assignSelShrHldrRelatedCompany(relCom)}"
-					partialSubmit="true" process="@this">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
+			<p:dataTable id="shrRelCom"
+				value="#{backingBean.managedBean.selectedShareHolder.smRelatedCompanies}"
+				var="relCom" widgetVar="suppPrsnRelComDtWidVar"
+				selection="#{backingBean.managedBean.selectedShrHldrRelatedCompanies}"
+				rowIndexVar="rowIndex" rowKey="#{relCom}">
+				<ac:paginator for="shrRelCom" />
+				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
+					</f:facet>
+					<h:outputText value="#{relCom.companyName}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.spec.roc.no']}" />
+					</f:facet>
+					<h:outputText value="#{relCom.regNo}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.shareholding.total.rm']}" />
+					</f:facet>
+					<h:outputText value="#{relCom.shareAmt}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.mof.reg.no']}" />
+					</f:facet>
+					<h:outputText value="#{relCom.mofNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink update=":form:tt:equiRelCompInfo"
+						action="#{backingBean.assignSelShrHldrRelatedCompany(relCom)}"
+						partialSubmit="true" process="@this">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
 
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.addShrHldrRelatedCompany()}"
-				update="equiRelCompInfo" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				partialSubmit="true" process="equiShrHldrRelComp"
-				action="#{backingBean.deleteSelectedShrHldrRelatedCompanies()}"
-				update="shrRelCom" />
-		</div>
-	</p:panel>
-	<p:dialog width="500px" height="300px" closable="false"
-		header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
-		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
-		<p:messages id="equiRelCompInfoMsg" showSummary="false"
-			showDetail="true" autoUpdate="true" closable="true" />
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.assocCmpny.companyName']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="100"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.assocCmpny.companyName']}"
-						id="equiRlCmpInfCompName"
-						value="#{backingBean.managedBean.selectedRelatedCompany.companyName}"
-						size="35" /> <p:message id="equiRlCmpInfCompNameMsg"
-						for="equiRlCmpInfCompName" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.reg.no']}" id="equiRlCmpInfRegNo"
-						value="#{backingBean.managedBean.selectedRelatedCompany.regNo}"
-						maxlength="20" size="35" /> <p:message id="equiRlCmpInfRegNoMsg"
-						for="equiRlCmpInfRegNo" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.designation']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="30"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.designation']}" id="equiRlCmpInfDesg"
-						value="#{backingBean.managedBean.selectedRelatedCompany.designation}"
-						size="35" /> <p:message id="equiRlCmpInfDesgMsg"
-						for="equiRlCmpInfDesg" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrAmt']}"
-						required="#{backingBean.managedBean.valueReqd}"
-						id="equiRlCmpInfShrAmt"
-						value="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}"
-						size="35">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText> <p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrPerc']}"
-						required="#{backingBean.managedBean.valueReqd}"
-						id="equiRlCmpInfShrPerc" maxlength="2"
-						value="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}"
-						size="35">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText> <p:message id="equiRlCmpInfShrPercMsg" for="equiRlCmpInfShrPerc"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedRelatedCompany.mofNo}"
-						size="35" maxlength="12" /></td>
-			</tr>
-		</table>
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateRelatedCompanies}" type="submit"
-				partialSubmit="true" process="equiRelCompInfo"
-				update="shrRelCom, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.cancelShrHldrRelatedCompanies}">
-			</p:commandButton>
-		</div>
-	</p:dialog>
-	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
-		id="equiShrPfBdyPan">
-		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
-			value="#{backingBean.managedBean.selectedShareHolder.smAssociationBodies}"
-			selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
-			rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
-			<ac:paginator for="shrProfDt" />
-			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
-				<h:outputText value="#{profBean.pmCertBody.bodyName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
-				<h:outputText value="#{profBean.regNo}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
-				<h:outputText value="#{profBean.expDate}">
-					<f:convertDateTime
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
-				<p:commandLink update=":form:tt:equiShrProfBeanInfo"
-					action="#{backingBean.assignSelShrHldrProfBody(profBean)}"
-					partialSubmit="true" process="@this">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
-			</p:column>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.addShrHldrRelatedCompany()}"
+					update="equiRelCompInfo" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					partialSubmit="true" process="equiShrHldrRelComp"
+					action="#{backingBean.deleteSelectedShrHldrRelatedCompanies()}"
+					update="shrRelCom" />
+			</div>
+		</p:panel>
+		<p:dialog width="500px" height="300px" closable="false"
+			header="#{lbl['lbl.sm.related.company.details']}"
+			id="equiRelCompInfo" widgetVar="equiRelCompInfo" resizable="false"
+			showEffect="fade" hideEffect="fade" modal="true">
+			<p:messages id="equiRelCompInfoMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.assocCmpny.companyName']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="100"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.assocCmpny.companyName']}"
+							id="equiRlCmpInfCompName"
+							value="#{backingBean.managedBean.selectedRelatedCompany.companyName}"
+							size="35" /> <p:message id="equiRlCmpInfCompNameMsg"
+							for="equiRlCmpInfCompName" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.reg.no']}" id="equiRlCmpInfRegNo"
+							value="#{backingBean.managedBean.selectedRelatedCompany.regNo}"
+							maxlength="20" size="35" /> <p:message id="equiRlCmpInfRegNoMsg"
+							for="equiRlCmpInfRegNo" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.designation']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText maxlength="30"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.designation']}" id="equiRlCmpInfDesg"
+							value="#{backingBean.managedBean.selectedRelatedCompany.designation}"
+							size="35" /> <p:message id="equiRlCmpInfDesgMsg"
+							for="equiRlCmpInfDesg" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrAmt']}"
+							required="#{backingBean.managedBean.valueReqd}"
+							id="equiRlCmpInfShrAmt"
+							value="#{backingBean.managedBean.selectedRelatedCompany.shareAmt}"
+							size="35">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText> <p:message id="equiRlCmpInfShrAmtMsg" for="equiRlCmpInfShrAmt"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText label="#{lbl['lbl.sm.equiComp.shrPerc']}"
+							required="#{backingBean.managedBean.valueReqd}"
+							id="equiRlCmpInfShrPerc" maxlength="2"
+							value="#{backingBean.managedBean.selectedRelatedCompany.sharePercentage}"
+							size="35">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText> <p:message id="equiRlCmpInfShrPercMsg" for="equiRlCmpInfShrPerc"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']}" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedRelatedCompany.mofNo}"
+							size="35" maxlength="12" /></td>
+				</tr>
+			</table>
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateRelatedCompanies}" type="submit"
+					partialSubmit="true" process="equiRelCompInfo"
+					update="shrRelCom, @([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.cancelShrHldrRelatedCompanies}">
+				</p:commandButton>
+			</div>
+		</p:dialog>
+		<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
+			id="equiShrPfBdyPan">
+			<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
+				value="#{backingBean.managedBean.selectedShareHolder.smAssociationBodies}"
+				selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
+				rowKey="#{profBean}" rowIndexVar="index" id="shrProfDt">
+				<ac:paginator for="shrProfDt" />
+				<p:column selectionMode="multiple" width="5%" />
+				<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
+					<h:outputText value="#{profBean.pmCertBody.bodyName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
+					<h:outputText value="#{profBean.regNo}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
+					<h:outputText value="#{profBean.expDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink update=":form:tt:equiShrProfBeanInfo"
+						action="#{backingBean.assignSelShrHldrProfBody(profBean)}"
+						partialSubmit="true" process="@this">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
 
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.addShrHldrProfBody()}"
-				update="equiShrProfBeanInfo" />
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				partialSubmit="true" process="equiShrPfBdyPan"
-				action="#{backingBean.deleteSelectedShrHldrProfBodies()}"
-				update="shrProfDt" />
-		</div>
-	</p:panel>
-	<p:dialog width="500px" height="300px" closable="false"
-		header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
-		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
-		<p:messages id="equiShrProfBeanInfoMsg" showSummary="false"
-			showDetail="true" autoUpdate="true" closable="true" />
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.profBody.profBody']}" id="equiStfPrdBdyLbl"
-						value="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems var="shrProfBody"
-							value="#{backingBean.managedBean.profBodyLs}"
-							itemValue="#{shrProfBody.certBodyId}"
-							itemLabel="#{shrProfBody.bodyName}" />
-					</p:selectOneMenu> <p:message id="equiStfPrdBdyLblMsg" for="equiStfPrdBdyLbl"
-						showSummary="true" showDetail="false" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText
-						required="#{backingBean.managedBean.valueReqd}"
-						label="#{lbl['lbl.sm.profBody.regNo']}" id="equiPrfBdyRegNo"
-						value="#{backingBean.managedBean.selectedStfPrfBdy.regNo}"
-						maxlength="20" size="35" /> <p:message id="equiPrfBdyRegNoMsg"
-						for="equiPrfBdyRegNo" showSummary="true" showDetail="false"
-						display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" navigator="true"
-						display="inline" readonlyInput="true"
-						label="#{lbl['lbl.sm.prof.enddate']}" id="equiPrfBdyEndDt"
-						required="#{backingBean.managedBean.valueReqd}"
-						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-						yearRange="-99:+10"
-						value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" /> <p:message
-						id="equiPrfBdyEndDtMsg" for="equiPrfBdyEndDt" showSummary="true"
-						showDetail="false" display="icon" /></td>
-			</tr>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.addShrHldrProfBody()}"
+					update="equiShrProfBeanInfo" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+					partialSubmit="true" process="equiShrPfBdyPan"
+					action="#{backingBean.deleteSelectedShrHldrProfBodies()}"
+					update="shrProfDt" />
+			</div>
+		</p:panel>
+		<p:dialog width="500px" height="300px" closable="false"
+			header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
+			widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
+			hideEffect="fade" modal="true">
+			<p:messages id="equiShrProfBeanInfoMsg" showSummary="false"
+				showDetail="true" autoUpdate="true" closable="true" />
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.profBody.profBody']}" id="equiStfPrdBdyLbl"
+							value="#{backingBean.managedBean.selectedStfPrfBdy.pmCertBody.certBodyId}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems var="shrProfBody"
+								value="#{backingBean.managedBean.profBodyLs}"
+								itemValue="#{shrProfBody.certBodyId}"
+								itemLabel="#{shrProfBody.bodyName}" />
+						</p:selectOneMenu> <p:message id="equiStfPrdBdyLblMsg" for="equiStfPrdBdyLbl"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText
+							required="#{backingBean.managedBean.valueReqd}"
+							label="#{lbl['lbl.sm.profBody.regNo']}" id="equiPrfBdyRegNo"
+							value="#{backingBean.managedBean.selectedStfPrfBdy.regNo}"
+							maxlength="20" size="35" /> <p:message id="equiPrfBdyRegNoMsg"
+							for="equiPrfBdyRegNo" showSummary="true" showDetail="false"
+							display="icon" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:calendar showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							label="#{lbl['lbl.sm.prof.enddate']}" id="equiPrfBdyEndDt"
+							required="#{backingBean.managedBean.valueReqd}"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							yearRange="-99:+10"
+							value="#{backingBean.managedBean.selectedStfPrfBdy.expDate}" />
+						<p:message id="equiPrfBdyEndDtMsg" for="equiPrfBdyEndDt"
+							showSummary="true" showDetail="false" display="icon" /></td>
+				</tr>
 
-		</table>
-		<br />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
-				action="#{backingBean.addOrUpdateShrHldrProfBody}" type="submit"
-				partialSubmit="true" process="equiShrProfBeanInfo"
-				update="shrProfDt, @([id$=Msg])" />
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
-				partialSubmit="true" process="@this"
-				action="#{backingBean.cancelShrHldrProfBody}">
-			</p:commandButton>
-		</div>
-	</p:dialog>
+			</table>
+			<br />
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
+					action="#{backingBean.addOrUpdateShrHldrProfBody}" type="submit"
+					partialSubmit="true" process="equiShrProfBeanInfo"
+					update="shrProfDt, @([id$=Msg])" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					partialSubmit="true" process="@this"
+					action="#{backingBean.cancelShrHldrProfBody}">
+				</p:commandButton>
+			</div>
+		</p:dialog>
+	</c:if>
 	<p:panel header="#{lbl['lbl.sm.academic.qualification']}"
 		toggleable="true" id="equiShrHldrAcadPan">
 
