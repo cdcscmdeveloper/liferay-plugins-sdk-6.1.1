@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -51,6 +52,8 @@ import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.exception.EpException;
@@ -303,7 +306,7 @@ public class LOADetailBackingBean extends
 
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
-
+		System.out.println("===== ScLoaLoiItem : " + scLoa.getScLoiLoaItems().size());
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 
@@ -2488,6 +2491,7 @@ public class LOADetailBackingBean extends
 					resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
 					suppLoaLoi.setScLoa(resDTO.getScLoa());
 					suppLoiLoaList.add(suppLoaLoi);
+
 				}
 
 				getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
@@ -2538,6 +2542,31 @@ public class LOADetailBackingBean extends
 		} finally {
 			qtAwardSO = null;
 		}
+	}
+
+	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
+		IStatusSO statusSO = null;
+		ScLoa scLoa = new ScLoa();
+		try {
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			scLoa.setScLoiLoa(scLoiLoa);
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			scLoa.setPmStatus(statusResDTO.getPmStatus());
+			
+			
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			statusSO = null;
+		}
+
+		return editLOAAction(scLoa);
+
 	}
 
 	public String goQtEditLoaAction(SuppLoiLoaBean suppLoiLoaBean) {
