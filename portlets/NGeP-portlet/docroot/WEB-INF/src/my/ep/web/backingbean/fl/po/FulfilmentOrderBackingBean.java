@@ -113,6 +113,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+			FlFulfilmentOrder flOrder = null;
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				flOrder = getManagedBean().getFulfilmentOrder();
+			}
+				
+			
+			
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 
@@ -156,7 +163,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				reqDTO.setStopIns(getManagedBean().getStopIns());
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				reqDTO.setFulfilmentOrder(flRequest.getFlFulfilmentOrder());
+				reqDTO.setFulfilmentOrder(flOrder);
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
 					|| getManagedBean().getProcessName() != null 
