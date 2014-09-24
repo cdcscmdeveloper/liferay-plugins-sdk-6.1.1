@@ -128,7 +128,7 @@ public class ViewSmApplBackingBean extends
 					+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE);
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
-			
+
 			setApplication(resDTO);
 		} catch (NullPointerException ne) {
 			getManagedBean().setReviewApplicationExist(false);
@@ -171,12 +171,6 @@ public class ViewSmApplBackingBean extends
 	}
 
 	public void navigateToViewSuppProfile() {
-
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-
 		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
@@ -388,17 +382,15 @@ public class ViewSmApplBackingBean extends
 
 		return addr;
 	}
-	
-	private void setApplication(SmApplRevisionResDTO resDTO){
+
+	private void setApplication(SmApplRevisionResDTO resDTO) {
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
 		setSupplierBusinessType(getManagedBean().getSmSupplier());
-		getManagedBean()
-				.setSupplierBusinessTypeVal(
-						getDropDownViewOnlyValueByCode(
-								SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-								getManagedBean().getSmSupplier()
-										.getBusinessType()));
+		getManagedBean().setSupplierBusinessTypeVal(
+				getDropDownViewOnlyValueByCode(
+						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+						getManagedBean().getSmSupplier().getBusinessType()));
 		setSmCompanyBasicCalculation();
 		setApplicationShareHolders(getManagedBean().getSmAppl()
 				.getSmPersonnels());
@@ -1152,7 +1144,7 @@ public class ViewSmApplBackingBean extends
 	}
 
 	private void setDefaultApproverReviewSection() {
-		if (getManagedBean().getSmAppl().getSmApplSectionReviews()!= null) {
+		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 					.getSmApplSectionReviews()) {
 				if (rev.getRoleType().equalsIgnoreCase(
