@@ -3478,6 +3478,31 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		return "catalogMaintenanceFile";
 	}
+	
+	public String getPriceType(Long docId){
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		try{
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			reqDTO.setSupplierItemId(docId);
+			reqDTO.setToken(new FacesScopes().getUserLocale().getLanguage());
+			CatalogueResDTO resDTO = catalogueSO.getAllPriceType(reqDTO);
+			
+			String allPrice = "";
+			if(resDTO.getList() != null){
+			   for(int i=0;i<resDTO.getList().size();i++){
+				   allPrice+=resDTO.getList().get(i);
+				   if(i!=resDTO.getList().size()-1)
+					   allPrice+=", "; 
+			   }
+			}
+			return allPrice;
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			catalogueSO = null;
+		}
+		return "";
+	}
 
 	/*
 	 * public void searchCatalogue(){
