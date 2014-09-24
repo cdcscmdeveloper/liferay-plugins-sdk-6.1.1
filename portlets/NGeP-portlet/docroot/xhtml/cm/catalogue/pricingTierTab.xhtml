@@ -21,7 +21,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.from.qty']}
 				</f:facet>
-				<p:inputText id="fromQty" value="#{price.fromQty}" size="5" disabled="#{!price.showFlag || price.standardDisabled}">
+				<p:inputText id="fromQty" styleClass="fromQty" value="#{price.fromQty}" size="5" disabled="#{!price.showFlag || price.standardDisabled}">
 				 <p:ajax event="keyup" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:inputText>
 
@@ -31,7 +31,8 @@
 					#{lbl['lbl.cm.to.qty']}
 				</f:facet>
 				<p:inputText value="#{price.toQty}" size="5" disabled="#{price.standardDisabled}">
-				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update=":form:pricingTabID:headerTabId:tierId:pricingTierID" />
+				<p:ajax event="change" listener="#{catalogueBackingBean.updateToQty(rowIndex)}" update="@(.fromQty)" 
+				/>
                 </p:inputText>
             </p:column>
 			<p:column>

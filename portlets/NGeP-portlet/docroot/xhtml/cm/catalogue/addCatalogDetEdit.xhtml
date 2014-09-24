@@ -39,6 +39,11 @@
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
+		
+	<p:blockUI block="form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+		
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right; min-height: 40px;">
