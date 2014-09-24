@@ -85,29 +85,33 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-
-		PmZone zone = getManagedBean().getPmZone();
-		zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
-		zone.setZoneName(getManagedBean().getPmZone().getZoneName());
-		zone.setRecordStatusFlg(getManagedBean().getPmZone()
-				.getRecordStatusFlg());
-		List<PmZoneState> zones = getManagedBean().getSelectedZones();
-
-		List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
-
-		for (PmZoneState addType : stateZones) {
-			getManagedBean().setSelectedZones(stateZones);
-
-			addType.setPmZone(zone);
-
-		}
+		System.out.println("Zone idd :::"
+				+ getManagedBean().getPmZone().getZoneCode());
 		if (getManagedBean().getSelectedZones().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
+		List<PmZoneState> zones = getManagedBean().getSelectedZones();
 
-		zones.addAll(stateZones);
+		PmZone zone = getManagedBean().getPmZone();
+		if (zone.isBrandNew()) {
+			zone.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			zone.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			zone.setZoneCode(getManagedBean().getPmZone().getZoneCode());
+			zone.setZoneName(getManagedBean().getPmZone().getZoneName());
+			zone.setRecordStatusFlg(getManagedBean().getPmZone()
+					.getRecordStatusFlg());
+
+			List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
+
+			for (PmZoneState zoneSta : stateZones) {
+				getManagedBean().setSelectedZones(stateZones);
+
+				zoneSta.setPmZone(zone);
+
+			}
+			zones.addAll(stateZones);
+		}
+
 		zone.setPmZoneStates(zones);
 		reqDTO.setPmZone(zone);
 
@@ -130,8 +134,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
-
-		this.getManagedBean().setPmZone(resDTO.getPmZone());
+		getManagedBean().setPmZone(resDTO.getPmZone());
+		getManagedBean().setSelectedZones(resDTO.getPmZone().getPmZoneStates());
 
 		this.getManagedBean().setZoneStateList(
 				resDTO.getPmZone().getPmZoneStates());

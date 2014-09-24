@@ -10,7 +10,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.location.type']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{locationBackingBean.managedBean.selectedType}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 276px;margin-bottom: 5px;">
 				<f:selectItems
 					value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.locationLevel)}" />
 			</p:selectOneMenu>
@@ -23,9 +23,9 @@
 			<h:outputLabel value="#{lbl['lbl.pm.location.status']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{locationBackingBean.managedBean.recordStatus}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 135px;margin-bottom: 5px;">
 				<f:selectItems
-					value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					value="#{locationBackingBean.getStatusOptions()}" />
 			</p:selectOneMenu>
 
 		</h:panelGrid>

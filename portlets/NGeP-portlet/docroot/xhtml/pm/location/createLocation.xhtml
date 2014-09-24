@@ -13,7 +13,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.location.type']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="locationcode"
-						label="#{lbl['lbl.pm.location.type']}" style="width: 235px;margin-bottom: 5px;" 
+						label="#{lbl['lbl.pm.location.type']}" style="width: 135px;margin-bottom: 5px;" 
 						value="#{locationBackingBean.managedBean.selectedType}"
 						required="true">
 						<f:selectItems
@@ -98,7 +98,7 @@
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.division.pmState.stateId}"
 							id="statereq" label=" #{lbl['lbl.pm.state']}" required="true"
-							style="margin-bottom: 5px;">
+							style="width: 275px;margin-bottom: 5px;" >
 							<f:selectItem itemValue="" itemLabel="---Select---" />
 							<f:selectItems var="stateLs"
 								value="#{locationBackingBean.managedBean.states}"
@@ -111,9 +111,9 @@
 					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
 							value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
 					<td class="TableFieldRight"><p:inputText id="countryname"
-							disabled="true"
+							disabled="true" size="40"
 							value="#{locationBackingBean.managedBean.state.pmCountry.countryName}"
-							style="margin-bottom: 5px;" size="40" /></td>
+							 /></td>
 				</tr>
 			</ui:fragment>
 			<ui:fragment
@@ -148,7 +148,7 @@
 					<td><p:selectOneMenu
 							value="#{locationBackingBean.managedBean.district.pmState.stateId}"
 							id="stateval" label=" #{lbl['lbl.pm.state']}" required="true"
-							style="margin-bottom: 5px;">
+							style="width: 276px;margin-bottom: 5px;" >
 							<f:selectItem itemValue=" " itemLabel="---Select---" />
 							<f:selectItems var="stateLs"
 								value="#{locationBackingBean.managedBean.states}"
@@ -197,7 +197,7 @@
 							styleClass="mandatory" /></td>
 					<td><p:selectOneMenu label="#{lbl['lbl.pm.district']}"
 							value="#{locationBackingBean.managedBean.city.pmDistrict.districtId}"
-							id="districtval" required="true" style="width: 235px;margin-bottom: 5px;">
+							id="districtval" required="true" style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemValue=" " itemLabel="---Select---" />
 							<f:selectItems var="districtLs"
 								value="#{locationBackingBean.managedBean.districts}"
@@ -212,7 +212,7 @@
 							value="#{lbl['lbl.pm.state']}"></h:outputLabel></td>
 					<td class="TableFieldRight"><p:inputText disabled="true" id="cityState"
 							value="#{locationBackingBean.managedBean.district.pmState.stateName}"
-							style="margin-bottom: 5px;" size="40" /></td>
+							 size="40" /></td>
 				</tr>
 
 				<tr>
@@ -220,7 +220,7 @@
 							value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
 					<td class="TableFieldRight"><p:inputText disabled="true" id="cityCountry"
 							value="#{locationBackingBean.managedBean.district.pmState.pmCountry.countryName}"
-							style="margin-bottom: 5px;" size="40" /></td>
+							 size="40" /></td>
 				</tr>
 
 
@@ -232,9 +232,9 @@
 				<td><p:selectOneMenu id="locationStatus"
 						label="#{lbl['lbl.pm.location.status']}"
 						value="#{locationBackingBean.managedBean.status}" required="true"
-						style="width: 235px;margin-bottom: 5px;">
+						style="width: 135px;margin-bottom: 5px;" >
 						<f:selectItems
-							value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					value="#{locationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td><td> <p:message id="locationStatusMsg" for="locationStatus"
 						display="icon" /></td>
 			</tr>
