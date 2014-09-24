@@ -46,10 +46,8 @@
 
 			<p:dataTable var="macBean" widgetVar="smMachDtWidVar"
 				value="#{viewSmApplBackingBean.managedBean.smAppl.smMachineDtls}"
-				selection="#{viewSmApplBackingBean.managedBean.selectedMachineList}"
 				rowKey="#{macBean}" rowIndexVar="index" id="macDt">
 				<ac:paginator for="macDt" />
-				<p:column selectionMode="multiple" width="5%" />
 
 				<p:column headerText="#{lbl['lbl.sm.machine.equiType']}">
 					<h:outputText value="#{macBean.machineType}" />
