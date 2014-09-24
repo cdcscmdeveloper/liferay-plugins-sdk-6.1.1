@@ -15,17 +15,17 @@
 
 			<p:column headerText="Title" style="width:30%;white-space: normal;">
 				<p:commandLink style="margin-right:20px;"
-					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt)}">
-					<h:outputText value="#{scqt.qtTitle}" />
+					action="#{noticeBoardBackingBean.retrieveQTDetails(scqt[0])}">
+					<h:outputText value="#{scqt[1]}" />
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.notice.board.ptj']}"
 				style="width:30%;white-space: normal;">
-				<h:outputText value="#{scqt.pmOrgProfile.orgName}" />
+				<h:outputText value="#{scqt[2]}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}"
 				style="width:6%;white-space: normal;">
-				<h:outputText value="#{scqt.publishDate}">
+				<h:outputText value="#{scqt[3]}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
@@ -33,7 +33,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
 				style="width:6%;white-space: normal;">
-				<h:outputText value="#{scqt.closingDate}">
+				<h:outputText value="#{scqt[4]}">
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
@@ -41,18 +41,18 @@
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
 				style="width:8%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges}">
-						#{noticeBoardBackingBean.getClosingDays(scqt.closingDate)}
+						#{noticeBoardBackingBean.getClosingDays(scqt[4])}
 					</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.notice.board.view.bsv']}"
 				style="width:7%; white-space:normal; text-align:right;"
 				rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 				<h:outputText
-					value="#{(scqt.bsvRequired eq '1')?lbl['lbl.btn.no']:lbl['lbl.btn.yes']}" />
+					value="#{(scqt[5] eq '1')?lbl['lbl.btn.no']:lbl['lbl.btn.yes']}" />
 						&#160;
 						<p:commandLink id="supRegIcon"
-					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt)}"
-					rendered="#{scqt.bsvRequired}">
+					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
+					rendered="#{scqt[5]}">
 					<p:graphicImage library="ep/images/design" name="register.png"
 						value="/resources/ep/images/design/register.png" />
 				</p:commandLink>
@@ -65,7 +65,7 @@
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
-						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt)}">
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}">
 						<p:graphicImage library="ep/images/design" name="tick.png"
 							value="/resources/ep/images/design/tick.png" />
 					</p:commandLink>
@@ -81,14 +81,14 @@
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
 					<p:commandLink
-						action="#{noticeBoardBackingBean.showPriceSchedules(scqt)}">
+						action="#{noticeBoardBackingBean.showPriceSchedules(scqt[0])}">
 						<h:outputText value="Price Schedule"></h:outputText>
 					</p:commandLink>
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusAwarded}">
 					<p:commandLink
-						action="#{noticeBoardBackingBean.showAwardDetails(scqt)}">
+						action="#{noticeBoardBackingBean.showAwardDetails(scqt[0])}">
 						<h:outputText value="View Awarded List"></h:outputText>
 					</p:commandLink>
 				</ui:fragment>

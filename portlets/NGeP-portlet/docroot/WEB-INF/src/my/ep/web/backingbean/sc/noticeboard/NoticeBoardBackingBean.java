@@ -21,7 +21,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -40,8 +39,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -106,7 +103,7 @@ public class NoticeBoardBackingBean extends
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 
-	private IPagingDataModel<ScQt> qtDataModel = new QTPagingDataModel();
+	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private String mofNo;
 	private boolean visible;
 
@@ -137,7 +134,7 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * Qtn / Tender Tab qtnTenderDetails
 	 */
-	public String retrieveQTDetails(ScQt qt) {
+	public String retrieveQTDetails(Long qtId) {
 		log.info("** Qtn / TenderDetsils **");
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -145,7 +142,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
@@ -228,8 +225,6 @@ public class NoticeBoardBackingBean extends
 						specResDTO.getSpecResultBean().getResultList());
 			}
 
-		} catch (Exception e) {
-			log.debug("Exception"+e.getMessage());
 		} finally {
 			qtNoticeBoardSO = null;
 		}
@@ -285,12 +280,7 @@ public class NoticeBoardBackingBean extends
 
 					this.getManagedBean().setLocationRootNode(node);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-								.toString(), e.getMessage()));
+			} finally {
 			}
 
 		}
@@ -505,11 +495,14 @@ public class NoticeBoardBackingBean extends
 		if (selectedNode.equalsIgnoreCase("location")) {
 			this.getManagedBean().setLocationSelectedNode(null);
 			TreeNode rootNode = this.getManagedBean().getTempLocationRootNode();
-			List<TreeNode> childNodes = rootNode.getChildren();
+			
+			if (rootNode != null) {
+				List<TreeNode> childNodes = rootNode.getChildren();
 
-			for (TreeNode node : childNodes) {
-				if (node.isExpanded()) {
-					node.setExpanded(false);
+				for (TreeNode node : childNodes) {
+					if (node.isExpanded()) {
+						node.setExpanded(false);
+					}
 				}
 			}
 
@@ -521,14 +514,17 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	public String gotoSupplierQualificationCriteria(ScQt scqt) {
+	public String gotoSupplierQualificationCriteria(Long qtId) {
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 
-		this.getManagedBean().setScQt(scqt);
+		ScQt scQt = new ScQt();
+		scQt.setQtId(qtId);
+		this.getManagedBean().setScQt(scQt);
+		
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml?faces-redirect=true";
 	}
 
-	public String gotoSupplierRegistration(ScQt qt) {
+	public String gotoSupplierRegistration(Long qtId) {
 		this.getManagedBean().setPreviousPage("noticeboardlandingpage");
 		this.getManagedBean().setMofAccounts(null);
 		this.getManagedBean().setAttendanceList(null);
@@ -539,7 +535,7 @@ public class NoticeBoardBackingBean extends
 						IQTNoticeBoardSO.class);
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		reqDTO.setUserId(pmUser.getUserId());
-		reqDTO.setQtId(qt.getQtId());
+		reqDTO.setQtId(qtId);
 		NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveQtNoticeDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
@@ -724,7 +720,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
 	}
 
-	public String showPriceSchedules(ScQt scqt) {
+	public String showPriceSchedules(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -733,7 +729,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			reqDTO.setQtId(scqt.getQtId());
+			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveOfferedPriceDtls(reqDTO);
 			this.getManagedBean().setScQt(resDTO.getScQt());
@@ -743,8 +739,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setQualificationBean(
 						resDTO.getQualificationBean());
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
 		}
 		return "/xhtml/sc/noticeboard/noticeboardPriceSchedule.xhtml?faces-redirect=true";
 	}
@@ -838,7 +833,7 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * notice board quotation/tender list paging class
 	 */
-	private class QTPagingDataModel extends PagingDataModel<ScQt> {
+	private class QTPagingDataModel extends PagingDataModel<Object[]> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -854,16 +849,16 @@ public class NoticeBoardBackingBean extends
 		 * .biz.bean.search.ISearchBean)
 		 */
 		@Override
-		public ISearchResultBean<ScQt> pageChangeListener(
-				ISearchBean<ScQt> searchBean) {
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 
-			IQTDetailSO detailSO = null;
+			IQTNoticeBoardSO qtNoticeBoardSO = null;
 			try {
-				detailSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 
 				// Filter By - Status
 				List<Long> statusIds = new ArrayList<Long>();
@@ -1086,20 +1081,15 @@ public class NoticeBoardBackingBean extends
 					}
 				}
 
-				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				qtReqDTO.setQtSearchBean(searchBean);
+				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+				reqDTO.setQtSearchBean(searchBean);
 
-				QuationTenderResDTO qtResDTO = detailSO
-						.getQuationTenders(qtReqDTO);
+				NoticeBoardResDTO resDTO = qtNoticeBoardSO.searchQTNoticeBoard(reqDTO);
 				
-				return qtResDTO.getQtResultBean();
-			} catch (Exception ex) {
-				log.debug("Exception"+ex.getMessage());
+				return resDTO.getQtResultBean();
 			} finally {
-				detailSO = null;
+				qtNoticeBoardSO = null;
 			}
-
-			return null;
 		}
 	}
 
@@ -1140,7 +1130,7 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * @return the qtDataModel
 	 */
-	public IPagingDataModel<ScQt> getQtDataModel() {
+	public IPagingDataModel<Object[]> getQtDataModel() {
 		return qtDataModel;
 	}
 
@@ -1148,7 +1138,7 @@ public class NoticeBoardBackingBean extends
 	 * @param qtDataModel
 	 *            the qtDataModel to set
 	 */
-	public void setQtDataModel(IPagingDataModel<ScQt> qtDataModel) {
+	public void setQtDataModel(IPagingDataModel<Object[]> qtDataModel) {
 		this.qtDataModel = qtDataModel;
 	}
 
@@ -1341,7 +1331,7 @@ public class NoticeBoardBackingBean extends
 
 	}
 
-	public String showAwardDetails(ScQt qt) {
+	public String showAwardDetails(Long qtId) {
 		IQTNoticeBoardSO qtNoticeBoardSO = null;
 
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -1350,7 +1340,7 @@ public class NoticeBoardBackingBean extends
 		try {
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
-			reqDTO.setQtId(qt.getQtId());
+			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveAwardDetails(reqDTO);
 			this.getManagedBean().setScQt(resDTO.getScQt());
@@ -1359,8 +1349,7 @@ public class NoticeBoardBackingBean extends
 			} else {
 				this.getManagedBean().setProposalAmts(resDTO.getProposalAmts());
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} finally {
 		}
 
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
