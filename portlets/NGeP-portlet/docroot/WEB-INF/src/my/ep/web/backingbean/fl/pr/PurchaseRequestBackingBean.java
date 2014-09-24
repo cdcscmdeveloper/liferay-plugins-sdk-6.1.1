@@ -192,7 +192,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private String queryDesc;
 	
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
-	private static Map<Long, PmGlAccount> glAccountCodeMap = new HashMap<Long, PmGlAccount>();
 	private static Map<Long, PmPrgActivity> progmActivityCodeMap = new HashMap<Long, PmPrgActivity>();
 	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
 	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
@@ -1625,9 +1624,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 					
 				if(childData.getPmGlAccount()!=null) {
-					PmGlAccount pmGlAccount = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId());
-					getManagedBean().setGosodo(pmGlAccount);
-					getManagedBean().getGosodo().setGlAccCode(pmGlAccount.getGlAccCode());
+					getManagedBean().setGosodo(childData.getPmGlAccount());
 				}
 				
 				if(childData.getPmPrgActivity()!=null) {
@@ -1749,7 +1746,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			chargeLineValidation();
 			
 			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-			PmGlAccount pmGlAccount = glAccountCodeMap.get(getManagedBean().getGlAccountId());
+			PmGlAccount pmGlAccount = getManagedBean().getGosodo();
 			PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(getManagedBean().getPrgActivityId());
 			PmProject pmProject = projectCodeMap.get(getManagedBean().getProjectId());
 			PmSetia pmSetia = setiaCodeMap.get(getManagedBean().getSetiaId());
@@ -2129,15 +2126,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
 		
-		FulfilmentResDTO glAccountRes = fulfilmentSO.retrieveGlAccounts(reqDTO);
-		getManagedBean().setGlAccountList(glAccountRes.getGlAccountList());
-		for(PmGlAccount pmGlAcount : glAccountRes.getGlAccountList()) {
-			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount);
-		}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(votFundRes.getVotFundList());
-		
 	}
 	
 	/*public void getProjectList(AjaxBehaviorEvent e) {
@@ -2780,11 +2771,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 	}
-	public void checkGosodoLov(){
-		if(null != getManagedBean().getGosodo()){
-			glAccountCodeMap.put(getManagedBean().getGosodo().getGlAccountId(), getManagedBean().getGosodo());
-		}
-	}
+
 	public void checkProgramLov(){
 		if(null != getManagedBean().getPmPrgActivity()){
 			progmActivityCodeMap.put(getManagedBean().getPmPrgActivity().getPrgActivityId(),getManagedBean().getPmPrgActivity());
