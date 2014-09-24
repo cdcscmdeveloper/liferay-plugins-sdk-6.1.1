@@ -22,6 +22,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -173,6 +174,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<PmState> basicCompanyStates;
 	private List<PmDistrict> basicCompanyDistricts;
 	private List<PmCity> basicCompanyCities;
+	private List<PmRace> racesList;
 
 	private List<PmState> basicOffFacStates;
 	private List<PmDistrict> basicOffFacDistricts;
@@ -2057,6 +2059,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRevAppUrl(String revAppUrl) {
 		this.revAppUrl = revAppUrl;
+	}
+
+	public List<PmRace> getRacesList() {
+		return racesList;
+	}
+
+	public void setRacesList(List<PmRace> racesList) {
+		this.racesList = racesList;
 	}
 
 }

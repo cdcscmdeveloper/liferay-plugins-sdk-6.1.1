@@ -14,6 +14,7 @@ import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
@@ -37,6 +38,7 @@ import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.race.RaceResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -65,6 +67,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -1227,6 +1230,17 @@ public class SmApplicationUtil {
 		CertBodyResDTO resDTO = reqSO.retrieveCertifiedBodyList();
 		if (resDTO != null) {
 			return resDTO.getCertBodyList();
+		} else {
+			return null;
+		}
+	}
+
+	public static List<PmRace> retrievePmRaceList() {
+		IRaceSO reqSO = (IRaceSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IRaceSO.class);
+		RaceResDTO resDTO = reqSO.retrieveRaceList();
+		if (resDTO != null) {
+			return resDTO.getRaceList();
 		} else {
 			return null;
 		}
