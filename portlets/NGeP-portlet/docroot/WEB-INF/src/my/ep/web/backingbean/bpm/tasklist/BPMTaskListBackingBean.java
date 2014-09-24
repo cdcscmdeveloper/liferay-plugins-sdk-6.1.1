@@ -257,6 +257,8 @@ public class BPMTaskListBackingBean extends
 				SourcingConstants.LOA_PTJ_PAGE);
 		temp.put("Supplier DP Acceptance" + SCProcessNameConst.ACCEPT_LOA,
 				SourcingConstants.LOA_SUPPLIER_PAGE);
+		temp.put("Supplier DP Acceptance" + "Verify LOA",
+				SourcingConstants.LOA_PTJ_PAGE);
 		temp.put(SCProcessNameConst.QUOTATION_TENDER_PROCESS_NAME
 				+ SCProcessNameConst.APPROVE_PUBLICATION, "qtapprovals");
 
@@ -288,7 +290,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_OC_EVALUATION,
 				"proposal-evaluation");
-		
+
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FC_MEETING,
 				SourcingConstants.FC_COORDINATE_MEETING_PAGE);
@@ -555,19 +557,19 @@ public class BPMTaskListBackingBean extends
 		// this.getManagedBean().setAssignment("ALL");
 		// this.getManagedBean().setDocType("");
 
-//		HttpServletRequest servletRequest = PortalUtil
-//				.getHttpServletRequest(new FacesScopes().getRequest());
-//		HttpServletRequest originalServletRequest = PortalUtil
-//				.getOriginalServletRequest(servletRequest);
-//		String docTypeId = originalServletRequest.getParameter("docTypeId");
-//
-//		if (docTypeId != null && !docTypeId.isEmpty()) {
-//			this.getManagedBean().setDocType(docTypeId);
-//			originalServletRequest.getParameterMap().remove("docTypeId");
-//		}
-//
-//		this.getManagedBean().getTaskListDataModel().reloadData();
-//		// FacesContext fc = FacesContext.getCurrentInstance();
+		// HttpServletRequest servletRequest = PortalUtil
+		// .getHttpServletRequest(new FacesScopes().getRequest());
+		// HttpServletRequest originalServletRequest = PortalUtil
+		// .getOriginalServletRequest(servletRequest);
+		// String docTypeId = originalServletRequest.getParameter("docTypeId");
+		//
+		// if (docTypeId != null && !docTypeId.isEmpty()) {
+		// this.getManagedBean().setDocType(docTypeId);
+		// originalServletRequest.getParameterMap().remove("docTypeId");
+		// }
+		//
+		// this.getManagedBean().getTaskListDataModel().reloadData();
+		// // FacesContext fc = FacesContext.getCurrentInstance();
 		// fc.getApplication().getNavigationHandler()
 		// .handleNavigation(fc, null, "taskListTable");
 		// return "/xhtml/bpmtasklist/taskListTable.xhtml";
@@ -578,7 +580,7 @@ public class BPMTaskListBackingBean extends
 
 		this.getManagedBean().setViewBy("");
 		this.getManagedBean().setAssignment("ALL");
-		
+
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
