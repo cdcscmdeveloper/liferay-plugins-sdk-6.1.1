@@ -12,6 +12,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>		
 		<f:event listener="#{danBackingBean.preRenderView}"
 			type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -19,13 +22,13 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"
+				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{danBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"
-							styleClass="ui-button"
+							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{danBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>
