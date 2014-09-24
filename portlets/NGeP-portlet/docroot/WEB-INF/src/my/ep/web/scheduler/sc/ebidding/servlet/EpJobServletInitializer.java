@@ -5,20 +5,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
 import my.ep.factory.EpLogger;
+import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.sc.ebidding.JobTasks.BidSchedulesPoolingCronJob;
 import my.ep.web.scheduler.sc.ebidding.JobTasks.ContinuousBidSchedulerJob;
-import my.ep.web.scheduler.sc.ebidding.constants.EPSchedulerConstants;
 
 import org.apache.log4j.Logger;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.ee.servlet.QuartzInitializerListener;
-import org.quartz.impl.StdSchedulerFactory;
 
 public class EpJobServletInitializer extends HttpServlet {
 
