@@ -4,9 +4,11 @@ import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 
+import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -22,6 +24,15 @@ import org.quartz.JobExecutionException;
  */
 @DisallowConcurrentExecution
 public class BidSchedulesPoolingCronJob implements Job {
+	
+	public static Logger log = EpLogger.getLogger(BidSchedulesPoolingCronJob.class);
+	
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
 
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
@@ -34,6 +45,7 @@ public class BidSchedulesPoolingCronJob implements Job {
 			BiddingResDTO resDTO = biddingSO.retriveSchedulerJobBidSchedulesList(reqDTO);
 			if(resDTO.isSuccessful()){
 				if(resDTO.getActiveBidSchedules()!= null){
+					log.info("jobBidSchedulesList size is"+resDTO.getActiveBidSchedules().size());
 					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 					schedulerHelper.setJobBidScheduleList(resDTO.getActiveBidSchedules());
 				}
