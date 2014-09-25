@@ -1,0 +1,271 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+		<p:messages id="ruleCatalogMsgId" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="true"></p:messages>
+		<p:outputPanel id="ruleCat">
+
+			<div style="text-align: right; min-height: 40px;">
+
+				<h:panelGroup>
+					<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
+						icon="ui-icon-save"
+						action="#{ruleCatalogueBackingBean.saveRuleCatalog}"
+						update="@form"></p:commandButton>
+
+				</h:panelGroup>
+
+			</div>
+
+
+			<p:tabView id="generalParameterTabID" orientation="left"
+				activeIndex="#{ruleCatalogueBackingBean.managedBean.ruleCatTabActiveIndex}">
+
+				<p:tab id="generalParameterId"
+					title="#{lbl['lbl.pm.settings.general.parameter']}">
+
+
+					<p:panel header="#{lbl['lbl.pm.settings.general.setting']}"
+						toggleable="true" style="width: 100%;">
+
+						<table style="width: 100%; margin-top: 10px;">
+							<tr style="height: 30px;">
+
+								<td><p:outputLabel
+										value="#{lbl['lbl.pm.settings.date.format']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneMenu
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatdate}"
+										style="width:128px;">
+										<f:selectItem itemLabel="dd/MM/yyyy" itemValue="dd/MM/yyyy" />
+										<f:selectItem itemLabel="dd/MM/yy" itemValue="dd/MM/yy" />
+										<f:selectItem itemLabel="dd/MMM/yy" itemValue="dd/MMM/yy" />
+										<f:selectItem itemLabel="dd-MM-yyyy" itemValue="dd-MM-yyyy" />
+										<f:selectItem itemLabel="dd-MM-yy" itemValue="dd-MM-yy" />
+										<f:selectItem itemLabel="dd-MMM-yyyy" itemValue="dd-MMM-yyyy" />
+									</p:selectOneMenu></td>
+								<td><p:outputLabel value="#{lbl['lbl.pm.financial.year']}" /></td>
+								<td><p:inputText
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.financialYear}"
+										disabled="true" size="8" /></td>
+
+							</tr>
+							<tr style="height: 30px;">
+
+								<td><p:outputLabel
+										value="#{lbl['lbl.pm.settings.time.format']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneMenu
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatTime}"
+										style="width:128px;">
+										<f:selectItem itemLabel="12H" itemValue="12H" />
+										<f:selectItem itemLabel="24H" itemValue="24H" />
+										<f:selectItem itemLabel="HH:mm" itemValue="HH:mm" />
+									</p:selectOneMenu></td>
+								<td><p:outputLabel
+										value="#{lbl['lbl.pm.settings.notification.frequency']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:inputText
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.notifyFreq}"
+										required="true" size="8"/></td>
+							</tr>
+							<tr style="height: 30px;">
+								<td><p:outputLabel
+										value="#{lbl['lbl.pm.profiles.preferences.noformat']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneMenu
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatNumber}"
+										style="width:128px;">
+										<f:selectItem itemLabel="#,##0" itemValue="#,##0" />
+										<f:selectItem itemLabel="###0" itemValue="###0" />
+									</p:selectOneMenu></td>
+								<td />
+								<td />
+							</tr>
+							<tr style="height: 30px;">
+								<td><p:outputLabel
+										value="#{lbl['lbl.pm.settings.language']}" /> <p:outputLabel
+										value="*" styleClass="mandatory" /></td>
+								<td><p:selectOneMenu
+										value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.preferredLanguage}"
+										style="width:128px;">
+										<f:selectItem itemLabel="en" itemValue="en" />
+									</p:selectOneMenu></td>
+								<td />
+								<td />
+							</tr>
+
+						</table>
+					</p:panel>
+
+					<p:panel header="#{lbl['lbl.pm.settings.general.rule']}"
+						toggleable="true">
+						<p:dataTable id="ruleTypeTableID" widgetVar="ruleTypeDbWidget"
+							var="ruleTypeObj" row="10"
+							value="#{ruleCatalogueBackingBean.managedBean.configRuleList}"
+							selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleType}"
+							rowKey="#{ruleTypeObj}" rowIndexVar="rowIndex"
+							selectionMode="single">
+
+							<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+								update=":form:generalParameterTabID:ruleTypeValueTableID" />
+							<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+								update=":form:generalParameterTabID:ruleTypeValueTableID" />
+
+
+
+							<p:column>
+								<f:facet name="header">
+					               #{lbl['lbl.pm.rule.type']}
+			                   	</f:facet>
+				
+			                    #{ruleTypeObj.ruleTypeDesc}
+				
+			            	</p:column>
+							<p:column>
+								<f:facet name="header">
+				                	#{lbl['lbl.pm.rule.data.type']}
+				                </f:facet>
+                                #{bpmTasklistBackingBean.getParameterDesc(ParameterTypeConst.ruleDataType,ruleTypeObj.ruleDataTypeId.parameterCode)}
+						       
+							
+			              	</p:column>
+
+						</p:dataTable>
+						<br />
+						<p:outputLabel value="#{lbl['lbl.pm.rule.type.value']}"
+							style="font-weight: bold;" />
+						<p:spacer height="20px" />
+						<p:dataTable id="ruleTypeValueTableID"
+							widgetVar="ruleValueTblWidget"
+							value="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues}"
+							var="typeValueObj" selectionMode="single"
+							selection="#{ruleCatalogueBackingBean.managedBean.selectedRuleValue}"
+							rowKey="#{typeValueObj}" rowIndexVar="index">
+
+							<ac:paginator for="ruleTypeValueTableID" />
+							<p:column width="15%"
+								rendered="#{!(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'C')}">
+								<f:facet name="header">
+					                 #{lbl['lbl.pm.value']}
+				                </f:facet>
+
+								<p:inputText value="#{typeValueObj.ruleValue}" size="15"></p:inputText>
+							</p:column>
+
+							<p:column width="15%"
+								rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
+								<f:facet name="header">
+					                 #{lbl['lbl.pm.value']}
+				                </f:facet>
+
+								<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" update="@form"
+									size="15" headerText="Category Lov"
+									postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
+									saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
+									value="#{typeValueObj.ruleValue}">
+								</ac:lov>
+								<ac:lovPopup />
+							</p:column>
+
+							<p:column width="15%"
+								rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+								<f:facet name="header">
+								
+				                 	#{lbl['lbl.pm.rule.from.value']}
+			                	</f:facet>
+								<p:inputText value="#{typeValueObj.fromValue}" size="15"></p:inputText>
+							</p:column>
+
+							<p:column width="15%"
+								rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'A') and (ruleCatalogueBackingBean.managedBean.selectedRuleType.isRangeValue == 1)}">
+								<f:facet name="header">
+				                	#{lbl['lbl.pm.rule.to.value']}
+			                	</f:facet>
+								<p:inputText value="#{typeValueObj.toValue}" size="15"></p:inputText>
+							</p:column>
+
+							<p:column
+								rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode == 'C')}">
+								<f:facet name="header">
+				                	#{lbl['lbl.pm.desc']}
+		                		</f:facet>
+		                		#{typeValueObj.categoryL3Id.categoryName}
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+		                			#{lbl['lbl.pm.as.effdate']}
+		                		</f:facet>
+								<p:calendar value="#{typeValueObj.effDate}" />
+							</p:column>
+
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="*" styleClass="mandatory" />#{lbl['lbl.pm.as.expdate']}
+			                	</f:facet>
+								<p:calendar value="#{typeValueObj.expDate}" />
+
+							</p:column>
+
+							<p:column width="10%">
+								<f:facet name="header">
+					                #{lbl['lbl.pm.status']}
+				                </f:facet>
+								<p:selectOneMenu value="#{typeValueObj.recordStatusFlg}"
+									style="width:128px;">
+									<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
+										itemValue="0" />
+									<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+								</p:selectOneMenu>
+							</p:column>
+
+						</p:dataTable>
+						<h:panelGroup id="addBtnId">
+							<div style="text-align: right;">
+								<p:commandButton value="#{lbl['lbl.btn.add']}"
+									icon="ui-icon-add" ajax="true"
+									action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
+									update=":form:generalParameterTabID:ruleTypeValueTableID"></p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.delete']}"
+									icon="ui-icon-delete" ajax="true"
+									action="#{ruleCatalogueBackingBean.deleteMoreRuleValue()}"
+									update=":form:generalParameterTabID:ruleTypeValueTableID"></p:commandButton>
+							</div>
+						</h:panelGroup>
+					</p:panel>
+
+
+
+				</p:tab>
+
+				<p:tab id="kpiSlASettingId"
+					title="#{lbl['lbl.pm.settings.kpi.sla.setting']}">
+					<ui:include src="kpiSlASettingTab.xhtml"></ui:include>
+				</p:tab>
+
+				<p:tab id="feeSettingId"
+					title="#{lbl['lbl.pm.settings.fee.setting']}">
+					<ui:include src="feeSettingTab.xhtml"></ui:include>
+				</p:tab>
+
+				<p:tab id="yepSettingId"
+					title="#{lbl['lbl.pm.settings.yep.setting']}">
+					<ui:include src="yepSettingTab.xhtml"></ui:include>
+				</p:tab>
+
+
+			</p:tabView>
+
+
+		</p:outputPanel>
+	</ui:define>
+</ui:composition>
