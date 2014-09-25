@@ -852,7 +852,7 @@
 		            </div>
 		           <h:panelGroup id="rptbtnGroup">
 		            <div align="right">		            		                    	
-		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult">
+		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult,rptCriteria">
 				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
