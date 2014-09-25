@@ -145,7 +145,7 @@
 				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
 					<p:selectOneMenu id="meetingRoleId" required="true"
 						label="#{lbl['lbl.sc.eva.committee.role']}"
-						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}"
+						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
