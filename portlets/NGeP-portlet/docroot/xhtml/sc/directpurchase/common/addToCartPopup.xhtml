@@ -71,9 +71,10 @@
 										value="#{requestNoteBackingBean.managedBean.priceType}">
 										<f:selectItems
 											value="#{requestNoteBackingBean.managedBean.priceTypes}" />
-									</p:selectOneMenu></td>
-								<td><p:message id="priceTypeMsg" for="priceType"
-										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
+									</p:selectOneMenu>
+									<p:message id="priceTypeMsg" for="priceType"
+										display="icon" /></td>
+								<td style="margin-top: -3px"><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}"/></td>
 							</tr>
 						</table>
 					</td>
@@ -95,7 +96,7 @@
 											listener="#{requestNoteBackingBean.procurementTypeEvent}"
 											process="@this" />
 									</p:selectOneRadio></td>
-								<td><p:message id="procTypeMsg" for="procType"
+								<td style="margin-top: -3px"><p:message id="procTypeMsg" for="procType"
 										display="icon" /> <ac:iconTooltip
 										value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
 							</tr>

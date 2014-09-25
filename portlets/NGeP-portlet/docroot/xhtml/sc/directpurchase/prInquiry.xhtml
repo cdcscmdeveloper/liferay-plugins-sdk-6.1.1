@@ -116,7 +116,7 @@
 								     <p:graphicImage library="ep/images/design" name="evaluate.png"
 							                style="vertical-align:middle" />
 									</h:commandLink></td>
-								<td><p:message id="priceTypeMsg" for="priceType"
+								<td style="margin-top: -3px"><p:message id="priceTypeMsg" for="priceType"
 										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 							</tr>
 					  </table>
@@ -168,15 +168,27 @@
 						 <td style="width: 250px">
 						     <p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />  
 						     <p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneRadio style="margin-bottom: 5px;"  
-						        id="procType" required="true" label="#{lbl['lbl.sc.procurement.type']}"
-								value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
-								<f:selectItems 
-									value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
-									<p:ajax event="change" update="justiId" 
-									listener="#{purchaseInquiryBackingBean.procurementTypeEvent}" process="@this" />
-							</p:selectOneRadio> <p:message id="procTypeMsg" for="procType" display="icon"/><ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
-					  </tr>
+						 <td>
+							<table>
+								<tr>
+								  <td><p:selectOneRadio style="margin-bottom: 5px;"
+										id="procType" required="true"
+										label="#{lbl['lbl.sc.procurement.type']}"
+										value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode}">
+										 <f:selectItems
+												value="#{purchaseInquiryBackingBean.managedBean.procurementTypes}" />
+												<p:ajax event="change" update="justiId"
+										    		listener="#{purchaseInquiryBackingBean.procurementTypeEvent}"
+													process="@this" />
+									</p:selectOneRadio></td>
+								 <td style="margin-top: -3px">
+								      <p:message id="procTypeMsg" for="procType" display="icon" /> 
+								      <ac:iconTooltip value="#{lbl['lbl.sc.procurementtype.tooltip']}" /></td>
+						       </tr>
+							</table>
+							</td>
+					      </tr>
+					      
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 							 <td style="width: 250px">
