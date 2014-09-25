@@ -127,7 +127,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private List<SmFacility> applDockyardFacilities;
 	private List<SmFacility> applWorkShopFacilities;
 	private List<SmFacility> applStoreFacilities;
-	private List<PmState> basicOffFacStates;
 	
 	private String revTypeParam;
 
@@ -656,14 +655,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setApplStoreFacilities(List<SmFacility> applStoreFacilities) {
 		this.applStoreFacilities = applStoreFacilities;
-	}
-
-	public List<PmState> getBasicOffFacStates() {
-		return basicOffFacStates;
-	}
-
-	public void setBasicOffFacStates(List<PmState> basicOffFacStates) {
-		this.basicOffFacStates = basicOffFacStates;
 	}
 
 	public String getFacilityType() {
