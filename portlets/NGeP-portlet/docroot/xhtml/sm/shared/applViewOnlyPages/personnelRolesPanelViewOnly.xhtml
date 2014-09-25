@@ -14,13 +14,11 @@
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
-								<c:if test="#{viewSmApplBackingBean.managedBean.validEquityLimit}">
-									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
-											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
-										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
-											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
-								</c:if>
+								<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+										value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel style="float: left"
+										value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
 								<c:if
 									test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
 									<c:if
@@ -62,13 +60,11 @@
 					<td style="padding-left: 5px;">
 						<table>
 							<tr>
-								<c:if test="#{viewSmApplBackingBean.managedBean.validEquityLimit}">
-									<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
-											value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
-										</p:selectBooleanCheckbox></td>
-									<td><p:outputLabel style="float: left"
-											value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
-								</c:if>
+								<td style="width: 20px"><p:selectBooleanCheckbox disabled="true"
+										value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.equityOwner}">
+									</p:selectBooleanCheckbox></td>
+								<td><p:outputLabel style="float: left"
+										value="#{lbl['lbl.sm.person.equiOwner']}" /></td>
 								<c:if
 									test="#{viewSmApplBackingBean.managedBean.currentPageType ne SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY}">
 									<c:if
