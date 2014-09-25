@@ -440,6 +440,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String bsvZoneindx="0";
 	private List<ScQtApproval> toBeRemoveList;
 	private List<ScQtDeduction> removeDeductions;
+	private List<ScCommitteeMember> toBeDelCommitteMemebers;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2622,6 +2623,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setRemoveDocReports(List<ScQtDocReport> removeDocReports) {
 		this.removeDocReports = removeDocReports;
+	}
+
+	public List<ScCommitteeMember> getToBeDelCommitteMemebers() {
+		return toBeDelCommitteMemebers;
+	}
+
+	public void setToBeDelCommitteMemebers(
+			List<ScCommitteeMember> toBeDelCommitteMemebers) {
+		this.toBeDelCommitteMemebers = toBeDelCommitteMemebers;
 	}
 
 }

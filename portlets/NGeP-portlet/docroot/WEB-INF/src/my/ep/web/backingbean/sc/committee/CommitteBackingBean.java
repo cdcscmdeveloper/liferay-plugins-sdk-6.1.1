@@ -154,7 +154,7 @@ public class CommitteBackingBean extends
 				UserReqDTO userReqDTO = new UserReqDTO();
 				populateUserSearchCriteria(userQCSearchBean, searchBean);
 				userReqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDto = userSO.searchUserProfile(userReqDTO);
+				UserResDTO resDto = userSO.searchUserProfileDtl(userReqDTO);
 				if (resDto != null) {
 					getManagedBean().setExternalUsers(resDto.getUserResultBean().getResultList());
 					for(PmUser user : getManagedBean().getExternalUsers()) {
