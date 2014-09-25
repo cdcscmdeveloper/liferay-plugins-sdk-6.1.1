@@ -63,7 +63,7 @@
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText></td>
 
-									<td><p:outputLabel value="#{lbl['lbl.ct.circular']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.cm.circular.no']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
 								</tr>
@@ -203,13 +203,6 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.cm.supplier.name']}" style="white-space: normal">
-								<ui:remove>
-									<h:outputText value="#{supplierItem.companyName}"
-										rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
-									<p:commandLink value="#{supplierItem.companyName}"
-										rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
-										action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
-								</ui:remove>	
 								<h:outputText value="#{supplierItem.companyName}" ></h:outputText>
 							</p:column>
 
