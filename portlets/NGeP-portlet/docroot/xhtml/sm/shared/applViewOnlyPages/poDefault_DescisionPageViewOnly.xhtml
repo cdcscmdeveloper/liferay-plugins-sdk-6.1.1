@@ -24,31 +24,28 @@
 				</c:if>
 			</td>
 			<td>
-				<p:panel header="PO Decision">
+				<p:panel header="#{lbl['lbl.sm.poDecisionLbl']}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="Supplier Name" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" size="50" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" disabled="true" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.suppname']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" size="50" value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" disabled="true">
+							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']} :" /></td>
+							<td style="font-size: 12px;font-weight: normal;font-family: Arial">
+								<h:outputText value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}">
 									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-								</p:inputText>
+								</h:outputText>
 							</td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
-							<td><p:outputLabel value="   : " /></td>
-							<td><p:inputText readonly="true" size="50" value="#{viewSmApplBackingBean.managedBean.currentStatus}" disabled="true" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.status']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.currentStatus}" /></td>
 						</tr>
 						<tr>
 							<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
-								<td><p:outputLabel value="Remarks for Cancellation" /></td>
-								<td><p:outputLabel value="   : " /></td>
-								<td><p:inputTextarea readonly="true" cols="60" value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" disabled="true" /></td>
+								<td><p:outputLabel value="#{lbl['lbl.sm.remark.cancellation']} :" /></td>
+								<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" /></td>
 							</c:if>
 						</tr>
 					</table>
