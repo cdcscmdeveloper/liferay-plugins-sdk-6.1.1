@@ -3,29 +3,21 @@
  */
 package my.ep.web.backingbean.sc.loa;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
-import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
-import my.ep.web.managedbean.sc.loa.DpLOAManagedBean;
 import my.ep.web.managedbean.sc.loa.QtLOAManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -47,7 +39,8 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 	public void preRenderView() {
 		debugLogger("preRenderView");
 		try {
-			Long sourceId = 1450L;//LOA record Existed
+			this.renewSesionObject();
+			Long sourceId = 146L;//LOA record Existed
 			//Long sourceId = 3025L; // no LOA record
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			loaDetailBackingBean.renewSesionObject();
@@ -74,10 +67,11 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setDocId(qtId);
 			reqDTO.setDocType("QT");
+			reqDTO.setSupplierId(27L);
 
-			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAListByDocTypeAndQtId(reqDTO);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setQt(resDTO.getScQt());
