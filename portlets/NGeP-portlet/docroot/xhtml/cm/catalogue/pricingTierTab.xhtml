@@ -36,6 +36,7 @@
                 </p:inputText>
             </p:column>
 			<p:column>
+				<p:focus for=":form:pricingTabID:headerTabId:tierId:pricingTierID:tierPriceId"></p:focus>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
@@ -55,6 +56,8 @@
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 
 			</p:column>
@@ -69,6 +72,8 @@
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateDateOverlap(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
 				 <p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
+				 <p:ajax event="change" listener="#{catalogueBackingBean.validateTierPrice(rowIndex)}" update="promoLink, cloneLink, deleteLink, errorLink" />
                 </p:calendar>
 			</p:column>
 
