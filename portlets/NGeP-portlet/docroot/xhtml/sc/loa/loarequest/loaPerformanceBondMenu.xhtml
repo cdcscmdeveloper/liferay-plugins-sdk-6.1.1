@@ -21,7 +21,7 @@
 						value="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate}"
 						size="14" disabled="true" readonly="true">
 						<f:convertDateTime pattern="dd/MM/yyyy" />
-					</p:inputText> <p:spacer width="10px" /> <p:inputText disabled="true" rendered="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate ne 'null'}"
+					</p:inputText> <p:spacer width="10px" /> <p:inputText disabled="true" rendered="#{lOADetailBackingBean.managedBean.scLoa.bondResDueDate ne null}"
 						readonly="true" size="5"
 						value="#{DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.bondResDueDate)} #{lbl['lbl.sc.days']}">
 					</p:inputText></td>
