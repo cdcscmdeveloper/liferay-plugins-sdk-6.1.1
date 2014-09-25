@@ -102,7 +102,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private	TreeNode	rootLocationTree;
 	private TreeNode[] selectedLocNodes;
 	private	List<TreeNode>	locationTrees	=	new ArrayList<TreeNode>();
-	private int locIndex = -1;
 
 	private List<ScLocationStateCriteria>	stateCriterias = new ArrayList<ScLocationStateCriteria>();
 	private List<ScLocationDivisionCriteria> divistionCriterias = new ArrayList<ScLocationDivisionCriteria>();
@@ -170,8 +169,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	private List<CtPanelItem> panelItems = new ArrayList<CtPanelItem>();
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
-	// to store locality
-	private List<TplSpecZoneLoc> tplSpecZoneLocs = new ArrayList<TplSpecZoneLoc>();
 	
 	private boolean conformDlgBtnFlag;
 
@@ -659,20 +656,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedLocNodes(TreeNode[] selectedLocNodes) {
 		this.selectedLocNodes = selectedLocNodes;
-	}
-
-	/**
-	 * @return the locIndex
-	 */
-	public int getLocIndex() {
-		return locIndex;
-	}
-
-	/**
-	 * @param locIndex the locIndex to set
-	 */
-	public void setLocIndex(int locIndex) {
-		this.locIndex = locIndex;
 	}
 
 	/**
@@ -1408,18 +1391,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setBeans(List<ZonesBean> beans) {
 		this.beans = beans;
 	}
-	/**
-	 * @return the tplSpecZoneLocs
-	 */
-	public List<TplSpecZoneLoc> getTplSpecZoneLocs() {
-		return tplSpecZoneLocs;
-	}
-	/**
-	 * @param tplSpecZoneLocs the tplSpecZoneLocs to set
-	 */
-	public void setTplSpecZoneLocs(List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		this.tplSpecZoneLocs = tplSpecZoneLocs;
-	}
+	
 	public boolean isNewableFlag() {
 		return newableFlag;
 	}
@@ -1438,5 +1410,4 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setConformDlgBtnFlag(boolean conformDlgBtnFlag) {
 		this.conformDlgBtnFlag = conformDlgBtnFlag;
 	}
-	
 }
