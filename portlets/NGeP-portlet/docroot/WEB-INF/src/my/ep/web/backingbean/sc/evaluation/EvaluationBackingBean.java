@@ -1054,7 +1054,13 @@ public class EvaluationBackingBean extends
 
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
-			reqDTO.setCompliance(true);
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
+							.getDefinationType().getParameterCode())) {
+				reqDTO.setCompliance(true);
+			} else {
+				reqDTO.setCompliance(null);
+			}
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			this.getManagedBean().setComplianceTechnicalProposalCheckList(
 					new ArrayList<ScQtProposalChecklist>());
@@ -1100,7 +1106,13 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
-			reqDTO.setCompliance(true);
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
+							.getDefinationType().getParameterCode())) {
+				reqDTO.setCompliance(true);
+			} else {
+				reqDTO.setCompliance(null);
+			}
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			this.getManagedBean().setComplianceTechnicalProposalCheckList(
 					new ArrayList<ScQtProposalChecklist>());
@@ -1143,7 +1155,13 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
-			reqDTO.setCompliance(true);
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
+							.getDefinationType().getParameterCode())) {
+				reqDTO.setCompliance(true);
+			} else {
+				reqDTO.setCompliance(null);
+			}
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			this.getManagedBean().setComplianceTechnicalProposalCheckList(
 					new ArrayList<ScQtProposalChecklist>());
@@ -1254,7 +1272,13 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 			reqDTO.setCheckListId(this.getManagedBean().getScQtChecklist()
 					.getQtChecklistId());
-			reqDTO.setCompliance(true);
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
+					.equalsIgnoreCase(this.getManagedBean().getScQtChecklist()
+							.getDefinationType().getParameterCode())) {
+				reqDTO.setCompliance(true);
+			} else {
+				reqDTO.setCompliance(null);
+			}
 			resDTO = evaluationSo.retrieveComplianceDtlsByCheckList(reqDTO);
 			this.getManagedBean().setComplianceTechnicalProposalCheckList(
 					new ArrayList<ScQtProposalChecklist>());
@@ -3214,6 +3238,32 @@ public class EvaluationBackingBean extends
 		else if (SCProcessNameConst.FINALISE_FEC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_FEC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		} else if (SCProcessNameConst.ENDORSE_OC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.SIGNOFF_OC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		}
+
+		else if (SCProcessNameConst.ENDORSE_TEC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.SIGNOFF_TEC_EVALUATION
+						.equalsIgnoreCase(taskName)) {
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sc/evaluation/evaluationstage1view.xhtml");
+		} else if (SCProcessNameConst.ENDORSE_FEC_EVALUATION
+				.equalsIgnoreCase(taskName)
+				|| SCProcessNameConst.SIGNOFF_FEC_EVALUATION
 						.equalsIgnoreCase(taskName)) {
 			fc.getApplication()
 					.getNavigationHandler()
