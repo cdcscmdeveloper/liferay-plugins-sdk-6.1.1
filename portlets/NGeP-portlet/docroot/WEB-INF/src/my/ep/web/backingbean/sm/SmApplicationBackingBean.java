@@ -1692,6 +1692,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
+		if (equiCompBean.getShareAmt() == null) {
+			equiCompBean.setShareAmt(new BigDecimal(0));
+		}
 		validatePaidCaptialAmt(false);
 		populateStatesByCountry(equiCompBean.getSmAddress().getPmCountry()
 				.getCountryId(), SupplierManagementConst.SM_EQUI_COMPANY_PANEL,
@@ -1711,6 +1714,8 @@ public class SmApplicationBackingBean extends
 		validatePaidCaptialAmt(false);
 		getManagedBean().setSelectedEquityCompany(new SmEquityCompany());
 		getManagedBean().getSelectedEquityCompany().setRevNo(1);
+		getManagedBean().getSelectedEquityCompany().setShareAmt(
+				new BigDecimal(0));
 		getManagedBean().getSelectedEquityCompany().setSmAddress(
 				(SmApplicationUtil.setDefaultAddr(getManagedBean()
 						.getDefPmCountry())));
@@ -2821,12 +2826,22 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedShareHolders(String personType) {
-		if (!personType
-				.equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
-			for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
-				if (shr.isEquityOwner()) {
-					throw new EpException(MessageConst.ERROR_722536);
-				}
+		// if (!personType
+		// .equalsIgnoreCase(SupplierManagementConst.PERSONNEL_TYPE_EQUITY)) {
+		// for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
+		// if (shr.isEquityOwner()) {
+		// throw new EpException(MessageConst.ERROR_722536);
+		// }
+		// if(shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN")
+		// ||shr.getEpRole().equalsIgnoreCase("BASIC_SUPPLIER_ADMIN")){
+		// throw new EpException(MessageConst.ERROR_722553);
+		// }
+		// }
+		// }
+		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
+			if (shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN")
+					|| shr.getEpRole().equalsIgnoreCase("BASIC_SUPPLIER_ADMIN")) {
+				throw new EpException(MessageConst.ERROR_722553);
 			}
 		}
 		log.info("*** Delete Share Holders ******* "
