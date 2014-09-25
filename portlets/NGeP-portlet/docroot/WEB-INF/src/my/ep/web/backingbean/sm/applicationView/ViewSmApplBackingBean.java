@@ -152,7 +152,7 @@ public class ViewSmApplBackingBean extends
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication();
 		String applType = getManagedBean().getSmAppl().getApplType();
-		String redirectToAppl = getBasePage(applType);
+		String redirectToAppl = SmApplicationUtil.getReviewApplicationBasePage(applType);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, redirectToAppl);
@@ -177,7 +177,7 @@ public class ViewSmApplBackingBean extends
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
-			String redirectToAppl = getBasePage(applType);
+			String redirectToAppl = SmApplicationUtil.getReviewApplicationBasePage(applType);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, redirectToAppl);
@@ -303,43 +303,6 @@ public class ViewSmApplBackingBean extends
 		}
 
 		return retVal;
-	}
-
-	private SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
-		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
-		reqDTO.setDocId(docId);
-		reqDTO.setDocType(docType);
-		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISmRemarksSO.class);
-		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
-		return resDTO;
-	}
-
-	private String getBasePage(String applicationType) {
-		String basePage = "";
-		if (applicationType != null) {
-			switch (applicationType) {
-			case ParameterConst.NEW_SM_APPLN_FOR_MOF:
-				basePage = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
-				break;
-			case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
-				basePage = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
-				break;
-			case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
-				basePage = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
-				break;
-			case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
-				basePage = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
-				break;
-			case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
-				basePage = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
-				break;
-			default:
-				break;
-			}
-		}
-		return basePage;
 	}
 
 	private void setTabParam() {
@@ -538,6 +501,7 @@ public class ViewSmApplBackingBean extends
 
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
+		
 		setDefaultApproverReviewSection();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
@@ -547,7 +511,7 @@ public class ViewSmApplBackingBean extends
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
-		SmRemaksResDTO resDTO = getRemarksByDoc(docType, docId);
+		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType, docId);
 		StringBuffer sb = new StringBuffer();
 		if (resDTO != null && resDTO.getRemarksList() != null
 				&& !resDTO.getRemarksList().isEmpty()) {
@@ -708,17 +672,6 @@ public class ViewSmApplBackingBean extends
 		}
 
 		return sec;
-	}
-
-	private PmParameter retrievePmParameterById(Long paramId) {
-		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IParameterSO.class);
-		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterId(paramId);
-		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
-
-		return resDTO.getPmParameter();
 	}
 
 	private List<PmState> retrievePmStateList(long countryId) {
@@ -1020,7 +973,7 @@ public class ViewSmApplBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
 			getManagedBean().getSelectedShareHolder()
 					.setIdentificationType(
-							retrievePmParameterById(getManagedBean()
+							SmApplicationUtil.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
