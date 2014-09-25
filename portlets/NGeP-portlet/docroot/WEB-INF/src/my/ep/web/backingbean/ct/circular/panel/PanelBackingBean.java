@@ -893,19 +893,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void addCancelCircularListener() {
 		log.info("PanelBackingBean.addCancelCircularListener()");
+		CircularReqDTO reqDTO = null;
 		try {
-				CircularReqDTO reqDTO = new CircularReqDTO();
-				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
+				if(getManagedBean().getCancelledCircularList().size() == 0){
+			        reqDTO = new CircularReqDTO();
+				    ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
+				    searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
 						SearchOperator.OPERATOR_EQUALS.value(), ContractConst.CIRCULAR_DOC_TYPE_PANEL));
-				reqDTO.setCancelCircularSearchBean(searchBean);
+				    reqDTO.setCancelCircularSearchBean(searchBean);
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
 				if(resDTO.isSuccessful()) {
 					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
+				  }
 				}
-			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+			  getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -916,11 +919,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.addCancelledCircular()");
         try {
         	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
-        		cancelCircular.setCancelCircularId(null);
-        		cancelCircular.setCtCancelCircularReq(null);
+//        		cancelCircular.setCancelCircularId(null);
+//        		cancelCircular.setCtCancelCircularReq(null);
+        		CtCancelCircular addedCancelCircular = new CtCancelCircular();
+        		addedCancelCircular.setParentCircularVer(getManagedBean().getCircularVer());
+        		addedCancelCircular.setCircularVer(cancelCircular.getCircularVer());
+        		getManagedBean().getCircularVer().getCtCancelCircularList().add(addedCancelCircular);
         	}
-        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
+//        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
         	getManagedBean().getCancelledCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
+        	getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
