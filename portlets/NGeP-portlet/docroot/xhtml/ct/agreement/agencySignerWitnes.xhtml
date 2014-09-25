@@ -6,19 +6,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="agencyPanelId" header="#{lbl['lbl.ct.ag.agysigndtls']}"  toggleable="true"  toggleSpeed="500">
+    <p:panel id="agencyPanelId" header="#{lbl['lbl.ct.panel.agency.signing.dtls']}"  toggleable="true"  toggleSpeed="500">
     <h:panelGrid style="width:100%">
-     <p:outputLabel value="#{lbl['lbl.ct.ag.signer']}" style="float:left;"/>
+     <p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
       <p:dataTable id="AgSignerTable" var="agSignerVar" value="#{agreementBackingBean.managedBean.ctAgencySigner}" 
 	     selection="#{agreementBackingBean.selectedAgencySigner}" rowKey="#{agSignerVar}">
 		 <ac:paginator for="AgSignerTable"/>
 		 <p:column selectionMode="multiple" style="width:2%"/>  
-		 <p:column style="width:15%; white-space:normal;"  headerText="#{lbl['lbl.ct.ag.ministry']}" 
+		 <p:column style="width:15%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}" 
 		   rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null and
 		   		agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}" >
 		   <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		 </p:column>
-         <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.ptj']}">
+         <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}">
             <p:selectOneMenu id="ptj" value="#{agSignerVar.orgProfile.orgProfileId}"  style="width:320px;" label="#{lbl['lbl.ct.ptj']}" 
             	rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null and
             		agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}" >
@@ -37,10 +37,10 @@
                  listener="#{agreementBackingBean.setUserValueAgency(agSignerVar,agSignerVar.officer.userId)}"/> 
            </p:selectOneMenu>
          </p:column>  
-         <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.ag.icno']}">
+         <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.ic.no']}">
              <p:outputLabel id="agOfId" value="#{agSignerVar.officerIc}" style="float:left;"/>
          </p:column>         
-         <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.ag.position']}">
+         <p:column style="width:10%; white-space:normal;" headerText="#{lbl['lbl.ct.designation']}">
             <p:outputLabel id="agOfPosition" value="#{agSignerVar.officerPosition}" style="float:left;"/>
          </p:column> 
        </p:dataTable>
@@ -51,7 +51,7 @@
 		  <p:commandButton value="#{lbl['lbl.btn.delete']}"
 		     icon="ui-icon-delete" process="@form" onsuccess="dlgAgSignerDel.show()"/>
 	  </div>
-	   <p:dialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" header="Delete Confirmation" styleClass="screen-title"  
+	   <p:dialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -68,18 +68,18 @@
         </p:dialog>  
 	  <p:spacer width="15"/>
       <h:panelGrid style="width:100%">  
-         <p:outputLabel value="#{lbl['lbl.ct.ag.witness']}" style="float:left;"/>
+         <p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
           <p:dataTable id="AgWitnessTable" var="signAgWitnessVar" value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}" 
 	         selection="#{agreementBackingBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
 		 <ac:paginator for="AgWitnessTable"/>
 		 <p:column selectionMode="multiple" style="width:2%"/> 
-		 <p:column headerText="Name" style="width:50%;">
+		 <p:column headerText="#{lbl['lbl.ct.name']}" style="width:50%;">
 		    <p:inputText value="#{signAgWitnessVar.officerName}" style="width:90%" maxlength="20"/>
 		 </p:column> 
-		  <p:column headerText="IC No." style="width:20%;">
+		  <p:column headerText="#{lbl['lbl.ct.ic.no']}" style="width:20%;">
 		    <p:inputText value="#{signAgWitnessVar.officerIc}" style="width:90%" maxlength="20"/>
 		 </p:column> 
-		  <p:column headerText="#{lbl['lbl.ct.ag.position']}" style="width:30%;">
+		  <p:column headerText="#{lbl['lbl.ct.designation']}" style="width:30%;">
 		    <p:inputText value="#{signAgWitnessVar.officerPosition}" style="width:90%" maxlength="255"/>
 		 </p:column> 
 		</p:dataTable>

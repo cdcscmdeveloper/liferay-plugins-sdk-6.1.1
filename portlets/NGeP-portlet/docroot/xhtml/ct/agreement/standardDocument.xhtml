@@ -4,13 +4,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="createAgreement" header="AGREEMENT CONTENT" toggleable="true" toggleSpeed="500">
+	<p:panel id="createAgreement" header="#{lbl['lbl.ct.panel.agreement.content']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
 			<h:panelGrid columns="2">
-				<p:outputLabel value="Sample Contract" />
+				<p:outputLabel value="#{lbl['lbl.ct.sample.contract']}" />
 				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
 					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/css/images/design/download.png" title="File Download" />
+						value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
 				</h:commandLink>				
 			</h:panelGrid>
 			<p:spacer height="5" />
@@ -23,32 +23,32 @@
 					<p:inputText value="#{contentsVar.title}" style="width:90%;" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}"/>
 				</p:column>
 				<p:column style="width:20%px;"
-					headerText="#{lbl['lbl.ct.ag.table.type']}">
+					headerText="#{lbl['lbl.ct.type']}">
 					<p:outputLabel style="float:left;"
 						value="#{agreementBackingBean.getParameterDesc(contentsVar.contentType.parameterType,contentsVar.contentType.parameterCode)}" />
 				</p:column>
 				<p:column style="width:20%;" styleClass="column-align-center"
-					headerText="#{lbl['lbl.ct.ag.table.action']}">
+					headerText="#{lbl['lbl.ct.action']}">
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode == ParameterConst.agreementTemplateDoc}">
 					 <p:commandLink process="@this" partialSubmit="true"
 							action="#{agreementBackingBean.downloadTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/css/images/design/download.png"
-								title="File Download" />
+								title="#{lbl['lbl.txt.file.download']}" />
 						</p:commandLink>
 						<p:spacer width="2"/>
 					   <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="document.png"
 								value="/css/images/design/document.png"
-								title="View Document" />
+								title="#{lbl['lbl.ct.view.document']}" />
 						</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}">
 							<p:graphicImage library="ep/images/design" name="download.png"
 								value="/css/images/design/download.png"
-								title="File Download" />
+								title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
 					</h:panelGroup>
 					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
@@ -70,7 +70,7 @@
 				<p:fileUpload style="display:inline;" mode="advanced"
 					fileUploadListener="#{agreementBackingBean.fileUpload}"
 					allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-					invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted" update=":form:contentTable">
+					invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:contentTable">
 				</p:fileUpload>
 			</p:dialog>
 		</h:panelGrid>
@@ -100,7 +100,7 @@
         </p:dialog>  
 	</p:panel>
 	
-	<p:panel id="agreementPnl" header="agreement" toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
+	<p:panel id="agreementPnl" header="#{lbl['lbl.ct.agreement']}" toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
 		<h:panelGroup id="uploadAgPg">
 			<h:panelGrid columns="2">
 				<h:panelGrid columns="2">
@@ -126,7 +126,7 @@
 			<p:fileUpload style="display:inline;" mode="advanced"
 				fileUploadListener="#{agreementBackingBean.uploadAgreement}"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 				update=":form:uploadAgPg">
 			</p:fileUpload>
 		</p:dialog>				

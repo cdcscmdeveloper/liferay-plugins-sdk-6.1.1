@@ -118,7 +118,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 <p:commandButton value="No" icon="ui-icon-reject" onclick="bulkUpdateDlg.hide();" type="button" />
 		   </div>
         </p:dialog>  	
-		<p:dialog id="delItemDlg" header="Delete Confirmation" resizable="false"
+		<p:dialog id="delItemDlg" header="#{lbl['lbl.ct.dialog.confirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -228,7 +228,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</p:commandButton>
 	   </p:dialog>
 	   
-	   <p:dialog id="delZoneDlg" header="Delete Confirmation" resizable="false"
+	   <p:dialog id="delZoneDlg" header="#{lbl['lbl.ct.dialog.confirm.header']}" resizable="false"
 		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
@@ -304,7 +304,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			    </tr>
 			</table>
 	      </div>
-	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg" header="Delete Confirmation" 
+	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg" header="#{lbl['lbl.ct.dialog.confirm.header']}"
 		   styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
            <h:panelGrid columns="3">
              <p:graphicImage library="ep/images/design" name="exclamation.png"
