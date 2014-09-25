@@ -229,6 +229,32 @@ public class SmApplicationUtil {
 
 	}
 
+	public static String getReviewApplicationBasePage(String applicationType) {
+		String basePage = "";
+		if (applicationType != null) {
+			switch (applicationType) {
+			case ParameterConst.NEW_SM_APPLN_FOR_MOF:
+				basePage = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+				basePage = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+				basePage = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+				basePage = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_BasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+				basePage = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_BasePage.xhtml";
+				break;
+			default:
+				break;
+			}
+		}
+		return basePage;
+	}
+
 	public static StatusResDTO setApplPmStatus(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(Long.parseLong(statusId));

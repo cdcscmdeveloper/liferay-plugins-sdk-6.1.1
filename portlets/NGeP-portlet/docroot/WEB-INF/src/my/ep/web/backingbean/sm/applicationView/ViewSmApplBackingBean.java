@@ -113,10 +113,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		 if (reloadPreviousApplication()) {
-//		 initPreviousApplication();
-//		 }
-//		 constructMessage();
+		// if (reloadPreviousApplication()) {
+		// initPreviousApplication();
+		// }
+		// constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -380,7 +380,7 @@ public class ViewSmApplBackingBean extends
 		return addr;
 	}
 
-	private void setApplication(SmApplRevisionResDTO resDTO){ 
+	private void setApplication(SmApplRevisionResDTO resDTO) {
 		initStep0BaseInfo(resDTO);
 		initStep1CompanyInfo();
 		initStep2BranchCompanyInfo();
@@ -393,8 +393,8 @@ public class ViewSmApplBackingBean extends
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
 	}
-	
-	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO){
+
+	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
 		setSupplierBusinessType(getManagedBean().getSmSupplier());
@@ -404,22 +404,23 @@ public class ViewSmApplBackingBean extends
 						getManagedBean().getSmSupplier().getBusinessType()));
 		getManagedBean().setReviewApplicationExist(true);
 	}
-	
-	private void initStep1CompanyInfo(){
-		//companyBasicInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmCompanyBasic()==null){
-			getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
+
+	private void initStep1CompanyInfo() {
+		// companyBasicInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmCompanyBasic() == null) {
+			getManagedBean().getSmAppl()
+					.setSmCompanyBasic(new SmCompanyBasic());
 		}
-		
-		//staffInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmStaffTotals()==null){
-			getManagedBean().getSmAppl().setSmStaffTotals(new ArrayList<SmStaffTotal>());
+
+		// staffInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmStaffTotals() == null) {
+			getManagedBean().getSmAppl().setSmStaffTotals(
+					new ArrayList<SmStaffTotal>());
 		}
-		
-		//officeFacilityTypeFormViewOnly
+
+		// officeFacilityTypeFormViewOnly
 		getManagedBean().setBasicCompanyFacility(new SmFacility());
-		for (SmFacility smFac : getManagedBean().getSmAppl()
-				.getSmFacilities()) {
+		for (SmFacility smFac : getManagedBean().getSmAppl().getSmFacilities()) {
 			if (smFac.getFacilityType().equalsIgnoreCase(
 					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
 					|| smFac.getFacilityType()
@@ -433,105 +434,116 @@ public class ViewSmApplBackingBean extends
 				this.getManagedBean().setBasicCompanyFacility(smFac);
 			}
 		}
-		
-		//certificateInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmSupplierCerts()==null){
-			getManagedBean().getSmAppl().setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+
+		// certificateInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmSupplierCerts() == null) {
+			getManagedBean().getSmAppl().setSmSupplierCerts(
+					new ArrayList<SmSupplierCert>());
 		}
-		
-		//professionalBodyInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmAssociationBodies()==null){
-			getManagedBean().getSmAppl().setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+
+		// professionalBodyInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmAssociationBodies() == null) {
+			getManagedBean().getSmAppl().setSmAssociationBodies(
+					new ArrayList<SmAssociationBody>());
 		}
 	}
-	
-	private void initStep2BranchCompanyInfo(){
-		//branchCompanyInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmSupplierBranches()==null){
-			getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+
+	private void initStep2BranchCompanyInfo() {
+		// branchCompanyInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
+			getManagedBean().getSmAppl().setSmSupplierBranches(
+					new ArrayList<SmSupplierBranch>());
 		}
-		
-		//associatedCompanyInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmAssociateCompanies()==null){
-			getManagedBean().getSmAppl().setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
+
+		// associatedCompanyInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmAssociateCompanies() == null) {
+			getManagedBean().getSmAppl().setSmAssociateCompanies(
+					new ArrayList<SmAssociateCompany>());
 		}
-		
-		//companyProjectsExperienceInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmCompanyExperiences()==null){
-			getManagedBean().getSmAppl().setSmCompanyExperiences(new ArrayList<SmCompanyExperience>());
+
+		// companyProjectsExperienceInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmCompanyExperiences() == null) {
+			getManagedBean().getSmAppl().setSmCompanyExperiences(
+					new ArrayList<SmCompanyExperience>());
 		}
-		
+
 	}
-	
-	private void initStep4PersonnelInfo(){
-		//personnelInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmPersonnels()==null){
-			getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
+
+	private void initStep4PersonnelInfo() {
+		// personnelInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmPersonnels() == null) {
+			getManagedBean().getSmAppl().setSmPersonnels(
+					new ArrayList<SmPersonnel>());
 		}
 		setPersonnelInfoCalculationSummary();
 	}
-	
-	private void initStep3CaptialAndEquityInfo(){
-		//captialOrEquityStatusInfoFormViewOnly
-		SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
-				getManagedBean().getSmAppl().getSmCompanyBasic(),
-				getManagedBean().getBusinessTypeVal());
-		
-		//captialOrEquityShareHolderInfoFormViewOnly
+
+	private void initStep3CaptialAndEquityInfo() {
+		// captialOrEquityStatusInfoFormViewOnly
+		SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(getManagedBean()
+				.getSmAppl().getSmCompanyBasic(), getManagedBean()
+				.getBusinessTypeVal());
+
+		// captialOrEquityShareHolderInfoFormViewOnly
 		setApplicationShareHolders(getManagedBean().getSmAppl()
 				.getSmPersonnels());
-		
-		//captialOrEquityShareHoldingCompanyInfoFormViewOnly
-		if(getManagedBean().getSmAppl().getSmEquityCompanies()==null){
-			getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
+
+		// captialOrEquityShareHoldingCompanyInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmEquityCompanies() == null) {
+			getManagedBean().getSmAppl().setSmEquityCompanies(
+					new ArrayList<SmEquityCompany>());
 		}
 	}
-	
-	private void initStep5BankInfo(){
-		if(getManagedBean().getSmAppl().getSmSupplierBanks()==null){
-			getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+
+	private void initStep5BankInfo() {
+		if (getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
+			getManagedBean().getSmAppl().setSmSupplierBanks(
+					new ArrayList<SmSupplierBank>());
 		}
 	}
-	
-	private void initStep6RegisterCategoryCode(){
-		if(getManagedBean().getSmAppl().getSmSupplierCategories()==null){
-			getManagedBean().getSmAppl().setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+
+	private void initStep6RegisterCategoryCode() {
+		if (getManagedBean().getSmAppl().getSmSupplierCategories() == null) {
+			getManagedBean().getSmAppl().setSmSupplierCategories(
+					new ArrayList<SmSupplierCategory>());
 		}
 		setCategoryTypeConfirm();
 	}
-	
-	private void initStep6_1ViewFactoryInfo(){
-		//factoryOrWorkshopInfoFormViewOnly/dockyardInfoFormViewOnly/workshopInfoFormViewOnly/storeInfoFormViewOnly
+
+	private void initStep6_1ViewFactoryInfo() {
+		// factoryOrWorkshopInfoFormViewOnly/dockyardInfoFormViewOnly/workshopInfoFormViewOnly/storeInfoFormViewOnly
 		setApplicationFacilities();
 	}
-	
-	private void initStep6_2EquipmentInfo(){
-		//machineryInfoFormViewOnly
+
+	private void initStep6_2EquipmentInfo() {
+		// machineryInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
 			getManagedBean().getSmAppl().setSmMachineDtls(
 					new ArrayList<SmMachineDtl>());
 		}
-		//manufacturingOrAssmblyInfoFormViewOnly
+		// manufacturingOrAssmblyInfoFormViewOnly
 		if (getManagedBean().getSmAppl().getSmManufacturingDtls() == null) {
 			getManagedBean().getSmAppl().setSmManufacturingDtls(
 					new ArrayList<SmManufacturingDtl>());
 		}
 	}
-	
-	private void initStep7SupportingDocumentsInfo(){
-		//offlineSupportingDocsFormViewOnly/onlineSupportingDocsFormViewOnly
-		if(getManagedBean().getSmAppl().getSmApplSupportDocs()==null){
-			getManagedBean().getSmAppl().setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
+
+	private void initStep7SupportingDocumentsInfo() {
+		// offlineSupportingDocsFormViewOnly/onlineSupportingDocsFormViewOnly
+		if (getManagedBean().getSmAppl().getSmApplSupportDocs() == null) {
+			getManagedBean().getSmAppl().setSmApplSupportDocs(
+					new ArrayList<SmApplSupportDoc>());
 		}
 	}
-	
-	private void initStep8_9PoApproverDefaultDecision(){
-		//poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
+
+	private void initStep8_9PoApproverDefaultDecision() {
+		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
 		setDefaultApproverReviewSection();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
-		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()==null?"":
-			getManagedBean().getSmAppl().getPmStatus().getStatusId().toString());
+		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus() == null ? ""
+				: getManagedBean().getSmAppl().getPmStatus().getStatusId()
+						.toString());
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
@@ -674,15 +686,6 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
 		getManagedBean().setSelectedCompanyExperience(consultantBean);
-		if (consultantBean.getSmCompanyExperienceCats() != null
-				&& !consultantBean.getSmCompanyExperienceCats().isEmpty()) {
-			populateChildCategoryByParent(consultantBean
-					.getSmCompanyExperienceCats().get(0).getPmCategoryL1()
-					.getCategoryL1Id(), new PmCategoryL2(), new PmCategoryL3());
-			populateSubChildCategoryByChild(consultantBean
-					.getSmCompanyExperienceCats().get(0).getPmCategoryL2()
-					.getCategoryL2Id(), new PmCategoryL3());
-		}
 	}
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
@@ -705,37 +708,6 @@ public class ViewSmApplBackingBean extends
 		}
 
 		return sec;
-	}
-
-	public void populateChildCategoryByParent(long parentId,
-			PmCategoryL2 catL2, PmCategoryL3 catL3) {
-		try {
-			List<PmCategoryL2> categoryL2s = this
-					.retrieveChildCategoryList(parentId);
-
-			this.getManagedBean().setSupplierChildCatList(categoryL2s);
-			this.getManagedBean().setSupplierSubChildCatList(
-					new ArrayList<PmCategoryL3>());
-
-			resetChildCategory(catL2);
-			resetSubChildCategory(catL3);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void populateSubChildCategoryByChild(long childId, PmCategoryL3 catL3) {
-		try {
-			List<PmCategoryL3> categoryL3s = this
-					.retrieveSubChildCategoryList(childId);
-
-			this.getManagedBean().setSupplierSubChildCatList(categoryL3s);
-
-			resetSubChildCategory(catL3);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	private PmParameter retrievePmParameterById(Long paramId) {
@@ -1004,7 +976,7 @@ public class ViewSmApplBackingBean extends
 					getManagedBean().setPoSecReview(rev);
 				}
 			}
-		}else{
+		} else {
 			getManagedBean().setApprvrSecReview(new SmApplSectionReview());
 		}
 	}
