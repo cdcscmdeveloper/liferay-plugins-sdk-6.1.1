@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-	 <p:panel>
 	  <div class="ppRightBtn">
 	   <c:if test="#{empty requestNoteBackingBean.managedBean.taskId}">
 	           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" style="float:left;" 
@@ -83,5 +82,4 @@
 	 </table>
 	</c:if>
 	</div>
-	</p:panel>
 </ui:composition>
