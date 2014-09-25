@@ -97,9 +97,26 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.website']} :" /></td>
-					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" />
-					</td>
+					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
 				</tr>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+
+					<tr>
+						<td style="float:left;"><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td colspan="3"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" /></td>
+					</tr>
+
+				</p:outputPanel>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+
+					<tr>
+						<td style="float:left;"><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" /></td>
+						<td style="float:left;"><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
+						<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.basicRemark}" /></td>
+					</tr>
+
+				</p:outputPanel>
 			</table>
 		</p:panel>
 
