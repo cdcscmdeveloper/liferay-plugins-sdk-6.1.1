@@ -164,6 +164,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				resDTO = fulfilmentOrderSO.stopFulfilment(reqDTO);
 			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				reqDTO.setFulfilmentOrder(flOrder);
+				if(flOrder.getFlFulfilmentRequest().getCtContract() != null){
+					reqDTO.setContractRequest(true);
+				}
 				resDTO = fulfilmentOrderSO.cancelFulfillmentOrder(reqDTO);
 			}else if(action.equalsIgnoreCase(FulfilmentConst.REMOVE_FACTORING) 
 					|| getManagedBean().getProcessName() != null 
