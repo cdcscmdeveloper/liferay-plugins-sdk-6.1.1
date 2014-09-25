@@ -110,10 +110,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		// if (reloadPreviousApplication()) {
-		// initPreviousApplication();
-		// }
-		// constructMessage();
+//		 if (reloadPreviousApplication()) {
+//		 initPreviousApplication();
+//		 }
+//		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -237,7 +237,7 @@ public class ViewSmApplBackingBean extends
 	}
 
 	public void viewApplication() {
-		retrievePmCertBodyList();
+		getManagedBean().setCertBodyLs(SmApplicationUtil.retrievePmCertBodyList());
 	}
 
 	public void viewSignatories(SmSupplierBank signAcctBean) {
@@ -352,13 +352,6 @@ public class ViewSmApplBackingBean extends
 		getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
 	}
 
-	private void retrievePmCertBodyList() {
-		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICertBodySO.class);
-		CertBodyResDTO resDTO = reqSO.retrieveCertifiedBodyList();
-		this.getManagedBean().setCertBodyLs(resDTO.getCertBodyList());
-	}
-
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
 		PmCountry cntry = new PmCountry();
@@ -386,6 +379,7 @@ public class ViewSmApplBackingBean extends
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
+		getManagedBean().setCertBodyLs(SmApplicationUtil.retrievePmCertBodyList());
 		setSmCompanyBasicCalculation();
 		setApplicationShareHolders(getManagedBean().getSmAppl()
 				.getSmPersonnels());
@@ -394,7 +388,6 @@ public class ViewSmApplBackingBean extends
 		setEquipments();
 		setPersonnelInfoCalculationSummary();
 		setDefaultApproverReviewSection();
-		retrievePmCertBodyList();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
 		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
