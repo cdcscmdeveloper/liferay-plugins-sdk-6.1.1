@@ -303,6 +303,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtCancelCircular> getCancelledCircularList() {
+		if(cancelledCircularList == null)
+			cancelledCircularList = new ArrayList<CtCancelCircular>();
 		return cancelledCircularList;
 	}
 

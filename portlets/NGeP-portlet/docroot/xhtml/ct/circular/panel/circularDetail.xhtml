@@ -81,8 +81,8 @@
 	
 	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
 		<p:panel id="circular">
-			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" rowIndexVar="index"
-				value="#{panelBackingBean.managedBean.cancelledCircularList}" 
+			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" 
+			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:3%" />

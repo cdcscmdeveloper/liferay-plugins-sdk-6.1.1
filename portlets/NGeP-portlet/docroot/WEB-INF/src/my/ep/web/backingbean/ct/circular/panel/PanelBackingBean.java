@@ -894,12 +894,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void addCancelCircularListener() {
 		log.info("PanelBackingBean.addCancelCircularListener()");
 		try {
-			if(getManagedBean().getCancelledCircularList()==null) {
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("circularVer.ctCircular.circularType", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						ContractConst.CIRCULAR_DOC_TYPE_PANEL));
+						SearchOperator.OPERATOR_EQUALS.value(), ContractConst.CIRCULAR_DOC_TYPE_PANEL));
 				reqDTO.setCancelCircularSearchBean(searchBean);
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
@@ -907,7 +905,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(resDTO.isSuccessful()) {
 					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
 				}
-			}
 			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1350,6 +1347,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void updateZoneGeneralLocation() {
+		
+		if(getManagedBean().getZoneName() == null || getManagedBean().getZoneName() == ""){
+			throw new EpException(MessageConst.WARN_753000);
+		}
 		
 		List<CtPanelZoneDtl> allNodes = new ArrayList<CtPanelZoneDtl>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
