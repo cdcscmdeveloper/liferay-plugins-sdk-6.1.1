@@ -6,15 +6,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="signingWitness" header="#{lbl['lbl.ct.ag.suppsingdtls']}" toggleable="true" toggleSpeed="500">
+    <p:panel id="signingWitness" header="#{lbl['lbl.ct.panel.supplier.signing.dtls']}" toggleable="true" toggleSpeed="500">
       <h:panelGrid style="width:100%">  
-        <p:outputLabel value="#{lbl['lbl.ct.ag.signer']}" style="float:left;"/>
+        <p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
          <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
             value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
            selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
             <ac:paginator for="agSupplierSigner"/>
 			   <p:column selectionMode="multiple" style="width:2%"/> 
-                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.company']}">
+                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}">
                      <p:outputLabel value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" style="float:left;"/>
                 </p:column> 
                 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.contract.signer']}">
@@ -23,10 +23,10 @@
                      <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar,signSupplierVar.officerName)}"/> 
                    </p:selectOneMenu>
                 </p:column>  
-                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.icno']}"> 
+                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
                    <p:outputLabel id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
                 </p:column> 	
-                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.position']}" >
+                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.designation']}" >
                    <p:outputLabel id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
                 </p:column>  	
              </p:dataTable>
@@ -36,7 +36,7 @@
 		       icon="ui-icon-add" update=":form:agSupplierSigner"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSupplierDel.show()"/>
         </div>
-         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" header="Delete Confirmation" styleClass="screen-title"  
+         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -52,18 +52,18 @@
 		   </div>
         </p:dialog>  
         <h:panelGrid style="width:100%">
-          <p:outputLabel value="Witness" style="float:left;"/>
+          <p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
           <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
             selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
             <ac:paginator for="witnessSign"/>
             <p:column selectionMode="multiple" style="width:2%"/> 
-            <p:column style="width:50%;" headerText="#{lbl['lbl.ct.ag.witnessname']}">
+            <p:column style="width:50%;" headerText="#{lbl['lbl.ct.name']}">
                <p:inputText value="#{supplierWitnessVar.officerName}" style="width:95%;" maxlength="20"/>
             </p:column>
-            <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ag.icno']}"> 
+            <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
                <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="20"/>
             </p:column> 	       
-            <p:column style="width:20%;" headerText="#{lbl['lbl.ct.ag.position']}" >
+            <p:column style="width:20%;" headerText="#{lbl['lbl.ct.designation']}" >
                <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255"/>
             </p:column>  
         </p:dataTable>
@@ -73,7 +73,7 @@
 		       icon="ui-icon-add" update=":form:supplierWitnesTable"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()"/>
         </div>
-         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" header="Delete Confirmation" styleClass="screen-title"  
+         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -89,13 +89,13 @@
 		   </div>
         </p:dialog>  
        </p:panel>
-       <p:panel header="Remarks" toggleable="true">
+       <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{agreementBackingBean.managedBean.ctAgreement.signAgreementRemark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -107,7 +107,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

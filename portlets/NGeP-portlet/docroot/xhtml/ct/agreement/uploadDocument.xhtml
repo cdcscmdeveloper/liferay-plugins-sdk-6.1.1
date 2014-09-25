@@ -5,7 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="uploadDocument" header="SIGNED DETAILS" toggleable="true" toggleSpeed="500">
+	<p:panel id="uploadDocument" header="#{lbl['lbl.ct.menu.signed.dtls']}" toggleable="true" toggleSpeed="500">
 		<p:spacer width="15" />
 		<h:panelGrid style="width:100%" columns="2"	columnClasses="columnWidth15">
 			<h:panelGrid columns="2">
@@ -20,7 +20,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.signedpg']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.signed.page']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upAgrSignedPagePg">
@@ -38,7 +38,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.stampedpg']}" />
+				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upStampedPagePg">
@@ -62,7 +62,7 @@
 		<p:fileUpload style="display:inline;" mode="advanced" 
 			fileUploadListener="#{agreementBackingBean.uploadSignedPage}" 
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="upAgrSignedPagePg">
 		</p:fileUpload> 
 	 </p:dialog>
@@ -72,7 +72,7 @@
 		<p:fileUpload style="display:inline;" mode="advanced" 
 			fileUploadListener="#{agreementBackingBean.uploadStampedPage}" 
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="upStampedPagePg">
 		</p:fileUpload> 
 	 </p:dialog>

@@ -13,7 +13,7 @@
 		   <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
@@ -40,7 +40,7 @@
 								value="#{supplierBackingBean.managedBean.ctContract.contractNo}" />
 					</td>
 					<td>
-							<p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" />
+							<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
 					</td>
 					<td>
 							<p:inputText size="30" disabled="true" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"/>
@@ -61,9 +61,9 @@
 	    <table style="width: 100%">
             <tr>
                 <td style="width:15%;">  
-                <h:outputLabel for="contractId" value="Contract No." /></td>
+                <h:outputLabel for="contractId" value="#{lbl['lbl.ct.contract.no']}" /></td>
 			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" style="width:180px;" disabled="false">
-				     <f:selectItem itemLabel="-Select One-" itemValue="" />
+				     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				      <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
 				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
 			         </p:selectOneMenu></td>
@@ -114,11 +114,11 @@
                                    disabled="true" size="10"/>
                              </h:panelGrid> 
                        </td>
-                       <td style="width:10%;">  <p:outputLabel  value="Contact Person"/>  </td>
+                       <td style="width:10%;">  <p:outputLabel  value="#{lbl['lbl.ct.contact.person']}"/>  </td>
                        <td>  <p:inputText   disabled="true"   style="width:170px;" /></td>
                 </tr> 
                 <tr>       
-                     <td>  <p:outputLabel value="Supplier Name" />  </td>
+                     <td>  <p:outputLabel value="#{lbl['lbl.ct.business.name']}" />  </td>
                      <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierCompanyName}"
                                disabled="true" style="width:218px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.tel']}" />  </td>       
