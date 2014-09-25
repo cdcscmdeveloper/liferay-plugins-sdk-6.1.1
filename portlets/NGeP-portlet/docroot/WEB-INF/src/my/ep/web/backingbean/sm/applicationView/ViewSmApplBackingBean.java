@@ -389,11 +389,6 @@ public class ViewSmApplBackingBean extends
 					|| smFac.getFacilityType()
 							.equalsIgnoreCase(
 									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
-					getManagedBean().setBasicOffFacStates(
-							retrievePmStateList(smFac.getSmAddress()
-									.getPmCountry().getCountryId()));
-				}
 				this.getManagedBean().setBasicCompanyFacility(smFac);
 			}
 		}
@@ -674,50 +669,6 @@ public class ViewSmApplBackingBean extends
 		return sec;
 	}
 
-	private List<PmState> retrievePmStateList(long countryId) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(countryId);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		return resDTO.getStateList();
-	}
-
-	private List<PmCategoryL2> retrieveChildCategoryList(long categoryL1Id) {
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL1Id(categoryL1Id);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
-
-		return resDTO.getCategoryL2List();
-	}
-
-	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
-		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICategoryCodeSO.class);
-		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setCategoryL2Id(categoryL2Id);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
-
-		return resDTO.getCategoryL3List();
-	}
-
-	private void resetChildCategory(PmCategoryL2 catL2) {
-		catL2.setCategoryL2Id(null);
-
-	}
-
-	private void resetSubChildCategory(PmCategoryL3 catL3) {
-		catL3.setCategoryL3Id(null);
-
-	}
-
 	public void onTabChange(TabChangeEvent event) {
 		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab"
 				+ event.getTab().getId());
@@ -887,18 +838,6 @@ public class ViewSmApplBackingBean extends
 						.getSmFacilities())) {
 			for (SmFacility smFac : getManagedBean().getSmAppl()
 					.getSmFacilities()) {
-				if (smFac.getFacilityType().equalsIgnoreCase(
-						SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
-						|| smFac.getFacilityType()
-								.equalsIgnoreCase(
-										SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
-					if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
-						getManagedBean().setBasicOffFacStates(
-								retrievePmStateList(smFac.getSmAddress()
-										.getPmCountry().getCountryId()));
-					}
-					this.getManagedBean().setBasicCompanyFacility(smFac);
-				}
 				if (smFac.getFacilityType().equalsIgnoreCase(
 						SupplierManagementConst.SM_FACILITY_TYPE_FACTORY)) {
 					getManagedBean().getApplFactoryFacilities().add(smFac);
@@ -1177,11 +1116,6 @@ public class ViewSmApplBackingBean extends
 					.setBusinessTypeVal(
 							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT);
 		}
-	}
-
-	public void retrieveBusinessTypeList() {
-		SelectItem[] selectItems = getDropdownCodeValues(SupplierManagementConst.SUPPLIER_BUSINESS_TYPE);
-		this.getManagedBean().setBusinessTypeLs(selectItems);
 	}
 
 	private void constructMessage() {
