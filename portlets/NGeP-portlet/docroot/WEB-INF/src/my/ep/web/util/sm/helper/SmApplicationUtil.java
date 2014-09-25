@@ -782,6 +782,31 @@ public class SmApplicationUtil {
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722508);
 		}
+		if (managedBean.getBusinessTypeVal() != null
+				&& !managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
+				&& managedBean.getSmapplShareHolders() != null) {
+			StringBuffer sb = new StringBuffer();
+			boolean validShrHldrsCap = true;
+			int i = 0;
+			for (SmPersonnel per : managedBean.getSmapplShareHolders()) {
+				if (per.getShareAmt() == null
+						|| per.getShareAmt().compareTo(new BigDecimal(0)) == 0) {
+					sb.append("<br/>");
+					sb.append(++i + ".)");
+					sb.append(per.getName());
+					validShrHldrsCap = false;
+				}
+			}
+			if (!validShrHldrsCap) {
+				validCount = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722552,
+						new String[] { sb.toString() });
+			}
+		}
 		return validCount;
 	}
 
