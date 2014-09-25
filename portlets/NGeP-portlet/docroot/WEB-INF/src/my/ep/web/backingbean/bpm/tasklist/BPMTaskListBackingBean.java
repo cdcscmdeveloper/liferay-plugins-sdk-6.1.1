@@ -290,6 +290,41 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_OC_EVALUATION,
 				"proposal-evaluation");
+		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.UPDATE_OC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.ENDORSE_OC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.SIGNOFF_OC_EVALUATION,
+				"proposal-evaluation");
+
+		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.FINALISE_TEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.UPDATE_TEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.ENDORSE_TEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.SIGNOFF_TEC_EVALUATION,
+				"proposal-evaluation");
+
+		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.FINALISE_FEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.UPDATE_FEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.ENDORSE_FEC_EVALUATION,
+				"proposal-evaluation");
+		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
+				+ SCProcessNameConst.SIGNOFF_FEC_EVALUATION,
+				"proposal-evaluation");
 
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FC_MEETING,
