@@ -969,7 +969,6 @@ public class ViewSmApplBackingBean extends
 		assignSelShareHolderAddress(shareHolderBean);
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 		managePersonnelRoles();
-		manageEquityLimit(shareHolderBean);
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
 			getManagedBean().getSelectedShareHolder()
 					.setIdentificationType(
@@ -1110,32 +1109,6 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
 		getManagedBean().setSelectedStaffAcademic(aca);
-	}
-
-	private void manageEquityLimit(SmPersonnel personnel) {
-		if (personnel.isEquityOwner()
-				&& !getManagedBean()
-						.getBusinessTypeVal()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
-			getManagedBean().setValidEquityLimit(true);
-		} else if (getManagedBean().getBusinessTypeVal().equalsIgnoreCase(
-				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)
-				|| (getManagedBean()
-						.getBusinessTypeVal()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT) && getManagedBean()
-						.getSmapplShareHolders().size() >= 1)
-				|| (getManagedBean()
-						.getBusinessTypeVal()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT) && getManagedBean()
-						.getSmapplShareHolders().size() >= 20)) {
-			getManagedBean().setValidEquityLimit(false);
-
-		} else {
-			getManagedBean().setValidEquityLimit(true);
-		}
 	}
 
 	private void setApplicationShareHolders(List<SmPersonnel> perList) {
