@@ -254,7 +254,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			stateReqDTO.setStateId(locationId);
 			IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
-			StateResDTO resDTO = stateSO.retriveStateByID(stateReqDTO);
+			StateResDTO resDTO = stateSO.retriveStateDetailsByID(stateReqDTO);
 			PmState state = resDTO.getPmState();
 			this.getManagedBean().setState(state);
 
@@ -267,7 +267,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDivisionSO.class);
 			DivisionResDTO resDTO = divisionSO
-					.retrieveDivisionById(divisionReqDTO);
+					.retrieveDivisionDtlById(divisionReqDTO);
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
 		}
 		if (locationType
@@ -278,7 +278,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDistrictSO.class);
 			DistrictResDTO resDTO = districtSO
-					.retriveDistrictByID(districtReqDTO);
+					.retriveDistrictDtlByID(districtReqDTO);
 			this.getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 		}
@@ -287,7 +287,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			cityReqDTO.setCityId(locationId);
 			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
-			CityResDTO resDTO = citySO.retriveCityById(cityReqDTO);
+			CityResDTO resDTO = citySO.retriveCityByDtlId(cityReqDTO);
 			this.getManagedBean().setCity(resDTO.getPmCity());
 
 		}
