@@ -1000,6 +1000,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			reqDTO.setDocId(supplierItem.getDocId());
+			reqDTO.setOutcome("Active");
 	
 			CatalogueResDTO resDTO = null;
 			resDTO = catalogueSO.viewSupplierItem(reqDTO);
