@@ -21,11 +21,13 @@ import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
+import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -54,6 +56,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
+import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
@@ -1135,6 +1139,17 @@ public class SmApplicationUtil {
 		}
 		return staffList;
 	}
+	
+	public static SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
+		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
+		reqDTO.setDocId(docId);
+		reqDTO.setDocType(docType);
+		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISmRemarksSO.class);
+		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
+		return resDTO;
+	}
 
 	public static boolean validL3CategoryCode(Long catL3Id, Long supplierId) {
 		System.out
@@ -1789,7 +1804,7 @@ public class SmApplicationUtil {
 
 	public static PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IParameterSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(paramId);
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
