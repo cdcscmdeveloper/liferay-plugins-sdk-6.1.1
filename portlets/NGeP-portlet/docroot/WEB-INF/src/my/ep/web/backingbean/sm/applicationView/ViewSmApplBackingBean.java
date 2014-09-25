@@ -25,6 +25,7 @@ import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
@@ -110,10 +111,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		 if (reloadPreviousApplication()) {
-//		 initPreviousApplication();
-//		 }
-//		 constructMessage();
+		 if (reloadPreviousApplication()) {
+		 initPreviousApplication();
+		 }
+		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -121,7 +122,7 @@ public class ViewSmApplBackingBean extends
 
 		try {
 			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISmApplRevisionSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 			reqDTO.setDeSerFileName(SER_FILE_DIR
@@ -161,7 +162,7 @@ public class ViewSmApplBackingBean extends
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setSupplierId(supplier.getSupplierId());
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+				.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		SupplierSearchResDTO smResDTO = supplierSearchSO
 				.retriveLatestApplBySupplierId(supplierSearchReqDTO);
 
@@ -183,7 +184,7 @@ public class ViewSmApplBackingBean extends
 
 		try {
 			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISmApplRevisionSO.class);
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 
@@ -302,7 +303,7 @@ public class ViewSmApplBackingBean extends
 		reqDTO.setDocId(docId);
 		reqDTO.setDocType(docType);
 		ISmRemarksSO reqSO = (ISmRemarksSO) BusinessDelegate.getInstance()
-				.getServiceObject("sm", ISmRemarksSO.class);
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmRemarksSO.class);
 		SmRemaksResDTO resDTO = reqSO.retrieveSmRemarksByDocument(reqDTO);
 		return resDTO;
 	}
@@ -422,7 +423,7 @@ public class ViewSmApplBackingBean extends
 		reqDTO.setStatusId(Long.parseLong(statusId));
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
 		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		StatusResDTO resDTO = reqSO.retrieveStatusDescById(reqDTO);
 		if (resDTO != null && resDTO.getPmStatusDesc() != null) {
 			getManagedBean().setCurrentStatus(
@@ -601,7 +602,7 @@ public class ViewSmApplBackingBean extends
 
 	private PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IParameterSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(paramId);
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);
@@ -613,14 +614,14 @@ public class ViewSmApplBackingBean extends
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(countryId);
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
 		return resDTO.getStateList();
 	}
 
 	private List<PmCategoryL2> retrieveChildCategoryList(long categoryL1Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL1Id(categoryL1Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL2ListByL1Id(reqDTO);
@@ -630,7 +631,7 @@ public class ViewSmApplBackingBean extends
 
 	private List<PmCategoryL3> retrieveSubChildCategoryList(long categoryL2Id) {
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
-				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
+				.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 		reqDTO.setCategoryL2Id(categoryL2Id);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
