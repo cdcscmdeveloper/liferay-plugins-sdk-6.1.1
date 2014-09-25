@@ -114,6 +114,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
+    private CmSupplierItem cmSupplierItem;
+    private String recentPriceDuration;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -851,4 +853,17 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setZoneDtlMap(Map<String, TplSpecZoneDtl> zoneDtlMap) {
 		this.zoneDtlMap = zoneDtlMap;
 	}
+	public CmSupplierItem getCmSupplierItem() {
+		return cmSupplierItem;
+	}
+	public void setCmSupplierItem(CmSupplierItem cmSupplierItem) {
+		this.cmSupplierItem = cmSupplierItem;
+	}
+	public String getRecentPriceDuration() {
+		return recentPriceDuration;
+	}
+	public void setRecentPriceDuration(String recentPriceDuration) {
+		this.recentPriceDuration = recentPriceDuration;
+	}
+	
 }
