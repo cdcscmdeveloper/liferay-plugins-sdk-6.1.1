@@ -295,7 +295,7 @@
 							value="#{profilePersonalizationBackingBean.getDistrictList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"/>
-						<p:ajax event="change" listener="#{profilePersonalizationBackingBean.updateAddress(2)}" update="somCityC"/>     
+						<p:ajax event="change" listener="#{profilePersonalizationBackingBean.updateAddress(2)}" update="pUserContact"/>     
 				   </p:selectOneMenu>
 				   <p:message id="somDistrictCMsg" for="somDistrictC" display="icon" />
 			    </td>	
