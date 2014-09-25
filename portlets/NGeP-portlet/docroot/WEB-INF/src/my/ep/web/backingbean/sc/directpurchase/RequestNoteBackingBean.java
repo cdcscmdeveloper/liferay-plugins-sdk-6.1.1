@@ -2120,12 +2120,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
 							if(requestSupplierItem.getSupplierItemPrices() == null){
 								RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
-								if(requestNoteResTO.getSupplierItem() != null ){
-									ScRequestSupplierItem scRequestSupplierItem = requestNoteResTO.getSupplierItem();
-									List<ScSupplierItemPrice>	supplierItemPrices  = scRequestSupplierItem.getSupplierItemPrices();
-									if(supplierItemPrices != null && supplierItemPrices.size()>0){
-										requestSupplierItem.setSupplierItemPrices(supplierItemPrices);
-									}
+								if(requestNoteResTO.getSupplierItemPrices() != null && requestNoteResTO.getSupplierItemPrices().size()>0){
+									requestSupplierItem.setSupplierItemPrices(requestNoteResTO.getSupplierItemPrices());
 								}
 							}
 						}
@@ -2604,6 +2600,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
         };
         Collections.sort(marketSummaryList, comparator);
     }
+
+	public void showRecentPrice(CmSupplierItem cmSupplierItem) {
+		debugLogger("showRecentPrice");
+		getManagedBean().setCmSupplierItem(cmSupplierItem);
+		getManagedBean().setRecentPriceDuration(ParameterConst.RECENT_PRICE_DURATION);
+	}
+	
+	
+	public void viewRecentPrice(){
+		debugLogger("viewRecentPrice");
+		if(getManagedBean().getCmSupplierItem() != null){
+           // TODO REPO IMPL
+		}
+
+	}
 
 	/**
 	 * @return the flag
