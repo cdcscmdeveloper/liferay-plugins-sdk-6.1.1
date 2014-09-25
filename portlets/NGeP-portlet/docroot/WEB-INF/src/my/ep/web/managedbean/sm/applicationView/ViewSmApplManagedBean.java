@@ -86,7 +86,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private SmPersonnelAddress shareHolderOffAddr;
 	private SmAddress defaultAddr;
 	private String businessTypeVal;
-	private boolean validEquityLimit;
 	private List<SmPersonnel> smapplShareHolders;
 
 	// temp added for testing
@@ -472,14 +471,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setBusinessTypeVal(String businessTypeVal) {
 		this.businessTypeVal = businessTypeVal;
-	}
-
-	public boolean isValidEquityLimit() {
-		return validEquityLimit;
-	}
-
-	public void setValidEquityLimit(boolean validEquityLimit) {
-		this.validEquityLimit = validEquityLimit;
 	}
 
 	public List<SmPersonnel> getSmapplShareHolders() {
