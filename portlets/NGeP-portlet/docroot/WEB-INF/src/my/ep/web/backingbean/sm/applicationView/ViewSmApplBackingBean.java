@@ -16,7 +16,6 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -29,7 +28,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
-import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -53,9 +51,11 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -67,9 +67,11 @@ import my.ep.persistence.entity.sm.SmRelatedCompany;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffExperience;
+import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -111,10 +113,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		// if (reloadPreviousApplication()) {
-		// initPreviousApplication();
-		// }
-		// constructMessage();
+//		 if (reloadPreviousApplication()) {
+//		 initPreviousApplication();
+//		 }
+//		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -378,7 +380,21 @@ public class ViewSmApplBackingBean extends
 		return addr;
 	}
 
-	private void setApplication(SmApplRevisionResDTO resDTO) {
+	private void setApplication(SmApplRevisionResDTO resDTO){ 
+		initStep0BaseInfo(resDTO);
+		initStep1CompanyInfo();
+		initStep2BranchCompanyInfo();
+		initStep3CaptialAndEquityInfo();
+		initStep4PersonnelInfo();
+		initStep5BankInfo();
+		initStep6RegisterCategoryCode();
+		initStep6_1ViewFactoryInfo();
+		initStep6_2EquipmentInfo();
+		initStep7SupportingDocumentsInfo();
+		initStep8_9PoApproverDefaultDecision();
+	}
+	
+	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO){
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
 		setSupplierBusinessType(getManagedBean().getSmSupplier());
@@ -386,21 +402,136 @@ public class ViewSmApplBackingBean extends
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
-		getManagedBean().setCertBodyLs(
-				SmApplicationUtil.retrievePmCertBodyList());
-		setSmCompanyBasicCalculation();
+		getManagedBean().setReviewApplicationExist(true);
+	}
+	
+	private void initStep1CompanyInfo(){
+		//companyBasicInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmCompanyBasic()==null){
+			getManagedBean().getSmAppl().setSmCompanyBasic(new SmCompanyBasic());
+		}
+		
+		//staffInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmStaffTotals()==null){
+			getManagedBean().getSmAppl().setSmStaffTotals(new ArrayList<SmStaffTotal>());
+		}
+		
+		//officeFacilityTypeFormViewOnly
+		getManagedBean().setBasicCompanyFacility(new SmFacility());
+		for (SmFacility smFac : getManagedBean().getSmAppl()
+				.getSmFacilities()) {
+			if (smFac.getFacilityType().equalsIgnoreCase(
+					SupplierManagementConst.SM_FACILITY_TYPE_HOMEOFFICE)
+					|| smFac.getFacilityType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.SM_FACILITY_TYPE_BUSSINESSOFFICE)) {
+				if (!smFac.getOwnershipType().equalsIgnoreCase("O")) {
+					getManagedBean().setBasicOffFacStates(
+							retrievePmStateList(smFac.getSmAddress()
+									.getPmCountry().getCountryId()));
+				}
+				this.getManagedBean().setBasicCompanyFacility(smFac);
+			}
+		}
+		
+		//certificateInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmSupplierCerts()==null){
+			getManagedBean().getSmAppl().setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+		}
+		
+		//professionalBodyInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmAssociationBodies()==null){
+			getManagedBean().getSmAppl().setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+		}
+	}
+	
+	private void initStep2BranchCompanyInfo(){
+		//branchCompanyInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmSupplierBranches()==null){
+			getManagedBean().getSmAppl().setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+		}
+		
+		//associatedCompanyInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmAssociateCompanies()==null){
+			getManagedBean().getSmAppl().setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
+		}
+		
+		//companyProjectsExperienceInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmCompanyExperiences()==null){
+			getManagedBean().getSmAppl().setSmCompanyExperiences(new ArrayList<SmCompanyExperience>());
+		}
+		
+	}
+	
+	private void initStep4PersonnelInfo(){
+		//personnelInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmPersonnels()==null){
+			getManagedBean().getSmAppl().setSmPersonnels(new ArrayList<SmPersonnel>());
+		}
+		setPersonnelInfoCalculationSummary();
+	}
+	
+	private void initStep3CaptialAndEquityInfo(){
+		//captialOrEquityStatusInfoFormViewOnly
+		SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(
+				getManagedBean().getSmAppl().getSmCompanyBasic(),
+				getManagedBean().getBusinessTypeVal());
+		
+		//captialOrEquityShareHolderInfoFormViewOnly
 		setApplicationShareHolders(getManagedBean().getSmAppl()
 				.getSmPersonnels());
+		
+		//captialOrEquityShareHoldingCompanyInfoFormViewOnly
+		if(getManagedBean().getSmAppl().getSmEquityCompanies()==null){
+			getManagedBean().getSmAppl().setSmEquityCompanies(new ArrayList<SmEquityCompany>());
+		}
+	}
+	
+	private void initStep5BankInfo(){
+		if(getManagedBean().getSmAppl().getSmSupplierBanks()==null){
+			getManagedBean().getSmAppl().setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		}
+	}
+	
+	private void initStep6RegisterCategoryCode(){
+		if(getManagedBean().getSmAppl().getSmSupplierCategories()==null){
+			getManagedBean().getSmAppl().setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+		}
 		setCategoryTypeConfirm();
+	}
+	
+	private void initStep6_1ViewFactoryInfo(){
+		//factoryOrWorkshopInfoFormViewOnly/dockyardInfoFormViewOnly/workshopInfoFormViewOnly/storeInfoFormViewOnly
 		setApplicationFacilities();
-		setEquipments();
-		setPersonnelInfoCalculationSummary();
+	}
+	
+	private void initStep6_2EquipmentInfo(){
+		//machineryInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
+			getManagedBean().getSmAppl().setSmMachineDtls(
+					new ArrayList<SmMachineDtl>());
+		}
+		//manufacturingOrAssmblyInfoFormViewOnly
+		if (getManagedBean().getSmAppl().getSmManufacturingDtls() == null) {
+			getManagedBean().getSmAppl().setSmManufacturingDtls(
+					new ArrayList<SmManufacturingDtl>());
+		}
+	}
+	
+	private void initStep7SupportingDocumentsInfo(){
+		//offlineSupportingDocsFormViewOnly/onlineSupportingDocsFormViewOnly
+		if(getManagedBean().getSmAppl().getSmApplSupportDocs()==null){
+			getManagedBean().getSmAppl().setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
+		}
+	}
+	
+	private void initStep8_9PoApproverDefaultDecision(){
+		//poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
 		setDefaultApproverReviewSection();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
-		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
-				.getStatusId().toString());
-		getManagedBean().setReviewApplicationExist(true);
+		setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()==null?"":
+			getManagedBean().getSmAppl().getPmStatus().getStatusId().toString());
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
@@ -412,9 +543,8 @@ public class ViewSmApplBackingBean extends
 			for (SmRemark rem : resDTO.getRemarksList()) {
 				sb.append(rem.getRemark()).append("\n");
 			}
+			getManagedBean().setSupplierRemarks(sb.toString());
 		}
-		getManagedBean().setSupplierRemarks(sb.toString());
-
 	}
 
 	private void setPersonnelInfoCalculationSummary() {
@@ -741,280 +871,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	private void setSmCompanyBasicCalculation() {
-		try {
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getBumiEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setBumiEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getBumiEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setBumiEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getNonBumiEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setNonBumiEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getNonBumiEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setNonBumiEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getGovtEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getGovtUnitrustEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtUnitrustEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getGovtUnitrustEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setGovtUnitrustEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getForeignCompanyEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setForeignCompanyEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getForeignCompanyEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setForeignCompanyEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getForeignerEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setForeignerEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getForeignerEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setForeignerEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getLocalCompanyEquity() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setLocalCompanyEquity(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getLocalCompanyEquity()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setLocalCompanyEquity(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getAuthorizedCapital() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setAuthorizedCapital(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic()
-										.getAuthorizedCapital()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setAuthorizedCapital(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getTotalShare() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setTotalShare(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getTotalShare()
-										.setScale(2, RoundingMode.HALF_UP));
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setTotalShare(new BigDecimal(0));
-			}
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getTotalMember() != null) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setTotalMember(
-								getManagedBean().getSmAppl()
-										.getSmCompanyBasic().getTotalMember());
-			} else {
-				getManagedBean().getSmAppl().getSmCompanyBasic()
-						.setTotalMember(new BigDecimal(0));
-			}
-			getManagedBean()
-					.getSmAppl()
-					.getSmCompanyBasic()
-					.setPaidUpCapital(
-							getManagedBean()
-									.getSmAppl()
-									.getSmCompanyBasic()
-									.getBumiEquity()
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getNonBumiEquity())
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getLocalCompanyEquity())
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getForeignCompanyEquity())
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getForeignerEquity())
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getGovtEquity())
-									.add(getManagedBean().getSmAppl()
-											.getSmCompanyBasic()
-											.getGovtUnitrustEquity())
-									.setScale(2, RoundingMode.HALF_UP));
-
-			BigDecimal mul = new BigDecimal(100);
-
-			if (getManagedBean().getSmAppl().getSmCompanyBasic()
-					.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setBumiPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getBumiEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setNonBumiPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getNonBumiEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setForiegnerPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getForeignerEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtUTPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getGovtUnitrustEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setGovtEquityPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getGovtEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setForiegnCompPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getForeignCompanyEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-				getManagedBean()
-						.getSmAppl()
-						.getSmCompanyBasic()
-						.setLocalCompPercent(
-								getManagedBean()
-										.getSmAppl()
-										.getSmCompanyBasic()
-										.getLocalCompanyEquity()
-										.divide(getManagedBean().getSmAppl()
-												.getSmCompanyBasic()
-												.getPaidUpCapital(), 4,
-												RoundingMode.HALF_UP)
-										.multiply(mul)
-										.setScale(2, RoundingMode.HALF_UP));
-			}
-
-		} catch (NumberFormatException ne) {
-			throw new EpException(MessageConst.ERROR_722522);
-		}
-	}
-
 	private void setSmEquityCompanyPercentageCalculation() {
 		try {
 			if (getManagedBean().getSelectedEquityCompany().getShareAmt() != null) {
@@ -1135,17 +991,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	private void setEquipments() {
-		if (getManagedBean().getSmAppl().getSmMachineDtls() == null) {
-			getManagedBean().getSmAppl().setSmMachineDtls(
-					new ArrayList<SmMachineDtl>());
-		}
-		if (getManagedBean().getSmAppl().getSmManufacturingDtls() == null) {
-			getManagedBean().getSmAppl().setSmManufacturingDtls(
-					new ArrayList<SmManufacturingDtl>());
-		}
-	}
-
 	private void setDefaultApproverReviewSection() {
 		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null) {
 			for (SmApplSectionReview rev : getManagedBean().getSmAppl()
@@ -1159,6 +1004,8 @@ public class ViewSmApplBackingBean extends
 					getManagedBean().setPoSecReview(rev);
 				}
 			}
+		}else{
+			getManagedBean().setApprvrSecReview(new SmApplSectionReview());
 		}
 	}
 
