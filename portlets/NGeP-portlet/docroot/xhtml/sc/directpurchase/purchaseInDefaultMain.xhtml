@@ -20,7 +20,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	 </p:blockUI>
     
-   <p:panel id="mailPanel">
+   <h:panelGroup id="mailPanel">
 	<div class="ppRightBtn">
 	    <c:if test="#{purchaseInDefaultBackingBean.managedBean.taskId eq null}">
 	        <p:commandButton  immediate="true" 
@@ -71,7 +71,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</td></td>
 			</tr>
 		</table>
-     </p:panel>	
+     </h:panelGroup>	
    			
 	</ui:define>
 	</ui:composition>
