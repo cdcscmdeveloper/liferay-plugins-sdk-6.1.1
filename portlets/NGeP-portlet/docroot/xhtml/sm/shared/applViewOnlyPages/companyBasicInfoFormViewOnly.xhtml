@@ -35,31 +35,33 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText></td>
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']} :" /></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}"/></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
-					<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"/></td>
-				</tr>
-						
+				
+				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']} :" /></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryName}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address2}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateName}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address3}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtName}"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address4}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+						<td style="float:left"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity.cityName}"/></td>
+					</tr>
+				</c:if>	
 
 				<tr>
 					<td>
