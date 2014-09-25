@@ -5182,14 +5182,14 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>RuleCatalogue</portlet-name>
-		<display-name>Rule Catalogue</display-name>
+		<portlet-name>RuleConfigue</portlet-name>
+		<display-name>Rule Configue</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/settings/general/ruleCatalogue.xhtml</value>
+			<value>/xhtml/pm/settings/general/ruleConfigPreRender.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -5197,7 +5197,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Rule Catalogue</title>
+			<title>Rule Configue</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
