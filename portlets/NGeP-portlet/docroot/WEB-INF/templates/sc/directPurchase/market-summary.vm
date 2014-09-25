@@ -2,160 +2,218 @@
    <head>
       <style>
          @page { size: B3 landscape;}
-  		        body {	 
-  		        font-size: 0.7em !important;
-   				font-family: Arial !important;
-  		        } 
-		 
-		 .table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
-			border: 1px solid black;
-		}
-		 th{
-			background-color: #DEDEDE;
-		 }
-
+         body {	 
+         font-size: 0.7em !important;
+         font-family: Arial !important;
+         } 
+         .table2 {
+         border-collapse: collapse;
+         width:100%;
+         }
+         .table2 th, .table2 td {
+         border: 1px solid black;
+         }
+         th{
+         background-color: #DEDEDE;
+         }
+         @media print {
+         thead {display: table-header-group;}
+         .break {page-break-after: always;}
+         }
+         @page {
+         @bottom-right {
+         content: "Page No:" counter(page) "/" counter(pages);
+         font-size: 0.7em !important;
+         font-family: Arial !important;
+         }
+         }
       </style>
-   </head>   
+   </head>
    <body>
-
-   <table width="100%">
-   <tr>
-   <td width="20%">
-   Item Code
-   </td>
-   <td>
-  $productCode
-   </td>
-   </tr>
-   
-   <tr>
-   <td>
-   Item
-   </td>
-   <td>
-     $itemName
-   </td>
-   </tr>
-   
-   <tr>
-   <td>
-   Additional Description
-   </td>
-   <td>
-    $desc
-   </td>
-   </tr>
-   
-      <tr>
-   <td>
-   UOM
-      </td>
-   <td>
-    $uom
-   </td>
-   </tr>
-
-   </table>
-   <br/>
-   <br/>
-   
-   <table class="table2">
-<tr>
-<th width="20%">
-Supplier
-</th>
-<th width="10%">
-Delivery Terms
-</th>
-<th width="7%">
-Minimum Order
-</th>
-<th width="15%">
-Additional Description
-</th>
-<th width="10%">
-Price Type
-</th>
-<th width="10%">
-Zone
-</th>
-<th width="9%">
-From Quantity
-</th>
-<th width="9%">
-To Quantity
-</th>
-<th width="10%">
-Unit Price (RM)
-</th>
-
-</tr>
-      
-	  #set( $count = 0 )	
- 	  #set ($prevSupplierId = "")
+      <table width="100%">
+         <tr>
+            <td width="20%">
+               Item Code
+            </td>
+            <td>
+               $productCode
+            </td>
+         </tr>
+         <tr>
+            <td>
+               Item
+            </td>
+            <td>
+               $itemName
+            </td>
+         </tr>
+         <tr>
+            <td>
+               Additional Description
+            </td>
+            <td>
+               $desc
+            </td>
+         </tr>
+         <tr>
+            <td>
+               UOM
+            </td>
+            <td>
+               $uom
+            </td>
+         </tr>
+      </table>
+      <br/>
+      <br/>
+      <table class="table2">
+      #set( $pageCount = 0)
+      #set( $count = 0 )	
+      #set ($prevSupplierId = "")
       #set ($supplierId = "")
       #foreach( $requestNoteVo in $requestNoteVOList ) 
       #set ($supplierId = $requestNoteVo.supplierId)
       #if( $count == 0 )  
-      	<tr>
-			<td>$requestNoteVo.supplierName</td>
-		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
-			<td style="text-align:right">$requestNoteVo.minQty</td>
-		    <td>$requestNoteVo.addItemDesc</td>
-		    <td>$requestNoteVo.priceType</td>
-		    <td>$requestNoteVo.zone</td>
-		    <td style="text-align:right">
-		    #if( $requestNoteVo.frQty != 0 )
-		    	$requestNoteVo.frQty
-		    #end
-		    </td>
-		    <td style="text-align:right">
-		     #if( $requestNoteVo.toQty != 0 )
-		     	$requestNoteVo.toQty
-		     #end	
-		     </td>
-		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
-		</tr>
-		#else
-		<tr>
-		    #if( $supplierId != $prevSupplierId )  
-			<td>$requestNoteVo.supplierName</td>
-		    <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
-			<td style="text-align:right">$requestNoteVo.minQty</td>
-		    <td>$requestNoteVo.addItemDesc</td>
-		    #else
-		    <td></td>
-		    <td></td>
-			<td></td>
-		    <td></td>
-		    #end
-		    
-		    <td>$requestNoteVo.priceType</td>
-		    <td>$requestNoteVo.zone</td>
- 			<td style="text-align:right">
-		    #if( $requestNoteVo.frQty != 0 )
-		    	$requestNoteVo.frQty
-		    #end
-		    </td>
-		    <td style="text-align:right">
-		     #if( $requestNoteVo.toQty != 0 )
-		     	$requestNoteVo.toQty
-		     #end	
-		     </td>
-		    <td style="text-align:right">$requestNoteVo.unitPrice</td>
-		</tr>
-		#end
-		
-		#set( $prevSupplierId = $requestNoteVo.supplierId )
-      	#set( $count = $count + 1 )
-      #end
-
-
-   </table>
-   
-   </body>   
- </html>
+    
+         <tr>
+            <th width="20%">
+               Supplier
+            </th>
+            <th width="10%">
+               Delivery Terms
+            </th>
+            <th width="7%">
+               Minimum Order
+            </th>
+            <th width="15%">
+               Additional Description
+            </th>
+            <th width="10%">
+               Price Type
+            </th>
+            <th width="10%">
+               Zone
+            </th>
+            <th width="9%">
+               From Quantity
+            </th>
+            <th width="9%">
+               To Quantity
+            </th>
+            <th width="10%">
+               Unit Price (RM)
+            </th>
+         </tr>
+         <tr>
+            <td>$requestNoteVo.supplierName</td>
+            <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
+            <td style="text-align:right">$requestNoteVo.minQty</td>
+            <td>$requestNoteVo.addItemDesc</td>
+            <td>$requestNoteVo.priceType</td>
+            <td>$requestNoteVo.zone</td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.frQty != 0 )
+               $requestNoteVo.frQty
+               #end
+            </td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.toQty != 0 )
+               $requestNoteVo.toQty
+               #end	
+            </td>
+            <td style="text-align:right">$requestNoteVo.unitPrice</td>
+         </tr>
+         #elseif( ($count + 1) % 20 == 0 ) 
+      </table>
+      #set( $pageCount = $pageCount + 1 )
+      <p class="break"></p>
+      <table class="table2">
+         <tr>
+            <th width="20%">
+               Supplier
+            </th>
+            <th width="10%">
+               Delivery Terms
+            </th>
+            <th width="7%">
+               Minimum Order
+            </th>
+            <th width="15%">
+               Additional Description
+            </th>
+            <th width="10%">
+               Price Type
+            </th>
+            <th width="10%">
+               Zone
+            </th>
+            <th width="9%">
+               From Quantity
+            </th>
+            <th width="9%">
+               To Quantity
+            </th>
+            <th width="10%">
+               Unit Price (RM)
+            </th>
+         </tr>
+         <tr>
+            #if( $supplierId != $prevSupplierId )  
+            <td>$requestNoteVo.supplierName</td>
+            <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
+            <td style="text-align:right">$requestNoteVo.minQty</td>
+            <td>$requestNoteVo.addItemDesc</td>
+            #else
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            #end
+            <td>$requestNoteVo.priceType</td>
+            <td>$requestNoteVo.zone</td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.frQty != 0 )
+               $requestNoteVo.frQty
+               #end
+            </td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.toQty != 0 )
+               $requestNoteVo.toQty
+               #end	
+            </td>
+            <td style="text-align:right">$requestNoteVo.unitPrice</td>
+         </tr>
+         #else
+         <tr>
+            #if( $supplierId != $prevSupplierId )  
+            <td>$requestNoteVo.supplierName</td>
+            <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
+            <td style="text-align:right">$requestNoteVo.minQty</td>
+            <td>$requestNoteVo.addItemDesc</td>
+            #else
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            #end
+            <td>$requestNoteVo.priceType</td>
+            <td>$requestNoteVo.zone</td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.frQty != 0 )
+               $requestNoteVo.frQty
+               #end
+            </td>
+            <td style="text-align:right">
+               #if( $requestNoteVo.toQty != 0 )
+               $requestNoteVo.toQty
+               #end	
+            </td>
+            <td style="text-align:right">$requestNoteVo.unitPrice</td>
+         </tr>
+         #end
+         #set( $prevSupplierId = $requestNoteVo.supplierId )
+         #set( $count = $count + 1 )
+         #end
+      </table>
+   </body>
+</html>
