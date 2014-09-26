@@ -32,7 +32,8 @@
 							required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 							label="#{lbl['lbl.so.briefdate']}"
 							value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+							showOn="button" />
 						<p:message id="briefdateMsg" for="briefdate" display="icon" /></td>
 				</tr>
 				<tr>
