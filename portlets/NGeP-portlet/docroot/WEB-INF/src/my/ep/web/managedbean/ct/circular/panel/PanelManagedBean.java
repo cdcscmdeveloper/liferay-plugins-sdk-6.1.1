@@ -67,6 +67,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private boolean updateAction;
 	private boolean buttonHideActive;
 	private boolean selectionOfZone;
+	private boolean chkCancelPage;
 	private int index = -1;
 	
 	private TreeNode[] selectedGeneralTreeNodes;
@@ -468,5 +469,13 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSupplierList(List<SmSupplier> supplierList) {
 		this.supplierList = supplierList;
+	}
+
+	public boolean isChkCancelPage() {
+		return chkCancelPage;
+	}
+
+	public void setChkCancelPage(boolean chkCancelPage) {
+		this.chkCancelPage = chkCancelPage;
 	}
 }
