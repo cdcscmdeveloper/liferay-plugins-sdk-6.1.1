@@ -150,7 +150,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		pmUser.setOrgTypeCode(new PmParameter());
 		
 		//initial preference - notification
-		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+		this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
 
 		//initial preference
 		PmCommonUtil.loadPmUserPreference(pmUser, pmUser.getPmUserPreference());
@@ -190,7 +190,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			populateUserAddress(pmUser);
 			
 			//load preference - notification
-			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
 			
 			//load preference 
 			if(pmUser.getPmUserPreference()==null){
@@ -486,7 +486,27 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			throw new EpException(MessageConst.ERROR_770048);
 		}
 	}
-
+	
+	/**
+	 * sync notification data
+	 * @param user
+	 */
+	private void loadUserNotification(PmUser user){
+		logger.info("loadUserNotification");
+		List <PmUserNotification> displayNotifications = this.getManagedBean().getNotifications();
+		if(displayNotifications!=null && !displayNotifications.isEmpty()){
+			for(PmUserNotification displayNotification: displayNotifications){
+				for(PmUserNotification pmUserNotification: user.getPmUserNotifications()){
+					if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(displayNotification.getNotifyMode())
+							&& !ParameterConst.NOTIFICATION_SMS.equals(displayNotification.getNotifyMode())){
+						if(displayNotification.getNotifyMode().equals(pmUserNotification.getNotifyMode())){
+							pmUserNotification.setPreferred(displayNotification.isPreferred());
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Method to update the user details
@@ -510,7 +530,9 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 				}
 			}
 		}
-
+		
+		loadUserNotification(user);
+		
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(

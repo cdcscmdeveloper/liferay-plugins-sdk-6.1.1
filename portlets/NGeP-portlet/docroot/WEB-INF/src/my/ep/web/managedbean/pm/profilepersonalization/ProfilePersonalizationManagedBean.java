@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -52,6 +53,7 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private boolean divisionFlagC;
 	private boolean deletePortrait;
 	private int selectedTabIndex;
+	private List<PmUserNotification> notifications;
 	
 	
 /**
@@ -123,6 +125,20 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the notifications
+	 */
+	public List<PmUserNotification> getNotifications() {
+		return notifications;
+	}
+
+	/**
+	 * @param notifications the notifications to set
+	 */
+	public void setNotifications(List<PmUserNotification> notifications) {
+		this.notifications = notifications;
 	}
 
 
