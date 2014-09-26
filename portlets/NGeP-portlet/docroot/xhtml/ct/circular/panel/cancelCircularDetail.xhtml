@@ -23,7 +23,9 @@
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
-				<h:outputText value="#{data.circularVer.circularNo}" />
+				<p:commandLink value="#{data.circularVer.circularNo}"
+					onclick="gotoCancelPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVer.circularVerId}'}])">
+				</p:commandLink>	
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
 				<h:outputText value="#{data.circularVer.name}" />
@@ -74,5 +76,5 @@
 		  </div>
         </p:dialog>  		
 	</p:panel>
-		
+		<p:remoteCommand name="gotoCancelPage" action="#{panelBackingBean.gotoCancelPage}" />
 </ui:composition>

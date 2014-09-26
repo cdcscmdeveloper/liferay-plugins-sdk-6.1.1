@@ -343,7 +343,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public String backAction() {
-		return "search.xhtml?faces-redirect=true";
+		if(getManagedBean().isChkCancelPage()){
+			 getManagedBean().setChkCancelPage(false);
+			 return "cancelCircularBase.xhtml?faces-redirect=true";
+	
+		} else {
+		    return "search.xhtml?faces-redirect=true";
+		}
 	}
 	
 	public void searchReset(){
@@ -1139,6 +1145,37 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			resDTO = circularSO.retrieveCircularVerById(reqDTO);					
 			setPanelCircularVar(resDTO);
 			return "circularBase.xhtml?faces-redirect=true";
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+		return null;
+	}
+	
+	public String gotoCancelPage() {
+		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
+		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
+		log.info("Action :"+action+" Id :"+circularVerId);
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			CircularResDTO resDTO = null;
+			getManagedBean().setSelectionOfZone(false);
+			getManagedBean().setSelectedPanelItems(null);
+			getManagedBean().setSelectedPanelZone(null);
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setAction(action);
+	       getManagedBean().setUpdateAction(false);
+	       getManagedBean().setChkCancelPage(true);
+			resDTO = circularSO.retrieveCircularVerById(reqDTO);					
+			setPanelCircularVar(resDTO);
+			return "circularBase.xhtml?faces-redirect=true";
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
