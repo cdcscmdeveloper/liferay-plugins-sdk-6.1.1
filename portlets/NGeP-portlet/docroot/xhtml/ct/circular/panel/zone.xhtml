@@ -30,7 +30,7 @@
 				disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}" />				
 		</div>		
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
-			closable="true" appendToBody="true" header="#{lbl['lbl.ct.dialog.confirm.header']}" >
+			closable="true" appendToBody="true" >
 			<h:panelGrid columns="2">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:circularZoneDtlPnl,circularZoneDt" partialSubmit="true" process="@this"
 					 action="#{panelBackingBean.deleteCircularZone()}" oncomplete="delZoneDlg.hide();"   /> 
@@ -73,7 +73,7 @@
 					disabled="#{panelBackingBean.managedBean.selectedCircularZoneDtl == null}" />			
 			</div>							
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delStateDlg"
-				closable="true" appendToBody="true" header="#{lbl['lbl.ct.dialog.confirm.header']}" >
+				closable="true" appendToBody="true" >
 				<h:panelGrid columns="2">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tabview:deleteZoneDtlBtn,circularZoneDtlDt" partialSubmit="true" process="@this"
 						 action="#{panelBackingBean.deleteCircularZoneDtl()}" oncomplete="delStateDlg.hide();"   /> 

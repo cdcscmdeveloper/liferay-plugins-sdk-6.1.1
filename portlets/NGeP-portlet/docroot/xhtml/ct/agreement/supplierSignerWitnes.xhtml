@@ -36,7 +36,7 @@
 		       icon="ui-icon-add" update=":form:agSupplierSigner"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSupplierDel.show()"/>
         </div>
-         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
+         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
@@ -73,7 +73,7 @@
 		       icon="ui-icon-add" update=":form:supplierWitnesTable"/>
 		    <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()"/>
         </div>
-         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
+         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" styleClass="screen-title"  
            resizable="false" modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png"
