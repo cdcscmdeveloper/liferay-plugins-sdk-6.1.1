@@ -16,7 +16,7 @@
                  <ac:paginator for="itemTable"/>
                  <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.refreshCeilingQuantity()}" />
 		 
-		         <p:column headerText="#{lbl['lbl.ct.item.name']}"  
+		         <p:column headerText="#{lbl['lbl.ct.item.desc']}"  
 		              filterBy="#{ctItemVar.itemName}" style="width:40%;" filterMatchMode="contains">
 		              <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;"/>
 		         </p:column>       

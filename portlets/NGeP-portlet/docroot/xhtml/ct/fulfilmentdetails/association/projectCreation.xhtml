@@ -24,24 +24,24 @@
     		</tr>
     	</table>    	
 	 </p:panel>
-     <p:panel id="projectId" header="#{lbl['lbl.ct.acreation']}" toggleable="true" toggleSpeed="500">
+     <p:panel id="projectId" header="#{lbl['lbl.ct.panel.project.assoc.creation']}" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
 	       	<h:panelGrid columns="2" style="float:right;">
 			  <p:outputLabel value="*" styleClass="mandatory" />
-	          <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
+	          <p:outputLabel value="#{lbl['lbl.ct.project.name']}" />
 	       </h:panelGrid>
 	       <h:panelGrid columns="2">
-           <p:inputText id="projectNames" style="width:300px;" required="true" label="#{lbl['lbl.ct.asearch.model.pname']}"
+           <p:inputText id="projectNames" style="width:300px;" required="true" label="#{lbl['lbl.ct.project.name']}"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" maxlength="100">
                </p:inputText>
                 <p:message for="projectNames" display="icon"/>
            </h:panelGrid>
            	<h:panelGrid columns="2" style="float:right;">
            	   <p:outputLabel value="*" styleClass="mandatory" />
-                 <p:outputLabel value="#{lbl['lbl.ct.asearch.model.pdes']}" />
+                 <p:outputLabel value="#{lbl['lbl.ct.project.desc']}" />
              </h:panelGrid>
             <h:panelGrid  columns="2">
-		    <p:inputTextarea id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.asearch.model.pdes']}"
+		    <p:inputTextarea id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.project.desc']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200" rows="2" autoResize="false">
 		   </p:inputTextarea>
 		    <p:message for="projectDesc" display="icon"/>
@@ -53,35 +53,35 @@
              selection="#{associationBackingBean.deleteSelectedContractList}" rowKey="#{data}">
              <ac:paginator for="associateCreation"/>
                <p:column selectionMode="multiple" style="width:2%;" />
-               <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}" style="width:15%;">
+               <p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:15%;">
 			     <h:outputText value="#{data.contractNo}"/>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}" style="width:20%;white-space:normal;">
+			   <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
 				 <h:outputText  value="#{data.latestContractVer.ctContractValue.supplierName}"/>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" style="width:10%;">
+			   <p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:10%;">
 				<h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
 			     	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			     </h:outputText>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}" style="width:10%;">
+			   <p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:10%;">
 				 <h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
 			     	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			     </h:outputText>
                </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" style="width:5%;">
+			   <p:column headerText="#{lbl['lbl.ct.ptj.code']}" style="width:5%;">
 				 <h:outputText  value="#{data.ownerOrgProfile.orgCode}"/>
 			   </p:column>
-			   <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}" style="width:20%;white-space:normal;">
+			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:20%;white-space:normal;">
 				 <h:outputText  value="#{data.ownerOrgProfile.orgName}"/>
 			   </p:column>
 			</p:dataTable> 
 			<p:spacer height="5"/>
 			<div class="ppRightBtn">
-			      <p:commandButton value="Add" process="@form" icon="ui-icon-add"  onclick="dlg2.show();">
+			      <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"  onclick="dlg2.show();">
 			         <p:ajax event="change" update="associateCreation" process="@this" />
 			      </p:commandButton>
-			      <p:commandButton value="Delete" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />     
+			      <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />     
 			   </div>
 			 <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialong.cofirm.header']}" styleClass="screen-title"  
                resizable="false" modal="true" width="350" height="95">  
@@ -93,19 +93,19 @@
                  styleClass="ui-inputtextarea"></p:inputTextarea>
            </h:panelGrid>
            <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" icon="ui-icon-accept" update="@([id$=associateCreation])" process="@form" 
+		     <p:commandButton value="#{lbl['lbl.ct.btn.yes']}" icon="ui-icon-accept" update="@([id$=associateCreation])" process="@form" 
 				actionListener="#{associationBackingBean.deleteAdvanceContract()}" onclick="dlgDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
+			  <p:commandButton value="#{lbl['lbl.ct.btn.no']}" icon="ui-icon-reject" onclick="dlgDel.hide();" type="button" />
 		   </div>
         </p:dialog>  
        
          </p:panel>
-		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.asearch.model1.header']}" widgetVar="dlg2" modal="true" width="750" height="350">
+		 <p:dialog id="modelDialog" header="#{lbl['lbl.ct.search.contract']}" widgetVar="dlg2" modal="true" width="750" height="350">
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
-                  <p:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
+                  <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
                   <p:inputText value="#{associationBackingBean.managedBean.ctNumber}" style="width:150px;"/>
-                  <p:commandButton value="Search" process="modelDialog" icon="ui-icon-search"
+                  <p:commandButton value="#{lbl['lbl.btn.search']}" process="modelDialog" icon="ui-icon-search"
                     onstart="blkDlgAssociateTable.show();" oncomplete="blkDlgAssociateTable.hide();" action="#{associationBackingBean.searchContract}" update=":form:advanceCtSearch"/>
               </h:panelGrid>
 		     <p:spacer height="2"/>
@@ -113,21 +113,21 @@
                 rowIndexVar="index"  lazy="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data}">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:2%;" />
-			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}" style="width:10%;">
+			        <p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cname']}" style="width:35%;white-space:normal">
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:35%;white-space:normal">
                        	<h:outputText value="#{data.contractName}" />
 					</p:column> 
-                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}" style="width:32%;white-space:normal">
+                    <p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:32%;white-space:normal">
                        	<h:outputText value="#{data.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
-                    <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}"  style="width:10%;">
+                    <p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:10%;">
                        <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
                    	</p:column> 
-					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}" style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:10%;">
                         <h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
 					    	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
@@ -138,7 +138,7 @@
 		      </p:blockUI> 
 			 <f:facet name="footer">
 			   <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
-				  <p:commandButton value="Select" process="modelDialog" action="#{associationBackingBean.addAdvanceContract}" 
+				  <p:commandButton value="#{lbl['lbl.btn.select']}" process="modelDialog" action="#{associationBackingBean.addAdvanceContract}" 
 				     update="associateCreation,modelDialog" icon="ui-icon-accept" onclick="dlg2.hide();"/>
                     <p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			    </h:panelGrid>

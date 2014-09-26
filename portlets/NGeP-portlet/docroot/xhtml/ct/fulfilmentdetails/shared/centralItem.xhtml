@@ -14,7 +14,7 @@
               <ac:paginator for="centralitemTable"/>
               <p:ajax event="rowSelect" update=":form:changeCentralItemField"  />
 		    
-		      <p:column headerText="#{lbl['lbl.ct.item.name']}" 
+		      <p:column headerText="#{lbl['lbl.ct.item.desc']}" 
 		           filterBy="#{data.itemName}" style="width:40%;" filterMatchMode="contains">
 		           <p:outputLabel value="#{data.itemName}" style="float:left;" /> 
 		       </p:column>       

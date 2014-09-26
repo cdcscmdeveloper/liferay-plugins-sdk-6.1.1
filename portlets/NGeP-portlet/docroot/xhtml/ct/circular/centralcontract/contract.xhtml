@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.cc.ct']}"
+	<p:panel id="contractListPnl" header="#{lbl['lbl.ct.contract.list']}"
 		toggleable="true" toggleSpeed="500">
 		<p:dataTable id="centralContractDt" var="circularContractsVar" rowIndexVar="index"
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
@@ -15,37 +15,37 @@
 				update=":form:contractListPnl"
 				process="@this"
 				listener="#{centralContractBackingBean.setContractListner()}" />
-			<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
+			<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}">
 				<h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.cc.phyCno']}">
+			<p:column headerText="#{lbl['lbl.ct.physical.no']}">
 				<h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.cc.ctname']}">
+			<p:column headerText="#{lbl['lbl.ct.contract.title']}">
 				<h:outputText value="#{circularContractsVar.ctContract.contractName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.cc.sup']}">
+			<p:column headerText="#{lbl['lbl.ct.supplier.name']}">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}">
+			<p:column headerText="#{lbl['lbl.ct.contract.start']}">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.cc.ctedate']}">
+			<p:column headerText="#{lbl['lbl.ct.contract.end']}">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Status">
+			<p:column headerText="#{lbl['lbl.ct.status']}">
 				<p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}"
 					disabled="#{!centralContractBackingBean.managedBean.updateAction}"
 					style="width:70px;">
-					<f:selectItem itemValue="0" itemLabel="Inactive" />
-					<f:selectItem itemValue="1" itemLabel="Active" />
+					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
@@ -90,7 +90,7 @@
 			<h:panelGroup
 				rendered="#{centralContractBackingBean.managedBean.selectedCircularContract != null and
 		   centralContractBackingBean.managedBean.selectedCircularContract.ctCircularItems.size() > 0}">
-				<p:outputLabel value="#{lbl['lbl.ct.cc.sublabel.item']}"
+				<p:outputLabel value="#{lbl['lbl.ct.sublabel.item']}"
 					style="float:left; font-weight:bold; padding-top:5px;" />
 				<div style="clear: both" />
 				<p:dataTable id="circularItemDt" var="itemVar"
@@ -103,32 +103,32 @@
 						update="@([id$=circularZonePanel],[id$=circularPricePanel])"
 						process="@this"
 						listener="#{centralContractBackingBean.setZoneListener()}" />
-					<p:column headerText="#{lbl['lbl.ct.pc.item.name']}"
+					<p:column headerText="#{lbl['lbl.ct.item.name']}"
 						style="width:45%; white-space:pre-line;">
 						<h:outputText value="#{itemVar.ctContractItem.itemName}"
 							style="width:450px;" />
 					</p:column>
-					<p:column headerText="Minimum Order Qty." style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%;">
 						<p:inputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.minimumOrderQty}" maxlength="14"
-							label="Minimum Order Qty.">
+							label="#{lbl['lbl.ct.min.order.qty']}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemVar.ctContractItem.uom.uomCode)}" />
 						</p:inputText>
 					</p:column>
-					<p:column headerText="Nilai Pesanan Minimum (RM)" style="width:15%;white-space:pre-line;">
+					<p:column headerText="#{lbl['lbl.ct.min.order.amount']}" style="width:15%;white-space:pre-line;">
 						<p:inputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.minimumOrderAmt}" maxlength="19"
-							label="Nilai Pesanan Minimum (RM)">
+							label="#{lbl['lbl.ct.min.order.amount']}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</p:column>
-					<p:column headerText="Had Pembelian Luar Kontrak (RM)"
+					<p:column headerText="#{lbl['lbl.ct.contract.purchase.limit']}"
 						style="width:15%;white-space:pre-line;">
 						<p:inputText styleClass="colFloatRight" style="width:120px;"
 							value="#{itemVar.maxProcureAmt}" maxlength="19"
-							label="Had Pembelian Luar Kontrak (RM)">
+							label="#{lbl['lbl.ct.contract.purchase.limit']}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
@@ -137,8 +137,8 @@
 						<p:selectOneMenu value="#{itemVar.recordStatusFlg}"
 							disabled="#{!centralContractBackingBean.managedBean.updateAction}"
 							style="width:70px;">
-							<f:selectItem itemValue="0" itemLabel="Inactive" />
-							<f:selectItem itemValue="1" itemLabel="Active" />
+							<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
+							<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
@@ -150,7 +150,7 @@
 			<h:panelGroup
 				rendered="#{centralContractBackingBean.managedBean.selectedCircularItem != null
 		     and centralContractBackingBean.managedBean.chkItemZone}">
-				<p:outputLabel value="#{lbl['lbl.ct.cc.sublabel.zone']}"
+				<p:outputLabel value="#{lbl['lbl.ct.sublabel.zone']}"
 					style="float:left; font-weight:bold; padding-top:25px;" />
 				<div style="clear: both" />
 				<p:dataTable id="circularItemZoneDt" var="dataZone"
@@ -161,14 +161,14 @@
 					<p:ajax event="rowSelect" update="@([id$=circularPricePanel])"
 						process="@this"
 						listener="#{centralContractBackingBean.setPriceListener()}" />
-					<p:column headerText="Zone" style="width:60%;">
+					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:60%;">
 						<h:outputText value="#{dataZone.zoneName}" style="width:50%;" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:40%;">
 						<p:commandLink update="@([id$=itemZoneId])"
 							oncomplete="itemZoneDlg.show();" immediate="true">
 							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png" title="View"></p:graphicImage>
+								value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}"></p:graphicImage>
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -183,33 +183,33 @@
 		    and centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.ctItemPrices.size() > 0}">
 				<p:outputLabel
 					value="#{(centralContractBackingBean.managedBean.selectedCircularItem != null
-		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.cc.sublabel.zoneprice']:lbl['lbl.ct.cc.sublabel.itemprice']}"
+		     and centralContractBackingBean.managedBean.chkItemZone)?lbl['lbl.ct.sublabel.zone.price']:lbl['lbl.ct.sublabel.item.price']}"
 					style="float:left; font-weight:bold; padding-top:25px;" />
 				<div style="clear: both" />
 				<p:dataTable id="circularItemZonePriceDt" var="priceVar" 
 				     value="#{centralContractBackingBean.getItemPrice()}">
 					<ac:paginator for="circularItemZonePriceDt" />
-					<p:column headerText="From Qty." style="width:30%;">
+					<p:column headerText="#{lbl['lbl.ct.from.qty']}" style="width:30%;">
 						<h:outputText value="#{priceVar.fromQty}" style="width:50%;" />
 					</p:column>
-					<p:column headerText="To Qty." style="width:30%;">
+					<p:column headerText="#{lbl['lbl.ct.to.qty']}." style="width:30%;">
 						<h:outputText value="#{priceVar.toQty}" style="width:50%;" />
 					</p:column>
-					<p:column headerText="Unit Price (RM)" style="width:30%;">
+					<p:column headerText="#{lbl['lbl.ct.unit.price']}" style="width:30%;">
 						<h:outputText value="#{priceVar.unitPrice}" style="width:50%;" />
 					</p:column>
 				</p:dataTable>
 			</h:panelGroup>
 		</p:outputPanel>
 
-		<p:dialog id="itemZoneDlg" header="Zone Details"
+		<p:dialog id="itemZoneDlg" header="#{lbl['lbl.ct.panel.zone']}"
 			widgetVar="itemZoneDlg" modal="true" width="350" height="200">
 			<p:outputPanel id="itemZoneId">
 				<p:treeTable id="itemZoneDt"
 					value="#{centralContractBackingBean.managedBean.centralZoneTrees}"
 					var="zoneTree">
 					<p:column style="width:70%;">
-						<f:facet name="header">  Location Name </f:facet>
+						<f:facet name="header">#{lbl['lbl.ct.location.name']}</f:facet>
 						<p:treeNode type="zone">
 							<h:outputText value="#{zoneTree.zone}" />
 						</p:treeNode>
@@ -224,7 +224,7 @@
 			</p:outputPanel>
 		</p:dialog>
 
-		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.cc.ct']}"
+		<p:dialog id="contractDlg" header="#{lbl['lbl.ct.contract.list']}"
 			widgetVar="contractDlg" modal="true" width="750" height="400">
 			<p:panel id="listOfContract">
 				<h:panelGrid columns="6">
@@ -233,7 +233,7 @@
 						value="#{centralContractBackingBean.managedBean.searchContractNo}"
 						maxlength="17" />
 					<p:spacer width="10" />
-					<h:outputText value="#{lbl['lbl.ct.search.table.cname']}" />
+					<h:outputText value="#{lbl['lbl.ct.contract.title']}" />
 					<p:inputText id="contractName"
 						value="#{centralContractBackingBean.managedBean.searchContractName}"
 						maxlength="1000" />
@@ -248,16 +248,16 @@
 					selection="#{centralContractBackingBean.managedBean.selectedContractList}">
 					<ac:paginator for="contractDt" />
 					<p:column selectionMode="multiple" style="width:3%;" />
-					<p:column headerText="#{lbl['lbl.ct.cc.phyloa']}">
+					<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}">
 						<h:outputText value="#{contractListVar.loaPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.cc.phyCno']}">
+					<p:column headerText="#{lbl['lbl.ct.physical.no']}">
 						<h:outputText value="#{contractListVar.contractPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.cno']}">
+					<p:column headerText="#{lbl['lbl.ct.contract.no']}">
 						<h:outputText value="#{contractListVar.contractNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.cc.sup']}">
+					<p:column headerText="#{lbl['lbl.ct.supplier.name']}">
 						<h:outputText
 							value="#{contractListVar.latestContractVer.ctContractValue.supplierName}" />
 					</p:column>
@@ -282,7 +282,7 @@
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{centralContractBackingBean.managedBean.circularVer.contractRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -294,7 +294,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

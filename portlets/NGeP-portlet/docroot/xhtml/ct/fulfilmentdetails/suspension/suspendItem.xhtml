@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="itemId" toggleable="true"  toggleSpeed="500" header="#{lbl['lbl.ct.panel.item.dtls']}" >
+	<p:panel id="itemId" toggleable="true"  toggleSpeed="500" header="#{lbl['lbl.ct.panel.item']}" >
 		
 		<p:dataTable id="itemTable" var="itemData" 
 		    value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}"
@@ -16,7 +16,7 @@
 				    <p:outputLabel style="float:left;" value="#{suspensionBackingBean.getParameterDesc(itemData.itemType)}" />
 			   </p:column>
 			
-			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.name']}" 
+			   <p:column id="modelColumn" headerText="#{lbl['lbl.ct.item.desc']}" 
 			        style="width:40%;white-space:normal;"  filterBy="#{itemData.itemName}"   filterMatchMode="contains"> 
 			        <p:outputLabel value="#{itemData.itemName}" style="float:left;" />
 			   </p:column>

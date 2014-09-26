@@ -19,13 +19,13 @@
 			<td width="20%" valign="top" class="sidemenutd">
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{centralContractBackingBean.managedBean.selectedTabIndex}">
-                    <p:menuitem value="Circular Details" update="@form">
+                    <p:menuitem value="#{lbl['lbl.ct.menu.circular']}" update="@form">
 						<f:setPropertyActionListener target="#{centralContractBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="Contract" update="@form">
+					<p:menuitem value="#{lbl['lbl.ct.menu.contract']}" update="@form">
 						<f:setPropertyActionListener target="#{centralContractBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
-					<p:menuitem value="Setting" update="@form" rendered="#{centralContractBackingBean.isCentralContractAdmin()}">
+					<p:menuitem value="#{lbl['lbl.ct.menu.setting']}" update="@form" rendered="#{centralContractBackingBean.isCentralContractAdmin()}">
 						<f:setPropertyActionListener target="#{centralContractBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 				</p:tabMenu>

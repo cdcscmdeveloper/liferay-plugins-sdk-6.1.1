@@ -12,23 +12,23 @@
 			  <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
 		 </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
-		<p:panel id="searchPanel" header="Search" toggleable="true">
+		<p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
-				<h:outputLabel value="#{lbl['lbl.ct.pc.cno']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="50" />
-				<h:outputLabel value="#{lbl['lbl.ct.pc.cname']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
-				<h:outputLabel value="#{lbl['lbl.ct.pc.item.sname']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchSupplierName}" style="width:170px;" maxlength="100" />
-				<h:outputLabel value="#{lbl['lbl.ct.pc.frno']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:170px;" maxlength="50" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.start.date']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cenddt']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.end.date']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
-				<h:outputLabel value="#{lbl['lbl.ct.pc.item.name']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.item.name']}" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchItemName}" style="width:170px;margin-top:3px;" maxlength="100" />						
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
 				<p:selectOneMenu id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:200px;">
@@ -36,53 +36,53 @@
 				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton id="panelSearchId" value="#{lbl['lbl.ct.search.btn.search']}" action="#{panelBackingBean.searchCircularVer}"
+				<p:commandButton id="panelSearchId" value="#{lbl['lbl.btn.search']}" action="#{panelBackingBean.searchCircularVer}"
 				    onstart="blkPanelSearchTable.show();" oncomplete="blkPanelSearchTable.hide();"  icon="ui-icon-search" update="circularVerDt" />
-				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{panelBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
+				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{panelBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
 			</div>		
 		</p:panel>
-		<p:panel id="resultPanel" header="Result" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
 			<p:dataTable id="circularVerDt" value="#{panelBackingBean.circularVerPagingDataModel}"
 				var="data" lazy="true" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
-				<p:column headerText="#{lbl['lbl.ct.cc.cnumber']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
 					<h:outputText value="#{data.name}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.pc.frno']}" >
+				<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" >
 					<h:outputText value="#{data.circularFileRefNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.cstartdt']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}" >
 					<h:outputText value="#{data.startDate}" >
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.cenddt']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.end.date']}" >
 					<h:outputText value="#{data.endDate}" >
 						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.status']}" >
-					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.pc.status.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" />
+					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqPendingSubmission}"
 							onclick="gotoPage([{name:'action',value:'save'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
+					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or 
 						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" 
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
+					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
 					<p:spacer width="5" rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission) or
 						data.status.statusId == CtStatusConst.pqApproved or 
 						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" />	
 					<p:commandLink rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission)}"
 					onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="View" />
+					 <p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
 					</p:commandLink>	
 						<!-- 
 						<p:spacer width="1" />

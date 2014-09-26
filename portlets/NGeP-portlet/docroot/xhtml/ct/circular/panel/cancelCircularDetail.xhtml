@@ -8,7 +8,7 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
-	<p:panel id="cancelCcrPnl" header="#{lbl['lbl.ct.cc.ctobecancele']}" toggleable="true" toggleSpeed="500" >
+	<p:panel id="cancelCcrPnl" header="#{lbl['lbl.ct.panel.circular.to.cancel']}" toggleable="true" toggleSpeed="500" >
 		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" 
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}" 
 			rendered="#{!panelBackingBean.isBPKApprover()}" >
@@ -22,10 +22,10 @@
 			selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
-			<p:column headerText="#{lbl['lbl.ct.pc.cno']}" >
+			<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
 				<h:outputText value="#{data.circularVer.circularNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
+			<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
 				<h:outputText value="#{data.circularVer.name}" />
 			</p:column>
 		</p:dataTable>
@@ -35,17 +35,17 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onclick="delCancelCircular.show()"/>				
 		</div>				
 		</p:outputPanel>	
-		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.cc.acirculars']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
+		<p:dialog id="activeCircularDlg" header="#{lbl['lbl.ct.active.circular']}" widgetVar="activeCircularDlg" modal="true" width="700" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:3%" />
-					<p:column headerText="#{lbl['lbl.ct.cc.cno']}">
+					<p:column headerText="#{lbl['lbl.ct.circular.no']}">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.cc.cname']}">
+					<p:column headerText="#{lbl['lbl.ct.circular.name']}">
 						<h:outputText value="#{data.name}" />
 					</p:column>									
 				</p:dataTable>

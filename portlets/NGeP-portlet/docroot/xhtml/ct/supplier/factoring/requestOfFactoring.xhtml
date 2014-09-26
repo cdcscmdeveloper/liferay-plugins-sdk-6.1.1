@@ -17,7 +17,7 @@
 		     <p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
-	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="false" /></td>
+	    			<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" rendered="false" /></td>
 	    			<td class="ppRightBtn">
 	    			<ui:repeat var="outcome" value="#{supplierBackingBean.managedBean.action}">
 	    				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(outcome)}" />
@@ -35,7 +35,7 @@
 				           <td style="width: 10%" class="header-info-text">#{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
 				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 				           <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo} </td>
-				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /></td>
+				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" /></td>
 					       <td style="width: 15%" class="header-info-text">
 						      #{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.supplierName}</td>		
 				           <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
@@ -52,11 +52,11 @@
 		
 		     	<h:panelGrid columns="2" style="float:right;">
 			         <p:outputLabel value="*" styleClass="mandatory" />
-			         <p:outputLabel value="LOA No." />
+			         <p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			    </h:panelGrid>  
 			    <h:panelGrid columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			         <p:selectOneMenu id="menuLoaId" style="width:210px;" 
-			              value="#{supplierBackingBean.managedBean.loaId}" required="true" label="LOA No">
+			              value="#{supplierBackingBean.managedBean.loaId}" required="true" label="#{lbl['lbl.ct.loa.no']}">
 			              <f:selectItems value="#{supplierBackingBean.getContractSupplierLoa()}"/>
 			                 <p:ajax event="change" process="@this" 
 			                     update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
@@ -66,23 +66,23 @@
 			 <p:inputText  rendered="#{supplierBackingBean.managedBean.taskId!=null}"
 			      disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.ctContract.loa.loaNo}"/>
 		    
-		       <p:outputLabel value="LOA Date" />
+		       <p:outputLabel value="#{lbl['lbl.ct.loa.date']}" />
 		       <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.loaDate}"> 
 		         	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 		       </p:inputText>
 		    
-		       <p:outputLabel value="Contract No." />
+		       <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
 		       <p:inputText style="width:200px;"  value="#{supplierBackingBean.managedBean.contractNo}" disabled="true"/>
 		    
-		       <p:outputLabel value="Contract Name" />
+		       <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
 		       <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.contractName}"/> 
 	        
-	           <p:outputLabel value="Contract Effective Date" />
+	           <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.effDate}" >
 	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	           </p:inputText> 
 	         
-	           <p:outputLabel value="Contract Expiry Date" />
+	           <p:outputLabel value="#{lbl['lbl.ct.expiry.date']}" />
 	           <p:inputText style="width:200px;" disabled="true" value="#{supplierBackingBean.managedBean.expDate}"> 
 	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	           </p:inputText> 
@@ -132,27 +132,27 @@
             
                     <h:panelGrid columns="2" style="float:right;">
 					     <p:outputLabel value="*" styleClass="mandatory" />         
-         			     <p:outputLabel value="Start Date"/>
+         			     <p:outputLabel value="#{lbl['lbl.ct.start.date']}"/>
          		    </h:panelGrid>
          		    <h:panelGrid columns="2">
          			   <p:calendar size="25" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
-		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" label="Start Date"
+		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}" id="effdateCal" showOn="button" label="#{lbl['lbl.ct.start.date']}"
 		    			    disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true"/>
 					        <p:message for="effdateCal" display="icon" />				
 				     </h:panelGrid>		    			
            
                    <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/> 
                     <p:inputText id="bankName"  style="width:200px;" 
-                       value="#{supplierBackingBean.managedBean.factoringBankName}"   disabled="true"/>
+                       value="#{supplierBackingBean.managedBean.factoringBankName}" disabled="true"/>
 				
 				   <h:panelGrid columns="2" style="float:right;">
 				    	<p:outputLabel value="*" styleClass="mandatory" />
-					    <p:outputLabel value="End Date" />
+					    <p:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 				</h:panelGrid>
 			
 				<h:panelGrid columns="2">
 		 			<p:calendar size="25" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" required="true"
-		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" label="End Date"
+		    			 value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" label="#{lbl['lbl.ct.end.date']}"
 		    			 disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" />
 					 <p:message for="expdateCal" display="icon" />				
 				</h:panelGrid>		  		    			 
@@ -163,7 +163,7 @@
 				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				    
-				 <p:outputLabel value="Status" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
+				 <p:outputLabel value="#{lbl['lbl.ct.status']}" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
 				 <p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}"
 				         disabled="true" value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
 					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
@@ -172,11 +172,11 @@
 				
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="Factoring Agreement" />
+					<p:outputLabel value="#{lbl['lbl.ct.copy.factoring.agreement']}" />
 				</h:panelGrid>
 				<h:panelGroup id="uploadFactoringPg">
                     <h:panelGrid columns="3">
-			               <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" value="Upload"
+			               <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
 			                   icon="iconAttachment" disabled="#{supplierBackingBean.managedBean.removeFactoring}" update="factoringPanel" />	
 				              <p:spacer width="1"/>
 		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
@@ -192,13 +192,13 @@
 	      	      <p:fileUpload style="display:inline;" mode="advanced" 
 			           fileUploadListener="#{supplierBackingBean.fileUpload}" 
 			           allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			           invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			           invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			           update="factoringPanel">
 		          </p:fileUpload> 
 	         </p:dialog>
          </p:panel>
         
-         <p:panel id="clausePanel" header="Clause Details" toggleable="true"  toggleSpeed="500"
+         <p:panel id="clausePanel" header="#{lbl['lbl.ct.panel.clause']}" toggleable="true"  toggleSpeed="500"
             rendered="#{!supplierBackingBean.managedBean.removeFactoring and !supplierBackingBean.approverRole}" >
             <p:spacer height="8"/>
 	        <table style="width: 100%">
@@ -206,18 +206,17 @@
 				<td style="width: 15%;vertical-align: top;text-align: right"><p:selectBooleanCheckbox id="checkBox" required="true" value="#{supplierBackingBean.managedBean.agreeFactoringClause}" /> </td>
 				  <td><h:panelGrid columns="2">
 				      <p:outputLabel
-					   value="I Agree, according to the terms related to the payment for the requisition below, 
-					   The Government need to pay all that is needed to Us under the specific requisition directly to the #{supplierBackingBean.getFactoringCompany()}"/>
+					   value="#{lbl['lbl.ct.agree.factoring']}"> #{supplierBackingBean.getFactoringCompany()}</p:outputLabel>
 				        <p:message for="checkBox" display="icon"/>
 				       </h:panelGrid></td>
 				</tr>
 				<tr><td />
 				 <td>
-				       <p:commandButton value="View Factoring Clauses" process="@this" immediate="true" update="editorDisplay" actionListener="#{supplierBackingBean.previewAction()}" oncomplete="factoringClauseDlg.show();"/>
+				       <p:commandButton value="#{lbl['lbl.ct.view.factoring.clauses']}" process="@this" immediate="true" update="editorDisplay" actionListener="#{supplierBackingBean.previewAction()}" oncomplete="factoringClauseDlg.show();"/>
 			  	</td>
 				</tr>
 			</table>
-	        <p:dialog id="factoringClauseDlg" header="Factoring Clause" widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
+	        <p:dialog id="factoringClauseDlg" header="#{lbl['lbl.ct.factoring.clauses']}" widgetVar="factoringClauseDlg" modal="true" width="820" height="450">
     	    	<p:editor controls="print" id="editorDisplay" value="#{supplierBackingBean.editorValue}" width="800" height="430" />
     	    </p:dialog>
      </p:panel>

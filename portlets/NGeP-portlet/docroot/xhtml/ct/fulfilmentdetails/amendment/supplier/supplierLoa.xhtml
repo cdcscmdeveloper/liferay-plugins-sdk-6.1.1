@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="panelSupplierLOA" header="Letter of Acceptance" toggleable="true" toggleSpeed="500">
+	<p:panel id="panelSupplierLOA" header="#{lbl['lbl.ct.menu.loa']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
 			<object type="application/pdf" data="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.filePath}" height="500px" width="100%">
 				Your browser can't display pdf, <a href="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.scLoaAttachment.filePath}">click</a> to download pdf	instead.
