@@ -405,7 +405,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			    getManagedBean().getFlItemMap().put(key, flItem);
 		    }
 		}
-		
+		getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
 	}
