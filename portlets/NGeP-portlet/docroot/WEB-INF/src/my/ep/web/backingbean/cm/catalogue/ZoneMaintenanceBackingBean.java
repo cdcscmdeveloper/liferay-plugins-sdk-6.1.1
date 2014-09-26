@@ -477,6 +477,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							reqDistrictDTO.setDistrictId(districtNodeDto4.getDistrict().getDistrictId());
 							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict4 = resDistrictDTO.getPmDistrict();
+							if(newState3.getStateId() == null){
+								newState3 = newDistrict4.getPmState();
+							}
 							CmSupplierZoneDTL cmDtl9 = new CmSupplierZoneDTL();
 							cmDtl9.setCmSupplierZone(selZone);
 							cmDtl9.setPmState(newState3);
@@ -488,10 +491,22 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 						newCmSupplierZoneDTLs.add(cmDtl8);
 					}
 				} else if(selectedNode.getParent().getType().equals("division")){
-					TreeNode parentNode = selectedNode.getParent();
-					CmSupplierZoneStateDistrictDTO divisionNodeDto3 = (CmSupplierZoneStateDistrictDTO) parentNode.getData();
+					CmSupplierZoneStateDistrictDTO stateNodeDto4 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getParent().getData();
 					CmSupplierZoneDTL cmDtl10 = new CmSupplierZoneDTL();
 					cmDtl10.setCmSupplierZone(selZone);
+					PmState newState4 = new PmState();
+					if(stateNodeDto4.getState() != null){
+						selectedStates.add(stateNodeDto4.getState().getStateId());
+						if(!existingStates.contains(stateNodeDto4.getState().getStateId())){
+							IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
+							StateReqDTO reqStateDTO = new StateReqDTO();
+							reqStateDTO.setStateId(stateNodeDto4.getState().getStateId());
+							StateResDTO resStateDTO = stateSO.retriveStateDetailsByID(reqStateDTO);
+							newState4 = resStateDTO.getPmState();
+							System.out.println("*******State4:" + newState4.getStateName());
+						}
+					}
+					CmSupplierZoneStateDistrictDTO divisionNodeDto3 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
 					PmDivision newDivision3 = new PmDivision();
 					if(divisionNodeDto3.getDivision() != null){
 						selectedDivisions.add(divisionNodeDto3.getDivision().getDivisionId());
@@ -503,20 +518,6 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							newDivision3 = resDivisionDTO.getPmDivision();
 						}
 					}
-					cmDtl10.setPmDivision(newDivision3);
-					CmSupplierZoneStateDistrictDTO stateNodeDto4 = (CmSupplierZoneStateDistrictDTO) parentNode.getParent().getData();
-					PmState newState4 = new PmState();
-					if(stateNodeDto4.getState() != null){
-						selectedStates.add(stateNodeDto4.getState().getStateId());
-						if(!existingStates.contains(stateNodeDto4.getState().getStateId())){
-							IStateSO stateSO = (IStateSO)BusinessDelegate.getInstance().getServiceObject("pm",IStateSO.class);
-							StateReqDTO reqStateDTO = new StateReqDTO();
-							reqStateDTO.setStateId(stateNodeDto4.getState().getStateId());
-							StateResDTO resStateDTO = stateSO.retriveStateByID(reqStateDTO);
-							newState4 = resStateDTO.getPmState();
-						}
-					}
-					cmDtl10.setPmState(newState4);
 					CmSupplierZoneStateDistrictDTO districtNodeDto5 = (CmSupplierZoneStateDistrictDTO) selectedNode.getData();
 					if(districtNodeDto5.getDistrict() != null){
 						selectedDistricts.add(districtNodeDto5.getDistrict().getDistrictId());
@@ -526,6 +527,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							reqDistrictDTO.setDistrictId(districtNodeDto5.getDistrict().getDistrictId());
 							DistrictResDTO resDistrictDTO = districtSO.retriveDistrictDtlByID(reqDistrictDTO);
 							PmDistrict newDistrict5 = resDistrictDTO.getPmDistrict();
+							if(newState4.getStateId() == null){
+								newState4 = newDistrict5.getPmState();
+							}
 							CmSupplierZoneDTL cmDtl11 = new CmSupplierZoneDTL();
 							cmDtl11.setCmSupplierZone(selZone);
 							cmDtl11.setPmState(newState4);
@@ -534,6 +538,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 							newCmSupplierZoneDTLs.add(cmDtl11);
 						}
 					} else {
+						cmDtl10.setPmDivision(newDivision3);
+						cmDtl10.setPmState(newState4);
 						newCmSupplierZoneDTLs.add(cmDtl10);
 					}
 				}
