@@ -17,10 +17,7 @@
 						<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
 					</td>
 				</tr>
-			</table>
-			<ui:fragment
-				rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
-				<table style="width: 100%">
+				<c:if test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
 						<td width="134px;" style="float:left;">
 							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" />
@@ -133,11 +130,9 @@
 							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
 						</td>
 					</tr>
-				</table>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
-				<table style="width: 100%">
+					</c:if>
+					
+					<c:if test="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 					<tr>
 						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
 						<td style="float:left;">
@@ -170,8 +165,26 @@
 							</h:outputText>
 						</td>
 					</tr>
+					</c:if>
+					
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+	
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
+						</tr>
+					</p:outputPanel>
 				</table>
-			</ui:fragment>
 		</p:panel>
 	</p:panel>
 </ui:composition>
