@@ -25,11 +25,18 @@
 					<h:outputLabel value="#{lbl['lbl.sc.request.note.header.method']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
-				  #{requestNoteBackingBean.managedBean.sourceMethod}  
-					<p:commandLink  partialSubmit="true" process="@this" action="#{requestNoteBackingBean.showSimpleQuote}"  rendered="#{requestNoteBackingBean.managedBean.sourceMethod ne 'Search Catalogue'}">
+				   <h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}">  
+				      #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteMethodCode)}
+				  </h:panelGroup>
+				  
+				    <h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
+				         #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteSQMethodCode)}
+				      <p:commandLink  partialSubmit="true" process="@this" action="#{requestNoteBackingBean.showSimpleQuote}">
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
-							style="vertical-align:middle" />
-					</p:commandLink>
+					 		style="vertical-align:middle" />
+					 </p:commandLink>
+				  </h:panelGroup>
+					
 				</td>
 
 				<td style="width: 8%"><h:outputLabel
