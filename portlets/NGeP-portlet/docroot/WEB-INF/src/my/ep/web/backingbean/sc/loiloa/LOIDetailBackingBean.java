@@ -169,106 +169,89 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		debugLogger("retrieveLOIList");
 		IQTAwardSO qtAwardSO = null;
 		try {
-			
+
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(qtId);
 			reqDTO.setOrgProfileId(32950L);	// TODO - change in SO to remove this.
-			
+
 			AwardSupplierResDTO resDTO = qtAwardSO.retrievePendingLoiList(reqDTO);
-			
+
 			// loi loa list
 			if(resDTO.getLoiLoas() != null &&  resDTO.getLoiLoas().size() >0){
 				//getManagedBean().setLoiLoaBeans(prepareLoiLoaList(resDTO.getLoiLoas()));
+				reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
 			}
-			
+
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
 			// rec supplier in loi list
 			getManagedBean().setRecSupplierList(resDTO.getPendingLoiLoas());
-			
-			reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
-			resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
-			
-			
-		
-			// loi details
-			getManagedBean().setScLoi(resDTO.getScLoi());
-			
-			// branch list 
-			if(resDTO.getSmSupplierBranchs() != null && resDTO.getSmSupplierBranchs().size() >0){
-				getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
-			}
-			
-			
-			// approvers
-			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() >0){
-				getManagedBean().setApproverNames(resDTO.getApproverList());
-			}
-			
-			
-			getManagedBean().setScLoiLoaItems(resDTO.getScLoi().getScLoiLoaItems());
-			getManagedBean().setScLoi(resDTO.getScLoi());
-			
-			// TODO APPPROVER HISTORY
-			getManagedBean().getLois().add(resDTO.getScLoi());
-			
-			
-			// remarks
-			getManagedBean().getScLoi().setScLoiRemarks(initializeRemarks(resDTO.getScLoi()));
-			
+
 			// status
 			getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
-			
+
 			populateUserMinistryList();
 			initializeRemarks(new ScLoi());
 			getApproverNames();
-			
+
 		} catch (Exception ex) {																		
 			handleException(ex);
 		}
 	}
-	
 
-	private List<LoiLoaBean> prepareLoiLoaList(ScLoiLoa  loiLoa){
+	private List<LoiLoaBean> prepareLoiLoaList(List<ScLoiLoa>  loiloas){
 		List<LoiLoaBean>  loiloaBeans  = new ArrayList<LoiLoaBean>();
-		if(loiLoa != null){
-			
+		if(loiloas != null && loiloas.size()>0){
+			for (ScLoiLoa scLoiLoa : loiloas) {
 
-			if(loiLoa.getScloas() != null && loiLoa.getScloas().size()>0){
-				for (ScLoa scLoa : loiLoa.getScloas()) {
-					LoiLoaBean loiLoaBean  = new LoiLoaBean();
-					loiLoaBean.setScLoa(scLoa);
-					loiLoaBean.setLoiLoaType("LOA");
-					loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(null ,scLoa.getScLoaWorkFlowStatuses()));
-					loiloaBeans.add(loiLoaBean);
+				if(scLoiLoa.getScloas() != null && scLoiLoa.getScloas().size()>0){
+					for (ScLoa scLoa : scLoiLoa.getScloas()) {
+						LoiLoaBean loiLoaBean  = new LoiLoaBean();
+						loiLoaBean.setScLoa(scLoa);
+						loiLoaBean.setLoiLoaType("LOA");
+						loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(null ,scLoa.getScLoaWorkFlowStatuses()));
+						loiloaBeans.add(loiLoaBean);
+					}
 				}
+
+				if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+					for (ScLoi scLoi : scLoiLoa.getScLois()) {
+						LoiLoaBean loiLoaBean  = new LoiLoaBean();
+						loiLoaBean.setScLoi(scLoi);
+						loiLoaBean.setLoiLoaType("LOI");
+						loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(scLoi.getScLoiWorkFlowStatuses() ,null));
+						loiloaBeans.add(loiLoaBean);
+					}
+				}	
 			}
-
-			if(loiLoa.getScLois() != null && loiLoa.getScLois().size()>0){
-				for (ScLoi scLoi : loiLoa.getScLois()) {
-					LoiLoaBean loiLoaBean  = new LoiLoaBean();
-					loiLoaBean.setScLoi(scLoi);
-					loiLoaBean.setLoiLoaType("LOI");
-					loiLoaBean.setLoiLoaStatus(getLoiLoaStatus(scLoi.getScLoiWorkFlowStatuses() ,null));
-					loiloaBeans.add(loiLoaBean);
-				}
-			}	  
-
 		}
 		return loiloaBeans;
+	}
 
-	}
-	
 	public void onRowRecSupplierAction(SelectEvent event) {
+		IQTAwardSO qtAwardSO = null;
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
-		getManagedBean().setLoiLoaBeans(prepareLoiLoaList(scLoiLoa));
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
+			reqDTO.setDocId(scLoiLoa.getDocId());
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+			
+			if(resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size()>0){
+				getManagedBean().setLoiLoaBeans(prepareLoiLoaList(resDTO.getLoiLoas()));
+			}
+		} catch (Exception ex) {																		
+			handleException(ex);
+		}
 	}
-	
+
 	/**
 	 * to get ptj drop down Listing
 	 */
@@ -288,22 +271,19 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 	
 	public void tabMenuListener(Integer selectedTabIndex) {
 		debugLogger("tabMenuListener");
-		 FacesContext fc = FacesContext.getCurrentInstance();
 		if(selectedTabIndex.equals(0)){
 			getManagedBean().setSelectedTabIndex(0);
-			
+
 		} else if(selectedTabIndex.equals(1)){
 			getManagedBean().setSelectedTabIndex(1);
 		} else if(selectedTabIndex.equals(2)){
 			getManagedBean().setSelectedTabIndex(2);
 		} else if(selectedTabIndex.equals(3)){
 			getManagedBean().setSelectedTabIndex(3);
-			
+
 		}
-		
-		//fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "loiDetailsMain");
 	}
-	
+
    
 	/**
 	 * Initializing remarks in loi approval
@@ -362,10 +342,8 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		if(resDTO.getScLoi() != null){
 			getManagedBean().setScLoi(resDTO.getScLoi());
 		}
-
 	}
 
-	
 	/**
 	 * getting Approver drop down listing
 	 */
@@ -379,52 +357,51 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setUserId(user.getUserId());
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			
-		   IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		   UserReqDTO userReqDto = new UserReqDTO();
-		   userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-		   //userReqDto.setOrgProfileId(resDTO.getUserOrgList() .get(0).getPmOrgProfile().getOrgProfileId());
-		   
-		   UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		   getManagedBean().setApproverNames(userResDTO.getUserList());
-		
+
+			IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDto = new UserReqDTO();
+			userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+			//userReqDto.setOrgProfileId(resDTO.getUserOrgList() .get(0).getPmOrgProfile().getOrgProfileId());
+
+			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+			getManagedBean().setApproverNames(userResDTO.getUserList());
+
 		}
-		
 		return approverUsers;
 	}
 
-	  /**
-	    * To get status for loi
-	    */
-	   public void  getCurrentStatus(Long statusId) {
-		   if (statusId != null) {
-			   getManagedBean().setStatus(getStatusDescById(statusId));
-		   }
-	   } 
-	
-	   
+	/**
+	 * To get status for loi
+	 */
+	public void  getCurrentStatus(Long statusId) {
+		if (statusId != null) {
+			getManagedBean().setStatus(getStatusDescById(statusId));
+		}
+	} 
 
-	   private String  getLoiLoaStatus(List<ScLoiWorkFlowStatus> loiStatus , List<ScLoaWorkFlowStatus> loaStatus) {
-		   String loiLoaStatus = "";
-		   if (loiStatus != null && loiStatus.size()>0) {
-			   loiLoaStatus = getStatusDescById( 
-					   loiStatus.get(0).getPmStatus().getStatusId());
-		   }
-		   if (loaStatus != null && loaStatus.size()>0) {
-			   loiLoaStatus = getStatusDescById(loaStatus.get(0).getPmStatus().getStatusId());
-		   }
-		   return loiLoaStatus;
-	   } 
-	   
-	   
-	   /**
-	    * Page navigation to loi loa list
-	    */
-	   public void backToPervious() {
-		   log.info("backToPervious");
-		   FacesContext fc = FacesContext.getCurrentInstance();
-		   fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);  
-	   }
+
+
+	private String  getLoiLoaStatus(List<ScLoiWorkFlowStatus> loiStatus , List<ScLoaWorkFlowStatus> loaStatus) {
+		String loiLoaStatus = "";
+		if (loiStatus != null && loiStatus.size()>0) {
+			loiLoaStatus = getStatusDescById( 
+					loiStatus.get(0).getPmStatus().getStatusId());
+		}
+		if (loaStatus != null && loaStatus.size()>0) {
+			loiLoaStatus = getStatusDescById(loaStatus.get(0).getPmStatus().getStatusId());
+		}
+		return loiLoaStatus;
+	} 
+
+
+	/**
+	 * Page navigation to loi loa list
+	 */
+	public void backToPervious() {
+		log.info("backToPervious");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);  
+	}
 
 
 	/*
@@ -449,7 +426,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 	public void addNegotiationLocation() {
 		debugLogger("addNegotiationLocation");
 		ScLoiNegoLocation negoLocation = new ScLoiNegoLocation();
-		
+
 		List<ScLoiNegoLocation> negoLocationList = getManagedBean().getNegoLocationList();
 		if (null == negoLocationList) {
 			negoLocationList = new ArrayList<ScLoiNegoLocation>();
@@ -471,7 +448,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		negoTerm.setSelected(Boolean.TRUE);
 		negoTerm.setScLoi(getManagedBean().getScLoi());
 		scNegoTerms.add(negoTerm);
-		
+
 		getManagedBean().getScLoi().setScNegoTerms(scNegoTerms);
 		//this.getManagedBean().setNegoTermsList(scNegoTerms);
 	}
@@ -482,9 +459,9 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
+
 			String languageCode = new FacesScopes().getUserLocale().getLanguage();
-			
+
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setTermType(TermType.TERM_LOI.value());
 			reqDTO.setLanguageCode(languageCode);
@@ -541,7 +518,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			throw new EpException("Please select At least one Item");
 		}
 	}
-	
+
 	public void deleteNegoLocations() { 
 		List<ScLoiNegoLocation> selectedNegoLocs  = getManagedBean().getSelectedNegoLocationList();
 		if(selectedNegoLocs != null){
@@ -554,11 +531,6 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}
 	}
 
-	
-	
-	
-	
-	
 	/**
 	 * Handle Department dropdown changed - reset selected ptj profile and
 	 * populate list of department.
@@ -594,7 +566,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}
 
 		this.getManagedBean().getQt().getDepartmentOrgProfile()
-				.setOrgProfileId(null);
+		.setOrgProfileId(null);
 
 		handleDepartmentProfileChanged();
 	}
@@ -694,16 +666,16 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
 
-				
+
 
 				getManagedBean().setQt(scQt);
 				getManagedBean().getScLoi().setBrandNew(false);
 				populateParentOrgProfile(getManagedBean().getQt());
 
-				
+
 				/*List<ScQtZoneCriteria> zonelist = scQt.getScQtCriterias()
 						.getScQtZoneCriterias();
-				
+
 
 				List<ScRequestItem> itemList = resDTO.getItemResultBean()
 						.getResultList();
@@ -725,7 +697,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 				getManagedBean().setNegoTermsList(negoTermList);*/
 
 				getManagedBean().setApproverNames(getApproverNames());
-				
+
 			} else {
 
 				Calendar c = Calendar.getInstance();
@@ -752,7 +724,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 				populateParentOrgProfile(getManagedBean().getQt());
 
 				getManagedBean().setScLoi(new ScLoi());
-				
+
 				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
 				/*getManagedBean().getScLoi().setSmSupplier(
@@ -780,7 +752,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 				PmUser pmUser = new PmUser();
 				//getManagedBean().getScLoi().setApproverUser(pmUser);
 				getManagedBean().setApproverNames(getApproverNames());
-			
+
 				/*
 				 * getManagedBean().setScQtItemList(null);
 				 * getManagedBean().setZonelist(null);
@@ -811,9 +783,51 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}
 		return QTConstants.LOI_PAGE;
 	}
-	
-	public void createLOI(){
-		
+
+	public void createLOI(ScLoiLoa scLoiLoa){
+		IQTAwardSO qtAwardSO = null;
+
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			ScLoi loi = new ScLoi();
+			loi.setScLoiLoa(scLoiLoa);
+			reqDTO.setScLoi(loi);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+
+			// loi details
+			getManagedBean().setScLoi(resDTO.getScLoi());
+
+			// branch list 
+			if(resDTO.getSmSupplierBranchs() != null && resDTO.getSmSupplierBranchs().size() >0){
+				getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
+			}
+
+			// approvers
+			if(resDTO.getApproverList() != null && resDTO.getApproverList().size() >0){
+				getManagedBean().setApproverNames(resDTO.getApproverList());
+			}
+
+			getManagedBean().setScLoiLoaItems(resDTO.getScLoi().getScLoiLoaItems());
+			getManagedBean().setScLoi(resDTO.getScLoi());
+
+			// TODO APPPROVER HISTORY
+			getManagedBean().getLois().add(resDTO.getScLoi());
+
+			// remarks
+			getManagedBean().getScLoi().setScLoiRemarks(initializeRemarks(resDTO.getScLoi()));
+
+			// status
+			getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
+
+			populateUserMinistryList();
+			initializeRemarks(new ScLoi());
+			getApproverNames();
+
+		} catch (Exception ex) {																		
+			handleException(ex);
+		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "loiDetailsMain");
 	}
@@ -841,13 +855,13 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 			List<PmAddressType> addList = addResDTO.getAddressTypeList();
 
-		/*	getManagedBean().getScLoi().setOfficerAddress(
+			/*	getManagedBean().getScLoi().setOfficerAddress(
 					addList.get(0).getPmAddress().getAddress1());*/
 			/*getManagedBean().getScLoi().setOfficerFaxNo(
 					addList.get(0).getPmAddress().getFaxNo());
 			getManagedBean().getScLoi().setOfficerPhoneNo(
 					addList.get(0).getPmAddress().getPhoneNo());*/
-		/*	getManagedBean().getScLoi().setOfficerEmail(
+			/*	getManagedBean().getScLoi().setOfficerEmail(
 					addList.get(0).getPmAddress().getEmail());*/
 
 			// getManagedBean().getScLoi().setApproverUser(user);
@@ -887,7 +901,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}*/
 
 	}
-	
+
 	/**
 	 * Method to save the LOA details
 	 */
@@ -904,7 +918,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
-					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -925,12 +939,12 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			System.out.println("LOI Response Due Date : "
 					+ scLoi.getAckDueDate());
 
-			
+
 			// Setting the pm user id for LOI details
 			UserReqDTO userReqDTO = new UserReqDTO();
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
-*/
+			 */
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
@@ -943,7 +957,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			reqDTO.setStatusId(60000l);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			
+
 
 			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
 					.getNegoLocationList();
@@ -979,7 +993,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			iqtAwardSO = null;
 		}
 	}
-	
+
 	public String submitAction() {
 		debugLogger("submitAction");
 
@@ -993,7 +1007,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
-					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -1014,12 +1028,12 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			System.out.println("LOI Response Due Date : "
 					+ scLoi.getAckDueDate());
 
-			
+
 			// Setting the pm user id for LOI details
 			UserReqDTO userReqDTO = new UserReqDTO();
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
-*/
+			 */
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
@@ -1032,7 +1046,6 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			reqDTO.setStatusId(60000l);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			
 
 			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
 					.getNegoLocationList();
@@ -1059,23 +1072,23 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 				renewSesionObject();
 
 				FacesContext
-						.getCurrentInstance()
-						.addMessage(
+				.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(
+								FacesMessage.SEVERITY_INFO,
 								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_LETTER_OF_INTENT),
-																scLoi.getLoiNo() },
+								MessageUtils
+								.getMessage(
+										MessageConst.INFO_700026,
+										new String[] {
+												getParameterDesc(
+														ParameterTypeConst.DOCUMENT_TYPES,
+														ParameterConst.DOCTYPE_LETTER_OF_INTENT),
+														scLoi.getLoiNo() },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()
-																.getUserLocale())));
+										.getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
@@ -1104,7 +1117,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
-					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -1114,7 +1127,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			//Long statusId = scLoi.getPmStatus().getStatusId().longValue();
 			Long statusId =null ;
-			
+
 			scLoi.setIssueDate(new Date());
 
 			// Date date = new Date();
@@ -1127,12 +1140,12 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			System.out.println("LOI Response Due Date : "
 					+ scLoi.getAckDueDate());
 
-			
+
 			// Setting the pm user id for LOI details
 			UserReqDTO userReqDTO = new UserReqDTO();
 			/*userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
 					.getUserId());
-*/
+			 */
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 
 			PmUser user = userResDTO.getPmUser();
@@ -1145,7 +1158,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			reqDTO.setStatusId(60000l);
 			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
-			
+
 
 			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
 					.getNegoLocationList();
@@ -1207,13 +1220,11 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			iqtAwardSO = null;
 		}
 	}
-	
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
 		log.info(message);
 	}
-
-	
 }

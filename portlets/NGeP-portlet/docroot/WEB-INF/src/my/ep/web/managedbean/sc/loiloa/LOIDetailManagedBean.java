@@ -87,7 +87,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> ptjList;
 	
 	private Long sourceId;
-	List<LoiLoaBean>  loiLoaBeans  = new ArrayList<LoiLoaBean>();
+	private List<LoiLoaBean>  loiLoaBeans  = new ArrayList<LoiLoaBean>();
 	private ScLoiLoa selectedLoiLoa = new ScLoiLoa();
 
 	private List<ScLoiLoaItem> scLoiLoaItems;
