@@ -10,38 +10,38 @@
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td><p:inputText size="65" id="ministry"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
 						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
+					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
 						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
-						width="5" /> <p:inputText size="39" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"/></td>
+				<td><p:inputText size="8" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
+						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}"/></td>
 			</tr>
 		</table>
 	</p:panel>
