@@ -8,25 +8,8 @@
 		<tr>
 			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 					src="smViewRenewApplnSideMenuItem.xhtml" /></td>
-			<td><p:outputPanel id="renewStep62OnlySuppPan"
-					rendered="#{viewSmApplBackingBean.managedBean.supplierUser}">
-					<table style="width: 98%">
-						<tr>
-							<td class="smLastSubmitLabel"><h:outputText
-									value="#{lbl['lbl.sm.lastSubmitDate']}" /></td>
-							<td class="smLastSubmitDateVal"><h:outputText
-									value="#{viewSmApplBackingBean.managedBean.smAppl.draftExpiryDate}">
-									<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-								</h:outputText></td>
-						</tr>
-					</table>
-				</p:outputPanel> <h:inputHidden
-					value="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType}" />
-				<ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
-				<ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/machineryInfoFormViewOnly.xhtml" />
-
+			<td><ui:include src="/xhtml/sm/shared/applViewOnlyPages/manufacturingOrAssmblyInfoFormViewOnly.xhtml" />
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/machineryInfoFormViewOnly.xhtml" />
 			</td>
 		</tr>
 

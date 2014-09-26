@@ -57,7 +57,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 	private String currentPageType;
 
 	private SmSupplierCert selectedCert;
-	private List<PmCertBody> certBodyLs;
 	private SelectItem[] businessTypeLs;
 	private SmFacility basicCompanyFacility;
 	private SmAssociateCompany selectedAssocCompany;
@@ -242,14 +241,6 @@ public class ViewSmApplManagedBean extends BaseManagedBean {
 
 	public void setSelectedCert(SmSupplierCert selectedCert) {
 		this.selectedCert = selectedCert;
-	}
-
-	public List<PmCertBody> getCertBodyLs() {
-		return certBodyLs;
-	}
-
-	public void setCertBodyLs(List<PmCertBody> certBodyLs) {
-		this.certBodyLs = certBodyLs;
 	}
 
 	public SelectItem[] getBusinessTypeLs() {

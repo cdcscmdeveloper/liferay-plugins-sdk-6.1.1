@@ -113,10 +113,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		// if (reloadPreviousApplication()) {
-		// initPreviousApplication();
-		// }
-		// constructMessage();
+		 if (reloadPreviousApplication()) {
+		 initPreviousApplication();
+		 }
+		 constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -217,21 +217,6 @@ public class ViewSmApplBackingBean extends
 		}
 	}
 
-	// temp added for testing
-	public void changeVerifySection(Boolean isSectionVerified) {
-		if (getManagedBean().isPoUser()) {
-			getManagedBean().getPoSecReview();
-			getManagedBean().setPoSecReview(
-					assignVerificationCount(getManagedBean().getPoSecReview(),
-							isSectionVerified));
-		} else if (getManagedBean().isApproverUser()) {
-			getManagedBean().getApprvrSecReview();
-			getManagedBean().setApprvrSecReview(
-					assignVerificationCount(getManagedBean()
-							.getApprvrSecReview(), isSectionVerified));
-		}
-	}
-
 	public void downloadSelectedSuppDoc(String fileName, String filePath) {
 		String finalFilePath = filePath + fileName;
 		try {
@@ -241,11 +226,6 @@ public class ViewSmApplBackingBean extends
 			e.printStackTrace();
 		}
 		finalFilePath = null;
-	}
-
-	public void viewApplication() {
-		getManagedBean().setCertBodyLs(
-				SmApplicationUtil.retrievePmCertBodyList());
 	}
 
 	public void viewSignatories(SmSupplierBank signAcctBean) {
@@ -655,31 +635,6 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelAssocBody(SmAssociationBody assocBean) {
 		getManagedBean().setSelectedAssocBody(assocBean);
-	}
-
-	private SmApplSectionReview assignVerificationCount(
-			SmApplSectionReview sec, Boolean isSectionVerified) {
-		if (isSectionVerified) {
-			sec.setCheckCount(sec.getCheckCount() + 1);
-
-		} else {
-			sec.setCheckCount(sec.getCheckCount() - 1);
-
-		}
-		if (sec.getCheckCount() >= getManagedBean().getMaxReviewCount()) {
-			sec.setVerifiedAll(Boolean.TRUE);
-		} else {
-			sec.setVerifiedAll(Boolean.FALSE);
-		}
-
-		return sec;
-	}
-
-	public void onTabChange(TabChangeEvent event) {
-		FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab"
-				+ event.getTab().getId());
-
-		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public void backFromPersonnelPage() {
