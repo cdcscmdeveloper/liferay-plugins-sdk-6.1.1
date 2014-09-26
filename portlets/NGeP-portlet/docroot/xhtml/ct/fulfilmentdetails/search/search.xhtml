@@ -17,92 +17,92 @@
 			</p:blockUI>
        <p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
     </p:panel>
-     <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500">
+     <p:panel id="searchId" header="#{lbl['lbl.btn.search']}" toggleable="true"  toggleSpeed="500">
      	<h:panelGrid columns="4" style="width:100%;">
-           <p:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" maxlength="17" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}" maxlength="1000" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" />
-           <p:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}" maxlength="200" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.supplier.id']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" maxlength="20" style="width:170px;"/>
-           <p:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.supplier.name']}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" maxlength="100" style="width:170px;"/> 
-           <p:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.contract.start']}"/>
            <p:calendar id="popupButtonCal"   showOn="button" readonlyInput="true"  navigator="true"
                style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" 
                pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-           <p:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
            <p:calendar id="popupButtonCal1"  style="width:130px;"  readonlyInput="true" 
              value="#{contractDetailsBackingBean.managedBean.ctDateEnd}"  navigator="true"  showOn="button"
              pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
-           <p:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" maxlength="100" style="width:170px;margin-top:3px;"/>                     
-           <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
+           <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
            <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctPhysicalNo}" maxlength="30" style="width:170px;margin-top:3px;" />
-		   <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
+		   <p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
 		   <p:selectOneMenu id="status" value="#{contractDetailsBackingBean.managedBean.ctContractStatus}"	style="width:200px;">
 				<f:selectItems value="#{contractDetailsBackingBean.getSearchStatusDropdown()}" />
 		   </p:selectOneMenu>
-		   <p:outputLabel value="#{lbl['lbl.ct.search.ttype']}" />
+		   <p:outputLabel value="#{lbl['lbl.ct.termination.type']}" />
 		   <p:selectOneMenu id="terminationType" value="#{contractDetailsBackingBean.managedBean.terminationTypeId}" style="width:200px;">
 		   		<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.terminationDecisionType)}" />
 		   </p:selectOneMenu>
 		</h:panelGrid>
 	  	<div class="ppRightBtn"> 
         	<p:commandButton
-        	 id="searchButtonId" value="#{lbl['lbl.ct.search.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
+        	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
         	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"  icon="ui-icon-search"   update="contractTbl"/>
-             <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{contractDetailsBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
+             <p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{contractDetailsBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
 	  	</div>	
 	  </p:panel>
-		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.panel.result']}" toggleable="true"	toggleSpeed="500">
+		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
 			<div style="overflow-x: auto">				
 				<p:dataTable id="contractTbl" value="#{contractDetailsBackingBean.contractDataModel}"
 					var="data" lazy="true" rowIndexVar="index" rowKey="#{data}" >
 					<ac:paginator for="contractTbl" />
-					<p:column headerText="#{lbl['lbl.ct.search.cno']}" style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.search.table.cname']}"  style="width:15%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.clno']}"  style="width:10%;">
+					<p:column headerText="#{lbl['lbl.ct.circular.no']}"  style="width:10%;">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  style="width:15%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{data.companyName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  style="width:8%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:8%;">
 						<h:outputText value="#{data.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.cend']}"  style="width:8%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  style="width:8%;">
 						<h:outputText value="#{data.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.lno']}"  style="width:10%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.loa.no']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.loaPhysicalNo}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.status']}"  style="width:10%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.status']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.search.table.action']}"  style="width:14%;">
+					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:14%;">
 						<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoSuspendPage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="pause.png"
-						  		value="/css/images/design/pause.png" title="#{lbl['lbl.ct.search.susContract']}" />
+						  		value="/css/images/design/pause.png" title="#{lbl['lbl.ct.suspend.contract']}" />
 						</p:commandLink>					   
 					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />
 					  	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoTerminatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="terminate.png"
-						  		value="/css/images/design/terminate.png" title="#{lbl['lbl.ct.search.terminate']}" />
+						  		value="/css/images/design/terminate.png" title="#{lbl['lbl.ct.termination']}" />
 						</p:commandLink>
 					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved
 					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}" />
@@ -110,29 +110,29 @@
 					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
-						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
+						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.amendment']}" />
 						</p:commandLink>
 						<p:commandLink rendered="#{data.ctContractVer.status.statusId eq CtStatusConst.faPendingSubmission and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase}"
 							onclick="gotoAmendPage([{name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'edit'}])">
 							<p:graphicImage library="ep/images/design" name="revise.png"
-						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.search.amd']}" />
+						   		value="/css/images/design/revise.png" title="#{lbl['lbl.ct.amendment']}" />
 						</p:commandLink>
 						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />					   
 					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}"
 							onclick="gotoUpdatePage([{name:'latestContractVerId',value:'#{data.ctContract.latestContractVer.contractVerId}'}, {name:'contractId',value:'#{data.ctContract.contractId}'}])">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
-						   		value="/css/images/design/evaluate.png" title="#{lbl['lbl.ct.search.update']}" />
+						   		value="/css/images/design/evaluate.png" title="#{lbl['lbl.ct.update']}" />
 						</p:commandLink>
 						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1 and data.ctContractVer.status.statusId != CtStatusConst.ftApproved}" />
 					   	<p:commandLink onclick="gotoViewPage([{name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}])">
 							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png" title="#{lbl['lbl.ct.search.viewCt']}" />
+								value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
 						</p:commandLink>
 						<p:spacer width="5" rendered="#{data.terminate or data.mutualTerminate or data.remedy}" />
 					   	<p:commandLink rendered="#{data.terminate or data.mutualTerminate or data.remedy}"
 							onclick="gotoTerminateHistoryPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}])">
 							<p:graphicImage library="ep/images/design" name="history_frame.png"
-								value="/css/images/design/history_frame.png" title="#{lbl['lbl.ct.search.viewHistory']}" />
+								value="/css/images/design/history_frame.png" title="#{lbl['lbl.ct.view.termination.history']}" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>			

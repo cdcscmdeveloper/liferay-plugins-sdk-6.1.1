@@ -58,7 +58,7 @@ public class AmendTabSideMenus {
 		  
 		  if(menuWithMeetings == null){
 			  menuWithMeetings =  new ArrayList<String>(Arrays.asList(
-						ResourceBundleUtils.getMessage("lbl.ct.menu.meeting.details", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+						ResourceBundleUtils.getMessage("lbl.ct.menu.meeting", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
 		  }
 		  
 		  if(menuWithDeclaration == null){

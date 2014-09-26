@@ -18,50 +18,50 @@
       	</p:messages>
     </p:panel>
     
-    <p:panel id="associatePanelId" header="#{lbl['lbl.ct.projassociate']}"   toggleable="true"  toggleSpeed="500">
+    <p:panel id="associatePanelId" header="#{lbl['lbl.ct.project.association']}"   toggleable="true"  toggleSpeed="500">
          <h:panelGrid columns="4" style="width:100%;">
                
-               <p:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
+               <p:outputLabel value="#{lbl['lbl.ct.project.name']}"  />
                <p:inputText id="pNames"  maxlength="100" style="width:170px;" 
-                    label="#{lbl['lbl.ct.asearch.pname']}"  value="#{associationBackingBean.managedBean.projectName}"/>
+                    label="#{lbl['lbl.ct.project.name']}"  value="#{associationBackingBean.managedBean.projectName}"/>
    
-               <p:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
+               <p:outputLabel value="#{lbl['lbl.ct.contract.title']}"  />
                <p:inputText id="contractName" maxlength="1000" style="width:170px;"
-                   label="#{lbl['lbl.ct.asearch.cname']}" value="#{associationBackingBean.managedBean.ctName}" />
+                   label="#{lbl['lbl.ct.contract.title']}" value="#{associationBackingBean.managedBean.ctName}" />
            
-               <p:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
+               <p:outputLabel value="#{lbl['lbl.ct.project.desc']}" />
                <p:inputText id="pDescp" maxlength="200"  style="width:170px;" 
-                   label="#{lbl['lbl.ct.asearch.pdes']}" value="#{associationBackingBean.managedBean.projectDescription}"/>
+                   label="#{lbl['lbl.ct.project.desc']}" value="#{associationBackingBean.managedBean.projectDescription}"/>
 
-               <p:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
+               <p:outputLabel  value="#{lbl['lbl.ct.supplier.name']}"  />
                <p:inputText id="sName" style="width:170px;" maxlength="100"
-                   label="#{lbl['lbl.ct.asearch.sname']}" value="#{associationBackingBean.managedBean.ctSupplierName}"/>
+                   label="#{lbl['lbl.ct.supplier.name']}" value="#{associationBackingBean.managedBean.ctSupplierName}"/>
          
-              <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
+              <h:outputLabel value="#{lbl['lbl.ct.contract.start']}"  />
               <p:calendar id="calefdate" style="width:130px;margin-bottom:5px;"  navigator="true"
                  value="#{associationBackingBean.managedBean.ctDateStart}" readonlyInput="true"   showOn="button"
                  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
       
-              <p:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
+              <p:outputLabel value="#{lbl['lbl.ct.contract.end']}" />
               <p:calendar id="calepdate"  showOn="button" readonlyInput="true"
                   value="#{associationBackingBean.managedBean.ctDateEnd}" style="width:130px;"  navigator="true"
                   pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"/>
        
-              <p:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
+              <p:outputLabel value="#{lbl['lbl.ct.physical.no']}"/>
               <p:inputText  id="ProdName"  style="width:170px;margin-top:3px;"  maxlength="30"
-                   label="#{lbl['lbl.ct.asearch.pcno']}" value="#{associationBackingBean.managedBean.ctProductCode}" />
+                   label="#{lbl['lbl.ct.physical.no']}" value="#{associationBackingBean.managedBean.ctProductCode}" />
           </h:panelGrid>
            
           <div class="ppRightBtn"> 
-             <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" process="@form" action="#{associationBackingBean.searchAssociation}" 
+             <p:commandButton value="#{lbl['lbl.btn.search']}" process="@form" action="#{associationBackingBean.searchAssociation}" 
                  icon="ui-icon-search" onstart="blkAssoSearchTable.show();" oncomplete="blkAssoSearchTable.hide();"  update=":form"/>
             
-             <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@form"
+             <p:commandButton value="#{lbl['lbl.ct.reset']}"  process="@form"
               action="#{associationBackingBean.searchReset}" icon="ui-icon-reset"   update=":form"/>
         </div>
      </p:panel>
 	
-	<p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
+	<p:panel id="associateResultId" header="#{lbl['lbl.ct.search.result']}"   toggleable="true"  toggleSpeed="500">
         <p:dataTable id="associateSearch" var="data" 
              lazy="true"  value="#{associationBackingBean.associationDataModel}"  
              rowKey="#{data}" selection="#{associationBackingBean.ctSelectAssociation}">
@@ -70,22 +70,22 @@
 		    
 		    <p:column selectionMode="multiple" style="width:3%;" />
 		 
-		    <p:column style="width:30%; white-space:normal;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
+		    <p:column style="width:30%; white-space:normal;" headerText="#{lbl['lbl.ct.project.name']}">
 		          <h:outputText value="#{data.projectName}" />
 		    </p:column> 
 		 
-		    <p:column style="width:50%; white-space:normal;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
+		    <p:column style="width:50%; white-space:normal;" headerText="#{lbl['lbl.ct.project.desc']}">
 		         <h:outputText value="#{data.description}" /> 
 		    </p:column> 
 		    
-		    <p:column style="width:7%;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
+		    <p:column style="width:7%;" headerText="#{lbl['lbl.ct.no.of.contracts']}">
 		         <h:outputText value="#{fn:length(data.ctAssocContracts)}"  style="float:right;"/>
 		    </p:column>
 		    
-		    <p:column style="width:10%;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
+		    <p:column style="width:10%;" headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
 		         <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" process="@this" styleClass="column-align-center">
 			         <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
-			         <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
+			         <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
 		        </p:commandLink> 
 		  </p:column> 
 	   

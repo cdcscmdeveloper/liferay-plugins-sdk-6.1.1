@@ -8,22 +8,22 @@
 	<table style="width: 100%" >
 			<tr>
 				<td style="width: 15%;">
-					<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:170px;" required="true" label="#{lbl['lbl.ct.cc.cno']}"
+					<p:inputText id="circularNoTxt" style="width:170px;" required="true" label="#{lbl['lbl.ct.circular.no']}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" maxlength="50" />
 				</td>
 				<td>
 					<p:message for="circularNoTxt" display="icon" />
 				</td>
 				<td rowspan="2" valign="top" style="width: 15%;">
-					<p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}" />
+					<p:outputLabel  value="#{lbl['lbl.ct.circular.name']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
-					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px; margin-bottom:5px;" label="#{lbl['lbl.ct.cc.cname']}"
+					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px; margin-bottom:5px;" label="#{lbl['lbl.ct.circular.name']}"
 						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" maxlength="200" />
 				</td>
 				<td>
@@ -31,17 +31,17 @@
 				</td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" /></td>
 				<td><p:inputText  style="width:170px;"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" maxlength="50" /></td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.ct.start.date']}" /></td>
 				<td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal"
 				   style="width:170px;" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
 				<td></td>
-				<td><h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.ct.end.date']}" /></td>
 			    <td><p:inputText value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			    style="width:170px;" disabled="true">
 				<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText></td>
@@ -49,12 +49,12 @@
 			</tr>
 			<tr>
 			<td>
-				<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td><h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-					update="uploadCircularPg" value="Choose file" 
+					update="uploadCircularPg" value="#{lbl['lbl.bpm.choose.file']}"
 					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
 				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />					
@@ -68,7 +68,7 @@
 		<p:fileUpload style="display:inline;" mode="advanced" 
 			fileUploadListener="#{centralContractBackingBean.fileUpload}" 
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadCircularPg" >
 		</p:fileUpload> 
 	</p:dialog>

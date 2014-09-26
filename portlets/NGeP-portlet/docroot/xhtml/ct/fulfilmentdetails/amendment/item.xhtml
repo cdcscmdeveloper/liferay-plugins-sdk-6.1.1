@@ -16,7 +16,7 @@
 				<ac:paginator for="itemTable" />
 				<p:ajax event="rowSelect" update=":form:itemId" process="@this"  />
 			
-				<p:column headerText="#{lbl['lbl.ct.item.name']}" 
+				<p:column headerText="#{lbl['lbl.ct.item.desc']}" 
 				      style="width:35%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
 					<p:outputLabel value="#{ctItemVar.itemName}" style="float:left;" />
 				</p:column>
@@ -63,7 +63,7 @@
 			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
 			     header="#{lbl['lbl.ct.amend.max.qty']}" styleClass="screen-title" resizable="false" modal="true" width="450" height="200">
 			  	    <h:panelGrid columns="1">
-				    	<p:outputLabel value="#{lbl['lbl.ct.item.name']}" >: #{amendmentBackingBean.managedBean.selectedItem.itemName}</p:outputLabel>
+				    	<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{amendmentBackingBean.managedBean.selectedItem.itemName}</p:outputLabel>
 				     </h:panelGrid>
 				     <p:spacer  height="5"/>
 				
@@ -308,7 +308,7 @@
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" />
-				<p:column headerText="#{lbl['lbl.ct.item.name']}" style="width:35%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
+				<p:column headerText="#{lbl['lbl.ct.item.desc']}" style="width:35%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
 					<p:outputLabel value="#{serviceItemVar.itemName}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;">

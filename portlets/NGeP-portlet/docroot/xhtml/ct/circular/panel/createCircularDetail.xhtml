@@ -8,11 +8,11 @@
 	<table style="width: 100%" >
 			<tr>
 				<td style="width: 20%;" >
-					<p:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+					<p:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td style="width: 200px">
-					<p:inputText id="circularNoTxt" style="width:170px; margin-top:2px;" label="#{lbl['lbl.ct.cc.cno']}"
+					<p:inputText id="circularNoTxt" style="width:170px; margin-top:2px;" label="#{lbl['lbl.ct.circular.no']}"
 					 required="true" maxlength="50"
 						value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 				</td>
@@ -20,31 +20,31 @@
 					<p:message for="circularNoTxt" display="icon" />
 				</td>				
 				<td rowspan="2" valign="top" style="width: 20%;">	
-					<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
+					<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td rowspan="2" style="width: 180px">
 					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px;" maxlength="200" required="true" 
-						label="#{lbl['lbl.ct.cc.cname']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
+						label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
 					<p:message for="circularNameTxt" display="icon" />
 				</td>					
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.ct.cc.frno']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" /></td>
 				<td><p:inputText  style="width:170px;" maxlength="50"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
 			<tr>
 			   <td>
-			   	<p:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
+			   	<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
 			   	<p:outputLabel value="*" styleClass="mandatory" />
 			   </td>
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			       		navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.csdate']}">
+			       		navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}">
 			       	 <p:ajax event="dateSelect" update="popupButtonCal1" />
 			       	</p:calendar> 
 			   </td>
@@ -52,14 +52,14 @@
 					<p:message for="popupButtonCal" display="icon" />
 				</td>				   
 		       <td>
-		       	<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
+		       	<h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
 		       	<p:outputLabel value="*" styleClass="mandatory" />
 		       </td>
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
-			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.cc.cedate']}">
+			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}">
 			         	 <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                          <f:validator validatorId="primeDateRangeValidator" />
 			         	</p:calendar>
@@ -69,20 +69,20 @@
 				</td>				         
 		    </tr>
 			<tr>
-		   	     <td><h:outputLabel value="#{lbl['lbl.ct.pc.compdeadline']}" /></td>
+		   	     <td><h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" /></td>
 			     <td><h:panelGroup>
 				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
-				       maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.pc.compdeadline']}" />
+				       maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.complaint.deadline']}" />
 				     <p:spacer width="5" />
-				     <h:outputText value="#{lbl['lbl.ct.pc.months']}" />
+				     <h:outputText value="#{lbl['lbl.ct.months']}" />
 			        </h:panelGroup>	</td>
 			       <td></td>
-			<td><h:outputLabel value="#{lbl['lbl.ct.pc.paymentday']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.payment.day']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
-				    maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.pc.paymentday']}" />
+				    maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.payment.day']}" />
 				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
 			</h:panelGroup></td>
 			<td></td>
 			</tr>
@@ -93,45 +93,45 @@
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
 				    maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.delivery.period']}" />
 				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
 			</h:panelGroup>	</td>
 			<td></td>
-			<td><h:outputLabel value="#{lbl['lbl.ct.pc.lastreqday']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.contract.effective.end.date']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
-				     maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.lastreqday']}" />
+				     maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.contract.effective.end.date']}" />
 				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
 			</h:panelGroup></td>
 			<td></td>
 			</tr>
 			
 			<tr>
-			<td><h:outputLabel value="#{lbl['lbl.ct.pc.replacementday']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.replacement.day']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
-				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.replacementday']}" />
+				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.replacement.day']}" />
 				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.pc.days']}" />
+				<h:outputText value="#{lbl['lbl.ct.days']}" />
 			</h:panelGroup>	</td>
 			<td></td>
-			<td><h:outputLabel value="#{lbl['lbl.ct.pc.warrantyperiod']}" /></td>
+			<td><h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" 
-				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.pc.warrantyperiod']}" />
+				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
 				<p:spacer width="5" />
-				<h:outputText value="#{lbl['lbl.ct.pc.months']}" />
+				<h:outputText value="#{lbl['lbl.ct.months']}" />
 			</h:panelGroup>	</td>
 			<td></td>
 			</tr>
 			<tr>
 			<td> 
-				<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
 			<td> <h:panelGroup id="uploadCircularPg">
 				   <p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-					update="uploadCircularPg" value="Choose file" 
+					update="uploadCircularPg" value="#{lbl['lbl.bpm.choose.file']}"
 					rendered="#{panelBackingBean.isPanelAdmin()}" />	
 					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 					action="#{panelBackingBean.downloadFile(1)}" />				
@@ -145,7 +145,7 @@
 		<p:fileUpload style="display:inline;" mode="advanced" 
 			fileUploadListener="#{panelBackingBean.fileUpload}" 
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="uploadCircularPg" >
 		</p:fileUpload> 
 	</p:dialog>

@@ -13,19 +13,19 @@
 			      <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
 		      </p:blockUI> 	
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info, warning" />
-		<p:panel id="searchPanel" header="Search" toggleable="true">
+		<p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true">
 			<h:panelGrid columns="4" style="width:100%">
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.no']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularNo}" style="width:170px;" maxlength="50" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:170px;" maxlength="200" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cstartdt']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.start.date']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"   readonlyInput="true"
 				  navigator="true"	value="#{centralContractBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.cenddt']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.circular.end.date']}" />
 				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonlyInput="true"
 					navigator="true" value="#{centralContractBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
-				<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
+				<h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:170px;margin-top:3px;" maxlength="50" />					
 				<p:outputLabel for="status" value="#{lbl['lbl.ct.status']}" />
 				<p:selectOneMenu id="status" value="#{centralContractBackingBean.managedBean.searchStatusId}" style="width:200px;">
@@ -33,53 +33,53 @@
 				</p:selectOneMenu>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton id="centralSearchId" value="#{lbl['lbl.ct.search.btn.search']}" onstart="blkCentralSearchTable.show();" 
+				<p:commandButton id="centralSearchId" value="#{lbl['lbl.btn.search']}" onstart="blkCentralSearchTable.show();" 
 				    oncomplete="blkCentralSearchTable.hide();"  action="#{centralContractBackingBean.searchCircularVer}" update="circularVerDt" icon="ui-icon-search" />
-				<p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}" action="#{centralContractBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
+				<p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{centralContractBackingBean.searchReset}" icon="ui-icon-reset" update=":form" />
 			</div>		
 		</p:panel>
-		<p:panel id="resultPanel" header="Result" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.ct.search.result']}" toggleable="true">
 			<p:dataTable id="circularVerDt" value="#{centralContractBackingBean.circularVerPagingDataModel}"
 				var="data" lazy="true" rowIndexVar="index" >
 				<ac:paginator for="circularVerDt" />
-				<p:column headerText="#{lbl['lbl.ct.cc.cnumber']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.cname']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.name']}" >
 					<h:outputText value="#{data.name}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.frno']}" >
+				<p:column headerText="#{lbl['lbl.ct.file.ref.no']}" >
 					<h:outputText value="#{data.circularFileRefNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.cstartdt']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.start.date']}" >
 					<h:outputText value="#{data.startDate}" >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ct.cc.cenddt']}" >
+				<p:column headerText="#{lbl['lbl.ct.circular.end.date']}" >
 					<h:outputText value="#{data.endDate}" >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.status']}" >
-					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cc.status.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
+					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqPendingSubmission}"
 						onclick="gotoPage([{name:'action',value:'save'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or 
 						(data.status.statusId == CtStatusConst.cqRejected and data.ctCircular.latestCircularVer != null)}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Update" />
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
 					<p:spacer width="5" rendered="#{data.status.statusId == CtStatusConst.cqPendingSubmission or
 						data.status.statusId == CtStatusConst.cqApproved or 
 						(data.status.statusId == CtStatusConst.cqRejected and data.ctCircular.latestCircularVer != null)}" />
 					<p:commandLink rendered="#{!(data.status.statusId == CtStatusConst.cqPendingSubmission)}"
 						onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="View" />
+						<p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>	

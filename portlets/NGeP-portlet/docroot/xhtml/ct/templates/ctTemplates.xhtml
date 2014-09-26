@@ -16,12 +16,12 @@
   	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
       <h:panelGrid columns="4" style="width:400px;">
          <p:selectOneMenu id="searchid" value="#{contractTemplateBackingBean.managedBean.searchFilterBean.searchField}" style="width:170px">
-	       <f:selectItem itemLabel="---Please Select-----" itemValue="" />
+	       <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 	       <f:selectItems value="#{contractTemplateBackingBean.searchOptions}" />
 	    </p:selectOneMenu>
 	    <p:spacer width="5"/>
         <p:inputText id="searchTxt" value="#{contractTemplateBackingBean.searchValue}" style="width:150px;"/>
-        <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractTemplateBackingBean.searchActionListener}"
+        <p:commandButton value="#{lbl['lbl.btn.search']}" action="#{contractTemplateBackingBean.searchActionListener}"
           process="@this,searchTxt,searchid"  icon="ui-icon-search"  update="dataTable"/>
       </h:panelGrid>
      </p:panel>
@@ -31,17 +31,17 @@
 	     dynamic="true" rowKey="#{data}" selection="#{contractTemplateBackingBean.selectedTemplates}">
 		 <ac:paginator for="dataTable"/>
 		    <p:column selectionMode="multiple" style="width:18px;"/>
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.name']}" style="width:50%;">
+			<p:column headerText="#{lbl['lbl.ct.tpl.name']}" style="width:50%;">
 			   <h:outputText value="#{data.name}" />
 			</p:column> 
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.cby']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.created.by']}" style="width:20%;">
 			   <h:outputText value="#{contractTemplateBackingBean.retriveUserName(data.createdBy)}" />
 			</p:column> 	
-			<p:column headerText="#{lbl['lbl.ct.tpl.table.cdate']}" style="width:20%;">
+			<p:column headerText="#{lbl['lbl.ct.created.date']}" style="width:20%;">
 			   <h:outputText value="#{data.createdDate}" />
 			</p:column> 
 			<p:column styleClass="column-align-center" style="width:8%;"
-			   headerText="#{lbl['lbl.ct.tpl.table.action']}">
+			   headerText="#{lbl['lbl.ct.action']}">
 			   <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}" ajax="false" process="@form">
 			      <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
 			      <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="Edit" />
@@ -52,7 +52,7 @@
 		<div class="ppRightBtn"> 
 		    <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" icon="ui-icon-add" ajax="false"/>
 		       <p:spacer width="1"/>
-             <p:commandButton value="Delete" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
+             <p:commandButton value="#{lbl['lbl.btn.delete']}"" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
 		 </div>
 		  <p:dialog id="dlgDel" widgetVar="dlgDel" header="#{lbl['lbl.ct.dialog.confirm.header']}" styleClass="screen-title"  
                resizable="false" modal="true" width="350" height="95">  

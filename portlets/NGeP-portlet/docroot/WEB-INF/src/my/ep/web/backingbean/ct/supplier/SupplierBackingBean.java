@@ -90,6 +90,7 @@ import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -956,9 +957,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 
 	public String getPortletTitle() {
-		String portletTitle = "Request Factoring";
+		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+         
 		if(getManagedBean().isRemoveFactoring()) {
-			portletTitle = portletTitle + " Removal";
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
 	}

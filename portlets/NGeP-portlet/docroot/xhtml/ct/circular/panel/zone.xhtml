@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
-	<p:panel id="zonePnl" header="#{lbl['lbl.ct.pc.panel.zone']}" toggleable="true" toggleSpeed="500" >
+	<p:panel id="zonePnl" header="#{lbl['lbl.ct.panel.zone']}" toggleable="true" toggleSpeed="500" >
 		<p:dataTable id="circularZoneDt" var="data" rowKey="#{data}"
 			value="#{panelBackingBean.managedBean.circularVer.ctCircularZones}" selectionMode="single" 
 			selection="#{panelBackingBean.managedBean.selectedCircularZone}" >
@@ -15,7 +15,7 @@
 				listener="#{panelBackingBean.selectZoneEvent()}" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:600px" headerText="#{lbl['lbl.ct.pc.zone.name']}" />
+					<p:column style="width:600px" headerText="#{lbl['lbl.ct.zone.name']}" />
 				</p:row>
 			</p:columnGroup>
 			<p:column>
@@ -24,17 +24,17 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" partialSubmit="false" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="false" icon="ui-icon-add"
 				action="#{panelBackingBean.addCircularZone()}" update="circularZoneDt" />
-			<p:commandButton id="deleteZoneBtn" value="Delete" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
+			<p:commandButton id="deleteZoneBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
 				disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}" />				
 		</div>		
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
 			closable="true" appendToBody="true" header="#{lbl['lbl.ct.dialog.confirm.header']}" >
 			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:circularZoneDtlPnl,circularZoneDt" partialSubmit="true" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:circularZoneDtlPnl,circularZoneDt" partialSubmit="true" process="@this"
 					 action="#{panelBackingBean.deleteCircularZone()}" oncomplete="delZoneDlg.hide();"   /> 
-				<p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>	
 		
@@ -48,7 +48,7 @@
 				<p:ajax event="rowSelect" update=":form:tabview:deleteZoneDtlBtn" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column style="width:600px" headerText="Location" />
+						<p:column style="width:600px" headerText="#{lbl['lbl.ct.location']}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
@@ -57,7 +57,7 @@
 						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
 					</p:selectOneMenu>			
 					<ac:lov id="district" lovId="PM_DISTRICT" rendered="#{panelBackingBean.managedBean.circularVer.zonalLevel.parameterCode == ParameterConst.locationLevelDistrict}"
-						headerText="District Lov" 
+						headerText="#{lbl['lbl.ct.district']}" 
 						saveObject="panelBackingBean.managedBean.selectedCircularZone.ctCircularZoneDtls[#{index}].district"
 						value="#{data.district.districtName}"
 						conditionField="recordStatus^1" /> 					
@@ -66,18 +66,18 @@
 			
 			<p:spacer height="2" />
 			<div class="ppRightBtn"> 
-				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
 					disabled="#{panelBackingBean.managedBean.selectedCircularZone == null}"
 					action="#{panelBackingBean.addCircularZoneDtl()}" update="circularZoneDtlDt" />	
-				<p:commandButton id="deleteZoneDtlBtn" value="Delete" icon="ui-icon-delete" onsuccess="delStateDlg.show()" 
+				<p:commandButton id="deleteZoneDtlBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" onsuccess="delStateDlg.show()" 
 					disabled="#{panelBackingBean.managedBean.selectedCircularZoneDtl == null}" />			
 			</div>							
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delStateDlg"
 				closable="true" appendToBody="true" header="#{lbl['lbl.ct.dialog.confirm.header']}" >
 				<h:panelGrid columns="2">
-					<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneDtlBtn,circularZoneDtlDt" partialSubmit="true" process="@this"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:tabview:deleteZoneDtlBtn,circularZoneDtlDt" partialSubmit="true" process="@this"
 						 action="#{panelBackingBean.deleteCircularZoneDtl()}" oncomplete="delStateDlg.hide();"   /> 
-					<p:commandButton value="No" icon="ui-icon-reject" onclick="delStateDlg.hide()" type="button" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="delStateDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	
 		</h:panelGroup>
@@ -89,7 +89,7 @@
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.zoneRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -101,7 +101,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>

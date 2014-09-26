@@ -14,14 +14,14 @@
                <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" style="width:500px;"/>
                <h:panelGroup>
 			     <div style="height: 220px; vertical-align: top">
-               <p:outputLabel value="#{lbl['lbl.ct.tpl.content']}"/>  
+               <p:outputLabel value="#{lbl['lbl.ct.enter.content']}"/>  
                </div>
                </h:panelGroup>
                  <p:editor id="editor" value="#{contractTemplateBackingBean.editorValue}" width="1020" height="400" />
               </h:panelGrid>
               <div class="ppRightBtn"> 
-			      <p:commandButton id="submitButton" value="Submit"  action="#{contractTemplateBackingBean.createTemplate()}" icon="ui-icon-submit" />
-			      <p:commandButton value="Cancel" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" />
+			      <p:commandButton id="submitButton" value="#{lbl['lbl.btn.submit']}"  action="#{contractTemplateBackingBean.createTemplate()}" icon="ui-icon-submit" />
+			      <p:commandButton value="#{lbl['lbl.btn.cancel']}" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" />
 		    	</div>
          </p:panel>
         </h:form>
