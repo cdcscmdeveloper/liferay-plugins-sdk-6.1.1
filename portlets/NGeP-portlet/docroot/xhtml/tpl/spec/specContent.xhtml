@@ -118,7 +118,8 @@
 		</p:panel>
 		
 		<p:dialog id="delConfirmPopup" header="#{lbl['lbl.tpl.spec.content.delete.confirmation.title']}" widgetVar="#{delConfirmPopup}" modal="true" height="100" width="350" resizable="false" >
-			 
+			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="delConfirmPopup"/>
+			
 			<h:outputText value="Confirm to delete?" />
 			<br />
 			<h:outputText value="All child nodes belong to this node will be deleted as well" />
@@ -137,9 +138,11 @@
 			</div>
 		</p:dialog>
 		
-		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="#{tierQtyPopup}" modal="true" width="450" height="350">
+		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="#{tierQtyPopup}" modal="true" width="450" height="390">
+			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="tierQtyPopup"/>
+			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:310px;">
+				<div style="height:330px;">
 					<h:panelGroup id="tierQtyPnl">
 						<p:messages id="tierPopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 						
@@ -165,9 +168,11 @@
 			</c:if>
 		</p:dialog>
 
-		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="550" height="410" rendered="#{isScoringReq}">
+		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="630" height="490" rendered="#{isScoringReq}">
+			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="scoringSetPopup"/>
+			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:370px;">
+				<div style="height:440px;">
 					<h:panelGroup id="scoreSettPnl">
 						<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 						
@@ -194,6 +199,8 @@
 		</p:dialog>
 		
 		<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{estimationPopup}" modal="true" width="450" height="290">
+			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="estimationPopup"/>
+			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:250px;">
 					<h:panelGroup id="estimationPnl">

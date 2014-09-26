@@ -7,10 +7,9 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
-import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 
 public class TemplateSpecBean {
+	private boolean selectAll;
 	private TplSpecMaster specMaster;
 	private String contentType;
 	private SmSupplier supplier;
@@ -18,15 +17,27 @@ public class TemplateSpecBean {
 	private String specComponentId;
 	private TplSpecQuestion selectedSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
-	private List<TplSpecTierQty> selectedTierQtyList;
-	private List<TplSpecScoring> selectedScoringList;
 	
 	public TemplateSpecBean() {
 		this(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 	}
-	
+
 	public TemplateSpecBean(String contentType) {
 		this.contentType = contentType;
+	}
+	
+	/**
+	 * @return the selectAll
+	 */
+	public boolean isSelectAll() {
+		return selectAll;
+	}
+
+	/**
+	 * @param selectAll the selectAll to set
+	 */
+	public void setSelectAll(boolean selectAll) {
+		this.selectAll = selectAll;
 	}
 
 	/**
@@ -125,33 +136,5 @@ public class TemplateSpecBean {
 	 */
 	public void setSpecAnswerList(List<TplSpecAnswer> specAnswerList) {
 		this.specAnswerList = specAnswerList;
-	}
-
-	/**
-	 * @return the selectedTierQtyList
-	 */
-	public List<TplSpecTierQty> getSelectedTierQtyList() {
-		return selectedTierQtyList;
-	}
-
-	/**
-	 * @param selectedTierQtyList the selectedTierQtyList to set
-	 */
-	public void setSelectedTierQtyList(List<TplSpecTierQty> selectedTierQtyList) {
-		this.selectedTierQtyList = selectedTierQtyList;
-	}
-
-	/**
-	 * @return the selectedScoringList
-	 */
-	public List<TplSpecScoring> getSelectedScoringList() {
-		return selectedScoringList;
-	}
-
-	/**
-	 * @param selectedScoringList the selectedScoringList to set
-	 */
-	public void setSelectedScoringList(List<TplSpecScoring> selectedScoringList) {
-		this.selectedScoringList = selectedScoringList;
 	}
 }

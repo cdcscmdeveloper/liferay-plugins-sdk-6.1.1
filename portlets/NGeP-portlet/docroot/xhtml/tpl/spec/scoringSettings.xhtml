@@ -6,7 +6,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
+	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
+	
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<tr>
+		<td><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
+		<td colspan="3">
+			<p:inputText id="itemSpec" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}" disabled="true" size="66" />
+		</td>
+	</tr>
 	<tr>
 		<td width="17%"><p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.answer.type']}" /></td>
 		<td width="30%">
@@ -20,27 +28,36 @@
 			<h:selectOneMenu id="scoreType" value="#{templateSpecBean.selectedScoreTypeId}" 
 				required="true"
 				label="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type']}"
-				rendered="#{editable}">
+				rendered="#{editable and templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode != ParameterConst.answerTypeText}">
 				<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.scoreType)}" />
-				<p:ajax event="change" listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedScoreTypeId)}" update="scorePG" />
+				<p:ajax event="change" 
+					listener="#{templateSpecBackingBean.scoreTypeChange(templateSpecBean.selectedSpecQuestion, templateSpecBean.selectedScoreTypeId)}" 
+					update="maxScoreLPG, maxScorePG, scorePG" />
 			</h:selectOneMenu>
 			<p:inputText value="#{templateSpecBackingBean.getParameterDesc(templateSpecBean.selectedSpecQuestion.scoreTypeCode)}" 
 				disabled="true" size="15"
-				rendered="#{!editable}" />
+				rendered="#{!editable or templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
-			<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable}" />
+			<h:panelGroup id="maxScoreLPG">
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
+					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+				<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{editable and templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+			</h:panelGroup>
 		</td>
 		<td>
-			<p:inputText id="maxScore" styleClass="ppNumericAlign" 
-				value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
-				required="true" size="15" maxlength="3"
-				disabled="#{!editable}"
-				label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}" />
-			<p:message id="maxScoreMsg" for="maxScore" display="icon" />
+			<h:panelGroup id="maxScorePG">
+				<p:inputText id="maxScore" styleClass="ppNumericAlign" 
+					value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
+					required="true" size="15" maxlength="3"
+					disabled="#{!editable}"
+					label="#{lbl['lbl.tpl.spec.content.scoring.settings.max.score']}"
+					rendered="#{templateSpecBean.selectedSpecQuestion.scoreTypeCode.parameterCode == ParameterConst.scoreTypeUser}" />
+				<p:message id="maxScoreMsg" for="maxScore" display="icon" />
+			</h:panelGroup>
 		</td>
 		<td>
 			<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" />
@@ -83,21 +100,30 @@
 			var="tplSpecScoring"
 			rowIndexVar="rowIndex"
 			value="#{templateSpecBean.selectedSpecQuestion.tplSpecScorings}"
-			rowKey="#{tplSpecScoring}"
-			selection="#{templateSpecBean.selectedScoringList}">
+			rowKey="#{tplSpecScoring}">
 								
 			<ac:paginator for="scoringTbl" />
 			
-			<p:column selectionMode="multiple" style="width:20px;" rendered="#{!isCompliance and editable}" />
+			<p:column style="width:20px;" rendered="#{!isCompliance and editable}">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selAllChk" value="#{templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="scoringTbl"  listener="#{templateSpecBackingBean.selectAll(templateSpecBean.selectAll, templateSpecBean.selectedSpecQuestion.tplSpecScorings)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{tplSpecScoring.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column rendered="#{!isCompliance}">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"/>
 				</f:facet>
-				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:96%;" styleClass="ppNumericAlign" 
+				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:80%;" styleClass="ppNumericAlign" 
 					required="true" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"
 					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
 				</p:inputText>
 				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
@@ -107,10 +133,11 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"/>
 				</f:facet>
-				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:96%;" styleClass="ppNumericAlign" 
-					required="true" maxlength="19"
+				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:80%;" styleClass="ppNumericAlign" 
+					required="#{rowIndex lt templateSpecBean.selectedSpecQuestion.tplSpecScorings.size()-1}" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"
 					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
 				</p:inputText>
 				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
@@ -126,10 +153,11 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"/>
 				</f:facet>
-				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:96%;" styleClass="ppNumericAlign" 
+				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:65%;" styleClass="ppNumericAlign" 
 					required="true" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"
 					disabled="#{!editable}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
 				</p:inputText>
 				<p:message id="scoreMsg" for="score" display="icon" />
@@ -144,11 +172,13 @@
 				update="scoringTbl" icon="ui-icon-add"
 				rendered="#{!isCompliance and editable}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, scoringTbl" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings, templateSpecBean.selectedScoringList)}"
+				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
 				update="scoringTbl"
-				rendered="#{!isCompliance and editable}" />
+				rendered="#{!isCompliance and editable}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
+			</p:commandButton>
 		</div>
 	</p:panel>
 	</h:panelGroup>
