@@ -34,13 +34,14 @@
 	              <table style="width: 100%">
 			        <tr>
 				          <td style="width: 20%"> <h:outputLabel value="#{lbl['lbl.ct.loa.no']}" /></td>
-				          <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
-				          <td style="width: 10%"> <h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
-				          <td style="width: 10%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo}</td>
-				          <td style="width: 10%"> <h:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /></td>
-					      <td style="width: 15%" class="header-info-text"> #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>		
-				          <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
-				          <td style="width: 15%" class="header-info-text">#{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
+				          <td style="width: 13%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
+				          <td style="width: 7%"> <h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
+				          <td style="width: 13%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo}</td>
+				          <td style="width: 7%"> <h:outputLabel value="#{lbl['lbl.ct.sup.cbank.name']}" /></td>
+					      <td style="width: 18%" class="header-info-text"> #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>		
+				          <td style="width: 7%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+				          <td style="width: 15%" class="header-info-text">
+				            #{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
 			       </tr>
 		        </table>
 	        </div> 	
@@ -131,7 +132,7 @@
          </h:panelGrid>
       </p:panel>
 	 
-	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
+	  <p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.sup.cbank.name']}"  toggleable="true"  toggleSpeed="500">
 	      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
 	          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
             
@@ -140,16 +141,16 @@
                 <p:inputText disabled="true" style="width:70px;" 
                    value="#{supplierBackingBean.managedBean.ctContract.smSupplier.regNo}"/>
                    <p:spacer width="1"/>
-                <p:outputLabel value="MOF No." />  
-                <p:inputText disabled="true" style="width:70px;" 
+                <p:outputLabel value="#{lbl['lbl.ct.sup.cbank.smof']}" />  
+                <p:inputText disabled="true" style="width:100px;" 
                 	value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
              </h:panelGrid> 
            
-             <p:outputLabel value="Contact Person"/>  
+             <p:outputLabel value="#{lbl['lbl.ct.sup.cbank.ctperson']}"/>  
              <p:inputText disabled="true" style="width:200px;" 
                  value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}"/>
             
-             <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}" /> 
+             <p:outputLabel value="#{lbl['lbl.ct.sup.cbank.name']}" /> 
              <p:inputText disabled="true" style="width:230px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
             
@@ -157,7 +158,7 @@
              <p:inputText disabled="true"  style="width:200px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
             
-             <p:outputLabel   value="Branch Name"/>
+             <p:outputLabel   value="#{lbl['lbl.ct.sup.cbank.bname']}"/>
              <p:inputText disabled="true" style="width:200px;" 
                  value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
             
