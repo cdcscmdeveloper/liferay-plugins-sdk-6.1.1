@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 124px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td style="width: 140px;"><p:inputText size="53"
+				<td style="width: 140px;"><p:inputText size="54"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td ><p:outputLabel value="#{lbl['lbl.fl.pm.dan.no']}" /></td>
@@ -20,7 +20,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="preparedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}"
@@ -32,7 +32,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="issuePtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.issuedOrgProfile.orgName}"
@@ -43,7 +43,7 @@
 			</tr>			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="chargedPtj"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgName}"
@@ -56,7 +56,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.agOffice.officeName}" /></td>

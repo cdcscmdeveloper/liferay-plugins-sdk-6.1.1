@@ -10,7 +10,7 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td>
-					<p:inputText size="50" id="ministry" disabled="true" 
+					<p:inputText size="54" id="ministry" disabled="true" 
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.parentOrgProfile.orgName}" />
 				</td>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel value="#{lbl['lbl.fl.title']}" /></td>
@@ -23,7 +23,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
 				<td>
-					<p:inputText size="5" id="preparedOrgProfileId" disabled="true"
+					<p:inputText size="8" id="preparedOrgProfileId" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}" />
@@ -32,7 +32,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td>
-					<p:inputText size="5" id="issuedOrgProfileId" disabled="true"
+					<p:inputText size="8" id="issuedOrgProfileId" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}" />
@@ -40,7 +40,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Requistioner" /></td>
-				<td><p:inputText size="50" disabled="true"
+				<td><p:inputText size="54" disabled="true"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.requistioner.userName}" />
 				</td>
 			</tr>

@@ -13,7 +13,7 @@
 				<td><p:inputText size="53" id="ministry"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
+				<td rowspan="3" valign="top" style="width: 108px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="3"><p:inputTextarea cols="55" rows="4" id="title"
 						disabled="true" style=" margin-bottom:5px;"
@@ -22,21 +22,21 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId" disabled="true"
+				<td><p:inputText size="7" id="preparedOrgProfileId" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId" disabled="true"
+				<td><p:inputText size="7" id="issuedOrgProfileId" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
+				<td><p:inputText size="7" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" /></td>
