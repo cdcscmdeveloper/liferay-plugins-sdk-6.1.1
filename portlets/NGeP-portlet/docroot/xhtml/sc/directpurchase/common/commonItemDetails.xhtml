@@ -57,6 +57,10 @@
 				</p:column>
 				  
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%;">
+				<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'N'}">
+						<h:outputText value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
+					</ui:fragment>
+					
 					<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'E'}">
 						<p:commandLink value="#{lbl['lbl.sc.justification.emergency']}" partialSubmit="true" process="@this"
 							update=":form:justPopup"

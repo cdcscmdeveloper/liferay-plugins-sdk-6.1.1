@@ -15,10 +15,9 @@
 				   title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 				</p:commandButton>
 						
-				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@all"
+				<p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" process="@this"
 				   onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-				   action="#{requestNoteBackingBean.saveAction('')}" 
-				   update="@([id$=requestNoteId])"/>
+				   action="#{requestNoteBackingBean.saveAction('')}"/>
 
 				<p:commandButton value="#{lbl['lbl.sc.common.submit']}" update="@([id$=requestNoteId])"
 				    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -49,7 +48,7 @@
 									  or requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingRevision}">
                               <p:commandButton value="#{lbl['lbl.sc.common.save']}" icon="ui-icon-save" action="#{requestNoteBackingBean.saveAction('Save')}"
                                    onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-							       update="@([id$=requestNoteId])" process="@all" />
+							        process="@this" />
 
 					     </c:if>
 					     
