@@ -552,6 +552,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				//sortAddress(deliveryAddr);
 				getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745053, new String[]{getFullAddress(addrType.getPmAddress())}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
@@ -1804,6 +1808,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			populateChargeLineData(true);
 			onNodeSelect();
 			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745052, new String[]{}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
 		} finally {
 			parameterSO = null;
 		}
