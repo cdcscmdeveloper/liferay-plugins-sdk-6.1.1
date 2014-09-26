@@ -186,7 +186,7 @@
 						action="#{templateSpecBackingBean.scoringOkAction(templateSpecBean)}"
 						partialSubmit="true"
 						process="@this, scoreSettPnl"
-						update="scoreSettPnl">
+						update="scoreSettPnl, @(.scoringBtn)">
 						<f:setPropertyActionListener target="#{templateSpecBean.specComponentId}" value="#{templateSpecId}" />
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
