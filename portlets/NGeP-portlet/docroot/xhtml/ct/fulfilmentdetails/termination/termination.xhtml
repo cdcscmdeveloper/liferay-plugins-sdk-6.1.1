@@ -209,7 +209,7 @@
 		  </h:panelGrid>
 		   <h:panelGrid columns="2"  rendered="#{terminationBackingBean.managedBean.remedy}">
                 <p:calendar id="calItem3"  readonlyInput="true"  required="true" label="#{lbl['lbl.ct.remedy.start.date']}" navigator="true"
-                    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="24"
+                    value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}" size="20"
                      showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                     <p:ajax event="dateSelect" update=":form:calItem4" process="@this" />
                 </p:calendar>
@@ -263,7 +263,7 @@
 		   </h:panelGrid>
 		   <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
               <p:calendar  id="calItem7" readonlyInput="true" required="true" label="#{lbl['lbl.ct.last.remedy.start.date']}"  navigator="true"
-          		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="24" 
+          		  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.remedyStartDate}"  size="20" 
           		  showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
                   <p:ajax event="dateSelect" update=":form:calItem8" process="@this" />
              </p:calendar>
@@ -290,7 +290,7 @@
 		  <p:outputLabel value="#{lbl['lbl.ct.recommended.agency']}" />
 		 </h:panelGrid>
 		    <h:panelGrid columns="2" rendered="#{terminationBackingBean.managedBean.termination}">
-		       <p:inputText id="recomendAgency"  style="width:170px;" maxlength="255" required="true" label="#{lbl['lbl.ct.recommended.agency']}"
+		       <p:inputText id="recomendAgency"  style="width:220px;" maxlength="255" required="true" label="#{lbl['lbl.ct.recommended.agency']}"
                  value="#{terminationBackingBean.managedBean.contractVer.ctTermination.recommendedAgency}"/>
                   <p:message for="recomendAgency" display="icon"/>
 		     </h:panelGrid>
