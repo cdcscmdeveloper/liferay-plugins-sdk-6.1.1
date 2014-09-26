@@ -155,6 +155,10 @@
 										</p:outputLabel>
 									</p:column>
 								</p:row>
+								
+								<c:if
+									test="#{viewSmApplBackingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT or 
+										viewSmApplBackingBean.managedBean.businessTypeVal eq SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
 
@@ -219,6 +223,7 @@
 										</p:outputLabel>
 									</p:column>
 								</p:row>
+								</c:if>
 							</p:panelGrid>
 						</div>
 					</td>
@@ -228,6 +233,27 @@
 					<td><br /></td>
 				</tr>
 			</table>
+			
+			<br />
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
+						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.capitalRemark}" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
 		</p:panel>
 	</p:panel>
 </ui:composition>
