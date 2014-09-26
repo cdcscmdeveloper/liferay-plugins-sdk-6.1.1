@@ -418,24 +418,28 @@
 
 					</p:dataTable>
 				</p:panel>
-				<p:panel id="persBranMapInfo"
-					header="#{lbl['lbl.sm.person.composition.brnchPoc']}"
-					rendered="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches.size() gt 0}">
-					<p:dataTable var="branch" id="perBrDt"
-						value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBranches}"
-						rowIndexVar="index">
-						<ac:paginator for="perBrDt" />
-						<p:column
-							headerText="#{lbl['lbl.sm.person.composition.brnName']} ">
-							<h:outputText value="#{branch.branchName}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sm.person.composition.poc']}">
-							<h:outputText value="#{branch.smPersonnel.name}" />
-						</p:column>
+				<br />
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
+					<table style="width: 50%">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.personnelRemark}" /></td>
+						</tr>
+					</table>
+				</p:outputPanel>
+				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.personnelRemark}" /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
+							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelRemark}" /></td>
 
-					</p:dataTable>
-				</p:panel>
+						</tr>
+					</table>
+				</p:outputPanel>
 			</p:panel>
+			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/branchCompanyInfoFormViewOnly.xhtml" />
 		</p:panel>
 	</h:panelGroup>
 
