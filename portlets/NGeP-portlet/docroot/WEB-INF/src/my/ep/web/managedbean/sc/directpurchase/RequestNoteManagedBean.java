@@ -117,6 +117,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private CmSupplierItem cmSupplierItem;
     private String recentPriceDuration;
     
+    private String reportURL;
+    
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
 		requestNoteDtl.setProcurementType(pmParameter);
@@ -864,6 +866,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	public void setRecentPriceDuration(String recentPriceDuration) {
 		this.recentPriceDuration = recentPriceDuration;
+	}
+	public String getReportURL() {
+		return reportURL;
+	}
+	public void setReportURL(String reportURL) {
+		this.reportURL = reportURL;
 	}
 	
 }
