@@ -174,9 +174,14 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.val.period']}" /></td>
-				<td><p:inputText disabled="true" />
+				<td><p:inputText disabled="true"  value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.startDate}">
+				        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				      </p:inputText>
 				    <p:spacer width="2px"/>
-				    <p:inputText disabled="true" /></td>
+				    <p:inputText disabled="true" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.endDate}">
+				        <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				      </p:inputText>
+				    </td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.purchase.in.default.max.proc.amt']}" /></td>
@@ -208,7 +213,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.purchase.in.default.supplier.mof.no']}" style="width:10%">
-				<h:outputText value="#{panelSupplier.supplier.smMofAccounts[0].mofNo}" rendered="false" />
+				<h:outputText value="#{panelSupplier.supplier.smMofAccounts[0].mofNo}"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
