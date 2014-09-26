@@ -86,19 +86,21 @@
 					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
 				</td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
-			</tr>
+			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']} :" /></td>
+					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
+				</tr>
+			</c:if>
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 							and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']} :" /></td>
-						<td style="float:left;">
-							<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
-							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
-						</td>
-					</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']} :" /></td>
+					<td style="float:left;">
+						<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
+						<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
+					</td>
+				</tr>
 			</c:if>
 		</table>
 
