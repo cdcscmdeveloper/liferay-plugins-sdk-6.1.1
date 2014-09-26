@@ -116,7 +116,8 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private	Map<String, TplSpecZoneDtl>	zoneDtlMap;
     private CmSupplierItem cmSupplierItem;
     private String recentPriceDuration;
-    
+    private boolean tierAndPromoTierFlag;;
+    private boolean zonalStandardAndPromoFlag;
     private String reportURL;
     
     public RequestNoteManagedBean() {
@@ -872,6 +873,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	public void setReportURL(String reportURL) {
 		this.reportURL = reportURL;
+	}
+	public boolean isTierAndPromoTierFlag() {
+		return tierAndPromoTierFlag;
+	}
+	public void setTierAndPromoTierFlag(boolean tierAndPromoTierFlag) {
+		this.tierAndPromoTierFlag = tierAndPromoTierFlag;
+	}
+	public boolean isZonalStandardAndPromoFlag() {
+		return zonalStandardAndPromoFlag;
+	}
+	public void setZonalStandardAndPromoFlag(boolean zonalStandardAndPromoFlag) {
+		this.zonalStandardAndPromoFlag = zonalStandardAndPromoFlag;
 	}
 	
 }

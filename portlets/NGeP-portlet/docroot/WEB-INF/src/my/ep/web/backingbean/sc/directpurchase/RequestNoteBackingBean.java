@@ -134,6 +134,7 @@ import org.apache.velocity.VelocityContext;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -395,7 +396,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		String taskId = originalServletRequest.getParameter("taskId");
@@ -605,14 +605,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return results;
 	}
 
-	 public void approverAction(String outcome) {
+	public void approverAction(String outcome) {
 		debugLogger("approverAction");
 		RequestNoteResDTO requestNoteResDTO = null;
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
-			requestNote.setRemarks(initializeRemarks(requestNote));
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))){
 				if(requestNote.getRemarks() != null ){
 					for (int i = 0; i < requestNote.getRemarks().size(); i++) {
@@ -623,11 +622,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					} 
 				}
 			}
-			
+
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
-			
+
 			FacesScopes facesScopes = new FacesScopes();
 			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
@@ -1554,9 +1553,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+			pricingHideAndShow(scRequestNoteDtl);
 			getManagedBean().setPricingList(supplierItemPrices);
 		}
 	}
+	
+	private void pricingHideAndShow(ScRequestNoteDtl requestNoteDtl) {
+		log.info("pricingHideAndShow");
+		if(requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice() != null){
+			String priceTypeCode = requestNoteDtl.getScRequestSupplierItem().getSupplierItemPrice().getPriceType().getParameterCode();
+
+			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) ){
+				getManagedBean().setTierAndPromoTierFlag(Boolean.FALSE);
+				getManagedBean().setZonalStandardAndPromoFlag(Boolean.TRUE);
+
+			}
+			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD) || 
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION)){
+				getManagedBean().setZonalStandardAndPromoFlag(Boolean.FALSE);
+				getManagedBean().setTierAndPromoTierFlag(Boolean.TRUE);
+			} 
+			
+			if(priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER) || priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF) || 
+					priceTypeCode.equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF) ){
+				getManagedBean().setTierAndPromoTierFlag(Boolean.TRUE);
+				getManagedBean().setZonalStandardAndPromoFlag(Boolean.TRUE);
+			}
+		}
+	}
+	
 	
 	public boolean showPurchaseInqIcon(ScRequestNoteDtl requestNoteDtl) {
 		log.info("showPurchaseInqIcon");
@@ -1983,9 +2010,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// zone details
 					if(scQuote.getQuoteZone() != null){
 						if(scQuote.getQuoteZone().getTplSpecZoneDtls() != null && scQuote.getQuoteZone().getTplSpecZoneDtls().size() >0){
+							List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
 							for (TplSpecZoneDtl tplSpecZoneDtl : scQuote.getQuoteZone().getTplSpecZoneDtls() ) {
 								if(tplSpecZoneDtl.getTplSpecZoneLocs() != null && tplSpecZoneDtl.getTplSpecZoneLocs().size()>0){
-									simpleQuoteBackingBean.getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+									zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+									simpleQuoteBackingBean.getManagedBean().setZoneTrees(zoneTrees);
 								}
 							}
 						}
