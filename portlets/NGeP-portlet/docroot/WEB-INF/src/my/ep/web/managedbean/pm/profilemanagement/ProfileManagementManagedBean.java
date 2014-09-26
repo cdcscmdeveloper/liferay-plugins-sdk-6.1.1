@@ -11,6 +11,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
+import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -49,7 +50,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Map<PmUserAttachment, FileUploadEvent> fileEventMapper;
 	private List<PmUserAttachment> deletePmUserAttachments;
 	private boolean deletePortrait;
-	
+	private List<PmUserNotification> notifications;
 	
 	/**
 	 * @return the fileEventMapper
@@ -285,6 +286,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setDeletePortrait(boolean deletePortrait) {
 		this.deletePortrait = deletePortrait;
+	}
+	/**
+	 * @return the notifications
+	 */
+	public List<PmUserNotification> getNotifications() {
+		return notifications;
+	}
+	/**
+	 * @param notifications the notifications to set
+	 */
+	public void setNotifications(List<PmUserNotification> notifications) {
+		this.notifications = notifications;
 	}
 
 

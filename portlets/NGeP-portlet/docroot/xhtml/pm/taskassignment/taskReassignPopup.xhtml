@@ -41,6 +41,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				 >
 				<p:ajax event="rowSelect"/>
 				<ac:paginator for="dtTaskReassign" />
+				<p:column headerText="#{lbl['lbl.pm.ta.login']}">  
+			    	#{user.loginId}
+		        </p:column>  
 		        <p:column headerText="#{lbl['lbl.pm.ta.name']}">  
 			    	#{user.userName}
 		        </p:column>  
@@ -50,7 +53,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		   	</p:dataTable> 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pm.ta.btn.assign']}" oncomplete="dlTaskReassignment.hide()"
-					action="#{taskAssignBackingBean.confirmReassignTask()}"
+					action="#{taskAssignBackingBean.confirmReassignTask()}" update=":form:dtTaskAssignResult"
 					immediate="true"/>
 				&#160;
 				<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"

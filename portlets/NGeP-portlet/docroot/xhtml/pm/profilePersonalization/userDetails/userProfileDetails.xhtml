@@ -49,8 +49,16 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
-								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationName}"/>
+							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somSalutation" 
+								required="#{!empty param['disableValidation']}"
+								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
+								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+								<f:selectItems value="#{profilePersonalizationBackingBean.salutationOptions()}" 
+									var="salutation" itemLabel="#{salutation.salutationName}"
+									itemValue="#{salutation.salutationId}"/>
+							</p:selectOneMenu>
+							<p:message id="somSalutationMsg" for="somSalutation" display="icon" />
 						</td>
 						<th></th>
 						<td></td>

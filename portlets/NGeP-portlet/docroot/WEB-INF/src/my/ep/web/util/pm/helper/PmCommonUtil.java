@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,13 +25,13 @@ import my.ep.biz.service.pm.common.language.ILanguageSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.salutation.ISalutationSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -56,9 +55,12 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentReqDTO;
 import my.ep.dto.pm.common.userattachment.UserAttachmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
@@ -77,6 +79,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -109,60 +112,68 @@ public class PmCommonUtil {
 	/**
 	 * initialize a default notifications
 	 * @param pmUser
+	 * @return List <PmUserNotification>
 	 */
 	
-	public static void generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
+	public static List<PmUserNotification> generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
+		List <PmUserNotification> displayNotifications = new ArrayList<PmUserNotification>();
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		searchBean.getDataFilterBeans().add(new SearchFilterBean(
+				"pmParameter.parameterCode",
+				SearchOperator.OPERATOR_NOT_EQUALS.value(),
+				ParameterConst.NOTIFICATION_SMS));
+		
 		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 		parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
 		parameterReqDTO.setLanguageCode(languageCode);
+		
+		parameterReqDTO.setParameterDescSearchBean(searchBean);
+		
 		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
 		List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
 		
+		
+		//add into pmUser.getPmUserNotifications()
 		//this is to sync back the notification list
-		if(pmUser.getPmUserNotifications()!=null){
-			//Temp remove SMS from UI - Start
-			PmUserNotification deleteUserNotification = null;
-			for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-				if(ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
-					deleteUserNotification = pmUserNotification;
-					break;
-				}
-			}
-			if(deleteUserNotification!=null){
-				pmUser.getPmUserNotifications().remove(deleteUserNotification);
-			}
-			//Temp remove SMS from UI - End
+		if(pmUser.getPmUserNotifications()!=null && !pmUser.getPmUserNotifications().isEmpty()){
 			if(pmParameterDescs!=null && (pmParameterDescs.size() != pmUser.getPmUserNotifications().size())){
 				for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-					if(!ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())){ 
-						boolean isRequired = true;
-						for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-							if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
-								isRequired = false;
-								break;
-							}
+					boolean isRequired = true;
+					for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+						if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
+							isRequired = false;
+							break;
 						}
-						if(isRequired){
-							PmUserNotification notification = new PmUserNotification();
-							notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
-							notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-							pmUser.addPmUserNotifications(notification);
-						}
+					}
+					if(isRequired){
+						PmUserNotification notification = new PmUserNotification();
+						notification.setPreferred(true);
+						notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+						pmUser.addPmUserNotifications(notification);
 					}
 				}
 			}
 		}else{
 			pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
 			for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-				if(!ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())){ 
-					PmUserNotification notification = new PmUserNotification();
-					notification.setPreferred(ParameterConst.NOTIFICATION_SMS.equals(pmParameterDesc.getPmParameter().getParameterCode())? false : true);
-					notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-					pmUser.addPmUserNotifications(notification);
-				}
+				PmUserNotification notification = new PmUserNotification();
+				notification.setPreferred(true);
+				notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+				pmUser.addPmUserNotifications(notification);
 			}
 		}
+		
+		//generate displayNotification
+		
+		for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+			if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(pmUserNotification.getNotifyMode())
+					&& !ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
+				displayNotifications.add(pmUserNotification);
+			}
+		}
+		
+		return displayNotifications;
 	}
 	
 	/**
@@ -650,5 +661,66 @@ public class PmCommonUtil {
 		}
 		
 	}
+	
 
+	/**
+	 * retrieve status by status id
+	 * @param statusId
+	 * @return PmStatus
+	 */
+	public static PmStatus getPmStatusById(Long statusId){
+		PmStatus pmStatus = new PmStatus();
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		reqDTO.setStatusId(statusId);
+		StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
+		if(resDTO.isSuccessful()){
+			pmStatus = resDTO.getPmStatus();
+		}
+		return pmStatus;
+	}
+
+	/**
+	 * Retrieve user name
+	 * @param userIds
+	 * @return List<PmUser>
+	 */
+	public static List<PmUser> retriveUsersByIds(List<Long> userIds){
+		IUserSO userSo=null;
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		
+		try{
+			if(userIds!=null){
+				ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
+				
+				
+				// active user
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchField("recordStatusFlg");
+				bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+				searchBean.getDataFilterBeans().add(bean);
+							
+				bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+				bean.setSearchField("userId");
+				bean.setSearchValue(userIds);
+				searchBean.getDataFilterBeans().add(bean);
+				
+				
+				userSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO reqDTO=new UserReqDTO();
+				reqDTO.setUserSearchBean(searchBean);
+				UserResDTO resDTO = userSo.searchUserProfile(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null && resDTO.getUserResultBean().getResultList()!=null){
+					pmUsers = reqDTO.getUserResultBean().getResultList();
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return pmUsers;
+	}
 }

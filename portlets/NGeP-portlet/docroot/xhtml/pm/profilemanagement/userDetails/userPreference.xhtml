@@ -53,7 +53,7 @@
 	<!-- Notification List -->
 	<p:panel>
 		<br/>
-    	<p:dataTable value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserNotifications}" var="preference" >
+    	<p:dataTable value="#{profileManagementBackingBean.managedBean.notifications}" var="preference" >
  			<p:column headerText="#{lbl['lbl.pm.profiles.preferences.preferred']}" > 
    				<p:selectBooleanCheckbox value="#{preference.preferred}" /> 
     		</p:column> 		

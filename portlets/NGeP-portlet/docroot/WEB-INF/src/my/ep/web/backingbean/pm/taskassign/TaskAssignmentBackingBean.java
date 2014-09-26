@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -19,25 +20,37 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.ct.IContractIntegrationSO;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.fl.IFulfilmentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.AssigneeVO;
 import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractIntegrationReqDTO;
+import my.ep.dto.ct.ContractIntegrationResDTO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -46,8 +59,8 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -60,7 +73,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 /**
  * Backing Bean for Task Assignment
@@ -78,11 +90,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public static final String NAV_TO_SEARCH = "taskAssignment";
 	public static final String NAV_TO_MAINTAIN = "taskAssignment";
 	
+	public static final String APPROVER = "APPROVER";
+	
 	//BPM default filter values
-	public static final String VIEW_BY = "ALL";
-	public static final String ASSIGNMENT = "ALL";
-	public static final String DOC_TYPE = "";
-	public static final String STATE = "ASSIGNED";
+//	public static final String VIEW_BY = "ALL";
+//	public static final String ASSIGNMENT = "ALL";
+//	public static final String DOC_TYPE = "";
+//	public static final String STATE = "ASSIGNED";
 	
 	//Mapper for DDL object
 	private static Map<Long, Object> orgTypeMapper;
@@ -92,14 +106,14 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	private String currentDate;
 
-	public TaskAssignmentBackingBean(){
-		//TODO
-		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
-		}else{
-			MDC.put(LogKey.USER_ID, 1L);
-		}
-	}
+//	public TaskAssignmentBackingBean(){
+//		//TODO
+//		if(MDC.get(LogKey.USER_ID)==null) {
+//			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
+//		}else{
+//			MDC.put(LogKey.USER_ID, 1L);
+//		}
+//	}
 		
 	public void preLoading(){
 		log.info("preLoading");
@@ -204,7 +218,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					this.getManagedBean().setOrgProfileRequired(false);
 					//default org profile
 					PmOrgValidity pmOrgValidity = getOrgProfile(pmParameter.getParameterCode());
-					
+					this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgProfileId(pmOrgValidity.getPmOrgProfile().getOrgProfileId());
 					this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName(pmOrgValidity.getOrgName());
 				}else{
 					this.getManagedBean().setOrgProfileRequired(true);
@@ -269,7 +283,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			this.getManagedBean().setAvailableUsers(new ArrayList<PmUser>());
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
-			this.getManagedBean().setAvailableUsers(retrieveAvailableUsers());
+			this.getManagedBean().setAvailableUsers(generateAvailableUsers(item));
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -285,18 +299,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	public String applicationStatus(Integer docInt) {
 		log.info("applicationStatus");
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
-
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setLanguageCode(languageCode);
-		reqDTO.setStatusId(docInt.longValue());
-		StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
-
 		log.info("docInt:" + docInt);
-
-		return resDTO.getPmStatusDesc() != null ? resDTO.getPmStatusDesc().getStatusName() : "Review";
+		if(docInt!=null){
+			return getStatusDescById(docInt.longValue());
+		}else{
+			return "";
+		}
 	}
 
 	/**
@@ -305,10 +313,14 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public void confirmReassignTask(){
 		log.info("confirmReassignTask");
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
+		WorklistItemVO task = this.getManagedBean().getSelectedTask();
 		if(pmUser==null){
 			throw new EpException("Please select an user to be re-assigned.");//TODO
 		}
-		reassignTask(pmUser);
+		if(task==null){
+			throw new EpException("Task is not null.");//TODO
+		}
+		reassignTask(pmUser, task.getTaskId());
 	}
 	
 	private List<String> retrieveAvailableRoles(Long statusId){
@@ -345,9 +357,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		try {
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusResDTO resDTO = statusSO.retrieveStatusRoleByStatusId(reqDTO);
+			StatusResDTO resDTO = statusSO.retrieveStatusRoleStatusId(reqDTO);
 			if(resDTO.isSuccessful()){
-				statusIds = resDTO.getStatusIds();
+				for(int i=0; i<resDTO.getStatusIds().size(); i++){
+					statusIds.add((int) (long)resDTO.getStatusIds().get(i));
+				}
 			}
 			
 		} catch (Exception e) {
@@ -361,25 +375,34 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	}
 	
 	/**
-	 * retrieve available users
+	 * retrieve and generate available users
 	 * @return List<PmUser>
 	 */
-	public List<PmUser> retrieveAvailableUsers(){
-		log.info("retrieveAvaiableUsers");
+	public List<PmUser> generateAvailableUsers(WorklistItemVO task){
+		log.info("generateAvailableUsers");
+
+		boolean isApprover = false;
 		List <PmUser> pmUsers = new ArrayList<PmUser>();
 		try {
 			List<String> statusRoles = retrieveAvailableRoles(this.getManagedBean().getSelectedTask().getDocStatus().longValue());
-//			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
+			Long userId = this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId();
 			Long orgProfileId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId();
 			Long orgTypeId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId();
 			ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-			
+		
 			
 			// active user
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("recordStatusFlg");
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(bean);
+			
+			// not current user
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+			bean.setSearchField("userId");
+			bean.setSearchValue(userId);
 			searchBean.getDataFilterBeans().add(bean);
 				
 			// org profile id
@@ -410,6 +433,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchValue(statusRoles);
 			searchBean.getDataFilterBeans().add(bean);
 			
+			// approver should be returned by BPM not selected from DB
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_LIKE.value());
+			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
+			bean.setSearchValue(APPROVER);
+			searchBean.getDataFilterBeans().add(bean);
+			
 			// active user role
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -427,6 +457,18 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null){
 				pmUsers = resDTO.getUserResultBean().getResultList();
 			}
+			
+			//if contains approver role
+			for(String roleCode:statusRoles){
+				if(roleCode.toLowerCase().contains(APPROVER.toLowerCase())){
+					isApprover = true;
+					break;
+				}
+			}
+			if(isApprover){
+				generateCompleteUsers(pmUsers, task);
+			}
+			
 				
 		} catch (Exception e) {
 //			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
@@ -436,57 +478,154 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}		
 		return pmUsers;
 	}
+	
+	private void generateCompleteUsers(List<PmUser> pmUsers, WorklistItemVO task){
+		log.info("generateCompleteUsers");
+		String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
+		log.info("moduleCode: " + moduleCode);
+		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
+		if(ModuleCodeConst.SUPPLIER_MANAGEMENT.equalsIgnoreCase(moduleCode)){
+			// TODO not applicable at the moment
+		}else if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+			selectedApprovers = retrieveFlApprovers(task.getDocNumber(), task.getDocType());
+		}else if(ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(moduleCode)){
+			selectedApprovers = retrieveScApprovers(task.getDocNumber(), task.getDocStatus());
+		}else if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
+			selectedApprovers = retrieveCtApprovers(task.getDocNumber(), task.getDocType());
+		}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT.equalsIgnoreCase(moduleCode)){
+			// TODO not applicable at the moment
+		}
+		if(selectedApprovers!=null && !selectedApprovers.isEmpty()){
+			log.info("add approvers to list");
+			pmUsers.addAll(selectedApprovers);
+		}
+	}
 
-
+	private List<PmUser> retrieveFlApprovers(String docNo, String DocType){
+		log.info("retrieveFlApprovers");
+		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
+		PmUser user = new PmUser();
+		user.setLoginId("FL APPROVER USER");
+		selectedApprovers.add(user);
+		
+		IFulfilmentSO reqSO = null;
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		try{
+			reqSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			if(resDTO.isSuccessful()){
+//				selectedApprovers = 
+			}
+		}catch(Exception e){
+			throw e; 
+		}finally{
+			reqSO = null;
+		}
+		
+		return selectedApprovers;
+	}
+	private List<PmUser> retrieveCtApprovers(String docNo, String DocType){
+		log.info("retrieveCtApprovers");
+		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
+//		PmUser user = new PmUser();
+//		user.setLoginId("CT APPROVER USER");
+//		selectedApprovers.add(user);
+//		
+		IContractIntegrationSO reqSO = null;
+		ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
+		ContractIntegrationResDTO resDTO = new ContractIntegrationResDTO();
+		try{
+			reqDTO.setDocType(DocType);
+			reqDTO.setDocNo(docNo);
+			reqSO = (IContractIntegrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
+//			resDTO = reqSO.retrieveApproverListByDocTypeAndNo(reqDTO);
+			if(resDTO.isSuccessful()){
+				selectedApprovers = PmCommonUtil.retriveUsersByIds(resDTO.getUserIdList());
+			}
+		}catch(Exception e){
+			throw e; 
+		}finally{
+			reqSO = null;
+		}
+		return selectedApprovers;
+	}
+	private List<PmUser> retrieveScApprovers(String docNo, Integer statusCode){
+		log.info("retrieveScApprovers");
+		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
+		PmUser user = new PmUser();
+		user.setLoginId("SC APPROVER USER");
+		selectedApprovers.add(user);
+		
+		IContractSO reqSO = null;
+		ContractReqDTO reqDTO = new ContractReqDTO();
+		ContractResDTO resDTO = new ContractResDTO();
+		try{
+			reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IContractSO.class);
+			if(resDTO.isSuccessful()){
+//				selectedApprovers = 
+			}
+		}catch(Exception e){
+			throw e; 
+		}finally{
+			reqSO = null;
+		}
+		return selectedApprovers;
+	}
 	
 	/**
 	 * Reassign task to selected user
 	 * @param users
 	 */
-	private void reassignTask(PmUser user)throws EpException{
+	private void reassignTask(PmUser user, String taskId)throws EpException{
 		log.info("reassignTask");
-//		IBpmSO bpmSO = null;
-//		BpmRequestDTO reqDTO = null;
-//		BpmResponseDTO responseDTO = null;
-//		List<String>users = null;
-//		String token = null;
-//		
-//		try {
-//			reqDTO = new BpmRequestDTO();
-//			WorklistItemVO workListItem = this.getManagedBean().getSelectedTask();
-//			token = getFacesScopes().getBPMAuthenticationCtxToken();
-//			users = new ArrayList<String>();
-//			if(token==null){
-//				throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
-//			}
-//
-//			users.add(user.getLoginId());
-//			
-//			// set useful info
-//			reqDTO.setCtxToken(token);
-//			reqDTO.setTaskId(workListItem.getTaskId());
-////			reqDTO.setAssignee(users);
-//
-//			//invoke BPM
-//			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//			responseDTO = bpmSO.reassignTask(reqDTO);
-//			
-//			if(responseDTO.isSuccessful()){
-//				//TODO
-//				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-//			    FacesMessage.SEVERITY_INFO,
-//			    null,
-//			    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//			}else{
-//				throw new EpException("BPM submission is failed. Unknown problem occurred. Please contact administrator.");//TODO
-//			}
-//		}catch(EpBpmException be){
-//			throw new EpException("Task Re-assignment failed: {0}.", new String[]{be.getMessage()});//TODO
-//		}catch(EpException e){
-//			throw new EpException("Task Re-assignment failed: {0}.", new String[]{e.getMessage()});//TODO
-//		} finally {
-//			bpmSO = null;
-//		}
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String token = null;
+		
+		try {
+
+			if(taskId==null){
+				throw new EpException("taskId is null.");//TODO
+			}
+			log.info("BPM taskId******"+taskId);
+			log.info("BPM userId*****"+user.getLoginId());
+			
+			reqDTO = new BpmRequestDTO();
+			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+			
+			if(token==null){
+				throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
+			}
+		
+			log.info("BPM token******"+token);
+			
+			// set useful info
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			reqDTO.getAssignee().add(new AssigneeVO(user.getLoginId(), "user"));
+
+			//invoke BPM
+			responseDTO = bpmSO.reassignTask(reqDTO);
+			
+			if(responseDTO.isSuccessful()){
+				this.taskListDataModel.reloadData();
+				//TODO
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+			    FacesMessage.SEVERITY_INFO,
+			    null,
+			    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
+			}else{
+				throw new EpException("BPM submission is failed. Unknown problem occurred. Please contact administrator.");//TODO
+			}
+		}catch(EpBpmException be){
+			throw new EpException("EpBpmException: Task Re-assignment failed: {0}.", new String[]{be.getMessage()});//TODO
+		}catch(EpException e){
+			throw new EpException("EpException: Task Re-assignment failed: {0}.", new String[]{e.getMessage()});//TODO
+		} finally {
+			bpmSO = null;
+		}
 	}
 	
 	/**
@@ -518,63 +657,64 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			IBpmSO bpmSO = null;
 			BpmRequestDTO reqDTO = null;
 			BpmResponseDTO responseDTO = null;
-			
 			String token = null;
 			String loginId = null;
 			List<Integer> statusIds = null;
 			TaskAssignmentSearchBean taskSearchBean = null;
 			SearchResultBean<WorklistItemVO> resultBean = null;
+			
 			try {
 				taskSearchBean = getManagedBean().getTaskAssignmentSearchBean();
-//				loginId = taskSearchBean.user.getLoginId();
-				statusIds = retrieveAvailableStatusId();
-				reqDTO = new BpmRequestDTO();
-				token = getFacesScopes().getBPMAuthenticationCtxToken();
+				loginId = taskSearchBean.getUser()!=null? taskSearchBean.getUser().getLoginId() : null;
+				
+				if(loginId!=null){
+					statusIds = retrieveAvailableStatusId();
+//					token = getFacesScopes().getBPMAuthenticationCtxToken();
+					
+					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+					  
+					reqDTO = new BpmRequestDTO();
 
-				if(token==null){
-					throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
-				}
-					log.info("BPM auth******" + token);
-					log.info("BPM assignment******"+ ASSIGNMENT);
 					log.info("BPM pageNo******"+getPageNo());
 					log.info("BPM pageSize*****"+getPageSize());
+					log.info("BPM loginId******"+loginId);
+					log.info("BPM statusIds******"+statusIds.size());
 					
-				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				
-				// set useful info
-				reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-				reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-				reqDTO.setState(STATE); 
-				
-//				reqDTO.setUserName(loginId);
-//				reqDTO.setStatusIds(statusIds);
-				
-//				if(!getDocType().isEmpty()){
-				  reqDTO.setDocType(DOC_TYPE);
-//				}
-				reqDTO.setViewBy(VIEW_BY);
-				reqDTO.setAssignment(ASSIGNMENT);
-				reqDTO.setCtxToken(token);
-				
-				// Invoke BPM TODO
-				responseDTO = bpmSO.getWorklistItems(reqDTO);
-				
-				// Set resultBean for UI
-				resultBean = new SearchResultBean<WorklistItemVO>();
-				resultBean.setTotalRecord(0);
-				resultBean.setResultList(null);
-				
-				if (responseDTO.getWorklistVO() != null) {
-					log.info("BPM size******" + responseDTO.getWorklistVO().getWorklistItem().size());
-					log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
-					/*
-					if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-						// markup data
-						markupWorklistItem(responseDTO.getWorklistVO().getWorklistItem());
-					}*/
-					resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
-					resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
+					
+					if(token==null){
+						throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
+					}
+					log.info("BPM auth******" + token);
+					
+					// set useful info
+					reqDTO.setCtxToken(token);
+					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+					reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+			        reqDTO.setStatusList(statusIds);
+			        reqDTO.setUserId(loginId);
+
+					// Invoke BPM 
+					responseDTO = bpmSO.getReassignedItems(reqDTO);
+					
+					// Set resultBean for UI
+					resultBean = new SearchResultBean<WorklistItemVO>();
+					resultBean.setTotalRecord(0);
+					resultBean.setResultList(null);
+					
+					if (responseDTO.getWorklistVO() != null) {
+						log.info("BPM size******" + responseDTO.getWorklistVO().getWorklistItem().size());
+						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+						/*
+						if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+							// markup data
+							markupWorklistItem(responseDTO.getWorklistVO().getWorklistItem());
+						}*/
+						resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
+						resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
+					}
 				}
+				
 			}catch(Exception e){
 				e.printStackTrace();
 			} finally {

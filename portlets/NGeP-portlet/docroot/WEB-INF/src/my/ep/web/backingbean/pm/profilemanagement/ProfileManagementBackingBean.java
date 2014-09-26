@@ -253,7 +253,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			populateUserAddress(pmUser);
 			
 			//load preference - notification
-			PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+			this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
+			
 			
 			//load preference
 			if(pmUser.getPmUserPreference()==null){
@@ -313,7 +314,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setOrgTypeCode(new PmParameter());
 		
 		//initial preference - notification
-		PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage());
+		this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
 
 		//initial preference
 		PmCommonUtil.loadPmUserPreference(pmUser, pmUser.getPmUserPreference());
@@ -432,6 +433,11 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	public List<PmCity> getCityList(Long districtId) {
 		logger.info("getCityList");
 		return PmCommonUtil.retrievePmCityList(districtId);
+	}
+	
+	public Date getCurrentDate(){
+		Date currentDate = new Date();
+		return currentDate;
 	}
 
 	/**
@@ -1434,6 +1440,27 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
+	 * sync notification data
+	 * @param user
+	 */
+	private void loadUserNotification(PmUser user){
+		logger.info("loadUserNotification");
+		List <PmUserNotification> displayNotifications = this.getManagedBean().getNotifications();
+		if(displayNotifications!=null && !displayNotifications.isEmpty()){
+			for(PmUserNotification displayNotification: displayNotifications){
+				for(PmUserNotification pmUserNotification: user.getPmUserNotifications()){
+					if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(displayNotification.getNotifyMode())
+							&& !ParameterConst.NOTIFICATION_SMS.equals(displayNotification.getNotifyMode())){
+						if(displayNotification.getNotifyMode().equals(pmUserNotification.getNotifyMode())){
+							pmUserNotification.setPreferred(displayNotification.isPreferred());
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Generate new role and deleted role to update Liferay and OIM
 	 * @param user
 	 * @param reqDTO
@@ -1747,6 +1774,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			loadUserAddress(user);
 			
 			loadUserOrgType(user);
+			
+			loadUserNotification(user);
+			
+			
 			
 			if(!user.isBrandNew()){
 				reqDTO.setNewRoleList(new ArrayList<PmUserRole>());
