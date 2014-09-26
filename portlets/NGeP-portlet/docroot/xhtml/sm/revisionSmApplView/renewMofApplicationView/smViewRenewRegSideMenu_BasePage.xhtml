@@ -38,70 +38,46 @@
 						src="step6ViewRenewAppln_RegisterCategoryCodesInfo.xhtml" />
 				</c:if>
 				<c:choose>
-					<c:when
-						test="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}">
-						<c:if
-							test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+					<c:when test="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
 							<ui:include src="step6.1ViewRenewAppln_FactoryInfo.xhtml" />
 						</c:if>
-						<c:if
-							test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
 							<ui:include src="step6.2ViewRenewAppln_EquipmentInfo.xhtml" />
 						</c:if>
 						<c:choose>
 							<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser }">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-									<ui:include
-										src="step7ViewRenewAppln_SupportingDocumentsInfo.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+									<ui:include src="step7ViewRenewAppln_SupportingDocumentsInfo.xhtml" />
 								</c:if>
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-									<ui:include
-										src="step8ViewRenewAppln_ProcessingFeePaymentInfo.xhtml" />
-								</c:if>
-	
 							</c:when>
 							<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
 								</c:if>
 								<c:choose>
-									<c:when
-										test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
+									<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
 										</c:if>
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 10}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
 										</c:if>
 									</c:when>
 									<c:otherwise>
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
 										</c:if>
 									</c:otherwise>
 								</c:choose>
 	
 							</c:when>
 							<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
 								</c:if>
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
 								</c:if>
 							</c:when>
 							<c:otherwise>
@@ -112,58 +88,37 @@
 					<c:otherwise>
 						<c:choose>
 							<c:when test="#{viewSmApplBackingBean.managedBean.supplierUser }">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-									<ui:include
-										src="step7ViewRenewAppln_SupportingDocumentsInfo.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+									<ui:include src="step7ViewRenewAppln_SupportingDocumentsInfo.xhtml" />
 								</c:if>
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-									<ui:include
-										src="step8ViewRenewAppln_ProcessingFeePaymentInfo.xhtml" />
-								</c:if>
-	
 							</c:when>
 							<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
 								</c:if>
 								<c:choose>
-									<c:when
-										test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
+									<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
 										</c:if>
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
 										</c:if>
 									</c:when>
 									<c:otherwise>
-										<c:if
-											test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-											<ui:include
-												src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+											<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
 										</c:if>
 									</c:otherwise>
 								</c:choose>
 	
 							</c:when>
 							<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
 								</c:if>
-								<c:if
-									test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-									<ui:include
-										src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
+								<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+									<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
 								</c:if>
 							</c:when>
 							<c:otherwise>
