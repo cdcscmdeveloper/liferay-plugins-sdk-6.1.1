@@ -59,7 +59,7 @@
 					<td>$committeeMember.scCommitteeMember.grade</td>
 					<td>$committeeMember.scCommitteeMember.icPassport</td>
 					<td></td>
-					<td>$committeeMember.scCommitteeMember.memberRole.parameterCode</td>
+					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
 				</tr>
 				#end
 			</table>
@@ -99,7 +99,7 @@
 					<td>$committeeMember.scCommitteeMember.grade</td>
 					<td>$committeeMember.scCommitteeMember.icPassport</td>
 					<td></td>
-					<td>$committeeMember.scCommitteeMember.memberRole.parameterCode</td>
+					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
 				</tr>
 				#end
 			</table>
