@@ -42,7 +42,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
-import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -68,8 +67,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
@@ -575,8 +572,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else{
-			        getManagedBean().setCircularVer(resDTO.getCircularVer());
-					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+					reqDTO = new CircularReqDTO();
+					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
+					setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 					getManagedBean().setSelectionOfZone(false);
 					getManagedBean().setSelectedPanelItems(null);
 					getManagedBean().setSelectedPanelZone(null);
@@ -1119,7 +1117,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
-			CircularResDTO resDTO = null;
 			getManagedBean().setSelectionOfZone(false);
 			getManagedBean().setSelectedPanelItems(null);
 			getManagedBean().setSelectedPanelZone(null);
@@ -1142,8 +1139,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 			}
 			
-			resDTO = circularSO.retrieveCircularVerById(reqDTO);					
-			setPanelCircularVar(resDTO);
+			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 			return "circularBase.xhtml?faces-redirect=true";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1550,18 +1546,24 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public String getSupAddress(CtPanelSupplier panelSupplier){
-		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofRegistrationSO.class);
-		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(panelSupplier.getSupplier().getSupplierId());
-		MofRegistrationResDTO resDTO = mofRegistrationSO.retrieveSupplierProfile(reqDTO);
-		
-		if(resDTO.getSmSupplier().getSmAppl()!=null && resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!=null && 
-			resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!=null) {
-			for(SmCompanyAddress address : resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
-				if(address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
-					return getFullAddress(address.getSmAddress());
-				}
-			}
+	
+		ICircularSO circularSO = null;
+		CircularReqDTO reqDTO = null;
+		try{
+	           	circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+	           	reqDTO = new CircularReqDTO();
+	           	reqDTO.setSupplier(panelSupplier.getSupplier());
+	            CircularResDTO resDTO = circularSO.retriveSupplierById(reqDTO);
+		        if(resDTO.getSmSupplier().getSmAppl()!=null && resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic()!=null && 
+		             	resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()!=null) {
+			            for(SmCompanyAddress address : resDTO.getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()) {
+				                if(address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) {
+					                 return getFullAddress(address.getSmAddress());
+				                }
+			             }
+		         }
+		   }catch(Exception ex){
+			
 		}
 		return "";
 	}
