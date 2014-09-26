@@ -202,7 +202,10 @@
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
-		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
+		<p:commandButton id="scoringBtn"
+			icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+			style="background-color:transparent !important; border:0px none;"
+			styleClass="scoringBtn"
 			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="#{scoringSetPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
