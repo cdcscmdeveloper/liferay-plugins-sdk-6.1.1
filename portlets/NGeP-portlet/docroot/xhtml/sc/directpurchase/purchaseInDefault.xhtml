@@ -14,17 +14,19 @@
 				<td style="width: 10%" class="header-info-text">
 					#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.purchaseInDefaultNo}
 				</td>
-				
-				<td style="width: 10%">
-					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" />
-				</td>
-				<td style="width: 16%" class="header-info-text">
-				 #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}
-				</td>
-				
-				<td style="width: 8%">
-					<h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" />
-				</td>
+
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.purchase.in.default.pkp.no']}" /></td>
+				<td style="width: 16%" class="header-info-text"><h:panelGroup
+						rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
+				      #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractNo}
+				   </h:panelGroup> <h:panelGroup
+						rendered="#{!purchaseInDefaultBackingBean.managedBean.checkContractItem}">
+				      #{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.panelItem.ctCircularVer.circularNo}
+				   </h:panelGroup></td>
+
+				<td style="width: 8%"><h:outputLabel
+						value="#{lbl['lbl.sc.purchase.in.default.cat.type']}" /></td>
 				<td style="width: 10%" class="header-info-text">
 				 <ui:fragment rendered="#{purchaseInDefaultBackingBean.managedBean.checkContractItem}">
 				    #{purchaseInDefaultBackingBean.getParameterDesc(purchaseInDefaultBackingBean.managedBean.purchaseInDefault.contractedItem.ctContractVer.ctContract.contractType)}
