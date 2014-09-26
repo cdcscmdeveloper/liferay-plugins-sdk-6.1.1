@@ -41,7 +41,7 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"/>						
 		</div>
 		
-		<p:dialog id="delCtPersonDlg" header="#{lbl['lbl.ct.dialog.confirm.header']}" resizable="false"
+		<p:dialog id="delCtPersonDlg" resizable="false"
 		    styleClass="screen-title" widgetVar="delCtPersonDlg"  modal="true" width="350" height="95">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
