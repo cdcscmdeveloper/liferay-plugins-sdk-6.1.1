@@ -136,5 +136,10 @@
 		<managed-bean-class>my.ep.constant.sc.DPStatusConstants</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<description>QT Amend Field Constants</description>
+		<managed-bean-name>QTAmendFieldConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.sc.QTAmendFieldConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
-
