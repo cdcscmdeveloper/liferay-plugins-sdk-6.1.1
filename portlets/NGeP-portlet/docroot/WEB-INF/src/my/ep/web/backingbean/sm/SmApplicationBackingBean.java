@@ -3242,6 +3242,26 @@ public class SmApplicationBackingBean extends
 		} else {
 			for (SmPersonnelAddress addr : shareHolderBean
 					.getSmPersonnelAddresses()) {
+				SmAddress smAddress = new SmAddress();
+				smAddress.setAddress1(addr.getSmAddress().getAddress1());
+				smAddress.setAddress2(addr.getSmAddress().getAddress2());
+				smAddress.setAddress3(addr.getSmAddress().getAddress3());
+				smAddress.setAddress4(addr.getSmAddress().getAddress4());
+				PmCountry country = new PmCountry();
+				country.setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
+				smAddress.setPmCountry(country);
+				PmState state = new PmState();
+				state.setStateId(addr.getSmAddress().getPmState().getStateId());
+				smAddress.setPmState(state);
+				PmDistrict district = new PmDistrict();
+				district.setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+				smAddress.setPmDistrict(district);
+				PmCity city = new PmCity();
+				city.setCityId(addr.getSmAddress().getPmCity().getCityId());
+				smAddress.setPmCity(city);
+				smAddress.setPostcode(addr.getSmAddress().getPostcode());
+				addr.setSmAddress(smAddress);
+
 				if (addr.getAddressType().equalsIgnoreCase(
 						SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM)) {
 					getManagedBean().setShareHolderPermAddr(addr);
