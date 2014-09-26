@@ -22,7 +22,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.fl.IFulfilmentSO;
+import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -42,8 +42,8 @@ import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.fl.FlDocumentReqDTO;
+import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -501,20 +501,25 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 	}
 
-	private List<PmUser> retrieveFlApprovers(String docNo, String DocType){
+	private List<PmUser> retrieveFlApprovers(String docNo, String docType){
 		log.info("retrieveFlApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
 		PmUser user = new PmUser();
 		user.setLoginId("FL APPROVER USER");
 		selectedApprovers.add(user);
 		
-		IFulfilmentSO reqSO = null;
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		IFulfilmentDocumentSO reqSO = null;
+		FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
+		FlDocumentResDTO resDTO = new FlDocumentResDTO();
 		try{
-			reqSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			log.info("docType: " + docType);
+			log.info("docNo: " + docNo);
+			reqDTO.setDocType(docType);
+			reqDTO.setDocNo(docNo);
+			reqSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentDocumentSO.class);
+			resDTO = reqSO.retrieveApproverListByDocTypeAndNo(reqDTO);
 			if(resDTO.isSuccessful()){
-//				selectedApprovers = 
+				selectedApprovers = PmCommonUtil.retriveUsersByIds(resDTO.getUserIdList());
 			}
 		}catch(Exception e){
 			throw e; 
@@ -524,7 +529,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		
 		return selectedApprovers;
 	}
-	private List<PmUser> retrieveCtApprovers(String docNo, String DocType){
+	private List<PmUser> retrieveCtApprovers(String docNo, String docType){
 		log.info("retrieveCtApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
 //		PmUser user = new PmUser();
@@ -535,10 +540,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 		ContractIntegrationResDTO resDTO = new ContractIntegrationResDTO();
 		try{
-			reqDTO.setDocType(DocType);
+			log.info("docType: " + docType);
+			log.info("docNo: " + docNo);
+			reqDTO.setDocType(docType);
 			reqDTO.setDocNo(docNo);
 			reqSO = (IContractIntegrationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
-//			resDTO = reqSO.retrieveApproverListByDocTypeAndNo(reqDTO);
+			resDTO = reqSO.retrieveApproverListByDocTypeAndNo(reqDTO);
 			if(resDTO.isSuccessful()){
 				selectedApprovers = PmCommonUtil.retriveUsersByIds(resDTO.getUserIdList());
 			}
@@ -560,6 +567,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		ContractResDTO resDTO = new ContractResDTO();
 		try{
+			log.info("statusCode: " + statusCode);
+			log.info("docNo: " + docNo);
 			reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IContractSO.class);
 			if(resDTO.isSuccessful()){
 //				selectedApprovers = 
