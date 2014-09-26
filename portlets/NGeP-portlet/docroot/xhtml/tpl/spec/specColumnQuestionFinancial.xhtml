@@ -44,6 +44,7 @@
 			value="#{question.tplSpecEstimations[0].estimatedCost}" 
 			required="true" rendered="#{isPriceTypeStandard}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
+			<p:ajax partialSubmit="true" process="@this" update="@this" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 		</p:inputText>
 		<p:message id="estimatedCostMsg" for="estimatedCost" display="icon" />

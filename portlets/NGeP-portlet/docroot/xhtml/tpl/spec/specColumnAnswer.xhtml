@@ -56,7 +56,7 @@
 			value="#{tplSpecAnswer.ratePerUom}"
 			rendered="#{isQuestionTypeItem}" required="#{isScoringReq}" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
-			<p:ajax event="blur" partialSubmit="true" process="@this" update="ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
+			<p:ajax event="blur" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
 			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
 		</p:inputText>
 		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />

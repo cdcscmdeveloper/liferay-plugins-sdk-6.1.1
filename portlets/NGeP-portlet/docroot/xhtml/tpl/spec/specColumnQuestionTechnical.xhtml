@@ -157,6 +157,7 @@
 				value="#{question.clQuantity}" 
 				required="#{!question.selected}" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  

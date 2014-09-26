@@ -5,7 +5,6 @@ package my.ep.web.backingbean.tpl.spec;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -327,6 +326,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		newQuestion.setClAnswerRequired(true);
+		
+		if (tplSpecMaster.isWeightageReq()) {
+			newQuestion.setWeightageReq(true);
+		}
 		
 		if (questionList == null) {
 			questionList = new ArrayList<TplSpecQuestion>();
@@ -790,8 +793,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		if (tplSpecTierQties.size() > 0) {
-			Collections.sort(tplSpecTierQties);
-			
 			prevSpecTierQty = tplSpecTierQties.get(tplSpecTierQties.size()-1);
 		}
 		
@@ -821,8 +822,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		if (tplSpecScorings.size() > 0) {
-			Collections.sort(tplSpecScorings);
-			
 			prevSpecScoring = tplSpecScorings.get(tplSpecScorings.size()-1);
 		}
 		
