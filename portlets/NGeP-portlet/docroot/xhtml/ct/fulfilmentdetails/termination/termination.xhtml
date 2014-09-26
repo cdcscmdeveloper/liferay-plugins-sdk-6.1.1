@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth250,columnWidth250">
+		   <h:panelGrid columns="4" style="width:870px;" columnClasses="columnWidth200,columnWidth210,columnWidth200,columnWidth210">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 			  <p:inputText for="cno" value="#{terminationBackingBean.managedBean.ctContract.contractNo}" 
 			     disabled="true" style="width:170px;" />
@@ -98,7 +98,7 @@
 				action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.ctContract.currentAgreement.filePath,
 							terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
-		<h:panelGrid  style="width:200px;">
+		<h:panelGrid  style="width:330px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true"/>
 			 <p:spacer width="2" />
@@ -134,22 +134,22 @@
 			  <p:outputLabel value="#{lbl['lbl.ct.pb.exemption']}" style="text-align:top;" />
 		   </h:panelGrid>	
 	    </h:panelGrid>
-	    <h:panelGrid columns="2" style="width:1000px;"  styleClass="top-aligned-columns" columnClasses="columnWidth200"
-	    rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
+	     <h:panelGrid columns="2" style="width:870px;"  styleClass="top-aligned-columns" columnClasses="columnWidth210"
+	      rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       terminationBackingBean.managedBean.contractVer.ctContractValue.concession}">
-	          <h:panelGrid columns="2" style="float:right;">
+	         <h:panelGrid columns="2" style="float:right;">
 		    	<p:outputLabel value="*" styleClass="mandatory" />
-			      <p:outputLabel for="justificationLbl" style="float:right;" value="#{lbl['lbl.ct.justification.ap201']}" />
+			   <p:outputLabel for="justificationLbl" style="float:right;" value="#{lbl['lbl.ct.justification.ap201']}" />
 			  </h:panelGrid>
 	  <h:panelGrid>
-	    <p:inputTextarea id="justificationLbl" rows="4" style="width:720px;"  disabled="true" 
-	        autoResize="false"  value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"/>	
+	    <p:inputTextarea id="justificationLbl" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.justification}"
+		  rows="4" style="width:600px;"  disabled="true" autoResize="false" />	
 	  </h:panelGrid>		
     </h:panelGrid> 
 	</h:panelGrid>
  </p:panel>
     <p:panel id="terminateContract" header="#{lbl['lbl.ct.panel.termination.dtls']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:1000px;" columnClasses="columnWidth200,columnWidth250,columnWidth250,columnWidth250">
+       <h:panelGrid columns="4" style="width:1100px;" columnClasses="columnWidth210,columnWidth300,columnWidth300,columnWidth300">
         <h:panelGrid columns="2" style="float:right;">
 			<p:outputLabel value="*" styleClass="mandatory" />
             <p:outputLabel value="#{lbl['lbl.ct.termination.decision']}" />
