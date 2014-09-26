@@ -596,11 +596,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueResDTO resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 			reqDTO.setSupplierId(resDTO.getSupplierItem().getSupplierId());
 	
-			CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+			log.info("resDTO.getSupplierItem().getSupplierId()" + resDTO.getSupplierItem().getSupplierId());
+			
+			/*CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 	
-			log.debug("size:" + resDTO2.getSupplierZoneLs().size());
+			log.info("size:" + resDTO2.getSupplierZoneLs().size());
 	
-			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
+			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());*/
 	
 			CmSupplierItem clone = (CmSupplierItem) SerializationUtils.clone(this.getManagedBean().getMaintainItemList().get(index));
 	
@@ -811,8 +813,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setDisplayCatalogue(true);
 			this.getManagedBean().setPreviousScreen(1);//catMaintenance
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
-		} catch(Exception e){
-			e.printStackTrace();
+		/*} catch(Exception e){
+			e.printStackTrace();*/
 		} finally {
 			codificationSO = null;
 			catalogueSO = null;
@@ -880,8 +882,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setDisplayCatalogue(true);
 			//updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		/*} catch (Exception e) {
+			e.printStackTrace();*/
 		}finally {
 			userSO = null;
 			statusSO = null;
@@ -918,8 +920,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
-		this.getManagedBean().setPreviousScreen(1);//catMaintenance
-		
+		this.getManagedBean().setPreviousScreen(1);//catMaintenance		
 		
 //		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 //		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
@@ -977,8 +978,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			this.getManagedBean().setDisplayCatalogue(true);
 			updateStandardErrorDialog(this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing());
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		/*} catch (Exception e) {
+			e.printStackTrace();*/
 		}finally {
 			userSO = null;
 			statusSO = null;
@@ -4138,7 +4139,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	public void preRenderCatalogue() {
-
+		log.debug("In preRenderCatalogue");
+		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -4162,7 +4164,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					.getSupplierId());
 			reqDTO.setItemStatus("D");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-	
+			
 			/*
 			 * for(CmSupplierItem supplierItem: resDTO.getSupplierItemList()){
 			 * 
@@ -4173,16 +4175,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			 * supplierItem.getzStdPrices().add(zone); } }
 			 */
 	
-			System.out.println("*****************end********************");
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+
+			CatalogueResDTO resDTO2 = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);	
+			log.info("zone size:" + resDTO2.getSupplierZoneLs().size());	
+			this.getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs());
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
 		}finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
 		}
 
+		log.debug("Exit preRenderCatalogue");
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, "catalogMaintenanceFile");
