@@ -714,7 +714,7 @@ public class PmCommonUtil {
 				reqDTO.setUserSearchBean(searchBean);
 				UserResDTO resDTO = userSo.searchUserProfile(reqDTO);
 				if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null && resDTO.getUserResultBean().getResultList()!=null){
-					pmUsers = reqDTO.getUserResultBean().getResultList();
+					pmUsers = resDTO.getUserResultBean().getResultList();
 				}
 			}
 		}catch(Exception e){
