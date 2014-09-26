@@ -1411,8 +1411,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.finSpecZoneBean = finSpecZoneBean;
 	}
 
-	
-
 	public List<ScQtCommitteeActivity> getEndorscommitteeMemberList() {
 		return endorscommitteeMemberList;
 	}
