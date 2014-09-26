@@ -60,13 +60,13 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><ac:inputText
+					<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info1']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 							required="true" size="40"></ac:inputText></td>
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.request.description']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><ac:inputText
+					<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info2']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 							value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 							required="true" size="40"></ac:inputText></td>
 				</tr>
@@ -76,24 +76,24 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.type']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><ac:inputText
+						<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info3']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 								required="true" size="40"></ac:inputText></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><ac:inputText
+						<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info4']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 								required="true" size="40"></ac:inputText></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><ac:inputText
+						<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info5']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 								required="true" size="40"></ac:inputText></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.color']}" />
 							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><ac:inputText
+						<td><ac:inputText toolTip="#{lbl['lbl.cm.tooltip.info6']}" requiredMessage="#{lbl['lbl.cm.error.error14']}"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 								required="true" size="40"></ac:inputText></td>
 					</tr>
