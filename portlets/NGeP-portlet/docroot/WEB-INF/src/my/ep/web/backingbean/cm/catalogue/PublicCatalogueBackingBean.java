@@ -407,8 +407,8 @@ public class PublicCatalogueBackingBean extends
 //					+ supplierItem.getCmPricings().size());
 			bb.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItem());
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		/*} catch (Exception e) {
+			e.printStackTrace();*/
 		} finally {
 			catalogueSO = null;
 //			supplierSearchSO = null;
