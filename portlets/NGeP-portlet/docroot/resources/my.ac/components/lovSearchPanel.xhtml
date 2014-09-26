@@ -5,33 +5,39 @@
     xmlns:f="http://java.sun.com/jsf/core"
    	xmlns:p="http://primefaces.org/ui">
    	
-	<h:panelGrid columns="3" id="lovCriteria" cellpadding="0" cellspacing="0">
+	<h:panelGrid columns="2" id="lovCriteria" cellpadding="0" cellspacing="0">
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchField}">
 			<f:selectItem itemLabel="Select One" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
-		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchOperator}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
-			<f:selectItems value="#{lovBackingBean.searchOperators}" />
-		</p:selectOneMenu>
+		<ui:remove>
+			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchOperator}">
+				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItems value="#{lovBackingBean.searchOperators}" />
+			</p:selectOneMenu>
+		</ui:remove>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-top:6px;" />
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchField}">
 			<f:selectItem itemLabel="Select One" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
-		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchOperator}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
-			<f:selectItems value="#{lovBackingBean.searchOperators}" />
-		</p:selectOneMenu>
+		<ui:remove>
+			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchOperator}">
+				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItems value="#{lovBackingBean.searchOperators}" />
+			</p:selectOneMenu>
+		</ui:remove>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchValue}" style="margin-top:6px;" />
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchField}">
 			<f:selectItem itemLabel="Select One" itemValue="" />
 			<f:selectItems value="#{lovBackingBean.searchOptions}" />
 		</p:selectOneMenu>
-		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchOperator}">
-			<f:selectItem itemLabel="Select One" itemValue="" />
-			<f:selectItems value="#{lovBackingBean.searchOperators}" />
-		</p:selectOneMenu>
+		<ui:remove>
+			<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchOperator}">
+				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItems value="#{lovBackingBean.searchOperators}" />
+			</p:selectOneMenu>
+		</ui:remove>
 		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[2].searchValue}" style="margin-top:6px;" />
 		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[3].searchField}">
