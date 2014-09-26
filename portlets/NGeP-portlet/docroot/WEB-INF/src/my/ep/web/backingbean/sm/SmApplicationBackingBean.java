@@ -363,14 +363,14 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-				if (getManagedBean()
-						.getSmAppl()
-						.getSupplierType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.STYPE_CONTRACTOR)) {
-					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.setWithFederal(true);
-				}
+				// if (getManagedBean()
+				// .getSmAppl()
+				// .getSupplierType()
+				// .equalsIgnoreCase(
+				// SupplierManagementConst.STYPE_CONTRACTOR)) {
+				getManagedBean().getSmAppl().getSmCompanyBasic()
+						.setWithFederal(true);
+				// }
 			} else {
 				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(smAppl
 						.getApplId());
@@ -866,6 +866,8 @@ public class SmApplicationBackingBean extends
 			break;
 		case SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY:
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
+					getManagedBean(), currentTab);
+			validSave = SmApplicationUtil.validateEquityOwnerAmount(
 					getManagedBean(), currentTab);
 			validatePaidCaptialAmt(true);
 			break;
@@ -3413,17 +3415,25 @@ public class SmApplicationBackingBean extends
 		}
 		getManagedBean().setChequeSingPerId(chequSigns);
 		// shareBankBean.getSmChequeSignatories().clear();
-		getManagedBean().setSelectedBank(shareBankBean);
-		retrieveBankFinOrgListByType();
-		if (shareBankBean.getSmAddress() == null) {
+		if (shareBankBean.getSmAddress() != null
+				&& shareBankBean.getSmAddress().getPmCountry().getCountryId() != null
+				&& shareBankBean.getSmAddress().getPmState().getStateId() != null
+				&& shareBankBean.getSmAddress().getPmDistrict().getDistrictId() != null) {
+			assignStateDistAndCityForSelVal(shareBankBean.getSmAddress()
+					.getPmCountry().getCountryId(), shareBankBean
+					.getSmAddress().getPmState().getStateId(), shareBankBean
+					.getSmAddress().getPmDistrict().getDistrictId(),
+					SupplierManagementConst.SM_BANK_INFO_PANEL);
+		} else {
 			shareBankBean.setSmAddress(SmApplicationUtil
 					.setDefaultAddr(getManagedBean().getDefPmCountry()));
+			populateStatesByCountry(shareBankBean.getSmAddress().getPmCountry()
+					.getCountryId(),
+					SupplierManagementConst.SM_BANK_INFO_PANEL, new PmState(),
+					new PmDistrict(), new PmCity());
 		}
-		assignStateDistAndCityForSelVal(shareBankBean.getSmAddress()
-				.getPmCountry().getCountryId(), shareBankBean.getSmAddress()
-				.getPmState().getStateId(), shareBankBean.getSmAddress()
-				.getPmDistrict().getDistrictId(),
-				SupplierManagementConst.SM_BANK_INFO_PANEL);
+		getManagedBean().setSelectedBank(shareBankBean);
+		retrieveBankFinOrgListByType();
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("bankDialog.show()");
 	}
