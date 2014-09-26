@@ -4,76 +4,82 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-     <p:dialog  id="pricingPopup" widgetVar="pricingPopup" modal="true" header="#{lbl['lbl.sc.pricing']}"
-        dynamic="true" styleClass="pop_up_top" 
-		width="700" height="380" resizable="false" closable="false">
-		
-	   <h:panelGroup>
-		<table style="width: 550px">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
-				<td><p:inputText disabled="true" size="46"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName}" /></td>
-			</tr>
+	<p:dialog id="pricingPopup" widgetVar="pricingPopup" modal="true"
+		header="#{lbl['lbl.sc.pricing']}" dynamic="true"
+		styleClass="pop_up_top" width="700" height="380" resizable="false"
+		closable="false">
 
-			<tr>
-				<td style="vertical-align:top; text-align:left;"><p:outputLabel value="#{lbl['lbl.sc.desc']}" /></td>
-				<td><p:inputTextarea disabled="true" rows="2" cols="55" style="margin-bottom: 5px; width: 300px;"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemDesc}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
-				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
-				<td><p:inputText disabled="true" size="25"
-						value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType)}" /></td>
-			</tr>
-		</table>
+		<h:panelGroup>
+			<table style="width: 550px">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
+					<td><p:inputText disabled="true" size="46"
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></td>
+					<td><p:inputText disabled="true" size="46"
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName}" /></td>
+				</tr>
+				<tr>
+					<td style="vertical-align: top; text-align: left;"><p:outputLabel
+							value="#{lbl['lbl.sc.desc']}" /></td>
+					<td><p:inputTextarea disabled="true" rows="2" cols="55"
+							style="margin-bottom: 5px; width: 300px;"
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemDesc}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></td>
+					<td><p:inputText disabled="true" size="25"
+							value="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.uom.uomName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.price.type']}" /></td>
+					<td><p:inputText disabled="true" size="25"
+							value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType)}" /></td>
+				</tr>
+			</table>
 		</h:panelGroup>
-		
-      <h:panelGroup>
-		<p:spacer height="15px" />
-		<p:dataTable id="priceDtl" var="itemPrice"
-			value="#{requestNoteBackingBean.managedBean.pricingList}"
-			rowKey="#{itemPrice}" rowIndexVar="index">
 
-			<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%">
-				#{itemPrice.tplSpecZone.zoneName}
-			</p:column>
+		<h:panelGroup>
+			<p:spacer height="15px" />
+			<p:dataTable id="priceDtl" var="itemPrice"
+				value="#{requestNoteBackingBean.managedBean.pricingList}"
+				rowKey="#{itemPrice}" rowIndexVar="index">
+				<p:column headerText="#{lbl['lbl.sc.zone']}" style="width:45%"
+					rendered="#{requestNoteBackingBean.managedBean.tierAndPromoTierFlag}">
+				      #{itemPrice.tplSpecZone.zoneName}
+			     </p:column>
+				<p:column headerText="#{lbl['lbl.sc.from.qty']}"
+					style="width:15%; text-align:right;"
+					rendered="#{requestNoteBackingBean.managedBean.zonalStandardAndPromoFlag}">
+					   #{itemPrice.fromQty}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.from.qty']}" style="width:15%; text-align:right;"> 
-				<h:outputText value="#{itemPrice.fromQty}" /> 
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.to.qty']}"
+					style="width:15%; text-align:right;"
+					rendered="#{requestNoteBackingBean.managedBean.zonalStandardAndPromoFlag}">
+					   #{itemPrice.toQty}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.to.qty']}" style="width:15%; text-align:right;">
-				<h:outputText value="#{itemPrice.toQty}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.price.offered']}"
+					style="width:25%; text-align:right;">
+					<h:outputText value="#{itemPrice.itemPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.price.offered']}" style="width:25%; text-align:right;">
-				<h:outputText value="#{itemPrice.itemPrice}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-			</p:column>
-
-		</p:dataTable>
+			</p:dataTable>
 		</h:panelGroup>
-	  <p:panelGrid styleClass="noBorders tr,noBorders td">
-		 <p:row>
-			<p:column width="100%" style="text-align:right">
-			 <p:commandButton value="#{lbl['lbl.sc.close']}" partialSubmit="true" process="@this"
-					onclick="pricingPopup.hide()" icon="ui-icon-cancel" />
-		   </p:column>
-		</p:row>
-	</p:panelGrid>
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.close']}"
+						partialSubmit="true" process="@this" onclick="pricingPopup.hide()"
+						icon="ui-icon-cancel" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
 	</p:dialog>
 </ui:composition>
