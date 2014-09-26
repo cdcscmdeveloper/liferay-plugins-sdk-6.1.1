@@ -172,9 +172,13 @@
 							id="smBankAcctPurposeVal"
 							value="#{backingBean.managedBean.selectedBank.accountPurpose}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="O" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}" itemValue="R" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}" itemValue="P" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.both.regandpay']}" itemValue="B" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.bankDtls.registration']}"
+								itemValue="R" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.paymentLbl']}"
+								itemValue="P" />
+							<f:selectItem
+								itemLabel="#{lbl['lbl.sm.bankDtls.both.regandpay']}"
+								itemValue="B" />
 							<p:ajax event="change" update="bankDetailsPanel"
 								listener="#{backingBean.retrieveBankFinOrgListByType}" />
 						</p:selectOneMenu> <p:message id="smBankAcctPurposeValMsg"
@@ -217,9 +221,7 @@
 							required="#{backingBean.managedBean.valueReqd}"
 							label="#{lbl['lbl.sm.bankDtls.acctNo']}" id="smBankAcctNo"
 							value="#{backingBean.managedBean.selectedBank.accountNo}"
-							size="35"
-							validatorMessage="#{lbl['lbl.sm.bankDtls.acctNo']} - #{lbl['lbl.sm.invalidNo']}">
-							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+							size="35">
 						</p:inputText> <p:message id="smBankAcctNoMsg" for="smBankAcctNo"
 							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>

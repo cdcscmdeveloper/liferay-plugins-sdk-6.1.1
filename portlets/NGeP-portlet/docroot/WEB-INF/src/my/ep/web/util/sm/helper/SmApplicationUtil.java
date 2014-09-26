@@ -570,7 +570,9 @@ public class SmApplicationUtil {
 		int payAccCnt = 0;
 		int regAccCnt = 0;
 		int designatedAccCnt = 0;
-
+		StringBuffer sb = new StringBuffer();
+		int noSignatoryCount = 0;
+		
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 			if (bank.getAccountPurpose().equalsIgnoreCase("P")) {
 				payAccCnt = payAccCnt + 1;
@@ -580,8 +582,14 @@ public class SmApplicationUtil {
 				payAccCnt = payAccCnt + 1;
 				regAccCnt = regAccCnt + 1;
 			}
-			if (payAccCnt > 0 && regAccCnt > 0) {
-				break;
+			// if (payAccCnt > 0 && regAccCnt > 0) {
+			// break;
+			// }
+			if (bank.getSmChequeSignatories() == null
+					|| bank.getSmChequeSignatories().isEmpty()) {
+				sb.append("<br/>");
+				sb.append(++noSignatoryCount + ".) ");
+				sb.append(bank.getAccountNo());
 			}
 		}
 		if (payAccCnt == 0) {
@@ -593,6 +601,12 @@ public class SmApplicationUtil {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722544);
+		}
+		if(noSignatoryCount > 0){
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722556,
+					new String[] { sb.toString() });
 		}
 		managedBean.setSelectedSignatoryBankAcct(new SmSupplierBank());
 		appl = null;
@@ -812,6 +826,61 @@ public class SmApplicationUtil {
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722508);
 		}
+		return validCount;
+	}
+
+	public static boolean validateEquityOwnerAmount(
+			SmApplicationManagedBean managedBean, int currentTab) {
+		boolean validAmt = true;
+		String s = "";
+		if (managedBean
+				.getBusinessTypeVal()
+				.equalsIgnoreCase(
+						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+				|| managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
+			s = "Accumulated Capital";
+		} else if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
+				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
+				|| managedBean
+						.getBusinessTypeVal()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+			s = "Paid-Up Capital";
+		} else if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
+				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
+			s = "Authorized Share";
+		}
+
+		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
+			boolean validPaidUp = true;
+			String amt = "";
+			String supType = "";
+			if (managedBean.getSmAppl().getSupplierType()
+					.equals(SupplierManagementConst.STYPE_CONSULTANT)
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital()
+							.compareTo(new BigDecimal(50000)) < 0) {
+				validPaidUp = false;
+				amt = "RM.50,000";
+				supType = "consultant";
+			} else if (managedBean.getSmAppl().getSupplierType()
+					.equals(SupplierManagementConst.STYPE_CONTRACTOR)
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital().compareTo(new BigDecimal(2500)) < 0) {
+				validPaidUp = false;
+				amt = "RM.2,500";
+				supType = "contractor";
+			}
+			if (!validPaidUp) {
+				validAmt = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722555, new String[] {
+						s, amt, supType });
+			}
+		}
 		if (managedBean.getBusinessTypeVal() != null
 				&& !managedBean
 						.getBusinessTypeVal()
@@ -821,6 +890,7 @@ public class SmApplicationUtil {
 			StringBuffer sb = new StringBuffer();
 			boolean validShrHldrsCap = true;
 			int i = 0;
+			BigDecimal perShrSum = new BigDecimal(0);
 			for (SmPersonnel per : managedBean.getSmapplShareHolders()) {
 				if (per.getShareAmt() == null
 						|| per.getShareAmt().compareTo(new BigDecimal(0)) == 0) {
@@ -828,16 +898,26 @@ public class SmApplicationUtil {
 					sb.append(++i + ".)");
 					sb.append(per.getName());
 					validShrHldrsCap = false;
+				} else {
+					perShrSum = perShrSum.add(per.getShareAmt());
 				}
 			}
 			if (!validShrHldrsCap) {
-				validCount = false;
+				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722552,
 						new String[] { sb.toString() });
 			}
+			if (perShrSum.compareTo(managedBean.getSmAppl().getSmCompanyBasic()
+					.getPaidUpCapital()) != 0) {
+				validAmt = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				System.out.println("*** Value **** "+s);
+				throw new EpException(MessageConst.ERROR_722554,
+						new String[] { s.toString() });
+			}
 		}
-		return validCount;
+		return validAmt;
 	}
 
 	public static void validatePaidCaptialAmt(boolean setNavigationCurrentPage,

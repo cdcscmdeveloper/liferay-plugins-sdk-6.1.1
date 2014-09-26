@@ -76,11 +76,10 @@
 							disabled="true" readonly="true" size="35" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" style="padding-top :5px;" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.taxRefNo']}" /></td>
 					<td><p:inputText label="#{lbl['lbl.sm.taxRefNo']}"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.incomeTaxNo}"
-							required="true" id="smIncTaxNum" size="35" maxlength="20" /> <p:message
+							id="smIncTaxNum" size="35" maxlength="20" /> <p:message
 							id="smIncTaxNumMsg" for="smIncTaxNum" showSummary="true"
 							showDetail="false" display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>

@@ -100,10 +100,14 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /> <p:outputLabel
+						value="*" styleClass="mandatory"
+						rendered="#{backingBean.managedBean.smAppl.supplierType
+						eq SupplierManagementConst.STYPE_CONSULTANT}" /></td>
 				<td><p:inputText title="For Malaysian Only" maxlength="10"
-						label="#{lbl['lbl.sm.person.epfNo']}" required="true"
+						label="#{lbl['lbl.sm.person.epfNo']}"
+						required="#{backingBean.managedBean.smAppl.supplierType
+						eq SupplierManagementConst.STYPE_CONSULTANT}"
 						validatorMessage="#{lbl['lbl.sm.person.epfNo']} - #{lbl['lbl.sm.invalidNo']}"
 						value="#{backingBean.managedBean.selectedShareHolder.epfNo}"
 						id="equiEpfNo" size="35">
