@@ -66,9 +66,9 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.bankDtls.signIsBumi']}">
-						<h:outputText value="Yes"
+						<h:outputText value="#{lbl['lbl.txt.no']}"
 							rendered="#{auth.smPersonnel.bumiFlg eq 0}" />
-						<h:outputText value="Yes"
+						<h:outputText value="#{lbl['lbl.txt.yes']}"
 							rendered="#{auth.smPersonnel.bumiFlg eq 1}" />
 					</p:column>
 
