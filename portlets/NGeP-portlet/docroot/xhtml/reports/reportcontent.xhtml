@@ -326,14 +326,22 @@
 									<p:outputLabel value="*" styleClass="mandatory"  style="width:84px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>														
 								  </p:column>
-								  <p:column>																
+								  <p:column>
+								  <table style="width: 100%" >
+									<tr>
+										<td style="width:84%">																
 									<p:selectOneMenu id="Zone" value="#{reportBackingBean.zone}"  required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.semenanjung']}" itemValue="#{lbl['lbl.rpt.semenanjung']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.sabah']}" itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>	
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}" itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>																					
 									</p:selectOneMenu>
-									<p:message id="rptZoneMsg" for="Zone" display="icon" />														
+									</td>									
+									<td>
+									<p:message id="rptZoneMsg" for="Zone" display="icon" />
+									</td>
+									</tr>
+									</table>	
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierTypeView}">
@@ -349,13 +357,21 @@
 									<p:outputLabel value="*" styleClass="mandatory"  style="width:37px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>														
 								  </p:column>
-								  <p:column>																
+								  <p:column>
+								  <table style="width: 100%" >
+									<tr>
+										<td style="width:84%">																
 									<p:selectOneMenu id="SupplierType" value="#{reportBackingBean.supplierType}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}" itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>																					
 									</p:selectOneMenu>
-									<p:message id="supplierTypeMsg" for="SupplierType" display="icon" />														
+									</td>
+									<td>
+									<p:message id="supplierTypeMsg" for="SupplierType" display="icon" />
+									</td>
+									</tr>
+									</table>														
 									</p:column>									
 								  </c:if>
 								  
@@ -394,20 +410,36 @@
 									<p:outputLabel value="*" styleClass="mandatory"  style="width:16px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>														
 								  </p:column>
-								  <p:column>																
+								  <p:column>
+								  <table style="width: 100%" >
+									<tr>
+										<td style="width:84%">																
 									<p:inputText id="MOFRegNoFrom" value="#{reportBackingBean.mofRegNoFrom}"  required="true" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
-									<p:message id="MOFRegNoFromMsg" for="MOFRegNoFrom" display="icon" />														
+					 				</td>
+					 				<td>
+									<p:message id="MOFRegNoFromMsg" for="MOFRegNoFrom" display="icon" />
+									</td>
+									</tr>
+									</table>														
 									</p:column>
 									<p:column>								 					    
 									<p:outputLabel value="*" styleClass="mandatory"  style="width:23px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>														
 								  </p:column>
-								  <p:column>																
+								  <p:column>
+								  <table style="width: 100%" >
+									<tr>
+										<td style="width:84%">																
 									<p:inputText id="MOFRegNoTo" value="#{reportBackingBean.mofRegNoTo}" required="true" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
-									<p:message id="MOFRegNoToMsg" for="MOFRegNoTo" display="icon" />														
-									</p:column>
+					 				</td>
+					 				<td>
+									<p:message id="MOFRegNoToMsg" for="MOFRegNoTo" display="icon" />
+									</td>
+									</tr>
+									</table>														
+									</p:column>									
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ePNoView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:122px;"/>
@@ -494,7 +526,10 @@
 									<p:outputLabel value="*" styleClass="mandatory"  style="width:49px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>														
 								  </p:column>
-								  <p:column>																
+								  <p:column>
+								  	<table style="width: 100%" >
+									<tr>
+										<td style="width:84%">															
 									<p:selectOneMenu id="ApplicationStatus" value="#{reportBackingBean.applicationStatus}" required="true" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}" itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
@@ -502,7 +537,12 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendSuppDocAppl']}" itemValue="#{lbl['lbl.rpt.pendSuppDocAppl']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendDeclAppl']}" itemValue="#{lbl['lbl.rpt.pendDeclAppl']}"></f:selectItem>																						
 									</p:selectOneMenu>
-									<p:message id="appStatusMsg" for="ApplicationStatus" display="icon" />														
+									</td>
+									<td>
+									<p:message id="appStatusMsg" for="ApplicationStatus" display="icon" />	
+									</td>
+									</tr>
+									</table>													
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.cancelledByView}">
@@ -667,7 +707,7 @@
 		            </div>
 		            <div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryPrintedDateView}">
-						<TABLE style="width:45%;">
+						<TABLE style="width:50%;">
 							<TR>
 								<TD>
 								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
@@ -677,12 +717,16 @@
 									<p:calendar id="PrintedFromDate" showOn="button" value="#{reportBackingBean.printedFromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
 									</p:calendar>
+									</TD>
+								<TD>
 									<p:message id="PrintedFromDateMsg" for="PrintedFromDate" display="icon" />
 								</TD>				
 								<TD>
 									<p:calendar id="PrintedToDate" showOn="button" value="#{reportBackingBean.printedToDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
-									</p:calendar> 
+									</p:calendar>
+									</TD>
+								<TD> 
 									<p:message id="PrintedToDateMsg" for="PrintedToDate" display="icon" />
 								</TD>
 							</TR>
@@ -712,7 +756,7 @@
 		            </div>
 		            <div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryExpiryDateView}">
-						<TABLE style="width:45%;">
+						<TABLE style="width:50%;">
 							<TR>
 								<TD>
 								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
@@ -722,12 +766,16 @@
 									<p:calendar id="ExpiryFromDate" showOn="button" value="#{reportBackingBean.expiryFromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
 									</p:calendar>
+									</TD>
+								<TD>
 									<p:message id="ExpiryFromDateMsg" for="ExpiryFromDate" display="icon" />
 								</TD>				
 								<TD>
 									<p:calendar id="ExpiryToDate" showOn="button" value="#{reportBackingBean.expiryToDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">																							
 									</p:calendar>
+									</TD>
+								<TD>
 									<p:message id="ExpiryToDateMsg" for="ExpiryToDate" display="icon" /> 
 								</TD>
 							</TR>
@@ -780,7 +828,7 @@
 		            </div>
 		            <div>
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationDateView}">
-						<TABLE style="width:45%;">
+						<TABLE style="width:50%;">
 							<TR>
 								<TD>
 								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
@@ -791,6 +839,8 @@
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
 																				
 									</p:calendar>
+									</TD>
+								<TD>
 									<p:message id="ApplicationFromDateMsg" for="ApplicationFromDate" display="icon" />
 								</TD>				
 								<TD>
@@ -798,6 +848,8 @@
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"   partialSubmit="true" process="@form">	
 																							
 									</p:calendar>
+									</TD>
+								<TD>
 									<p:message id="ApplicationToDateMsg" for="ApplicationToDate" display="icon" /> 
 								</TD>
 							</TR>
@@ -852,7 +904,7 @@
 		            </div>
 		           <h:panelGroup id="rptbtnGroup">
 		            <div align="right">		            		                    	
-		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult,rptCriteria">
+		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult,@form">
 				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
@@ -879,12 +931,12 @@
 			}
 			function handleLocalesDialogComplete(xhr, status, args)
 			{
-				//alert(args.reportViewUrl);
+				//alert(args);
 			   if (args) {
 			      var reportInValid = args.reportInValid;
 			     if(!reportInValid){
-			    	 //window.open(args.reportViewUrl,'_blank');
-			    	 reportGenDialog.show();
+			    	 window.open(args.reportViewUrl,'_blank');
+			    	 //reportGenDialog.show();
 			     }
 			   }
 			}
