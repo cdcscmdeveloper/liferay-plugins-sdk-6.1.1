@@ -136,6 +136,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				// panel item 
 				PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 				reqDTO.setPanelItemId(vCmSupplierItem.getDocId());
+				reqDTO.setFetchSubEntity(true);
 				PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
 				if(resDTO.getCtPanelItem()!=null) {
 					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
