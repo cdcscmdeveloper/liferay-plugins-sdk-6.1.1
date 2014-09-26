@@ -59,6 +59,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
 				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedBranch.faxNo}"/></td>
 			</tr>
+			<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.poc']} :" /></td>
+			<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedBranch.smPersonnel.name}" /></td>
+		</tr>
 		</table>
 	</p:outputPanel>
 </ui:composition>
