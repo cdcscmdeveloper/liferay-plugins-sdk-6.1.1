@@ -7,38 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.manufacture.panHdr']}" toggleable="true">
-		<table style="width: 250px">
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{viewSmApplBackingBean.managedBean.poSecReview.manufacturingVerified}"
-							id="poManuVer">
-							<p:ajax update=":form:tt:manuInfPan"
-								event="change"
-								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.poSecReview.manufacturingVerified)}" />
-						</p:selectBooleanCheckbox></td>
-					<td valign="top"><h:outputText
-							value="#{lbl['lbl.sm.sectionPoVerf']}"
-							title="For PO to highlight the verified section " /></td>
-
-				</tr>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.manufacturingVerified}"
-							id="apprManuVer">
-							<p:ajax update=":form:tt:manuInfPan"
-								event="change"
-								listener="#{viewSmApplBackingBean.changeVerifySection(viewSmApplBackingBean.managedBean.apprvrSecReview.manufacturingVerified)}" />
-						</p:selectBooleanCheckbox></td>
-					<td valign="top"><h:outputText
-							value="#{lbl['lbl.sm.sectionApprVerf']}"
-							title="For Approver to highlight the verified section " /></td>
-				</tr>
-			</p:outputPanel>
-		</table>
-		<br />
 		<p:panel id="manuInfPan">
 			<p:blockUI block=":form:tt:manuInfPan" widgetVar="buiPoManu"
 				id="poManuBlc"
