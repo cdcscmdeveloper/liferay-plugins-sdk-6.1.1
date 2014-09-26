@@ -5,22 +5,31 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:dialog id="recentPrice" widgetVar="recentPricePopup" header="#{lbl['lbl.sc.view.recent.price.header']}"  resizable="false"
-	      width="500" height="100"  closable="false" >
+	
+	<p:dialog id="recentPrice" widgetVar="recentPricePopup" position="top"
+		header="#{lbl['lbl.sc.view.recent.price.header']}" modal="true"
+		width="500" height="100" >
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.view.recent.price.duration']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.view.recent.price.duration']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu
 						value="#{requestNoteBackingBean.managedBean.recentPriceDuration}">
-						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.recentPriceDuration)}"/>
+						<f:selectItems
+							value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.recentPriceDuration)}" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.view.recent.price.view.btn']}" process="@form" icon="ui-icon-search" 
-					     action="#{requestNoteBackingBean.viewRecentPrice}"/> 
+					<p:commandButton
+						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
+						icon="ui-icon-search"
+						action="#{requestNoteBackingBean.viewRecentPrice}" process="@form"
+						oncomplete="handleLocalesDialogComplete(xhr, status, args)"
+						update="reportResult" />
 
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						icon="ui-icon-cancel" oncomplete="recentPricePopup.hide();"
@@ -28,5 +37,33 @@
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+
 	</p:dialog>
+
+	<p:dialog id="reportGenDialog" widgetVar="reportGenDialog" modal="true"
+		header="Report" width="1200" height="600" resizable="false"
+		position="top" closable="true" closeOnEscape="true" draggable="true"
+		onHide="closeDialogBox(this)">
+		<h:panelGroup id="reportResult" styleClass="reportResultStyle">
+			
+		</h:panelGroup>
+	</p:dialog>
+
+
+	<script type="text/javascript">
+		/*Function to hide the Iframe*/
+		function closeDialogBox(obj) {
+			//$('.reportIframe').hide();
+		}
+		function handleLocalesDialogComplete(xhr, status, args) {
+			//alert(args.reportViewUrl);
+			if (args) {
+				var reportInValid = args.reportInValid;
+				if (!reportInValid) {
+					window.open(args.reportViewUrl,'_blank');
+					//reportGenDialog.show();
+				}
+			}
+		}
+	</script>
 </ui:composition>
