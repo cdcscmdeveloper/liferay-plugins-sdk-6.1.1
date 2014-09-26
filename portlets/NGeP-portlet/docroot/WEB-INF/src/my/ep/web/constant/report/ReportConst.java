@@ -96,7 +96,10 @@ public class ReportConst {
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_non_govt_5b.jsp";
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
-	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";	
+	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
+	
+	//S1 Report
+	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	//SC Module reports start
 	//CM Module reports start		
 	public static final String LST_PUB_CAT_ITM_RPT_NAME = "lbl.rpt.cm.LST_PUB_CAT_ITM_RPT_NAME";
@@ -371,6 +374,7 @@ public class ReportConst {
 	//SM Module report end
 	public static final String EMPTY_VAL = "";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
+	public static final String AMP_ITM_ID_EQ = "&itemid=";
 	public static final String AMP_ITM_NAME_EQ = "&itemname=";
 	public static final String AMP_ITM_TYPE_EQ = "&itemtype=";
 	public static final String AMP_ITM_STATUS_EQ = "&itemstatus=";
@@ -391,6 +395,7 @@ public class ReportConst {
 	public static final String AMP_JABATAN_EQ = "&jabatan=";
 	public static final String AMP_MINISTRY_EQ = "&ministry=";
 	public static final String AMP_SUPPLIER_EQ = "&supplier=";
+	public static final String AMP_SUPPLIER_ID_EQ = "&supplierid=";
 	public static final String AMP_STATUS_EQ = "&status=";
 	public static final String AMP_DURATION_EQ = "&duration=";
 	public static final String AMP_REC_OFFCR_EQ = "&recievingofficer=";
@@ -463,4 +468,7 @@ public class ReportConst {
 	public static final String RPT_IN_VALID = "reportInValid";
 	public static final String RPT_TRUE = "true";
 	public static final String TO_DT_GTR_THN_FRM_DT = "lbl.rpt.search.date.TO_DT_GTR_THN_FRM_DT";
+	public static final String AMP_NO_OF_DAYS_EQ = "&noofdays=";
+	public static final String RECENT_PRICE_RPT_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?&report=";
+	public static final String RECENT_PRICE_RPT_NEXT_URL = "&destype=cache&desformat=pdf&cmdkey=key1";
 }
