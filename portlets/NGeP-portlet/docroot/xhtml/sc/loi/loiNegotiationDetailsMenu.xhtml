@@ -55,8 +55,8 @@
 		    rowKey="#{negoTerm}" rowIndexVar="rowIndex">
 		
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!negoTerm.brandNew}" />
-
+				disabledSelection="#{negoTerm.loiTermId ne null}" />
+            #{negoTerm.brandNew}-#{negoTerm.loiTermId ne null}
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 				style="width:80%">
 				<h:outputText
@@ -70,7 +70,7 @@
 			</p:column>
 
 			<p:column headerText="Negotiate">
-				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{negoTerm.brandNew}">
+				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{negoTerm.loiTermId eq null}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -91,27 +91,4 @@
 		</div>
 
 	</p:panel>
-
-	<p:dialog id="predefinedTerms" widgetVar="predefinedTerms" modal="true"
-		dynamic="true" hideEffect="explode" resizable="false" width="400px"
-		height="200" styleClass="pop_up_top" header="Pre-Defined Terms">
-
-		<p:dataTable id="predefinedtermsid" var="predefinedList"
-			value="#{lOIDetailBackingBean.managedBean.scTermDescList}"
-			selection="#{lOIDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{predefinedList.termDescId}" editable="true"
-			rowIndexVar="index">
-			<ac:paginator for="pretermId" />
-
-			<p:column selectionMode="multiple" style="width:2%" />
-			<p:column headerText="Title">
-				<h:outputText value="#{predefinedList.termDesc}" />
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="20px" />
-		<p:commandButton value="OK" style="float:right;" process="@all"
-			action="#{lOIDetailBackingBean.addPredefinedTerms}"
-			partialSubmit="true" oncomplete="predefinedTerms.hide();"
-			icon="ui-icon-accept" update="negoTermId"></p:commandButton>
-	</p:dialog>
 </ui:composition>
