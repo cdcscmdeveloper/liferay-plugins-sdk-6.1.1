@@ -12,12 +12,15 @@
 
 
 	<ui:define name="contentSection">
+
+		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
 	
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
-					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
+					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
 		     action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
 						style="float:right;" icon="ui-icon-save" />
 	
@@ -54,7 +57,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
-					<p:commandLink process="@this" update="zoneDetailsDataTable"
+					<p:commandLink process="@this" update="zoneDetailsDataTable, @([id$=zmMsgs])"
 					     actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
 						<p:graphicImage library="ep/images/design" name="trash.png"
 							value="/css/images/design/trash.png" />
