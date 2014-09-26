@@ -411,6 +411,12 @@ public class ViewSmApplBackingBean extends
 		if (getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
+		}else{
+			for(SmSupplierBranch smSupplierBranch:getManagedBean().getSmAppl().getSmSupplierBranches()){
+				if(smSupplierBranch.getSmPersonnel()==null){
+					smSupplierBranch.setSmPersonnel(new SmPersonnel());
+				}
+			}
 		}
 
 		// associatedCompanyInfoFormViewOnly
