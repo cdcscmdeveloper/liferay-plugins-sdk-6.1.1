@@ -12,22 +12,31 @@
 		var="tplSpecTierQty"
 		rowIndexVar="rowIndex"
 		value="#{templateSpecBean.selectedSpecQuestion.tplSpecTierQties}"
-		rowKey="#{tplSpecTierQty}"
-		selection="#{templateSpecBean.selectedTierQtyList}">
+		rowKey="#{tplSpecTierQty}">
 							
 		<ac:paginator for="tierQtyTbl" />
 		<ui:param name="uomCode" value="#{templateSpecBean.selectedSpecQuestion.clUom.uomCode}" />
 		
-		<p:column selectionMode="multiple" style="width:20px;" rendered="#{editable}" />
+		<p:column style="width:20px;" rendered="#{editable}">
+			<f:facet name="header">
+				<p:selectBooleanCheckbox id="selAllChk" value="#{templateSpecBean.selectAll}">
+					<p:ajax partialSubmit="true" process="@this" update="tierQtyTbl"  listener="#{templateSpecBackingBean.selectAll(templateSpecBean.selectAll, templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}" />
+				</p:selectBooleanCheckbox>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{tplSpecTierQty.selected}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:selectBooleanCheckbox>
+		</p:column>
 		<p:column>
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"/>
 			</f:facet>
-			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" style="width:96%;" styleClass="ppNumericAlign" 
+			<p:inputText id="fromQty" value="#{tplSpecTierQty.fromQty}" style="width:65%;" styleClass="ppNumericAlign" 
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.tier.from.qty']}"
 				disabled="#{!editable}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="fromQtyMsg" for="fromQty" display="icon" />
@@ -37,10 +46,11 @@
 				<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"/>
 			</f:facet>
-			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" style="width:96%;" styleClass="ppNumericAlign" 
+			<p:inputText id="toQty" value="#{tplSpecTierQty.toQty}" style="width:65%;" styleClass="ppNumericAlign" 
 				required="true" maxlength="14"
 				label="#{lbl['lbl.tpl.spec.content.tier.to.qty']}"
 				disabled="#{!editable}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:message id="toQtyMsg" for="toQty" display="icon" />
@@ -50,10 +60,11 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"/>
 			</f:facet>
-			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" style="width:96%;" styleClass="ppNumericAlign" 
+			<p:inputText id="subSeq" value="#{tplSpecTierQty.subSequence}" style="width:65%;" styleClass="ppNumericAlign" 
 				rendered="#{rowIndex > 0}" required="true" maxlength="6"
 				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"
 				disabled="#{!editable}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="6" />
 			</p:inputText>
 			<p:message id="subSeqMsg" for="subSeq" display="icon" />
@@ -72,10 +83,12 @@
 		</p:tooltip>
 		
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			process="@this, tierQtyTbl" partialSubmit="true"
+			process="@this" partialSubmit="true"
 			icon="ui-icon-delete"
-			action="#{templateSpecBackingBean.deleteRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties, templateSpecBean.selectedTierQtyList)}"
+			action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
 			update="tierQtyTbl"
-			rendered="#{editable}" />
+			rendered="#{editable}">
+			<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
+		</p:commandButton>
 	</div>
 </ui:composition>

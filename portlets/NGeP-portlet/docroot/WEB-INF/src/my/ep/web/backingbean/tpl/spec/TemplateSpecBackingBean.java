@@ -5,6 +5,7 @@ package my.ep.web.backingbean.tpl.spec;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -247,6 +248,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			questionToDelete.setDeleted(true);
 		}
 		specQuestionList.remove(questionToDelete);
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 
 	public String newAction() {
@@ -282,81 +285,59 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 
 	public void addQuestion(TplSpecMaster tplSpecMaster, List<TplSpecQuestion> questionList, Integer row, String questionType) {
-		IParameterSO parameterSO = null;
-		try {
-			TplSpecQuestion newQuestion = new TplSpecQuestion();
-			newQuestion.setTplSpecMaster(tplSpecMaster);
-			newQuestion.setQuestionType(questionType);
+		TplSpecQuestion newQuestion = new TplSpecQuestion();
+		newQuestion.setTplSpecMaster(tplSpecMaster);
+		newQuestion.setQuestionType(questionType);
+		
+		if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+			PmParameter pmParameter = getParameterByTypeAndCode(
+					ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+			newQuestion.setClFulfilmentTypeCode(pmParameter);
 			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
-			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode())) {
-				reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_NUMERIC);
-			} else {
-				reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
-			}
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			newQuestion.setAnswerTypeCode(resDTO.getPmParameter());
-			resetAnswerTypeDtl(newQuestion);
-			
-			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
-			reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
-			resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			newQuestion.setScoreTypeCode(resDTO.getPmParameter());
-			resetScoreTypeDtl(newQuestion);
-			
-			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
-				reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.FULFILMENT_TYPE);
-				reqDTO.setParameterCode(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				newQuestion.setClFulfilmentTypeCode(resDTO.getPmParameter());
-				
-				if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster.getItemTypeCode().getParameterCode())) {
-					reqDTO = new ParameterReqDTO();
-					reqDTO.setParameterType(ParameterTypeConst.PRICE_TYPE);
-					if (tplSpecMaster.getTplSpecZone() != null) {
-						reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
-					} else {
-						reqDTO.setParameterCode(ParameterConst.PRICE_TYPE_STANDARD);
-					}
-					
-					resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-					newQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+			if (ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecMaster.getItemTypeCode().getParameterCode())) {
+				if (tplSpecMaster.getTplSpecZone() != null) {
+					pmParameter = getParameterByTypeAndCode(
+							ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_ZONAL_STANDARD);
+					newQuestion.setClPriceTypeCode(pmParameter);
 				} else {
-					newQuestion.setClPriceTypeCode(new PmParameter());	
+					pmParameter = getParameterByTypeAndCode(
+							ParameterTypeConst.PRICE_TYPE, ParameterConst.PRICE_TYPE_STANDARD);
+					newQuestion.setClPriceTypeCode(pmParameter);
 				}
-				resetPriceTypeDtl(newQuestion);
-				
-				reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.DELIVERY_TERM);
-				reqDTO.setParameterCode(ParameterConst.DELIVERY_TERM_DAYS);
-				resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				newQuestion.setClDeliveryTermTypeCode(resDTO.getPmParameter());
-				
-				PmUom uom = new PmUom();
-				newQuestion.setClUom(uom);	
+			} else {
+				newQuestion.setClPriceTypeCode(new PmParameter());	
 			}
+			resetPriceTypeDtl(newQuestion);
 			
-			newQuestion.setClAnswerRequired(true);
+			pmParameter = getParameterByTypeAndCode(
+					ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS);
+			newQuestion.setClDeliveryTermTypeCode(pmParameter);
 			
-			if (questionList == null) {
-				questionList = new ArrayList<TplSpecQuestion>();
-				
-				tplSpecMaster.setTplSpecQuestions(questionList);
-			}
+			PmUom uom = new PmUom();
+			newQuestion.setClUom(uom);
 			
-			questionList.add(row + 1, newQuestion);
-			for(int i = 0; i < questionList.size(); i++) {
-				TplSpecQuestion question = questionList.get(i);
-				question.setQuestionOrder(i+1);
-			}
-		} finally {
-			parameterSO = null;
+			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode())) {					
+				pmParameter = getParameterByTypeAndCode(
+						ParameterTypeConst.ANSWER_TYPE, ParameterConst.ANSWER_TYPE_NUMERIC);
+				newQuestion.setAnswerTypeCode(pmParameter);
+				resetAnswerTypeDtl(newQuestion);
+			}				
+		} else {
+			newQuestion.setAnswerTypeCode(new PmParameter());
+		}
+		
+		newQuestion.setClAnswerRequired(true);
+		
+		if (questionList == null) {
+			questionList = new ArrayList<TplSpecQuestion>();
+			
+			tplSpecMaster.setTplSpecQuestions(questionList);
+		}
+		
+		questionList.add(row + 1, newQuestion);
+		for(int i = 0; i < questionList.size(); i++) {
+			TplSpecQuestion question = questionList.get(i);
+			question.setQuestionOrder(i+1);
 		}
 	}
 	
@@ -586,21 +567,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	private void resetAnswerTypeDtl(TplSpecQuestion specQuestion) {
 		if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion.getAnswerTypeCode().getParameterCode())) {
-			IParameterSO parameterSO = null;
-			try {
-				parameterSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-				
-				ParameterReqDTO reqDTO = new ParameterReqDTO();
-				reqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
-				reqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
-				
-				ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-				specQuestion.setScoreTypeCode(resDTO.getPmParameter());
-			} finally {
-				parameterSO = null;
-			}
-		}	
+			PmParameter pmParameter = getParameterByTypeAndCode(
+					ParameterTypeConst.SCORE_TYPE, ParameterConst.SCORE_TYPE_USER);
+			specQuestion.setScoreTypeCode(pmParameter);
+		} else {
+			specQuestion.setScoreTypeCode(null);
+		}
 	}
 	
 	public void scoreTypeChange(TplSpecQuestion specQuestion, Long selectedScoreTypeId) {
@@ -693,22 +665,34 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 	}
 	
+	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("tierQtyPopupAction");
+		
+		templateSpecBean.setSelectAll(false);
+	}
+	
 	public void scoringPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringPopupAction");
 		
 		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
 		
+		if (tplSpecQuestion.getScoreTypeCode() == null) {
+			tplSpecQuestion.setScoreTypeCode(new PmParameter());
+		} 
+		
 		// update selected score type id
 		templateSpecBean.setSelectedScoreTypeId(
 				tplSpecQuestion.getScoreTypeCode().getParameterId());
 		
-		// add compliance scoring.
-		addComplianceScoringAction(tplSpecQuestion);
+		templateSpecBean.setSelectAll(false);
 	}
 	
 	private void addComplianceScoringAction(TplSpecQuestion tplSpecQuestion) {
 		
-		if (ParameterConst.ANSWER_TYPE_DROPDOWN.equals(tplSpecQuestion.getAnswerTypeCode().getParameterCode())) {
+		if (tplSpecQuestion.getAnswerTypeCode() != null && tplSpecQuestion.getScoreTypeCode() != null &&
+				ParameterConst.ANSWER_TYPE_DROPDOWN.equals(tplSpecQuestion.getAnswerTypeCode().getParameterCode()) &&
+				ParameterConst.SCORE_TYPE_AUTO.equals(tplSpecQuestion.getScoreTypeCode().getParameterCode())) {
+			
 			List<TplSpecScoring> specScorings = tplSpecQuestion.getTplSpecScorings();
 			
 			if (specScorings == null || specScorings.size() == 0) {
@@ -796,6 +780,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void addTierQtyAction(TplSpecQuestion tplSpecQuestion) {
 		debugLogger("addTierQtyAction");
 		
+		TplSpecTierQty prevSpecTierQty = null;
 		List<TplSpecTierQty> tplSpecTierQties = tplSpecQuestion.getTplSpecTierQties();
 		
 		if (tplSpecTierQties == null) {
@@ -804,8 +789,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			tplSpecQuestion.setTplSpecTierQties(tplSpecTierQties);
 		}
 		
+		if (tplSpecTierQties.size() > 0) {
+			Collections.sort(tplSpecTierQties);
+			
+			prevSpecTierQty = tplSpecTierQties.get(tplSpecTierQties.size()-1);
+		}
+		
 		TplSpecTierQty tplSpecTierQty = new TplSpecTierQty();
 		tplSpecTierQty.setTplSpecQuestion(tplSpecQuestion);
+		if (prevSpecTierQty != null) {
+			BigDecimal prevToQty = prevSpecTierQty.getToQty();
+			if (prevToQty != null) {
+				tplSpecTierQty.setFromQty(prevToQty.add(BigDecimal.valueOf(1)));
+			}
+		}
 		tplSpecTierQties.add(tplSpecTierQty);
 		
 		tplSpecQuestion.setTplSpecEstimations(null);
@@ -814,6 +811,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void addScoringAction(TplSpecQuestion tplSpecQuestion){
 		debugLogger("addScoringAction");
 		
+		TplSpecScoring prevSpecScoring = null;
 		List<TplSpecScoring> tplSpecScorings = tplSpecQuestion.getTplSpecScorings();
 		
 		if (tplSpecScorings == null) {
@@ -822,8 +820,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			tplSpecQuestion.setTplSpecScorings(tplSpecScorings);
 		}
 		
+		if (tplSpecScorings.size() > 0) {
+			Collections.sort(tplSpecScorings);
+			
+			prevSpecScoring = tplSpecScorings.get(tplSpecScorings.size()-1);
+		}
+		
 		TplSpecScoring tplSpecScoring = new TplSpecScoring();
 		tplSpecScoring.setTplSpecQuestion(tplSpecQuestion);
+		if (prevSpecScoring != null) {
+			BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
+			if (prevRangeTo != null) {
+				tplSpecScoring.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
+			}
+		}
 		tplSpecScorings.add(tplSpecScoring);
 	}
 	
@@ -851,6 +861,19 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringOkAction");
+		
+		ITemplateSpecSO templateSpecSO = null;
+		try {
+			List<TplSpecScoring> specScorings = templateSpecBean.getSelectedSpecQuestion().getTplSpecScorings();
+			
+			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+			
+			templateSpecSO.validateScoring(templateSpecBean.getSelectedSpecQuestion(), specScorings);
+			
+		} finally {
+			templateSpecSO = null;
+		}
 		
 		templateSpecBean.setSelectedSpecQuestion(null);
 		

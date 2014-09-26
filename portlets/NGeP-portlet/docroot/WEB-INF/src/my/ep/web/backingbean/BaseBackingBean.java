@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -263,6 +265,32 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			valueBean.setSelected(selectAll);
 		}
     }*/
+	
+	public <ENTITY_CLASS extends BaseEntity> void selectAll(boolean selected, List<ENTITY_CLASS> list) {
+		if (list != null) {
+			for (ENTITY_CLASS entity : list) {
+				entity.setSelected(selected);
+			}
+		}
+	}
+	
+	public <ENTITY_CLASS extends BaseEntity> void deleteSelectedRowsAction(List<ENTITY_CLASS> list) {
+		if (log.isDebugEnabled()) {
+			log.debug("deleteSelectedRowsAction");
+		}
+		
+		if (list != null) {
+			List<ENTITY_CLASS> toBeRemovedList = new ArrayList<ENTITY_CLASS>();
+			
+			for (ENTITY_CLASS entity : list) {
+				if (entity.isSelected()) {
+					toBeRemovedList.add(entity);
+				}
+			}
+			
+			deleteRowsAction(list, toBeRemovedList);
+		}
+	}
 	
 	public <ENTITY_CLASS> void deleteRowAction(List<ENTITY_CLASS> list, ENTITY_CLASS toBeRemoved) {
 		if (log.isDebugEnabled()) {

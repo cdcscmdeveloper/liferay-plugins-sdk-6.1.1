@@ -160,6 +160,7 @@
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
 				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}">
@@ -196,14 +197,16 @@
 		</f:facet>
 		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" style="width:83%;"
 			required="#{!question.selected}"
-			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}">
+			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"
+			rendered="#{!isQuestionTypeItem}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn"
 			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
 			oncomplete="#{scoringSetPopup}.show();"
-			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])">
+			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+			rendered="#{!isQuestionTypeItem}">
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 		</p:commandButton>
 		<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
