@@ -113,10 +113,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		 if (reloadPreviousApplication()) {
-//		 initPreviousApplication();
-//		 }
-//		 constructMessage();
+		// if (reloadPreviousApplication()) {
+		// initPreviousApplication();
+		// }
+		// constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -152,7 +152,8 @@ public class ViewSmApplBackingBean extends
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication();
 		String applType = getManagedBean().getSmAppl().getApplType();
-		String redirectToAppl = SmApplicationUtil.getReviewApplicationBasePage(applType);
+		String redirectToAppl = SmApplicationUtil
+				.getReviewApplicationBasePage(applType);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, redirectToAppl);
@@ -177,7 +178,8 @@ public class ViewSmApplBackingBean extends
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
-			String redirectToAppl = SmApplicationUtil.getReviewApplicationBasePage(applType);
+			String redirectToAppl = SmApplicationUtil
+					.getReviewApplicationBasePage(applType);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, redirectToAppl);
@@ -391,9 +393,10 @@ public class ViewSmApplBackingBean extends
 		if (getManagedBean().getSmAppl().getSmSupplierBranches() == null) {
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
-		}else{
-			for(SmSupplierBranch smSupplierBranch:getManagedBean().getSmAppl().getSmSupplierBranches()){
-				if(smSupplierBranch.getSmPersonnel()==null){
+		} else {
+			for (SmSupplierBranch smSupplierBranch : getManagedBean()
+					.getSmAppl().getSmSupplierBranches()) {
+				if (smSupplierBranch.getSmPersonnel() == null) {
 					smSupplierBranch.setSmPersonnel(new SmPersonnel());
 				}
 			}
@@ -482,7 +485,7 @@ public class ViewSmApplBackingBean extends
 
 	private void initStep8_9PoApproverDefaultDecision() {
 		// poDefault_DescisionPageViewOnly/approverDefault_DescisionPageViewOnly
-		
+
 		setDefaultApproverReviewSection();
 		setSupplierCancellationRemarks(getManagedBean().getSmAppl()
 				.getApplType(), getManagedBean().getSmAppl().getApplId());
@@ -492,7 +495,8 @@ public class ViewSmApplBackingBean extends
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
-		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType, docId);
+		SmRemaksResDTO resDTO = SmApplicationUtil.getRemarksByDoc(docType,
+				docId);
 		StringBuffer sb = new StringBuffer();
 		if (resDTO != null && resDTO.getRemarksList() != null
 				&& !resDTO.getRemarksList().isEmpty()) {
@@ -870,9 +874,9 @@ public class ViewSmApplBackingBean extends
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 		managePersonnelRoles();
 		if (getManagedBean().getSelectedShareHolder().getIdentificationTypeId() != null) {
-			getManagedBean().getSelectedShareHolder()
-					.setIdentificationType(
-							SmApplicationUtil.retrievePmParameterById(getManagedBean()
+			getManagedBean().getSelectedShareHolder().setIdentificationType(
+					SmApplicationUtil
+							.retrievePmParameterById(getManagedBean()
 									.getSelectedShareHolder()
 									.getIdentificationTypeId()));
 		}
