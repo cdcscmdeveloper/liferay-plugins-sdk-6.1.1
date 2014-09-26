@@ -55,7 +55,12 @@
 			<from-outcome>stopInstr</from-outcome>
 			<to-view-id>/xhtml/fl/stopInstruction/siBasePage.xhtml</to-view-id>
 			<redirect />
-		</navigation-case>		
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>flDocSearch</from-outcome>
+			<to-view-id>/xhtml/fl/docsearch/flDocSearch.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>			
 	</navigation-rule>
 	
 	<managed-bean>
