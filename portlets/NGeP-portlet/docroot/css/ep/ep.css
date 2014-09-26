@@ -1850,29 +1850,29 @@ table.ppTwoTable td {
 }
 
 .ppDisplayTextL {
-	width: 300px;
+	width: 300px !important;
 }
 
 .ppDisplayTextM {
-	width: 200px;
+	width: 200px !important;
 }
 
 .ppDisplayTextS {
-	width: 100px;
+	width: 100px !important;
 }
 
 .ppDisplayTextXS{
-	width: 60px;
+	width: 60px !important;
 }
 .ppDisplayCalS input {
-	width: 100px;
+	width: 100px !important;
 }
 .ppDisplayCalM input {
-	width: 180px;
+	width: 180px !important;
 }
 
 .ppDisplayCalXS{
-	width: 60px;
+	width: 60px !important;
 }
 
 .ui-selectonemenu.ppDropDownWidthM {
