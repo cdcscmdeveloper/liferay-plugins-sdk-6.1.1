@@ -268,7 +268,7 @@
 		        <td>
 		        	<p:selectOneMenu id="somDivisionC" disabled="#{!profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDivision.divisionId}" 
-		        		required="#{!empty param['disableValidation'] and profileManagementBackingBean.managedBean.divisionFlagC}"
+		        		required="#{!empty param['disableValidation'] and profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.division']}"
 		        		styleClass="ppDropDownWidthM"> 
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
