@@ -1990,7 +1990,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}
 			resetReportForm();
 			retrieveDates();
-			getManagedBean().setRptGenBean(rptGenBean);			
+			getManagedBean().setRptGenBean(rptGenBean);
+			resetReportForm();
 		}
 	}
 	/*
@@ -3527,11 +3528,14 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	/*
 	 *Generate all modules reports 
 	 */
-	public void generateReport(){		
+	public void generateReport(){
+		RequestContext context1 = RequestContext.getCurrentInstance();
+		 System.out.println("context1.getCallbackParams()################"+ context1.getCallbackParams());
+		 System.out.println("context1()################"+ context1.toString());
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
 			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getReleaseFromDate()==null)&&(this.getReleaseToDate()!=null))||((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){		
-					RequestContext context = RequestContext.getCurrentInstance();  
+					RequestContext context = RequestContext.getCurrentInstance();					 
 			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
