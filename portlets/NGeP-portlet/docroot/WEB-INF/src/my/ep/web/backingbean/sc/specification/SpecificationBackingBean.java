@@ -4194,7 +4194,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtCheckListScore(
 					new ScQtCheckListScore());
-			toBeRemoveList.addAll(this.getManagedBean().getCheckListScore());
+			//toBeRemoveList.add(this.getManagedBean().getCheckListScore());
 		} else {
 			toBeRemoveList.add(this.getManagedBean().getScQtCheckListScore());
 		}
