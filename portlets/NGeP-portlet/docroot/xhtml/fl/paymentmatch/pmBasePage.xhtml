@@ -23,7 +23,7 @@
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{paymentMatchBackingBean.managedBean.taskId==null}"
-						icon="ui-icon-back" oncomplete="location.replace(document.referrer);" /></td>			
+						icon="ui-icon-back" action="#{paymentMatchBackingBean.backToPervious}" /></td>			
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction"
 						value="#{paymentMatchBackingBean.managedBean.outComes}">
