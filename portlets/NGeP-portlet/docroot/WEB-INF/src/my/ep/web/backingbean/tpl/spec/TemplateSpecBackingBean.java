@@ -285,10 +285,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 
 	public void addQuestion(TplSpecMaster tplSpecMaster, List<TplSpecQuestion> questionList, Integer row, String questionType) {
 		TplSpecQuestion newQuestion = new TplSpecQuestion();
+		boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType);
+		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
+		
 		newQuestion.setTplSpecMaster(tplSpecMaster);
 		newQuestion.setQuestionType(questionType);
 		
-		if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType)) {
+		if (isQuestionTypeItem) {
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 			newQuestion.setClFulfilmentTypeCode(pmParameter);
@@ -315,7 +318,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			PmUom uom = new PmUom();
 			newQuestion.setClUom(uom);
 			
-			if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode())) {					
+			if (isFinancialSpec) {					
 				pmParameter = getParameterByTypeAndCode(
 						ParameterTypeConst.ANSWER_TYPE, ParameterConst.ANSWER_TYPE_NUMERIC);
 				newQuestion.setAnswerTypeCode(pmParameter);
@@ -327,7 +330,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		newQuestion.setClAnswerRequired(true);
 		
-		if (tplSpecMaster.isWeightageReq()) {
+		if ((isFinancialSpec || (!isFinancialSpec && !isQuestionTypeItem)) && tplSpecMaster.isWeightageReq()) {
 			newQuestion.setWeightageReq(true);
 		}
 		
@@ -978,6 +981,22 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		}
 		
 		return isAllPriceTypesStandard;
+	}
+	
+	public void updateItemWeightageReq(TemplateSpecBean templateSpecBean) {
+		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
+		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode());
+		boolean isWeightageReq = specMaster.isWeightageReq();
+		
+		if (specMaster.getTplSpecQuestions() != null) {
+			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType());
+				
+				if ((isFinancialSpec || (!isFinancialSpec && !isQuestionTypeItem))) {
+					specQuestion.setWeightageReq(isWeightageReq);
+				}
+			}
+		}
 	}
 	
 	/**
