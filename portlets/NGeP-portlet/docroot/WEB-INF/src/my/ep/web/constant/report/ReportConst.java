@@ -423,8 +423,8 @@ public class ReportConst {
 	public static final String AMP_EXT_BRAND_EQ = "&brandid=";
 	public static final String AMP_EXT_MEASURMENT_EQ = "&measurementid=";
 	public static final String AMP_EXT_COLOUR_EQ = "&colorid=";
-	public static final String EXC_PREV_URL = "lbl.cm.EXC_PREV_URL";
-	public static final String EXC_NEXT_URL = "lbl.cm.EXC_NEXT_URL";
+	public static final String EXC_PREV_URL = "lbl.rpt.EXC_PREV_URL";
+	public static final String EXC_NEXT_URL = "lbl.rpt.EXC_NEXT_URL";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "lbl.rpt.search.PLZ_SEL_ONE_RPT_SEARCH";
 	public static final String PLZ_SEL_ONE_RPT_CRITERIA_SEARCH = "lbl.rpt.search.criteria.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH";
 	public static final String CATLOG_ADMIN = "Catalogue Administrator";
