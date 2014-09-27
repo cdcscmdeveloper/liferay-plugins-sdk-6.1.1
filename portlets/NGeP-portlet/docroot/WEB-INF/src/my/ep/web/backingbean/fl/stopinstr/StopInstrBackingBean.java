@@ -306,4 +306,11 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		return null;
 	}
 	
+	/**
+	 * Page navigation to FLDoc search page in StopInstr
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
 }

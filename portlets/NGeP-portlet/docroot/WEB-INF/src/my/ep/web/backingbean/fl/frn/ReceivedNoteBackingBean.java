@@ -383,4 +383,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 		return null;
 	}
+	
+	/**
+	 * Page navigation to FLDoc search page in FRN
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
 }

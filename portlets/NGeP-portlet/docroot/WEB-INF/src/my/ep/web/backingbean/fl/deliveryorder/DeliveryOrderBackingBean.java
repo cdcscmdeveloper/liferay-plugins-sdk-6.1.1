@@ -570,4 +570,11 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		return null;
 	}
 	
+	/**
+	 * Page navigation to FLDoc search page inDo
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
 }

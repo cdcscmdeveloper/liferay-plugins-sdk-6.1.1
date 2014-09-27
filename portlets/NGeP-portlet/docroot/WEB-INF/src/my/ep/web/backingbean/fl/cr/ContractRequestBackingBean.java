@@ -2297,4 +2297,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 	}
+	
+	/**
+	 * Page navigation to FLDoc search page in CR
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
 }
