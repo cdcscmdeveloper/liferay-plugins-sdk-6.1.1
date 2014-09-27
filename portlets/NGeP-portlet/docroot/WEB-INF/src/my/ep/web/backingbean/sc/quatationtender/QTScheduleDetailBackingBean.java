@@ -222,6 +222,23 @@ public class QTScheduleDetailBackingBean extends
 		}
 	}
 
+	public void retrievePmuserName(ScQtContactPerson contactPerson) {
+		debugLogger("retrievePmuserName");
+		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
+		if (list != null) {
+			for (PmUser user : list) {
+				if (user.getUserId().equals(contactPerson.getUser().getUserId())) {
+					contactPerson.setName(user.getUserName());
+					contactPerson.setEmail(user.getEmail());
+					contactPerson.setPhoneNo(user.getPhoneNo());
+					contactPerson.setFaxNo(user.getFaxNo());
+					contactPerson.setUser(user);
+					break;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Will be call when we click apply button for address.
 	 */

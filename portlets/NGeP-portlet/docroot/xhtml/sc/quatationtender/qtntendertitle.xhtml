@@ -22,11 +22,16 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.fileno']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}"
-						required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
-						disabled="#{!qTDetailBB.managedBean.editable}" size="30"
-						maxlength="50" /> <p:message id="filenoMsg" for="fileno"
-						display="icon" /></td>
+				<td><table>
+						<tr>
+							<td><p:inputText id="fileno" label="#{lbl['lbl.so.fileno']}"
+									required="true" value="#{qTDetailBB.managedBean.qt.fileNo}"
+									disabled="#{!qTDetailBB.managedBean.editable}" size="30"
+									maxlength="50" /></td>
+							<td><p:message id="filenoMsg" for="fileno" display="icon" />
+							</td>
+						</tr>
+					</table></td>
 				<td style="width: 210px;"><p:outputLabel
 						value="#{lbl['lbl.so.crtdt']}" /></td>
 				<td><p:inputText
@@ -55,15 +60,16 @@
 				<td />
 				<td />
 			</tr>
-			<ui:fragment rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
-			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3"><p:inputTextarea
-						value="#{qTDetailBB.managedBean.qt.justificationRemark}" cols="30"
-						rows="2" style=" margin-bottom:5px;" maxlength="200"
-						disabled="true" readonly="true" /></td>
-			</tr>
+			<ui:fragment
+				rendered="#{qTDetailBB.managedBean.qt.ppPlan.planNo ne null}">
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.justification']}" /></td>
+					<td colspan="3"><p:inputTextarea
+							value="#{qTDetailBB.managedBean.qt.justificationRemark}"
+							cols="30" rows="2" style=" margin-bottom:5px;" maxlength="200"
+							disabled="true" readonly="true" /></td>
+				</tr>
 			</ui:fragment>
 		</table>
 	</p:panel>
@@ -106,8 +112,8 @@
 						rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems value="#{qTDetailBB.handleGoChanged(gosodo)}" var="so"
-							itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
+						<f:selectItems value="#{qTDetailBB.handleGoChanged(gosodo)}"
+							var="so" itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
 						<p:ajax event="change"
 							listener="#{qTDetailBB.handleSoChanged(gosodo)}"
 							partialSubmit="true" process="@this" />

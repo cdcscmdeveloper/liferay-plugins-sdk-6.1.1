@@ -46,6 +46,7 @@
 								value="#{lbl['lbl.sc.committe.clone.datecreated']}" /></td>
 						<td><p:calendar id="datecreatedfrm" showOn="button"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								size="30" readonlyInput="true">
 								<p:ajax event="dateSelect" update="datecreatedto" />
 							</p:calendar></td>
@@ -58,6 +59,7 @@
 						<td><p:calendar id="datecreatedto" showOn="button"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								size="30" readonlyInput="true">
 								<f:attribute name="startDate"
 									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />

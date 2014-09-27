@@ -428,7 +428,7 @@ public class ApprovalBackingBean extends
 				if (null != qtCommittes && !qtCommittes.isEmpty()) {
 					committees = new ArrayList<ScQtCommittee>();
 					for (int i = 0; i < qtCommittes.size(); i++) {
-						ScQtCommittee qtCommittee = qtCommittes.get(0)
+						ScQtCommittee qtCommittee = qtCommittes.get(i)
 								.getScQtCommittee();
 						PmStatus committeStatus = new PmStatus();
 						if (BpmOutcomeConst.BPM_REVISE
