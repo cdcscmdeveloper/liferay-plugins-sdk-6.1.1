@@ -9,6 +9,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "supportingDocInquiryManagedBean")
 @SessionScoped
 public class SupportingDocInquiryManagedBean extends BaseManagedBean {
+
+	private static final long serialVersionUID = 1L;
+	
 	private SmApplInquiry smApplInquiry;
 	private Long appId;
 	private Object bpmPojo;
