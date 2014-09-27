@@ -176,6 +176,7 @@
 						label="#{lbl['lbl.sm.cert.strtDate']}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						yearRange="-99:+0" readonlyInput="true"
+						maxdate="#{CommonConstants.CURRENT_DATE}"
 						value="#{backingBean.managedBean.selectedCert.certStartDate}" />
 					<p:message id="certStrttMsg" for="stDate" showSummary="true"
 						showDetail="false" display="icon" /></td>

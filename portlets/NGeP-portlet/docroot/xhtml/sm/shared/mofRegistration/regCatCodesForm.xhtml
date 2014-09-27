@@ -151,6 +151,7 @@
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 							itemValue="0" />
+						<p:ajax event="change" process="@this" update="poCatDecisionRmrk" />
 					</p:selectOneRadio>
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS and backingBean.managedBean.poUser}" />
@@ -162,7 +163,12 @@
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and catBean.poDecFlg eq 0 and backingBean.managedBean.approverUser}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
-					<p:inputTextarea value="#{catBean.poRemarks}" />
+					<p:inputTextarea value="#{catBean.poRemarks}"
+						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
+						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
+						id="poCatDecisionRmrk" required="#{catBean.poDecFlg == 0}" />
+					<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
+						showSummary="true" showDetail="false" display="icon" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
@@ -172,12 +178,19 @@
 							itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.reject']}"
 							itemValue="0" />
+						<p:ajax event="change" process="@this"
+							update="apprvrCatDecisionRmrk" />
 					</p:selectOneRadio>
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
-					<p:inputTextarea value="#{catBean.approverRemarks}" />
+					<p:inputTextarea value="#{catBean.approverRemarks}"
+						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
+						label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
+						id="apprvrCatDecisionRmrk" required="#{catBean.apprvrDecFlg == 0}" />
+					<p:message id="apprvCatDecisionRmrkMsg" for="apprvrCatDecisionRmrk"
+						showSummary="true" showDetail="false" display="icon" />
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
@@ -417,11 +430,11 @@
 		header="#{lbl['lbl.sm.catCodes.cmfrmHdr']}"
 		widgetVar="typeConfirmation">
 
-		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}" update="@form"
-			action="#{backingBean.assignApplnCategoryType}"
+		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
+			update="@form" action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
-		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}" process="@this"
-			partialSubmit="true" update=":form:tt:catCodeInfPan"
+		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
+			process="@this" partialSubmit="true" update=":form:tt:catCodeInfPan"
 			action="#{backingBean.resetApplnCategoryType}" />
 
 	</p:confirmDialog>

@@ -32,7 +32,6 @@ import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
-import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -59,8 +58,6 @@ import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
-import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
-import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
@@ -111,11 +108,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
-import my.ep.persistence.entity.sm.SmSvAddress;
-import my.ep.persistence.entity.sm.SmSvCategory;
-import my.ep.persistence.entity.sm.SmSvOffice;
-import my.ep.persistence.entity.sm.SmSvTask;
-import my.ep.persistence.entity.sm.SmSvTemplate;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -2479,6 +2471,16 @@ public class SmApplicationBackingBean extends
 			validShrHldr = false;
 			throw new EpException(MessageConst.ERROR_722518);
 		}
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& getManagedBean().getSelectedShareHolder().isEquityOwner()
+				&& (getManagedBean().getSelectedShareHolder().getSmStaffExperiences() == null || getManagedBean()
+						.getSelectedShareHolder().getSmStaffExperiences().isEmpty())) {
+
+			validShrHldr = false;
+			throw new EpException(
+					"At least one record for work experience (job function) is required for personnel with role Equity Owner");
+		}
 		addOrUpdateShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		validShrHldr = SmApplicationUtil.checkValidUser(getManagedBean()
 				.getSelectedShareHolder(), getManagedBean().getSmAppl());
@@ -4495,8 +4497,8 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getSupplierType());
 		log.info("** getApplCategoryType type ***"
 				+ getManagedBean().getSmAppl().getApplCategoryType());
-		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-				.getSupplierType());
+//		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+//				.getSupplierType());
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
