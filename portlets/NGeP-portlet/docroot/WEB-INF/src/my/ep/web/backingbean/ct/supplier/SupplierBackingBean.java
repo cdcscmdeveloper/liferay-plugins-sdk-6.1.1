@@ -70,15 +70,12 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -98,6 +95,7 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
+
 import com.liferay.portal.util.PortalUtil;
 
 /**
@@ -562,7 +560,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 
    public void reset(){ 
-	   
 	   SelectItem[] items = null;
 	   IFinancialOrgSO financialOrgSO;
 	   flush();
@@ -572,74 +569,49 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 			if (this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId() != null) {
 				reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-				FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
-				
-				if(resDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && resDTO.getPmFinancialOrg().getPmFinancialBranchs().size() > 0){
-					List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
+				FinancialOrgResDTO resDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(reqDTO);
+				if(resDTO.getFinancialBranchList() != null && resDTO.getFinancialBranchList().size() > 0){
+					List<PmFinancialBranch> list = resDTO.getFinancialBranchList();
 					items = new SelectItem[list.size() + 1];
 					items[0] = new SelectItem(null, "- Select One -");
 					for (PmFinancialBranch pmFinancialBranch : list) {
 						items[i++] = new SelectItem(pmFinancialBranch.getFinancialBranchId(), pmFinancialBranch.getBranchName());
-					}this.getManagedBean().setFinancialBankBranch(items);
-				
+					}
+					this.getManagedBean().setFinancialBankBranch(items);
 				}else{
-					   List<PmFinancialAcc> accList = resDTO.getPmFinancialOrg().getPmFinancialAccs();
-					   for(PmFinancialAcc financialAcc : accList) {
-						 if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))){
-							getManagedBean().setAccountNo(financialAcc.getAccountNo());
-							getManagedBean().setFactoringBankName(financialAcc.getPmPaymentBankOrg().getFinOrgName());
-							for(PmAddressType pmAddressType : financialAcc.getPmPaymentBankOrg().getPmAddressTypes()) {
-							   if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-								  getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
-								  break;
-								}
-						    }
-					    }
-				     }
+					resDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(reqDTO);
+					getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+					getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+					getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 			    }
 		    }
 		  }catch(Exception ex){
 			  ex.printStackTrace();
 		  }
-		
 		 finally{
 			financialOrgSO = null;
 		 }
    }
    
    public void resetBranch(){
-	   
 	   IFinancialOrgSO financialOrgSO;
-		try {
-			if (getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId() != null) {
-				financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
-				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
-				reqDTO.setFinancialOrgId(this.getManagedBean().getFactoring().getFinancialOrg().getFinancialOrgId());
-				FinancialOrgResDTO resDTO = financialOrgSO.retrieveFinancialOrgById(reqDTO);
-				List<PmFinancialBranch> list = resDTO.getPmFinancialOrg().getPmFinancialBranchs();
-		        for(PmFinancialBranch pmFinancialBranch : list) {
-			      if(pmFinancialBranch.getFinancialBranchId().equals(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId())) {
-				  for (PmFinancialAcc financialAcc : pmFinancialBranch.getPmFinancialAccs()) {
-					if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-						getManagedBean().setAccountNo(financialAcc.getAccountNo());
-						getManagedBean().setFactoringBankName(financialAcc.getPmPaymentBankOrg().getFinOrgName());
-						for(PmAddressType pmAddressType : financialAcc.getPmPaymentBankOrg().getPmAddressTypes()) {
-							if(pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())) {
-								getManagedBean().setFactoringBankAddress(getFullAddress(pmAddressType.getPmAddress()));
-								break;
-							}
-					     }
-				      }
-			        }
-			      }
-		        }
-			 }
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}finally{
-			financialOrgSO = null;
-		}
+	   try {
+		   if(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId() != null) {
+			   financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+			   FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+			   reqDTO.setFinancialBranchId(getManagedBean().getFactoring().getPmFinancialBranch().getFinancialBranchId());
+			   FinancialOrgResDTO resDTO = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
+			   getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
+			   getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
+			   getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
+		   }
+	   }catch(Exception ex){
+		   ex.printStackTrace();
+	   }finally{
+		   financialOrgSO = null;
+	   }
     }
+   
 	public void changeLoaActionListener() {
 	
 		    IContractSO contractSO = null;
