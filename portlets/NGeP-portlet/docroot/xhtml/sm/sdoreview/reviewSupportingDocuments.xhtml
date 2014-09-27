@@ -8,12 +8,20 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+	<f:event listener="#{sdoReviewBackingBean.preRenderView}" type="preRenderView" />
+		<!-- HEADER -->
+		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
+		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
+		<ui:param name="applType" value="#{sdoReviewBackingBean.getsupplierApplTypeDesc(sdoReviewBackingBean.managedBean.smAppl.applType)}" />
+		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
+		
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}" />
-			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}">
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" disabled="#{empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
+				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
 		</div>
 
 		<p:outputPanel id="resOutPanelId">
@@ -21,17 +29,17 @@
 				<p:panel header="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="pnlInquiryId">
 					<table>
 					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
+						<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
 					</tr>
 					<tr>
 						<td><p:inputText size="50" id="resInquirySubId" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquirySubject}" /></td>
 					</tr>
 					<tr>
-						<td>#{lbl['lbl.sm.supportingdoc.inquiry']} :</td>
+						<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 					</tr>
 					<tr>
-						<td><p:inputTextarea id="resInquiryId" rows="10" cols="80" 
+						<td><p:inputTextarea id="resInquiryId" rows="10" cols="150" 
 								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.inquiryText}" /></td>
 					</tr>
@@ -54,7 +62,7 @@
 						<td>#{lbl['lbl.sm.supportingdoc.response']} :</td>
 					</tr>
 					<tr>
-						<td><p:inputTextarea id="responseTextId" rows="10" cols="80"
+						<td><p:inputTextarea id="responseTextId" rows="10" cols="150"
 								autoResize="false" disabled="true"
 								value="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse.responseText}" /></td>
 					</tr>
@@ -64,35 +72,38 @@
 			</p:dialog>
 		</p:outputPanel>
 
-		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true"
-			height="300" width="525">
+		<p:dialog header="#{lbl['lbl.sm.supportingdoc.inquiry']}" widgetVar="inquiryDlg" modal="true" id="inquiryDlg"
+			height="300" width="auto">
 			<p:messages id="inquiryMessageId"  showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table>
 				<tr>
-					<td>#{lbl['lbl.sm.supportingdoc.subject']} :</td>
+					<td>#{lbl['lbl.sm.supportingdoc.subject']}</td>
 				</tr>
 				<tr>
 					<td><p:inputText size="50" id="inquirySubId" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquirySubject}"/></td>
 				</tr>
 				<tr>
-					<td>#{lbl['lbl.sm.supportingdoc.inquiry']} :</td>
+					<td>#{lbl['lbl.sm.supportingdoc.inquiry']}</td>
 				</tr>
 				<tr>
-					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="80" autoResize="false" value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquiryText}"/></td>
+					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="150" autoResize="false" 
+					value="#{sdoReviewBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>
 			</table>
 			<br />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_INQUIRY)}">
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="inquiryDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
-
-		<p:dialog widgetVar="submissionDlg" modal="true" height="300"
-			width="580">
+		
+		<p:dialog widgetVar="submissionDlg" modal="true" height="300" width="580">
 			<p:panel header="#{lbl['lbl.sm.remark']}">
 				<p:messages id="submissionMessageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 				<table>
+					<ui:remove>
 					<tr>
 						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
 						<td class="tdContent"><p:calendar id="receiveCalId"
@@ -103,9 +114,10 @@
 								display="inline" size="30" showOn="button" /> <p:message
 								id="receiveCalIdMsg" for="receiveCalId" display="icon" /></td>
 					</tr>
+					</ui:remove>
 
 					<tr>
-						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.remark']}" /></td>
+						<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.remark']}" /></td>
 						<td class="tdContent">
 						<p:inputTextarea id="remarkId" rows="6"
 								cols="80" label="#{lbl['lbl.sm.remark']}"
@@ -124,8 +136,7 @@
 			</p:panel>
 		</p:dialog>
 
-		<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true"
-			id="pnlCompInfo">
+		<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
 			<table class="customTbl">
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
@@ -164,15 +175,6 @@
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</p:inputText></td>
 				</tr>
-
-<!-- 				<tr> -->
-<!-- 					<td class="tdTitle"><p:outputLabel value="Total Staff" /></td> -->
-<!-- 					<td class="tdContent"><p:inputText disabled="true" size="40" value="10" /></td> -->
-
-<!-- 					<td class="tdTitle"><p:outputLabel value="Yearly Income" /></td> -->
-<!-- 					<td class="tdContent"><p:inputText value="100,000" -->
-<!-- 							disabled="true" size="40" /></td> -->
-<!-- 				</tr> -->
 
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
@@ -264,35 +266,41 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel id="pnlSuppDoc" header="Supporting Document"
-			toggleable="true">
+		<p:panel id="pnlSuppDoc" header="Supporting Document" toggleable="true">
+			<table class="customTbl">
+				<tr>
+					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
+					<td class="tdContent"><p:calendar id="receiveCalId" navigator="true"
+							label="#{lbl['lbl.sm.receivedate']}" required="#{empty param['disableValidation']}"
+							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
+							size="30" showOn="button" /> <p:message id="receiveCalIdMsg"
+							for="receiveCalId" display="icon" /></td>
+					<td><p:outputLabel value="&#160;" /></td>
+					<td><p:outputLabel value="&#160;" /></td>
+				</tr>
+			</table><br />
+			
 			<p:dataTable var="suppDoc" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="dtSuppDoc">
-				<p:column headerText="Document Name">  
+				<p:column style="width:85%; white-space:normal" headerText="Document Name">  
 		            #{suppDoc.pmDocument.docName} 
 		        </p:column>
 
-<!-- 				<p:column headerText="Receive Date"> -->
-<!-- 					<p:calendar id="receiveDate" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> -->
-<!-- 				</p:column> -->
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
 					<p:selectBooleanCheckbox value="#{suppDoc.received}">
-						<p:ajax event="change" update="dtSuppDoc" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
+						<p:ajax event="change" update=":form:btnInquiryId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isvalid']}">
-					<p:selectOneMenu value="#{suppDoc.verifiedFlg}" label="#{lbl['lbl.sm.supportingdoc.docstatus']}" disabled="#{!suppDoc.received}" required="#{suppDoc.received}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue=""></f:selectItem>
-						<f:selectItem itemLabel="Valid" itemValue="1" />
-						<f:selectItem itemLabel="Invalid" itemValue="0" />
-						<p:ajax event="change" /> 
-						<f:validateBean disabled="#{!empty param['disableValidation']}" />
-					</p:selectOneMenu>
+				<p:column headerText="#{lbl['lbl.sm.remark']}">
+					<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" autoResize="false" />
 				</p:column>
+
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Inquiry(s)" toggable="true"
+		<p:panel header="Inquiry(s)" toggleable="true"
 			rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}">
 			<p:dataTable id="dtInquiryResponse" selectionMode="single" 
 			selection="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
@@ -310,24 +318,5 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-<!--  
-		<p:panel header="Remark" toggleable="true">
-			<table>
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="Receive Date" /></td>
-					<td class="tdContent"><p:calendar id="receiveCal" navigator="true"
-						value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-						size="30" showOn="button" /></td>
-				</tr>
-				
-				<tr>
-					<td class="tdTitle"><p:outputLabel value="Remarks" /></td>
-					<td class="tdContent"><p:inputTextarea rows="6" cols="80" value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /></td>
-				</tr>
-			</table>
-			<br />
-		</p:panel>
-		  -->
 	</ui:define>
 </ui:composition>
