@@ -28,7 +28,7 @@
 			<tr>
 				<td><p:commandButton value="Back" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
-						icon="ui-icon-back" oncomplete="location.replace(document.referrer);" /></td>
+						icon="ui-icon-back" action="#{invoiceBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"

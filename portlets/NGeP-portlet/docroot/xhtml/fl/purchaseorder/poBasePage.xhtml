@@ -26,7 +26,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="Back" immediate="true"  
-						icon="ui-icon-back" oncomplete="location.replace(document.referrer);"
+						icon="ui-icon-back" action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<c:if
 						test='#{flOrderBB.managedBean.outComes ne "null"}'>		
