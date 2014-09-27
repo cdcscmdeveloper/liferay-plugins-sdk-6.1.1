@@ -152,6 +152,7 @@
 						readonly="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.programLov}" 
 						postUpdateListener="purchaseRequestBackingBean.checkProgramLov()" 
+						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
 						value="#{purchaseRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td> 
@@ -161,9 +162,11 @@
 						readonly="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
+						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
 						postUpdateListener="purchaseRequestBackingBean.checkProjectLov()" 
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
-					</ac:lov></h:panelGroup></td>
+					</ac:lov>
+					</h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td> 
 					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
 						<p:inputText size="5" id="setiaCode"
