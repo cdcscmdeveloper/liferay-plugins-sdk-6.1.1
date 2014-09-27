@@ -340,9 +340,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
 					FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
 					financialOrgReqDTO.setFinancialOrgId(resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
-					FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retrieveFinancialOrgById(financialOrgReqDTO);
-					if(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs() != null && !financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs().isEmpty()){
-						flOrderBB.getManagedBean().setFactoringBranchList(financialOrgResDTO.getPmFinancialOrg().getPmFinancialBranchs());
+					FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(financialOrgReqDTO);
+					if(financialOrgResDTO.getFinancialBranchList() != null && !financialOrgResDTO.getFinancialBranchList().isEmpty()){
+						flOrderBB.getManagedBean().setFactoringBranchList(financialOrgResDTO.getFinancialBranchList());
 					}
 					flOrderBB.getFactoringAddress(null, resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
 				} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
