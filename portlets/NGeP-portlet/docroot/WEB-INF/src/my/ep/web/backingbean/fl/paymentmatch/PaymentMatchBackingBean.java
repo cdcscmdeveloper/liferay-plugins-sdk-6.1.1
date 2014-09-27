@@ -687,4 +687,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		return null;
 	}
 	
+	/**
+	 * Page navigation to FLDoc search page in PA
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
 }

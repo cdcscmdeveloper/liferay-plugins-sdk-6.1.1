@@ -282,4 +282,11 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 		return null;
 	}
+	
+	/**
+	 * Page navigation to FLDoc search page in DAN
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
 }

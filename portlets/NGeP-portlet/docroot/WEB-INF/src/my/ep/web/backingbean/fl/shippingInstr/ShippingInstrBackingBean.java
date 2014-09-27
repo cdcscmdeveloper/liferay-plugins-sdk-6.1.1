@@ -164,5 +164,12 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 	}
+	
+	/**
+	 * Page navigation to FLDoc search page in ShippingInstr
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
 
 }

@@ -713,4 +713,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}
 			return null;
 		}
+		
+		/**
+		 * Page navigation to FLDoc search page in Order
+		 */
+		public String backToPervious() {
+			return "flDocSearch";
+		}
 }

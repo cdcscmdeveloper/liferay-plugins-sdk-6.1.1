@@ -860,4 +860,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		return null;
 	}
 	
+	/**
+	 * Page navigation to FLDoc search page in INV
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
 }
