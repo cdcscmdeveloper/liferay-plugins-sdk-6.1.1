@@ -8,7 +8,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-	<f:event listener="#{sdoReviewBackingBean.preRenderView}" type="preRenderView" />
 		<!-- HEADER -->
 		<ui:param name="supplierName" value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{sdoReviewBackingBean.managedBean.smAppl.applNo}" />
