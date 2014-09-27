@@ -1979,10 +1979,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	// display itemCode,itemName,QueryDesc in popup
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		
+		getManagedBean().setQueryDisplay(false);
 		flItemAddress.getScRequestItem().getItemName();
 		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
+		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
+			getManagedBean().setQueryDisplay(true);
+			setQueryDesc(flItemAddress.getFlFulfilmentItem().getFlQuery().getQueryDesc());
+		}
+		
 	}
 	/**
 	 * @return the displayItemPnl
