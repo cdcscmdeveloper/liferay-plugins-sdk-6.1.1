@@ -18,7 +18,6 @@ import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
-import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -29,7 +28,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 
 @ManagedBean(name = "sdoReviewBackingBean")
@@ -39,9 +37,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
 
 	public SdoReviewBackingBean() {
-/*		if (MDC.get(LogKey.USER_ID) == null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}*/
 		
 	}
 
@@ -53,7 +48,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public void viewSupportingDocument() {
 		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
-		//this.getManagedBean().setAppId(2765); //TODO
+		//this.getManagedBean().setAppId(2765); 
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -72,19 +67,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setSmApplInquiry(new SmApplInquiry());
 		this.getManagedBean().setSelectedInquiryResponse(new SmApplInquiry());
 		
+		this.getManagedBean().setUnselectedSmApplSuppDocs(new ArrayList<SmApplSupportDoc>());
+
+		for(SmApplSupportDoc applSuppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			if(!applSuppDoc.isReceived()){
+
+				this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+			}
+		}
 		retrieveBusinessTypeList();
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
 
 	}
-
-	//	public void testSave(){
-	//		for(SmApplSupportDoc sd : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
-	//			log.info("********SuppDoc" + sd.getApplSupportDocId() + " - received - " + sd.isReceived() + " -Verified -" + sd.isVerified());
-	//		}
-	//		
-	//		log.info("*****received dat- " + this.getManagedBean().getSmAppl().getSdoReceivedDate());
-	//		log.info("****Remark" + this.getManagedBean().getSmRemark().getRemark());
-	//	}
 
 	public String submitSDOReviewAction(String resAction) {
 
@@ -143,16 +137,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 				
 				SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
-//				SdoReviewResDTO resDTO = new SdoReviewResDTO();
-//				sss
 
 				if (resDTO.isSuccessful()) {
 					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
 					RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
-//					FacesContext.getCurrentInstance().addMessage(
-//							null,
-//							new FacesMessage(FacesMessage.SEVERITY_INFO,
-//									"Application has been updated successfully", ""));
+
 					return navigateToAck();
 				} else {
 					throw new EpException(MessageConst.ERROR_721109);
@@ -167,15 +156,29 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	public void showSdoActionDialog(String action){
 		if(action.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 			RequestContext.getCurrentInstance().execute("submissionDlg.show()");
+			
 		}else if(action.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
+			List<SmApplSupportDoc> unselectedAplSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
+
+			if(this.getManagedBean().getUnselectedSmApplSuppDocs().size() > 0){
+				StringBuilder enquiry = new StringBuilder("");
+				for(int i= 0; i < unselectedAplSuppDocLs.size(); i++){
+					int count = i + 1;
+					enquiry.append(count + ". " + unselectedAplSuppDocLs.get(i).getPmDocument().getDocName());
+					enquiry.append(System.getProperty("line.separator"));
+				}
+				System.out.println(">>>>Str>>>");
+				System.out.println(enquiry);
+				this.getManagedBean().getSmApplInquiry().setInquiryText(enquiry.toString());
+			}
 			RequestContext.getCurrentInstance().execute("inquiryDlg.show()");
 		}
 	}
 	
 	public void inquiryRowSelect(){
-		System.out.println("*************inquiryRowSelect***********"+ this.getManagedBean().getSelectedInquiryResponse().getInquiryText());
+		log.info("*************inquiryRowSelect***********"+ this.getManagedBean().getSelectedInquiryResponse().getInquiryText());
 		RequestContext.getCurrentInstance().update("resOutPanelId");
-		//RequestContext.getCurrentInstance().execute("responseDlg.show()");
+
 	}
 	
 	public void retrieveBusinessTypeList(){
@@ -202,9 +205,20 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 	
 	public void receiveStatusChange(SmApplSupportDoc applSuppDoc){
-		log.info("--------receiveStatusChange--------" + applSuppDoc.getApplSupportDocId());
-		if(!applSuppDoc.isReceived()){
-			applSuppDoc.setVerifiedFlg(null);
+		log.debug("-----applSuppDoc----" + applSuppDoc.getPmDocument().getDocName());
+		List<SmApplSupportDoc> unselectedSuppDocLs = this.getManagedBean().getUnselectedSmApplSuppDocs();
+		
+		if(applSuppDoc.isReceived()){
+			unselectedSuppDocLs.remove(applSuppDoc);
+		}else{
+			unselectedSuppDocLs.add(applSuppDoc);
 		}
+		log.debug("-----applSuppDoc size----" + unselectedSuppDocLs.size());
 	}
+	
+	public String getsupplierApplTypeDesc(String applType){
+		return SmCommonUtil.getApplTypeDesc(applType);
+	}
+	
+	
 }

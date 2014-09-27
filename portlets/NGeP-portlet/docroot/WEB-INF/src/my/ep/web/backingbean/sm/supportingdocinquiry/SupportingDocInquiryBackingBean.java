@@ -19,6 +19,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -34,10 +35,10 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public void viewDocInquiry(){
-		System.out.println("**********viewDocInquiry*********");
+		log.info("**********viewDocInquiry*********");
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
-		//this.getManagedBean().setAppId(2716L);
+		//this.getManagedBean().setAppId(1009L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
@@ -46,16 +47,16 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	}
 	
 	public String submitInquiryResponse(){
-		System.out.println("**********submitInquiryResponse*********");
-		//try{
-			System.out.println("**********submitInquiryResponse*********");
+		log.info("**********submitInquiryResponse*********");
+		try{
+			log.info("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
 			String token = new FacesScopes().getBPMAuthenticationCtxToken();
 			
 			Date currDate = new Date();
 			
-			System.out.println("**********Current Date*********" + currDate);
+			log.info("**********Current Date*********" + currDate);
 			this.getManagedBean().getSmApplInquiry().setResponseDate(currDate);
 			reqDTO.setToken(token);
 			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
@@ -67,13 +68,13 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			//SupportingDocInquiryResDTO resDTO = new SupportingDocInquiryResDTO();
 			//resDTO.setSuccessful(true);
 			if(resDTO.isSuccessful()){
-				System.out.println("*****is Success******");
+				log.info("*****is Success******");
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				return navigateToAck();
 			}
-/*		}catch(Exception ex){
+		}catch(Exception ex){
 			throw new EpException(ex.getMessage());
-		}*/
+		}
 		
 		return "";
 	}
@@ -88,10 +89,15 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	
 	
 	public void preRenderView(){
-		System.out.println("**********preRenderView*********");
+		log.info("**********preRenderView*********");
 		if(this.getManagedBean().getSmApplInquiry() == null){
+			//this.getManagedBean().setAppId(2765L); //TODO
 			viewDocInquiry();
 		}
+	}
+	
+	public String getsupplierApplTypeDesc(String applType){
+		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
 }

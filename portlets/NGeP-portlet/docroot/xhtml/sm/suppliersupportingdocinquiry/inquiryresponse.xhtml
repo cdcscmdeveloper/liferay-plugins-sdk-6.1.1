@@ -8,6 +8,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+		<ui:param name="supplierName" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.smSupplier.companyName}" />
+		<ui:param name="applNo" value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applNo}" />
+		<ui:param name="applType" value="#{supportingDocInquiryBackingBean.getsupplierApplTypeDesc(supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applType)}" />
+		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
+		
 		<div align="right">
 			<p:commandButton value="Submit" onclick="submissionConfirmDlg.show();" />
 		</div>
@@ -25,25 +30,31 @@
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.supportingdocinquiry']}">
 			<table style="width: 100%;">
 				<tr>
-					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']} :" /></td>
-					<td><p:inputText size="50" readonly="true"
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.subject']}" /></td>
+					<td style="width:85%;"><p:inputText size="50" disabled="true"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquirySubject}" /></td>
 				</tr>
 
 				<tr>
-					<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']} :" /></td>
-					<td><p:inputTextarea id="inquiryDetailId" rows="10" cols="80"
-							readonly="true" autoResize="false"
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.inquiry']}" /></td>
+					<td style="width:85%;"><p:inputTextarea id="inquiryDetailId" rows="20" cols="180"
+							disabled="true" autoResize="false"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.inquiryText}" /></td>
 				</tr>
 			</table>
 		</p:panel>
 
 		<p:panel header="#{lbl['lbl.sm.supportingdoc.panel.response']}">
-			<p:inputTextarea id="inquiryResId" rows="10" cols="100" required="true"
-				value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
-				autoResize="false" />
 			<p:message id="inquiryResIdMsg" for="inquiryResId" display="icon" />
+			<table style="width: 100%;">
+				<tr>
+					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.response']}" /></td>
+					<td style="width:85%;"><p:inputTextarea id="inquiryResId" rows="10" cols="100"
+							required="true"
+							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
+							autoResize="false" /></td>
+				</tr>
+			</table>
 		</p:panel>
 	</ui:define>
 </ui:composition>
