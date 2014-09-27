@@ -152,7 +152,7 @@
 											value="#{backingBean.managedBean.countryLs}"
 											itemValue="#{basicCountry.countryId}"
 											itemLabel="#{basicCountry.countryName}" />
-										<p:ajax event="change"
+										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCountry.countryId,SupplierManagementConst.SM_BASIC_INFO_PANEL,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"
 											update="basicComState,basicCompDist,basicCompCity" />
 									</p:selectOneMenu> <p:message id="smSupContMsg" for="smSupCont"
@@ -170,7 +170,7 @@
 											value="#{backingBean.managedBean.basicCompanyStates}"
 											itemValue="#{basicState.stateId}"
 											itemLabel="#{basicState.stateName}" />
-										<p:ajax event="change"
+										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmState.stateId, 
 											SupplierManagementConst.SM_BASIC_INFO_PANEL,
 											backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict,
@@ -190,7 +190,7 @@
 											value="#{backingBean.managedBean.basicCompanyDistricts}"
 											itemValue="#{dist.districtId}"
 											itemLabel="#{dist.districtName}" />
-										<p:ajax event="change"
+										<p:ajax event="change" process="@this"
 											listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmDistrict.districtId,
 								SupplierManagementConst.SM_BASIC_INFO_PANEL,
 								backingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.pmCity)}"

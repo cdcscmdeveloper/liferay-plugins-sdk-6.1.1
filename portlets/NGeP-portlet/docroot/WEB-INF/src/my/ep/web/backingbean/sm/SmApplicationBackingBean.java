@@ -392,13 +392,11 @@ public class SmApplicationBackingBean extends
 					&& (getManagedBean().isPoUser() || getManagedBean()
 							.isApproverUser())) {
 				setRevUrl();
-				getManagedBean()
-						.setMaxReviewCount(
-								assignMaxReviewCount(applicationType,
-										getManagedBean().getSmAppl()
-												.getApplCategoryType(),
-										getManagedBean().getSmAppl()
-												.getSupplierType()));
+				getManagedBean().setMaxReviewCount(
+						assignMaxReviewCount(applicationType, getManagedBean()
+								.getSmAppl().getApplCategoryType(),
+								getManagedBean().getSmAppl().getSupplierType(),
+								getManagedBean().getBusinessTypeVal()));
 				if (getManagedBean().getSmAppl().getSmApplSectionReviews() == null) {
 					smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
 				}
@@ -1106,7 +1104,8 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
 			assignMaxReviewCount(getManagedBean().getSmAppl().getApplType(),
 					getManagedBean().getSmAppl().getApplCategoryType(),
-					getManagedBean().getSmAppl().getSupplierType());
+					getManagedBean().getSmAppl().getSupplierType(),
+					getManagedBean().getBusinessTypeVal());
 		}
 	}
 
@@ -3248,13 +3247,15 @@ public class SmApplicationBackingBean extends
 				smAddress.setAddress3(addr.getSmAddress().getAddress3());
 				smAddress.setAddress4(addr.getSmAddress().getAddress4());
 				PmCountry country = new PmCountry();
-				country.setCountryId(addr.getSmAddress().getPmCountry().getCountryId());
+				country.setCountryId(addr.getSmAddress().getPmCountry()
+						.getCountryId());
 				smAddress.setPmCountry(country);
 				PmState state = new PmState();
 				state.setStateId(addr.getSmAddress().getPmState().getStateId());
 				smAddress.setPmState(state);
 				PmDistrict district = new PmDistrict();
-				district.setDistrictId(addr.getSmAddress().getPmDistrict().getDistrictId());
+				district.setDistrictId(addr.getSmAddress().getPmDistrict()
+						.getDistrictId());
 				smAddress.setPmDistrict(district);
 				PmCity city = new PmCity();
 				city.setCityId(addr.getSmAddress().getPmCity().getCityId());
@@ -4538,9 +4539,9 @@ public class SmApplicationBackingBean extends
 	}
 
 	private int assignMaxReviewCount(String appType, String applCatType,
-			String supplierType) {
+			String supplierType, String businessType) {
 		return SmApplicationUtil.assignMaxReviewCount(appType, applCatType,
-				supplierType);
+				supplierType, businessType);
 	}
 
 	public void populateStatesByCountry(long coutryId, String panelName,

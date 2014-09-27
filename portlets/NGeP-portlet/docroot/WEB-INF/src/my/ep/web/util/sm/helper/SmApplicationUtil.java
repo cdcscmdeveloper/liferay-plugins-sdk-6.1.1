@@ -11,11 +11,14 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.race.IRaceSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
@@ -34,8 +37,12 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -43,6 +50,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.race.RaceResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
@@ -480,7 +489,7 @@ public class SmApplicationUtil {
 	}
 
 	public static int assignMaxReviewCount(String appType, String applCatType,
-			String supplierType) {
+			String supplierType, String businessType) {
 		int i = 0;
 		switch (appType) {
 
@@ -504,6 +513,10 @@ public class SmApplicationUtil {
 			} else {
 				i = SupplierManagementConst.BUMI_APPL_NORMCAT_REVIEW_MAXCOUNT;
 			}
+			if (supplierType
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
+				i = i + 1;
+			}
 			break;
 		case "U":
 			i = SupplierManagementConst.UPDATE_MOF_APPL_REVIEW_MAXCOUNT;
@@ -519,9 +532,15 @@ public class SmApplicationUtil {
 			break;
 
 		}
-		if (supplierType
-				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
-			i = i + 1;
+		if (businessType
+				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
+			i = i - 2;
+		}
+		if (businessType
+				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)
+				|| businessType
+						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
+			i = i - 1;
 		}
 		return i;
 	}
@@ -545,20 +564,79 @@ public class SmApplicationUtil {
 				}
 			}
 		}
-		int validStfCont = 0;
-		for (SmStaffTotal stfTl : appl.getSmStaffTotals()) {
-			if (stfTl.getTotalBumi().compareTo(new BigDecimal(0)) > 0
-					|| stfTl.getTotalForeigner().compareTo(new BigDecimal(0)) > 0
-					|| stfTl.getTotalNonBumi().compareTo(new BigDecimal(0)) > 0) {
-				validStfCont = validStfCont + 1;
-				break;
+		if (appl.getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& !appl.getSmCompanyBasic().getSmCompanyAddresses().isEmpty()
+				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+						.getSmAddress() != null
+				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+						.getSmAddress().getPmState() != null
+				&& appl.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+						.getSmAddress().getPmDistrict() != null) {
+			PmState state = retrievePmStateById(appl.getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress().getPmState()
+					.getStateId());
+			PmDistrict dist = retrievePmDistById(appl.getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0).getSmAddress()
+					.getPmDistrict().getDistrictId());
+			if (state.getStateCode().equalsIgnoreCase(
+					SupplierManagementConst.SARAWAK_CODE)
+					&& dist.getDistrictCode().equalsIgnoreCase(
+							SupplierManagementConst.KUCHING_DISTRICT_CODE)
+					&& (appl.getSmCompanyBasic().getIncomeTaxNo() == null || appl
+							.getSmCompanyBasic().getIncomeTaxNo().trim() == "")) {
+				validSave = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(
+						"Income Tax is mandatory of comapnies located in Kuching");
+			}
+
+		}
+		if (appl.getSupplierType().equalsIgnoreCase(
+				SupplierManagementConst.STYPE_CONSULTANT)) {
+			int profStfCnt = 0;
+			int semiPrfCnt = 0;
+			int clrCnt = 0;
+			for (SmStaffTotal stfTl : appl.getSmStaffTotals()) {
+				if (stfTl.getTotalBumi().compareTo(new BigDecimal(0)) > 0
+						|| stfTl.getTotalForeigner().compareTo(
+								new BigDecimal(0)) > 0
+						|| stfTl.getTotalNonBumi().compareTo(new BigDecimal(0)) > 0) {
+					if (stfTl.getStaffCategory().equalsIgnoreCase(
+							SupplierManagementConst.STAFF_TYPE_PROFESSIONAL)) {
+						profStfCnt = profStfCnt + 1;
+					} else if (stfTl.getStaffCategory().equalsIgnoreCase(
+							SupplierManagementConst.STAFF_TYPE_SEMIPROF)) {
+						semiPrfCnt = semiPrfCnt + 1;
+					} else if (stfTl.getStaffCategory().equalsIgnoreCase(
+							SupplierManagementConst.STAFF_TYPE_CLERICAL)) {
+						clrCnt = clrCnt + 1;
+					}
+				}
+			}
+			if ((clrCnt == 0 || semiPrfCnt == 0 || profStfCnt == 0)
+					&& !appl.getApplType().equalsIgnoreCase("C")) {
+				validSave = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722557);
+			}
+		} else {
+			int validStfCont = 0;
+			for (SmStaffTotal stfTl : appl.getSmStaffTotals()) {
+				if (stfTl.getTotalBumi().compareTo(new BigDecimal(0)) > 0
+						|| stfTl.getTotalForeigner().compareTo(
+								new BigDecimal(0)) > 0
+						|| stfTl.getTotalNonBumi().compareTo(new BigDecimal(0)) > 0) {
+					validStfCont = validStfCont + 1;
+					break;
+				}
+			}
+			if (validStfCont == 0 && !appl.getApplType().equalsIgnoreCase("C")) {
+				validSave = false;
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_722526);
 			}
 		}
-		if (validStfCont == 0 && !appl.getApplType().equalsIgnoreCase("C")) {
-			validSave = false;
-			setNavigationBackToCurrentPage(currentTab, managedBean);
-			throw new EpException(MessageConst.ERROR_722526);
-		}
+
 		appl = null;
 		return validSave;
 
@@ -572,7 +650,7 @@ public class SmApplicationUtil {
 		int designatedAccCnt = 0;
 		StringBuffer sb = new StringBuffer();
 		int noSignatoryCount = 0;
-		
+
 		for (SmSupplierBank bank : appl.getSmSupplierBanks()) {
 			if (bank.getAccountPurpose().equalsIgnoreCase("P")) {
 				payAccCnt = payAccCnt + 1;
@@ -602,7 +680,7 @@ public class SmApplicationUtil {
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722544);
 		}
-		if(noSignatoryCount > 0){
+		if (noSignatoryCount > 0) {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722556,
@@ -912,7 +990,7 @@ public class SmApplicationUtil {
 					.getPaidUpCapital()) != 0) {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				System.out.println("*** Value **** "+s);
+				System.out.println("*** Value **** " + s);
 				throw new EpException(MessageConst.ERROR_722554,
 						new String[] { s.toString() });
 			}
@@ -1219,7 +1297,7 @@ public class SmApplicationUtil {
 		}
 		return staffList;
 	}
-	
+
 	public static SmRemaksResDTO getRemarksByDoc(String docType, Long docId) {
 		SmRemarksReqDTO reqDTO = new SmRemarksReqDTO();
 		reqDTO.setDocId(docId);
@@ -1474,6 +1552,39 @@ public class SmApplicationUtil {
 		CountryResDTO resDTO = reqSO.retrieveCountryById(reqDTO);
 
 		return resDTO.getPmCountry();
+	}
+
+	public static PmState retrievePmStateById(Long stateId) {
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(stateId);
+		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
+
+		return resDTO.getPmState();
+	}
+
+	public static PmCity retrievePmCityById(Long cityId) {
+		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICitySO.class);
+		CityReqDTO reqDTO = new CityReqDTO();
+		reqDTO.setCityId(cityId);
+		CityResDTO resDTO = reqSO.retriveCityById(reqDTO);
+
+		return resDTO.getPmCity();
+	}
+
+	public static PmDistrict retrievePmDistById(Long distId) {
+		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDistrictSO.class);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		reqDTO.setDistrictId(distId);
+		DistrictResDTO resDTO = reqSO.retriveDistrictByID(reqDTO);
+
+		return resDTO.getPmDistrict();
 	}
 
 	public static MofRegistrationResDTO retriveApplicationById(int applId) {
@@ -1884,7 +1995,8 @@ public class SmApplicationUtil {
 
 	public static PmParameter retrievePmParameterById(Long paramId) {
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
 		reqDTO.setParameterId(paramId);
 		ParameterResDTO resDTO = reqSO.retrieveParameterById(reqDTO);

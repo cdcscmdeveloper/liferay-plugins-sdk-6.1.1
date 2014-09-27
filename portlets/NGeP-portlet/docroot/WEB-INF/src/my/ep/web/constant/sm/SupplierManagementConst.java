@@ -323,20 +323,21 @@ public class SupplierManagementConst {
 	public static final int RECORD_STATUS_SUSPENDED = 0;
 
 	public static final String REV_APPL_PATH = "/web/dashboard/view-revision-application?";
-	
+
 	// Site Visit
 	public static final String SVO_FIN_CHECKLIST = "FCL";
 	public static final String MALAYSIA_CODE = "MY";
-	
-	//Pm Edu codes
-	public static final String SUPPLIER_EDU_PHD ="1";
-	public static final String SUPPLIER_EDU_MASTERS ="2";
-	public static final String SUPPLIER_EDU_BACHELORS ="3";
-	public static final String SUPPLIER_EDU_DIPLOMA ="4";
-	public static final String SUPPLIER_EDU_CERTIFIED ="5";
-	public static final String SUPPLIER_EDU_NOTDEFINED ="6";
-	
-	
+	public static final String SABAH_CODE = "SA";
+	public static final String SARAWAK_CODE = "13";
+	public static final String KUCHING_DISTRICT_CODE = "1301";
+
+	// Pm Edu codes
+	public static final String SUPPLIER_EDU_PHD = "1";
+	public static final String SUPPLIER_EDU_MASTERS = "2";
+	public static final String SUPPLIER_EDU_BACHELORS = "3";
+	public static final String SUPPLIER_EDU_DIPLOMA = "4";
+	public static final String SUPPLIER_EDU_CERTIFIED = "5";
+	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {

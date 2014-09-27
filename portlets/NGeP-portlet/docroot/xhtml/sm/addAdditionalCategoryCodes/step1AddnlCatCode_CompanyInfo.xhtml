@@ -38,11 +38,14 @@
 				<ui:include
 					src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
 				<ui:fragment
-					rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}">
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
-				</ui:fragment> <ui:include
-					src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+				</ui:fragment> <ui:fragment
+					rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+					<ui:include
+						src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+				</ui:fragment>
 				<div class="nav-wrapper">
 					<table style="width: 100%">
 						<tr>
