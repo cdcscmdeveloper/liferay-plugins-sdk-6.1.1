@@ -164,32 +164,39 @@ public class SPDetailBackingBean extends
 		getManagedBean().setPrepareActiveIndex(0);
 		IQTProposalSO proposalSO = null;
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(qtID);
 			reqDTO.setUserId(userId);
 			reqDTO.setHashSupplierId(supplierID);
-			
-			ProposalResDTO resDTO = proposalSO.retrieveProposalDtlBySupplierId(reqDTO);
+
+			ProposalResDTO resDTO = proposalSO
+					.retrieveProposalDtlBySupplierId(reqDTO);
 			getManagedBean().setQt(resDTO.getScQt());
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
 			// Technical Check List
 			if (resDTO.getTechnicalCheckLists() != null) {
-				getManagedBean().setTecCheckDetailsList(resDTO.getTechnicalCheckLists());
-				log.info("Technical Check list: " + resDTO.getTechnicalCheckLists().size());
+				getManagedBean().setTecCheckDetailsList(
+						resDTO.getTechnicalCheckLists());
+				log.info("Technical Check list: "
+						+ resDTO.getTechnicalCheckLists().size());
 			}
-			
+
 			// Financial Check List
 			if (resDTO.getFinancialCheckLists() != null) {
-				getManagedBean().setFinanceCheckDetailsList(resDTO.getFinancialCheckLists());
-				log.info("Financial Check list: " + resDTO.getFinancialCheckLists().size());
+				getManagedBean().setFinanceCheckDetailsList(
+						resDTO.getFinancialCheckLists());
+				log.info("Financial Check list: "
+						+ resDTO.getFinancialCheckLists().size());
 			}
 
 			if (null != getManagedBean().getQt().getClosingDate()) {
 				Date today = new Date();
-				long days = DateUtils.getDaysDifference(today, getManagedBean().getQt().getClosingDate());
+				long days = DateUtils.getDaysDifference(today, getManagedBean()
+						.getQt().getClosingDate());
 				this.getManagedBean().setDays(days);
 			}
 
@@ -208,10 +215,10 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(1);
 	}
 
-	public void retrieveDeclarationList()throws Exception {
+	public void retrieveDeclarationList() throws Exception {
 		debugLogger("retrieveDeclarationList");
 		this.getManagedBean().setPrepareActiveIndex(2);
-		
+
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
 
@@ -220,36 +227,48 @@ public class SPDetailBackingBean extends
 	 */
 	public void submitSupplierProposal() {
 		debugLogger("submitSupplierProposal");
-		
+
 		IQTProposalSO proposalSO = null;
 		try {
-			proposalSO = BusinessDelegate.getInstance().getServiceObject( ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-			
+			proposalSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
+
 			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
-			List<ScQtProposalChecklist> technicalChecklist = getManagedBean().getTecCheckDetailsList();
-			List<ScQtProposalChecklist> financialChecklist = getManagedBean().getFinanceCheckDetailsList();
-			
+			List<ScQtProposalChecklist> technicalChecklist = getManagedBean()
+					.getTecCheckDetailsList();
+			List<ScQtProposalChecklist> financialChecklist = getManagedBean()
+					.getFinanceCheckDetailsList();
+
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
 			scQtProposal.setSubmitted(true);
-			
+
 			scQtProposalChecklists.addAll(technicalChecklist);
 			scQtProposalChecklists.addAll(financialChecklist);
-			scQtProposal.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(scQtProposalChecklists));
-			
+			scQtProposal
+					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
+							scQtProposalChecklists));
+
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtSupplierId(getManagedBean().getQtProposal().getScQtSupplier().getQtSupplierId());
+			reqDTO.setQtSupplierId(getManagedBean().getQtProposal()
+					.getScQtSupplier().getQtSupplierId());
 			reqDTO.setScQtProposal(scQtProposal);
-			reqDTO.setTechnicalChecklist(new ArrayList<ScQtProposalChecklist>(technicalChecklist));
-			reqDTO.setFinancialChecklist(new ArrayList<ScQtProposalChecklist>(financialChecklist));
-			reqDTO.setAgreeWithIntegrityPact(getManagedBean().isAgreeWithIntegrityPact());
-			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean().isAgreeWithOthersTermsConditions());
-			
+			reqDTO.setTechnicalChecklist(new ArrayList<ScQtProposalChecklist>(
+					technicalChecklist));
+			reqDTO.setFinancialChecklist(new ArrayList<ScQtProposalChecklist>(
+					financialChecklist));
+			reqDTO.setAgreeWithIntegrityPact(getManagedBean()
+					.isAgreeWithIntegrityPact());
+			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
+					.isAgreeWithOthersTermsConditions());
+
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
-				String variable1 = CommonMethod.getMessageCommon("lbl.sc.sp.pplno");
+				String variable1 = CommonMethod
+						.getMessageCommon("lbl.sc.sp.pplno");
 				String variable2 = scQtProposal.getProposalNo();
-				commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
+				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
+						variable1, variable2);
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -257,19 +276,21 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
-	
-	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
-		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-			FacesMessage.SEVERITY_INFO, 
-			null,
-			MessageUtils.getMessage(messageId, 
-					new String[]{variable1, variable2}, 
-					MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					new FacesScopes().getUserLocale())));
-		 // clear data
+
+	private void commonMessageAcknowledmentPage(String messageId,
+			String variable1, String variable2) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(messageId, new String[] { variable1,
+								variable2 },
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		// clear data
 		super.renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 	}
 
 	/**
@@ -330,8 +351,9 @@ public class SPDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setDeletedPRPExperiences(null);
-				debugLogger("*****save successfull*****"+resDTO.isSuccessful());
-				
+				debugLogger("*****save successfull*****"
+						+ resDTO.isSuccessful());
+
 				return navigatePrepareFinProposalCheckList(
 						scQtProposalChecklist, resDTO.getProposalChecklist(),
 						isCompleted);
@@ -743,10 +765,9 @@ public class SPDetailBackingBean extends
 					attachment = new ScQtProposalChecklistAttachment();
 					attachment.setScQtProposalChecklist(scQtProposalChecklist);
 				}
-				attachment.setDocNo(getManagedBean()
-						.getQt().getQtNo());
-				attachment.setPrefixFileName(getManagedBean()
-						.getQtProposal().getProposalNo());
+				attachment.setDocNo(getManagedBean().getQt().getQtNo());
+				attachment.setPrefixFileName(getManagedBean().getQtProposal()
+						.getProposalNo());
 
 				uploadAttachmentWithEncryption(event.getFile(), attachment);
 
@@ -770,10 +791,10 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	protected void uploadAttachmentWithEncryption(UploadedFile file, ScAttachment attachment)
-			throws FileNotFoundException, IOException {
+	protected void uploadAttachmentWithEncryption(UploadedFile file,
+			ScAttachment attachment) throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
-//		byte[] fileBytes = file.getContents();
+		// byte[] fileBytes = file.getContents();
 		FileInputStream fis = (FileInputStream) file.getInputstream();
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded");
@@ -782,11 +803,10 @@ public class SPDetailBackingBean extends
 
 		FileOutputStream fos;
 		fos = new FileOutputStream(getActualFilePath(attachment));
-//		fos.write(fileBytes);
-//		fos.close();
-        BouncyCastleProvider_AES_CBC bc =
-                new BouncyCastleProvider_AES_CBC();
-        try {
+		// fos.write(fileBytes);
+		// fos.close();
+		BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+		try {
 			bc.InitCiphers();
 		} catch (InvalidKeyException e) {
 			// TODO Auto-generated catch block
@@ -804,12 +824,11 @@ public class SPDetailBackingBean extends
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        //encryption
-        try {
+		// encryption
+		try {
 			bc.CBCEncrypt(fis, fos);
 		} catch (ShortBufferException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.debug(e.getMessage());
 		} catch (IllegalBlockSizeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -844,9 +863,8 @@ public class SPDetailBackingBean extends
 				// Cannot open connection, maybe local file
 				input = new FileInputStream(filePath);
 			}
-            BouncyCastleProvider_AES_CBC bc =
-                    new BouncyCastleProvider_AES_CBC();
-            try {
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			try {
 				bc.InitCiphers();
 			} catch (InvalidKeyException e1) {
 				// TODO Auto-generated catch block
@@ -864,15 +882,15 @@ public class SPDetailBackingBean extends
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-            System.out.println("Test 1 !"+bc.generateKey());
-            //encryption
-        //    bc.CBCEncrypt(fis, fos);
- 
-            FileOutputStream fos = new FileOutputStream(new File("C:\\Windows\\Temp\\PV.pdf"));
+			System.out.println("Test 1 !" + bc.generateKey());
+			// encryption
+			// bc.CBCEncrypt(fis, fos);
 
- 
-            //decryption
-            try {
+			FileOutputStream fos = new FileOutputStream(new File(
+					"C:\\Windows\\Temp\\PV.pdf"));
+
+			// decryption
+			try {
 				bc.CBCDecrypt(input, fos);
 			} catch (ShortBufferException e) {
 				// TODO Auto-generated catch block
@@ -884,25 +902,26 @@ public class SPDetailBackingBean extends
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	
-//			byte[] buffer = new byte[4096];
-//			int bytesRead;
-//			while ((bytesRead = input.read(buffer)) != -1) {
-//				out.write(buffer, 0,ytesRead);
-//				buffer = new byte[4096];
-//			}
+
+			// byte[] buffer = new byte[4096];
+			// int bytesRead;
+			// while ((bytesRead = input.read(buffer)) != -1) {
+			// out.write(buffer, 0,ytesRead);
+			// buffer = new byte[4096];
+			// }
 			input.close();
 			fos.flush();
 			fos.close();
-			 FileInputStream input1 = new FileInputStream(new File("C:\\Windows\\Temp\\PV.pdf"));
+			FileInputStream input1 = new FileInputStream(new File(
+					"C:\\Windows\\Temp\\PV.pdf"));
 			downloadFileByInputStream(input1, fileName);
 		}
-//
-//		// use to upload back to database
-//		File file = new File(filePath);
-//		return file;
+		//
+		// // use to upload back to database
+		// File file = new File(filePath);
+		// return file;
 	}
-	
+
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
 		debugLogger("downloadSPFile");
@@ -945,8 +964,6 @@ public class SPDetailBackingBean extends
 	}
 
 	public String updateBpmTask(String action) {
-		
-		
 
 		ProposalReqDTO prReqDTO = constructReqDTO();
 		prReqDTO.setOutcome(action);
@@ -959,7 +976,7 @@ public class SPDetailBackingBean extends
 		try {
 			ProposalResDTO resDTO = proSo.updateBPMAction(prReqDTO);
 			if (resDTO.isSuccessful()) {
-				
+
 				// to nullify personnel tab SmPersonnleCalcVO object
 				getManagedBean().setPersonCalc(null);
 
@@ -1070,11 +1087,11 @@ public class SPDetailBackingBean extends
 
 		templateSpecBean.setSpecMaster(specMaster);
 		templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-		
+
 		SmSupplier smSupplier = new SmSupplier();
 		smSupplier.setSupplierId(getManagedBean().getSupplierId());
 		templateSpecBean.setSupplier(smSupplier);
-		
+
 		templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
 
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE + "?faces-redirect=true";
@@ -1098,20 +1115,20 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtPRPExperiences(
 					resDTO.getPrpExperience());
 
-			ScQtProposalScore totalContractScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
-			ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
+			ScQtProposalScore totalContractScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACTS_FOR_NON_FED_GOV);
+			ScQtProposalScore contractYearsScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_NO_OF_CONTRACT_YEARS_FOR_NON_FED_GOV);
 
 			int totalContracts = 0;
-			if (totalContractScore != null && totalContractScore.getCriteriaValue() != null) {
+			if (totalContractScore != null
+					&& totalContractScore.getCriteriaValue() != null) {
 				totalContracts = totalContractScore.getCriteriaValue()
 						.intValue();
 			}
 			this.getManagedBean().setTotalContracts(totalContracts);
 
 			int totalYears = 0;
-			if (contractYearsScore != null && contractYearsScore.getCriteriaValue() != null) {
+			if (contractYearsScore != null
+					&& contractYearsScore.getCriteriaValue() != null) {
 				totalYears = contractYearsScore.getCriteriaValue()
 						.multiply(BigDecimal.valueOf(12)).intValue();
 			}
@@ -1227,24 +1244,28 @@ public class SPDetailBackingBean extends
 					.println("******SP(SAMPLING_ADDRESS_PAGE) defenition type parameter code is ******"
 							+ scQtProposalChecklist.getScQtCheckList()
 									.getDefinationType().getParameterCode());
-			
+
 			ScQt scQt = getManagedBean().getQt();
 
 			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setQtProposalId(getManagedBean().getQtProposal().getQtProposalId());
+			reqDTO.setQtProposalId(getManagedBean().getQtProposal()
+					.getQtProposalId());
 			ProposalResDTO resDTO = proposalSO.retrieveSampleDetails(reqDTO);
-			
-			List<ScQtSampleSubmission> sampleSubmissionDtls = resDTO.getSampleSubmissionDtls();
-			
+
+			List<ScQtSampleSubmission> sampleSubmissionDtls = resDTO
+					.getSampleSubmissionDtls();
+
 			if (scQt.isZonal()) {
-				getManagedBean().setScQtSampleSubmissionList(sampleSubmissionDtls);
+				getManagedBean().setScQtSampleSubmissionList(
+						sampleSubmissionDtls);
 			} else {
-				if (sampleSubmissionDtls != null && sampleSubmissionDtls.size() > 0) {
+				if (sampleSubmissionDtls != null
+						&& sampleSubmissionDtls.size() > 0) {
 					getManagedBean().setScQtSampleSubmission(
 							sampleSubmissionDtls.get(0));
 				}
 			}
-			
+
 			getManagedBean().setScQtSampleLable(resDTO.getScQtSampleLable());
 
 			return NAV_TO_SAMPLING_ADDRESS_PAGE + "?faces-redirect=true";
@@ -1314,8 +1335,9 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setQtProposalCheckListId(scQtProposalChecklist.getQtProposalChecklistId());
-			
+			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
+					.getQtProposalChecklistId());
+
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			this.getManagedBean().setScLoaList(list);
@@ -1425,12 +1447,14 @@ public class SPDetailBackingBean extends
 	private String retrieveFinancialSpecDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
+		String redirectPage = null;
 		try {
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 
 			ScQt scQt = getManagedBean().getQt();
-			ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList().getScQtDoc();
+			ScQtDoc scQtDoc = scQtProposalChecklist.getScQtCheckList()
+					.getScQtDoc();
 			this.getManagedBean().setScQtDoc(scQtDoc);
 
 			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
@@ -1439,14 +1463,16 @@ public class SPDetailBackingBean extends
 			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
 
 			templateSpecBean.setSpecMaster(specMaster);
-			templateSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			
+			templateSpecBean
+					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(getManagedBean().getSupplierId());
 			templateSpecBean.setSupplier(smSupplier);
-			
-			templateSpecBackingBean.retrieveTemplateSpecMaster(templateSpecBean);
-			
+
+			templateSpecBackingBean
+					.retrieveTemplateSpecMaster(templateSpecBean);
+
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 
@@ -1454,34 +1480,30 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = proposalSO
 					.retrieveFinancialSpecDtls(reqDTO);
 
-			if (scQt.getMaxProposal() > 1) {
-				if (scQt.isZonal()) {
-					System.out
-							.println("TS ***** NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE*****");
+			if (scQt.isZonal()) {
+				List<TplSpecZoneDtl> zones = resDTO.getZones();
+				if (null != zones) {
+					this.getManagedBean().setZones(zones);
+					this.getManagedBean().setSelectedZone(zones.get(0));
+				}
+				if (scQt.getMaxProposal() > 1) {
 
-					List<TplSpecZoneDtl> zones = resDTO.getZones();
-					if (null != zones) {
-						this.getManagedBean().setZones(zones);
-						this.getManagedBean().setSelectedZone(zones.get(0));
-					}
-
-					return NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE
+					redirectPage = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE
 							+ "?faces-redirect=true";
 				} else {
-					System.out
-							.println("TS ***** NAV_TO_MORE_THAN_PROPOSAL_PAGE *****");
-
-					return NAV_TO_MORE_THAN_PROPOSAL_PAGE
+					redirectPage = NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE
 							+ "?faces-redirect=true";
+
 				}
 			} else {
-				System.out
-						.println("TS ***** NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE *****");
+				if (scQt.getMaxProposal() == 1) {
 
-				return NAV_TO_FINANCE_STATNDARD_PRODUCT_PAGE
-						+ "?faces-redirect=true";
+					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE
+							+ "?faces-redirect=true";
+
+				}
 			}
-
+			return redirectPage;
 		} finally {
 			proposalSO = null;
 		}
@@ -1494,7 +1516,6 @@ public class SPDetailBackingBean extends
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
-
 
 			List<ScQtProposalChecklist> techinicalProposalCheckLists = this
 					.getManagedBean().getTecCheckDetailsList();
@@ -1532,12 +1553,11 @@ public class SPDetailBackingBean extends
 			}
 			this.getManagedBean().setScQtPRPExperiences(scQtPRPExperiences);
 
-			ScQtProposalScore contractAmountScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
-			
-			if(contractAmountScore != null){
+			ScQtProposalScore contractAmountScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CONTRACT_AMOUNT_FOR_NON_FED_GOV);
+
+			if (contractAmountScore != null) {
 				this.getManagedBean().setTotalContractAmount(
-					contractAmountScore.getCriteriaValue());
+						contractAmountScore.getCriteriaValue());
 			}
 			System.out
 					.println("FN ***** NAV_TO_NON_GOVT_COMPANY_EXPERIENCE_PAGE *****");
@@ -1598,14 +1618,13 @@ public class SPDetailBackingBean extends
 
 			totalCreditFacilitiesSum();
 
-			ScQtProposalScore creditFacilitiesScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
-			
-			if(creditFacilitiesScore != null){
+			ScQtProposalScore creditFacilitiesScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CREDIT_FACILITIES);
+
+			if (creditFacilitiesScore != null) {
 				this.getManagedBean().setTotalAmountCredit(
-					creditFacilitiesScore.getCriteriaValue());
+						creditFacilitiesScore.getCriteriaValue());
 			}
-			
+
 			System.out.println("CF ***** NAV_TO_CREDIT_FACILITIES_PAGE *****");
 
 			return NAV_TO_CREDIT_FACILITIES_PAGE + "?faces-redirect=true";
@@ -1635,12 +1654,11 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtPRPCashOnHand(
 					resDTO.getCashOnHandResultBean());
 
-			ScQtProposalScore cashOnHandScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND);
-			
-			if(cashOnHandScore != null){
+			ScQtProposalScore cashOnHandScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_TOTAL_CASH_ON_HAND);
+
+			if (cashOnHandScore != null) {
 				this.getManagedBean().setTotalcashHand(
-					cashOnHandScore.getCriteriaValue());
+						cashOnHandScore.getCriteriaValue());
 			}
 			System.out.println("CH ***** NAV_TO_CASH_ON_HAND_PAGES *****");
 
@@ -1683,11 +1701,11 @@ public class SPDetailBackingBean extends
 
 			totalAmountSum();
 
-			ScQtProposalScore avgBankStatementScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
-			
-			if(avgBankStatementScore != null){
-				this.getManagedBean().setAvgAmount(avgBankStatementScore.getCriteriaValue());
+			ScQtProposalScore avgBankStatementScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_AVERAGE_OF_BANK_STATEMENT);
+
+			if (avgBankStatementScore != null) {
+				this.getManagedBean().setAvgAmount(
+						avgBankStatementScore.getCriteriaValue());
 			}
 			return NAV_TO_FINANCE_BANK_STATEMENT_PAGE + "?faces-redirect=true";
 
@@ -1725,13 +1743,12 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setScQtProposalScoreList(
 					resDTO.getProposalScores());
 
-			ScQtProposalScore assetLiabilityScore = findProposalScoreByCriteriaType(
-					SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
+			ScQtProposalScore assetLiabilityScore = findProposalScoreByCriteriaType(SourcingConstants.CRITERIA_TYPE_ASSETS_AND_LIABILITIES_ACID_RATIO);
 
-			if(assetLiabilityScore != null){
-				getManagedBean().getScQtPRPAssetLiability().setAcidRatio(assetLiabilityScore.getCriteriaValue());
+			if (assetLiabilityScore != null) {
+				getManagedBean().getScQtPRPAssetLiability().setAcidRatio(
+						assetLiabilityScore.getCriteriaValue());
 			}
-			
 
 			System.out.println("AL ***** NAV_TO_ASSET_LIABILITY_PAGE *****");
 
@@ -1819,8 +1836,9 @@ public class SPDetailBackingBean extends
 
 			reqDTO.setQtId(getManagedBean().getQt().getQtId());
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
-			reqDTO.setQtProposalCheckListId(scQtProposalChecklist.getQtProposalChecklistId());
-			
+			reqDTO.setQtProposalCheckListId(scQtProposalChecklist
+					.getQtProposalChecklistId());
+
 			ProposalResDTO resDTO = proposalSO.retrieveCompanyExpDtls(reqDTO);
 			List<ScLoa> list = resDTO.getLoaResultBean().getResultList();
 			log.info(" List Size : " + list.size());
@@ -1848,7 +1866,7 @@ public class SPDetailBackingBean extends
 		log.info("Supplier Id : " + supplierId);
 
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
-		
+
 		if (smSupplier == null
 				|| (smSupplier.getSupplierId() != null && smSupplier
 						.getSupplierId().longValue() != supplierId)) {
@@ -1864,8 +1882,9 @@ public class SPDetailBackingBean extends
 				ProposalResDTO resDTO = proposalSO.retriveSupplierById(reqDTO);
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				getManagedBean().setSmAppl(resDTO.getSmAppl());
-				log.info("*****SmAppl Appl_Id : *****" + resDTO.getSmAppl().getApplId());
-				//  equityShareHolders for 
+				log.info("*****SmAppl Appl_Id : *****"
+						+ resDTO.getSmAppl().getApplId());
+				// equityShareHolders for
 				List<SmPersonnel> equityShareHolders = new ArrayList<SmPersonnel>();
 
 				for (SmPersonnel personnel : resDTO.getSmAppl()
@@ -1876,34 +1895,49 @@ public class SPDetailBackingBean extends
 					}
 				}
 				getManagedBean().setEquityShareHolders(equityShareHolders);
-				
+
 				// to set data for category codes
-				
+
 				System.out.println("********** category test***********");
-				if(resDTO.getSmAppl().getSmSupplierCategories() != null && resDTO.getSmAppl().getSmSupplierCategories().size() != 0){
-					for (SmSupplierCategory category : resDTO.getSmAppl().getSmSupplierCategories()){
-						System.out.println("&&&&&&&****** supplier category id is *****&&&&&&"+ category.getSupplierCategoryId());
+				if (resDTO.getSmAppl().getSmSupplierCategories() != null
+						&& resDTO.getSmAppl().getSmSupplierCategories().size() != 0) {
+					for (SmSupplierCategory category : resDTO.getSmAppl()
+							.getSmSupplierCategories()) {
+						System.out
+								.println("&&&&&&&****** supplier category id is *****&&&&&&"
+										+ category.getSupplierCategoryId());
 					}
-					
+
 				}
-				
-				
+
 				// To fetch data for personnel tab using the new static method
-				
-				if(getManagedBean().getSmAppl().getSmPersonnels() !=  null){
-					SmPersonnleCalcVO personnelVO = SmCommonUtil.calcPersonnelListCount(
-							 getManagedBean().getSmAppl().getSmPersonnels(),getManagedBean().getSmAppl().getSmStaffTotals(),
-							 getManagedBean().getSmSupplier().getBusinessType());
-							getManagedBean().setPersonCalc(personnelVO);
-							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getBodNonBumiCnt());
-							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getHghMngNonBumiCnt());
-							System.out.println("***** After calculation ****** "+getManagedBean().getPersonCalc().getStfNonBumiEnterCnt());
+
+				if (getManagedBean().getSmAppl().getSmPersonnels() != null) {
+					SmPersonnleCalcVO personnelVO = SmCommonUtil
+							.calcPersonnelListCount(getManagedBean()
+									.getSmAppl().getSmPersonnels(),
+									getManagedBean().getSmAppl()
+											.getSmStaffTotals(),
+									getManagedBean().getSmSupplier()
+											.getBusinessType());
+					getManagedBean().setPersonCalc(personnelVO);
+					System.out.println("***** After calculation ****** "
+							+ getManagedBean().getPersonCalc()
+									.getBodNonBumiCnt());
+					System.out.println("***** After calculation ****** "
+							+ getManagedBean().getPersonCalc()
+									.getHghMngNonBumiCnt());
+					System.out.println("***** After calculation ****** "
+							+ getManagedBean().getPersonCalc()
+									.getStfNonBumiEnterCnt());
 				}
-								
+
 				// To set data for bankinfo tab
-				getManagedBean().setSmChequeSignatories(getManagedBean().getSmAppl().getSmSupplierBanks().get(0).getSmChequeSignatories());
-				
-				//staffInformation();
+				getManagedBean().setSmChequeSignatories(
+						getManagedBean().getSmAppl().getSmSupplierBanks()
+								.get(0).getSmChequeSignatories());
+
+				// staffInformation();
 				log.info("Paid up capital : "
 						+ getManagedBean().getSmAppl().getSmCompanyBasic()
 								.getPaidUpCapital());
@@ -2355,14 +2389,11 @@ public class SPDetailBackingBean extends
 		}
 
 	}
-	
-	
-	
-	private String generateDeclarationFromVelocity(ScQt scQt)
-			throws Exception {
-		
+
+	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
+
 		retrieveSupplierDtls(getManagedBean().getTecCheckDetailsList().get(0));
-		
+
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
@@ -2383,7 +2414,6 @@ public class SPDetailBackingBean extends
 
 		return integrityPact;
 	}
-	
 
 	private List<ScQtProposalScore> updateProposalScoresValue(
 			ScQtProposalChecklist proposalChecklist,
