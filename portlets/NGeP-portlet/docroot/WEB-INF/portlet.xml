@@ -1268,7 +1268,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/docsearch/flDocSearch.xhtml</value>
+			<value>/xhtml/fl/docsearch/docSearchBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
