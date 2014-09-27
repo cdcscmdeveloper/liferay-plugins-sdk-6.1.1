@@ -14,7 +14,9 @@
 		<c:if test="#{newable}">
 			<p:inputTextarea id="itemName" style="width:96%;" value="#{question.clItem}" 
 				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="200"
-				label="#{lbl['lbl.tpl.spec.content.item']}" />
+				label="#{lbl['lbl.tpl.spec.content.item']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:inputTextarea>
 			<p:message id="itemNameMsg" for="itemName" display="icon" />
 		</c:if>
 		<c:if test="#{!newable}">
@@ -28,7 +30,9 @@
 		</f:facet>
 		<p:inputTextarea id="specification" style="width:96%;" value="#{question.clSpecDetail}" 
 			rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="200"
-			label="#{lbl['lbl.tpl.spec.content.specification']}" />
+			label="#{lbl['lbl.tpl.spec.content.specification']}">
+			<p:ajax partialSubmit="true" process="@this" update="@this" />
+		</p:inputTextarea>
 		<p:message id="specificationMsg" for="specification" display="icon" />
 	</p:column>
 	<p:column style="width:75px;" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
@@ -201,18 +205,20 @@
 			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"
 			rendered="#{!isQuestionTypeItem}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
-			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtnPG" />
 		</h:selectOneMenu>	
-		<p:commandButton id="scoringBtn"
-			icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
-			style="background-color:transparent !important; border:0px none;"
-			styleClass="scoringBtn"
-			action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
-			oncomplete="#{scoringSetPopup}.show();"
-			partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
-			rendered="#{!isQuestionTypeItem}">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-		</p:commandButton>
+		<h:panelGroup id="scoringBtnPG">
+			<p:commandButton id="scoringBtn"
+				icon="#{empty question.maxScore ? 'ui-icon-pencil' : 'ui-icon-evaluate'}" 
+				style="background-color:transparent !important; border:0px none;"
+				styleClass="scoringBtn"
+				action="#{templateSpecBackingBean.scoringPopupAction(templateSpecBean)}"
+				oncomplete="#{scoringSetPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=scoringSetPopup])"
+				rendered="#{!isQuestionTypeItem and !empty question.answerTypeCode.parameterId}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+		</h:panelGroup>
 		<p:message id="answerTypeIdMsg" for="answerTypeId" display="icon" />
 	</p:column>
 	<p:column style="width:80px;" rendered="#{isEstCostReq and !isSpecificationReq}">
