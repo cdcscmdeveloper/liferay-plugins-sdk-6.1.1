@@ -10,6 +10,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
+import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -31,6 +32,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private SmApplInquiry smApplInquiry;
 	private SmApplInquiry selectedInquiryResponse;
 	private List<PmParameterDesc> businessTypeLs;
+	private List<SmApplSupportDoc> unselectedSmApplSuppDocs;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -126,6 +128,15 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
 		this.businessTypeLs = businessTypeLs;
+	}
+
+	public List<SmApplSupportDoc> getUnselectedSmApplSuppDocs() {
+		return unselectedSmApplSuppDocs;
+	}
+
+	public void setUnselectedSmApplSuppDocs(
+			List<SmApplSupportDoc> unselectedSmApplSuppDocs) {
+		this.unselectedSmApplSuppDocs = unselectedSmApplSuppDocs;
 	}
 
 	
