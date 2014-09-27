@@ -16,15 +16,15 @@
 				</p:column>
 
 				<p:column headerText="Type">
-						<p:outputPanel rendered="#{mofAcc.supplierType == SupplierManagementConst.STYPE_CONSULTANT}">
-						#{lbl['lbl.sm.consultant']}
-						</p:outputPanel>
-						
-						<p:outputPanel rendered="#{mofAcc.supplierType == SupplierManagementConst.STYPE_CONTRACTOR}}">
-						#{lbl['lbl.sm.contractor']}
-						</p:outputPanel>
+					<h:outputText
+						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONSULTANT}"
+						value="#{lbl['lbl.sm.consultant']}" />
+
+					<h:outputText
+						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
+						value="#{lbl['lbl.sm.contractor']}" />
 				</p:column>
-				
+
 				<p:column headerText="Serial No">
 					#{mofAcc.smMofCerts[0].certSerialNo}
 				</p:column>
