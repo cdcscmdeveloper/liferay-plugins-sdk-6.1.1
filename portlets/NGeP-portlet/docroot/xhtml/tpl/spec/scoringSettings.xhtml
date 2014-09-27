@@ -164,22 +164,26 @@
 			</p:column>
 		</p:dataTable>
 		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, scoringTbl" partialSubmit="true"
-				action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
-				oncomplete="scoringWidget.paginator.endLink.click();"
-				update="scoringTbl" icon="ui-icon-add"
-				rendered="#{!isCompliance and editable}" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this" partialSubmit="true"
-				icon="ui-icon-delete"
-				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
-				update="scoringTbl"
-				rendered="#{!isCompliance and editable}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
-			</p:commandButton>
-		</div>
+		<table style="width:100%;">
+		<tr>
+			<td style="text-align:right;">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this, scoringTbl" partialSubmit="true"
+					action="#{templateSpecBackingBean.addScoringAction(templateSpecBean.selectedSpecQuestion)}"
+					oncomplete="scoringWidget.paginator.endLink.click();"
+					update="scoringTbl" icon="ui-icon-add"
+					rendered="#{!isCompliance and editable}" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					process="@this" partialSubmit="true"
+					icon="ui-icon-delete"
+					action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecScorings)}"
+					update="scoringTbl"
+					rendered="#{!isCompliance and editable}">
+					<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
+				</p:commandButton>
+			</td>
+		</tr>
+		</table>
 	</p:panel>
 	</h:panelGroup>
 </ui:composition>

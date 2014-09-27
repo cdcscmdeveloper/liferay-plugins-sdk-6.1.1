@@ -71,24 +71,28 @@
 		</p:column>
 	</p:dataTable>
 	
-	<div class="ppRightBtn">
-		<p:commandButton id="addTierBtn" value="#{lbl['lbl.btn.add']}"
-			process="@this, tierQtyTbl" partialSubmit="true"
-			action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
-			oncomplete="tierQtyWidget.paginator.endLink.click();"
-			update="tierQtyTbl" icon="ui-icon-add"
-			rendered="#{editable}" />
-		<p:tooltip id="addTierTtp" for="addTierBtn">
-			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
-		</p:tooltip>
-		
-		<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			process="@this" partialSubmit="true"
-			icon="ui-icon-delete"
-			action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
-			update="tierQtyTbl"
-			rendered="#{editable}">
-			<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
-		</p:commandButton>
-	</div>
+	<table style="width:100%;">
+	<tr>
+		<td style="text-align:right;">
+			<p:commandButton id="addTierBtn" value="#{lbl['lbl.btn.add']}"
+				process="@this, tierQtyTbl" partialSubmit="true"
+				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
+				oncomplete="tierQtyWidget.paginator.endLink.click();"
+				update="tierQtyTbl" icon="ui-icon-add"
+				rendered="#{editable}" />
+			<p:tooltip id="addTierTtp" for="addTierBtn">
+				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
+			</p:tooltip>
+			
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this" partialSubmit="true"
+				icon="ui-icon-delete"
+				action="#{templateSpecBackingBean.deleteSelectedRowsAction(templateSpecBean.selectedSpecQuestion.tplSpecTierQties)}"
+				update="tierQtyTbl"
+				rendered="#{editable}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectAll}" value="#{false}" />
+			</p:commandButton>
+		</td>
+	</tr>
+	</table>
 </ui:composition>
