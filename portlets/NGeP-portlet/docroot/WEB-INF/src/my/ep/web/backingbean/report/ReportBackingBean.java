@@ -58,6 +58,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import com.liferay.portal.util.PortalUtil;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -4428,4 +4430,116 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		out.close(); 		
 		return localFile;
 	}	
+	
+	/*
+	public StreamedContent getStreamedContentPDFFile(String url) {
+		  
+		  PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		  HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		  HttpURLConnection urlConnection = null;
+		  HttpServletResponse res = com.liferay.portal.util.PortalUtil
+		    .getHttpServletResponse(portletResponse);  
+		  res.setHeader("Content-Disposition", "attachment; filename=\""
+		    + "NGePReportView.pdf" + "\"");//
+		  res.setHeader("Content-Transfer-Encoding", "binary");
+		  res.setContentType("application/octet-stream"); 
+		  res.flushBuffer();  
+		  ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		  
+		  
+		  ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+		       // byte[] buf = new byte[1024];
+		  if(url!=null) {
+		   InputStream input = null;
+		   try {
+		    URL obj = new URL(url);
+		    urlConnection = (HttpURLConnection) obj.openConnection();    
+		    //input = new BufferedInputStream(urlConnection.getInputStream()); 
+		    //pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");   
+		             for (int readNum; (readNum = input.read(buf)) != -1;) {
+		                 bos.write(buf, 0, readNum);                 
+		             }
+		            // bos.close();
+		    // input.close();
+		       //urlConnection.disconnect();
+		    InputStream in = urlConnection.getInputStream();
+		    byte[] buf = new byte[512];
+		    int len;
+		    while (true) {
+		     len = in.read(buf);
+		     if (len == -1) {
+		      break;
+		     }
+		     tmpOut.write(buf, 0, len);
+		    }
+		    in.close();
+		    tmpOut.close();
+		    ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+		      tmpOut.size());
+
+		    ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+		    pdfFile= new DefaultStreamedContent(stream, "application/pdf");
+		    urlConnection.disconnect();
+		         } catch (IOException ex) {
+		          ex.printStackTrace();
+		         }
+		   
+		  
+		         //byte[] bytes = bos.toByteArray();       
+		    //render.setDocumentFromString(html);
+		          //render.layout();  
+		  }
+		  return pdfFile;
+		 }
+	*/
+	
+	public StreamedContent getReportPdf() {
+		
+		String reportUrl = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=Total_Catalog_Item_Unspscwise.jsp&frdt=26/09/2014&todt=30/09/2014&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
+		HttpURLConnection urlConnection = null;
+		try {
+		    URL obj = new URL(reportUrl);
+		    urlConnection = (HttpURLConnection) obj.openConnection();  
+		    
+		    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+		    
+//			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+//			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+//			OutputStream out = res.getOutputStream();
+//            byte[] b = new byte[128];
+//            int size;
+//            while ((size = buf.read(b, 0, b.length)) != -1) {
+//            	out.write(b, 0, size);
+//            }
+//            out.close();
+            
+            
+            PortletResponse portletResponse = (PortletResponse) FacesContext
+            	      .getCurrentInstance().getExternalContext().getResponse();
+            	     HttpServletResponse res = PortalUtil
+            	      .getHttpServletResponse(portletResponse);
+            	     res.setHeader("Content-Disposition", "attachment; filename=\""
+            	          + "test-report.pdf" + "\"");//
+            	     res.setHeader("Content-Transfer-Encoding", "binary");
+            	     res.setContentType("application/pdf");
+
+            	  res.flushBuffer();
+            	  OutputStream out = res.getOutputStream();
+            	  
+                byte[] b = new byte[128];
+                int size;
+                while ((size = buf.read(b, 0, b.length)) != -1) {
+                	out.write(b, 0, size);
+                }
+            	  
+//            	  out.write(getPdfStream());
+            
+            	  out.close();
+
+		} catch (IOException ex) {
+	          ex.printStackTrace();
+	    }
+		
+		return null;
+	}
 }
