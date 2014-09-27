@@ -2786,4 +2786,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
+	/**
+	 * Page navigation to FLDoc search page in PR
+	 */
+	public String backToPervious() {
+		return "flDocSearch";
+	}
+	
 }

@@ -257,6 +257,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	
+	
 /**
 	 * @return the chargeLineItemRoot
 	 */
@@ -2199,5 +2200,4 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.supplierItemPriceList = supplierItemPriceList;
 	}
 
-	
 }

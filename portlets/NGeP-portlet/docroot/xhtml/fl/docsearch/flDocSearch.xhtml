@@ -137,7 +137,7 @@
 		</p:panel>
 		<p:panel id="resultPanel" header="RESULT" toggleable="true">
 			<p:dataTable id="flDocListDt"
-				value="#{flDocumentBackingBean.flDocumentDataModel}" lazy="true"
+				value="#{flDocumentBackingBean.managedBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
 				width="100%">
 				<ac:paginator for="flDocListDt" />
