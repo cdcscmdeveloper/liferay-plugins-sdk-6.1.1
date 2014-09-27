@@ -863,12 +863,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		ITemplateSpecSO templateSpecSO = null;
 		try {
-			List<TplSpecScoring> specScorings = templateSpecBean.getSelectedSpecQuestion().getTplSpecScorings();
+			TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+			List<TplSpecScoring> specScorings = selectedSpecQuestion.getTplSpecScorings();
 			
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 			
-			templateSpecSO.validateScoring(templateSpecBean.getSelectedSpecQuestion(), specScorings);
+			Integer maxScore = templateSpecSO.validateScoring(selectedSpecQuestion, specScorings);
+			
+			if (maxScore != null) {
+				selectedSpecQuestion.setMaxScore(maxScore);
+			}
 			
 		} finally {
 			templateSpecSO = null;
