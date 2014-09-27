@@ -10,7 +10,9 @@
 	<ui:define name="resourceSection">
 		<h:panelGroup rendered="#{backingBean.managedBean.supplierUser}">
 			<script>
-				$('#portlet_MOFApplication_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.appli.new.categories']}");
+				$('#portlet_MOFApplication_WAR_NGePportlet').find(
+						'.portlet-title-text').html(
+						"#{lbl['lbl.sm.appli.new.categories']}");
 			</script>
 		</h:panelGroup>
 	</ui:define>
@@ -25,7 +27,7 @@
 		</p:outputPanel>
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}" escape="false"
 				closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">

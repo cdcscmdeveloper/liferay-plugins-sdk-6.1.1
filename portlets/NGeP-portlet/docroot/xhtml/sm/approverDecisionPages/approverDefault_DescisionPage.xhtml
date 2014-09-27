@@ -30,13 +30,23 @@
 			<td><h:inputHidden
 					value="#{backingBean.managedBean.smAppl.applCategoryType}" />
 				<div style="width: 100%" align="right">
-					<p:commandButton value="#{lbl['lbl.sm.button.approve']}" partialSubmit="true"
-						process="@this" update=":form:tt:approverAppDialog"
-						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
-					<p:commandButton value="#{lbl['lbl.sm.button.reject']}" update=":form:tt:approverRejDialog"
+					<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 						partialSubmit="true" process="@this"
+						update=":form:tt:approverAppDialog"
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
+						action="#{backingBean.assignFinalApproveOrReject('approverAppDialog')}" />
+					<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+						update=":form:tt:approverRejDialog" partialSubmit="true"
+						process="@this"
+						disabled="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}"
 						action="#{backingBean.assignFinalApproveOrReject('approverRejDialog')}" />
-
+					<c:if
+						test="#{!backingBean.managedBean.apprvrSecReview.verifiedAll}">
+						<div>
+							<p:outputLabel value="#{lbl['lbl.sm.po.vrfyAllNotes']}"
+								escape="false" />
+						</div>
+					</c:if>
 				</div> <p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
 					<table>
 						<!-- <tr>

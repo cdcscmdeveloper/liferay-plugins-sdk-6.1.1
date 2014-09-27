@@ -12,7 +12,7 @@
 			<tr>
 				<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
 						src="smMofApplnSideMenuItem.xhtml" /></td>
-				<td> <ui:include
+				<td><ui:include
 						src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
 					<ui:include
 						src="/xhtml/sm/shared/mofRegistration/staffInfoForm.xhtml" /> <ui:include
@@ -23,8 +23,11 @@
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}">
 						<ui:include
 							src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
-					</ui:fragment> <ui:include
-						src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+					</ui:fragment> <ui:fragment
+						rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+						<ui:include
+							src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+					</ui:fragment>
 					<div class="nav-wrapper">
 						<table style="width: 100%">
 							<tr>
@@ -59,8 +62,11 @@
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
 		</ui:fragment>
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+		<ui:fragment
+			rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}">
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
+		</ui:fragment>
 		<div class="nav-wrapper">
 			<table style="width: 100%">
 				<tr>

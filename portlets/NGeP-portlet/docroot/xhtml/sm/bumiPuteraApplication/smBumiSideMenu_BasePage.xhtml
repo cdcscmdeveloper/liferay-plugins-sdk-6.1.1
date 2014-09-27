@@ -25,7 +25,7 @@
 		</p:outputPanel>
 		<ac:smPanel id="tt">
 			<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="#{backingBean.managedBean.showParentMsg}"
+				autoUpdate="#{backingBean.managedBean.showParentMsg}" escape="false"
 				closable="true" />
 
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
