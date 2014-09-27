@@ -2753,22 +2753,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-		System.out.println("Votfund type in DRopdown:::: "+pmVotFund.getVotFundType());
-		if(!"".equalsIgnoreCase(pmVotFund.getVotFundType())){
+		if(null != getManagedBean().getPmSubSetia()){
+			getManagedBean().getPmSubSetia().setSubSetiaCode("");
+			getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
+			getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
+			getManagedBean().getPmSubSetia().setFinancingType(null);
+		}			
+		if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
 			if("B".equalsIgnoreCase(pmVotFund.getVotFundType()) || "T".equalsIgnoreCase(pmVotFund.getVotFundType())){
 				getManagedBean().setProgramLov(true);
-				if(null != getManagedBean().getPmSubSetia()){
-					getManagedBean().getPmSubSetia().setSubSetiaCode("");
-					getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
-					getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
-					if(null !=getManagedBean().getPmSubSetia().getFinancingType()){
-						if(getManagedBean().getPmSubSetia().getFinancingType().getPmParameterDescs().size() >0){
-							getManagedBean().getPmSubSetia().getFinancingType().getPmParameterDescs().get(0).setCodeName("");
-						}
-					}
-				}
-				
-			}else if("P".equalsIgnoreCase(pmVotFund.getVotFundType()) || "S".equalsIgnoreCase(pmVotFund.getVotFundType())){
+			} else if("P".equalsIgnoreCase(pmVotFund.getVotFundType()) || "S".equalsIgnoreCase(pmVotFund.getVotFundType())){
 				getManagedBean().setProjectLov(true);
 				if(null != getManagedBean().getPmPrgActivity()){
 					getManagedBean().getPmPrgActivity().setPrgActivityCode("");
