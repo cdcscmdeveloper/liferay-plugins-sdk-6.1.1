@@ -13,7 +13,7 @@
 						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
-						id="noticePublish" required="true"
+						id="noticePublish" required="true" readonlyInput="true"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
 
 						<p:ajax event="dateSelect" process="@this"
@@ -35,7 +35,7 @@
 				<td><p:calendar id="closingDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" readonly="true"
-						showOn="button">
+						showOn="button" readonlyInput="true">
 						<p:ajax event="dateSelect" process="@this"
 							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
 							update="proposalvalidityid" />
@@ -61,6 +61,8 @@
 				<td><p:calendar
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
 						id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+						mindate="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
+						readonlyInput="true"
 						disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" /></td>
 			</tr>
 			<tr>
@@ -267,6 +269,8 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
+						<p:ajax event="change" update="doaaid"
+						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin)}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
