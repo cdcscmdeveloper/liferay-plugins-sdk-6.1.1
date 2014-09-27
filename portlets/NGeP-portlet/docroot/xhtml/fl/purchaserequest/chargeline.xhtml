@@ -16,10 +16,10 @@
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
-				update="@(.chargeLineSection1)" />
+				update="@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
-				update="@(.chargeLineSection1)"></p:ajax>
+				update="@(.chargeLineSection)"></p:ajax>
 			<p:column>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
@@ -27,7 +27,7 @@
 					styleClass="myCustomChekBox">
 				<p:ajax event="change"
 					listener="#{purchaseRequestBackingBean.selectCheckbox}"
-					update="@(.chargeLineSection1)"/>	
+					update="@(.chargeLineSection)"/>	
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="COA">
@@ -72,8 +72,16 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Query">
-
+			<p:column headerText="Query"  rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}">
+			<h:outputText style="text-align:right" />
+				<p:commandLink oncomplete="addQuery.show();"
+					action="#{purchaseRequestBackingBean.showItemQuery(chargeLineNode)}"
+					 rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}"
+					update=":form:queryDialog,@(.orderSummaryChange)">
+					<p:graphicImage library="ep/images/design" name="exclamation.png"
+						value="/resources/ep/images/design/exclamation.png"
+						title="Query" />
+				</p:commandLink>
 			</p:column>
 		</p:treeTable>
 		<br />
@@ -94,7 +102,7 @@
 		<br />
 		<br />
 		<br />
-		<h:panelGroup styleClass="chargeLineSection1" id="chargeLineSection1">
+		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot']}" /></td>
@@ -180,7 +188,7 @@
 				<td colspan="4" style="text-align: right"><p:commandButton
 						value="Update COA" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
-						update="chargeLineTbl,chargeAss,chargeLineSection1"
+						update="chargeLineTbl,chargeAss,chargeLineSection"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						action="#{purchaseRequestBackingBean.chargeLineApply}" /></td>
 			</tr>
@@ -198,7 +206,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Item Name" /></td>
-				<td><p:inputText disabled="true" size="35"
+				<td><p:inputText disabled="true" size="60"
 						value="#{purchaseRequestBackingBean.queryItemName}" /></td>
 			</tr>
 			<tr>
@@ -336,7 +344,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Apply" icon="ui-icon-accept" 
 				process="@this,chargeAss,applyBulkChargeDialog"
-				update="bulkUpdatePnl,chargeLineTbl,chargeAss,chargeLineSection1"
+				update="bulkUpdatePnl,chargeLineTbl,chargeAss,chargeLineSection"
 				action="#{purchaseRequestBackingBean.chargeLineApply}">
 			</p:commandButton>
 			<p:commandButton value="Cancel" icon="ui-icon-cancel"

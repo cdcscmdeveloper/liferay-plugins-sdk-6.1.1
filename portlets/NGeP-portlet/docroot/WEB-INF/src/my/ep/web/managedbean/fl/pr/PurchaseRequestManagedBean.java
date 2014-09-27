@@ -257,6 +257,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	
+	private boolean queryDisplay=false;
+	
 	
 /**
 	 * @return the chargeLineItemRoot
@@ -2198,6 +2200,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setSupplierItemPriceList(
 			List<FLSupplierItemVO> supplierItemPriceList) {
 		this.supplierItemPriceList = supplierItemPriceList;
+	}
+
+	/**
+	 * @return the queryDisplay
+	 */
+	public boolean isQueryDisplay() {
+		return queryDisplay;
+	}
+
+	/**
+	 * @param queryDisplay the queryDisplay to set
+	 */
+	public void setQueryDisplay(boolean queryDisplay) {
+		this.queryDisplay = queryDisplay;
 	}
 
 }
