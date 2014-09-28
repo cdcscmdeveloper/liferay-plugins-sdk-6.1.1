@@ -14,7 +14,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.view.recent.price.duration']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="duration"
 						value="#{requestNoteBackingBean.managedBean.recentPriceDuration}">
 						<f:selectItems
 							value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.recentPriceDuration)}" />
@@ -27,9 +27,9 @@
 					<p:commandButton
 						value="#{lbl['lbl.sc.view.recent.price.view.btn']}"
 						icon="ui-icon-search"
-						action="#{requestNoteBackingBean.viewRecentPrice}" process="@form"
-						oncomplete="handleLocalesDialogComplete(xhr, status, args)"
-						update="reportResult" />
+						ajax="false">
+						<p:fileDownload value="#{requestNoteBackingBean.viewRecentPrice()}" />
+					</p:commandButton>
 
 					<p:commandButton value="#{lbl['lbl.sc.cancel']}" process="@this"
 						icon="ui-icon-cancel" oncomplete="recentPricePopup.hide();"
@@ -39,31 +39,4 @@
 		</p:panelGrid>
 
 	</p:dialog>
-
-	<p:dialog id="reportGenDialog" widgetVar="reportGenDialog" modal="true"
-		header="Report" width="1200" height="600" resizable="false"
-		position="top" closable="true" closeOnEscape="true" draggable="true"
-		onHide="closeDialogBox(this)">
-		<h:panelGroup id="reportResult" styleClass="reportResultStyle">
-			
-		</h:panelGroup>
-	</p:dialog>
-
-
-	<script type="text/javascript">
-		/*Function to hide the Iframe*/
-		function closeDialogBox(obj) {
-			//$('.reportIframe').hide();
-		}
-		function handleLocalesDialogComplete(xhr, status, args) {
-			//alert(args.reportViewUrl);
-			if (args) {
-				var reportInValid = args.reportInValid;
-				if (!reportInValid) {
-					window.open(args.reportViewUrl,'_blank');
-					//reportGenDialog.show();
-				}
-			}
-		}
-	</script>
 </ui:composition>

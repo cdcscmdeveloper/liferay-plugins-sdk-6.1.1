@@ -373,6 +373,7 @@ public class ReportConst {
 	public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";
 	//SM Module report end
 	public static final String EMPTY_VAL = "";
+	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
 	public static final String AMP_ITM_ID_EQ = "&itemid=";
 	public static final String AMP_ITM_NAME_EQ = "&itemname=";
