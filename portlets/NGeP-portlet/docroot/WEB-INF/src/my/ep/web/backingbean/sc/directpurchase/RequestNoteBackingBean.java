@@ -2638,37 +2638,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	
-	public void viewRecentPrice(){
+	public void viewRecentPrice() throws IOException {
 		debugLogger("viewRecentPrice");
-		if(getManagedBean().getCmSupplierItem() != null){
-           // TODO REPO IMPL
+		
+		if (getManagedBean().getCmSupplierItem() != null) {
 			long itemId = this.getManagedBean().getCmSupplierItem().getCmItem().getItemId();
 			long supplierId = this.getManagedBean().getCmSupplierItem().getSmSupplier().getSupplierId();
 			String noDays = this.getManagedBean().getRecentPriceDuration();
-			
-			String itemIdTotVar = ReportConst.AMP_ITM_ID_EQ + itemId;
-			String supplierIdTotVar = ReportConst.AMP_SUPPLIER_ID_EQ + supplierId;
-			String noOfDays = ReportConst.AMP_NO_OF_DAYS_EQ + noDays;
 			String reportName = ReportConst.SC_RECENT_PRICE_RPT_JSP;
-			String url = ReportConst.RECENT_PRICE_RPT_PREV_URL + reportName + itemIdTotVar + supplierIdTotVar + noOfDays + ReportConst.RECENT_PRICE_RPT_NEXT_URL;
-			log.info(url);
-			loadReport(url);
-		}
-	}
-	
-	private void loadReport(String gnrtdURL) {
-		try {			
-			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-			HttpServletRequest req = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
-			//String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
-			String baseUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
-			String path = baseUrl + "/ReportViewServlet";			
-			log.info(path);
-			req.getSession().setAttribute("generatedUrl", gnrtdURL);
-			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
-			this.getManagedBean().setReportURL(path);
-		} catch (Exception e) {
-			e.printStackTrace();		
+			
+			Map<String, String> paramMap = new HashMap<String, String>();
+			paramMap.put(ReportConst.AMP_ITM_ID_EQ, itemId+"");
+			paramMap.put(ReportConst.AMP_SUPPLIER_ID_EQ, supplierId+"");
+			paramMap.put(ReportConst.AMP_NO_OF_DAYS_EQ, noDays);
+			
+			generateReport(reportName, paramMap);
 		}
 	}
 

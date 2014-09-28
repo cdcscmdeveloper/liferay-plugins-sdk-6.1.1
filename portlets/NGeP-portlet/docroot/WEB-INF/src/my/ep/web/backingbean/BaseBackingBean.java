@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,8 +12,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -34,6 +39,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.exceptionhandler.EpExceptionHandler;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.AddressUtils;
@@ -676,6 +682,51 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 
 
+	}
+	
+	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
+		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
+		reportUrl.append(ReportConst.AMP_REPORT_NAME);
+		reportUrl.append(reportFile);
+		for (Entry<String, String> params : paramMap.entrySet()) {
+			reportUrl.append(params.getKey());
+			reportUrl.append(params.getValue());
+		}
+		reportUrl.append(excNextUrl);
+		
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		log.info(reportUrl);
+		
+		HttpURLConnection urlConnection = null;
+		URL obj = new URL(reportUrl.toString());
+	    urlConnection = (HttpURLConnection) obj.openConnection();  
+	    
+	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
+        
+	    PortletResponse portletResponse = (PortletResponse) FacesContext
+      	      .getCurrentInstance().getExternalContext().getResponse();
+	    HttpServletResponse res = PortalUtil
+	      	      .getHttpServletResponse(portletResponse);
+	    res.setHeader("Content-Disposition", "attachment; filename=\""
+    	          + "test-report.pdf" + "\"");//
+	    res.setHeader("Content-Transfer-Encoding", "binary");
+	    res.setContentType("application/pdf");
+	    res.flushBuffer();
+	    
+	    OutputStream out = res.getOutputStream();
+        	  
+	    byte[] b = new byte[128];
+        int size;
+        while ((size = buf.read(b, 0, b.length)) != -1) {
+        	out.write(b, 0, size);
+        }
+        buf.close();
+        out.close();
 	}
 	
 	public String getFullAddress(SmAddress smAddress) {
