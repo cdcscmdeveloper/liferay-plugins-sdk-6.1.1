@@ -2652,7 +2652,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			paramMap.put(ReportConst.AMP_SUPPLIER_ID_EQ, supplierId+"");
 			paramMap.put(ReportConst.AMP_NO_OF_DAYS_EQ, noDays);
 			
-			generateReport(reportName, paramMap);
+			generateReport("Recent_Price_Report.pdf", reportName, paramMap);
 		}
 	}
 
