@@ -684,7 +684,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 	
-	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
+	protected void generateReport(String reportName, String reportFile, Map<String, String> paramMap) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
@@ -700,7 +700,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
-		log.info(reportUrl);
 		
 		HttpURLConnection urlConnection = null;
 		URL obj = new URL(reportUrl.toString());
@@ -713,7 +712,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	    HttpServletResponse res = PortalUtil
 	      	      .getHttpServletResponse(portletResponse);
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + "test-report.pdf" + "\"");//
+    	          + reportName + "\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");
 	    res.setContentType("application/pdf");
 	    res.flushBuffer();
