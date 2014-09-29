@@ -157,6 +157,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private boolean agreeWithOthersTermsConditions;
 	private String integrityPact;
 	private String othersTermsConditions;
+	//Added by vidyasagarReddy
+	private String pageUrl;
+	private String docDefinitionKey;
+	private String checkListDefintionKey;
 
 	public SPDetailManagedBean() {
 		log.info("inside ");
@@ -918,6 +922,48 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setOthersTermsConditions(String othersTermsConditions) {
 		this.othersTermsConditions = othersTermsConditions;
+	}
+
+
+
+
+	public String getPageUrl() {
+		return pageUrl;
+	}
+
+
+
+
+	public void setPageUrl(String pageUrl) {
+		this.pageUrl = pageUrl;
+	}
+
+
+
+
+	public String getDocDefinitionKey() {
+		return docDefinitionKey;
+	}
+
+
+
+
+	public void setDocDefinitionKey(String docDefinitionKey) {
+		this.docDefinitionKey = docDefinitionKey;
+	}
+
+
+
+
+	public String getCheckListDefintionKey() {
+		return checkListDefintionKey;
+	}
+
+
+
+
+	public void setCheckListDefintionKey(String checkListDefintionKey) {
+		this.checkListDefintionKey = checkListDefintionKey;
 	}
 	
 }
