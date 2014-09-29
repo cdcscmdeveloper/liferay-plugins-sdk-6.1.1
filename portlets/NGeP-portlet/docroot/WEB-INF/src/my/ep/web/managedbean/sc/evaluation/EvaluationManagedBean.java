@@ -174,6 +174,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int totalNoOfYearsExperience;
 	private List<ScQtMeeting> meetingRemoveList;
 	private List<ScQtMeetingAttendance> meetingAttendanceRemoveList;
+	//Added by vidyasagarreddy for reusing commmon screens from proposal
+	private String evaluationPage;
+	private String proposalPage;
+	private String docDefinitionKey;
 
 	public List<ScQtMeeting> getMeetingRemoveList() {
 		return meetingRemoveList;
@@ -1641,6 +1645,30 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setTotalNoOfYearsExperience(int totalNoOfYearsExperience) {
 		this.totalNoOfYearsExperience = totalNoOfYearsExperience;
+	}
+
+	public String getEvaluationPage() {
+		return evaluationPage;
+	}
+
+	public void setEvaluationPage(String evaluationPage) {
+		this.evaluationPage = evaluationPage;
+	}
+
+	public String getProposalPage() {
+		return proposalPage;
+	}
+
+	public void setProposalPage(String proposalPage) {
+		this.proposalPage = proposalPage;
+	}
+
+	public String getDocDefinitionKey() {
+		return docDefinitionKey;
+	}
+
+	public void setDocDefinitionKey(String docDefinitionKey) {
+		this.docDefinitionKey = docDefinitionKey;
 	}
 
 }
