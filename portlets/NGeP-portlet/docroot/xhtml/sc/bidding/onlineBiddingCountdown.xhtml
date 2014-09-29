@@ -7,7 +7,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
 		<p:spacer height="5"></p:spacer>
-		<div style="align: left">
+		 <div style="align: left">
 			<table style="width: 100%;">
 				<tr>
 				
@@ -25,14 +25,14 @@
 					<TD style="width: 50%;"><h:outputLabel value="#{lbl['lbl.sc.notes']}" /></TD>
 				</tr>
 			</table>
-		</div>
+		</div> 
 
 		<p:spacer height="5"></p:spacer>
 
 		<div style="width: 100%">
 
 			<p:dataTable id="bidItemWisePriceList"
-				value="#{onlineBiddingBB.managedBean.bidPrices}" var="bidPriceItem">
+				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
 
 				<p:columnGroup type="header">
 					<p:row>
@@ -94,7 +94,7 @@
 					<p:row>
 						<p:column colspan="4" footerText="Total" style="text-align:right" />
 						<p:column id="itemStartPriceTotal" style="text-align:right"
-							footerText="#{onlineBiddingBB.managedBean.itemStartPriceTotal}">
+							footerText="#{onlineBiddingBB.itemStartPriceTotal}">
 
 						</p:column>
 					</p:row>

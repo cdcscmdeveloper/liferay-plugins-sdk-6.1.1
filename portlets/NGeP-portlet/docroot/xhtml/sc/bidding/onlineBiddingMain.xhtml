@@ -13,27 +13,33 @@
 
 	<ui:define name="contentSection">
 
-
+		<p:poll interval="30" listener="#{onlineBiddingBB.pollListener}"
+			rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding' or onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress' }"
+			update="@form" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
 		<ui:param name="isZonal"
-			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
+			value="#{!onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.zoneName eq null}" />
 		<ui:param name="isPending"
-			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding'}" />
+			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding'}" />
 		<ui:param name="isInProgress"
-			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.managedBean.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
+			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 
 		<div align="right" style="width: 100%">
 			<TABLE>
 				<TR>
 					<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 
-					<TD><p:selectOneMenu id="currentDayBidList" style="width : 160px">
+					<TD><p:selectOneMenu id="currentDayBidList"
+							style="width : 160px">
 							<f:selectItems var="bid"
-								value="#{onlineBiddingBB.managedBean.activeBidSchedules}"
+								value="#{onlineBiddingBB.activeBidSchedules}"
 								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{onlineBiddingBB.slectedBidChangeListener(bid)}"
+								listener="#{onlineBiddingBB.selectedBidChangeListener(bid)}"
 								update="@form"></p:ajax>
 
 						</p:selectOneMenu></TD>
@@ -53,18 +59,18 @@
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.no']}" /></td>
 						<td><p:inputText id="bidNo"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.bidNo}"
+								value="#{onlineBiddingBB.scBidSchedule.bidNo}"
 								disabled="true" size="20" /></td>
 						<TD></TD>
 						<TD></TD>
-						<td rowspan="4">  </td>
+						<td rowspan="4"></td>
 					</tr>
 
 					<tr>
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.document.no']}" /></td>
 						<td><p:inputText id="documentNo"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.docNo}"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}"
 								disabled="true" size="20" /></td>
 						<TD></TD>
 						<TD></TD>
@@ -75,7 +81,7 @@
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.document.title']}" /></td>
 						<td colspan="3"><p:inputText id="documentTitle"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.docTitle}"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
 								disabled="true" size="90" /></td>
 
 					</tr>
@@ -85,7 +91,7 @@
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.ptj.name']}" /></td>
 						<td colspan="3"><p:inputText id="ptjName"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.pmOrgProfile.orgName}"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
 								disabled="true" size="90" /></td>
 
 					</tr>
@@ -95,7 +101,7 @@
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.start']}" /></td>
 						<td><p:inputText id="bidStart"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.startDate}"
+								value="#{onlineBiddingBB.scBidSchedule.startDate}"
 								disabled="true" size="20">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -103,7 +109,7 @@
 						<TD style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.bidding.end']}" /></TD>
 						<TD><p:inputText id="bidEnd"
-								value="#{onlineBiddingBB.managedBean.scBidSchedule.endDate}"
+								value="#{onlineBiddingBB.scBidSchedule.endDate}"
 								disabled="true" size="20">
 								<f:convertDateTime
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />

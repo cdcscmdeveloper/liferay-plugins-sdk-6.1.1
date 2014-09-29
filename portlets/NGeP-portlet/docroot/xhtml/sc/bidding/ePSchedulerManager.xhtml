@@ -16,7 +16,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:poll update="@([id$=jobBeanDt])" interval="1"/>
+		<p:poll update="@([id$=jobBeanDt,biddingListPanel])" interval="1"/>
 		
 		<p:panel header="#{schedulerManagerBB.managedBean.scheduler.schedulerName} jobs List" toggleable="true">
 		
@@ -82,21 +82,13 @@
 		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
 		toggleable="true">
 
-		<p:dataTable id="biddingList"
-			value="#{schedulerManagerBB.managedBean.currentDayBids}" var="bid"
-			lazy="true">
-
-			<ac:paginator for="biddingList"></ac:paginator>
+		 <p:dataTable id="biddingList"
+			value="#{schedulerManagerBB.managedBean.currentDayBids}" var="bid">
 
 			<p:column headerText="#{lbl['lbl.sc.bidding.no']}">
 				<h:outputText value="#{bid.bidNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document.no']}">
-				<h:outputText value="#{bid.scBid.docNo}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.document.title']}">
-				<h:outputText value="#{bid.scBid.docTitle}" />
-			</p:column>
+			
 			<p:column headerText="#{lbl['lbl.sc.bid.start']}">
 				<h:outputText id="bidStart"  value="#{bid.startDate}" >
 					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -111,9 +103,9 @@
 			<p:column headerText="#{lbl['lbl.sc.status']}">
 
 				<p:outputLabel style="float : left"
-					value="#{schedulerManagerBB.getStatusDescById(bid.pmStatus.statusId)}" />
+					value="#{schedulerManagerBB.getStatusDescById(bid.pmStatus.statusId)}" /> 
 			</p:column>
-			</p:dataTable>
+			</p:dataTable> 
 			</p:panel>
 		
 	</ui:define>

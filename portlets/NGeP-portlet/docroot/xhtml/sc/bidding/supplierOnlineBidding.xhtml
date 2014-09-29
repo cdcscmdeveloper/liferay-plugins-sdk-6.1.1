@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:param name="isPackage"
-		value="#{onlineBiddingBB.managedBean.scBidSchedule.scBid.recommendedTypeId.parameterId eq ParameterConst.RECOMMEND_TYPE_PACKAGE}" />
+		value="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterId eq ParameterConst.RECOMMEND_TYPE_PACKAGE}" />
 	<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
 
 		<p:spacer height="5"></p:spacer>
@@ -18,17 +18,17 @@
 					<td style="width: 41%; align: left"><script
 							type="application/javascript">
 						
-			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.managedBean.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
+			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
 					</script></td>
 					<TD style="width: 50%;"><h:outputLabel value="#{lbl['lbl.sc.notes']}" /></TD>
 				</tr>
 			</table>
-		</div>
+		</div> 
 		<p:spacer height="5"></p:spacer>
 		<p:dataTable id="itemWiseBidList"
 			style="word-wrap: break-word ; table-layout: fixed"
-			value="#{onlineBiddingBB.managedBean.bidPrices}" var="bidPriceItem">
+			value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
 
 			<p:columnGroup type="header">
 				<p:row>
@@ -157,13 +157,13 @@
 				<p:row>
 					<p:column colspan="4" footerText="Total" style="text-align:right" />
 					<p:column
-						footerText="#{onlineBiddingBB.managedBean.itemStartPriceTotal}" />
+						footerText="#{onlineBiddingBB.itemStartPriceTotal}" />
 					<p:column footerText="Total" style="text-align:right" />
 					<p:column
-						footerText="#{onlineBiddingBB.managedBean.itemLastBidPriceTotal}" />
+						footerText="#{onlineBiddingBB.itemLastBidPriceTotal}" />
 					<p:column colspan="2" footerText="Total" style="text-align:right" />
 					<p:column
-						footerText="#{onlineBiddingBB.managedBean.itemNewBidPriceTotal}" />
+						footerText="#{onlineBiddingBB.itemNewBidPriceTotal}" />
 					<p:column />
 				</p:row>
 			</p:columnGroup>
@@ -183,7 +183,7 @@
 	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
 		toggleable="true">
 		<p:dataTable id="contactPersonDT"
-			value="#{onlineBiddingBB.managedBean.bidContactPersons}"
+			value="#{onlineBiddingBB.bidContactPersons}"
 			var="contact">
 
 			<p:column headerText="#{lbl['lbl.sc.name']}" style="width : 70%">
