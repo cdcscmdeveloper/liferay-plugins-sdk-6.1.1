@@ -26,6 +26,7 @@ import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -36,12 +37,11 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -50,6 +50,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
@@ -312,6 +314,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	public void confirmReassignTask(){
 		log.info("confirmReassignTask");
+		boolean isSuccess = false;
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
 		if(pmUser==null){
@@ -320,7 +323,16 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		if(task==null){
 			throw new EpException("Task is not null.");//TODO
 		}
-		reassignTask(pmUser, task.getTaskId());
+		
+		isSuccess = reassignTask(pmUser, task.getTaskId());
+		
+		if(isSuccess){
+			this.taskListDataModel.reloadData();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+		    FacesMessage.SEVERITY_INFO,
+		    null,
+		    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
+		}
 	}
 	
 	private List<String> retrieveAvailableRoles(Long statusId){
@@ -479,21 +491,25 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		return pmUsers;
 	}
 	
+	/**
+	 * retrieve selected approvers from modules (SC, FL, CT)
+	 * @param pmUsers
+	 * @param task
+	 */
 	private void generateCompleteUsers(List<PmUser> pmUsers, WorklistItemVO task){
 		log.info("generateCompleteUsers");
 		String moduleCode = PmCommonUtil.getPmStatusById(task.getDocStatus().longValue()).getModuleCode();
 		log.info("moduleCode: " + moduleCode);
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
-		if(ModuleCodeConst.SUPPLIER_MANAGEMENT.equalsIgnoreCase(moduleCode)){
-			// TODO not applicable at the moment
-		}else if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
+		//FL
+		if(ModuleCodeConst.ORDER_FULFILLMENT.equalsIgnoreCase(moduleCode)){
 			selectedApprovers = retrieveFlApprovers(task.getDocNumber(), task.getDocType());
+		//SC
 		}else if(ModuleCodeConst.SUPPLIER_SELECTION.equalsIgnoreCase(moduleCode)){
-			selectedApprovers = retrieveScApprovers(task.getDocNumber(), task.getDocStatus());
+			selectedApprovers = retrieveScApprovers(task.getDocId(), task.getDocStatus());
+		//CT
 		}else if(ModuleCodeConst.CONTRACT_MANAGEMENT.equalsIgnoreCase(moduleCode)){
 			selectedApprovers = retrieveCtApprovers(task.getDocNumber(), task.getDocType());
-		}else if(ModuleCodeConst.CATALOGUE_MANAGEMENT.equalsIgnoreCase(moduleCode)){
-			// TODO not applicable at the moment
 		}
 		if(selectedApprovers!=null && !selectedApprovers.isEmpty()){
 			log.info("add approvers to list");
@@ -501,13 +517,15 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 	}
 
+	/**
+	 * retrieve selected approvers from FL
+	 * @param docNo
+	 * @param docType
+	 * @return List<PmUser>
+	 */
 	private List<PmUser> retrieveFlApprovers(String docNo, String docType){
 		log.info("retrieveFlApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
-		PmUser user = new PmUser();
-		user.setLoginId("FL APPROVER USER");
-		selectedApprovers.add(user);
-		
 		IFulfilmentDocumentSO reqSO = null;
 		FlDocumentReqDTO reqDTO = new FlDocumentReqDTO();
 		FlDocumentResDTO resDTO = new FlDocumentResDTO();
@@ -529,13 +547,15 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		
 		return selectedApprovers;
 	}
+	/**
+	 * retrieve selected approvers from CT
+	 * @param docNo
+	 * @param docType
+	 * @return List<PmUser> 
+	 */
 	private List<PmUser> retrieveCtApprovers(String docNo, String docType){
 		log.info("retrieveCtApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
-//		PmUser user = new PmUser();
-//		user.setLoginId("CT APPROVER USER");
-//		selectedApprovers.add(user);
-//		
 		IContractIntegrationSO reqSO = null;
 		ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 		ContractIntegrationResDTO resDTO = new ContractIntegrationResDTO();
@@ -556,22 +576,30 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 		return selectedApprovers;
 	}
-	private List<PmUser> retrieveScApprovers(String docNo, Integer statusCode){
+	
+	/**
+	 * retrieve selected approvers from SC
+	 * @param docId
+	 * @param statusCode
+	 * @return List<PmUser>
+	 */
+	private List<PmUser> retrieveScApprovers(Integer docId, Integer statusCode){
 		log.info("retrieveScApprovers");
 		List <PmUser> selectedApprovers = new ArrayList<PmUser>();
-		PmUser user = new PmUser();
-		user.setLoginId("SC APPROVER USER");
-		selectedApprovers.add(user);
-		
-		IContractSO reqSO = null;
-		ContractReqDTO reqDTO = new ContractReqDTO();
-		ContractResDTO resDTO = new ContractResDTO();
+		IQTDetailSO reqSO = null;
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		QuationTenderResDTO resDTO = new QuationTenderResDTO();
 		try{
 			log.info("statusCode: " + statusCode);
-			log.info("docNo: " + docNo);
-			reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IContractSO.class);
+			log.info("docId: " + docId);
+			
+			reqDTO.setStatusId(statusCode.longValue());
+			reqDTO.setDocId(docId.longValue());
+			reqSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			resDTO = reqSO.retrieveApprovalsByStatusId(reqDTO);
+			
 			if(resDTO.isSuccessful()){
-//				selectedApprovers = 
+				selectedApprovers = resDTO.getApprovers();
 			}
 		}catch(Exception e){
 			throw e; 
@@ -585,8 +613,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 * Reassign task to selected user
 	 * @param users
 	 */
-	private void reassignTask(PmUser user, String taskId)throws EpException{
+	private boolean reassignTask(PmUser user, String taskId)throws EpException{
 		log.info("reassignTask");
+		boolean isSuccess = false;
 		IBpmSO bpmSO = null;
 		BpmRequestDTO reqDTO = null;
 		BpmResponseDTO responseDTO = null;
@@ -619,12 +648,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			responseDTO = bpmSO.reassignTask(reqDTO);
 			
 			if(responseDTO.isSuccessful()){
-				this.taskListDataModel.reloadData();
-				//TODO
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-			    FacesMessage.SEVERITY_INFO,
-			    null,
-			    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
+				isSuccess = true;
 			}else{
 				throw new EpException("BPM submission is failed. Unknown problem occurred. Please contact administrator.");//TODO
 			}
@@ -635,6 +659,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		} finally {
 			bpmSO = null;
 		}
+		return isSuccess;
 	}
 	
 	/**

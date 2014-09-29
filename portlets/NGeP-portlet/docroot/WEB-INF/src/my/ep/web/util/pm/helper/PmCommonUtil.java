@@ -690,7 +690,7 @@ public class PmCommonUtil {
 		List<PmUser> pmUsers = new ArrayList<PmUser>();
 		
 		try{
-			if(userIds!=null){
+			if(userIds!=null && !userIds.isEmpty()){
 				ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 				
 				

@@ -11,10 +11,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		<br/>
 		<table class="ppTwoTable">
 			<tr>
-				<th width="10%">
+				<th width="15%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.org.type.name']}"/>
 				</th>
-				<td width="15%">
+				<td width="45%">
 					<p:selectOneMenu value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}" 
 						styleClass="ppDropDownWidthM" id="somOrgType"   
 						label="#{lbl['lbl.pm.ta.org.type.name']}">  
@@ -24,8 +24,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				     	<p:ajax event="change" listener="#{taskAssignBackingBean.changeOrgType()}" 
 				     		update=":form:pTaskAssignSearch"/> 
 		            </p:selectOneMenu>	
-				</td>
-				<td>
 					<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55" 
 						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
@@ -44,7 +42,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}"/>
 				</th>
-				<td colspan="2">
+				<td>
 					<ac:lov id="lovUser" lovId="PM_USER" size="98"  
 						disabled="#{!(taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null)}"
