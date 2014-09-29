@@ -1866,8 +1866,8 @@ public class SmApplicationBackingBean extends
 		if (validCatCode) {
 			SmSupplierCategory categ = new SmSupplierCategory();
 			categ.setRevNo(1);
-			categ.setApprvrDecFlg(1);
-			categ.setPoDecFlg(1);
+//			categ.setApprvrDecFlg(1);
+//			categ.setPoDecFlg(1);
 			categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 			if (getManagedBean().getSmAppl().getApplCategoryType()
 					.equalsIgnoreCase("S")) {
@@ -2476,8 +2476,10 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder().isEquityOwner()
-				&& (getManagedBean().getSelectedShareHolder().getSmStaffExperiences() == null || getManagedBean()
-						.getSelectedShareHolder().getSmStaffExperiences().isEmpty())) {
+				&& (getManagedBean().getSelectedShareHolder()
+						.getSmStaffExperiences() == null || getManagedBean()
+						.getSelectedShareHolder().getSmStaffExperiences()
+						.isEmpty())) {
 
 			validShrHldr = false;
 			throw new EpException(
@@ -4111,9 +4113,9 @@ public class SmApplicationBackingBean extends
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						if ((getManagedBean().isPoUser() && cat.getPoDecFlg() == 1)
+						if ((getManagedBean().isPoUser() && cat.getPoDecFlg().compareTo(new Integer(1)) == 0)
 								|| (getManagedBean().isApproverUser() && cat
-										.getApprvrDecFlg() == 1)) {
+										.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
 							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
 						} else {
 							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -4499,8 +4501,8 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getSupplierType());
 		log.info("** getApplCategoryType type ***"
 				+ getManagedBean().getSmAppl().getApplCategoryType());
-//		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-//				.getSupplierType());
+		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+		// .getSupplierType());
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {
@@ -5380,4 +5382,5 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRevSupUrl(revSupUrl);
 		getManagedBean().setRevAppUrl(revAppUrl);
 	}
+
 }

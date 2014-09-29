@@ -1705,7 +1705,7 @@ public class SmApplicationUtil {
 		docu.setPmDocument(doc);
 		docu.setSmAppl(appl);
 		docu.setVerified(true);
-		docu.setVerifiedFlg(1);
+		//docu.setVerifiedFlg(1);
 		docu.setReceived(false);
 
 		List<SmApplDocFile> files = new ArrayList<SmApplDocFile>();

@@ -7,24 +7,31 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel
-		header="Offline Supporting Documents List For Application No. - #{backingBean.managedBean.smAppl.applNo} ">
+		header="#{lbl['lbl.sm.suppDoc.document.offLnHdrLst']} - #{backingBean.managedBean.smAppl.applNo} ">
 
 
 		<p:dataTable var="offTable" id="revOffSdList"
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
 			<ac:paginator for="revOffSdList" />
 
-			<p:column headerText="Document Description" style="width :80%;">
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+				style="width :80%;">
 				<p:outputLabel value="#{offTable.pmDocument.docName}"
 					style="float: left;white-space: normal;" />
 			</p:column>
 
-			<p:column headerText="Document Valid?" style="width : 20%;">
-				<p:selectOneRadio value="#{offTable.verifiedFlg}"
-					layout="pageDirection">
-					<f:selectItem itemLabel="Valid" itemValue="1" />
-					<f:selectItem itemLabel="In-Valid" itemValue="0" />
+			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.dwldVld']}"
+				style="width : 20%;">
+				<p:selectOneRadio value="#{offTable.verifiedFlg}" required="true"
+					label="#{offTable.pmDocument.docName} - #{lbl['lbl.sm.suppDoc.document.dwldVld']}"
+					layout="pageDirection" id="offln">
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.valid']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.document.invalid']}"
+						itemValue="0" />
 				</p:selectOneRadio>
+				<p:message id="offlnMsg" for="offln" showSummary="true"
+					showDetail="false" display="icon" />
 			</p:column>
 		</p:dataTable>
 		<br />
