@@ -69,7 +69,14 @@
 					<p:outputLabel value="#{lbl['lbl.sm.person.religion.non.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
 				</td>
 			</tr>
-
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']} :" /></td>
+				<td style="float:left;">
+					<c:if var="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace}">
+						<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceName}" />
+					</c:if>
+				</td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.user.roles']}" toggleable="true" id="shrRolesPanel">
@@ -100,6 +107,16 @@
 						<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
 						<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
 						<p:outputLabel value="#{lbl['lbl.txt.issued']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and 
+				(viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"/></td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '1'}" />
+						<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '0'}" />
 					</td>
 				</tr>
 			</c:if>
@@ -190,6 +207,10 @@
 			</tr>
 		</table>
 	</p:dialog>
+	
+	<c:if
+		test="#{viewSmApplBackingBean.managedBean.smAppl.supplierType
+						eq SupplierManagementConst.STYPE_CONSULTANT}">
 	<p:panel header="#{lbl['lbl.sm.related.company.details']}" toggleable="true"
 		id="equiShrHldrRelComp">
 
@@ -233,6 +254,7 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+	
 	<p:dialog width="500px" height="300px" header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
 		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"	hideEffect="fade" modal="true">
 		<table style="width: 100%">
@@ -262,6 +284,7 @@
 			</tr>
 		</table>
 	</p:dialog>
+	
 	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
 		id="equiShrPfBdyPan">
 		<p:dataTable var="profBean" widgetVar="suppPrsnProfBdyDtWidVar"
@@ -315,6 +338,7 @@
 
 		</table>
 	</p:dialog>
+	</c:if>
 	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
 		id="equiShrHldrAcadPan">
 
