@@ -3589,14 +3589,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 				generateSMReport();
 			}
-			//StringBuilder uploadDir = new StringBuilder();
-			//uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
-			//uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
-			//Code for getting the report from the Oracle Report Server.
+			
 			if(null!=generatedURL && !"".equals(generatedURL)){
-				//loadReport(generatedURL);
+				loadReport(generatedURL);
 				//getStreamedContentPDFFile(generatedURL);
-				getReportPdf();
+				//getReportPdf();
 			}
 		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
