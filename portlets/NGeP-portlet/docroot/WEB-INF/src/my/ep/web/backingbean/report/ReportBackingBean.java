@@ -211,6 +211,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	private String reportURL;
 	
 	private StreamedContent pdfFile;
+	private String constructedParamString;
 	/*SM end*/
 	
 	
@@ -220,6 +221,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setPdfFile(StreamedContent pdfFile) {
 		this.pdfFile = pdfFile;
 	}
+	public String getConstructedParamString() {
+		return constructedParamString;
+	}
+	public void setConstructedParamString(String constructedParamString) {
+		this.constructedParamString = constructedParamString;
+	}
+	
 	public Date getPrintedFromDate() {
 		return printedFromDate;
 	}
@@ -3588,10 +3596,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				generateFLReport();
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 				generateSMReport();
-			}
-			
-			if(null!=generatedURL && !"".equals(generatedURL)){
-				loadReport(generatedURL);
+			}			
+			if(null!=constructedParamString && !"".equals(constructedParamString)){
+				//loadReport(generatedURL);	
+				loadReportWithParamsString(constructedParamString);
 				//getStreamedContentPDFFile(generatedURL);
 				//getReportPdf();
 			}
@@ -3637,38 +3645,38 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}
-	
-	public StreamedContent getStreamedContentPDFFile(String url) {
-		
+	private void loadReportWithParamsString(String paramConstrString) {
+		StringBuilder gnrtdURL = new StringBuilder();
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+		gnrtdURL.append(paramConstrString); 
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
+		try {			
+			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
+			//String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
+			String baseUrl=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String path=baseUrl+"/ReportViewServlet";			
+			log.info(path);
+			req.getSession().setAttribute("generatedUrl", gnrtdURL.toString());
+			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
+			setReportURL(path);
+		} catch (Exception e) {
+			e.printStackTrace();		
+		}
+	}	
+	public StreamedContent getStreamedContentPDFFile(String url) {		
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		HttpURLConnection urlConnection = null;
-		/*HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);		
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ "NGePReportView.pdf" + "\"");//
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/octet-stream");	
-		res.flushBuffer();		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();*/
-		
-		
-		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+		HttpURLConnection urlConnection = null;		
+		//ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
        // byte[] buf = new byte[1024];
-		if(url!=null) {
-			InputStream input = null;
+		if(url!=null) {		
 			try {
 				URL obj = new URL(url);
 				urlConnection = (HttpURLConnection) obj.openConnection();				
 				//input = new BufferedInputStream(urlConnection.getInputStream()); 
-				//pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");			
-	           /* for (int readNum; (readNum = input.read(buf)) != -1;) {
-	                bos.write(buf, 0, readNum); 	               
-	            }*/
-	           // bos.close();
-				// input.close();
-			    //urlConnection.disconnect();
-				InputStream in = urlConnection.getInputStream();
+				pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");	           
+				/*InputStream in = urlConnection.getInputStream();
 				byte[] buf = new byte[512];
 				int len;
 				while (true) {
@@ -3682,18 +3690,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				tmpOut.close();
 				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
 						tmpOut.size());
-
 				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
-				pdfFile= new DefaultStreamedContent(stream, "application/pdf");
+				pdfFile= new DefaultStreamedContent(stream, "application/pdf");*/
 				urlConnection.disconnect();
 	        } catch (IOException ex) {
 	        	ex.printStackTrace();
 	        }
-			
-		
-	        //byte[] bytes = bos.toByteArray();	      
-			 //render.setDocumentFromString(html);
-	         //render.layout();		
 		}
 		return pdfFile;
 	}
@@ -3894,7 +3896,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-				setGeneratedURL(url);
+				//setGeneratedURL(url);
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
@@ -3969,7 +3972,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));						
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				String url =ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-				setGeneratedURL(url);
+				//setGeneratedURL(url);
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
@@ -4069,8 +4073,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			//-----------			
 			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-				setGeneratedURL(url);
+				url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;				
+				//setGeneratedURL(url);
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
 		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
@@ -4276,7 +4281,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			rptGenBean.setUrlReportJSPName(urlFLReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				String url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;				
-				setGeneratedURL(url);
+				//setGeneratedURL(url);
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
