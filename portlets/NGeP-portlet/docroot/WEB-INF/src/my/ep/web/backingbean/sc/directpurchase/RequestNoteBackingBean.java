@@ -725,22 +725,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					selectedReqDtl.setFulfilmentType(getParameterByTypeAndCode(
 							ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
 
-					// rec supplier
-					if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
-
-						if(selectedReqDtl.getRequestItem() != null && selectedReqDtl.getRequestItem().getSupplierItems() !=null 
-								&& selectedReqDtl.getRequestItem().getSupplierItems().size()>0){
-							List<ScRequestSupplierItem> supplierItems = selectedReqDtl.getRequestItem().getSupplierItems();
-
-							for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
-
-								if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(getManagedBean().getSupplierId())){
-									scRequestSupplierItem.setSupplierId(getManagedBean().getSupplierId());
-									selectedReqDtl.setScRequestSupplierItem(scRequestSupplierItem);
-								}
-							}
-						}
-					}
 					// prepare by
 					if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
 						PmUser pmUser = new PmUser();
@@ -759,6 +743,29 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					if(getManagedBean().getPeriodValue() >0){
 						selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
+					}
+					
+					// rec supplier
+					if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
+
+						if(selectedReqDtl.getRequestItem() != null && selectedReqDtl.getRequestItem().getSupplierItems() !=null 
+								&& selectedReqDtl.getRequestItem().getSupplierItems().size()>0){
+							List<ScRequestSupplierItem> supplierItems = selectedReqDtl.getRequestItem().getSupplierItems();
+
+							for (ScRequestSupplierItem scRequestSupplierItem : supplierItems) {
+
+								if(scRequestSupplierItem.getSmSupplier().getSupplierId().equals(getManagedBean().getSupplierId())){
+									scRequestSupplierItem.setSupplierId(getManagedBean().getSupplierId());
+									selectedReqDtl.setScRequestSupplierItem(scRequestSupplierItem);
+								}
+							}
+						}
+						
+						supplierLister(selectedReqDtl.getScRequestSupplierItem().getSupplierId(),
+								selectedReqDtl.getPriceType().getParameterId() ,
+								selectedReqDtl,
+								selectedReqDtl.getAssignedUser().getUserId() , 
+								selectedReqDtl.getDeliverTermType().getParameterId());
 					}
 
 					requestNoteDtls.add(selectedReqDtl);
