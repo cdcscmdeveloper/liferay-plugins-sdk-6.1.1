@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true" >
-		Please select the address to show the items.
+	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.delivery.address']}" toggleable="true" >
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
@@ -27,7 +27,7 @@
 
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="Delivery Address" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
@@ -42,23 +42,27 @@
 			</p:column>
 			
 
-			<p:column headerText="Delivery Term">
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}">
 				<p:outputLabel style="text-align:right"
 					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
-			<p:column headerText="Delivery Start">
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}">
 				<h:outputText value="#{address.startDate}" style="text-align:right">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Delivery End">
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}">
 				<h:outputText value="#{address.endDate}" style="text-align:right">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText=" Recv. Officer">
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
+				</f:facet>
 				<h:outputText style="text-align:right" />
 				<p:commandLink oncomplete="addOfficer.show();"
 					action="#{purchaseRequestBackingBean.receivingOfficerList(address)}"
@@ -71,22 +75,25 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="PTJ Address" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
-				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="Manual Address" icon="ui-icon-add"
+				oncomplete="addDeliveryAddr.show();" 
+				title="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
+			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) "
-				process="@this,delAddr" oncomplete="addManualDeliveryAddr.show();">
+				process="@this,delAddr" oncomplete="addManualDeliveryAddr.show();"
+				title="#{lbl['lbl.fl.tooltip.other.address']}">
 				<f:setPropertyActionListener
 					target="#{purchaseRequestBackingBean.managedBean.required}"
 					value="true" />
 			</p:commandButton>
-			<p:commandButton id="deleteAddrBtn" value="Delete"
+			<p:commandButton id="deleteAddrBtn" value="#{lbl['lbl.fl.btn.delete']}"
 				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
-				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}">
+				disabled="#{purchaseRequestBackingBean.managedBean.deleteButtonHide}"
+				title="#{lbl['lbl.fl.tooltip.delete']}">
 			</p:commandButton>
 		</div>
 		<p:dialog id="delAddrDlg" widgetVar="delAddrDlg"
@@ -111,30 +118,35 @@
 		</p:dialog>
 	</p:panel>
 	<h:panelGroup id="itemDetPanelGroup">
-		<p:panel id="itemDetPanel" header="ITEM LIST" toggleable="true">
+		<p:panel id="itemDetPanel" header="#{lbl['lbl.fl.item.list']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false"/>
 			<p:dataTable id="itemDataTable" var="flItem" 
 				rowIndexVar="index"
 				value="#{purchaseRequestBackingBean.managedBean.showAllItemsRows}"
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
 
-				<p:column headerText=" Item Code">
+				<p:column>
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+				</f:facet>
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem==null}" value="#{flItem.scRequestItem.tempUnspscCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? 'N/A' : flItem.scRequestItem.quantity}"/>
 					<h:outputText rendered="#{flItem.scRequestItem.cmItem!=null}" value="#{flItem.scRequestItem.cmItem.extensionCode}" title="Requested Quantity: #{flItem.scRequestItem.quantity eq null ? 'N/A' : flItem.scRequestItem.quantity}"/>
 				</p:column>
-				<p:column headerText="Item Name" style="white-space:normal;">
+				<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 					<h:outputText value="#{flItem.scRequestItem.itemName}" />
 				</p:column>
-				<p:column headerText="UOM">
+				<p:column headerText="#{lbl['lbl.fl.uom']}">
 					<h:outputText value="#{flItem.scRequestItem.uom.uomName}" />
 				</p:column>
-				<p:column headerText="Unit Price (RM)" style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
 					<h:outputText disabled="true" size="6" value="#{flItem.unitPrice}" id="unitPrice">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="Ordered Qty." style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{flItem.orderedQty}" size="5" id="orderedQty"
 						styleClass="colFloatRight" maxlength="14"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
@@ -152,7 +164,7 @@
 						title="Request Item Information" />
 					</p:commandLink>
 				</p:column>
-				<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 					<h:outputText id="subTotalTxt" size="5"
 						value="#{flItem.orderedAmt}" disabled="true">
 						<f:convertNumber
@@ -162,7 +174,7 @@
 			</p:dataTable>
 		</p:panel>
 	</h:panelGroup>
-	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
+	<p:dialog id="addDelAddrDialog" header="#{lbl['lbl.fl.add.delivery.address']}"
 		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
 		modal="true"  width="600" resizable="false">
 		<p:dataTable id="delAddr" var="delAddr"
@@ -188,10 +200,11 @@
 		</div>
 	</p:dialog>
 
-	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
+	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.delivery.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
 		 resizable="false">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/>
 		<p:ajax event="close"
 			listener="#{purchaseRequestBackingBean.closeListener}"
 			update="addManualDelAddrDialog" />
@@ -200,7 +213,7 @@
 				autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
-					<td width="120"><p:outputLabel value="Country" /> <h:outputLabel
+					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manCountry"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -217,7 +230,7 @@
 								update="manState" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manCountry" display="icon" /></td>
-					<td width="150"><p:outputLabel value="State" /> <p:outputLabel
+					<td width="150"><p:outputLabel value="#{lbl['lbl.fl.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manState"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -233,10 +246,10 @@
 								listener="#{purchaseRequestBackingBean.retrieveDivisionList}"
 								update="manDivison,manDistrict" />
 						</p:selectOneMenu></td>
-					<td><p:message for="manState" display="icon" /></td>
+					<td colspan="2"><p:message for="manState" display="icon" /></td>
 				</tr>
 				<tr>
-					<td width="126"><p:outputLabel value="Address Line 1" /> <p:outputLabel
+					<td width="126"><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="address1" label="Address Line 1"
 							maxlength="255"
@@ -244,7 +257,7 @@
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
 							size="35" /></td>
 					<td><p:message for="address1" display="icon" /></td>
-					<td><p:outputLabel value="Divison" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -260,12 +273,12 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 2" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="District" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -287,12 +300,12 @@
 					<td><p:message for="manDistrict" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 3" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="City/Town" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manCity"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -307,12 +320,12 @@
 					<td><p:message for="manCity" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 4" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="Postal Code" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -323,7 +336,7 @@
 					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Email" /> <p:outputLabel value="*"
+					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -333,9 +346,12 @@
 							size="35" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
        					</p:inputText>	
+       					
        				</td>
-					<td><p:message for="email" display="icon" /></td>
-					<td><p:outputLabel value="Delivery Address" /> <p:outputLabel
+       				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
+       				<p:message for="email" display="icon" /></td>
+       				
+					<td><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manAddress" label="Manual Address"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
@@ -344,52 +360,58 @@
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{purchaseRequestBackingBean.managedBean.manualAddrList}" />
-
-						</p:selectOneMenu></td>
-					<td><p:message for="manAddress" display="icon" /></td>
+						</p:selectOneMenu>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
+						<p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Tel.No." /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="telNo"
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Tel No" maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
 							validatorMessage="Tel.No. - must be a number Example: 0-9"
-							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-					<td><p:message for="telNo" display="icon" /></td>
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
+							<p:message for="telNo" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Fax.No." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
 							 validatorMessage="Fax.No. - must be a number Example: 0-9"
-							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fax.no']}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Mobile.No." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
 							 validatorMessage="Mobile.No. - must be a number Example: 0-9"
-							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
+							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mobile.no']}"/></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Ok" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
 				process="@this addManualDelAddrDialog"
 				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
 				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
-			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" process="@this"
 				action="#{purchaseRequestBackingBean.closeListener}"
 				partialSubmit="true">
 			</p:commandButton>
 		</div>
 	</p:dialog>
 
-	<p:dialog id="addPurchasedItemDialog" header="ITEM LIST"
+	<p:dialog id="addPurchasedItemDialog" header="#{lbl['lbl.fl.item.list']}"
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
 		<p:dataTable id="purchasedItemDt" var="purchasedItem"
@@ -402,10 +424,10 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="Item Type"></p:column>
-					<p:column rowspan="1" headerText="Item Code"></p:column>
-					<p:column rowspan="1" headerText="Item Name"></p:column>
-					<p:column rowspan="1" headerText="UOM"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.type']}"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.code']}"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.name']}"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.uom']}"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
@@ -425,7 +447,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Add" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updatePurchasedItemDt}"
 				oncomplete="addItems.hide();"
 				update="itemDataTable,@(.orderSummaryChange)"
@@ -433,56 +455,56 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
+	<p:dialog id="addReceivingOfficerDialog" header="#{lbl['lbl.fl.receiving.officer']}"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
 		modal="true" width="600" resizable="false">
 		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
 			value="#{purchaseRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
 			<ac:paginator for="receivingOfficerDt" />
-			<p:column headerText="Receiving Officer Name">
+			<p:column headerText="#{lbl['lbl.fl.receiving.officer.name']}">
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
-			<p:column headerText="Tel. No.">
+			<p:column headerText="#{lbl['lbl.fl.telno']}">
 				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" />
 			</p:column>
-			<p:column headerText="Email">
+			<p:column headerText="#{lbl['lbl.fl.email']}">
 				<h:outputText value="#{receivingOfficer.pmUser.email}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.fl.cancel']}" icon="ui-icon-cancel"
 				oncomplete="addOfficer.hide();" update="addressDataTable"
 				process="@this,receivingOfficerDt">
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:dialog id="reqItemInfoDialog" header="REQUEST ITEM INFORMATION"
+	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name'}]" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
 			</tr>
 			<tr>		
-				<td><p:outputLabel value="Requested Qty." style="text-align:right"/></td>
+				<td><p:outputLabel value="#{lbl[lbl.fl.requested.qty']}" style="text-align:right"/></td>
 				<td><p:inputText disabled="true" 
 						value="#{purchaseRequestBackingBean.managedBean.quantity ==0 ? 'N/A' : purchaseRequestBackingBean.managedBean.quantity}"
 						size="35" ><f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" /></p:inputText></td>
 			</tr>
 			<tr>			
-				<td><p:outputLabel value="Price Type" /></td>
+				<td><p:outputLabel value="#{lbl[lbl.fl.price.type']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{purchaseRequestBackingBean.managedBean.priceType != null}"
 						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.priceType)}" 
 						size="35" /></td>					
 			</tr>
 			<tr>			
-				<td><p:outputLabel value="Standard Price" rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"/></td>
+				<td><p:outputLabel value="#{lbl[lbl.fl.standard.price']}" rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"
 						value="#{purchaseRequestBackingBean.managedBean.standardUnitPrice}" 
 						size="35" >
@@ -492,7 +514,7 @@
 			</tr>
 		</table> 
 		<h:panelGroup rendered="#{!purchaseRequestBackingBean.managedBean.standardPrice}">
-			<p:panel id="reqItemInfoPanel" header="ZONE/TIER PRICE DETAIL" toggleable="false" >
+			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail]}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{purchaseRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
@@ -513,19 +535,19 @@
 							</p:treeNode>
 						</p:tree>
 					</p:column>
-					<p:column headerText="From Qty." style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice }">
+					<p:column headerText="#{lbl['lbl.fl.from.qty']}" style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice }">
 						<h:outputText value="#{reqItemInfoList.supplierItemPrice.fromQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>			
 					</p:column>
-					<p:column headerText="To Qty" style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
+					<p:column headerText="#{lbl['lbl.fl.to.qty']}" style="text-align:right" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
 						<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" rendered="#{!purchaseRequestBackingBean.managedBean.zonalPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>			
 					</p:column>
-					<p:column headerText="Price Offered(RM)" style="text-align:right" >
+					<p:column headerText="#{lbl['lbl.fl.price.offered']}" style="text-align:right" >
 						<h:outputText value="#{reqItemInfoList.supplierItemPrice.itemPrice}" styleClass="colFloatRight" >
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
