@@ -292,6 +292,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String LocalLevelCode;
 	private List<ScQtDeliveryLoc> deliveryLocRemoveList;
 	private List<ScQtCheckList> checklistRemoveList;
+	//Added by vidyasagarReddy.. for making readonly based on userrole.
+	private boolean readOnly;
 
 	public List<ScQtDeliveryLoc> getDeliveryLocRemoveList() {
 		return deliveryLocRemoveList;
@@ -3030,6 +3032,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setLocalLevelCode(String localLevelCode) {
 		LocalLevelCode = localLevelCode;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
 	}
 
 }
