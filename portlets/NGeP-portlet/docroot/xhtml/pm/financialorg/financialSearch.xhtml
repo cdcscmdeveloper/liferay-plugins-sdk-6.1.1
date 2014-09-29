@@ -15,7 +15,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.financialorg.services']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{financialOrgBackingBean.managedBean.serviceType}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 276px;margin-bottom: 5px;">
 				<f:selectItems
 					value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
 			</p:selectOneMenu>
@@ -30,7 +30,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{financialOrgBackingBean.managedBean.orgStatus}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 135px;margin-bottom: 5px;">
 				<f:selectItems
 					value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 			</p:selectOneMenu>

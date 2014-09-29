@@ -16,7 +16,7 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
 				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
 					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
-					required="true" style="width: 235px;margin-bottom: 5px;">
+					required="true" style="width: 275px;margin-bottom: 5px;">
 					<f:selectItem itemValue=" " itemLabel="---Select---" />
 					<f:selectItems var="finorgLs"
 						value="#{financialOrgBackingBean.managedBean.pmFinancialOrg}"
@@ -35,9 +35,9 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.effdate']}">
 
 				<p:calendar value="#{financialacc.effDate}" showOn="button"
-					size="20" readonlyInput="true"
+					size="10" readonlyInput="true"
 					mindate="#{financialOrgBackingBean.managedBean.currentDate}"
-					style="margin-bottom: 5px;"
+					
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" update="expDate" />
 				</p:calendar>
@@ -45,7 +45,7 @@
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.expdate']}">
 				<p:calendar id="expDate" value="#{financialacc.expDate}"
-					showOn="button" size="20" mindate="#{financialacc.effDate}"
+					showOn="button" size="10" mindate="#{financialacc.effDate}"
 					readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 

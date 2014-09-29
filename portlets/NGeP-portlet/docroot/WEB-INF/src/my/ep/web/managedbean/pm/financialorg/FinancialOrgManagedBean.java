@@ -43,6 +43,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	// Financial Svc
 	private PmFinancialSvc financialSvc;
 	private List<PmFinancialSvc> pmFinancialSvc;
+	private List<PmFinancialSvc> pmFinancialSvcUpdate;
 	private List<PmFinancialSvc> selectedPmFinancialSvc;
 	private boolean byFactoring = true;
 	private int activeIndex = 0;
@@ -597,6 +598,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setCurrentDate(Date currentDate) {
 		this.currentDate = currentDate;
+	}
+
+	/**
+	 * @return the pmFinancialSvcUpdate
+	 */
+	public List<PmFinancialSvc> getPmFinancialSvcUpdate() {
+		return pmFinancialSvcUpdate;
+	}
+
+	/**
+	 * @param pmFinancialSvcUpdate the pmFinancialSvcUpdate to set
+	 */
+	public void setPmFinancialSvcUpdate(List<PmFinancialSvc> pmFinancialSvcUpdate) {
+		this.pmFinancialSvcUpdate = pmFinancialSvcUpdate;
 	}
 
 }

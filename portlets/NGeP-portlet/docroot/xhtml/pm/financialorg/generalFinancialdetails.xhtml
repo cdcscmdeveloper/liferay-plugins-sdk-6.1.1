@@ -16,7 +16,7 @@
 				<td><p:selectOneMenu id="regType"
 						label="#{lbl['lbl.pm.financialorg.regType']}" required="true"
 						value="#{financialOrgBackingBean.managedBean.regTypeId}"
-						style="width: 235px;margin-bottom: 5px;">
+						style="width: 276px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.financialOrgRegType)}" />
 					</p:selectOneMenu> <p:message id="regTypeMsg" for="regType" display="icon" /></td>
@@ -45,7 +45,7 @@
 				<td><p:selectOneMenu id="country"
 						label="#{lbl['lbl.pm.address.country']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.pmCountry.countryId}"
-						required="true" style="width: 235px;margin-bottom: 5px;">
+						required="true" style="width: 276px;margin-bottom: 5px;">
 						<f:selectItem itemValue="0" itemLabel="---Select---" />
 						<f:selectItems var="counLs"
 							value="#{financialOrgBackingBean.managedBean.countryList}"
@@ -60,7 +60,7 @@
 						label="#{lbl['lbl.pm.financialorg.status']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
 						id="recordSts" required="true"
-						style="width: 235px;margin-bottom: 5px;">
+						style="width: 135px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 					</p:selectOneMenu> <p:message id="recordStsMsg" for="recordSts" display="icon" /></td>

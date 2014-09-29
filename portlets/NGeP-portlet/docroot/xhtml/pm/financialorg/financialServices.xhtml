@@ -16,7 +16,7 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.servicetype']}">
 
 				<p:selectOneMenu value="#{financialsrv.serviceTypeCode.parameterCode}"
-					style="width: 235px;margin-bottom: 5px;">
+					style="width: 275px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.bankServices)}" />
 					<p:ajax event="change" update="@form" />
@@ -26,12 +26,12 @@
 
 			<p:column headerText="#{lbl['lbl.pm.financialorg.bankcode']}">
 
-				<p:inputText value="#{financialsrv.bankCode}" size="40" maxlength="20" />
+				<p:inputText value="#{financialsrv.bankCode}" size="30" maxlength="20" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu
 					value="#{financialsrv.recordStatusFlg}"
-					required="true" style="width: 235px;margin-bottom: 5px;">
+					required="true" style="width: 135px;margin-bottom: 5px;">
 					<f:selectItems
 						value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 				</p:selectOneMenu>

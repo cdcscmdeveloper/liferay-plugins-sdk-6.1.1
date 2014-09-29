@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.organisation;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +66,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -320,7 +318,7 @@ public class OrganisationBackingBean extends
 							.retriveCityListByDistrictId(cityReqDTO);
 					this.getManagedBean().setCityList(cityResDTO.getCityList());
 
-					//pmAddressType.setEditable(true);
+					// pmAddressType.setEditable(true);
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
 
@@ -362,7 +360,7 @@ public class OrganisationBackingBean extends
 					CityResDTO cityResDTO = citySO
 							.retriveCityListByDistrictId(cityReqDTO);
 					this.getManagedBean().setCityList(cityResDTO.getCityList());
-//pmAddressType.setEditable(true);
+					// pmAddressType.setEditable(true);
 					this.getManagedBean().setDeliveryAddress(
 							pmAddressType.getPmAddress());
 
@@ -403,9 +401,9 @@ public class OrganisationBackingBean extends
 
 		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
 
-		orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());		
+		orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 		PmOrgValidity orgValidity = this.getManagedBean().getOrgValidity();
-		
+
 		orgValidity.setEffDate(new Date());
 		orgValidity.setPmOrgProfile(orgProfile);
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
@@ -438,23 +436,21 @@ public class OrganisationBackingBean extends
 
 		}
 
-		/*PmAddressType addressType = getManagedBean().getPmAddressType();
-		addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-				.value());
-		List<PmAddressType> pmAddressTypes = getManagedBean()
-				.getOfficeAddressTypeList();
-		pmAddressTypes.add(addressType);
-
-		PmAddress address = getManagedBean().getOfficeAddress();
-		PmContact contact = getManagedBean().getOfficeContactPerson();
-		contact.setPmAddressType(addressType);
-		List<PmContact> contactLst = getManagedBean().getContactList();
-		contactLst.add(contact);
-		addressType.setPmAddress(address);
-		addressType.setPmContacts(contactLst);
-		addressType.setPmOrgProfile(orgProfile);
-		orgProfile.setPmAddressTypes(pmAddressTypes);
-*/
+		/*
+		 * PmAddressType addressType = getManagedBean().getPmAddressType();
+		 * addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
+		 * .value()); List<PmAddressType> pmAddressTypes = getManagedBean()
+		 * .getOfficeAddressTypeList(); pmAddressTypes.add(addressType);
+		 * 
+		 * PmAddress address = getManagedBean().getOfficeAddress(); PmContact
+		 * contact = getManagedBean().getOfficeContactPerson();
+		 * contact.setPmAddressType(addressType); List<PmContact> contactLst =
+		 * getManagedBean().getContactList(); contactLst.add(contact);
+		 * addressType.setPmAddress(address);
+		 * addressType.setPmContacts(contactLst);
+		 * addressType.setPmOrgProfile(orgProfile);
+		 * orgProfile.setPmAddressTypes(pmAddressTypes);
+		 */
 		/*
 		 * PmAddressType addressType = getManagedBean().getPmAddressType();
 		 * addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
@@ -505,7 +501,7 @@ public class OrganisationBackingBean extends
 		}
 		retrieveCountryList();
 		retrievePmZoneList();
-		
+
 		reset();
 
 		return "/xhtml/pm/organisation/maintainOrganisation";
@@ -729,9 +725,11 @@ public class OrganisationBackingBean extends
 			}
 		}
 	}
+
 	public void addNewPtjAction() {
 
-		List<PmOrgProfile> orgProfileList = this.getManagedBean().getOrgProfileList();
+		List<PmOrgProfile> orgProfileList = this.getManagedBean()
+				.getOrgProfileList();
 		if (orgProfileList == null) {
 			orgProfileList = new ArrayList<PmOrgProfile>();
 			this.getManagedBean().setOrgProfileList(orgProfileList);
@@ -765,11 +763,6 @@ public class OrganisationBackingBean extends
 				openList.remove(category);
 		}
 
-	}
-
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
 	}
 
 	/**
