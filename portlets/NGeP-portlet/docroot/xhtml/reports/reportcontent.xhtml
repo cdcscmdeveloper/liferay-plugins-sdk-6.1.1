@@ -903,13 +903,9 @@
 						</c:if>							
 		            </div>
 		           <h:panelGroup id="rptbtnGroup">
-		            <div align="right">	
-		           	<p:commandButton value="Download" ajax="false" actionListener="#{reportBackingBean.generateReport}" onclick="handleLocalesDialogComplete(xhr, status, args)" update="@form">
-        				<p:fileDownload value="#{reportBackingBean.pdfFile}" />
-    				</p:commandButton>            		                    	
+		            <div align="right">		            		                    	
 		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="reportResult,@form">
 				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
-				    <p:fileDownload value="#{reportBackingBean.pdfFile}"/>
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
 				    <h:graphicImage value="/css/images/design/icon_reset.png" styleClass="tasklist_title1"/>
@@ -922,7 +918,8 @@
 						resizable="false" position="right" closable="true"
 						closeOnEscape="true" draggable="true" onHide="closeDialogBox(this)">
 						<h:panelGroup id="reportResult" styleClass="reportResultStyle">
-							
+							<object id="someId" data="#{reportBackingBean.reportURL}"
+								type="application/pdf" width="1100" height="500" />
 						</h:panelGroup>						
 					</p:dialog>
 					
@@ -938,8 +935,8 @@
 			   if (args) {
 			      var reportInValid = args.reportInValid;
 			     if(!reportInValid){
-			    	// window.open(args.reportViewUrl,'_blank');
-			    	 reportGenDialog.show();
+			    	 window.open(args.reportViewUrl,'_blank');
+			    	 //reportGenDialog.show();
 			     }
 			   }
 			}
