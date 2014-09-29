@@ -25,11 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.dto.sm.softcert.VirtualCertReqDTO;
+import my.ep.dto.sm.softcert.VirtualCertResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -71,30 +74,18 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
 		String xhtml = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
 		
-		//SmSupplier smSupplier = null;
 		try {
-			IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-	
-			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 			
-			reqDto.setSupplierId(getSmSupplier().getSupplierId());
-			log.info("*********Supplier ID>" + reqDto.getSupplierId());
-			resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
-			this.getManagedBean().setSmSupplier(resDto.getSmSupplier());
-			Date now = new Date();
+			IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
+			VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+			reqDTO.setSupplierId(supp.getSupplierId());
+			VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
+			
 			this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
-			for(SmMofAccount mofAcc : this.getManagedBean().getSmSupplier().getSmMofAccounts()){
-				log.info("EFF>>>>>>>" + mofAcc.getEffDate());
-				log.info("EXF>>>>>>>" + mofAcc.getExpDate());
-				if(mofAcc.getEffDate().before(now) && mofAcc.getExpDate().after(now)){
-					log.info("viewVirtualCert within the range>>>>");
-					this.getManagedBean().getMofAccountLs().add(mofAcc);
-				}
+			if(resDTO.getSmMofAccounts().size() > 0){
+				this.getManagedBean().setMofAccountLs(resDTO.getSmMofAccounts());
 			}
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
+
 			quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
 		} catch(Exception ex){
 			log.error("viewVirtualCert ex:" + ex.getMessage());
@@ -102,9 +93,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		
 	}
 	
-	public void generatePdf(String mofNo) throws Exception {
-		
-//		log.info("mofNo: " + mofNo);
+	public void generatePdf(SmMofAccount mofAcc) throws Exception {
 		
 		Long applId = getSmSupplier().getSmAppl().getApplId();
 		
@@ -112,9 +101,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		IMofRegistrationSO mofRegistrationSO = null;
 //		SmAppl smAppl = null;
 //		tmpPath = System.getProperty("java.io.tmpdir");
-		
-//		log.info("mofNo: " + mofNo);
-		
+
+		String mofNo = mofAcc.getMofNo();
+
 		tmpPath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		tmpPath = tmpPath + "/" + Calendar.getInstance().get(Calendar.YEAR) + "/" + "SAP/cert/" + mofNo + "/";
 		
@@ -130,8 +119,6 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
 			
-			//reqDto.setSupplierId(getSmSupplier().getSupplierId());
-//			System.out.println("*********Supplier ID>" + reqDto.getSupplierId());
 			reqDto.setApplId(applId);
 			resDto = mofRegistrationSO.retrieveSupplierProfileByApplId(reqDto);
 			log.info("*********Supplier ID>" + resDto.getSmAppl().getApplId());
@@ -141,7 +128,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 		// instantiate velocity template
 		// replace value in velocity template
-		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofNo);
+		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc);
 		String contentHtml = getContentHtmlFromVelocity(smSupplier);
 		String lampiranBHtml = getLampiranBFromVelocity();
 		
@@ -222,51 +209,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		return smSupp;
 	}
 	
-/*	public StreamedContent getPdfFile() throws Exception {
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = PortalUtil
-				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ "test-editor-2-pdf.pdf" + "\"");//
-		res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("application/pdf");
-
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		out.write(getPdfStream2());
-
-		return null;
-	}*/
 	
-/*	public byte[] getPdfStream2() throws Exception {
-		
-        byte[] pdf = null;
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        OutputStream baos1 = new FileOutputStream("D:\\HKS\\cover.pdf");
-        OutputStream baos2 = new FileOutputStream("D:\\HKS\\context.pdf");
-//        String html = LEADING_HTML_FOR_PDF + this.getPdfText() + CLOSING_HTML_FOR_PDF;
-        String coverhtml = getCoverHtmlFromVelocity();  
-        String contentHtml = getContentHtmlFromVelocity();
-    
-        generatePdf(baos1, coverhtml);
-        generatePdf(baos2, contentHtml);
-        
-        List<InputStream> list = new ArrayList<InputStream>();
-        
-        list.add(new FileInputStream(new File("D:\\HKS\\cover.pdf")));
-        list.add(new FileInputStream(new File("D:\\HKS\\context.pdf")));
-        
-        OutputStream combined = new FileOutputStream(new File("D:\\HKS\\combined.pdf"));
-        
-        doMerge(list, combined);
-        
-        
-        return null;
-	}*/
-	
-    public String getCoverHtmlFromVelocity(SmSupplier supplier, String mofNo) throws Exception {
+    public String getCoverHtmlFromVelocity(SmSupplier supplier, SmMofAccount mofAcc) throws Exception {
     	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
 
     	Properties p = new Properties();
@@ -279,46 +223,27 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	
     	VelocityContext context = new VelocityContext();
     	log.info("*********Supplier Appl**********" + supplier.getSmAppl());
-    	String supplierType = supplier.getSmAppl().getSupplierType();
+    	//String supplierType = supplier.getSmAppl().getSupplierType();
     	
-    	Date now = new Date();
+    	//Date now = new Date();
     	
     	SmMofCert mofCert = null;
-    	SmMofAccount smMofAccount = null;
-    	for(SmMofAccount mofAccount : supplier.getSmMofAccounts()) {
-    		log.info("*********mofAccount**********" + mofAccount.getSmMofCerts().size());
-    		if(mofAccount.getEffDate().before(now) && mofAccount.getExpDate().after(now)) {
-    			if(mofAccount.getMofNo().equals(mofNo)) {
-	    			if(mofAccount.getSupplierType().equals(supplierType)) {
-	    				smMofAccount = mofAccount; //added for to make it temporary runaable
-	    				log.info("mofAccount.getMofNo(): " + mofAccount.getMofNo());
-	    				mofCert = mofAccount.getSmMofCerts().get(0);
-	    				
-	    				for(SmMofCert cert : mofAccount.getSmMofCerts()) {
-	    					log.info("****CERT ID****" + cert.getMofCertId());
-	    					log.info("****MOF CERT ID****" + mofCert.getMofCertId());
-	    					if(cert.isRecordStatus() && cert.getEffDate().before(now) && cert.getExpDate().after(now)) {
-	    						if(cert.getMofCertId() > mofCert.getMofCertId()) {
-	    							log.info("****MOF Gretter****" + mofAccount);
-	    							mofCert = cert;
-	    							smMofAccount = mofAccount;
-	    						}
-	    					}
-	    				}
-	    			}
-    			}
-    		}
-    		
-    		log.info(">>>>>MOF Account No>>>" + mofAccount.getMofAccountId());
-    	}
+    	//SmMofAccount smMofAccount = null;
     	
+    	IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setMofAccountId(mofAcc.getMofAccountId());
+		
+		VirtualCertResDTO resDTO = virtualCertSO.retrieveLatestCertByAccountId(reqDTO);
+		
+		mofCert = resDTO.getSmMofCert();
     	SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy");
     	log.info(">>>>>mofCertSerialNo>>>" + mofCert.getCertSerialNo());
-    	log.info(">>>>>mofAccountNo>>>" +  smMofAccount.getMofNo());
+    	log.info(">>>>>mofAccountNo>>>" +  mofAcc.getMofNo());
     	String mofCertSerialNo = mofCert.getCertSerialNo();
-    	String mofAccountNo = smMofAccount.getMofNo();
-    	String effDate = ft.format(smMofAccount.getEffDate());
-    	String expDate = ft.format(smMofAccount.getExpDate());
+    	String mofAccountNo = mofAcc.getMofNo();
+    	String effDate = ft.format(mofAcc.getEffDate());
+    	String expDate = ft.format(mofAcc.getExpDate());
     	log.info("*****after expiry date****");
     	this.getManagedBean().setMofCertSerialNo(mofCertSerialNo);
     	this.getManagedBean().setMofAccountNo(mofAccountNo);
