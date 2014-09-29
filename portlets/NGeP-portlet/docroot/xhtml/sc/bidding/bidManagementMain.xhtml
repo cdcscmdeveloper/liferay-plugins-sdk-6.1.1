@@ -14,11 +14,17 @@
 		<ui:param name="isZonal"
 			value="#{!biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName eq null}" />
 
+
 		<ui:param name="isViewByPackage"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'P'}" />
 		<ui:param name="isViewByItem"
 			value="#{biddingBB.managedBean.bidManagementViewBy eq 'I'}" />
 
+		<div>
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				action="#{biddingBB.biddingMonitorBackAction}"
+				icon="ui-icon-back" />
+		</div>
 
 
 		<div align="left" class="header-info">
@@ -26,24 +32,20 @@
 			<table style="width: 100%">
 
 				<tr>
-					<td ><p:outputLabel
-							value="#{lbl['lbl.sc.bidding.no']}" /></td>
-					<td  class="header-info-text">
+					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></td>
+					<td class="header-info-text">
 						#{biddingBB.managedBean.scheduledBid.bidNo}</td>
-					<td ><p:outputLabel
-							value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
 					<td style="width: 14%" class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.docNo}
 					</td>
 
-					<td ><p:outputLabel
-							value="#{lbl['lbl.sc.ptj.name']}" /></td>
-					<td  class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
+					<td class="header-info-text">#{biddingBB.managedBean.scheduledBid.scBid.pmOrgProfile.orgName}
 					</td>
 
-					<td ><p:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 
-					<td  class="header-info-text">#{biddingBB.getStatusDescById(biddingBB.managedBean.scheduledBid.pmStatus.statusId)}
+					<td class="header-info-text">#{biddingBB.getStatusDescById(biddingBB.managedBean.scheduledBid.pmStatus.statusId)}
 					</td>
 
 				</tr>
@@ -80,8 +82,8 @@
 					<tr>
 						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.duration.hours']}" /></td>
-						<td style="width: 15%"><p:inputText id="duration" size="15" disabled="true"
-								value="#{biddingBB.managedBean.duration}" /></td>
+						<td style="width: 15%"><p:inputText id="duration" size="15"
+								disabled="true" value="#{biddingBB.managedBean.duration}" /></td>
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>
 
@@ -90,7 +92,8 @@
 						<tr>
 							<td style="width: 15%"><p:outputLabel
 									value="#{lbl['lbl.sc.zone.name']}" /></td>
-							<td style="width: 15%"><p:inputText id="zoneNameLabel" disabled="true" size="15"
+							<td style="width: 15%"><p:inputText id="zoneNameLabel"
+									disabled="true" size="15"
 									value="#{biddingBB.managedBean.scheduledBid.tplSpecZoneDtl.zoneName}" />
 								<p:spacer width="5"></p:spacer> <p:commandLink id="zoneName"
 									oncomplete="zoneLocPopup.show();" partialSubmit="true"
@@ -111,13 +114,16 @@
 						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.view.by']}" /></td>
 						<td style="width: 15%"><p:selectOneMenu id="viewBy"
-								value="#{biddingBB.managedBean.bidManagementViewBy}" 
+								rendered="#{biddingBB.managedBean.bidManagementInitialViewBy eq 'P'}"
+								value="#{biddingBB.managedBean.bidManagementViewBy}"
 								style="width : 138px">
 								<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
 								<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
 								<p:ajax process="@this" partialSubmit="true" event="change"
-									listener="#{biddingBB.viewByChangeListener}" update="bidManagementPanel"></p:ajax>
-							</p:selectOneMenu></td>
+									listener="#{biddingBB.viewByChangeListener}" update="@form"></p:ajax>
+							</p:selectOneMenu> <p:inputText disabled="true" size="15"
+								rendered="#{biddingBB.managedBean.bidManagementInitialViewBy eq 'I'}" value="Item" />
+						</td>
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>
 					</tr>
@@ -126,12 +132,12 @@
 
 		</p:panel>
 		<p:panel id="bidManagementPanel">
-		<c:if test="#{isViewByPackage}">
-			<ui:include src="bidManagementByPackage.xhtml"></ui:include>
-		</c:if>
-		<c:if test="#{isViewByItem}">
-			<ui:include src="bidManagementByItem.xhtml"></ui:include>
-		</c:if>
+			<c:if test="#{isViewByPackage}">
+				<ui:include src="bidManagementByPackage.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{isViewByItem}">
+				<ui:include src="bidManagementByItem.xhtml"></ui:include>
+			</c:if>
 		</p:panel>
 
 		<p:dialog id="zoneLocPopup" widgetVar="zoneLocPopup" rendered="false"

@@ -10,28 +10,28 @@
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.item.name']}" /></TD>
 			<TD><p:inputText
-					value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
 					size="35" disabled="true" /></TD>
 		</tr>
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.item.description']}" /></TD>
 			<TD><p:inputTextarea cols="70" rows="5"
-					value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemDesc}"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.itemDesc}"
 					disabled="true" /></TD>
 		</tr>
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.uom']}" /></TD>
 			<TD><p:inputText
-					value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomName}"
 					size="20" disabled="true" /></TD>
 		</tr>
 
 		<tr>
 			<TD><p:outputLabel value="#{lbl['lbl.sc.quantity']}" /></TD>
 			<TD><p:inputText style="float : right"
-					value="#{onlineBiddingBB.managedBean.scBidPrice.scBidSupplierItem.scBidItem.qty}"
+					value="#{onlineBiddingBB.scBidPrice.scBidSupplierItem.scBidItem.qty}"
 					size="20" disabled="true">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />

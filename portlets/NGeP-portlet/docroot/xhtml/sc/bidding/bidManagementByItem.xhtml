@@ -14,7 +14,7 @@
 			rowKey="#{bidItem.bidItemId}">
 
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
-				update="@form" />
+				update="@([id$=itemPriceLineChartPanel])" />
 			<ac:paginator for="biddingListBMBI"></ac:paginator>
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
@@ -32,7 +32,7 @@
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText style="float : right" value="#{bidItem.qty}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="width : 125px"
@@ -50,17 +50,17 @@
 
 	<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
 		id="itemPriceLineChartPanel">
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="5"></p:spacer>
 
 		<div align="center">
 
-			<h5>
+			<h3>
 				<B> Bidding Statistic Graph</B>
-			</h5>
+			</h3>
 
 		</div>
 
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="5"></p:spacer>
 
 		<div>
 

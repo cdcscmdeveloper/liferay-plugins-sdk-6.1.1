@@ -32,7 +32,7 @@
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText style="float : right" value="#{item.qty}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="width : 125px"
@@ -53,14 +53,14 @@
 	<p:panel header="#{lbl['lbl.sc.bid.summary']}" id="bidSummaryByPackage"
 		toggleable="true">
 
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="5"></p:spacer>
 
 		<div align="center">
 
-		<h5><B> Bidding Statistic Graph</B></h5>
+		<h3><B> Bidding Statistic Graph</B></h3>
 
 		</div>
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="5"></p:spacer>
 		<div>
 			<p:lineChart value="#{biddingBB.managedBean.bidPriceLinearModel}"
 				legendPosition="e" style="height:300px;" />

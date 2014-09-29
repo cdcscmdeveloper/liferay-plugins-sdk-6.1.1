@@ -28,7 +28,7 @@
 							value="#{biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.qty}"
 							size="20" disabled="true">
 							<f:convertNumber
-								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, biddingBB.managedBean.historyPrice.scBidSupplierItem.scBidItem.scRequestItem.uom.uomCode)}" />
 						</p:inputText>
 					</div>
 				</TD>
@@ -44,41 +44,39 @@
 	</div>
 
 	<p:panel header="#{lbl['lbl.sc.history.summary']}" toggleable="true">
-		<p:spacer height="5"></p:spacer>
-
 		<div align="center">
 			<h5>
 				<B> Bidding Statistic Graph</B>
 			</h5>
 		</div>
-		<p:spacer height="5"></p:spacer>
 		<div>
 			<p:lineChart value="#{biddingBB.managedBean.historyPriceLinearModel}"
 				legendPosition="e" style="height:250px; width:750px" />
 		</div>
-		<p:spacer height="10"></p:spacer>
+		<p:spacer height="5"></p:spacer>
 		<div>
 			<p:dataTable id="historySummary"
 				value="#{biddingBB.managedBean.bidHistoryPriceList}" var="history">
 				<ac:paginator for="historySummary"></ac:paginator>
 				<p:column headerText="#{lbl['lbl.sc.submitted.time']}">
 					<h:outputText value="#{history.createdDate}">
-					<f:convertDateTime  pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
-					<!-- need to change the pattern value  -->
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+						<!-- need to change the pattern value  -->
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bid.price']}">
-					<h:outputText style="float : right" value="#{history.bidPrice}" >
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<h:outputText style="float : right" value="#{history.bidPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
 			</p:dataTable>
 		</div>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-back"
-				onclick="priceHistory.hide();" />
-		</div>
 	</p:panel>
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.close']}"
+			onclick="priceHistory.hide();" />
+	</div>
 
 </ui:composition>
