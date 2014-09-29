@@ -143,7 +143,7 @@
 						</tr>
 					</table>
 				</p:panel></td>
-			<td valign="top"><p:panel id="mailAddrPan">
+			<td valign="top"><p:panel id="mailAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
 					<table style="width: 100%">
 						<tr>
 							<td><u><b><h:outputText
@@ -319,7 +319,7 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td valign="top" width="50%"><p:panel id="resiAddrPan">
+			<td valign="top" width="50%"><p:panel id="resiAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					<table style="width: 100%">
 
 						<tr>
@@ -491,7 +491,7 @@
 						</c:choose>
 					</table>
 				</p:panel></td>
-			<td valign="top"><p:panel id="offcAddrPan">
+			<td valign="top"><p:panel id="offcAddrPan" rendered="#{backingBean.managedBean.selectedShareHolder.equityOwner or backingBean.managedBean.selectedShareHolder.higherManagement or backingBean.managedBean.selectedShareHolder.director}">
 					<table style="width: 100%">
 						<tr>
 							<td width="150px"><u><b><h:outputText
@@ -504,7 +504,7 @@
 													update=":form:tt:offcAddrPan" />
 											</p:selectBooleanCheckbox></td>
 										<td><h:outputText
-												value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+												value="#{lbl['lbl.sm.person.duplicateCmpnyAddr']}" /></td>
 									</tr>
 								</table></td>
 						</tr>

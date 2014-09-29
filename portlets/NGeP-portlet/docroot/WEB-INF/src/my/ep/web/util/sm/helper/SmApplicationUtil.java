@@ -1727,7 +1727,8 @@ public class SmApplicationUtil {
 						.getSmAddress(), managedBean.getShareHolderResdAddr(),
 						managedBean.getDefPmCountry()));
 		managedBean.getShareHolderOffAddr().setSmAddress(
-				cloneAsPermenantAddr(managedBean.getShareHolderPermAddr()
+				cloneAsPermenantAddr(managedBean.getSmAppl()
+						.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress(), managedBean.getShareHolderOffAddr()
 						.getSmAddress(), managedBean.getShareHolderOffAddr(),
 						managedBean.getDefPmCountry()));
