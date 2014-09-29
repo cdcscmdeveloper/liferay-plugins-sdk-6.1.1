@@ -42,8 +42,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<th width="10%">
 					<p:outputLabel value="#{lbl['lbl.pm.ta.username']}"/>
 				</th>
-				<td>
-					<ac:lov id="lovUser" lovId="PM_USER" size="98"  
+				<td width="45%">
+					<ac:lov id="lovUser" lovId="PM_USER" size="50"  
 						disabled="#{!(taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile!=null
 						and taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId!=null)}"
 		            	update=":form:pTaskAssignSearch" readonly="true" 

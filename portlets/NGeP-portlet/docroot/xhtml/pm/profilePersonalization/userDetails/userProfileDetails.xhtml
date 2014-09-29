@@ -186,7 +186,7 @@
 				</th>	  
 		        <td>
 		        	<p:selectOneMenu value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId}" 
-		        		styleClass="ppDropDownWidthM" id="somCountry" required="#{!empty param['disableValidation']}"
+		        		styleClass="ppDropDownWidthL" id="somCountry" required="#{!empty param['disableValidation']}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.country']}" >
 	            	     <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		             
 						 <f:selectItems value="#{profilePersonalizationBackingBean.getCountryList()}"
@@ -242,7 +242,7 @@
 		    		<p:inputText id="itPostcode" required="#{!empty param['disableValidation']}" 
 		    			label="#{lbl['lbl.pm.profiles.userdetails.postcode']}"
 		    			value="#{profilePersonalizationBackingBean.managedBean.userAddress.postcode}" 
-		    			styleClass="ppDisplayTextM"  maxlength="10" />
+		    			styleClass="ppDisplayTextL"  maxlength="10" />
 	    			<p:message id="itPostcodeMsg" for="itPostcode" display="icon" />
     			</td>	
 		    	<th></th>
@@ -254,7 +254,7 @@
   					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>  
 		        <td>
-		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}"
+		        	<p:selectOneMenu id="somStateC" styleClass="ppDropDownWidthL" required="#{!empty param['disableValidation']}"
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCountry.countryId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId}" 
 		        		label="#{lbl['lbl.pm.profiles.userdetails.state']}">
@@ -278,7 +278,7 @@
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDivision.divisionId}" 
 		        		required="#{!empty param['disableValidation'] and profilePersonalizationBackingBean.managedBean.divisionFlagC}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.division']}"
-		        		styleClass="ppDropDownWidthM"> 
+		        		styleClass="ppDropDownWidthL"> 
 					 	<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 					 	<f:selectItems
 						  value="#{profilePersonalizationBackingBean.getDivisionList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}" 
@@ -297,7 +297,7 @@
 		        		disabled="#{profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.district']}"
-		              	styleClass="ppDropDownWidthM"> 
+		              	styleClass="ppDropDownWidthL"> 
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 						<f:selectItems 
 							value="#{profilePersonalizationBackingBean.getDistrictList(profilePersonalizationBackingBean.managedBean.userAddress.pmState.stateId)}"
@@ -317,7 +317,7 @@
 		        			or profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId==null}"
 		        		value="#{profilePersonalizationBackingBean.managedBean.userAddress.pmCity.cityId}"
 		        		label="#{lbl['lbl.pm.profiles.userdetails.citytown']}"
-    					styleClass="ppDropDownWidthM"> 
+    					styleClass="ppDropDownWidthL"> 
 				        <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 
 				        <f:selectItems 
 							value="#{profilePersonalizationBackingBean.getCityList(profilePersonalizationBackingBean.managedBean.userAddress.pmDistrict.districtId)}"
@@ -338,7 +338,7 @@
 			    	<p:inputText id="itEmail" required="#{!empty param['disableValidation']}"
 			    		label="#{lbl['lbl.pm.profiles.userdetails.email']}"
 			    		value="#{profilePersonalizationBackingBean.managedBean.selectedUser.email}" 
-			    		styleClass="ppDisplayTextM" maxlength="80"
+			    		styleClass="ppDisplayTextL" maxlength="80"
 			    		validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 			    		<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
@@ -356,7 +356,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>  
 			    <td>
 			    	<p:inputText id="itTelNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.phoneNo}" label="#{lbl['lbl.pm.profiles.userdetails.telno']}"
-			    		styleClass="ppDisplayTextM"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+			    		styleClass="ppDisplayTextL"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itTelNoMsg" for="itTelNo" display="icon" />
@@ -368,7 +368,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th> 
 			    <td>
 			    	<p:inputText id="itFaxNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.faxNo}" label="#{lbl['lbl.pm.profiles.userdetails.faxno']}"
-			    		styleClass="ppDisplayTextM" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+			    		styleClass="ppDisplayTextL" maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itFaxNoMsg" for="itFaxNo" display="icon" />
@@ -380,7 +380,7 @@
   				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>  
 			    <td>
 			    	<p:inputText id="itMobileNo" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.mobileNo}" label="#{lbl['lbl.pm.profiles.userdetails.mobileno']}"
-			    		styleClass="ppDisplayTextM"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
+			    		styleClass="ppDisplayTextL"  maxlength="12" validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 			    		<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 		    		</p:inputText>
 		    		<p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />

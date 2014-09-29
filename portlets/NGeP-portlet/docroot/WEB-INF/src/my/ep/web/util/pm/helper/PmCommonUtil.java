@@ -52,6 +52,7 @@ import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.language.LanguageResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.salutation.SalutationReqDTO;
 import my.ep.dto.pm.common.salutation.SalutationResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
@@ -116,63 +117,67 @@ public class PmCommonUtil {
 	 */
 	
 	public static List<PmUserNotification> generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
+		IParameterSO parameterSO = null;
 		List <PmUserNotification> displayNotifications = new ArrayList<PmUserNotification>();
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		searchBean.getDataFilterBeans().add(new SearchFilterBean(
-				"pmParameter.parameterCode",
-				SearchOperator.OPERATOR_NOT_EQUALS.value(),
-				ParameterConst.NOTIFICATION_SMS));
-		
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
-		parameterReqDTO.setLanguageCode(languageCode);
-		
-		parameterReqDTO.setParameterDescSearchBean(searchBean);
-		
-		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
-		List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
-		
-		
-		//add into pmUser.getPmUserNotifications()
-		//this is to sync back the notification list
-		if(pmUser.getPmUserNotifications()!=null && !pmUser.getPmUserNotifications().isEmpty()){
-			if(pmParameterDescs!=null && (pmParameterDescs.size() != pmUser.getPmUserNotifications().size())){
-				for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-					boolean isRequired = true;
-					for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-						if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
-							isRequired = false;
-							break;
+		try{
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmParameter.parameterCode",
+					SearchOperator.OPERATOR_NOT_EQUALS.value(),
+					ParameterConst.NOTIFICATION_SMS));
+			
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
+			parameterReqDTO.setLanguageCode(languageCode);
+			
+			parameterReqDTO.setParameterDescSearchBean(searchBean);
+			
+			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
+			List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
+			
+			
+			//add into pmUser.getPmUserNotifications()
+			//this is to sync back the notification list
+			if(pmUser.getPmUserNotifications()!=null && !pmUser.getPmUserNotifications().isEmpty()){
+				if(pmParameterDescs!=null && (pmParameterDescs.size() != pmUser.getPmUserNotifications().size())){
+					for(PmParameterDesc pmParameterDesc: pmParameterDescs){
+						boolean isRequired = true;
+						for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+							if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
+								isRequired = false;
+								break;
+							}
+						}
+						if(isRequired){
+							PmUserNotification notification = new PmUserNotification();
+							notification.setPreferred(true);
+							notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+							pmUser.addPmUserNotifications(notification);
 						}
 					}
-					if(isRequired){
-						PmUserNotification notification = new PmUserNotification();
-						notification.setPreferred(true);
-						notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-						pmUser.addPmUserNotifications(notification);
-					}
+				}
+			}else{
+				pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
+				for(PmParameterDesc pmParameterDesc: pmParameterDescs){
+					PmUserNotification notification = new PmUserNotification();
+					notification.setPreferred(true);
+					notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
+					pmUser.addPmUserNotifications(notification);
 				}
 			}
-		}else{
-			pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
-			for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-				PmUserNotification notification = new PmUserNotification();
-				notification.setPreferred(true);
-				notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-				pmUser.addPmUserNotifications(notification);
+			
+			//generate displayNotification
+			
+			for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
+				if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(pmUserNotification.getNotifyMode())
+						&& !ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
+					displayNotifications.add(pmUserNotification);
+				}
 			}
+		}finally{
+			parameterSO = null;
 		}
-		
-		//generate displayNotification
-		
-		for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-			if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(pmUserNotification.getNotifyMode())
-					&& !ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
-				displayNotifications.add(pmUserNotification);
-			}
-		}
-		
 		return displayNotifications;
 	}
 	
@@ -181,30 +186,35 @@ public class PmCommonUtil {
 	 * @param pmUser
 	 */
 	public static void loadPmUserPreference(PmUser pmUser, PmUserPreference pmUserPreference) {
-		IConfigGeneralSO configGeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IConfigGeneralSO.class);
-		ConfigGeneralReqDTO configGeneralReqDTO = new ConfigGeneralReqDTO();
-		ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(configGeneralReqDTO);
-		PmConfigGeneral configGeneral = null;
-		if(configGeneralResDTO!=null && configGeneralResDTO.isSuccessful()){
-			configGeneral = configGeneralResDTO.getPmConfigGeneral();
-		}
-		if(configGeneral==null){
-			throw new EpException(MessageConst.ERROR_770052);
-		}
-		if(pmUserPreference == null){
-			pmUserPreference= new PmUserPreference();
-			pmUserPreference.setPreferredLanguage(configGeneral.getPreferredLanguage());
-			pmUserPreference.setNotifyRemovalDay(configGeneral.getNotifyFreq());
-			pmUserPreference.setFormatDate(configGeneral.getFormatdate());
-			pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
-			pmUserPreference.setFormatTime(configGeneral.getFormatTime());
-			pmUserPreference.setPmUser(pmUser);
-			pmUser.setPmUserPreference(pmUserPreference);
-		}else{
-			pmUserPreference.setFormatDate(configGeneral.getFormatdate());
-			pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
-			pmUserPreference.setFormatTime(configGeneral.getFormatTime());
-			pmUserPreference.setPmUser(pmUser);
+		IConfigGeneralSO configGeneralSO =  null;
+		try{
+			configGeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IConfigGeneralSO.class);
+			ConfigGeneralReqDTO configGeneralReqDTO = new ConfigGeneralReqDTO();
+			ConfigGeneralResDTO configGeneralResDTO = configGeneralSO.getConfigGeneral(configGeneralReqDTO);
+			PmConfigGeneral configGeneral = null;
+			if(configGeneralResDTO!=null && configGeneralResDTO.isSuccessful()){
+				configGeneral = configGeneralResDTO.getPmConfigGeneral();
+			}
+			if(configGeneral==null){
+				throw new EpException(MessageConst.ERROR_770052);
+			}
+			if(pmUserPreference == null){
+				pmUserPreference= new PmUserPreference();
+				pmUserPreference.setPreferredLanguage(configGeneral.getPreferredLanguage());
+				pmUserPreference.setNotifyRemovalDay(configGeneral.getNotifyFreq());
+				pmUserPreference.setFormatDate(configGeneral.getFormatdate());
+				pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
+				pmUserPreference.setFormatTime(configGeneral.getFormatTime());
+				pmUserPreference.setPmUser(pmUser);
+				pmUser.setPmUserPreference(pmUserPreference);
+			}else{
+				pmUserPreference.setFormatDate(configGeneral.getFormatdate());
+				pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
+				pmUserPreference.setFormatTime(configGeneral.getFormatTime());
+				pmUserPreference.setPmUser(pmUser);
+			}
+		}finally{
+			configGeneralSO = null;
 		}
 	}
 	
@@ -227,14 +237,17 @@ public class PmCommonUtil {
 	public static List <PmLanguage> retrieveLanguageObjs() {
 		log.info("retrieveLanguageObjs");
 		List<PmLanguage> languages = new ArrayList<PmLanguage>();
+		ILanguageSO languageSO = null;
 		try {
-			ILanguageSO languageSO = (ILanguageSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
+			languageSO = (ILanguageSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ILanguageSO.class);
 			LanguageResDTO languagecResDTO = languageSO.retrieveLanguages();
 			languages = languagecResDTO.getLanguageList();
 				
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_770057);
+		}finally{
+			languageSO = null;
 		}
 		return languages;
 	}
@@ -285,10 +298,17 @@ public class PmCommonUtil {
 	 * @return List<PmCountry>
 	 */
 	public static List<PmCountry> retrievePmCountryList() {
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
-		CountryResDTO resDTO = reqSO.retrieveCountryList();
-		return resDTO.getCountryList();
+		ICountrySO reqSO = null;
+		List<PmCountry> resultList = null;
+		try{
+			reqSO = (ICountrySO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryResDTO resDTO = reqSO.retrieveCountryList();
+			resultList = resDTO.getCountryList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 
 	/**
@@ -296,13 +316,20 @@ public class PmCommonUtil {
 	 * @param countryId
 	 * @return List<PmState>
 	 */
-	public static  List<PmState> retrievePmStateList(Long countryId) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(countryId);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		return resDTO.getStateList();
+	public static List<PmState> retrievePmStateList(Long countryId) {
+		IStateSO reqSO = null;
+		List<PmState> resultList = null;
+		try{
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryId(countryId);
+			reqSO = (IStateSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+			resultList = resDTO.getStateList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 	
 	/**
@@ -311,12 +338,19 @@ public class PmCommonUtil {
 	 * @return List<PmDivision>
 	 */
 	public static  List<PmDivision> retrievePmDivisionList(Long stateId) {
-		DivisionReqDTO reqDTO = new DivisionReqDTO();
-		reqDTO.setStateId(stateId);
-		IDivisionSO reqSO = (IDivisionSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
-		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
-		return resDTO.getDivisionList();
+		IDivisionSO reqSO = null;
+		List<PmDivision> resultList = null;
+		try{
+			DivisionReqDTO reqDTO = new DivisionReqDTO();
+			reqDTO.setStateId(stateId);
+			reqSO = (IDivisionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+			DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
+			resultList = resDTO.getDivisionList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 	
 	/**
@@ -324,14 +358,20 @@ public class PmCommonUtil {
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	public static  List<PmDistrict> retrievePmDistrictList(Long stateId) {
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(stateId);
-//		reqDTO.setDivisionId(divisionId);//TODO
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
-		return resDTO.getDistrictList();
+	public static List<PmDistrict> retrievePmDistrictList(Long stateId) {
+		IDistrictSO reqSO = null;
+		List<PmDistrict> resultList = null;
+		try{
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setStateId(stateId);
+			 reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
+			resultList = resDTO.getDistrictList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 
 	
@@ -340,13 +380,20 @@ public class PmCommonUtil {
 	 * @param districtId
 	 * @return List<PmCity>
 	 */
-	public static  List<PmCity> retrievePmCityList(Long districtId) {
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setDistrictId(districtId);
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
-		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
-		return resDTO.getCityList();
+	public static List<PmCity> retrievePmCityList(Long districtId) {
+		ICitySO reqSO = null;
+		List<PmCity> resultList = null;
+		try{
+			CityReqDTO reqDTO = new CityReqDTO();
+			reqDTO.setDistrictId(districtId);
+			reqSO = (ICitySO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+			CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+			resultList = resDTO.getCityList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 	
 	/**
@@ -355,12 +402,19 @@ public class PmCommonUtil {
 	 * @return PmState
 	 */
 	public static PmState retrievePmStateByStateId(Long stateId){
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setStateId(stateId);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStateByID(reqDTO);
-		return resDTO.getPmState();
+		IStateSO reqSO = null;
+		PmState pmState = null;
+		try{
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setStateId(stateId);
+			 reqSO = (IStateSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+			StateResDTO resDTO = reqSO.retriveStateByID(reqDTO);
+			pmState = resDTO.getPmState();
+		}finally{
+			reqSO = null;
+		}
+		return pmState;
 	}
 	
 	/**
@@ -368,10 +422,27 @@ public class PmCommonUtil {
 	 * @return List<PmSalutation>
 	 */
 	public static List<PmSalutation> retrievePmSalutationList() {
-		ISalutationSO reqSO = (ISalutationSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
-		SalutationResDTO resDTO = reqSO.retrieveSalutationList();
-		return resDTO.getSalutationList();
+		ISalutationSO reqSO = null;
+		List<PmSalutation> resultList = null;
+		try{
+			SalutationReqDTO reqDTO = new SalutationReqDTO();
+			reqSO = (ISalutationSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ISalutationSO.class);
+			ISearchBean<PmSalutation> searchBean = new SearchBean<PmSalutation>();
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("recordStatusFlg");
+			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
+			searchBean.getDataFilterBeans().add(bean);
+			
+			reqDTO.setSalutationSearchBean(searchBean);
+			SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
+			resultList = resDTO.getSalutationList();
+		}finally{
+			reqSO = null;
+		}
+		return resultList;
 	}
 
 	/**
@@ -408,11 +479,12 @@ public class PmCommonUtil {
 	 */
 	public static PmUser retrieveUserById(Long id, boolean ignoreStatus){
 		PmUser pmUser = new PmUser();
+		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = null;
 			reqDTO.setUserId(id);
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			if(ignoreStatus){
 				resDTO = userSO.retrieveUserByLoginIdOrUserIdIgnoreStatus(reqDTO);
 			}else{
@@ -422,9 +494,10 @@ public class PmCommonUtil {
 			if(resDTO.isSuccessful()){
 				pmUser = resDTO.getPmUser();
 			}
-				
 		} catch (Exception e) {
 			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
+		}finally{
+			userSO = null;
 		}		
 		return pmUser;
 	}
@@ -436,11 +509,12 @@ public class PmCommonUtil {
 	 */
 	public static List<PmUserOrg> retrieveActiveOrg(Long id){
 		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			UserResDTO resDTO = null;
 			reqDTO.setUserId(id);
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			if(resDTO.isSuccessful()){
 				pmUserOrgs = resDTO.getUserOrgList();
@@ -448,6 +522,8 @@ public class PmCommonUtil {
 				
 		} catch (Exception e) {
 			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
+		}finally{
+			userSO = null;
 		}		
 		return pmUserOrgs;
 	}
@@ -460,6 +536,7 @@ public class PmCommonUtil {
 	 */
 	public static List<PmAddressType> retrieveAddressTypesByUserIdOrAddressType(Long userId, String addressType){
 		List <PmAddressType> pmAddressTypes = new ArrayList<PmAddressType>();
+		IAddressSO addressSO = null;
 		try {
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			AddressResDTO resDTO = null;
@@ -469,7 +546,7 @@ public class PmCommonUtil {
 			if(addressType!=null){
 				reqDTO.setAddressType(addressType);
 			}
-			IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
 			resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(resDTO.isSuccessful()){
 				pmAddressTypes = resDTO.getAddressTypeList();
@@ -478,7 +555,9 @@ public class PmCommonUtil {
 		} catch (Exception e) {
 			throw new EpException(MessageConst.ERROR_770060 , new String[]{userId.toString(), e.getMessage()}); 
 			
-		}		
+		}finally{
+			addressSO = null;
+		}	
 		return pmAddressTypes;
 	}
 	
@@ -576,6 +655,8 @@ public class PmCommonUtil {
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}finally{
+			userSo = null;
 		}
 		
 		return userName;
@@ -598,17 +679,23 @@ public class PmCommonUtil {
 	 * @return boolean
 	 */
 	public static boolean deleteUserAttachment(List<PmUserAttachment> pmUserAttachments) {
+		boolean isSuccess = false;
 		UserAttachmentReqDTO reqDTO = null;
 		IUserAttachmentSO reqSO = null;
 		UserAttachmentResDTO resDTO = null;
-		if(pmUserAttachments!=null && !pmUserAttachments.isEmpty()){
-			reqDTO = new UserAttachmentReqDTO();
-			reqDTO.setPmUserAttachments(pmUserAttachments);
-			reqSO = (IUserAttachmentSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserAttachmentSO.class);
-			resDTO = reqSO.deleteUserAttachment(reqDTO);
+		try{
+			if(pmUserAttachments!=null && !pmUserAttachments.isEmpty()){
+				reqDTO = new UserAttachmentReqDTO();
+				reqDTO.setPmUserAttachments(pmUserAttachments);
+				reqSO = (IUserAttachmentSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserAttachmentSO.class);
+				resDTO = reqSO.deleteUserAttachment(reqDTO);
+			}
+			isSuccess = resDTO!=null? resDTO.isSuccessful() : false;
+		}finally{
+			reqSO = null;
 		}
-		return resDTO!=null? resDTO.isSuccessful() : false;
+		return isSuccess;
 	}
 	
 
@@ -618,12 +705,19 @@ public class PmCommonUtil {
 	 */
 	
 	public static PmParameter retrievePmParameter(String paramType, String paramCode){
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-		ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-		parameterReqDTO.setParameterType(paramType);
-		parameterReqDTO.setParameterCode(paramCode);
-		ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-		PmParameter pmParameter = parameterResDTO.getPmParameter();
+		IParameterSO parameterSO = null;
+		PmParameter pmParameter = null;
+		try{
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+			parameterReqDTO.setParameterType(paramType);
+			parameterReqDTO.setParameterCode(paramCode);
+			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+			pmParameter = parameterResDTO.getPmParameter();
+		
+		}finally{
+			parameterSO = null;
+		}
 		return pmParameter;
 	}
 	
@@ -633,17 +727,21 @@ public class PmCommonUtil {
 	 * @return PmOrgProfile
 	 */
 	public static PmOrgProfile retrievePmOrgProfile(Long id){
+		
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
-
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		OrgProfileResDTO resDTO = null;
-		reqDTO.setUserId(id);
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
-		if(resDTO.isSuccessful()){
-			pmOrgProfile = resDTO.getPmOrgProfile();
-		}
-				
+		IOrgProfileSO orgProfileSO   = null;
+		try{
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+			if(resDTO.isSuccessful()){
+				pmOrgProfile = resDTO.getPmOrgProfile();
+			}
+		}finally{
+			orgProfileSO = null;
+		}	
 			
 		return pmOrgProfile;
 	}
@@ -686,14 +784,12 @@ public class PmCommonUtil {
 	 * @return List<PmUser>
 	 */
 	public static List<PmUser> retriveUsersByIds(List<Long> userIds){
-		IUserSO userSo=null;
 		List<PmUser> pmUsers = new ArrayList<PmUser>();
 		
 		try{
 			if(userIds!=null && !userIds.isEmpty()){
 				ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
-				
-				
+
 				// active user
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
@@ -707,15 +803,8 @@ public class PmCommonUtil {
 				bean.setSearchValue(userIds);
 				searchBean.getDataFilterBeans().add(bean);
 				
+				pmUsers = searchUsersBySearchBean(searchBean);
 				
-				userSo = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				UserReqDTO reqDTO=new UserReqDTO();
-				reqDTO.setUserSearchBean(searchBean);
-				UserResDTO resDTO = userSo.searchUserProfile(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null && resDTO.getUserResultBean().getResultList()!=null){
-					pmUsers = resDTO.getUserResultBean().getResultList();
-				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -723,4 +812,29 @@ public class PmCommonUtil {
 		
 		return pmUsers;
 	}
+	/**
+	 * search user by search bean
+	 * @param userIds
+	 * @return List<PmUser>
+	 */
+	public static List<PmUser> searchUsersBySearchBean(ISearchBean<PmUser> searchBean){
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		IUserSO userSO  = null;
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setUserSearchBean(searchBean);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.searchUserProfile(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null && resDTO.getUserResultBean().getResultList()!=null){
+				pmUsers = resDTO.getUserResultBean().getResultList();
+			}
+		}finally{
+			userSO = null;
+		}
+		return pmUsers;
+	}
+	
+	
 }

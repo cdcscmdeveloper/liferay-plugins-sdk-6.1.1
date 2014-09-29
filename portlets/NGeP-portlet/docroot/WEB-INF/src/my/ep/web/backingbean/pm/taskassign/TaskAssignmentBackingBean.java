@@ -91,15 +91,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "taskAssignment";
 	public static final String NAV_TO_MAINTAIN = "taskAssignment";
-	
-	public static final String APPROVER = "APPROVER";
-	
-	//BPM default filter values
-//	public static final String VIEW_BY = "ALL";
-//	public static final String ASSIGNMENT = "ALL";
-//	public static final String DOC_TYPE = "";
-//	public static final String STATE = "ASSIGNED";
-	
+
 	//Mapper for DDL object
 	private static Map<Long, Object> orgTypeMapper;
 	
@@ -107,16 +99,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	private PagingDataModel<WorklistItemVO> taskListDataModel = new taskPagingDataModel();
 	
 	private String currentDate;
-
-//	public TaskAssignmentBackingBean(){
-//		//TODO
-//		if(MDC.get(LogKey.USER_ID)==null) {
-//			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
-//		}else{
-//			MDC.put(LogKey.USER_ID, 1L);
-//		}
-//	}
-		
+	public static final String APPROVER = "APPROVER";
+	
 	public void preLoading(){
 		log.info("preLoading");
 		this.retrieveOrgTypeMap();
@@ -309,34 +293,14 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		}
 	}
 
-	/**
-	 * Reassign task to selected user
-	 */
-	public void confirmReassignTask(){
-		log.info("confirmReassignTask");
-		boolean isSuccess = false;
-		PmUser pmUser = this.getManagedBean().getSelectedUser();
-		WorklistItemVO task = this.getManagedBean().getSelectedTask();
-		if(pmUser==null){
-			throw new EpException("Please select an user to be re-assigned.");//TODO
-		}
-		if(task==null){
-			throw new EpException("Task is not null.");//TODO
-		}
-		
-		isSuccess = reassignTask(pmUser, task.getTaskId());
-		
-		if(isSuccess){
-			this.taskListDataModel.reloadData();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-		    FacesMessage.SEVERITY_INFO,
-		    null,
-		    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
-		}
-	}
 	
+	
+	/**
+	 * retrieve available roles by status id
+	 * @param statusId
+	 * @return List<String>
+	 */
 	private List<String> retrieveAvailableRoles(Long statusId){
-//		statusId = 50250L;
 		log.info("retrieveAvailableRoles");
 		List<String> statusRoles = new ArrayList<String>();
 		try {
@@ -402,43 +366,50 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			Long orgTypeId = this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId();
 			ISearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		
-			
-			// active user
+			/* Search Bean Filter - Start */
+			// only active user
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("recordStatusFlg");
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
 			
-			// not current user
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
-			bean.setSearchField("userId");
-			bean.setSearchValue(userId);
-			searchBean.getDataFilterBeans().add(bean);
-				
-			// org profile id
+			// only active user role
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
-			bean.setSearchValue(orgProfileId);
+			bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
+			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
 			
-			// org type id
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId");
-			bean.setSearchValue(orgTypeId);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			// active org group
+			// only active org group
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 			bean.setSearchField("pmUserOrgs.recordStatusFlg");
 			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
 			searchBean.getDataFilterBeans().add(bean);
 			
-			// role code
+			// not current selected user
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_NOT_EQUALS.value());
+			bean.setSearchField("userId");
+			bean.setSearchValue(userId);
+			searchBean.getDataFilterBeans().add(bean);
+				
+			// same org profile id
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgProfileId");
+			bean.setSearchValue(orgProfileId);
+			searchBean.getDataFilterBeans().add(bean);
+			
+			// same org type id
+			bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("pmUserOrgs.pmOrgProfile.orgTypeCode.parameterId");
+			bean.setSearchValue(orgTypeId);
+			searchBean.getDataFilterBeans().add(bean);
+
+			// in applicable role code
 			bean = new SearchFilterBean();
 			bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
 			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
@@ -451,25 +422,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			bean.setSearchField("pmUserOrgs.pmUserRoles.pmRole.roleCode");
 			bean.setSearchValue(APPROVER);
 			searchBean.getDataFilterBeans().add(bean);
+			/* Search Bean Filter - End */
 			
-			// active user role
-			bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("pmUserOrgs.pmUserRoles.recordStatusFlg");
-			bean.setSearchValue(DbValueConst.RECORD_STATUS_ACTIVE);
-			searchBean.getDataFilterBeans().add(bean);
-			
-			
-			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = null;
-			reqDTO.setUserSearchBean(searchBean);
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.searchUserProfile(reqDTO);
-			
-			if(resDTO.isSuccessful() && resDTO.getUserResultBean()!=null){
-				pmUsers = resDTO.getUserResultBean().getResultList();
-			}
-			
+			//search users
+			pmUsers = PmCommonUtil.searchUsersBySearchBean(searchBean);
+
 			//if contains approver role
 			for(String roleCode:statusRoles){
 				if(roleCode.toLowerCase().contains(APPROVER.toLowerCase())){
@@ -611,6 +568,32 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	
 	/**
 	 * Reassign task to selected user
+	 */
+	public void confirmReassignTask(){
+		log.info("confirmReassignTask");
+		boolean isSuccess = false;
+		PmUser pmUser = this.getManagedBean().getSelectedUser();
+		WorklistItemVO task = this.getManagedBean().getSelectedTask();
+		if(pmUser==null){
+			throw new EpException("Please select an user to be re-assigned.");//TODO
+		}
+		if(task==null){
+			throw new EpException("Task is not null.");//TODO
+		}
+		
+		isSuccess = reassignTask(pmUser, task.getTaskId());
+		
+		if(isSuccess){
+			this.taskListDataModel.reloadData();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+		    FacesMessage.SEVERITY_INFO,
+		    null,
+		    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
+		}
+	}
+	
+	/**
+	 * Invoke BPM & Reassign task to selected user
 	 * @param users
 	 */
 	private boolean reassignTask(PmUser user, String taskId)throws EpException{
