@@ -427,10 +427,6 @@ public class ViewSmApplBackingBean extends
 
 	private void initStep3CaptialAndEquityInfo() {
 		// captialOrEquityStatusInfoFormViewOnly
-//		SmCommonUtil.calculateSmApplicationPaidUpCapitalSum(getManagedBean()
-//				.getSmAppl().getSmCompanyBasic(), getManagedBean()
-//				.getBusinessTypeVal());
-		
 		SmCommonUtil
 		.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 				.getSmAppl().getSmCompanyBasic());
