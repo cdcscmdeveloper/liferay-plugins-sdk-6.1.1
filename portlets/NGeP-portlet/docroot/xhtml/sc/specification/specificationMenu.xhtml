@@ -29,7 +29,8 @@
 
 
 					<p:menuitem value="#{lbl['lbl.sc.spec.financial.specification']}"
-						actionListener="#{specificationBackingBean.businessOwnerTabChange(3)}" update="@form" />
+						actionListener="#{specificationBackingBean.businessOwnerTabChange(3)}"
+						update="@form" />
 
 					<c:if
 						test="#{specificationBackingBean.managedBean.scQt.specApprovalReq eq 'true' and specificationBackingBean.managedBean.taskName eq 'Specification Approval' }">

@@ -24,7 +24,7 @@
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
 					<p:commandLink oncomplete="suppDetails.show();"
 						actionListener="#{specificationBackingBean.retriveSupplierDtls(qtSupplier)}"
-						update=":form:paneltabView:popupSuppDtl">
+						update=":form:paneltabView:popupSuppDtl" >
 						<h:outputText value="#{qtSupplier.supplier.companyName}" />
 					</p:commandLink>
 				</p:column>
