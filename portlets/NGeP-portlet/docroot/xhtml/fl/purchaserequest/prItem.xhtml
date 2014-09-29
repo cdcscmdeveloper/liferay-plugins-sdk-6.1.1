@@ -485,26 +485,26 @@
 		modal="true" width="900" resizable="false">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.item.name'}]" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.itemName}"
 						size="60" /></td>
 			</tr>
 			<tr>		
-				<td><p:outputLabel value="#{lbl[lbl.fl.requested.qty']}" style="text-align:right"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.requested.qty']}" style="text-align:right"/></td>
 				<td><p:inputText disabled="true" 
 						value="#{purchaseRequestBackingBean.managedBean.quantity ==0 ? 'N/A' : purchaseRequestBackingBean.managedBean.quantity}"
 						size="35" ><f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" /></p:inputText></td>
 			</tr>
 			<tr>			
-				<td><p:outputLabel value="#{lbl[lbl.fl.price.type']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.price.type']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{purchaseRequestBackingBean.managedBean.priceType != null}"
 						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.priceType)}" 
 						size="35" /></td>					
 			</tr>
 			<tr>			
-				<td><p:outputLabel value="#{lbl[lbl.fl.standard.price']}" rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"/></td>
 				<td><p:inputText disabled="true"  rendered="#{purchaseRequestBackingBean.managedBean.standardPrice}"
 						value="#{purchaseRequestBackingBean.managedBean.standardUnitPrice}" 
 						size="35" >
@@ -514,7 +514,7 @@
 			</tr>
 		</table> 
 		<h:panelGroup rendered="#{!purchaseRequestBackingBean.managedBean.standardPrice}">
-			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail]}" toggleable="false" >
+			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{purchaseRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
