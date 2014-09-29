@@ -1062,8 +1062,10 @@ public class SmApplicationBackingBean extends
 									RoleCode.MOF_SUPPLIER_USER.value())) {
 				getManagedBean().getSelectedShareHolder().setEpRole("");
 			}
+			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
 			getManagedBean().setRemoveEpRole(true);
 		} else {
+			getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
@@ -5321,7 +5323,16 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setDisableSemiProf(
 						false);
 			}
-
+		}
+		if (getManagedBean().getSelectedShareHolder().isEquityOwner()
+				|| getManagedBean().getSelectedShareHolder().isDirector()
+				|| getManagedBean().getSelectedShareHolder()
+						.isHigherManagement()){
+			getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
+			getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
+		} else {
+			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
+			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
 		}
 	}
 

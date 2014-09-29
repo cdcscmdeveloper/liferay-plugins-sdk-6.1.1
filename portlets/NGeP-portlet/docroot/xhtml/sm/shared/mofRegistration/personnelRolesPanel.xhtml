@@ -17,7 +17,7 @@
 								<c:if test="#{backingBean.managedBean.validEquityLimit}">
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
-											<p:ajax event="change" update=":form:tt:shrRolesPanel"
+											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles}" />
 										</p:selectBooleanCheckbox></td>
@@ -31,14 +31,14 @@
 										backingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT}">
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.director}">
-												<p:ajax event="change" update=":form:tt:shrRolesPanel"
+												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles}" />
 											</p:selectBooleanCheckbox></td>
 										<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.dir']}" /></td>
 										<td style="width: 20px"><p:selectBooleanCheckbox
 												value="#{backingBean.managedBean.selectedShareHolder.higherManagement}">
-												<p:ajax event="change" update=":form:tt:shrRolesPanel"
+												<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
 													process=":form:tt:shrRolesPanel" partialSubmit="true"
 													listener="#{backingBean.managePersonnelRoles}" />
 											</p:selectBooleanCheckbox></td>
