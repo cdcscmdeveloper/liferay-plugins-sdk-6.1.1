@@ -33,7 +33,7 @@
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.order.no']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.order.no']}" style="padding-left : 300px;"/>
 					<p:inputText size="28" maxlength="17" 
 						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
 				</h:panelGrid>
@@ -49,7 +49,7 @@
 							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" style="padding-left : 305px;"/>
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	
 				</h:panelGrid>
@@ -66,7 +66,7 @@
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
 				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
-				<p:inputText size="50"
+				<p:inputText size="45"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docDoStatusSearch">
