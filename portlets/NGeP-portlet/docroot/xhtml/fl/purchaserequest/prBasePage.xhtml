@@ -18,16 +18,17 @@
 		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{purchaseRequestBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{purchaseRequestBackingBean.backToPervious}"  /></td>
-				<td colspan="4" style="text-align: right"><ui:repeat
-						var="bpmAction"
-						value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						<p:commandButton value="#{bpmAction}" update="@form" 
+				<td colspan="4" style="text-align: right">
+					<ui:repeat var="bpmAction" value="#{purchaseRequestBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+						<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
 							styleClass="ui-button"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
-					</ui:repeat></td>
+					</ui:repeat>
+				</td>
 			</tr>
 		</table>
 		<table style="width: 100%;">
@@ -35,7 +36,7 @@
 				<c:if
 					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Update"}'>
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE"
+							value="#{lbl['lbl.btn.update']}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -43,7 +44,7 @@
 				<c:if
 					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL"
+							value="#{lbl['lbl.btn.cancel']}"
 							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
@@ -55,19 +56,19 @@
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu" activeIndex="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" >
-						<p:menuitem value="General"	update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="Delivery Address and Item" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>	
-						<p:menuitem value="Order Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(2)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(2)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="2" />
 						</p:menuitem>	
-						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(3)}">
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="3" />
 						</p:menuitem>	
-						<p:menuitem value="Approval Setting" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(4)}"
+						<p:menuitem value="#{lbl['lbl.fl.menu.approver.list']}" update="@form" actionListener="#{purchaseRequestBackingBean.onTabChange(4)}"
 						rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}" >
 							<f:setPropertyActionListener target="#{purchaseRequestBackingBean.managedBean.selectedTabIndex}" value="4" />
 						</p:menuitem>																								
@@ -86,10 +87,10 @@
 						<ui:include src="chargeline.xhtml" />
 					</p:outputPanel>	
 					<p:outputPanel rendered="#{purchaseRequestBackingBean.managedBean.selectedTabIndex == 4}">
-						<p:panel id="settingId" header="Approver Setting" toggleable="true" toggleSpeed="500">
+						<p:panel id="settingId" header="#{lbl['lbl.fl.ptj.approver.details']}" toggleable="true" toggleSpeed="500">
 							<h:panelGrid columns="1">
 								<h:panelGrid columns="2">
-									<h:outputLabel value="Approver Group" style="text-align: top" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" style="text-align: top" />
 									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
 										<p:ajax event="change" process="@this" update="approverpickList"
@@ -101,8 +102,8 @@
 									<p:pickList id="approverpickList" var="data" itemValue="#{data}" itemLabel="#{data}"
 										value="#{purchaseRequestBackingBean.managedBean.approverModel}"
 										showTargetControls="true" filterMatchMode="contains">
-										<f:facet name="sourceCaption">Available</f:facet>
-										<f:facet name="targetCaption">Selected</f:facet>
+										<f:facet name="sourceCaption">#{lbl['lbl.fl.ptj.available']}</f:facet>
+										<f:facet name="targetCaption">#{lbl['lbl.fl.ptj.selected']}</f:facet>
 										<p:column style="width:75%;">
 											<h:outputText value="#{data}" />
 										</p:column>
