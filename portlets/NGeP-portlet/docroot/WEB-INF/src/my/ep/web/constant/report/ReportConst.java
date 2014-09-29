@@ -424,7 +424,7 @@ public class ReportConst {
 	public static final String AMP_EXT_BRAND_EQ = "&brandid=";
 	public static final String AMP_EXT_MEASURMENT_EQ = "&measurementid=";
 	public static final String AMP_EXT_COLOUR_EQ = "&colorid=";
-	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report";
+	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "lbl.rpt.search.PLZ_SEL_ONE_RPT_SEARCH";
 	public static final String PLZ_SEL_ONE_RPT_CRITERIA_SEARCH = "lbl.rpt.search.criteria.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH";
