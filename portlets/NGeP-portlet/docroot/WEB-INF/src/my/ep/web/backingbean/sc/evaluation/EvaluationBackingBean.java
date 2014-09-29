@@ -196,7 +196,9 @@ public class EvaluationBackingBean extends
 
 				resultStg.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg);
-				award = SourcingConstants.AWARD_BY_ITEM;
+				if (!this.getManagedBean().getScQt().isZonal()) {
+					award = SourcingConstants.AWARD_BY_ITEM;
+				}
 				this.getManagedBean().setSummaryZoneBean(null);
 			} else if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 					.equalsIgnoreCase(this.getManagedBean().getSummaryViewBy())
@@ -205,7 +207,9 @@ public class EvaluationBackingBean extends
 									.getCommitteeType())) {
 				resultStg.add(QTConstants.RECOMMENDATION_BY_ITEM);
 				summaryReqDTO.setResultStages(resultStg);
-				award = SourcingConstants.AWARD_BY_ITEM;
+				if (!this.getManagedBean().getScQt().isZonal()) {
+					award = SourcingConstants.AWARD_BY_ITEM;
+				}
 				this.getManagedBean().setSummaryZoneBean(null);
 			} else if (QTConstants.PREFERENCE_MARGIN.equalsIgnoreCase(this
 					.getManagedBean().getSummaryViewBy())) {
@@ -218,7 +222,7 @@ public class EvaluationBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
 
 			summaryReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-
+			summaryReqDTO.setZonal(this.getManagedBean().getScQt().isZonal());
 			summaryReqDTO.setResultStages(resultStg);
 			summaryReqDTO.setAwardBy(award);
 
@@ -238,6 +242,9 @@ public class EvaluationBackingBean extends
 						if (QTConstants.FINANCIAL_EVALUATION_BY_ITEM
 								.equalsIgnoreCase(this.getManagedBean()
 										.getSummaryViewBy())) {
+							summaryReqDTO.setZonal(false);
+							award = SourcingConstants.AWARD_BY_ITEM;
+							summaryReqDTO.setAwardBy(award);
 							evalResDTO = evaluationSO
 									.retrieveSummaryDetails(summaryReqDTO);
 
@@ -254,16 +261,20 @@ public class EvaluationBackingBean extends
 										evalResDTO.getRequestItemResults()
 												.getResultList());
 
+							} else {
+								bean = new SummaryZoneBaen(tplSpecZoneDtl, null);
 							}
+							/*
+							 * this.getManagedBean().getSummaryZoneBean()
+							 * .add(bean);
+							 */
 						} else {
 							bean = new SummaryZoneBaen(tplSpecZoneDtl, null,
 									null);
 							this.getManagedBean()
 									.setEvaTotQualifiedSuppliers(0);
 							if (null != evalResDTO1.getQulifiedSuppliers()
-									&& null != evalResDTO1
-											.getQulifiedSuppliers()
-											.getResultList()
+
 									&& !evalResDTO1.getQulifiedSuppliers()
 											.getResultList().isEmpty()) {
 								this.getManagedBean()
@@ -280,9 +291,7 @@ public class EvaluationBackingBean extends
 							this.getManagedBean()
 									.setEvaTotDisQualifiedSuppliers(0);
 							if (null != evalResDTO1.getDisQulifiedSuppliers()
-									&& null != evalResDTO1
-											.getDisQulifiedSuppliers()
-											.getResultList()
+
 									&& !evalResDTO1.getDisQulifiedSuppliers()
 											.getResultList().isEmpty()) {
 
@@ -749,7 +758,7 @@ public class EvaluationBackingBean extends
 				List<String> evalstage = new ArrayList<String>();
 				evalstage.add(QTConstants.COMPLIANCE_CHECK);
 				reqDTO.setResultStages(evalstage);
-				// evaluationSO.prepareComplianceSummaryResults(reqDTO);
+				evaluationSO.prepareComplianceSummaryResults(reqDTO);
 				EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 				summaryReqDTO
 						.setQtId(this.getManagedBean().getScQt().getQtId());
@@ -939,8 +948,10 @@ public class EvaluationBackingBean extends
 					List<String> resultStg2 = new ArrayList<String>();
 					resultStg2.add(QTConstants.TECHNICAL_EVALUATION);
 					summaryReqDTO.setResultStages(resultStg2);
+					summaryReqDTO.setZonal(false);
 					evalResDTO = evaluationSo
 							.retrieveSummaryDetails(summaryReqDTO);
+					
 					if (evalResDTO.getQulifiedSuppliers().getTotalRecord() > 0) {
 
 						this.getManagedBean()
@@ -3055,8 +3066,8 @@ public class EvaluationBackingBean extends
 				tplSpecAnswer.setTplSpecSuppAnswer(tplSpecAnswer
 						.getTplSpecSuppAnswer());
 
-				tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
-						getManagedBean().getSelectedZone());
+				// tplSpecAnswer.getTplSpecSuppAnswer().setTplSpecZoneDtl(
+				// getManagedBean().getSelectedZone());
 
 			}
 
@@ -3066,7 +3077,7 @@ public class EvaluationBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"Evaluation Preperation Saved Successfully",
-							"Evaluation"));
+							"Evaluation TemplateSpec Saved Successfully."));
 		} finally {
 			evaluationSO = null;
 		}
