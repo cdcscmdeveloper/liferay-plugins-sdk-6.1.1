@@ -9,170 +9,173 @@
 	<p:dialog id="cloneBusinessOwner" header="Clone Business Owner"
 		widgetVar="cloneBusinessOwner" width="950" height="600" position="top"
 		styleClass="cloneAddMember">
-		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
-			id="searchpnlid">
-			<table>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
-					<td colspan="3"><p:inputTextarea id="title1"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
-							cols="110" rows="2" style=" margin-bottom:5px; width: 100%; "
-							maxlength="100" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
-					<td><p:inputText
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}"
-							size="30" maxlength="21" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
-					<td><p:selectOneMenu
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}"
-							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
-					<td><p:calendar
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
-							id="crdateFrm" showOn="button" size="30" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-							<p:ajax event="dateSelect" update="createdtTo" />
-						</p:calendar></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
-					<td><p:calendar id="createdtTo" showOn="button"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toCreatedDate}"
-							mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-							size="30" readonlyInput="true">
-							<f:attribute name="startDate"
-								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}" />
-							<f:validator validatorId="dateRangeValidator" />
-						</p:calendar></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
-					<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
-							value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtStatus}">
-							<f:selectItems
-								value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
-						</p:selectOneMenu></td>
-					<td />
-					<td />
-				</tr>
-			</table>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
-					icon="ui-icon-search"
-					action="#{qTBusinessOwnerBackingBean.cloneSearchBOAction}"
-					update="clonesearchboid" process="@parent, searchpnlid" />
-				<p:commandButton value="#{lbl['lbl.btn.reset']}"
-					action="#{qTBusinessOwnerBackingBean.resetClone}"
-					update="searchpnlid" icon="ui-icon-reset" resetValues="true"
-					partialSubmit="true" process="@this" />
-			</div>
+		<p:panel id="clonepnlid">
+			<p:messages id="boclonemessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true"
+				id="searchpnlid">
+				<table>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.title']}" /></td>
+						<td colspan="3"><p:inputTextarea id="title1"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtTitle}"
+								cols="110" rows="2" style=" margin-bottom:5px; width: 100%; "
+								maxlength="100" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.qtntender']}" /></td>
+						<td><p:inputText
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtNo}"
+								size="30" maxlength="21" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.procurementmode']}" /></td>
+						<td><p:selectOneMenu
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.procurementMode}"
+								style="width: 178px;margin-bottom: 5px;">
+								<f:selectItems
+									value="#{qTBusinessOwnerBackingBean.getProcurementModeDropdownValues()}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" /></td>
+						<td><p:calendar
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
+								id="crdateFrm" showOn="button" size="30" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+								<p:ajax event="dateSelect" update="createdtTo" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.so.creatdtto']}" /></td>
+						<td><p:calendar id="createdtTo" showOn="button"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.toCreatedDate}"
+								mindate="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								size="30" readonlyInput="true">
+								<f:attribute name="startDate"
+									value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.fromCreatedDate}" />
+								<f:validator validatorId="dateRangeValidator" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.committe.clone.comstatus']}" /></td>
+						<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+								value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerSearchBean.qtStatus}">
+								<f:selectItems
+									value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
+							</p:selectOneMenu></td>
+						<td />
+						<td />
+					</tr>
+				</table>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						icon="ui-icon-search"
+						action="#{qTBusinessOwnerBackingBean.cloneSearchBOAction}"
+						update="clonesearchboid" process="@parent, searchpnlid" />
+					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+						action="#{qTBusinessOwnerBackingBean.resetClone}"
+						update="searchpnlid" icon="ui-icon-reset" resetValues="true"
+						partialSubmit="true" process="@this" />
+				</div>
+			</p:panel>
+			<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
+				<p:dataTable id="clonesearchboid"
+					value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerDataModel}"
+					selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
+					rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
+					styleClass="cloneResults" rows="10">
+
+					<ac:paginator for="clonesearchboid" />
+
+					<p:ajax event="rowSelect" update=":form:businessownerlistid"
+						listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
+
+					<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+						<h:outputText value="#{scQt.qtNo}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.title']}">
+						<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.procmode']}">
+						<h:outputText
+							value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+						<h:outputText value="#{scQt.createdDate}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.status']}">
+						<h:outputText
+							value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<p:spacer height="3" />
+			<p:panel id="cloneCommitteMembers"
+				header="#{lbl['lbl.so.business.owner']}" toggleable="true">
+				<p:dataTable id="businessownerlistid"
+					value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
+					var="member" rowKey="#{member}"
+					selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
+					styleClass="cloneResults,cloneCommitteMembers">
+
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<p:column headerText="#{lbl['lbl.so.bo.name']}">
+						<h:outputText value="#{member.memberName}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
+						<h:outputText value="#{member.icPassport}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.designation']}">
+						<h:outputText value="#{member.designation}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.email']}">
+						<h:outputText
+							value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}"
+							style="white-space: normal;" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.grade']}">
+						<h:outputText value="#{member.grade}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.pp']}">
+						<h:outputText
+							value="#{lbl[member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
+						<h:outputText
+							value="#{lbl[member.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+					</p:column>
+
+				</p:dataTable>
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.ok']}"
+						action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
+						update="businessownerId" icon="ui-icon-check" />
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+						icon="ui-icon-cancel" onclick="cloneBusinessOwner.hide()" />
+				</div>
+			</p:panel>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.so.qtlist']}" toggleable="true">
-			<p:dataTable id="clonesearchboid"
-				value="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessOwnerDataModel}"
-				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCloneBusinessTender}"
-				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
-				styleClass="cloneResults" rows="10">
-
-				<ac:paginator for="clonesearchboid" />
-
-				<p:ajax event="rowSelect" update=":form:businessownerlistid"
-					listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
-
-				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
-					<h:outputText value="#{scQt.qtNo}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{scQt.qtTitle}" style="white-space: normal;" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.procmode']}">
-					<h:outputText
-						value="#{qTBusinessOwnerBackingBean.getParameterDesc(scQt.procurementMode)}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{scQt.createdDate}">
-						<f:convertDateTime
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
-					</h:outputText>
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.status']}">
-					<h:outputText
-						value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
-				</p:column>
-			</p:dataTable>
-		</p:panel>
-		<p:spacer height="3" />
-		<p:panel id="cloneCommitteMembers"
-			header="#{lbl['lbl.so.business.owner']}" toggleable="true">
-			<p:dataTable id="businessownerlistid"
-				value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
-				var="member" rowKey="#{member}"
-				selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
-				styleClass="cloneResults,cloneCommitteMembers">
-
-				<p:column selectionMode="multiple" style="width:2%" />
-
-				<p:column headerText="#{lbl['lbl.so.bo.name']}">
-					<h:outputText value="#{member.memberName}"
-						style="white-space: normal;" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.identification.no']}">
-					<h:outputText value="#{member.icPassport}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-					<h:outputText value="#{member.designation}"
-						style="white-space: normal;" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.email']}">
-					<h:outputText
-						value="#{member.pmUser.pmAddressTypes[0].pmAddress.email}"
-						style="white-space: normal;" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.grade']}">
-					<h:outputText value="#{member.grade}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.pp']}">
-					<h:outputText
-						value="#{lbl[member.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.bo.consolidate']}">
-					<h:outputText
-						value="#{lbl[member.consolidateValue ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
-				</p:column>
-
-			</p:dataTable>
-			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}"
-					action="#{qTBusinessOwnerBackingBean.addCloneCommitteeMembersAction}"
-					update="businessownerId" icon="ui-icon-check" />
-				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					icon="ui-icon-cancel" onclick="cloneBusinessOwner.hide()" />
-			</div>
-		</p:panel>
-
 	</p:dialog>
 </ui:composition>
