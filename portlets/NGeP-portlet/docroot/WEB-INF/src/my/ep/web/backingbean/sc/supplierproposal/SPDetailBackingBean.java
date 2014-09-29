@@ -1163,7 +1163,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveEmployeeDtls(
+	public String retrieveEmployeeDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1541,7 +1541,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveFinNonGovCompanyExpDtls(
+	public String retrieveFinNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1619,7 +1619,7 @@ public class SPDetailBackingBean extends
 		return proposalCheckList;
 	}
 
-	private String retrieveCreditFacilitiesDtls(
+	public String retrieveCreditFacilitiesDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1656,7 +1656,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveCashOnHandDtls(
+	public String retrieveCashOnHandDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1685,7 +1685,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveBankStmtDtls(
+	public String retrieveBankStmtDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1725,7 +1725,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveAssetLiabilityDtls(
+	public String retrieveAssetLiabilityDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1763,7 +1763,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrievePaidUpCapitalDtls(
+	public String retrievePaidUpCapitalDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 
 		retrieveSupplierDtls(scQtProposalChecklist);
@@ -1812,7 +1812,7 @@ public class SPDetailBackingBean extends
 	 * 
 	 * return null; }
 	 */
-	private String retrieveFinCompanyExpDtls(
+	public String retrieveFinCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
