@@ -41,7 +41,7 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -49,9 +49,9 @@
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.certRemark}" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.certRemark}" /></td>
 					</tr>
 				</table>
 			</p:outputPanel>
@@ -66,36 +66,35 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']} :" /></td>
-					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']} :" /></td>
-					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
 				</tr>
 	
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']} :" /></td>
-					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
-					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
+					<td>
+						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
-					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
+					<td>
+						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']} :" /></td>
-					<td style="float:left;">
-						<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
 					</td>
 				</tr>
-	
 			</table>
 		</p:outputPanel>
 
