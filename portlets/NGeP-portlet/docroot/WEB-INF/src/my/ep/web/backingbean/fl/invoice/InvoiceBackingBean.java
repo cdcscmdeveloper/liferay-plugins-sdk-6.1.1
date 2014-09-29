@@ -553,7 +553,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().setBranchName(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.toString());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			if(!resDTO.getAddressTypeList().isEmpty()){
@@ -561,7 +561,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				
 				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
 				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null ){
+				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null && resDTO.getAddressTypeList().get(0).getPmContacts().size()>0){
 					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
 					getManagedBean().setContactPerson(pmContact.getContactName());
 					getManagedBean().setContactEmail(pmContact.getEmail());
