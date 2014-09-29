@@ -120,7 +120,7 @@
 								<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 							</p:commandLink>&#160;</td>
 						<td style="text-align: right;">
-							<p:panel id="zTErrorLink" styleClass="noBorders tr,noBorders td">
+							<p:panel id="zTErrorLink" styleClass="noBorders tr,noBorders td" style="border:none;">
 								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this" actionListener="#{catalogueBackingBean.updateZonalTierErrorDialog(rowIndex)}" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:errorDialog" 
 									rendered="#{(tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction or !tier.checkOk)}"
 									oncomplete="errorDialog.show();">
