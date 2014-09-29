@@ -333,13 +333,13 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
-				<h:outputText value="#{jf.fromYear}" maxlength="4" label="Year From" />
+				<h:outputText value="#{jf.fromYear}" maxlength="4" label="#{lbl['lbl.sm.year.from']}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
-				<h:outputText value="#{jf.toYear}" maxlength="4" label="Year To" />
+				<h:outputText value="#{jf.toYear}" maxlength="4" label="#{lbl['lbl.sm.year.to']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
 				<p:commandLink update=":form:tt:equiJobFunctionInfo"
