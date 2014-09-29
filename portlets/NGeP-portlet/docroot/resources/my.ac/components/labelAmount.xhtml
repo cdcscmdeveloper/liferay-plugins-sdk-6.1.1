@@ -1,0 +1,20 @@
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<cc:interface>
+		<cc:attribute name="value" required="true" />
+		<cc:attribute name="rendered" />
+	</cc:interface>
+
+	<cc:implementation>
+		<h:outputText value="#{cc.attrs.value}" rendered="#{cc.attrs.rendered==null?'true':cc.attrs.rendered}">
+			<f:convertNumber
+				pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+		</h:outputText>
+	</cc:implementation>
+
+</ui:component>
