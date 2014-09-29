@@ -48,7 +48,11 @@
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}" >
-					<p:column headerText="#{lbl['lbl.fl.item.code']}" >
+					<p:column>
+						<f:facet name="header" style="width:8%;">
+							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
+						</f:facet>
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem==null}" value="#{newItems.scRequestItem.tempUnspscCode}" />
 						<h:outputText rendered="#{newItems.scRequestItem.cmItem!=null}" value="#{newItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
