@@ -3623,7 +3623,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			String baseUrl=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
 			String path=baseUrl+"/ReportViewServlet";			
 			log.info(path);
-			req.getSession().setAttribute("generatedUrl", gnrtdURL);
+			req.getSession().setAttribute("generatedUrl", gnrtdURL.toString());
 			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
 			setReportURL(path);
 		} catch (Exception e) {
