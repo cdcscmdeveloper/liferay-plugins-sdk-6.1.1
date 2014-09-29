@@ -140,19 +140,24 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
 								newSpecQuestion.setTplSpecAnswers(null);
 								
-								IParameterSO parameterSO = null;
-								try {
-									parameterSO = BusinessDelegate.getInstance().getServiceObject(
-											ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-								
-									ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-									parameterReqDTO.setParameterType(ParameterTypeConst.SCORE_TYPE);
-									parameterReqDTO.setParameterCode(ParameterConst.SCORE_TYPE_USER);
-									ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
-									newSpecQuestion.setScoreTypeCode(parameterResDTO.getPmParameter());
-								} finally {
-									parameterSO = null;
+								if (isTechnicalSpec) {
+									newSpecQuestion.setAnswerTypeCode(null);
+								} else {
+									IParameterSO parameterSO = null;
+									try {
+										parameterSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+									
+										ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+										parameterReqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
+										parameterReqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_NUMERIC);
+										ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+										newSpecQuestion.setAnswerTypeCode(parameterResDTO.getPmParameter());
+									} finally {
+										parameterSO = null;
+									}
 								}
+								newSpecQuestion.setScoreTypeCode(null);
 								newSpecQuestion.setMaxScore(null);
 								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
