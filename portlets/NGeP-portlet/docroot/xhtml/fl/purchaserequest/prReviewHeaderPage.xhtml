@@ -9,25 +9,25 @@
 		<table style="width: 100%">
 			<tr>
 				<td>
-					<h:outputLabel value="#{lbl['lbl.fl.rev.hed.request.note.no']} " />
+					<h:outputLabel value="#{lbl['lbl.fl.req.note.no']} " />
 				</td>
 				<td class="header-info-text">
 					#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.scPurchaseRequest.requestNote.requestNoteNo}
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.pr.no']} " />
+					<p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']} " />
 				</td>
 				<td class="header-info-text">
 					#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+					<p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
 					#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
 				</td>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
+					<p:outputLabel value="#{lbl['lbl.fl.status']} " />
 				</td>
 				<td class="header-info-text">
 					#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}

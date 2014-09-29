@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
+	<p:panel header="#{lbl['lbl.fl.agency.details']}" toggleable="true" id="flDetails">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
@@ -19,17 +20,21 @@
 				<td style="width: 146px;"><p:outputLabel
 						value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="8" id="preparedOrgProfileId"
+				<td style="width: 460px;"><p:inputText size="8" id="preparedOrgProfileId"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
-						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
+						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
 						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="50"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
-					</ac:lov></td>
+					</ac:lov>
+				</td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
@@ -40,6 +45,7 @@
 						<p:inputText size="50" id="issuedOrgName"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
 			</tr>										
 			<tr>
@@ -47,37 +53,46 @@
 				<td><p:inputText size="8" id="chargeOrgProfileId" readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
-						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
+						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
 						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}" 
 						update=":form:chargeOrgProfileId" size="50">
 					</ac:lov></td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
+				</td>					
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="8" disabled="true" id="agOffice"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeCode}" />
-					<p:spacer width="10" /> <p:inputText size="50" disabled="true"
+					<p:spacer width="9" /> <p:inputText size="50" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.agOffice.officeName}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/>	
 				</td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="REQUEST DETAIL" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
 						value="#{lbl['lbl.fl.title']}" /> </td>
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
-						maxlength="500" style=" margin-bottom:5px;" label="Title"
+						maxlength="500" style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
 						/></td>
-						<td><p:message for="title" display="icon" /></td>
+						<td><p:message for="title" display="icon" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.title']}"/>
+				</td>
 				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="25" disabled="true"
-						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" /></td>
+						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType)}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
+				</td>
 			</tr>
 			<tr>
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
@@ -91,10 +106,12 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/>	
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.term']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
 				<td><p:inputText size="12" style="text-align:right;"
 						disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.deliveryTerm}" />
@@ -106,10 +123,12 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.submission.date']}"/>	
+				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar mode="popup" readonlyInput="true"
 						showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
@@ -121,7 +140,7 @@
 					</p:calendar></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
 				<td><p:calendar id="delEndDate" mode="popup"
 						readonlyInput="true"  showOn="button"
 						mindate="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.startDate}" 
@@ -134,20 +153,24 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel id="supplierPnl" header="SUPPLIER DETAIL" toggleable="true">
+	<p:panel id="supplierPnl" header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 142px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
+						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" /></td>
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.regNo}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/>	
+							</td>
 							<td style="width: 78px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{purchaseRequestBackingBean.retrieveMofNo(purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier)}" /></td>
+									value="#{purchaseRequestBackingBean.retrieveMofNo(purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier)}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>	
+							</td>
 						</tr>
 					</table></td>
 			</tr>
