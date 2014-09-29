@@ -6,23 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<table style="width: 30%">
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
+			<td><p:selectOneRadio id="offLnSuppDocs"
+					value="#{backingBean.managedBean.smAppl.supportingDocMode}">
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+						itemValue="F" />
+					<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+						itemValue="O" />
+					<p:ajax update="supDocPan" event="change" />
+				</p:selectOneRadio></td>
+		</tr>
+
+	</table>
 	<p:panel
 		header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} #{backingBean.managedBean.smAppl.applNo}"
 		toggleable="true" id="offSupDocPanelHdr">
-		<table style="width: 30%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
-				<td><p:selectOneRadio id="offLnSuppDocs"
-						value="#{backingBean.managedBean.smAppl.supportingDocMode}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
-							itemValue="F" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
-							itemValue="O" />
-						<p:ajax update="supDocPan" event="change" />
-					</p:selectOneRadio></td>
-			</tr>
-
-		</table>
 		<br />
 		<table style="width: 100%">
 			<tr>
@@ -110,7 +110,6 @@
 
 		<p:dataTable var="table" id="offSdList"
 			value="#{backingBean.managedBean.smAppl.smApplSupportDocs}">
-			<ac:paginator for="offSdList" />
 
 			<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}">
 				<p:outputLabel value="#{table.pmDocument.docName}"
@@ -122,11 +121,13 @@
 
 		<br />
 		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.printList']}">
-				<p:printer target=":form:tt:offSupDocPanelHdr" />
-			</p:commandButton>
-		</div>
-
 	</p:panel>
+	<p:outputPanel>
+		<div align="right">
+			<h:commandButton value="#{lbl['lbl.sm.printList']}"
+				styleClass="ui-button">
+				<p:printer target=":form:tt:offSupDocPanelHdr" />
+			</h:commandButton>
+		</div>
+	</p:outputPanel>
 </ui:composition>
