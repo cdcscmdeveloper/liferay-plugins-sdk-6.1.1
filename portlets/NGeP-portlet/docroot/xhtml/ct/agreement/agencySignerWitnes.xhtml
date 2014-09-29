@@ -26,10 +26,10 @@
                  <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}" 
                       rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null and
             		  agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId != null}">
-                 <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}" 
+                 <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}"  
 						saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
 						value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="50" 
-						conditionField="parentOrgProfile.orgProfileId^#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="recordStatusFlg^1|parentOrgProfile.orgProfileId^#{agreementBackingBean.getPtjParentId()}">
 					</ac:lov>
 					 </p:column>
 				 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}" 
