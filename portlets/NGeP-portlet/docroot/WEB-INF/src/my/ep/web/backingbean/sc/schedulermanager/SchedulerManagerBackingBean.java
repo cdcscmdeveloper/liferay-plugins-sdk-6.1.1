@@ -7,10 +7,9 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.logging.LogKey;
-import my.ep.test.quartz.constant.EpQuartzConstant;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
-import my.ep.web.scheduler.sc.ebidding.constants.EPSchedulerConstants;
+import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
 import my.ep.web.scheduler.sc.ebidding.util.SchedulerFactoryUtil;
 import my.ep.web.vo.EpJobVO;
 
@@ -20,8 +19,8 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
 import org.quartz.Trigger.TriggerState;
+import org.quartz.TriggerBuilder;
 import org.quartz.impl.matchers.GroupMatcher;
 
 @ManagedBean(name = "schedulerManagerBB")
