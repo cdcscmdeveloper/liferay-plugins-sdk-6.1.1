@@ -20,18 +20,11 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.strtDate']}">
-					<h:outputText value="#{certBean.certStartDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
+					<ac:labelDate value="#{certBean.certStartDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.cert.expDate']}">
-					<h:outputText value="#{certBean.certEndDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
-
+					<ac:labelDate value="#{certBean.certEndDate}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}"
@@ -87,19 +80,13 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
 					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
+						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
 					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
 					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" >
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText>
+						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
 					</td>
 				</tr>
 				<tr>

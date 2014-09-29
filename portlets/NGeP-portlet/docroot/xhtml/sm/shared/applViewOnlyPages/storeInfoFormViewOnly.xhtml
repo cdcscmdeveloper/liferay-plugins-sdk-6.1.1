@@ -92,10 +92,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.area.feat']} :" /></td>
-				<td><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.areaSquareFeet}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+				<td>
+					<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.areaSquareFeet}" />
 				</td>
 			</tr>
 			<tr>
@@ -117,17 +115,11 @@
 				<td><p:outputPanel id="storPan">
 						<ui:fragment
 							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'O'}">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.purchasePrice}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.purchasePrice}" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.ownershipType eq 'R'}">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.rentalRate}" >
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedStoreFacility.rentalRate}" />
 						</ui:fragment>
 					</p:outputPanel></td>
 			</tr>
