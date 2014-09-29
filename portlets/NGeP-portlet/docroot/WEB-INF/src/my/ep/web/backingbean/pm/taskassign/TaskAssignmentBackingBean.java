@@ -136,11 +136,11 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		log.info("searchDocument - Start");
 		if(!(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()!=null 
 				&& this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().getOrgProfileId()!=null)){
-			throw new EpException("Org. Name is required.");//TODO
+			throw new EpException(MessageConst.ERROR_770091);
 		}
 		if(!(this.getManagedBean().getTaskAssignmentSearchBean().getUser()!=null 
 				&& this.getManagedBean().getTaskAssignmentSearchBean().getUser().getUserId()!=null)){
-			throw new EpException("User Name is required.");//TODO
+			throw new EpException(MessageConst.ERROR_770092);
 		}
 		this.getManagedBean().setResultUser(this.getManagedBean().getTaskAssignmentSearchBean().getUser());
 		this.getManagedBean().setResultOrgProfile(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile());
@@ -315,10 +315,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			}
 			
 		} catch (Exception e) {
-//			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
-//			TODO
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve status role list.");
+			throw new EpException(MessageConst.ERROR_770093, new String[]{e.getMessage()});
 		}
 		return statusRoles;
 	}
@@ -341,11 +339,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			}
 			
 		} catch (Exception e) {
-//			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
-//			TODO
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve status id list.");
-			
+			throw new EpException(MessageConst.ERROR_770094, new String[]{e.getMessage()});
 		}
 		return statusIds;
 	}
@@ -440,10 +435,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			
 				
 		} catch (Exception e) {
-//			throw new EpException(MessageConst.ERROR_770053, new String[]{id.toString(), e.getMessage()});
-//			TODO
 			e.printStackTrace();
-			throw new EpException("Unable to retrieve available users.");
+			throw new EpException(MessageConst.ERROR_770095, new String[]{e.getMessage()});
 		}		
 		return pmUsers;
 	}
@@ -497,7 +490,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				selectedApprovers = PmCommonUtil.retriveUsersByIds(resDTO.getUserIdList());
 			}
 		}catch(Exception e){
-			throw e; 
+			throw new EpException(MessageConst.ERROR_770103, new String[]{ModuleCodeConst.ORDER_FULFILLMENT, e.getMessage()}); 
 		}finally{
 			reqSO = null;
 		}
@@ -527,7 +520,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				selectedApprovers = PmCommonUtil.retriveUsersByIds(resDTO.getUserIdList());
 			}
 		}catch(Exception e){
-			throw e; 
+			throw new EpException(MessageConst.ERROR_770103, new String[]{ModuleCodeConst.CONTRACT_MANAGEMENT, e.getMessage()}); 
 		}finally{
 			reqSO = null;
 		}
@@ -559,7 +552,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				selectedApprovers = resDTO.getApprovers();
 			}
 		}catch(Exception e){
-			throw e; 
+			throw new EpException(MessageConst.ERROR_770103, new String[]{ModuleCodeConst.SUPPLIER_SELECTION, e.getMessage()});
 		}finally{
 			reqSO = null;
 		}
@@ -575,10 +568,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
 		if(pmUser==null){
-			throw new EpException("Please select an user to be re-assigned.");//TODO
+			throw new EpException(MessageConst.ERROR_770096);
 		}
 		if(task==null){
-			throw new EpException("Task is not null.");//TODO
+			throw new EpException(MessageConst.ERROR_770097);
 		}
 		
 		isSuccess = reassignTask(pmUser, task.getTaskId());
@@ -588,7 +581,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 		    FacesMessage.SEVERITY_INFO,
 		    null,
-		    MessageUtils.getMessage(MessageConst.INFO_770090, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); //TODO
+		    MessageUtils.getMessage(MessageConst.INFO_770104, new String[]{task.getDocNumber()}, 
+			MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 		}
 	}
 	
@@ -607,7 +601,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		try {
 
 			if(taskId==null){
-				throw new EpException("taskId is null.");//TODO
+				throw new EpException(MessageConst.ERROR_770098);
 			}
 			log.info("BPM taskId******"+taskId);
 			log.info("BPM userId*****"+user.getLoginId());
@@ -617,7 +611,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			token = bpmSO.authenticate("weblogic","welcome1"); //TODO
 			
 			if(token==null){
-				throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
+				throw new EpException(MessageConst.ERROR_770099); 
 			}
 		
 			log.info("BPM token******"+token);
@@ -633,12 +627,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			if(responseDTO.isSuccessful()){
 				isSuccess = true;
 			}else{
-				throw new EpException("BPM submission is failed. Unknown problem occurred. Please contact administrator.");//TODO
+				throw new EpException(MessageConst.ERROR_770100);
 			}
 		}catch(EpBpmException be){
-			throw new EpException("EpBpmException: Task Re-assignment failed: {0}.", new String[]{be.getMessage()});//TODO
+			throw new EpException(MessageConst.ERROR_770101, new String[]{be.getMessage()});
 		}catch(EpException e){
-			throw new EpException("EpException: Task Re-assignment failed: {0}.", new String[]{e.getMessage()});//TODO
+			throw new EpException(MessageConst.ERROR_770102, new String[]{e.getMessage()});
 		} finally {
 			bpmSO = null;
 		}
@@ -697,10 +691,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					log.info("BPM pageSize*****"+getPageSize());
 					log.info("BPM loginId******"+loginId);
 					log.info("BPM statusIds******"+statusIds.size());
-					
-					
+								
 					if(token==null){
-						throw new EpException("BPMAuthenticationCtxToken is null. Please login.");//TODO 
+						throw new EpException(MessageConst.ERROR_770099);
 					}
 					log.info("BPM auth******" + token);
 					
