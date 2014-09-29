@@ -3600,7 +3600,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if(null!=constructedParamString && !"".equals(constructedParamString)){
 				//loadReport(generatedURL);	
 				loadReportWithParamsString(constructedParamString);
-				//getStreamedContentPDFFile(generatedURL);
+				//getStreamedContentPDFFile(constructedParamString);
 				//getReportPdf();
 			}
 		}else{	
@@ -3664,15 +3664,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}	
-	public StreamedContent getStreamedContentPDFFile(String url) {		
+	public StreamedContent getStreamedContentPDFFile(String paramConstrString) {
+		StringBuilder gnrtdURL = new StringBuilder();
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+		gnrtdURL.append(paramConstrString); 
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		HttpURLConnection urlConnection = null;		
 		//ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
        // byte[] buf = new byte[1024];
-		if(url!=null) {		
+		if(gnrtdURL!=null) {		
 			try {
-				URL obj = new URL(url);
+				URL obj = new URL(gnrtdURL.toString());
 				urlConnection = (HttpURLConnection) obj.openConnection();				
 				//input = new BufferedInputStream(urlConnection.getInputStream()); 
 				pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");	           
