@@ -24,7 +24,7 @@
 				style="width:15%">
 				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3"
 					headerText="Category Lov"
-					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					postUpdateListener="specificationBackingBean.categoryCodesUpdate(index,specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
@@ -57,7 +57,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.mandatory']}"
 				style="width:10%">
 				<p:selectBooleanCheckbox value="#{cateGory.mandatory}"
-					disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}">
+					disabled="#{specificationBackingBean.managedBean.readOnly}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
@@ -67,12 +67,12 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,restrictedPnlId" update="restrictedPnlId"
 				icon="ui-icon-add"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				actionListener="#{specificationBackingBean.addNewCategoryAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 				icon="ui-icon-delete" process="@this,restrictedPnlId"
 				partialSubmit="true"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				action="#{specificationBackingBean.deleteCategoryCodes}"
 				update="restrictedPnlId" />
 
