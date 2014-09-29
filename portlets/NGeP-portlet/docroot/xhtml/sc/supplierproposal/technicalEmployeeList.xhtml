@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,64 +7,53 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<ui:define name="resourceSection">
-	</ui:define>
 
-	<ui:define name="contentSection">
-		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
-				icon="ui-icon-back" />
-		</div>
-		
-		<ui:include src="checklistHeader.xhtml" />
+	<p:panel header="#{lbl['lbl.sc.sp.technicalstafflist']}"
+		toggleable="true">
 
-		<p:panel header="#{lbl['lbl.sc.sp.technicalstafflist']}"
-			toggleable="true">
+		<p:dataTable id="techEmployeeList" var="techEmployee"
+			value="#{supplierProposalDetailBackingBean.managedBean.smPersonnelList}"
+			rowIndexVar="index">
+			<ac:paginator for="techEmployeeList"></ac:paginator>
 
-			<p:dataTable id="techEmployeeList" var="techEmployee"
-				value="#{supplierProposalDetailBackingBean.managedBean.smPersonnelList}"
-				rowIndexVar="index">
-				<ac:paginator for="techEmployeeList"></ac:paginator>
-
-				<p:column headerText="#{lbl['lbl.sc.sp.name']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.name']}">
 					#{techEmployee.smPersonnel.name}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.identificationno']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.identificationno']}">
 					#{techEmployee.smPersonnel.identificationNo}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.designation']}">
+			<p:column headerText="#{lbl['lbl.sc.sp.designation']}">
 					#{techEmployee.smPersonnel.designation}
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.qualification']}">
-					<ui:repeat var="smStaffAcademic" value="#{techEmployee.smStaffAcademics}">
+			<p:column headerText="#{lbl['lbl.sc.sp.qualification']}">
+				<ui:repeat var="smStaffAcademic"
+					value="#{techEmployee.smStaffAcademics}">
 						#{smStaffAcademic.codeName}
 						<br />
-					</ui:repeat>
-				</p:column>
+				</ui:repeat>
+			</p:column>
 			<!-- value="#{supplierProposalDetailBackingBean.getParameterDesc('QL',techEmployee.getSmStaffAcademics().get(0).getQualificationLevelId)}" -->
-				<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
-					<h:outputText style="float : right" value="#{techEmployee.smPersonnel.workExperienceYear}" />
-				</p:column>
-			</p:dataTable>
+			<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
+				<h:outputText style="float : right"
+					value="#{techEmployee.smPersonnel.workExperienceYear}" />
+			</p:column>
+		</p:dataTable>
 
-			<p:spacer height="5" />
-			<table style="width: 100%">
-				<tr>
-					<td style="width: 170px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.ttlnoofyrsexp']}" /></td>
-					<td colspan="3"><p:inputText style="text-align:right" value="#{supplierProposalDetailBackingBean.managedBean.totalNoOfYearsExperience}"
-							readonly="true" disabled="true" size="30">
-						</p:inputText></td>
-				</tr>
-			</table>
+		<p:spacer height="5" />
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 170px"><p:outputLabel
+						value="#{lbl['lbl.sc.sp.ttlnoofyrsexp']}" /></td>
+				<td colspan="3"><p:inputText style="text-align:right"
+						value="#{supplierProposalDetailBackingBean.managedBean.totalNoOfYearsExperience}"
+						readonly="true" disabled="true" size="30">
+					</p:inputText></td>
+			</tr>
+		</table>
 
-		</p:panel>
+	</p:panel>
 
-	</ui:define>
 </ui:composition>

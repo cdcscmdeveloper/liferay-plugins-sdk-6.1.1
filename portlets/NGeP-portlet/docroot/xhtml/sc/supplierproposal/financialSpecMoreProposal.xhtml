@@ -1,5 +1,5 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,21 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="resourceSection">
-	</ui:define>
-
-	<ui:define name="contentSection">
-		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				icon="ui-icon-back" process="@this" partialSubmit="true"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
-
-		</div>
-
-		<ui:include src="checklistHeader.xhtml" />
-		
+	
 		<p:panel header="" toggleable="true">
 			<table>
 				<tr>
@@ -66,5 +52,5 @@
 			</h:panelGroup>
 
 		</p:panel>
-	</ui:define>
+
 </ui:composition>

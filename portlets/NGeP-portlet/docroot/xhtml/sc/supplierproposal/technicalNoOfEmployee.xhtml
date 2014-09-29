@@ -1,6 +1,4 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,37 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="resourceSection">
-	</ui:define>
 
-	<ui:define name="contentSection">
-		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				process="@this" partialSubmit="true"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
-				icon="ui-icon-back" />
-				
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				process="@all" partialSubmit="true" update="@all"
-				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(false)}"
-				rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
-				
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check"
-				process="@all" partialSubmit="true" update="@all"
-				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
-				rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
-		</div>
-		
-		<ui:include src="checklistHeader.xhtml" />
-
-		<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
-			<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<p:panel header="#{lbl['lbl.sc.sp.noofemployees']}" toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td colspan="2">
-					<p:selectOneRadio id="allEmployees"
+				<td colspan="2"><p:selectOneRadio id="allEmployees"
 						value="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}"
 						disabled="true">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sp.employeesinvolve']}"
@@ -46,30 +18,25 @@
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sp.allemployees']}"
 							itemValue="true" />
 						<p:ajax event="change" process="@this,allEmployees"
-							partialSubmit="true"
-							update="@([id$=totalNoOfEmployeesInvolved])"></p:ajax>
-					</p:selectOneRadio>
-				</td>
+							partialSubmit="true" update="@([id$=totalNoOfEmployeesInvolved])"></p:ajax>
+					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td width="8%">
-					<h:outputText value="* " styleClass="mandatory"
+				<td width="8%"><h:outputText value="* " styleClass="mandatory"
 						rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
-					<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}"  />
-				</td>
-				<td width="92%">
-					<h:panelGroup id="totalNoOfEmployeesInvolved">
-						<p:inputText id="totalEmployees" style="text-align:right" size="30" 
-							required="true" maxlength="6"
+					<h:outputLabel value="#{lbl['lbl.sc.sp.ttlemployees']}" /></td>
+				<td width="92%"><h:panelGroup id="totalNoOfEmployeesInvolved">
+						<p:inputText id="totalEmployees" style="text-align:right"
+							size="30" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.sp.ttlemployees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
 							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
 						</p:inputText>
-						<p:message id="totalEmployeesMsg" for="totalEmployees" display="icon" />
-					</h:panelGroup>
-				</td>
+						<p:message id="totalEmployeesMsg" for="totalEmployees"
+							display="icon" />
+					</h:panelGroup></td>
 			</tr>
-			</table>
-		</p:panel>
-	</ui:define>
+		</table>
+	</p:panel>
+
 </ui:composition>

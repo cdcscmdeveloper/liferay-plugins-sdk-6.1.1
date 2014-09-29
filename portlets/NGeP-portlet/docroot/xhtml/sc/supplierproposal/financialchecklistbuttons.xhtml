@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:param name="docDefinationKey"
+		value="#{supplierProposalDetailBackingBean.managedBean.docDefinitionKey}"></ui:param>
+	<ui:param name="chkDefinationKey"
+		value="#{supplierProposalDetailBackingBean.managedBean.checkListDefintionKey}"></ui:param>
+
+	<c:if test="#{'TS' eq docDefinationKey}">
+		<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+			action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(false)}"
+			process="@all" partialSubmit="true" update="@all" />
+		<p:commandButton value="#{lbl['lbl.btn.complete']}"
+			action="#{supplierProposalDetailBackingBean.saveFinancialSpecificationAction(true)}"
+			process="@all" partialSubmit="true" update="@all"
+			icon="ui-icon-check" />
+	</c:if>
+
+	<c:if test="#{'WF' eq docDefinationKey}">
+		<c:if test="#{'FN' eq chkDefinationKey}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(false)}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				icon="ui-icon-check" process="@all" partialSubmit="true"
+				update="@all"
+				action="#{supplierProposalDetailBackingBean.saveFinancialNonGovCompanyExpAction(true)}" />
+
+		</c:if>
+		<c:if test="#{'CF' eq chkDefinationKey}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(false)}"
+				process="@all" partialSubmit="true" update="@all" />
+
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				action="#{supplierProposalDetailBackingBean.saveFinancialCreditFacilityAction(true)}"
+				process="@all" partialSubmit="true" update="@all"
+				icon="ui-icon-check" />
+		</c:if>
+		<c:if test="#{'CH' eq chkDefinationKey}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(false)}"
+				process="@all" partialSubmit="true" update="@all" />
+
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(true)}"
+				process="@all" partialSubmit="true" update="@all"
+				icon="ui-icon-check" />
+		</c:if>
+
+		<c:if test="#{'AL' eq chkDefinationKey}">
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				process="@all" partialSubmit="true" update="@all"
+				action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(false)}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				icon="ui-icon-check" process="@all" partialSubmit="true"
+				update="@all"
+				action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(true)}" />
+		</c:if>
+		<c:if test="#{'BS' eq chkDefinationKey}">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
+				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
+				partialSubmit="true" process="@all" update="@all" />
+			<p:commandButton value="#{lbl['lbl.btn.complete']}"
+				icon="ui-icon-check"
+				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
+				partialSubmit="true" process="@all" update="@all" />
+		</c:if>
+	</c:if>
+	
+</ui:composition>
