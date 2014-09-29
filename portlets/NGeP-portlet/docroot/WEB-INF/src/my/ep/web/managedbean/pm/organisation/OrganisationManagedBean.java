@@ -12,11 +12,15 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmAgOffice;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmPtjGroup;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -59,7 +63,19 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private List<PmAddressType> deliveryAddressTypeList;
 	private List<PmAddressType> selectedDelAddressTypes;
 	private PmAddressType selectedDeliveryAddressType;
-
+//
+	private List<PmPtjGroup> ptjGroup;
+	private PmPtjGroup pmPtjGroup;
+	private List<PmAgOffice> agOffice;
+	private List<PmOrgProfile> pmOrgProfile;
+	private List<PmOrgProfile> orgProfileList;
+	//
+	private List<PmFinancialOrg> pmFinancialOrg = new ArrayList<PmFinancialOrg>();
+	private List<PmFinancialAcc> pmFinancialAcc =  new ArrayList<PmFinancialAcc>();
+	private List<PmFinancialAcc> selectedPmFinancialAcc;
+	
+	private List<PmOrgProfile> selectedPmOrgProfile;
+	
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
@@ -68,6 +84,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		pmAddressType.setPmAddress(officeAddress);
 		officeAddressTypeList= new ArrayList<PmAddressType>();
 		contactList= new ArrayList<PmContact>();
+		ptjGroup= new ArrayList<PmPtjGroup>();
+		agOffice= new ArrayList<PmAgOffice>();
 
 	}
 
@@ -490,5 +508,133 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setOfficeAddressTypeList(List<PmAddressType> officeAddressTypeList) {
 		this.officeAddressTypeList = officeAddressTypeList;
 	}
+
+	/**
+	 * @return the ptjGroup
+	 */
+	public List<PmPtjGroup> getPtjGroup() {
+		return ptjGroup;
+	}
+
+	/**
+	 * @param ptjGroup the ptjGroup to set
+	 */
+	public void setPtjGroup(List<PmPtjGroup> ptjGroup) {
+		this.ptjGroup = ptjGroup;
+	}
+
+	/**
+	 * @return the pmPtjGroup
+	 */
+	public PmPtjGroup getPmPtjGroup() {
+		return pmPtjGroup;
+	}
+
+	/**
+	 * @param pmPtjGroup the pmPtjGroup to set
+	 */
+	public void setPmPtjGroup(PmPtjGroup pmPtjGroup) {
+		this.pmPtjGroup = pmPtjGroup;
+	}
+
+	/**
+	 * @return the agOffice
+	 */
+	public List<PmAgOffice> getAgOffice() {
+		return agOffice;
+	}
+
+	/**
+	 * @param agOffice the agOffice to set
+	 */
+	public void setAgOffice(List<PmAgOffice> agOffice) {
+		this.agOffice = agOffice;
+	}
+
+	/**
+	 * @return the pmOrgProfile
+	 */
+	public List<PmOrgProfile> getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+	/**
+	 * @param pmOrgProfile the pmOrgProfile to set
+	 */
+	public void setPmOrgProfile(List<PmOrgProfile> pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the orgProfileList
+	 */
+	public List<PmOrgProfile> getOrgProfileList() {
+		return orgProfileList;
+	}
+
+	/**
+	 * @param orgProfileList the orgProfileList to set
+	 */
+	public void setOrgProfileList(List<PmOrgProfile> orgProfileList) {
+		this.orgProfileList = orgProfileList;
+	}
+
+	/**
+	 * @return the pmFinancialOrg
+	 */
+	public List<PmFinancialOrg> getPmFinancialOrg() {
+		return pmFinancialOrg;
+	}
+
+	/**
+	 * @param pmFinancialOrg the pmFinancialOrg to set
+	 */
+	public void setPmFinancialOrg(List<PmFinancialOrg> pmFinancialOrg) {
+		this.pmFinancialOrg = pmFinancialOrg;
+	}
+
+	/**
+	 * @return the pmFinancialAcc
+	 */
+	public List<PmFinancialAcc> getPmFinancialAcc() {
+		return pmFinancialAcc;
+	}
+
+	/**
+	 * @param pmFinancialAcc the pmFinancialAcc to set
+	 */
+	public void setPmFinancialAcc(List<PmFinancialAcc> pmFinancialAcc) {
+		this.pmFinancialAcc = pmFinancialAcc;
+	}
+
+	/**
+	 * @return the selectedPmFinancialAcc
+	 */
+	public List<PmFinancialAcc> getSelectedPmFinancialAcc() {
+		return selectedPmFinancialAcc;
+	}
+
+	/**
+	 * @param selectedPmFinancialAcc the selectedPmFinancialAcc to set
+	 */
+	public void setSelectedPmFinancialAcc(
+			List<PmFinancialAcc> selectedPmFinancialAcc) {
+		this.selectedPmFinancialAcc = selectedPmFinancialAcc;
+	}
+
+	/**
+	 * @return the selectedPmOrgProfile
+	 */
+	public List<PmOrgProfile> getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	/**
+	 * @param selectedPmOrgProfile the selectedPmOrgProfile to set
+	 */
+	public void setSelectedPmOrgProfile(List<PmOrgProfile> selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+	
 
 }

@@ -8,20 +8,22 @@
 		<h:panelGrid columns="2">
 			<c:if
 				test="#{organisationBackingBean.managedBean.orgProfile.brandNew}">
-				<table><tr>
-				
-				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel></td>
-				<td><p:selectOneMenu id="orgtypeId"
-					label="#{lbl['lbl.pm.organisation.orgType']}"
-					value="#{organisationBackingBean.managedBean.orgType}"
-					style="width: 230px;margin-bottom: 5px;" required="true">
-					<f:selectItems
-						value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
-					<p:ajax event="change" update="@form"
-						listener="#{organisationBackingBean.resetOrgProfile}" />
-				</p:selectOneMenu></td><td>
-				<p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
-				</tr>
+				<table>
+					<tr>
+
+						<td><h:outputLabel
+								value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel></td>
+						<td><p:selectOneMenu id="orgtypeId"
+								label="#{lbl['lbl.pm.organisation.orgType']}"
+								value="#{organisationBackingBean.managedBean.orgType}"
+								style="width: 275px;margin-bottom: 5px;" required="true">
+								<f:selectItems
+									value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+								<p:ajax event="change" update="@form"
+									listener="#{organisationBackingBean.resetOrgProfile}" />
+							</p:selectOneMenu></td>
+						<td><p:message id="orgtypeMsg" for="orgtypeId" display="icon" /></td>
+					</tr>
 				</table>
 			</c:if>
 		</h:panelGrid>
@@ -37,14 +39,14 @@
 						test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 						<td><p:inputText
 								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
-								disabled="true" /></td>
+								size="40" disabled="true" /></td>
 					</c:when>
 					<c:otherwise>
 						<td><p:inputText id="orgCode"
-								label="#{lbl['lbl.pm.organisation.orgCode']}"
+								label="#{lbl['lbl.pm.organisation.orgCode']}" size="40"
 								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
-								required="true" /> </td><td><p:message id="orgCodeMsg" for="orgCode"
-								display="icon" /></td>
+								required="true" /></td>
+						<td><p:message id="orgCodeMsg" for="orgCode" display="icon" /></td>
 					</c:otherwise>
 				</c:choose>
 				<ui:fragment
@@ -74,39 +76,41 @@
 					<c:when
 						test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 						<td><p:inputText
-								value="#{organisationBackingBean.managedBean.orgValidity.orgName}" size="40"
-								disabled="true" /></td>
+								value="#{organisationBackingBean.managedBean.orgValidity.orgName}"
+								size="40" disabled="true" /></td>
 					</c:when>
 					<c:otherwise>
 						<td><p:inputText id="orgName"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgValidity.orgName}"
-								required="true" size="40" /> </td><td><p:message id="orgNameMsg"
-								for="orgName" display="icon" /></td>
+								required="true" size="40" /></td>
+						<td><p:message id="orgNameMsg" for="orgName" display="icon" /></td>
 					</c:otherwise>
-					</c:choose>
+				</c:choose>
 			</tr>
 			<ui:fragment
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FMI' }">
 				<tr>
-				<td><h:outputLabel
-									value="#{lbl['lbl.pm.organisation.effDate']}"></h:outputLabel></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.pm.organisation.effDate']}"></h:outputLabel></td>
 					<c:choose>
 						<c:when
 							test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 							<td><p:calendar
 									value="#{organisationBackingBean.managedBean.orgValidity.effDate}"
-									showOn="button" size="20" readonlyInput="true" disabled="true" style="margin-bottom: 5px;"
+									showOn="button" size="20" readonlyInput="true" disabled="true"
+									style="margin-bottom: 5px;"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="expDate" />
 								</p:calendar></td>
 						</c:when>
 						<c:otherwise>
-							
+
 							<td><p:calendar
 									value="#{organisationBackingBean.managedBean.orgValidity.effDate}"
 									id="effDate" showOn="button" size="20" readonlyInput="true"
-									mindate="#{organisationBackingBean.managedBean.currentDate}" style="margin-bottom: 5px;"
+									mindate="#{organisationBackingBean.managedBean.currentDate}"
+									style="margin-bottom: 5px;"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 									<p:ajax event="dateSelect" update="expDate" />
 								</p:calendar></td>
@@ -115,30 +119,29 @@
 
 					<td><h:outputLabel
 							value="#{lbl['lbl.pm.organisation.expDate']}"></h:outputLabel></td>
-							<c:choose>
+					<c:choose>
 						<c:when
 							test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 							<td><p:calendar id="expDate"
-							value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
-							showOn="button" size="20" style="margin-bottom: 5px;"
-							disabled="true"
-							readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+									value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
+									showOn="button" size="20" style="margin-bottom: 5px;"
+									disabled="true" readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
-						</p:calendar></td>
-							</c:when>
-							<c:otherwise>
+								</p:calendar></td>
+						</c:when>
+						<c:otherwise>
 
-					<td><p:calendar id="expDate"
-							value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
-							showOn="button" size="20"
-							mindate="#{organisationBackingBean.managedBean.orgValidity.effDate}"
-							readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+							<td><p:calendar id="expDate"
+									value="#{organisationBackingBean.managedBean.orgValidity.expDate}"
+									showOn="button" size="20"
+									mindate="#{organisationBackingBean.managedBean.orgValidity.effDate}"
+									readonlyInput="true"
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 
-						</p:calendar></td>
+								</p:calendar></td>
 						</c:otherwise>
-						</c:choose>
+					</c:choose>
 				</tr>
 			</ui:fragment>
 
@@ -150,13 +153,14 @@
 							label="#{lbl['lbl.pm.zone.name']}"
 							value="#{organisationBackingBean.managedBean.zoneId}"
 							required="#{organisationBackingBean.managedBean.orgType eq 'PSH' or organisationBackingBean.managedBean.orgType eq 'PSQ' }"
-							style="width: 218px;margin-bottom: 5px;">
+							style="width: 275px;margin-bottom: 5px;">
 							<f:selectItem itemValue=" " itemLabel="---Select---" />
 							<f:selectItems var="zoneLs"
 								value="#{organisationBackingBean.managedBean.zoneList}"
 								itemLabel="#{zoneLs.zoneName}" itemValue="#{zoneLs.zoneId}" />
 
-						</p:selectOneMenu></td><td> <p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
+						</p:selectOneMenu></td>
+					<td><p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
 
 
 				</tr>
@@ -170,11 +174,12 @@
 
 						<f:selectItems
 							value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
-					</p:selectOneMenu></td><td> <p:message id="orgStatusMsg" for="orgStatus" display="icon" /></td>
+					</p:selectOneMenu></td>
+				<td><p:message id="orgStatusMsg" for="orgStatus" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<!--  <ui:fragment
+	<!-- <ui:fragment
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
 	</ui:fragment> -->
@@ -183,20 +188,20 @@
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
 		toggleable="true">
 
-		<p:tabView>
+		<!--<p:tabView>
 			<p:tab title="#{lbl['lbl.pm.header.general.org.office']}">
 				<ui:include src="/xhtml/pm/organisation/orgOfficeAddress.xhtml" />
+			</p:tab>
+
+
+			 <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
 			</p:tab> 
 
 
-			<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
-				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
-				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab> -->
 
-
-
-		</p:tabView>
+		</p:tabView> -->
 	</p:panel>
 
 

@@ -9,7 +9,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgType']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgTypeCode}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 275px;margin-bottom: 5px;">
 				<f:selectItems
 					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
 			</p:selectOneMenu>
@@ -22,7 +22,7 @@
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.status']}"></h:outputLabel>
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgStatus}"
-				style="width: 235px;margin-bottom: 5px;">
+				style="width: 135px;margin-bottom: 5px;">
 				<f:selectItems
 					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
 			</p:selectOneMenu>
