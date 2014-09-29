@@ -24,7 +24,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
-				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 128px;" disabled="#{!tier.showFlag || tier.standardDisabled}">
+				<p:selectOneMenu value="#{tier.cmSupplierZone.suppZoneId}" style="width: 100px;" disabled="#{!tier.showFlag || tier.standardDisabled}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.supplierZoneList}"
@@ -59,7 +59,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText id="zTierPriceId" value="#{tier.price}" size="10" disabled="#{tier.standardDisabled}" style="text-align:right">
+				<p:inputText id="zTierPriceId" value="#{tier.price}" size="8" disabled="#{tier.standardDisabled}" style="text-align:right">
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierPrice(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -69,7 +69,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{tier.startDate}" size="10" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				<p:calendar value="#{tier.startDate}" size="8" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
@@ -83,7 +83,7 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{tier.endDate}" size="10" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				<p:calendar value="#{tier.endDate}" size="8" showOn="button" rendered="#{tier.showFlag}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
 					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateZonalTierDateOverlap(rowIndex)}" update="zTPromoLink, zTCloneLink, zTErrorLink, zTDeleteLink" />
