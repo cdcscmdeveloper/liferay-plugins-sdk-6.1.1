@@ -3212,7 +3212,7 @@ public class SpecificationBackingBean extends
 
 						getManagedBean().getZoneTrees().remove(
 								getManagedBean().getIndex());
-						getManagedBean().getZoneTrees().add(
+						getManagedBean().getZoneTrees().add(getManagedBean().getIndex(),
 								LocationSingleton.getInstance()
 										.buildLocationTree(null, localStaeList,
 												districts, divisions, cities,
@@ -6997,7 +6997,7 @@ public class SpecificationBackingBean extends
 			try {
 				CircularReqDTO circularReqDTO = new CircularReqDTO();
 
-				if (getManagedBean().getCtSearchBean().getCirCularNo() != null
+				if (null!=getManagedBean().getCtSearchBean().getCirCularNo() 
 						&& !"".equalsIgnoreCase(getManagedBean()
 								.getCtSearchBean().getCirCularNo())) {
 
@@ -7009,7 +7009,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-				if (getManagedBean().getCtSearchBean().getCircularName() != null
+				if (null!=getManagedBean().getCtSearchBean().getCircularName() 
 						&& !"".equalsIgnoreCase(getManagedBean()
 								.getCtSearchBean().getCircularName())) {
 
@@ -7020,7 +7020,7 @@ public class SpecificationBackingBean extends
 											.getCircularName(), true));
 				}
 
-				if (getManagedBean().getCtSearchBean().getItemName() != null
+				if (null!=getManagedBean().getCtSearchBean().getItemName() 
 						&& !"".equalsIgnoreCase(getManagedBean()
 								.getCtSearchBean().getItemName())) {
 
@@ -7107,7 +7107,7 @@ public class SpecificationBackingBean extends
 									.getParameterId());
 
 				}
-				if (getManagedBean().getSpecName() != null
+				if (null!=getManagedBean().getSpecName() 
 						&& !"".equalsIgnoreCase(getManagedBean().getSpecName())) {
 
 					searchBean.getDataFilterBeans().add(
@@ -7117,7 +7117,7 @@ public class SpecificationBackingBean extends
 
 				}
 
-				if (getManagedBean().getStandardTemplate() != null
+				if (null!=getManagedBean().getStandardTemplate() 
 						&& !"".equalsIgnoreCase(getManagedBean()
 								.getStandardTemplate())) {
 
@@ -7128,7 +7128,7 @@ public class SpecificationBackingBean extends
 									true));
 				}
 
-				if (getManagedBean().getSearchItemTypeId() != null) {
+				if (null!=getManagedBean().getSearchItemTypeId() ) {
 					SearchFilterBean itemSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					itemSearchBean.setSearchField("itemTypeCode.parameterId");
@@ -7137,7 +7137,7 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(itemSearchBean);
 				}
 
-				if (getManagedBean().getSearchProcurementId() != null) {
+				if (null!=getManagedBean().getSearchProcurementId() ) {
 					SearchFilterBean procurementSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					procurementSearchBean
@@ -7146,7 +7146,7 @@ public class SpecificationBackingBean extends
 							.getSearchProcurementId());
 					searchBean.getDataFilterBeans().add(procurementSearchBean);
 				}
-				if (getManagedBean().getQtNum() != null
+				if (null!=getManagedBean().getQtNum() 
 						&& !"".equalsIgnoreCase(getManagedBean().getQtNum())) {
 
 					searchBean.getDataFilterBeans().add(
@@ -7154,7 +7154,7 @@ public class SpecificationBackingBean extends
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getQtNum(), true));
 				}
-				if (specTypeCode != null) {
+				if (null!=specTypeCode ) {
 					SearchFilterBean qtnoSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_LIKE.value());
 					qtnoSearchBean.setSearchField("specTypeCode.parameterCode");
@@ -7203,7 +7203,7 @@ public class SpecificationBackingBean extends
 				AddressReqDTO addressReqDTO = new AddressReqDTO();
 				addressReqDTO
 						.setSearchAddressBean(new SearchBean<PmAddressType>());
-				if (getManagedBean().getStateCode() != null
+				if (null!=getManagedBean().getStateCode() 
 						&& !"".equalsIgnoreCase(getManagedBean().getStateCode())) {
 					SearchFilterBean stateSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
@@ -7214,7 +7214,7 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(stateSearchBean);
 				}
 
-				if (getManagedBean().getDistrictCode() != null
+				if (null!=getManagedBean().getDistrictCode() 
 						&& !"".equals(getManagedBean().getDistrictCode())) {
 					SearchFilterBean districtSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
@@ -7225,7 +7225,7 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(districtSearchBean);
 				}
 
-				if (getManagedBean().getMinistryId() != null) {
+				if (null!=getManagedBean().getMinistryId() ) {
 					SearchFilterBean ministrySearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					ministrySearchBean
@@ -7235,7 +7235,7 @@ public class SpecificationBackingBean extends
 					searchBean.getDataFilterBeans().add(ministrySearchBean);
 				}
 
-				if (getManagedBean().getDepartmentId() != null) {
+				if (null!=getManagedBean().getDepartmentId() ) {
 					SearchFilterBean departMentSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					departMentSearchBean
@@ -7244,7 +7244,7 @@ public class SpecificationBackingBean extends
 							.getDepartmentId());
 					searchBean.getDataFilterBeans().add(departMentSearchBean);
 				}
-				if (getManagedBean().getPtjId() != null) {
+				if (null!=getManagedBean().getPtjId() ) {
 					SearchFilterBean ptjSearchBean = new SearchFilterBean(
 							SearchOperator.OPERATOR_EQUALS.value());
 					ptjSearchBean.setSearchField("pmOrgProfile.orgProfileId");
