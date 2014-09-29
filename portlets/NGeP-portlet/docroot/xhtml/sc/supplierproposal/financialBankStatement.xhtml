@@ -1,6 +1,4 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,88 +6,65 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="resourceSection">
-	</ui:define>
 
-	<ui:define name="contentSection">
-		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-	
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				icon="ui-icon-back"
-				process="@this" partialSubmit="true"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}" />
+	<p:panel header="#{lbl['lbl.sc.sp.bankstatement']}" toggleable="true">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note4']}" /></td>
+			</tr>
+		</table>
+		<p:dataTable id="bankstatmentsid" var="bankstmt"
+			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
+			rowKey="#{bankstmt}" rowIndexVar="rowIndex">
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
-				partialSubmit="true" process="@all" update="@all" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
-				partialSubmit="true" process="@all" update="@all" />
-		</div>
-		
-		<ui:include src="checklistHeader.xhtml" />
+			<p:column headerText="#{lbl['lbl.sc.sp.month']}">
+				<h:outputText value="#{bankstmt.month}" />
 
-		<p:panel header="#{lbl['lbl.sc.sp.bankstatement']}" toggleable="true">
-			<table>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.sp.amount']}" />
+				</f:facet>
+				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
+					size="30" style="text-align:right" maxlength="19" required="true"
+					label="#{bankstmt.month} #{lbl['lbl.sc.sp.amount']}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<p:ajax event="blur" process="@this"
+						listener="#{supplierProposalDetailBackingBean.totalAmountSum}"
+						update="@this, :form:totalamount" />
+				</p:inputText>
+				<p:message id="balanceAmtMsg" for="balanceAmt" display="icon" />
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="5" />
+
+		<h:panelGroup id="totalamount">
+
+			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.note4']}" /></td>
+					<td style="width: 190px"><p:outputLabel
+							value="#{lbl['lbl.sc.sp.total']}" /></td>
+					<td colspan="3"><p:inputText style="text-align:right"
+							value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.avgogbankst']}" /></td>
+					<td colspan="3"><p:inputText style="text-align:right"
+							value="#{supplierProposalDetailBackingBean.managedBean.avgAmount}"
+							readonly="true" disabled="true" size="30">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText></td>
 				</tr>
 			</table>
-			<p:dataTable id="bankstatmentsid" var="bankstmt"
-				value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
-				rowKey="#{bankstmt}" rowIndexVar="rowIndex">
+		</h:panelGroup>
+	</p:panel>
 
-				<p:column headerText="#{lbl['lbl.sc.sp.month']}">
-					<h:outputText value="#{bankstmt.month}" />
-
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<h:outputText value="* " styleClass="mandatory" />
-						<h:outputText value="#{lbl['lbl.sc.sp.amount']}"/>
-					</f:facet>
-					<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}" size="30"
-						style="text-align:right" 
-						maxlength="19" required="true"
-						label="#{bankstmt.month} #{lbl['lbl.sc.sp.amount']}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						<p:ajax event="blur" process="@this"
-							listener="#{supplierProposalDetailBackingBean.totalAmountSum}"
-							update="@this, :form:totalamount" />
-					</p:inputText>
-					<p:message id="balanceAmtMsg" for="balanceAmt" display="icon" />
-				</p:column>
-
-			</p:dataTable>
-			<p:spacer height="5" />
-
-			<h:panelGroup id="totalamount">
-
-				<table style="width: 100%">
-					<tr>
-						<td style="width: 190px"><p:outputLabel
-								value="#{lbl['lbl.sc.sp.total']}" /></td>
-						<td colspan="3"><p:inputText style="text-align:right"
-								value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
-								readonly="true" disabled="true" size="30">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.sp.avgogbankst']}" /></td>
-						<td colspan="3"><p:inputText style="text-align:right"
-								value="#{supplierProposalDetailBackingBean.managedBean.avgAmount}"
-								readonly="true" disabled="true" size="30">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:inputText></td>
-					</tr>
-				</table>
-			</h:panelGroup>
-		</p:panel>
-	</ui:define>
 </ui:composition>

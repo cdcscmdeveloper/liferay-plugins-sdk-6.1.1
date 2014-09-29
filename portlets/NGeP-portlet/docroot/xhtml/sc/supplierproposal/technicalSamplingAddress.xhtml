@@ -1,6 +1,4 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,119 +6,105 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="resourceSection">
-	</ui:define>
 
-	<ui:define name="contentSection">
-		<p:messages id="techCLMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
-				action="#{supplierProposalDetailBackingBean.supplierProposalBackAction}"
-				icon="ui-icon-back" />
-		</div>
-		
-		<ui:include src="checklistHeader.xhtml" />
-
-		<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
-			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
+	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
+		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
 			
 			#{lbl['lbl.sc.sp.note2']} 
 			<br />
-			
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qt.sampleClosingDate}"
-							size="30" disabled="true" readonly="true">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
-				</tr>
-			</table>
-			<p:dataTable id="samplesubmissionid" var="samplesubmissiondtl"
-				style="width : 100%" editable="true" rowIndexVar="rowIndex"
-				value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmissionList}"
-				styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
 
-				<p:column headerText="#{lbl['lbl.sc.sp.zone']}">
-					<h:outputText
-						value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.address']}">
-					<p:outputLabel style="float : left" value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
-				</p:column>
-			</p:dataTable>
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{supplierProposalDetailBackingBean.managedBean.qt.sampleClosingDate}"
+						size="30" disabled="true" readonly="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
+		<p:dataTable id="samplesubmissionid" var="samplesubmissiondtl"
+			style="width : 100%" editable="true" rowIndexVar="rowIndex"
+			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmissionList}"
+			styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
 
-			<br />
+			<p:column headerText="#{lbl['lbl.sc.sp.zone']}">
+				<h:outputText value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.sp.address']}">
+				<p:outputLabel style="float : left"
+					value="#{supplierProposalDetailBackingBean.getFullAddress(samplesubmissiondtl.address)}" />
+			</p:column>
+		</p:dataTable>
+
+		<br />
 			
 			#{lbl['lbl.sc.sp.note3']}
 			
 			<br />
-			
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
-							size="30" disabled="true" readonly="true" /></td>
-					<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
-					<td />
-				</tr>
-			</table>
-		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
-			rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal ne 'true'}">
-			<table>
-				<tr>
-					<td colspan="4">#{lbl['lbl.sc.sp.note2']}</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
-					<td colspan="3"><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}"
-							size="30" disabled="true" readonly="true">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</p:inputText></td>
-				</tr>
-				<tr valign="top">
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.address']}" /></td>
-					<td><p:inputTextarea
-							value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address)}"
-							cols="32" rows="3" readonly="true" disabled="true" /></td>
-					<td />
-					<td />
-				</tr>
-				<tr>
-					<td colspan="4"><br/>#{lbl['lbl.sc.sp.note3']}</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
-					<td><p:inputText
-							value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
-							size="30" disabled="true" readonly="true" /></td>
-					<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
-					<td />
-				</tr>
-			</table>
-		</p:panel>
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
+				<td><p:inputText
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
+						size="30" disabled="true" readonly="true" /></td>
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
+				<td />
+			</tr>
+		</table>
+	</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
-			<p:dataTable id="sampleitemid" var="sampleitemdtl"
-				style="width : 100%" editable="true" rowIndexVar="rowIndex"
-				value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
-				styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
-				<p:column headerText="#{lbl['lbl.sc.sp.item']}">
-					<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
+	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
+		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal ne 'true'}">
+		<table>
+			<tr>
+				<td colspan="4">#{lbl['lbl.sc.sp.note2']}</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}"
+						size="30" disabled="true" readonly="true">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr valign="top">
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.address']}" /></td>
+				<td><p:inputTextarea
+						value="#{supplierProposalDetailBackingBean.getFullAddress(supplierProposalDetailBackingBean.managedBean.scQtSampleSubmission.address)}"
+						cols="32" rows="3" readonly="true" disabled="true" /></td>
+				<td />
+				<td />
+			</tr>
+			<tr>
+				<td colspan="4"><br />#{lbl['lbl.sc.sp.note3']}</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sp.labelno']}" /></td>
+				<td><p:inputText
+						value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo}"
+						size="30" disabled="true" readonly="true" /></td>
+				<td><p:commandButton value="#{lbl['lbl.sc.sp.printlabel']}" /></td>
+				<td />
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.sp.sampletosubmit']}" toggleable="true">
+		<p:dataTable id="sampleitemid" var="sampleitemdtl"
+			style="width : 100%" editable="true" rowIndexVar="rowIndex"
+			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.sampleItems}"
+			styleClass="sampleitemdtl" rowKey="#{sampleitemdtl}">
+			<p:column headerText="#{lbl['lbl.sc.sp.item']}">
+				<h:outputText value="#{sampleitemdtl.scRequestItem.itemName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.sp.extensionno']}">
 					#{supplierProposalDetailBackingBean.managedBean.scQtSampleLable.lableNo} - #{sampleitemdtl.subLableNo}
 				</p:column>
-			</p:dataTable>
+		</p:dataTable>
 
-		</p:panel>
-	</ui:define>
+	</p:panel>
 </ui:composition>
