@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.pm.financialorg;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
@@ -38,26 +36,17 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialBranch;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.financialorg.FinancialOrgManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -74,7 +63,6 @@ public class FinancialOrgBackingBean extends
 
 	public FinancialOrgBackingBean() {
 		retrieveCountryList();
-
 		retrievePmFinancialOrgList();
 	}
 
@@ -93,29 +81,7 @@ public class FinancialOrgBackingBean extends
 		getManagedBean().setPmFinancialBranchAcc(
 				new ArrayList<PmFinancialAcc>());
 		getManagedBean().setPmFinancialSvc(new ArrayList<PmFinancialSvc>());
-		/*
-		 * ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-		 * ICountrySO.class); CountryReqDTO countryReqDTO = new CountryReqDTO();
-		 * countryReqDTO.setCountryCode("MY");
-		 * getManagedBean().getPmAddress().setPmCountry(
-		 * countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-		 */
-		getManagedBean().setPmAddress(new PmAddress());
-		getManagedBean().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getPmAddress().setPmState(new PmState());
-		getManagedBean().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getPmAddress().setPmCity(new PmCity());
-		getManagedBean().getPmAddress().setPmDivision(new PmDivision());
-		// getManagedBean().getPmAddress().getPmDivision().setDivisionId(1L);
-		getManagedBean().setBranchAddress(new PmAddress());
-		getManagedBean().getBranchAddress().setPmCountry(new PmCountry());
-		// countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-		getManagedBean().getBranchAddress().setPmState(new PmState());
-		getManagedBean().getBranchAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getBranchAddress().setPmCity(new PmCity());
-		getManagedBean().getBranchAddress().setPmDivision(new PmDivision());
-		// getManagedBean().getBranchAddress().getPmDivision().setDivisionId(1L);
+
 		getManagedBean().getFinancialOrg().setRecordStatusFlg(null);
 
 		getManagedBean().setRegTypeId(null);
@@ -142,28 +108,7 @@ public class FinancialOrgBackingBean extends
 		getManagedBean().setPmFinancialBranchAcc(
 				new ArrayList<PmFinancialAcc>());
 		getManagedBean().setPmFinancialSvc(new ArrayList<PmFinancialSvc>());
-		/*
-		 * ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-		 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-		 * ICountrySO.class); CountryReqDTO countryReqDTO = new CountryReqDTO();
-		 * countryReqDTO.setCountryCode("MY");
-		 * getManagedBean().getPmAddress().setPmCountry(
-		 * countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-		 */
-		getManagedBean().setContactPerson(new PmContact());
-		getManagedBean().getPmAddress().setPmCountry(new PmCountry());
-		getManagedBean().getPmAddress().setPmState(new PmState());
-		getManagedBean().getPmAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getPmAddress().setPmCity(new PmCity());
-		getManagedBean().getPmAddress().setPmDivision(new PmDivision());
-		// getManagedBean().getPmAddress().getPmDivision().setDivisionId(1L);
-		getManagedBean().getBranchAddress().setPmCountry(new PmCountry());
-		// countrySO.retrieveCountryByCode(countryReqDTO).getPmCountry());
-		getManagedBean().getBranchAddress().setPmState(new PmState());
-		getManagedBean().getBranchAddress().setPmDistrict(new PmDistrict());
-		getManagedBean().getBranchAddress().setPmCity(new PmCity());
-		getManagedBean().getBranchAddress().setPmDivision(new PmDivision());
-		// getManagedBean().getBranchAddress().getPmDivision().setDivisionId(1L);
+
 		getManagedBean().getFinancialOrg().setRecordStatusFlg(null);
 
 		getManagedBean().setRegTypeId(null);
@@ -191,14 +136,7 @@ public class FinancialOrgBackingBean extends
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IFinancialOrgSO.class);
-		ICountrySO countrySO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						ICountrySO.class);
-		CountryReqDTO countryReqDTO = new CountryReqDTO();
-		countryReqDTO.setCountryId(getManagedBean().getFinancialOrg()
-				.getPmCountry().getCountryId());
-		CountryResDTO countryResDTO = countrySO
-				.retrieveCountryById(countryReqDTO);
+
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
@@ -208,113 +146,70 @@ public class FinancialOrgBackingBean extends
 		parameterReqDTO.setParameterCode(getManagedBean().getRegTypeId());
 		ParameterResDTO parameterResDTO = parameterSO
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
-		PmFinancialOrg financialOrg = getManagedBean().getFinancialOrg();
-		financialOrg.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		financialOrg.setCreatedBy(getFacesScopes().getUserSessionBean()
-				.getUserId());
-		financialOrg.setChangedBy(getFacesScopes().getUserSessionBean()
-				.getUserId());
+		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
 		financialOrg.setCompanyTypeCode(parameterResDTO.getPmParameter());
-		financialOrg.setBizRegNumber(getManagedBean().getFinancialOrg()
-				.getBizRegNumber());
-		financialOrg.setFinOrgName(getManagedBean().getFinancialOrg()
-				.getFinOrgName());
-		financialOrg.setPmCountry(countryResDTO.getPmCountry());
-		for (PmFinancialSvc financialSvc : getManagedBean().getPmFinancialSvc()) {
-			parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.BANK_SERVICES);
-			parameterReqDTO.setParameterCode(getManagedBean()
-					.getPmFinancialSvc().get(0).getServiceTypeCode()
-					.getParameterCode());
-			parameterResDTO = parameterSO
-					.retrieveParameterByTypeAndCode(parameterReqDTO);
-			financialSvc.setServiceTypeCode(parameterResDTO.getPmParameter());
-			financialSvc.setPmFinancialOrg(financialOrg);
-		}
+		if (financialOrg.isBrandNew()) {
 
-		if (getManagedBean()
-				.getPmFinancialSvc()
-				.get(0)
-				.getServiceTypeCode()
-				.getParameterCode()
-				.equalsIgnoreCase(
-						ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
-
-			for (PmFinancialAcc financialAcc : getManagedBean()
-					.getPmFinancialAcc()) {
-				financialAcc.setPmFinancialOrg(financialOrg);
-				financialAcc.setPmPaymentBankOrg(financialOrg);
+			for (PmFinancialSvc financialSvc : this.getManagedBean()
+					.getPmFinancialSvc()) {
+				parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO
+						.setParameterType(ParameterTypeConst.BANK_SERVICES);
+				parameterReqDTO.setParameterCode(this.getManagedBean()
+						.getPmFinancialSvc().get(0).getServiceTypeCode()
+						.getParameterCode());
+				parameterResDTO = parameterSO
+						.retrieveParameterByTypeAndCode(parameterReqDTO);
+				financialSvc.setServiceTypeCode(parameterResDTO
+						.getPmParameter());
+				financialSvc.setPmFinancialOrg(financialOrg);
 			}
+			if (this.getManagedBean().getPmFinancialSvc().get(0).getServiceTypeCode().getParameterCode()
+					.equalsIgnoreCase(
+							ParameterConst.BANK_SERVICES_FACTORING_COMPANY)) {
 
-			List<PmOrgProfile> orgProfileList = getManagedBean()
-					.getOrgProfileList();
-
-			for (PmOrgProfile orgProfile : orgProfileList) {
-				// PmOrgProfile orgPmOrgProfile = new PmOrgProfile();
-				System.out.println("saving org Profile");
-				orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
-				orgProfile.setPmFinancialOrg(financialOrg);
-
-			}
-
-			for (PmFinancialBranch financialBranchs : getManagedBean()
-					.getPmFinancialBranch()) {
-				PmAddressType brachAddress = getManagedBean()
-						.getBranchAddressType();
-				System.out.println("BranchAddress"
-						+ brachAddress.getPmAddress().getAddress1());
-				brachAddress
-						.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-								.value());
-
-				List<PmAddressType> branchAddressTypes = getManagedBean()
-						.getBranchAddressList();
-				branchAddressTypes.add(brachAddress);
-				PmAddress branchAddress = getManagedBean().getBranchAddress();
-				PmContact contact = getManagedBean().getBranchContactPerson();
-				contact.setPmAddressType(brachAddress);
-				List<PmContact> contactLst = getManagedBean()
-						.getBranchContact();
-				contactLst.add(contact);
-				brachAddress.setPmAddress(branchAddress);
-				brachAddress.setPmContacts(contactLst);
-				brachAddress.setPmFinancialBranch(financialBranchs);
-				financialBranchs.setPmAddressTypes(branchAddressTypes);
-
-				for (PmFinancialAcc financialAcc : getManagedBean()
-						.getPmFinancialBranchAcc()) {
-					financialAcc.setPmFinancialBranch(financialBranchs);
+				for (PmFinancialAcc financialAcc : this.getManagedBean()
+						.getPmFinancialAcc()) {
+					financialAcc.setPmFinancialOrg(financialOrg);
 					financialAcc.setPmPaymentBankOrg(financialOrg);
+				}
+
+				List<PmOrgProfile> orgProfileList = this.getManagedBean()
+						.getOrgProfileList();
+
+				for (PmOrgProfile orgProfile : orgProfileList) {
+					// PmOrgProfile orgPmOrgProfile = new PmOrgProfile();
+					System.out.println("saving org Profile");
+					orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
+					orgProfile.setPmFinancialOrg(financialOrg);
 
 				}
-				financialBranchs.setPmFinancialAccs(getManagedBean()
-						.getPmFinancialBranchAcc());
+				financialOrg.setPmOrgProfiles(this.getManagedBean()
+						.getOrgProfileList());
 
-				financialBranchs.setPmFinancialOrg(financialOrg);
+				for (PmFinancialBranch financialBranchs : this.getManagedBean()
+						.getPmFinancialBranch()) {
+
+					for (PmFinancialAcc financialAcc : this.getManagedBean()
+							.getPmFinancialBranchAcc()) {
+						financialAcc.setPmFinancialBranch(financialBranchs);
+						financialAcc.setPmPaymentBankOrg(financialOrg);
+
+					}
+					financialBranchs.setPmFinancialAccs(this.getManagedBean()
+							.getPmFinancialBranchAcc());
+
+					financialBranchs.setPmFinancialOrg(financialOrg);
+				}
+				financialOrg.setPmFinancialAccs(this.getManagedBean()
+						.getPmFinancialAcc());
+				financialOrg.setPmFinancialBranchs(this.getManagedBean()
+						.getPmFinancialBranch());
+
 			}
-			financialOrg.setPmFinancialAccs(getManagedBean()
-					.getPmFinancialAcc());
-			financialOrg.setPmFinancialBranchs(getManagedBean()
-					.getPmFinancialBranch());
-
 		}
-		PmAddressType addressType = getManagedBean().getPmAddressType();
-		addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-				.value());
-		List<PmAddressType> pmAddressTypes = getManagedBean().getAddressType();
-		pmAddressTypes.add(addressType);
-		PmAddress address = getManagedBean().getPmAddress();
-		PmContact contact = getManagedBean().getContactPerson();
-		contact.setPmAddressType(addressType);
-		List<PmContact> contactLst = getManagedBean().getPmContact();
-		contactLst.add(contact);
-		addressType.setPmContacts(contactLst);
-		addressType.setPmAddress(address);
-		addressType.setPmFinancialOrg(financialOrg);
-		financialOrg.setPmAddressTypes(pmAddressTypes);
-		financialOrg.setPmFinancialSvcs(getManagedBean().getPmFinancialSvc());
-		financialOrg.setPmOrgProfiles(getManagedBean().getOrgProfileList());
-
+		financialOrg.setPmFinancialSvcs(this.getManagedBean()
+				.getPmFinancialSvc());
 		reqDTO.setPmFinancialOrg(financialOrg);
 
 		FinancialOrgResDTO resDTO = financialOrgSO
@@ -345,89 +240,8 @@ public class FinancialOrgBackingBean extends
 		getManagedBean().setRegTypeId(
 				financialOrg.getCompanyTypeCode().getParameterCode());
 		getManagedBean().setFinancialOrg(financialOrg);
-		// financial org Address
-		List<PmAddressType> finAddressTypes = resDTO.getPmFinancialOrg()
-				.getPmAddressTypes();
+		getManagedBean().setPmFinancialSvc(financialOrg.getPmFinancialSvcs());
 
-		if (finAddressTypes != null && !finAddressTypes.isEmpty()) {
-			for (PmAddressType pmAddressType : finAddressTypes) {
-
-				if (pmAddressType.getAddressType().equalsIgnoreCase("R")) {
-					if (pmAddressType.getPmAddress().getPmDivision() == null) {
-						pmAddressType.getPmAddress().setPmDivision(
-								new PmDivision());
-					}
-					StateReqDTO stateReqDTO = new StateReqDTO();
-					stateReqDTO.setCountryId(pmAddressType.getPmAddress()
-							.getPmCountry().getCountryId());
-					IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IStateSO.class);
-					StateResDTO stateresDTO = reqSO
-							.retriveStatesListByCountryID(stateReqDTO);
-					getManagedBean().setStateList(stateresDTO.getStateList());
-
-					DistrictReqDTO districtReqDTO = new DistrictReqDTO();
-					IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-							.getInstance().getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									IDistrictSO.class);
-
-					if (pmAddressType.getPmAddress().getPmDivision()
-							.getDivisionId() != null) {
-						DivisionReqDTO divReqDTO = new DivisionReqDTO();
-						divReqDTO.setStateId(pmAddressType.getPmAddress()
-								.getPmState().getStateId());
-						IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate
-								.getInstance().getServiceObject(
-										ModuleCodeConst.PROFILE_MANAGEMENT,
-										IDivisionSO.class);
-						DivisionResDTO divResDTO = divisionSO
-								.retriveDivisionListByState(divReqDTO);
-						getManagedBean().setDivisionList(
-								divResDTO.getDivisionList());
-						districtReqDTO
-								.setDivisionId(pmAddressType.getPmAddress()
-										.getPmDivision().getDivisionId());
-						DistrictResDTO districtResDTO = districtSO
-								.retriveDistrictListByDivision(districtReqDTO);
-						getManagedBean().setDistrictList(
-								districtResDTO.getDistrictList());
-					} else {
-
-						districtReqDTO.setStateId(pmAddressType.getPmAddress()
-								.getPmState().getStateId());
-						DistrictResDTO districtResDTO = districtSO
-								.retriveDistrictListByStateID(districtReqDTO);
-						getManagedBean().setDistrictList(
-								districtResDTO.getDistrictList());
-					}
-
-					CityReqDTO cityReqDTO = new CityReqDTO();
-					cityReqDTO.setDistrictId(pmAddressType.getPmAddress()
-							.getPmDistrict().getDistrictId());
-					ICitySO citySO = (ICitySO) BusinessDelegate.getInstance()
-							.getServiceObject(
-									ModuleCodeConst.PROFILE_MANAGEMENT,
-									ICitySO.class);
-					CityResDTO cityResDTO = citySO
-							.retriveCityListByDistrictId(cityReqDTO);
-					this.getManagedBean().setCityList(cityResDTO.getCityList());
-					pmAddressType.setEditable(true);
-
-					getManagedBean().setPmAddress(pmAddressType.getPmAddress());
-
-				}
-				// financial contacts
-				if (pmAddressType.getPmContacts() != null
-						&& !pmAddressType.getPmContacts().isEmpty()) {
-					for (PmContact contactPerson : pmAddressType
-							.getPmContacts())
-						getManagedBean().setContactPerson(contactPerson);
-				}
-			}
-		}
 		// financial services
 		if (financialOrg.getPmFinancialSvcs() != null
 				&& !financialOrg.getPmFinancialSvcs().isEmpty()) {
@@ -447,117 +261,6 @@ public class FinancialOrgBackingBean extends
 				&& !financialOrg.getPmFinancialBranchs().isEmpty()) {
 			getManagedBean().setPmFinancialBranch(
 					financialOrg.getPmFinancialBranchs());
-			// financial Branch Address
-			/*
-			 * for (PmAddressType pmAddressType : financialOrg
-			 * .getPmFinancialBranchs().get(0).getPmAddressTypes()) { if
-			 * (pmAddressType.getAddressType().equalsIgnoreCase("R")) {
-			 * this.getManagedBean().setBranchAddress(
-			 * pmAddressType.getPmAddress());
-			 * 
-			 * } if (!pmAddressType.getPmContacts().isEmpty()) {
-			 * this.getManagedBean().setBranchContactPerson(
-			 * pmAddressType.getPmContacts().get(0)); } }
-			 */
-			for (PmFinancialBranch financialBranch : financialOrg
-					.getPmFinancialBranchs()) {
-				List<PmAddressType> branchAddressTypes = financialBranch
-						.getPmAddressTypes();
-
-				if (branchAddressTypes != null) {
-					for (PmAddressType branchAddressType : branchAddressTypes) {
-						getManagedBean().setBranchAddress(
-								branchAddressType.getPmAddress());
-
-						if (branchAddressType.getAddressType()
-								.equalsIgnoreCase("R")) {
-							if (branchAddressType.getPmAddress()
-									.getPmDivision() == null) {
-								branchAddressType.getPmAddress().setPmDivision(
-										new PmDivision());
-							}
-							System.out.println("CountryID ::"+branchAddressType.getPmAddress().getPmCountry()
-									.getCountryId());
-							StateReqDTO stateReqDTO = new StateReqDTO();
-							stateReqDTO.setCountryId(branchAddressType
-									.getPmAddress().getPmCountry()
-									.getCountryId());
-							IStateSO reqSO = (IStateSO) BusinessDelegate
-									.getInstance().getServiceObject(
-											ModuleCodeConst.PROFILE_MANAGEMENT,
-											IStateSO.class);
-							StateResDTO stateresDTO = reqSO
-									.retriveStatesListByCountryID(stateReqDTO);
-							getManagedBean().setStateList(
-									stateresDTO.getStateList());
-
-							DistrictReqDTO districtReqDTO = new DistrictReqDTO();
-							IDistrictSO districtSO = (IDistrictSO) BusinessDelegate
-									.getInstance().getServiceObject(
-											ModuleCodeConst.PROFILE_MANAGEMENT,
-											IDistrictSO.class);
-
-							if (branchAddressType.getPmAddress()
-									.getPmDivision().getDivisionId() != null) {
-								DivisionReqDTO divReqDTO = new DivisionReqDTO();
-								divReqDTO.setStateId(branchAddressType
-										.getPmAddress().getPmState()
-										.getStateId());
-								IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate
-										.getInstance()
-										.getServiceObject(
-												ModuleCodeConst.PROFILE_MANAGEMENT,
-												IDivisionSO.class);
-								DivisionResDTO divResDTO = divisionSO
-										.retriveDivisionListByState(divReqDTO);
-								getManagedBean().setDivisionList(
-										divResDTO.getDivisionList());
-								districtReqDTO.setDivisionId(branchAddressType
-										.getPmAddress().getPmDivision()
-										.getDivisionId());
-								DistrictResDTO districtResDTO = districtSO
-										.retriveDistrictListByDivision(districtReqDTO);
-								getManagedBean().setDistrictList(
-										districtResDTO.getDistrictList());
-							} else {
-
-								districtReqDTO.setStateId(branchAddressType
-										.getPmAddress().getPmState()
-										.getStateId());
-								DistrictResDTO districtResDTO = districtSO
-										.retriveDistrictListByStateID(districtReqDTO);
-								getManagedBean().setDistrictList(
-										districtResDTO.getDistrictList());
-							}
-
-							CityReqDTO cityReqDTO = new CityReqDTO();
-							cityReqDTO.setDistrictId(branchAddressType
-									.getPmAddress().getPmDistrict()
-									.getDistrictId());
-							ICitySO citySO = (ICitySO) BusinessDelegate
-									.getInstance().getServiceObject(
-											ModuleCodeConst.PROFILE_MANAGEMENT,
-											ICitySO.class);
-							CityResDTO cityResDTO = citySO
-									.retriveCityListByDistrictId(cityReqDTO);
-							this.getManagedBean().setCityList(
-									cityResDTO.getCityList());
-							branchAddressType.setEditable(true);
-
-						}
-
-						// financial Branch Contacts
-
-						if (branchAddressType.getPmContacts() != null
-								&& !branchAddressType.getPmContacts().isEmpty()) {
-							for (PmContact contactPerson : branchAddressType
-									.getPmContacts())
-								getManagedBean().setBranchContactPerson(
-										contactPerson);
-						}
-					}
-				}
-			}
 
 			// financial Branch Accounts
 			getManagedBean().setPmFinancialBranchAcc(
@@ -593,14 +296,9 @@ public class FinancialOrgBackingBean extends
 							new SearchFilterBean("finOrgName",
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getOrgName(), true));
-				}
-				if (getManagedBean().getRegNumber() != null) {
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("bizRegNumber",
-									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getRegNumber(), true));
-				}
-
+				}	
+					
+				
 				if (getManagedBean().getServiceType() != null) {
 					searchBean
 							.getDataFilterBeans()
@@ -615,6 +313,10 @@ public class FinancialOrgBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getOrgStatus()));
 				}
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("bizRegNumber",
+								SearchOperator.OPERATOR_LIKE.value(),
+								getManagedBean().getRegNumber()));
 
 				reqDTO.setFinancialSearchBean(searchBean);
 				financialOrgSO = (IFinancialOrgSO) BusinessDelegate
@@ -868,11 +570,6 @@ public class FinancialOrgBackingBean extends
 
 		RequestContext.getCurrentInstance().execute(
 				"branchContactPersonPopup.hide()");
-	}
-
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
 	}
 
 	public IPagingDataModel<PmFinancialOrg> getSearchFinancialOrg() {
