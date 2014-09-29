@@ -55,7 +55,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getStatusDescList();
 
 	}
-	
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -154,7 +154,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			reqDto.setScBidAction(getManagedBean().getBidAction());
 
 			BiddingResDTO resDto = biddingSO.updateBidAction(reqDto);
-			if(resDto.isSuccessful()){
+			if (resDto.isSuccessful()) {
 				log.info("bidPauseOrCancelAction successful");
 			}
 
@@ -172,7 +172,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 
 	public void reScheduleOrReBidPopUpAction(ScBidSchedule bid) {
-
 
 		IBiddingSO biddingSO = null;
 		try {
@@ -294,8 +293,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			reqDTO.setScBidAction(this.getManagedBean().getBidAction());
 			BiddingResDTO resDTO = biddingSO.updateBidAction(reqDTO);
-			if(resDTO.isSuccessful()){
-				
+			if (resDTO.isSuccessful()) {
+
 			}
 
 		}
@@ -371,7 +370,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getParameterCode())) {
 			getManagedBean().setBidManagementViewBy(
 					ParameterConst.RECOMMEND_TYPE_PACKAGE);
-			getManagedBean().setBidManagementInitialViewBy(ParameterConst.RECOMMEND_TYPE_PACKAGE);
+			getManagedBean().setBidManagementInitialViewBy(
+					ParameterConst.RECOMMEND_TYPE_PACKAGE);
 			createViewByPackageLineChart();
 
 		} else if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(getManagedBean()
@@ -379,7 +379,8 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				.getParameterCode())) {
 			getManagedBean().setBidManagementViewBy(
 					ParameterConst.RECOMMEND_TYPE_ITEM);
-			getManagedBean().setBidManagementInitialViewBy(ParameterConst.RECOMMEND_TYPE_ITEM);
+			getManagedBean().setBidManagementInitialViewBy(
+					ParameterConst.RECOMMEND_TYPE_ITEM);
 
 			ScBidItem bidItem = getManagedBean().getScheduledBid()
 					.getScBidItems().get(0);
@@ -401,10 +402,24 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			finally {
 				biddingSO = null;
 			}
-			
+
 			createViewByItemLineChart();
 		}
 
+		
+
+		getManagedBean().setRendered(false);
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "bidManagementMain.xhtml");
+
+		// return "bidManagementMain";
+
+	}
+
+	private void createViewByPackageLineChart() {
+		
 		List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 		for (ScBidPackage scBidPackage : getManagedBean().getBidPackages()) {
 
@@ -427,47 +442,38 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			getManagedBean().setLowestNonBumiOfferedPrice(
 					BigDecimal.valueOf(1l));
 		}
-
-		getManagedBean().setRendered(false);
 		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "bidManagementMain.xhtml");
-
-		//return "bidManagementMain";
-
-	}
-	
-	private void createViewByPackageLineChart(){
+		
 		List<ScBidPackage> listForCustomSort = new ArrayList<ScBidPackage>();
-		for(ScBidPackage scBidPackage : getManagedBean().getBidPackages()){
+		for (ScBidPackage scBidPackage : getManagedBean().getBidPackages()) {
 			listForCustomSort.add(scBidPackage);
 		}
 		// to sort list for line Graph
 		Collections.sort(listForCustomSort, new Comparator<ScBidPackage>() {
-		    public int compare(ScBidPackage bidPackage1, ScBidPackage bidPackage2) {
-		    	
-		    	if(bidPackage1.getCreatedDate().after(bidPackage2.getCreatedDate())){
-		    		return 1;
-	        	}
-		    	else if(bidPackage1.getCreatedDate().before(bidPackage2.getCreatedDate())){
-		    		return -1;
-	        	}
-		    	else if(bidPackage1.getCreatedDate().equals(bidPackage2.getCreatedDate())){
-		    		return 0;
-	        	}
-		    	return 0;
-		    	 
-		    }
+			public int compare(ScBidPackage bidPackage1,
+					ScBidPackage bidPackage2) {
+
+				if (bidPackage1.getCreatedDate().after(
+						bidPackage2.getCreatedDate())) {
+					return 1;
+				} else if (bidPackage1.getCreatedDate().before(
+						bidPackage2.getCreatedDate())) {
+					return -1;
+				} else if (bidPackage1.getCreatedDate().equals(
+						bidPackage2.getCreatedDate())) {
+					return 0;
+				}
+				return 0;
+
+			}
 		});
 		createBidPackagePriceLinearModel(listForCustomSort);
-		
+
 		listForCustomSort = null;
 	}
 
 	private void createBidPackagePriceLinearModel(
 			List<ScBidPackage> bidPackageList) {
-
 
 		getManagedBean().setBidPriceLinearModel(new CartesianChartModel());
 
@@ -487,37 +493,37 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 
 	}
-	
-	private void createViewByItemLineChart(){
+
+	private void createViewByItemLineChart() {
 		if (getManagedBean().getScBidPriceList() != null) {
-			
-			List<ScBidPrice> listForCustomSort  = new ArrayList<ScBidPrice>();
-			for(ScBidPrice scBidPrice : getManagedBean()
-					.getScBidPriceList()){
+
+			List<ScBidPrice> listForCustomSort = new ArrayList<ScBidPrice>();
+			for (ScBidPrice scBidPrice : getManagedBean().getScBidPriceList()) {
 				listForCustomSort.add(scBidPrice);
 			}
 			Collections.sort(listForCustomSort, new Comparator<ScBidPrice>() {
-			    public int compare(ScBidPrice bidPrice1, ScBidPrice bidPrice2) {
-			    	
-			    	if(bidPrice1.getCreatedDate().after(bidPrice2.getCreatedDate())){
-			    		return 1;
-		        	}
-			    	else if(bidPrice1.getCreatedDate().before(bidPrice2.getCreatedDate())){
-			    		return -1;
-		        	}
-			    	else if(bidPrice1.getCreatedDate().equals(bidPrice2.getCreatedDate())){
-			    		return 0;
-		        	}
-			    	return 0;
-			    }
+				public int compare(ScBidPrice bidPrice1, ScBidPrice bidPrice2) {
+
+					if (bidPrice1.getCreatedDate().after(
+							bidPrice2.getCreatedDate())) {
+						return 1;
+					} else if (bidPrice1.getCreatedDate().before(
+							bidPrice2.getCreatedDate())) {
+						return -1;
+					} else if (bidPrice1.getCreatedDate().equals(
+							bidPrice2.getCreatedDate())) {
+						return 0;
+					}
+					return 0;
+				}
 			});
-			
+
 			createBidItemPriceLinearModel(listForCustomSort);
-			
+
 			listForCustomSort = null;
 		}
 	}
-	
+
 	private void createBidItemPriceLinearModel(List<ScBidPrice> bidPriceList) {
 
 		getManagedBean().setItemPriceLinearModel(new CartesianChartModel());
@@ -539,20 +545,18 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 	}
 
 	public void viewByChangeListener(AjaxBehaviorEvent e) {
-		
-		log.info("viewByChangeListener");
 
+		log.info("viewByChangeListener");
 
 		String type = (String) e.getComponent().getAttributes().get("value");
 
 		getManagedBean().setBidManagementViewBy(type);
+		IBiddingSO biddingSO = null;
 
 		if (type.equalsIgnoreCase(ParameterConst.RECOMMEND_TYPE_ITEM)) {
 
 			ScBidItem bidItem = getManagedBean().getScheduledBid()
 					.getScBidItems().get(0);
-
-			IBiddingSO biddingSO = null;
 
 			try {
 				biddingSO = BusinessDelegate.getInstance().getServiceObject(
@@ -574,7 +578,24 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 				biddingSO = null;
 			}
 			createViewByItemLineChart();
+		} else if (type.equalsIgnoreCase(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
+			try {
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				BiddingReqDTO reqDTO = new BiddingReqDTO();
+				reqDTO.setBidScheduleId(getManagedBean().getScheduledBid().getBidScheduleId());
+				BiddingResDTO resDTO = biddingSO.retrieveBidScheduleDtl(reqDTO);
+
+				if (resDTO.isSuccessful()) {
+					getManagedBean().setScheduledBid(resDTO.getScBidSchedule());
+					getManagedBean().setBidPackages(resDTO.getBidPackages());
+				}
+			}finally{
+				biddingSO = null;
+			}
+			createViewByPackageLineChart();
 		}
+
 	}
 
 	public void supplierItemPricePopupAction(ScBidPackage packageItem) {
@@ -637,8 +658,6 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 	}
 
-	
-
 	public void historyPricePopupAction(ScBidPrice bidPrice) {
 
 		getManagedBean().setHistoryPrice(bidPrice);
@@ -668,7 +687,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			biddingSO = null;
 		}
 		List<ScBidPrice> customSortBidPrices = new ArrayList<>();
-		for(ScBidPrice scBidPrice : getManagedBean().getBidHistoryPriceList()){
+		for (ScBidPrice scBidPrice : getManagedBean().getBidHistoryPriceList()) {
 			customSortBidPrices.add(scBidPrice);
 		}
 		Collections.reverse(customSortBidPrices);
@@ -702,8 +721,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		String time = localDateFormat.format(date);
 		return time;
 	}
-	
-	
+
 	public String biddingMonitorBackAction() {
 		debugLogger("supplierProposalBackAction");
 		return "/xhtml/sc/bidding/biddingmain.xhtml ? faces-redirect=true";
