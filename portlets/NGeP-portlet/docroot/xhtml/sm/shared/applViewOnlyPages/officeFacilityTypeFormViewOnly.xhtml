@@ -9,37 +9,39 @@
 	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
 		toggleable="true">
 		<p:panel id="offInfPan">
-			<table style="width: 100%">
+			<table style="width: 50%">
 
 				<tr>
-					<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
-					<td style="float:left;">
-						<p:outputLabel value="#{lbl['lbl.sm.facility.own']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
-						<p:outputLabel value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
+					<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']} :" /></td>
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.own']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}"/>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.rent']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}"/>
 					</td>
 				</tr>
 				<c:if test="#{backingBean.managedBean.basicCompanyFacility.ownershipType eq 'R'}">
 					<tr>
-						<td width="134px;">
+						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" />
 						</td>
-						<td style="float:left;">
-							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
-							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 						</td>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
-						<td style="width: 14%">
+						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.facility.landLordName']} :" /> 
 						</td>
-						<td style="float:left;">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" />
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}" />
 						</td>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.facility.monthRent']} :" />
 						</td>
-						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						    <ac:labelAmount value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}" />
+						<td>
+						    <ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.rentalRate}" />
 						</td>
 					</tr>
 					<tr>
@@ -49,23 +51,23 @@
 						<td>
 							<table style="width: 100%">
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
 									</td>
 								</tr>
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address2}" />
 									</td>
 								</tr>
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address3}" />
 									</td>
 								</tr>
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address4}" />
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address4}" />
 									</td>
 								</tr>
 							</table>
@@ -98,25 +100,25 @@
 						<td>
 							<TABLE style="width: 100%">
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/>
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/>
 									</td>
 								</tr>
 								<tr>
 
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/>
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmState.stateName}"/>
 									</td>
 								</tr>
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtName}"/>
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmDistrict.districtName}"/>
 									</td>
 
 								</tr>
 								<tr>
-									<td style="float:left;">
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityName}"/>
+									<td>
+										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCity.cityName}"/>
 									</td>
 								</tr>
 							</TABLE>
@@ -124,37 +126,38 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
-						<td style="float:left;">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.postcode}" />
 						</td>
+						<td></td>
+						<td></td>
 					</tr>
 					</c:if>
 					
 					<c:if test="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownershipType eq 'O'}">
 					<tr>
-						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
-						<td style="float:left;">
-							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
-							<p:outputLabel value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
-						</td>
-
-					</tr>
-					<tr>
-						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']} :" /></td>
-						<td style="float:left;">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}"/>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.facilityType']} :" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.home.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}"/>
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.facility.facilityType.business.office']}" rendered="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'B'}" />
 						</td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.purchaseDate']} :" /></td>
-						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-							<ac:labelDate value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}" />
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerName']} :" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.ownerName}"/>
 						</td>
 					</tr>
 					<tr>
-						<td width="134px;"><p:outputLabel value="#{lbl['lbl.sm.facility.purchasePrice']} :" /></td>
-						<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-							<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}" />
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.purchaseDate']} :" /></td>
+						<td>
+							<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchaseDate}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.facility.purchasePrice']} :" /></td>
+						<td>
+							<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.purchasePrice}" />
 						</td>
 					</tr>
 					</c:if>
@@ -162,15 +165,15 @@
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 						</tr>
 					</p:outputPanel>
 					<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" /></td>
 							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.officeFacilityRemark}" /></td>
 						</tr>
 					</p:outputPanel>
 				</table>
