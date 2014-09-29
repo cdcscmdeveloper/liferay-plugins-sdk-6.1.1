@@ -15,7 +15,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" id="itLoginId" maxlength="75"
+							<p:inputText styleClass="ppDisplayTextL" id="itLoginId" maxlength="75"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.loginId}"
 								disabled="true"/>
@@ -49,7 +49,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:selectOneMenu styleClass="ppDropDownWidthM" id="somSalutation" 
+							<p:selectOneMenu styleClass="ppDropDownWidthL" id="somSalutation" 
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.salutation']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.salutationCode.salutationId}">
@@ -70,7 +70,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="50" label="#{lbl['lbl.pm.profiles.userdetails.username']}"
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" maxlength="50" label="#{lbl['lbl.pm.profiles.userdetails.username']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.userName}"/>
 						</td>
 						<th></th>
@@ -83,7 +83,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.idtype']}"
 								value="#{profilePersonalizationBackingBean.retrieveParamDesc(
 								ParameterTypeConst.identificationTypes,
 								profilePersonalizationBackingBean.managedBean.selectedUser.identificationCode.parameterCode)}"/>
@@ -98,7 +98,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
+							<p:inputText styleClass="ppDisplayTextL" disabled="#{!profilePersonalizationBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.identificationNo}" maxlength="12"
 								label="#{lbl['lbl.pm.profiles.userdetails.idno']}">
 								<p:ajax event="change" update="itLoginId" listener="#{profilePersonalizationBackingBean.updateLoginId()}"/>
@@ -115,7 +115,7 @@
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.nationality']}"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.pmCountry.countryName}"/>
 						</td>
 						<th></th>
@@ -127,7 +127,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.designation']}" />
 						</th>
 						<td>
-							<p:inputText disabled="true" styleClass="ppDisplayTextM" maxlength="30"
+							<p:inputText disabled="true" styleClass="ppDisplayTextL" maxlength="30"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.designation}" />
 						</td>
 						<th></th>
@@ -152,7 +152,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.grade']}" />
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" maxlength="10"
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" maxlength="10"
 								value="#{profilePersonalizationBackingBean.managedBean.selectedUser.grade}"/>
 						</td>
 						<th></th>
@@ -163,7 +163,7 @@
 							<p:outputLabel value="#{lbl['lbl.pm.profiles.userdetails.status']}"/>
 						</th>
 						<td>
-							<p:inputText styleClass="ppDisplayTextM" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.status']}"
+							<p:inputText styleClass="ppDisplayTextL" disabled="true" label="#{lbl['lbl.pm.profiles.userdetails.status']}"
 								value="#{(profilePersonalizationBackingBean.managedBean.selectedUser.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}"
 							/>
 						</td>

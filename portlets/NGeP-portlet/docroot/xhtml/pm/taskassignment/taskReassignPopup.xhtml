@@ -56,7 +56,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					action="#{taskAssignBackingBean.confirmReassignTask()}" update=":form:dtTaskAssignResult"
 					immediate="true"/>
 				&#160;
-				<p:commandButton id="cbCancel" value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"
+				<p:commandButton id="cbCancel" 
+					value="#{lbl['lbl.btn.cancel']}" oncomplete="dlTaskReassignment.hide()"
 					immediate="true" />
 			</div>
 		</p:outputPanel>
