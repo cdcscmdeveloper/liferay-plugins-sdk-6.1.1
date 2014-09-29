@@ -331,7 +331,7 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
-							 validatorMessage="Postal Code - must be a number Example: 0-9"
+							 validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
 					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
@@ -342,7 +342,7 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Email" maxlength="80"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
-							validatorMessage="Email - Invalid Email Format"
+							validatorMessage="#{lbl['lbl.fl.email.msg']}"
 							size="35" ><f:validateRegex disabled="#{purchaseRequestBackingBean.managedBean.emailValidate}"
        						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
        					</p:inputText>	
@@ -371,7 +371,7 @@
 							required="#{purchaseRequestBackingBean.managedBean.required}"
 							label="Tel No" maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
-							validatorMessage="Tel.No. - must be a number Example: 0-9"
+							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
 							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
@@ -381,7 +381,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
-							 validatorMessage="Fax.No. - must be a number Example: 0-9"
+							 validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
 							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fax.no']}"/></td>
@@ -390,7 +390,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 					<td><p:inputText maxlength="20"
 							value="#{purchaseRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
-							 validatorMessage="Mobile.No. - must be a number Example: 0-9"
+							 validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
 							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mobile.no']}"/></td>
