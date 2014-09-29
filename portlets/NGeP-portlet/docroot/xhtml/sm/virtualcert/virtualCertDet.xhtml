@@ -24,14 +24,10 @@
 						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
 						value="#{lbl['lbl.sm.contractor']}" />
 				</p:column>
-
-				<p:column headerText="Serial No">
-					#{mofAcc.smMofCerts[0].certSerialNo}
-				</p:column>
 				
 				<p:column headerText="Download">
 					<p:commandButton value="Download"
-						action="#{virtualCertBackingBean.generatePdf(mofAcc.mofNo)}" ajax="false"></p:commandButton>
+						action="#{virtualCertBackingBean.generatePdf(mofAcc)}" ajax="false"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 			
