@@ -106,6 +106,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private String createdBy;
 
 	private String bidManagementViewBy;
+	private String bidManagementInitialViewBy;
 	private boolean rendered;
 	
 	public BiddingManagedBean() {
@@ -115,6 +116,26 @@ public class BiddingManagedBean extends BaseManagedBean {
 		
 	}
 	
+	
+	
+	/**
+	 * @return the bidManagementInitialViewBy
+	 */
+	public String getBidManagementInitialViewBy() {
+		return bidManagementInitialViewBy;
+	}
+
+
+
+	/**
+	 * @param bidManagementInitialViewBy the bidManagementInitialViewBy to set
+	 */
+	public void setBidManagementInitialViewBy(String bidManagementInitialViewBy) {
+		this.bidManagementInitialViewBy = bidManagementInitialViewBy;
+	}
+
+
+
 	public void searchForScheduledBids() {
 		searchDataModel.reloadData();
 	}
