@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sm.equiStatus.panHdr']}" toggleable="true">
 		<p:panel id="capInfPan">
@@ -18,10 +19,8 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.accumCap']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -37,18 +36,14 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.authCap']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" />
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.paidUpCap']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -63,18 +58,14 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.ttlShare']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" />
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.accumShr']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -86,10 +77,8 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.members']} :" /></td>
-									<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-										</p:outputLabel>
+									<td style="float:left;">
+										<ac:labelInteger value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" />
 									</td>
 								</tr>
 							</table>
@@ -112,47 +101,29 @@
 									<p:column>#{lbl['lbl.sm.equiStatus.bumi']}</p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" >
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.nonBumi']} </p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.nonBumiPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.nonMy']}</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignerEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnerPercent}" />
 									</p:column>
 								</p:row>
 								
@@ -163,64 +134,40 @@
 									<p:column>#{lbl['lbl.sm.equiStatus.utAgency']}</p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUnitrustEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtUTPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.govtEquity']}</p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.govtEquityPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.frgComp']}</p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foreignCompanyEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.foriegnCompPercent}" />
 									</p:column>
 								</p:row>
 								<p:row>
 									<p:column>#{lbl['lbl.sm.equiStatus.lclComp']}</p:column>
 
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompanyEquity}" />
 									</p:column>
 									<p:column>
-										<p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}">
-											<f:convertNumber
-												pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-										</p:outputLabel>
+										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.localCompPercent}" />
 									</p:column>
 								</p:row>
 								</c:if>

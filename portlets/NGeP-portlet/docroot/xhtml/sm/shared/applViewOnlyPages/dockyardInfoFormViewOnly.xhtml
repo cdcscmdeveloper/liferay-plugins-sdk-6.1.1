@@ -96,10 +96,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.area.feat']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.areaSquareFeet}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+				<td style="float:left;">
+					<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.areaSquareFeet}" />
 				</td>
 			</tr>
 			<tr>
@@ -123,17 +121,11 @@
 					<p:outputPanel id="docPan">
 						<ui:fragment
 							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'O'}">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.purchasePrice}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.purchasePrice}" />
 						</ui:fragment>
 						<ui:fragment
 							rendered="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.ownershipType eq 'R'}">
-							<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.rentalRate}">
-								<f:convertNumber
-									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-							</p:outputLabel>
+							<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.selectedDockyardFacility.rentalRate}" />
 						</ui:fragment>
 					</p:outputPanel>
 				</td>

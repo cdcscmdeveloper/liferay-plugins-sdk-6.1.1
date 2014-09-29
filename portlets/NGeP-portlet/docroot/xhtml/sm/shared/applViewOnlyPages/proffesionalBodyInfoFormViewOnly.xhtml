@@ -20,10 +20,7 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.profBody.expDate']}">
-					<h:outputText value="#{profBean.expDate}">
-						<f:convertDateTime type="date"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-					</h:outputText>
+					<ac:labelDate value="#{profBean.expDate}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelAssocBody(profBean)}" 
@@ -81,10 +78,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.expDate']}" /></td>
 				<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-					<h:outputText value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</h:outputText>
+					<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}" />
 				</td>
 			</tr>
 

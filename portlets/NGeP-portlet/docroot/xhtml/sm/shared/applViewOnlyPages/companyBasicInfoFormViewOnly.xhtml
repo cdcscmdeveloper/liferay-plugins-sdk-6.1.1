@@ -30,10 +30,8 @@
 					
 					<td><p:outputLabel value="#{lbl['lbl.sm.estdate']} :" /></td>
 					<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-						<h:outputText value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}">
-							<f:convertDateTime
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						</h:outputText></td>
+						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.smSupplier.establishDate}" />
+					</td>
 				</tr>
 				
 				<c:if test="#{not empty viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.smCompanyAddresses}">
