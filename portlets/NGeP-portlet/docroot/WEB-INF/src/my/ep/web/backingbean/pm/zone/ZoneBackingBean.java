@@ -190,8 +190,8 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		StateResDTO resDTO = stateSO.retrieveStateList();
-
+		StateResDTO resDTO = stateSO.retrieveZoneStateList();
+		
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
 
