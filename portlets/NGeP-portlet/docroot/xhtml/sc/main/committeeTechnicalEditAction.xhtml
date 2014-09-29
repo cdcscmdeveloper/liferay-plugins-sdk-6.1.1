@@ -25,12 +25,12 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
 				action="#{specificationBackingBean.cancelSpecAction('SC')}"></p:commandButton>
-				
+
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 				style="float:right;" icon="ui-icon-check"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
 				update="@all" />
-				
+
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" update="@all"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"
@@ -80,9 +80,14 @@
 					<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio
-							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.weightageReq}">
+							value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
+
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
+
 						</p:selectOneRadio></td>
 				</tr>
 
