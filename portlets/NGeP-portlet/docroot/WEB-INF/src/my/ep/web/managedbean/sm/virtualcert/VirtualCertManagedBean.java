@@ -11,6 +11,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name="virtualCertMB")
 @SessionScoped
 public class VirtualCertManagedBean extends BaseManagedBean{
+	private static final long serialVersionUID = 1L;
+	
 	private SmSupplier smSupplier;
 	private String mofCertSerialNo;
 	private String mofAccountNo;
