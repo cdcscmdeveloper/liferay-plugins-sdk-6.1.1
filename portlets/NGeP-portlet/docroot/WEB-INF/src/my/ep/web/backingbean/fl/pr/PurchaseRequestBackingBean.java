@@ -907,7 +907,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					reqDTO.setPriceType(purchaseItem.getPriceType());
 					reqDTO.setOrderQuantity(new BigDecimal(1));
 					purResDTO = purchaseRequestSO.getUnitPriceByQuantityAndPriceType(reqDTO);
-					flItemAddr.setUnitPrice(purResDTO.getUnitPrice());
+					if(purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD) 
+						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION)) {
+						flItemAddr.setUnitPrice(purResDTO.getUnitPrice());
+					} else {
+						flItemAddr.setUnitPrice(new BigDecimal(0));
+					}
 					flItemAddr.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 					
 				}else{//zonal & zonal tier & zonal promo & zonal tier promo
