@@ -1,6 +1,17 @@
 package my.ep.web.backingbean.report;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,19 +20,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -43,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
@@ -51,37 +66,12 @@ import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
-import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-
 import com.liferay.portal.util.PortalUtil;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletResponse;
-import javax.portlet.PortletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -219,10 +209,17 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	
 	private String generatedURL;
 	private String reportURL;
+	
+	private StreamedContent pdfFile;
 	/*SM end*/
 	
 	
-	
+	public StreamedContent getPdfFile() {
+		return pdfFile;
+	}
+	public void setPdfFile(StreamedContent pdfFile) {
+		this.pdfFile = pdfFile;
+	}
 	public Date getPrintedFromDate() {
 		return printedFromDate;
 	}
@@ -3532,8 +3529,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 */
 	public void generateReport(){
 		RequestContext context1 = RequestContext.getCurrentInstance();
-		 System.out.println("context1.getCallbackParams()################"+ context1.getCallbackParams());
-		 System.out.println("context1()################"+ context1.toString());
+		 
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
 			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getReleaseFromDate()==null)&&(this.getReleaseToDate()!=null))||((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){		
@@ -3593,15 +3589,41 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 				generateSMReport();
 			}
+			//StringBuilder uploadDir = new StringBuilder();
+			//uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+			//uploadDir.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
 			//Code for getting the report from the Oracle Report Server.
 			if(null!=generatedURL && !"".equals(generatedURL)){
-				loadReport(generatedURL);
+				//loadReport(generatedURL);
+				//getStreamedContentPDFFile(generatedURL);
+				getReportPdf();
 			}
 		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
+	}
+	private void loadReportWithParams(List param) {
+		StringBuilder gnrtdURL = new StringBuilder();
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+		 for (int i = 1; i <= param.size(); i++) {
+			 gnrtdURL.append(param.get(i));
+		 }
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));		
+		try {			
+			PortletRequest portalRequest=(PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			HttpServletRequest req=com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
+			//String serverDetails="http://"+req.getServerName()+":"+req.getLocalPort();
+			String baseUrl=FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+			String path=baseUrl+"/ReportViewServlet";			
+			log.info(path);
+			req.getSession().setAttribute("generatedUrl", gnrtdURL);
+			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
+			setReportURL(path);
+		} catch (Exception e) {
+			e.printStackTrace();		
+		}
 	}
 	private void loadReport(String gnrtdURL) {
 		try {			
@@ -3617,6 +3639,66 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		} catch (Exception e) {
 			e.printStackTrace();		
 		}
+	}
+	
+	public StreamedContent getStreamedContentPDFFile(String url) {
+		
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		HttpURLConnection urlConnection = null;
+		/*HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);		
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ "NGePReportView.pdf" + "\"");//
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/octet-stream");	
+		res.flushBuffer();		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();*/
+		
+		
+		ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+       // byte[] buf = new byte[1024];
+		if(url!=null) {
+			InputStream input = null;
+			try {
+				URL obj = new URL(url);
+				urlConnection = (HttpURLConnection) obj.openConnection();				
+				//input = new BufferedInputStream(urlConnection.getInputStream()); 
+				//pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");			
+	           /* for (int readNum; (readNum = input.read(buf)) != -1;) {
+	                bos.write(buf, 0, readNum); 	               
+	            }*/
+	           // bos.close();
+				// input.close();
+			    //urlConnection.disconnect();
+				InputStream in = urlConnection.getInputStream();
+				byte[] buf = new byte[512];
+				int len;
+				while (true) {
+					len = in.read(buf);
+					if (len == -1) {
+						break;
+					}
+					tmpOut.write(buf, 0, len);
+				}
+				in.close();
+				tmpOut.close();
+				ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
+						tmpOut.size());
+
+				ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
+				pdfFile= new DefaultStreamedContent(stream, "application/pdf");
+				urlConnection.disconnect();
+	        } catch (IOException ex) {
+	        	ex.printStackTrace();
+	        }
+			
+		
+	        //byte[] bytes = bos.toByteArray();	      
+			 //render.setDocumentFromString(html);
+	         //render.layout();		
+		}
+		return pdfFile;
 	}
 	/*
 	 *Generate SM module report  
@@ -4429,7 +4511,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		out.flush();
 		out.close(); 		
 		return localFile;
-	}	
+	}
 	
 	/*
 	public StreamedContent getStreamedContentPDFFile(String url) {
