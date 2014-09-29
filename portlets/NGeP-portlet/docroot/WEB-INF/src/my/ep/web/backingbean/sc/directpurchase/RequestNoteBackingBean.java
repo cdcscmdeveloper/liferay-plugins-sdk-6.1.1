@@ -1200,6 +1200,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				catalogueReqDTO.setViewSearchBean(searchBean);
 				catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 				catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+				catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 		    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 
 		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
@@ -1229,6 +1230,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 		    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+		    	catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 		    	CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
 		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {

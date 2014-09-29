@@ -216,6 +216,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			  catalogueReqDTO.setViewSearchBean(searchBean);
 			  catalogueReqDTO.setSupplierItemId(cmSupplierItem.getSupplierItemId());
 			  catalogueReqDTO.setExtensionCode(cmSupplierItem.getCmItem().getExtensionCode());
+			  catalogueReqDTO.setUomId(cmSupplierItem.getPmUom().getUomId());
 			  CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 			 
 			  List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();

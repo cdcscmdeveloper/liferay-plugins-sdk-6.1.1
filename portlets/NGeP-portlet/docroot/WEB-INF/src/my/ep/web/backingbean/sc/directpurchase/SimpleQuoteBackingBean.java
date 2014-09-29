@@ -279,6 +279,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 							catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 							catalogueReqDTO.setExtensionCode(selectedSupplierItem.getCmItem().getExtensionCode());
+							catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 							catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 							List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
 							for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
