@@ -220,11 +220,16 @@ public class EducationBackingBean extends
 		debugLogger("saveEducationDtls");
 		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
+	//	List<PmEduField> pmEduFields = this.getManagedBean().getEduField();		
+	//	pmEduFields.add(eduField);
+			
+	//	PmEduFieldRestr eduFieldRes = this.getManagedBean().getEduFieldRetr();
+	//	eduFieldRes.setPmEduField(eduField);
 		
-		//List<PmEduFieldRestr> edufieldRetrs = this.getManagedBean().getEduRestrList();
-		//if (edufieldRetrs != null && !edufieldRetrs.isEmpty()) {
-	//		eduField.setPmEduFieldRestrs(edufieldRetrs);
-	//	}
+	//	List<PmEduFieldRestr> eduFieldRestr = getManagedBean().getEduRestrList();
+	//	eduFieldRestr.add(eduFieldRes);
+		
+	//	eduField.setPmEduFieldRestrs(eduFieldRestr);
 		
 		validationMessage(eduField);
 		
