@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		   <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
+		   <h:panelGrid columns="4" style="width:770px;" columnClasses="columnWidth150,columnWidth200,columnWidth150,columnWidth200">
 		      <p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 		      <p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}" styleClass="blue_font"
 		     		action="#{agreementBackingBean.gotoContractView}" >
@@ -58,7 +58,7 @@
 			     rendered="#{agreementBackingBean.managedBean.ctContract.agreement}"
 			     value="#{agreementBackingBean.getStatusDescById(agreementBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}"/>
 	    </h:panelGrid>
-		<h:panelGrid  style="width:150px;">
+		<h:panelGrid  style="width:230px;">
 		   <h:panelGrid columns="3">
 			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
@@ -97,17 +97,17 @@
 		   </h:panelGrid>
 	    </h:panelGrid>
 	</h:panelGrid>
-	 <h:panelGrid columns="2" style="width:800px;" 
+	 <h:panelGrid columns="2" style="width:740px;" 
 	    rendered="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       agreementBackingBean.managedBean.contractVer.ctContractValue.concession}">
 	        <h:panelGroup>
-		    <div style="height:70px; width:157px; vertical-align:top;">
+		    <div style="height:70px; width:162px; vertical-align:top;">
 			   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}" />
 			</div>
 		</h:panelGroup>
 	  <h:panelGrid columns="1">
-	    <p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:570px;"  disabled="true" required="true" autoResize="false"></p:inputTextarea>	
+	    <p:inputTextarea id="justificationLbl"  rows="4" style="width:553px;" disabled="true"  required="true"
+	        value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"  autoResize="false"></p:inputTextarea>	
 	  </h:panelGrid>		
     </h:panelGrid> 
  </p:panel>
