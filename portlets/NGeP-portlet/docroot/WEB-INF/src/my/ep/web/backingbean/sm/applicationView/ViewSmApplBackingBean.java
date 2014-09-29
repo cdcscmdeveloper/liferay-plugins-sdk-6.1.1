@@ -113,10 +113,10 @@ public class ViewSmApplBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		 if (reloadPreviousApplication()) {
-//		 initPreviousApplication();
-//		 }
-//		 constructMessage();
+//		if (reloadPreviousApplication()) {
+//			initPreviousApplication();
+//		}
+//		constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -342,7 +342,9 @@ public class ViewSmApplBackingBean extends
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
 		getManagedBean().setSmAppl(resDTO.getSmAppl());
 		getManagedBean().setSmSupplier(resDTO.getSmAppl().getSmSupplier());
-		setSupplierBusinessType(getManagedBean().getSmSupplier());
+		getManagedBean().setBusinessTypeVal(
+				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
+						.getSmSupplier()));
 		getManagedBean().setSupplierBusinessTypeVal(
 				getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
@@ -428,8 +430,8 @@ public class ViewSmApplBackingBean extends
 	private void initStep3CaptialAndEquityInfo() {
 		// captialOrEquityStatusInfoFormViewOnly
 		SmCommonUtil
-		.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
-				.getSmAppl().getSmCompanyBasic());
+				.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
+						.getSmAppl().getSmCompanyBasic());
 
 		// captialOrEquityShareHolderInfoFormViewOnly
 		setApplicationShareHolders(getManagedBean().getSmAppl()
@@ -572,7 +574,6 @@ public class ViewSmApplBackingBean extends
 
 	public void assignSelEquiCompany(SmEquityCompany equiCompBean) {
 		getManagedBean().setSelectedEquityCompany(equiCompBean);
-		setSmEquityCompanyPercentageCalculation();
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {
@@ -709,71 +710,6 @@ public class ViewSmApplBackingBean extends
 		default:
 			break;
 
-		}
-	}
-
-	private void setSmEquityCompanyPercentageCalculation() {
-		try {
-			if (getManagedBean().getSelectedEquityCompany().getShareAmt() != null) {
-				getManagedBean().getSelectedEquityCompany().setShareAmt(
-						getManagedBean().getSelectedEquityCompany()
-								.getShareAmt()
-								.setScale(2, RoundingMode.HALF_UP));
-			}
-			getManagedBean().setEquiCompCapTotal(new BigDecimal(0));
-			for (SmEquityCompany comp : getManagedBean().getSmAppl()
-					.getSmEquityCompanies()) {
-				if (!(comp.getEquityCompanyId() == null && comp
-						.equals(getManagedBean().getSelectedEquityCompany()))
-						&& !(comp.getEquityCompanyId() != null && comp
-								.getEquityCompanyId().equals(
-										getManagedBean()
-												.getSelectedEquityCompany()
-												.getEquityCompanyId()))) {
-
-					getManagedBean().setEquiCompCapTotal(
-							getManagedBean().getEquiCompCapTotal()
-									.add(comp.getShareAmt())
-									.setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-			getManagedBean().setEquiCompCapTotal(
-					getManagedBean()
-							.getEquiCompCapTotal()
-							.add(getManagedBean().getSelectedEquityCompany()
-									.getShareAmt())
-							.setScale(2, RoundingMode.HALF_UP));
-			if (getManagedBean().getEquiCompCapTotal().compareTo(
-					getManagedBean().getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital()) <= 0) {
-				BigDecimal mul = new BigDecimal(100);
-				if (getManagedBean().getSmAppl().getSmCompanyBasic()
-						.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
-					getManagedBean().getSelectedEquityCompany()
-							.setSharePercentage(
-									getManagedBean()
-											.getSelectedEquityCompany()
-											.getShareAmt()
-											.divide(getManagedBean()
-													.getSmAppl()
-													.getSmCompanyBasic()
-													.getPaidUpCapital(), 4,
-													RoundingMode.HALF_UP)
-											.multiply(mul)
-											.setScale(2, RoundingMode.HALF_UP));
-				}
-
-			} else {
-				getManagedBean().getSelectedEquityCompany().setSharePercentage(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				getManagedBean().getSelectedEquityCompany().setShareAmt(
-						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(MessageConst.ERROR_722521, new String[] {
-						"Company", "companies" });
-			}
-		} catch (NumberFormatException ne) {
-			// ne.printStackTrace();
-			throw new EpException(MessageConst.ERROR_722522);
 		}
 	}
 
@@ -1025,62 +961,6 @@ public class ViewSmApplBackingBean extends
 			}
 		}
 
-	}
-
-	private void setSupplierBusinessType(SmSupplier sup) {
-		if (sup.getBusinessType()
-				.equalsIgnoreCase(
-						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK)) {
-			getManagedBean()
-					.setBusinessTypeVal(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT);
-		} else if (sup
-				.getBusinessType()
-				.equalsIgnoreCase(
-						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)) {
-			getManagedBean()
-					.setBusinessTypeVal(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT);
-
-		} else if (sup
-				.getBusinessType()
-				.equalsIgnoreCase(
-						SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)) {
-			getManagedBean()
-					.setBusinessTypeVal(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT);
-		} else if (sup.getBusinessType().equalsIgnoreCase(
-				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
-				|| sup.getBusinessType()
-						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_BHD)) {
-			getManagedBean()
-					.setBusinessTypeVal(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT);
-		} else if (sup.getBusinessType().equalsIgnoreCase(
-				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP)) {
-			getManagedBean()
-					.setBusinessTypeVal(
-							SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT);
-		}
 	}
 
 	private void constructMessage() {

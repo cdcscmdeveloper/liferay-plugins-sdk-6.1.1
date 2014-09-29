@@ -8,10 +8,13 @@
 	<cc:interface>
 		<cc:attribute name="value" required="true" />
 		<cc:attribute name="rendered" />
+		<cc:attribute name="styleClass" />
 	</cc:interface>
 
 	<cc:implementation>
-		<h:outputText value="#{cc.attrs.value}" rendered="#{cc.attrs.rendered==null?'true':cc.attrs.rendered}">
+		<h:outputText value="#{cc.attrs.value}"
+			rendered="#{cc.attrs.rendered==null?'true':cc.attrs.rendered}"
+			styleClass="#{cc.attrs.styleClass}">
 			<f:convertDateTime
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 		</h:outputText>
