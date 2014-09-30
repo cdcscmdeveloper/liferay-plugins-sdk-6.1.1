@@ -698,13 +698,13 @@
 					<property name="columnName" value="votFundCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.fl.pm.vot.fund.code" />
+					<property name="bundleKey" value="lbl.fl.vot" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="description" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.fl.pm.vot.fund.description" />
+					<property name="bundleKey" value="lbl.fl.title" />
 				</bean>
 			</list>
 		</property>
