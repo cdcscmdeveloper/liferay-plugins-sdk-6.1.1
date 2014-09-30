@@ -986,7 +986,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void updateItemWeightageReq(TemplateSpecBean templateSpecBean) {
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
 		
-		TemplateSpecHelper.getInstance().updateItemWeightageReq(specMaster);
+		TemplateSpecHelper.getInstance().updateItemWeightageReq(
+				specMaster, specMaster.getTplSpecQuestions());
 	}
 	
 	/**
