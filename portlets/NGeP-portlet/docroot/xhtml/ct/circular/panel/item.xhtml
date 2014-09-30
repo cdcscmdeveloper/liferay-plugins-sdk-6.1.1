@@ -25,15 +25,15 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		      </p:column>
 			 
 			  <p:column headerText="#{lbl['lbl.ct.panel.coverage']}" style="white-space:pre-line;width:6%;">
-			       <p:selectOneMenu value="#{panelItemsVar.panelCoverageId.parameterId}" style="width:95%;" >
+			       <p:selectOneMenu id="panelCoverage" value="#{panelItemsVar.zoneAllParamterId}" style="width:95%;" >
 			             <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelCoverageType)}"/>
 			             <p:ajax event="change"   listener="#{panelBackingBean.setCtPanelZoneListner(panelItemsVar)}" 
-			                 process="@this"   update="@([id$=panelItemDt],[id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
+			                 process="@all"   update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])" /> 
 			       </p:selectOneMenu>
 	  	      </p:column>
 			 
 			  <p:column headerText="#{lbl['lbl.ct.item.category']}" style="white-space:pre-line;width:6%">
-			      <p:selectOneMenu value="#{panelItemsVar.itemCategoryId.parameterId}" style="width:95%">
+			      <p:selectOneMenu value="#{panelItemsVar.categoryParameterId}" style="width:95%">
 			           <f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.itemCategoryType)}"/>
 			           <p:ajax event="change" update="spec" process="@this"/> 
 			      </p:selectOneMenu>
@@ -45,12 +45,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
               
 			  <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:11%;">
 			     <p:inputText id="spec" value="#{panelItemsVar.specification}"   style="width:95%;" maxlength="200"
-				      disabled="#{panelBackingBean.getItemGeneralCode(panelItemsVar.itemCategoryId.parameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
+			     	      disabled="#{panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}"/>
 			  </p:column>
 			
 			  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width: 11%;">
 			       <ac:lov id="uomLovId" lovId="PM_UOM" size="8" headerText="UOM Lov" readonly="true" 
-				       value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1"
+				         value="#{panelItemsVar.pmUom.uomName}" conditionField="recordStatus^1" 
 				       saveObject="panelBackingBean.managedBean.circularVer.ctPanelItems[#{index}].pmUom">
 			       </ac:lov>
 			   </p:column>
@@ -292,7 +292,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						buttonIcon="ui-icon-add" 
 						selectionMode="multiple"
 						saveObject="panelBackingBean.managedBean.supplierList"
-						update="@form" />
+						update=":form:itemSupplierDt" />
 					</td>
 					<td>
 				    <p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.btn.delete']}" 

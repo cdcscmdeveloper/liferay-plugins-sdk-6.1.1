@@ -170,13 +170,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	  }
 	
 	  public void preRenderCircular() {
-		    renewSesionObject();
+		  
+		  renewSesionObject();
 		    getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		    FacesContext fc = FacesContext.getCurrentInstance();
 		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	  }
 	
 	public void preRenderSearch() {
+	
 		renewSesionObject();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -231,134 +233,136 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void setPanelCircularVar(CircularResDTO resDTO){
 		
-		getManagedBean().setCircularVer(resDTO.getCircularVer());
-		getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+		    getManagedBean().setCircularVer(resDTO.getCircularVer());
+		    getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 		
-		if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
-			Collections.sort(getManagedBean().getCircularVer().getCtPanelItems(), new CtPanelItem());
-			for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
-				  if(panelItem.getCtPanelZones() != null && panelItem.getCtPanelZones().size() > 0){
-						Collections.sort(panelItem.getCtPanelZones(), new CtPanelZone());
-				         for(CtPanelZone panelZone : panelItem.getCtPanelZones()){
-				        	 Collections.sort(panelZone.getCtPanelSuppliers(), new CtPanelSupplier()); 
-				         }
-				  }
-				 if(panelItem.getCtPanelSuppliers() != null && panelItem.getCtPanelSuppliers().size() > 0)
-			  		   Collections.sort(panelItem.getCtPanelSuppliers(), new CtPanelSupplier());  
-		 	}
-		}
+		    if(getManagedBean().getCircularVer().getCtPanelItems() != null && getManagedBean().getCircularVer().getCtPanelItems().size() > 0){
+			 
+		    	      Collections.sort(getManagedBean().getCircularVer().getCtPanelItems(), new CtPanelItem());
+			          for(CtPanelItem panelItem : getManagedBean().getCircularVer().getCtPanelItems()) {
+				
+			        	      if(panelItem.getCtPanelZones() != null && panelItem.getCtPanelZones().size() > 0) {
+					            	Collections.sort(panelItem.getCtPanelZones(), new CtPanelZone());
+				                    for(CtPanelZone panelZone : panelItem.getCtPanelZones())
+				        	               Collections.sort(panelZone.getCtPanelSuppliers(), new CtPanelSupplier()); 
+				               }
+				
+			        	      if(panelItem.getCtPanelSuppliers() != null && panelItem.getCtPanelSuppliers().size() > 0)
+			  		                 Collections.sort(panelItem.getCtPanelSuppliers(), new CtPanelSupplier());  
+		 	          }
+		     }
 		
-		getManagedBean().setRemarkList(resDTO.getRemarkList());
-		getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-		
-		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-		if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
-			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-		}
+		     getManagedBean().setRemarkList(resDTO.getRemarkList());
+		     getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+		     getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		   
+		     if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
+			       getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			       getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+		     }
 
-		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-		initializeRemarks();
-		ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-	}
+		     getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		     initializeRemarks();
+		     ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		     ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+	    }
 	
-	public void preRenderCancelCircular() {
-		renewSesionObject();
-		getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
-	}
+	    public void preRenderCancelCircular() {
+		     renewSesionObject();
+		     getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+		     FacesContext fc = FacesContext.getCurrentInstance();
+		     fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "cancelCircularBase.xhtml?faces-redirect=true");
+	    }
 	
-	public void preRenderViewCancelReq() {
-		ICircularSO circularSO = null;
-		try {
+	    public void preRenderViewCancelReq() {
+		     ICircularSO circularSO = null;
+		     try {
 		
-			System.out.println("**********preRenderView**************");
-			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-			String taskId = originalServletRequest.getParameter("taskId");
-			if(taskId==null) {
-				if(isPanelAdmin() || isCentralContractAdmin()) {
-					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
-				}
-				return;
-			}
+			         System.out.println("**********preRenderView**************");
+			         HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			         HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			         String taskId = originalServletRequest.getParameter("taskId");
+			         if(taskId==null) {
+				           if(isPanelAdmin() || isCentralContractAdmin()) {
+					            getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
+				           }
+				        return;
+			         }
 			
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			        FacesScopes face = new FacesScopes();
+			        String token = face.getBPMAuthenticationCtxToken();
+			        IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);
+			        BpmRequestDTO reqDTO = new BpmRequestDTO();
+			        reqDTO.setCtxToken(token);
+			        reqDTO.setTaskId(taskId);
 			
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			Object obj = res.getPojo();			
-			CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
+			        BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			        Object obj = res.getPojo();			
+			        CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
 			
-			getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
-			getManagedBean().setTaskId(taskId);
-			String[] outcome = new String[res.getAction().length];
-			int i = 0;
-			for(String action : res.getAction()) {
-				outcome[i++]= action;
-			}getManagedBean().setOutComes(outcome);	
+			        getManagedBean().setCircularAdmin(dataType.getCircularAdmin().getUserName());
+			        getManagedBean().setTaskId(taskId);
+			        String[] outcome = new String[res.getAction().length];
+			        int i = 0;
+			        for(String action : res.getAction()) 
+				          outcome[i++]= action;
+			        getManagedBean().setOutComes(outcome);	
 			
-			CircularReqDTO cancelReqDTO = new CircularReqDTO();
-			cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
+			        CircularReqDTO cancelReqDTO = new CircularReqDTO();
+			        cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
-			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
-			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
-			List <CtCancelCircular> ctCancelCircularList = resDTO.getCancelCircularReq().getCtCancelCircularList();
-			if(ctCancelCircularList.get(0).getCircularVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR))
-				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
-		    else 
-				getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+			        CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
+			        getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
+			        List <CtCancelCircular> ctCancelCircularList = resDTO.getCancelCircularReq().getCtCancelCircularList();
 			
-			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-			if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
-				getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-			}
+			        if(ctCancelCircularList.get(0).getCircularVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CENTRAL_CONTRACT_CIRCULAR))
+				             getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+		            else 
+			        	     getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			
-			getManagedBean().setRemarkList(resDTO.getRemarkList());
-			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+			        if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
+				          getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+				          getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			        }
+			
+			        getManagedBean().setRemarkList(resDTO.getRemarkList());
+			        getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 		
-			getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			        getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+			        initializeRemarks();
+			        ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			        ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		} finally {
-			circularSO = null;
-		}		
-	}
+		     } catch (Exception e) {
+			     e.printStackTrace();
+			     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		     } finally {
+			     circularSO = null;
+		     }		
+	   }
 	
-	public String backAction() {
-		if(getManagedBean().isChkCancelPage()){
-			 getManagedBean().setChkCancelPage(false);
-			 return "cancelCircularBase.xhtml?faces-redirect=true";
+	   public String backAction() {
+		   if(getManagedBean().isChkCancelPage()){
+			     getManagedBean().setChkCancelPage(false);
+			     return "cancelCircularBase.xhtml?faces-redirect=true";
+	       } else {
+		         return "search.xhtml?faces-redirect=true";
+		   }
+	   }
 	
-		} else {
-		    return "search.xhtml?faces-redirect=true";
-		}
-	}
-	
-	public void searchReset(){
-		this.getManagedBean().setSearchCircularNo(null);
-		this.getManagedBean().setSearchCircularName(null);
-		this.getManagedBean().setSearchSupplierName(null);
-		this.getManagedBean().setSearchFileRefNo(null);
-		this.getManagedBean().setSearchItemName(null);
-		this.getManagedBean().setSearchStartDate(null);
-		this.getManagedBean().setSearchEndDate(null);
-		this.getManagedBean().setSearchStatusId(null);
-	}
+	   public void searchReset(){
+		    this.getManagedBean().setSearchCircularNo(null);
+		    this.getManagedBean().setSearchCircularName(null);
+		    this.getManagedBean().setSearchSupplierName(null);
+		    this.getManagedBean().setSearchFileRefNo(null);
+	 	    this.getManagedBean().setSearchItemName(null);
+		    this.getManagedBean().setSearchStartDate(null);
+		    this.getManagedBean().setSearchEndDate(null);
+		    this.getManagedBean().setSearchStatusId(null);
+	   }
 	
 	public void searchCircularVer() throws Exception {
 		try {
@@ -679,11 +683,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			else {
 				for (CtPanelItem panelItem: getManagedBean().getCircularVer().getCtPanelItems()) {
-					if(panelItem.getPanelCoverageId().getParameterId()==null) {
+					if(panelItem.getZoneAllParamterId()==null) {
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Panel Coverage"});
 					}
 					
-					if(panelItem.getItemCategoryId().getParameterId()==null) {
+					if(panelItem.getCategoryParameterId() == null) {
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Category"});
 					}
 					
@@ -695,7 +699,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"UOM"});
 					}
 					
-					if(getItemGeneralCode(panelItem.getPanelCoverageId().getParameterId()).equalsIgnoreCase(
+					if(getItemGeneralCode(panelItem.getZoneAllParamterId()).equalsIgnoreCase(
 							ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
 						if(panelItem.getLocationLevelId().getParameterId()==null) {
 							throw new EpException(MessageConst.ERROR_100022, new String[]{"Location Level"});
@@ -1257,7 +1261,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public void setPanelListner(){
 		
-		 String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId());
+		 String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getZoneAllParamterId());
 		 if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
 			  this.getManagedBean().setSelectionOfZone(true);
 			  this.getManagedBean().setSelectedPanelZone(null);
@@ -1272,22 +1276,28 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void setCtPanelZoneListner(CtPanelItem panelItem){
-		   this.getManagedBean().setSelectedPanelItems(panelItem);
-		   String panelCoverageICode = getItemGeneralCode(this.getManagedBean().getSelectedPanelItems().getPanelCoverageId().getParameterId());
-	 	 
-		   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)){
-	 		      this.getManagedBean().setSelectedPanelZone(null);
-			      this.getManagedBean().setSelectionOfZone(true);
-			      if(this.getManagedBean().getSelectedPanelItems().getLocationLevelId() == null)
-			    	    this.getManagedBean().getSelectedPanelItems().setLocationLevelId(new PmParameter());
-			      this.getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
+		
+		   String panelCoverageICode = getItemGeneralCode(panelItem.getZoneAllParamterId());
+		   getManagedBean().setSelectedPanelItems(panelItem);
+		   if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ZONE)) {
+	 		      getManagedBean().setSelectedPanelZone(null);
+	 		      getManagedBean().getSelectedPanelItems().setCtPanelSuppliers(null);
+	 		      getManagedBean().getSelectedPanelItems().setCtPanelZones(null);
+			      getManagedBean().setSelectionOfZone(true);
+			    
+			      if(getManagedBean().getSelectedPanelItems().getLocationLevelId() == null)
+			    	  getManagedBean().getSelectedPanelItems().setLocationLevelId(new PmParameter());
+			      
+			      getManagedBean().getSelectedPanelItems().getLocationLevelId().setParameterId(retrieveParameterByTypeAndCode());
 			   
 	 	   } else if(panelCoverageICode.equalsIgnoreCase(ParameterConst.CIRCULAR_PANEL_COVERAGE_ALL)) {
-			           this.getManagedBean().setSelectionOfZone(false);
-		   } else{
-			this.getManagedBean().setSelectionOfZone(false);
-			this.getManagedBean().setSelectedPanelItems(null);
-			this.getManagedBean().setSelectedPanelZone(null);
+	 		  getManagedBean().getSelectedPanelItems().setCtPanelZones(null);
+	 		  getManagedBean().getSelectedPanelItems().setCtPanelSuppliers(null);
+	 		   getManagedBean().setSelectionOfZone(false);   
+		   } else {
+			    this.getManagedBean().setSelectionOfZone(false);
+			    this.getManagedBean().setSelectedPanelItems(null);
+			    this.getManagedBean().setSelectedPanelZone(null);
 		}
 	}
 	
@@ -1491,31 +1501,25 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public void bulkUpdateRow(){
-		try {
-			if(this.getManagedBean().getCircularVer().getCtPanelItems() != null){
-				Iterator<CtPanelItem> panelItemIterator = this.getManagedBean().getCircularVer().getCtPanelItems().iterator();
-				while(panelItemIterator.hasNext()){
-					CtPanelItem  item = panelItemIterator.next();
-					if(item.isSelectedCheckBox()){
-						if(item.getPanelCoverageId() == null){
-							item.setPanelCoverageId(new PmParameter());
-							item.getPanelCoverageId().setParameterId(this.getManagedBean().getPanelCoverageId());
-					     }else{
-					    		item.getPanelCoverageId().setParameterId(this.getManagedBean().getPanelCoverageId());
-					     }
-						
-						if(item.getItemCategoryId() == null){
-					    	   item.setItemCategoryId(new PmParameter());
-					    	   item.getItemCategoryId().setParameterId(this.getManagedBean().getItemCategoryId());
-					     }else{
-					    	  item.getItemCategoryId().setParameterId(this.getManagedBean().getItemCategoryId());
-					     }
-				}
-			}
-		  }
-			this.getManagedBean().setSelectedPanelItems(null);
-			this.getManagedBean().setSelectionOfZone(false);
+	  public void bulkUpdateRow(){
+		   try {
+			       if(getManagedBean().getCircularVer().getCtPanelItems() != null) {
+				           Iterator<CtPanelItem> panelItemIterator = getManagedBean().getCircularVer().getCtPanelItems().iterator();
+				           while (panelItemIterator.hasNext()) {
+					                  
+				        	            CtPanelItem  item = panelItemIterator.next();
+					                    if(item.isSelectedCheckBox()) {
+					                    	
+					                    	    if(getManagedBean().getPanelCoverageId() != null) 
+						                             item.setZoneAllParamterId(getManagedBean().getPanelCoverageId());
+					                    	 
+					                    	    if(getManagedBean().getItemCategoryId() != null)
+					                    	         item.setCategoryParameterId(getManagedBean().getItemCategoryId());
+					                    }
+				              }
+			          }
+			   getManagedBean().setSelectedPanelItems(null);
+			   getManagedBean().setSelectionOfZone(false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
