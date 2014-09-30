@@ -7,15 +7,15 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']}" /></td>
 				<td class="header-info-text">
 					#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.docNo}
 				</td>
-				<td><p:outputLabel value="Payment Advice No." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.no']}" /></td>
 				<td class="header-info-text">
 					#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo == null ? '-- System Generated --':paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
 					#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.preparedOrgProfile.orgName}

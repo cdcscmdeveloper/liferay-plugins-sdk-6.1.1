@@ -7,13 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<p:panel id="deductionPanel" header="DEDUCTIONS" toggleable="true">
+	<p:panel id="deductionPanel" header="#{lbl['lbl.fl.payment.match.deduction']}" toggleable="true">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.deduction']}" escape="false"/>
 		<p:dataTable id="deductionDataTable" var="deduction" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction}"
 			rowIndexVar="index"
 			selection="#{paymentMatchBackingBean.managedBean.selectedDeductions}" rowKey="#{deduction}">
 			<ac:paginator for="deductionDataTable" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" disabledSelection="#{index == 0}"/>
-			<p:column headerText="Type">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.type']}">
 				<h:outputText rendered="#{index == 0}" value="#{paymentMatchBackingBean.getParameterDesc(deduction.deductionType)}" />
 				<p:selectOneMenu rendered="#{index > 0}" value="#{deduction.deductionType.parameterCode}" >
 					<p:ajax event="change" process="@this" update=":form:deductionDataTable" />
@@ -24,16 +25,24 @@
 						itemValue="#{ctDeduction.deductionType.parameterCode}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="Description">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.deduction.desc']}">
 				<p:inputText rendered="#{index > 0}" value="#{deduction.deductionDesc}" />
 			</p:column>
-			<p:column headerText="Clauses">
+			<p:column>
+			<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.payment.match.clauses']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.clauses']}"/>
+				</f:facet>
 			<p:commandLink rendered="#{index > 0}" 
 					value="Clauses" action="#{paymentMatchBackingBean.retrieveClauses(deduction)}" oncomplete="clauses.show();"
 					update=":form:clauseDialog"></p:commandLink>
 				<h:outputText style="text-align:right" />
 			</p:column>
-			<p:column headerText="Amanah">
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.payment.match.amanah']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmVotFund.votFundCode}" />
 					<p:selectOneMenu style="margin-bottom:15px;" value="#{deduction.pmVotFund.votFundId}" 
@@ -45,7 +54,11 @@
 							itemValue="#{votFund.votFundId}" />
 					</p:selectOneMenu>				
 			</p:column>
-			<p:column headerText="GOSODO">
+			<p:column headerText="#{lbl['lbl.fl.gosodo']}">
+			<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.gosodo']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/>
+				</f:facet>
 				<h:outputText rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" 
 					value="#{deduction.pmGlAccount.glAccCode}" />
 					<p:selectOneMenu style="margin-bottom:15px;" value="#{deduction.pmGlAccount.glAccountId}" 
@@ -57,7 +70,7 @@
 							itemValue="#{glAccount.glAccountId}" />
 					</p:selectOneMenu>				
 			</p:column>
-			<p:column headerText="Amount (RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.amount']}" style="text-align:right">
 				<h:outputText styleClass="colFloatRight" value="#{deduction.deductionAmt}" 
 					rendered="#{deduction.deductionType.parameterCode==ParameterConst.deductionTypeFixed or deduction.deductionType.parameterCode==ParameterConst.deductionTypeTransactionFee}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -78,18 +91,18 @@
 		</div>
 	</p:panel>
 	
-	<p:dialog id="clauseDialog" header="Clauses"
+	<p:dialog id="clauseDialog" header="#{lbl['lbl.fl.payment.match.clauses']}"
 		widgetVar="clauses" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
 		<p:dataTable id="clauseDt" var="clause" style="width:100%"
 			value="#{paymentMatchBackingBean.managedBean.ctDeductionClauseList}">
 			<ac:paginator for="clauseDt" />
-			<p:column headerText="Clauses Description" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.clauses.desc']}" style="white-space:normal;">
 				#{clause.clauseDescription}
 			</p:column>
 		</p:dataTable>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.fl.btn.close']}" icon="ui-icon-cancel"
 				oncomplete="clauses.hide();" >
 			</p:commandButton>
 		</div>

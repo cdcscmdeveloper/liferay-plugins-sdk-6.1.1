@@ -21,7 +21,7 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{paymentMatchBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{paymentMatchBackingBean.backToPervious}" /></td>			
 				<td colspan="4" style="text-align: right;"><ui:repeat
@@ -40,23 +40,23 @@
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu" 
 						activeIndex="#{paymentMatchBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Charge Line Summary" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form"
 							actionListener="#{paymentMatchBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Deduction" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.payment.match.deduction']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
-						<p:menuitem value="Payment Summary" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.payment.match.payment.summary']}" update="@form"
 							actionListener="#{paymentMatchBackingBean.onTabChange(3)}">
 							<f:setPropertyActionListener
 								target="#{paymentMatchBackingBean.managedBean.selectedTabIndex}"
