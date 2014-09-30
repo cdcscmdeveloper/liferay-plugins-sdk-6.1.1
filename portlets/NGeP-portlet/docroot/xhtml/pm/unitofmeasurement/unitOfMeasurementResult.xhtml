@@ -14,7 +14,7 @@
     }
 </style>
 		
-	<p:panel id="measurementSearch" header="SEARCH" toggleable="true">
+	<p:panel id="measurementSearch" header="#{lbl['lbl.pm.uom.search']}" toggleable="true">
 	
 	 <ui:include src="/xhtml/pm/unitofmeasurement/unitOfMeasurementSearch.xhtml" />
 			
@@ -30,7 +30,7 @@
 	<br/>
 	</p:panel>
 	
-	<p:panel id="measurementResult" header="RESULT" toggleable="true">
+	<p:panel id="measurementResult" header="#{lbl['lbl.pm.uom.result']}" toggleable="true">
 	<p:dataTable id="measurementSR" value="#{unitOfMeasurementBackingBean.unitOfMeasurementDataModel}"
 				var="measurementList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="measurementSR" />
