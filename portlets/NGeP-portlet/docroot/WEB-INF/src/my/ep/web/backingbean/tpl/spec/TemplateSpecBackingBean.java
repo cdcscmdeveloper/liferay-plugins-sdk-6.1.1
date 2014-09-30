@@ -985,18 +985,8 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void updateItemWeightageReq(TemplateSpecBean templateSpecBean) {
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode());
-		boolean isWeightageReq = specMaster.isWeightageReq();
 		
-		if (specMaster.getTplSpecQuestions() != null) {
-			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
-				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType());
-				
-				if ((isFinancialSpec || (!isFinancialSpec && !isQuestionTypeItem))) {
-					specQuestion.setWeightageReq(isWeightageReq);
-				}
-			}
-		}
+		TemplateSpecHelper.getInstance().updateItemWeightageReq(specMaster);
 	}
 	
 	/**
