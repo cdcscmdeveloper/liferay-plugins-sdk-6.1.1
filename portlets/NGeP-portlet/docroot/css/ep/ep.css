@@ -3362,3 +3362,7 @@ table.rptTbl {
 .width-auto {
     width: auto !important;
 }
+
+.lastUpdated {
+	color: red;
+}
