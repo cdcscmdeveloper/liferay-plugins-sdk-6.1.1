@@ -12,6 +12,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.SourcingConstants;
@@ -23,6 +24,7 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -35,6 +37,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -190,20 +193,31 @@ public class QTScheduleDetailBackingBean extends
 	public void addDeskOfficerAdminAssistant() {
 		debugLogger("addDeskOfficerAdminAssistant");
 		ScQtContactPerson contactPerson = new ScQtContactPerson();
-		try {
-			List<ScQtContactPerson> contactList = this.getManagedBean()
-					.getPmuserContactpersonList();
-			if (null == contactList) {
-				contactList = new ArrayList<ScQtContactPerson>();
-			}
-			contactPerson.setUser(new PmUser());
-			contactPerson
-					.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE_DOAA);
-			contactPerson.setScQt(getManagedBean().getQt());
-			contactList.add(contactPerson);
-			this.getManagedBean().setPmuserContactpersonList(contactList);
-		} catch (Exception e) {
-			throw new IllegalArgumentException();
+		
+		List<ScQtContactPerson> doaaList = this.getManagedBean().getPmuserContactpersonList();
+		if (null == doaaList) {
+			doaaList = new ArrayList<ScQtContactPerson>();
+		}else{
+			//do validation before add a new one.
+			validationDeskOfficerAdminAssistant(doaaList);
+		}
+		contactPerson.setUser(new PmUser());
+		contactPerson.setOfficerType(SourcingConstants.CONTACT_PERSON_TYPE_DOAA);
+		contactPerson.setScQt(getManagedBean().getQt());
+		doaaList.add(contactPerson);
+		this.getManagedBean().setPmuserContactpersonList(doaaList);
+	}
+	
+	private void validationDeskOfficerAdminAssistant(List<ScQtContactPerson> doaaList){
+		IQTDetailSO detailSO = null;
+		try{
+			detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTDetailSO.class);
+			
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setDoaaList(doaaList);
+			detailSO.validateDeskOfficerAdminAssistant(reqDTO);
+		}finally{
+			detailSO = null;
 		}
 	}
 
