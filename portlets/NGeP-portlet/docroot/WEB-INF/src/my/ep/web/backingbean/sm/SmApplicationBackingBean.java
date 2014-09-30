@@ -1066,6 +1066,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(true);
 		} else {
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
+			assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
@@ -5332,6 +5333,7 @@ public class SmApplicationBackingBean extends
 						.isHigherManagement()){
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
+			assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
 		} else {
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
