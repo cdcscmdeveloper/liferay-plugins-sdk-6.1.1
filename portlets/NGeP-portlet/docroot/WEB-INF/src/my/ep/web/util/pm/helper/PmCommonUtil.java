@@ -508,7 +508,7 @@ public class PmCommonUtil {
 	 * @param isDetail
 	 * @return List<PmUserOrg> 
 	 */
-	public static List<PmUserOrg> retrieveActiveOrg(Long id, boolean isDetail){
+	public static List<PmUserOrg> retrieveActiveOrg(Long id){
 		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
 		IUserSO userSO = null;
 		try {
@@ -516,11 +516,9 @@ public class PmCommonUtil {
 			UserResDTO resDTO = null;
 			reqDTO.setUserId(id);
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			if(isDetail){
-				resDTO = userSO.retrieveUserOrgDtlListByUserId(reqDTO);
-			}else{
-				resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			}
+			
+			resDTO = userSO.retrieveUserOrgDtlListByUserId(reqDTO);
+			
 			if(resDTO.isSuccessful()){
 				pmUserOrgs = resDTO.getUserOrgList();
 			}

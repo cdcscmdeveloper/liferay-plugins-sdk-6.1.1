@@ -189,8 +189,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				, new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
 	}
 	
-	public void roleCheck2(){
-		log.info("roleCheck");
+	public void roleCheckLocal(){
+		log.info("roleCheckLocal");
 		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
 			String tempRole = this.getManagedBean().getTempRole(); //TODO
 			if(RoleCode.EP_ADMIN.value().equalsIgnoreCase(tempRole)){
@@ -199,7 +199,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
 					int count = 1;
 					for(PmUserOrg pmUserOrg: pmUserOrgs){
@@ -215,7 +215,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = parentOrg.orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
 					int count = 1;
 					for(PmUserOrg pmUserOrg: pmUserOrgs){
@@ -245,7 +245,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
 					int count = 1;
 					for(PmUserOrg pmUserOrg: pmUserOrgs){
@@ -261,7 +261,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				this.getManagedBean().setFilterOrg(true);
 				StringBuilder sb = new StringBuilder();
 				//parentId = parentOrg.orgProfileId
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
 					int count = 1;
 					for(PmUserOrg pmUserOrg: pmUserOrgs){
