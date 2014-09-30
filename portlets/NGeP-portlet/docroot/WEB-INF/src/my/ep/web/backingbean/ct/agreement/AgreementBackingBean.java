@@ -574,31 +574,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return items;
 	}
 
-	public SelectItem[] getContractSignerDropdown(
-			CtAgreementParty agreementParty) {
+	public SelectItem[] getContractSignerDropdown(CtAgreementParty agreementParty) {
 		SelectItem[] items = null;
 		IUserSO userSO = null;
 		try {
 			int i = 1;
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-			if (agreementParty.getAgreementPartyType().getParameterCode()
-					.equalsIgnoreCase(ParameterConst.AGENCY_SIGNER_CODE)) {
-				if (agreementParty.getOrgProfile() != null
-						&& agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
-					reqDTO.setOrgProfileId(agreementParty.getOrgProfile()
-							.getOrgProfileId());
-				} else if (agreementParty.getOrgProfile() != null
-						&& agreementParty.getOrgProfile().getParentOrgProfile() != null
-						&& agreementParty.getOrgProfile().getParentOrgProfile()
-								.getOrgProfileId() != null) { // Department
-					reqDTO.setOrgProfileId(agreementParty.getOrgProfile()
-							.getParentOrgProfile().getOrgProfileId());
+			if (agreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterConst.AGENCY_SIGNER_CODE)) {
+				  if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
+					       reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
+			     	} else if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getParentOrgProfile() != null && agreementParty.getOrgProfile().getParentOrgProfile()	.getOrgProfileId() != null) { // Department
+				        	reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId());
 				} else { // default to ministry
-					reqDTO.setOrgProfileId(getManagedBean().getCtContract()
-							.getOwnerOrgProfile().getOrgProfileId());
+					reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				}
 			}
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -606,8 +596,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, "- Select One -");
 			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(),
-						pmUser.getUserName());
+				items[i++] = new SelectItem(pmUser.getUserId(),pmUser.getUserName());
 			}
 		} finally {
 			userSO = null;
@@ -1216,9 +1205,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void setUserValueAgency(CtAgreementParty ctParty, Long userId) {
 		for (CtAgreementParty party : this.getManagedBean().getCtAgencySigner()) {
 			if (party.equals(ctParty)) {
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(userId);
 				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
