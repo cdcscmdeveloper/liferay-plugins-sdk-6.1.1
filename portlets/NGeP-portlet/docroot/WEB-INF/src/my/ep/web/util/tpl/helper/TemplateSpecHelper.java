@@ -160,8 +160,6 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setScoreTypeCode(null);
 								newSpecQuestion.setMaxScore(null);
 								
-								updateItemWeightageReq(newSpecMaster);
-								
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								newSpecQuestion.setTplSpecEstimations(null);
@@ -178,7 +176,9 @@ public class TemplateSpecHelper {
 						log.warn("clone " + specQuestion + ": " + specQuestion.getSpecQuestionId() + " failed.");
 					}
 				}
-				newSpecMaster.setTplSpecQuestions(newSpecQuestions);	
+				newSpecMaster.setTplSpecQuestions(newSpecQuestions);
+				
+				updateItemWeightageReq(newSpecMaster, newSpecQuestions);
 			}
 		}
 		
@@ -323,12 +323,12 @@ public class TemplateSpecHelper {
 		return newSpecEstimations;
 	}
 	
-	public void updateItemWeightageReq(TplSpecMaster specMaster) {
+	public void updateItemWeightageReq(TplSpecMaster specMaster, List<TplSpecQuestion> specQuestions) {
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode());
 		boolean isWeightageReq = specMaster.isWeightageReq();
 		
-		if (specMaster.getTplSpecQuestions() != null) {
-			for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+		if (specQuestions != null) {
+			for (TplSpecQuestion specQuestion : specQuestions) {
 				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType());
 				
 				if ((isFinancialSpec || (!isFinancialSpec && !isQuestionTypeItem))) {
