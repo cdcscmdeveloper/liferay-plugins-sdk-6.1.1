@@ -326,7 +326,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		StringBuilder conditionSB = new StringBuilder();
 		if(this.getManagedBean().isFilterOrg()){
 			if(StringUtils.isBlank(this.getManagedBean().getUserActiveOrgs())){
-				throw new EpException("User does not have active org. for lov. Please check logged in user configuration.");
+				throw new EpException(MessageConst.ERROR_770105);
 			}
 			conditionSB.append("orgTypeCode.parameterType^");
 			conditionSB.append(ParameterTypeConst.ORGANISATION_TYPES);
