@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel id="salutationSearch" header="SEARCH" toggleable="true">
+	<p:panel id="salutationSearch" header="#{lbl['lbl.pm.sa.search']}" toggleable="true">
 		
 	<h:panelGrid style="width:100%;">
 	</h:panelGrid>
@@ -26,7 +26,7 @@
 	<br/>
 	</p:panel>
 	
-	<p:panel id="salutationResult" header="RESULT" toggleable="true">
+	<p:panel id="salutationResult" header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
 	<p:dataTable id="salutationSR" value="#{salutationBackingBean.salutationDataModel}"
 				var="salutationList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="salutationSR" />
