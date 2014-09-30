@@ -19,8 +19,8 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.accumCap']} :" /></td>
-									<td style="float:left;">
-										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
+									<td>
+										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -36,14 +36,14 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.authCap']} :" /></td>
-									<td style="float:left;">
-										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" />
+									<td>
+										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.authorizedCapital}" />
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.paidUpCap']} :" /></td>
-									<td style="float:left;">
-										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
+									<td>
+										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -58,14 +58,14 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.ttlShare']} :" /></td>
-									<td style="float:left;">
-										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" />
+									<td>
+										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalShare}" />
 									</td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.accumShr']} :" /></td>
-									<td style="float:left;">
-										<ac:labelAmount value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
+									<td>
+										<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" />
 									</td>
 								</tr>
 							</table>
@@ -77,8 +77,8 @@
 							<table>
 								<tr>
 									<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.members']} :" /></td>
-									<td style="float:left;">
-										<ac:labelInteger value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" />
+									<td>
+										<ac:labelInteger styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.totalMember}" />
 									</td>
 								</tr>
 							</table>
@@ -93,7 +93,6 @@
 							<p:panelGrid styleClass="tablePanel">
 								<p:row>
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.compTabHdr']}</p:column>
-									<!-- <p:column>NO. Of Members</p:column> -->
 									<p:column styleClass="tableheaderrow">#{lbl['lbl.sm.equiStatus.valTabHdr']}</p:column>
 									<p:column styleClass="tableheaderrow">%</p:column>
 								</p:row>
@@ -181,26 +180,10 @@
 				</tr>
 			</table>
 			
-			<br />
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-				<table style="width: 50%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" /></td>
-					</tr>
-				</table>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-				<table style="width: 100%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.capitalRemark}" /></td>
-
-					</tr>
-				</table>
-			</p:outputPanel>
+			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.capitalRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.capitalRemark}" 
+						isInsideTable="false"/>
 		</p:panel>
 	</p:panel>
 </ui:composition>
