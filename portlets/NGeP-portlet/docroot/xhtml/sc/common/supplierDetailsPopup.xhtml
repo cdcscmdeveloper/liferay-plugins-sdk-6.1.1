@@ -8,7 +8,7 @@
 	<!--  Supplier Details dialog -->
 	<p:dialog id="suppDetailsPopup" widgetVar="suppDetailsPopup" 
 		header="#{lbl['lbl.sc.companyinfo']}" 
-		styleClass="pop_up_top" width="800" height="300" resizable="false">
+		styleClass="pop_up_top" width="900" height="300" resizable="false">
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
@@ -20,15 +20,15 @@
 			</td>
 		</tr>
 		<tr>
-			<td width="18%">
+			<td width="24%">
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}"/></td>
-			<td width="32">
+			<td width="32%">
 				<p:inputText size="30" value="#{supplierDetailBackingBean.managedBean.smSupplier.epNo}"  disabled="true"/>
 			</td>
 			<td width="18%">
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}"/>
 			</td>
-			<td width="32">
+			<td width="26%">
 				<p:inputText size="30" value="#{supplierDetailBackingBean.managedBean.mofNo}"  disabled="true"/>
 			</td>
 		</tr>
@@ -44,7 +44,7 @@
 			<td rowspan="4" valign="top">
 				<p:outputLabel value="#{lbl['lbl.sc.comp.address']}" />
 			</td>
-			<td width="32%">
+			<td>
 				<p:inputText id="suppAddr1" 
 					value="#{supplierDetailBackingBean.managedBean.smSupplier.smAppl.smCompanyBasic.smCompanyAddresses[0].smAddress.address1}"
 					size="30" disabled="true" />
