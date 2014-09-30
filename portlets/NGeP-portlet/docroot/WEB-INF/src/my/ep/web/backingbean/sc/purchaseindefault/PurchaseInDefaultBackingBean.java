@@ -143,8 +143,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 					getManagedBean().setCheckContractItem(Boolean.FALSE);
 				}
 			}
-			// initializing remarks
-			scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
 			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
 			// WorkFlow Status
 			List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
@@ -162,6 +160,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			//wflowStatus.add(workFlowStatus);
 			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
 			getCurrentStatus(workFlowStatus.getPmStatus());  
+
+			// initializing remarks
+			scPurchaseInDefault.setRemarks(initializeRemarks(
+					scPurchaseInDefault,
+					getManagedBean().getPidStatus(),
+					scPurchaseInDefault.getRemarks(),
+					ScPIDRemark.class));
 
 			// to get ptj
 			PmUser user = new FacesScopes().getUserSessionBean();
@@ -312,16 +317,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   PurchaseInDefaultReqDTO reqDTO = new PurchaseInDefaultReqDTO();
 		   ScPurchaseInDefault scPurchaseInDefault = getManagedBean().getPurchaseInDefault();
 		   // remarks
-		   scPurchaseInDefault.setRemarks(initializeRemarks(scPurchaseInDefault));
+		   scPurchaseInDefault.setRemarks(initializeRemarks(
+					scPurchaseInDefault,
+					getManagedBean().getPidStatus(),
+					scPurchaseInDefault.getRemarks(),
+					ScPIDRemark.class));
+		   
 		   if(!BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-			   if(scPurchaseInDefault.getRemarks() != null ){
-				   for (int i = 0; i < scPurchaseInDefault.getRemarks().size(); i++) {
-					   ScPIDRemark remark = scPurchaseInDefault.getRemarks().get(i);
-					   if(StringUtils.isBlank(remark.getRemark())){
-						   scPurchaseInDefault.getRemarks().remove(remark);
-					   }	
-				   } 
-			   }
+			   finalizeRemarks(scPurchaseInDefault.getRemarks());
 		   }
 		   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 		   FacesScopes facesScopes = new FacesScopes();
@@ -351,42 +354,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 	   } finally {
 		   purchaseInDefaultSO = null;
 	   }
-   } 
-
-   /**
-    * initializing remarks in Purchase In Default
-    */
-   private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
-	   IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-	   FacesScopes facesScopes = new FacesScopes();
-	   List<ScPIDRemark> results =   scPurchaseInDefault.getRemarks();
-		if(results == null){
-			results = new ArrayList<ScPIDRemark>();
-		} 
-	   
-	   if (results.size() == 0
-			   || !compareUserName( results.get(0).getCreatedUser().getLoginId())) {
-		   ScPIDRemark remark = new ScPIDRemark();
-		   remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		   remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		   remark.setChangedBy(remark.getCreatedBy());
-		   remark.setCreatedUser(facesScopes.getUserSessionBean());
-		   if (getManagedBean().getPurchaseInDefault().getRemarks() != null && getManagedBean().getPurchaseInDefault().getRemarks().size()>0) {
-			   remark.setRemark(getManagedBean().getPurchaseInDefault().getRemarks().get(0).getRemark());
-		   } 
-		   PmStatus status = new PmStatus();
-		   status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
-		   StatusReqDTO statusReqDTO = new StatusReqDTO();
-		   if (status != null) {
-			   statusReqDTO.setStatusId(status.getStatusId());
-			   StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-			   remark.setPmStatus(statusResDTO.getPmStatus());
-		   }
-		   remark.setPmStatus(status);
-		   remark.setPurchaseInDefault(scPurchaseInDefault);
-		   results.add(0, remark);
-	   }
-	   return results;
    }
    
    /**
@@ -636,8 +603,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			   getManagedBean().setCheckContractItem(Boolean.FALSE);
 		   }
 		   
-		   // remarks
-		   purchaseInDefault.setRemarks(initializeRemarks(purchaseInDefault));
 		   List<ScPurchaseInDefaultAttachment> attachments = new ArrayList<ScPurchaseInDefaultAttachment>();
 		   ScPurchaseInDefaultAttachment attachment = purchaseInDefault.getScPurchaseInDefaultAttachment();
 		   attachments.add(attachment);
@@ -663,6 +628,13 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			} finally {
 				statusSO = null;
 			}
+
+			// remarks
+			purchaseInDefault.setRemarks(initializeRemarks(
+					   purchaseInDefault,
+						getManagedBean().getPidStatus(),
+						purchaseInDefault.getRemarks(),
+						ScPIDRemark.class));
 
 		   initialInformation(purchaseInDefault);
 		   retrieveReasonDescListByCategory();

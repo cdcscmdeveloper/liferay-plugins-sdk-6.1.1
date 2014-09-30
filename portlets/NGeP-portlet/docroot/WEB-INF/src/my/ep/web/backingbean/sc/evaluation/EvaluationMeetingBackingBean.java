@@ -250,7 +250,7 @@ public class EvaluationMeetingBackingBean extends
 								qtRemarkList);
 					}
 					List<ScQtCommitteRemarks> remark = initializeRemarks(this
-							.getManagedBean().getScQtCommittee(), qtRemarkList,
+							.getManagedBean().getScQtCommittee(), null, qtRemarkList,
 							ScQtCommitteRemarks.class);
 					// qtRemarkList.addAll(remark);
 					this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);

@@ -1821,7 +1821,7 @@ public class SpecificationBackingBean extends
 				}
 				this.getManagedBean().setScQtRemarksList(remarkList);
 			}
-			initializeRemarks(this.getManagedBean().getScQt(), this
+			initializeRemarks(this.getManagedBean().getScQt(), null, this
 					.getManagedBean().getScQtRemarksList(), ScQtRemark.class);
 
 		} finally {

@@ -68,6 +68,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -161,8 +162,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  scPrInquiry.setDayToResponse(ParameterConst.PIQ_RESP_DAYS); // by default days
 		  scPrInquiry.setDateToResponse(calcDayToResponse(scPrInquiry));
 		  scPrInquiry.setPrInquiryNo(prInquirySO.generatePrInquiryNo());
-		  // Initializing Remarks 
-		  scPrInquiry.setRemarks(initializeRemarks(scPrInquiry));
+		  
 		  // TODO check supplier is government seller or not 
 		  ScRequestNoteDtl requestNoteDtl =  getManagedBean().getRequestNoteDtl();
 		  PmParameter pmParameter = new PmParameter();
@@ -266,6 +266,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			} finally {
 				statusSO = null;
 			}
+		  
+		  // Initializing Remarks 
+		  scPrInquiry.setRemarks(initializeRemarks(
+				  scPrInquiry, 
+				  getManagedBean().getPriStatus(), 
+				  scPrInquiry.getRemarks(), 
+				  ScPRIRemark.class));
 		  
 		  //TODO default value to  price type drop down listing
 		  getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
@@ -480,17 +487,15 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		    	
 		    	prInquiry.setCreatedDate(DateUtils.getCurrentDate());
 		    	// setting remarks 
-		    	prInquiry.setRemarks(initializeRemarks(prInquiry));
+		    	prInquiry.setRemarks(initializeRemarks(
+		    			prInquiry, 
+		    			getManagedBean().getPriStatus(), 
+		    			prInquiry.getRemarks(), 
+		    			ScPRIRemark.class));
+		    	
 		    	prInquiry.setWorkflowStatuses(null);
 
-		    	if(prInquiry.getRemarks() != null ){
-		    		for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
-		    			ScPRIRemark remark = prInquiry.getRemarks().get(i);
-		    			if(StringUtils.isBlank(remark.getRemark())){
-		    				prInquiry.getRemarks().remove(remark);
-		    			}	
-		    		} 
-		    	}
+		    	finalizeRemarks(prInquiry.getRemarks());
 
 		    	List<ScRequestItem>	requestItems	=	new ArrayList<ScRequestItem>();
 		    	requestItems.add(prInquiry.getRequestItem());
@@ -531,15 +536,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 				ScRequestSupplierItem scRequestSupplierItem   = getManagedBean().getScRequestSupplierItem();
 			   //remarks 
-			   prInquiry.setRemarks(initializeRemarks(prInquiry));
-			   if(prInquiry.getRemarks() != null ){
-				   for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
-					   ScPRIRemark remark = prInquiry.getRemarks().get(i);
-					   if(StringUtils.isBlank(remark.getRemark())){
-						   prInquiry.getRemarks().remove(remark);
-					   }	
-				   } 
-			   }
+			   prInquiry.setRemarks(initializeRemarks(
+					   prInquiry, 
+					   getManagedBean().getPriStatus(), 
+					   prInquiry.getRemarks(), 
+					   ScPRIRemark.class));
+			   
+			   finalizeRemarks(prInquiry.getRemarks());
 			   
 			   // updating price 
 			   List<ScRequestSupplierItem>	scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
@@ -565,43 +568,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		   }
 		return null;
 	  }
-	  
-	/**
-	 * Initializing remarks in Purchase inquiry
-	 */
-	public List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		FacesScopes facesScopes = new FacesScopes();
-		List<ScPRIRemark> results =   prInquiry.getRemarks();
-		if(results == null){
-			results = new ArrayList<ScPRIRemark>();
-		} 
-		if (results.size() == 0
-				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
-			ScPRIRemark remark = new ScPRIRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			if (getManagedBean().getScPrInquiry().getRemarks() != null
-					&& getManagedBean().getScPrInquiry().getRemarks().size() > 0) {
-				remark.setRemark(getManagedBean().getScPrInquiry().getRemarks()
-						.get(0).getRemark());
-			} 
-			PmStatus status = new PmStatus();
-			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
-		    StatusReqDTO statusReqDTO = new StatusReqDTO();
-		    if (status != null) {
-		     statusReqDTO.setStatusId(status.getStatusId());
-		     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-		     remark.setPmStatus(statusResDTO.getPmStatus());
-		    }
-		    remark.setPmStatus(status);
-		    remark.setPrInquiry(prInquiry);
-		    results.add(0, remark);
-		}
-		return results;
-	}
 
 	/**
 	 * Event for procurement type drop down in Purchase inquiry
@@ -716,7 +682,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
 				requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
 
-				requestNote.setRemarks(requestNoteBackingBean.initializeRemarks(requestNote));
 				requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
 				requestNoteBackingBean.getManagedBean().setRequestNoteDtls(requestNoteDtls);
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
@@ -741,6 +706,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				} finally {
 					statusSO = null;
 				}
+				
+				requestNote.setRemarks(initializeRemarks(
+						requestNote,
+						requestNoteBackingBean.getManagedBean().getRequestNoteStatus(),
+						requestNote.getRemarks(),
+						ScRequestNoteRemark.class));
+				
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 				
 				// back to search catalouge button hide
@@ -753,14 +725,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		} else {
 			IPrInquirySO prInquirySO = (IPrInquirySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPrInquirySO.class);
 			PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
-			if(prInquiry.getRemarks() != null ){
-				for (int i = 0; i < prInquiry.getRemarks().size(); i++) {
-					ScPRIRemark remark = prInquiry.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						prInquiry.getRemarks().remove(remark);
-					}	
-				} 
-			}
+			finalizeRemarks(prInquiry.getRemarks());
 
 			reqDTO.setPrInquiryDetail(prInquiry);
 			FacesScopes facesScopes = new FacesScopes();
@@ -809,8 +774,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 prInquiryReqDTO.setFetchSubEntity(true);
 		 PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 		 ScPrInquiry  prInquiry = prInquiryResDTO.getPrInquiryDetail();
-		 // remarks
-		 prInquiry.setRemarks(initializeRemarks(prInquiry));
+		 
          boolean flag = Boolean.TRUE;
 		 if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
 			 // get selected supplier 
@@ -852,7 +816,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 getManagedBean().setOutComes(res.getAction());
 		 getManagedBean().setStockAvailable(prInquiry.getIsStockAvailable());
 		 getManagedBean().setScPrInquiry(prInquiry);
-		 initializeRemarks(prInquiry);
 		 
 		 // Weather stock is available or not
 		 if(prInquiry.getIsStockAvailable() != null) {
@@ -878,6 +841,12 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			} finally {
 				statusSO = null;
 			}
+		 // remarks
+		 prInquiry.setRemarks(initializeRemarks(
+				 prInquiry, 
+				 getManagedBean().getPriStatus(), 
+				 prInquiry.getRemarks(), 
+				 ScPRIRemark.class));
 		  
 		 // title checker
 		 getManagedBean().setTitleChecker(Boolean.FALSE);

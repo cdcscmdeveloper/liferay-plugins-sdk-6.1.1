@@ -3,7 +3,6 @@
  */
 package my.ep.web.backingbean.sc.directpurchase;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -349,7 +348,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		
 		// Initializing Remarks
-		scQuote.setRemarks(initializeRemarks(scQuote));
+		scQuote.setRemarks(initializeRemarks(
+				scQuote, 
+				getManagedBean().getSimpleQuoteStatus(),
+				scQuote.getRemarks(),
+				ScSQRemark.class));
 		this.getManagedBean().setScQuote(scQuote);
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
@@ -762,15 +765,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// remarks
-			quote.setRemarks(initializeRemarks(quote));
-			if(quote.getRemarks() != null ){
-				for (int i = 0; i < quote.getRemarks().size(); i++) {
-					ScSQRemark remark = quote.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						quote.getRemarks().remove(remark);
-					}	
-				} 
-			}
+			quote.setRemarks(initializeRemarks(
+					quote, 
+					getManagedBean().getSimpleQuoteStatus(),
+					quote.getRemarks(),
+					ScSQRemark.class));
+			finalizeRemarks(quote.getRemarks());
 			
 		    // WorkFlow Status should be set In the save
 		    List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
@@ -983,15 +983,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// remarks
-			quote.setRemarks(initializeRemarks(quote));
-			if(quote.getRemarks() != null ){
-				for (int i = 0; i < quote.getRemarks().size(); i++) {
-					ScSQRemark remark = quote.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						quote.getRemarks().remove(remark);
-					}	
-				} 
-			}
+			quote.setRemarks(initializeRemarks(
+					quote, 
+					getManagedBean().getSimpleQuoteStatus(),
+					quote.getRemarks(),
+					ScSQRemark.class));
+			finalizeRemarks(quote.getRemarks());
 			quote.setWorkflowStatuses(null);
 
 			// product and service
@@ -1148,38 +1145,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			   getManagedBean().setTabActiveIndex(0); 
 		   }
 	   }
-
-	/**
-	 * initializing remarks in simpleQuote
-	 */
-	public List<ScSQRemark> initializeRemarks(ScQuote scQuote) {
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		List<ScSQRemark> results = scQuote.getRemarks();
-		if(results == null){
-			results = new ArrayList<ScSQRemark>();
-		}
-		FacesScopes facesScopes = new FacesScopes();
-		if (results.size() == 0
-				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
-			ScSQRemark remark = new ScSQRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			PmStatus status = new PmStatus();
-			status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-		    StatusReqDTO statusReqDTO = new StatusReqDTO();
-		    if (status != null) {
-		     statusReqDTO.setStatusId(status.getStatusId());
-		     StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-		     remark.setPmStatus(statusResDTO.getPmStatus());
-		    }
-		    remark.setPmStatus(status);
-			remark.setQuote(scQuote);
-			results.add(0, remark);
-		}
-		return results;
-	}
 
 	/**
 	 * Event for procurement type drop down in Add to Cart
@@ -2712,8 +2677,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 			
-			// remarks
-			scQuote.setRemarks(initializeRemarks(scQuote));
 			getManagedBean().setScQuote(scQuote);
 
 			// country id
@@ -2758,6 +2721,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} finally {
 				statusSO = null;
 			}
+
+			// remarks
+			scQuote.setRemarks(initializeRemarks(
+					scQuote, 
+					getManagedBean().getSimpleQuoteStatus(),
+					scQuote.getRemarks(),
+					ScSQRemark.class));
 			
 			getManagedBean().setProcessName(res.getProcessName());
 			
@@ -2798,9 +2768,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				// clear session data.
 				renewSesionObject();
 
-				// remarks
-				scQuote.setRemarks(initializeRemarks(scQuote));
-
 				if(scQuote.getQuoteDocs() != null && scQuote.getQuoteDocs().size()>0){
 					for (ScQuoteDoc quoteDoc : scQuote.getQuoteDocs()) {
 						// adding selected product or service question only
@@ -2838,10 +2805,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
 				}
 				getManagedBean().setScQuote(scQuote);
-				initializeRemarks(scQuote);
 
 				quoteReqDTO.setQuoteBidDtl(scQuote);
 				quoteReqDTO.setSpecAnswers(specAnswers);
+
+				// remarks
+				scQuote.setRemarks(initializeRemarks(
+						scQuote, 
+						getManagedBean().getSimpleQuoteStatus(),
+						scQuote.getRemarks(),
+						ScSQRemark.class));
 
 				quoteSO.validateSupplierResponse(quoteReqDTO);
 
@@ -2958,14 +2931,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// remarks
-			if(quote.getRemarks() != null ){
-				for (int i = 0; i < quote.getRemarks().size(); i++) {
-					ScSQRemark remark = quote.getRemarks().get(i);
-					if(StringUtils.isBlank(remark.getRemark())){
-						quote.getRemarks().remove(remark);
-					}	
-				} 
-			}
+			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			QuoteResDTO quoteResDTO = quoteSO.saveSupplierResponse(reqDTO);
@@ -3016,8 +2982,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		QuoteResDTO  quoteResDTO = quoteSO.getQuoteDtlForSupplier(quoteReqDTO);
 		scQuote = quoteResDTO.getQuoteBidDtl();
 
-		// remarks
-		scQuote.setRemarks(initializeRemarks(scQuote));
+		
 		// service and product
 		if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
 			productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
@@ -3037,7 +3002,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
 		}
 		getManagedBean().setScQuote(scQuote);
-		initializeRemarks(scQuote);
+		
+		// remarks
+		scQuote.setRemarks(initializeRemarks(
+				scQuote, 
+				getManagedBean().getSimpleQuoteStatus(),
+				scQuote.getRemarks(),
+				ScSQRemark.class));
 	}
 
 	/**

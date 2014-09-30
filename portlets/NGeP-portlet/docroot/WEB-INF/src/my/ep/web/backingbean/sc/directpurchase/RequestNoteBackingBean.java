@@ -86,6 +86,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScLocationDistrictCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationDivisionCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScLocationStateCriteria;
 import my.ep.persistence.entity.sc.directpurchase.ScPIReportAttachment;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefaultAttachment;
@@ -100,6 +101,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteApprovalUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScSQRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -225,15 +227,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		// Remarks
-		requestNote.setRemarks(initializeRemarks(requestNote));
-	    if(requestNote.getRemarks() != null ){
-	    	for (int i = 0; i < requestNote.getRemarks().size(); i++) {
-	    		ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
-	    		if(StringUtils.isBlank(remark.getRemark())){
-	    			requestNote.getRemarks().remove(remark);
-	    		}	
-	    	} 
-	    }
+		requestNote.setRemarks(initializeRemarks(
+				requestNote,
+				getManagedBean().getRequestNoteStatus(),
+				requestNote.getRemarks(),
+				ScRequestNoteRemark.class));
+		finalizeRemarks(requestNote.getRemarks());
 	    
 	    // WorkFlow Status should be set In the save
 	    List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
@@ -332,7 +331,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			requestNote.setWorkFlowStatuses(null);
 			// Remarks
-			requestNote.setRemarks(initializeRemarks(requestNote));
+			requestNote.setRemarks(initializeRemarks(
+					requestNote,
+					getManagedBean().getRequestNoteStatus(),
+					requestNote.getRemarks(),
+					ScRequestNoteRemark.class));
 			if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 			} else {
@@ -340,14 +343,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			if(!(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome))){
-				if(requestNote.getRemarks() != null ){
-					for (int i = 0; i < requestNote.getRemarks().size(); i++) {
-						ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
-						if(StringUtils.isBlank(remark.getRemark())){
-							requestNote.getRemarks().remove(remark);
-						}	
-					} 
-				}
+				finalizeRemarks(requestNote.getRemarks());
 			}
 			
 			if(getManagedBean().getPrInquiryId() != null){
@@ -511,8 +507,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// created by 
 		getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()).getUserName());
-		// remarks
-		requestNote.setRemarks(initializeRemarks(requestNote));
 
 		if (requestNote.getQuote() != null) {
 			getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
@@ -547,6 +541,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				statusSO = null;
 			}
 		}
+
+		// remarks
+		requestNote.setRemarks(initializeRemarks(
+				requestNote,
+				getManagedBean().getRequestNoteStatus(),
+				requestNote.getRemarks(),
+				ScRequestNoteRemark.class));
 					
 		getManagedBean().setRequestNote(requestNote);
 		initialInformation(requestNote);
@@ -613,14 +614,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
 			if(!(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome))){
-				if(requestNote.getRemarks() != null ){
-					for (int i = 0; i < requestNote.getRemarks().size(); i++) {
-						ScRequestNoteRemark remark = requestNote.getRemarks().get(i);
-						if(StringUtils.isBlank(remark.getRemark())){
-							requestNote.getRemarks().remove(remark);
-						}	
-					} 
-				}
+				finalizeRemarks(requestNote.getRemarks());
 			}
 
 			if(getManagedBean().getPrInquiryId() != null){
@@ -796,38 +790,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
-	}
-
-	/**
-	  * initializing remarks in Request Note
-	 */
-	public List<ScRequestNoteRemark> initializeRemarks(ScRequestNote scRequestNote) {
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		FacesScopes facesScopes = new FacesScopes();
-		List<ScRequestNoteRemark> results =   scRequestNote.getRemarks();
-		if(results == null){
-			results = new ArrayList<ScRequestNoteRemark>();
-		} 
-		if (results.size() == 0
-				|| !compareUserName(results.get(0).getCreatedUser().getLoginId())) {
-			ScRequestNoteRemark  remark = new ScRequestNoteRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			PmStatus status = new PmStatus();
-			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-		    StatusReqDTO statusReqDTO = new StatusReqDTO();
-		    if (status != null) {
-		    statusReqDTO.setStatusId(status.getStatusId());
-		    StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-		    remark.setPmStatus(statusResDTO.getPmStatus());
-		   }
-		   remark.setPmStatus(status);
-		   remark.setRequestNote(scRequestNote);
-		   results.add(0, remark);
-		} 
-		return results;
 	}
 	
 	/**
@@ -1352,7 +1314,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		if(requestNote.getCreatedUser() == null){
 			getManagedBean().setCreatedBy(getCreatedBy(facesScopes.getUserSessionBean().getUserId()).getUserName());
 		}
-		requestNote.setRemarks(initializeRemarks(requestNote));
+		
 		initialInformation(requestNote);
 		getManagedBean().setRequestNote(requestNote);
 	
@@ -1372,6 +1334,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		} finally {
 			statusSO = null;
 		}
+		
+		requestNote.setRemarks(initializeRemarks(
+				requestNote,
+				getManagedBean().getRequestNoteStatus(),
+				requestNote.getRemarks(),
+				ScRequestNoteRemark.class));
 		
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
@@ -1933,8 +1901,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(prInquiry.getWorkflowStatuses() != null && prInquiry.getWorkflowStatuses().size() >0){
 					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getWorkflowStatuses().get(0).getPmStatus());
 				}
-				// remarks
-				prInquiry.setRemarks(purchaseInquiryBackingBean.initializeRemarks(prInquiry));
+				
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
 
 					// get selected supplier 
@@ -1964,8 +1931,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					purchaseInquiryBackingBean.getManagedBean().setScPrInquiry(prInquiry);
 					 // price change lister 
 					purchaseInquiryBackingBean.priceTypeChangeListener();
-					purchaseInquiryBackingBean.initializeRemarks(prInquiry);
 				}
+
+				// remarks
+				prInquiry.setRemarks(initializeRemarks(
+						prInquiry,
+						purchaseInquiryBackingBean.getManagedBean().getPriStatus(),
+						prInquiry.getRemarks(),
+						ScPRIRemark.class));
 			}
 
 			// title checker
@@ -2087,14 +2060,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						simpleQuoteBackingBean.getManagedBean().setPanelSuppliers(scQuote.getScQuoteSuppliers());
 					}
 
-
-					// remarks
-					scQuote.setRemarks(simpleQuoteBackingBean.initializeRemarks(scQuote));
-
 					// status
 					if(scQuote.getWorkflowStatuses() != null && scQuote.getWorkflowStatuses().size() >0){
 						simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus());
 					}
+
+					// remarks
+					scQuote.setRemarks(initializeRemarks(
+							scQuote,
+							simpleQuoteBackingBean.getManagedBean().getSimpleQuoteStatus(),
+							scQuote.getRemarks(),
+							ScSQRemark.class));
 
 					// procurement type drop down.
 					if(scQuote.getProcurementType() != null){

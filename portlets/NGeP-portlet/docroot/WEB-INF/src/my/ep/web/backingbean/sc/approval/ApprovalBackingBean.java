@@ -317,7 +317,7 @@ public class ApprovalBackingBean extends
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_BPK);
 			scQtApproval.setApproverSettings(null);
-			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval,
+			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval, null,
 					scQtApproval.getScQtApprovalRemarks(),
 					ScQtApprovalRemark.class));
 			for (ScQtApprovalRequest approvalRequest : scQtApproval
@@ -383,7 +383,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setApprovalType("Publication Approval");
 			scQtApproval = getApproval(qtId,
 					ParameterConst.APPROVAL_CATEGORY_PTJ);
-			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval,
+			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval, null,
 					scQtApproval.getScQtApprovalRemarks(),
 					ScQtApprovalRemark.class));
 			if (null != getManagedBean().getQt().getClosingDate()) {
