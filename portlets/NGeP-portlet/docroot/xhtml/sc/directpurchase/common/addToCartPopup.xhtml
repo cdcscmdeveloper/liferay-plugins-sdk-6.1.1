@@ -105,7 +105,12 @@
 				</tr>
 				
 				<tr>
-					<td><h:panelGroup id="justLabel"> <p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /> </h:panelGroup></td>
+					<td>
+						<h:panelGroup id="justLabel">
+							<p:outputLabel value="#{lbl['lbl.sc.justification']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+							<p:outputLabel value="*" styleClass="mandatory" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+					 	</h:panelGroup>
+					</td>
 					<td><h:panelGroup id="justValue"><p:selectOneMenu style="margin-bottom: 5px; width: 185px;" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 							id="justificationId" label="#{lbl['lbl.sc.justification']}"
 							required="#{requestNoteBackingBean.managedBean.justRequired}"
@@ -115,7 +120,12 @@
 						</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></h:panelGroup></td>
 				</tr>
 				<tr>
-					<td style="vertical-align: top;padding-right: 1px;text-align: right;"><h:panelGroup id="justRmksLabel"><p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" /></h:panelGroup></td>
+					<td style="vertical-align: top;padding-right: 1px;text-align: right;">
+						<h:panelGroup id="justRmksLabel">
+							<p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+							<p:outputLabel value="*" styleClass="mandatory" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}" />
+						</h:panelGroup>
+					</td>
 					<td><h:panelGroup id="justRmksValue"><p:inputTextarea id="justificationRmk" rendered="#{requestNoteBackingBean.managedBean.procTypeOption}"
 							label="#{lbl['lbl.sc.just.rmks']}" maxlength="100"
 							required="#{requestNoteBackingBean.managedBean.justRequired}"

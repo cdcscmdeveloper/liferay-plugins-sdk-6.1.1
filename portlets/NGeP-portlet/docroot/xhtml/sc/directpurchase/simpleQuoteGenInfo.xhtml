@@ -77,7 +77,9 @@
 				    <tr>
 					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
 						 <td style="width: 150px">
-						     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" /></td>
+						     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" />
+						     <p:outputLabel value="*" styleClass="mandatory" />
+						 </td>
 						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
@@ -94,8 +96,10 @@
 				</tr>
 				<tr>
 				   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-					<td style="vertical-align:top; text-align:left;"><p:outputLabel
-							value="#{lbl['lbl.sc.just.rmks']}" /></td>
+					<td style="vertical-align:top; text-align:left;">
+						<p:outputLabel value="#{lbl['lbl.sc.just.rmks']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
 					<td colspan="4"><p:inputTextarea value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationRemark}"
 					          id="justificationRmk" label="#{lbl['lbl.sc.justification']}" maxlength="100"
 					           disabled="#{isPendingRnCreationStatus}"
