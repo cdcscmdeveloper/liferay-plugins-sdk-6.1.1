@@ -351,6 +351,14 @@ public class ViewSmApplBackingBean extends
 		apprSec.setCertRemark("approver cert remark");
 		apprSec.setAssocBodyRemark("approver assoc body remark");
 		apprSec.setTrnsNetworkRemark("approver trnsnetwork remark");
+		apprSec.setBranchRemark("approver branch remark");
+		apprSec.setAssociateRemark("approver associate remark");
+		apprSec.setExperienceRemark("approver experience remark");
+		apprSec.setCapitalRemark("approver capital remark");
+		apprSec.setShareholderRemark("approver shareholder remark");
+		apprSec.setEquityCompRemark("approver equitycomp remark");
+		apprSec.setPersonnelRemark("approver personnel remark");
+		apprSec.setCategoryRemark("approver category remark");
 		getManagedBean().setApprvrSecReview(apprSec);
 		
 		SmApplSectionReview poSec = new SmApplSectionReview();
@@ -360,6 +368,14 @@ public class ViewSmApplBackingBean extends
 		poSec.setCertRemark("po cert remark");
 		poSec.setAssocBodyRemark("po assoc body remark");
 		poSec.setTrnsNetworkRemark("po trnsnetwork remark");
+		poSec.setBranchRemark("po branch remark");
+		poSec.setAssociateRemark("po associate remark");
+		poSec.setExperienceRemark("po experience remark");
+		poSec.setCapitalRemark("po capital remark");
+		poSec.setShareholderRemark("po shareholder remark");
+		poSec.setEquityCompRemark("po equitycomp remark");
+		poSec.setPersonnelRemark("po personnel remark");
+		poSec.setCategoryRemark("po category remark");
 		getManagedBean().setPoSecReview(poSec);
 	}
 
