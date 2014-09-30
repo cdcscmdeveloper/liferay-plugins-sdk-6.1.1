@@ -144,6 +144,31 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 	}
 	
+	public String addCategory() {
+		if (getManagedBean().getOrgProfile().getOrgProfileId() == null) {
+			getManagedBean().setOrgProfile(new PmOrgProfile());
+		}
+		retrieveCategories();
+		retrievePmZoneList();
+
+		reset();
+
+		return "/xhtml/pm/category/addCategory";
+	}
+	
+	public String editCategory(Long id) {
+		return null;
+	}
+	
+	public void resetCategory() {
+		getManagedBean().setMainCatCode(null);
+		getManagedBean().setMainCatDesc(null);
+		getManagedBean().setSubCatCode(null);
+		getManagedBean().setSubCatDesc(null);
+		getManagedBean().setSubDivCode(null);
+		getManagedBean().setSubDivDesc(null);
+	}
+	
 	public void search() {
 		searchCategoryPagingDataModel.reloadData();
 	}
@@ -208,17 +233,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		getManagedBean().setOrgType(null);
 		getManagedBean().getOrgProfile().setRecordStatusFlg(null);
 	}
-
-	
-
-	public void resetOrganisation() {
-		getManagedBean().setOrgCode(null);
-		getManagedBean().setOrgTypeCode(null);
-		getManagedBean().setOrgName(null);
-		getManagedBean().setOrgStatus(null);
-
-	}
-
 	
 
 	public String editOrganization(PmOrgProfile orgProfile) {
