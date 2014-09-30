@@ -29,22 +29,22 @@
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.suppname']} :" /></td>
-							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']} :" /></td>
-							<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-								<ac:labelDate value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" />
+							<td>
+								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" />
 							</td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.status']} :" /></td>
-							<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.currentStatus}" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currentStatus}" /></td>
 						</tr>
 						<tr>
 							<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">
 								<td><p:outputLabel value="#{lbl['lbl.sm.remark.cancellation']} :" /></td>
-								<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.supplierRemarks}" /></td>
 							</c:if>
 						</tr>
 					</table>

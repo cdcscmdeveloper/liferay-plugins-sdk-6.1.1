@@ -34,26 +34,10 @@
 				</p:column>
 			</p:dataTable>
 			
-			<br />
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-				<table style="width: 50%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.associateRemark}" /></td>
-					</tr>
-				</table>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-				<table style="width: 100%">
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.poSecReview.associateRemark}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-						<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.associateRemark}" /></td>
-
-					</tr>
-				</table>
-			</p:outputPanel>
+			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.associateRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.associateRemark}" 
+						isInsideTable="false"/>
 		</p:panel>
 	</p:panel>
 	<p:dialog header="#{lbl['lbl.sm.assocCmpny.assocDiaHdr']}" id="asDisp"
@@ -61,17 +45,15 @@
 		hideEffect="fade" modal="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.assocCmpny.companyName']} " /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} " /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.companyName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.regNo']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.regNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.regNo}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.assocCmpny.shrHolding']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.shrHolding']} " /></td>
 				<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.isShareholding}" disabled="true">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
@@ -79,50 +61,50 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address1}"/></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address2}"/></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address3}"/></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address4}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.address4}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryName}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateName}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.smAddress.postcode}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.phoneNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocCompany.faxNo}"/></td>
 			</tr>
 
 		</table>

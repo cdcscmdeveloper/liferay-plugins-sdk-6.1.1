@@ -94,25 +94,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.sm.website']} :" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.website}" /></td>
 				</tr>
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.poUser}">
-
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td colspan="3"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" /></td>
-					</tr>
-
-				</p:outputPanel>
-				<p:outputPanel rendered="#{viewSmApplBackingBean.managedBean.approverUser}">
-
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.apprvrSecReview.basicRemark}" /></td>
-					</tr>
-
-				</p:outputPanel>
+				
+				<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.basicRemark}" 
+				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.basicRemark}" 
+				isInsideTable="true"/>
 			</table>
+				
 		</p:panel>
 
 	</p:panel>
