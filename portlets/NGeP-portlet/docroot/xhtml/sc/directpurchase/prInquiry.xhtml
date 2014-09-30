@@ -192,7 +192,9 @@
 					    <tr>
 						   <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
 							 <td style="width: 250px">
-							     <p:outputLabel value="#{lbl['lbl.sc.reason']}" /></td>
+							     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
+							     <p:outputLabel value="*" styleClass="mandatory" />
+							 </td>
 							 <td> <p:selectOneMenu style="width: 185px; margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.justification']}"
 							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
 						              purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"
@@ -207,8 +209,10 @@
 					   </tr>
 					   <tr>
 					    <ui:fragment rendered="#{purchaseInquiryBackingBean.managedBean.procTypeOption}">
-						 <td style="vertical-align:top; text-align:left;"><p:outputLabel
-								value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" /></td>
+						 <td style="vertical-align:top; text-align:left;">
+						 	<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.just.rmks']}" />
+						 	<p:outputLabel value="*" styleClass="mandatory" />
+						 </td>
 						 <td colspan="4">
 						    <p:inputTextarea value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justification}"
 						        id="justificationRmk" label="#{lbl['lbl.sc.price.inquiry.just.rmks']}"
