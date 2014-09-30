@@ -1119,7 +1119,7 @@ public class SPDetailBackingBean extends
 		return NAV_TO_TECHNICAL_STANDARD_PRODUCT_PAGE;
 	}
 
-	private String retrieveTecNonGovCompanyExpDtls(
+	public String retrieveTecNonGovCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
@@ -1288,7 +1288,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retriveTechnicalStaffDtls(
+	public String retriveTechnicalStaffDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		List<TechnicalStaffBean> smPersonnelsList = new ArrayList<TechnicalStaffBean>();
 
@@ -1338,7 +1338,7 @@ public class SPDetailBackingBean extends
 		return NAV_TO_TECHNICAL_EMPL_LIST_PAGE;
 	}
 
-	private String retrieveTecCompanyExpDtls(
+	public String retrieveTecCompanyExpDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		IQTProposalSO proposalSO = null;
 		try {
