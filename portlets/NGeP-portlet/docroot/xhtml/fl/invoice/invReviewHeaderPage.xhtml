@@ -3,18 +3,20 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docNo}</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.inv.no']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']} " /></td>
 				<td class="header-info-text">
 					#{invoiceBackingBean.managedBean.invoice.invoiceNo == null ? '-- System Generated --':invoiceBackingBean.managedBean.invoice.invoiceNo}
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.inv.no']}"/>
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
 					#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}

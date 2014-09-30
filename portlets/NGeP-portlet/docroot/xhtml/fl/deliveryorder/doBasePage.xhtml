@@ -25,19 +25,19 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{createDOBackingBean.managedBean.taskId==null}" 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						icon="ui-icon-back" action="#{createDOBackingBean.backAction}" /></td>
 				<h:panelGroup
 					rendered="#{empty createDOBackingBean.managedBean.buttonVal}">
 					<td colspan="4" style="text-align: right"><p:commandButton
-							styleClass="ui-button" icon="ui-icon-save" value="Save"
+							styleClass="ui-button" icon="ui-icon-save" value="#{lbl['lbl.btn.save']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SAVE')}" /> <p:commandButton
-							styleClass="ui-button" icon="ui-icon-submit" value="Submit"
+							styleClass="ui-button" icon="ui-icon-submit" value="#{lbl['lbl.btn.submit']}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
-						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel" 
+						<p:commandButton value="#{lbl['lbl.btn.Stop.Delivery']}" icon="ui-icon-cancel" 
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							rendered="#{false and createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
@@ -48,6 +48,7 @@
 					<td colspan="4" style="text-align: right"><ui:repeat
 							var="bpmAction"
 							value="#{createDOBackingBean.managedBean.outComes}">
+							<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{bpmAction}" update="@form"
 								styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
@@ -58,7 +59,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							value="#{lbl['lbl.btn.update']}" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -66,7 +67,7 @@
 				<h:panelGroup
 					rendered="#{createDOBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+							value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
@@ -79,12 +80,12 @@
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu"
 						activeIndex="#{createDOBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Delivery Items" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.do.delivery.items']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{createDOBackingBean.managedBean.selectedTabIndex}"
 								value="1" />

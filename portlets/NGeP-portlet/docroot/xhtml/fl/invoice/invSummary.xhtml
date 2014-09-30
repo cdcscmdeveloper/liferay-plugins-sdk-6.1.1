@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="INVOICE SUMMARY" toggleable="true" styleClass="invItemSummaryPnlClass" >
+	<p:panel header="#{lbl['lbl.fl.invoice.summary']}" toggleable="true" styleClass="invItemSummaryPnlClass" >
 		<table>
 			<tr>
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
@@ -19,17 +19,17 @@
 				<td>
 					<p:inputText size="35" value="#{invoiceBackingBean.managedBean.serviceCharge}" disabled="true" style="text-align:right">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</p:inputText>
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.service.fee']}"/>
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.fee.amt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.fee.amount']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.feeAmt}"  style="text-align:right">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.amt.to.supplier']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.to.supp']}" /></td>
 				<td><p:inputText size="35" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}" style="text-align:right"><f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 							</p:inputText></td>

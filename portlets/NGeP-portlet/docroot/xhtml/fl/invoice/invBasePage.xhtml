@@ -26,11 +26,12 @@
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{invoiceBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right;"><ui:repeat
 						var="bpmAction" value="#{invoiceBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" update="@form"
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
@@ -39,7 +40,7 @@
 			<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Update'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="UPDATE" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							value="#{lbl['lbl.btn.update']}" icon="ui-icon-edit" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
@@ -47,7 +48,7 @@
 				<h:panelGroup
 					rendered="#{invoiceBackingBean.managedBean.buttonVal eq 'Cancel'}">	
 					<td colspan="4" style="text-align: right"><p:commandButton
-							value="CANCEL" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+							value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{invoiceBackingBean.submitAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
@@ -61,18 +62,18 @@
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu"
 						activeIndex="#{invoiceBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Invoice Item" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.items']}" update="@form"
 							actionListener="#{invoiceBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Invoice Summary" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.invoice.summary']}" update="@form"
 							actionListener="#{invoiceBackingBean.onTabChange(2)}">
 							<f:setPropertyActionListener
 								target="#{invoiceBackingBean.managedBean.selectedTabIndex}"

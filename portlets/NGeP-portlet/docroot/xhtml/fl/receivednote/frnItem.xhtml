@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="ITEMS" toggleable="true" id="itemPnl">
+	<p:panel header="#{lbl['lbl.fl.menu.items']}" toggleable="true" id="itemPnl">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.frn.item']}" escape="false"/>
 		<br />
 		<p:dataTable id="frnItemDt" var="item" width="100%"
 			value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flFulfilmentNoteItem}"
@@ -14,43 +15,59 @@
 			rowIndexVar="index" selectionMode="single" rowKey="#{item}" >
 			<p:ajax event="rowSelect" update=":form:selectedItemSection" />
 			<ac:paginator for="itemDataTable" />
-			<p:column headerText="Item Code">
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
+    				</f:facet>
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.cmItem.extensionCode}" />
 			</p:column>
-			<p:column headerText="Item Name" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.itemName}" />
 			</p:column>
-			<p:column headerText="UOM">
+			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="Unit Price &lt;br /&gt;(MYR)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
+			<p:column >
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
+    				</f:facet>
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>			
-			<p:column headerText="Delivered &lt;br /&gt; Qty." style="text-align:right">
+			<p:column >
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
+    				</f:facet>
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredQty}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Delivered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="text-align:right">
 				<h:panelGroup id="delAmountTxt">
 					<h:outputText  styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
+			<p:column >
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
+    				</f:facet>
 				<p:inputText id="receivedQty" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 					<p:ajax update="receivedAmt,receivedQty" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"></p:ajax>
@@ -62,7 +79,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="text-align:right">
 				<p:inputText styleClass="colFloatRight" id="receivedAmtVal"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
 					<p:ajax update="receivedAmtVal" listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}"></p:ajax>
@@ -82,7 +99,7 @@
 					<td>
 						<p:inputTextarea cols="40" maxlength="200" value="#{receivedNoteBackingBean.managedBean.selectedItem.rejectionRemark}" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}">
 							<p:ajax process="@this" />
-						</p:inputTextarea>
+						</p:inputTextarea><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.frn.item.remarks']}"/>
 					</td>
 				</tr>
 			</table>
