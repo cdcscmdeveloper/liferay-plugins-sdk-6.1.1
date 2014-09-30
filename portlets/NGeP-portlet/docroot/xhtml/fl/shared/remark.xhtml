@@ -2,7 +2,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui" >
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%">
 		<tr>
@@ -27,6 +28,9 @@
 							<td>
 								<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+							<td>
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.remarks']}"/>
 							</td>
 						</tr>
 					</table>
