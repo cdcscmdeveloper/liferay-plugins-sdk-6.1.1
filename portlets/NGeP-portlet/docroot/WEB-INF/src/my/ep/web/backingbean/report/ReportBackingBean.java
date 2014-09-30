@@ -1366,7 +1366,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		SelectItem selectItem2= new SelectItem();
 		selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.PDDW_OC_RPT_NAME));
 		selectItem2.setValue(ReportConst.PDDW_OC_RPT_VAL);
-		reportList.add(selectItem2);			
+		reportList.add(selectItem2);
+		
+		SelectItem selectItem28= new SelectItem();
+		selectItem28.setLabel(CommonMethod.getMessageCommon(ReportConst.AKPP_PEMATUHAN_OC_RPT_NAME));
+		selectItem28.setValue(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL);
+		reportList.add(selectItem28);
 		
 		SelectItem selectItem3= new SelectItem();
 		selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_TEC_RPT_NAME));
@@ -1387,6 +1392,16 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.TECSPEC_TEC_RPT_NAME));
 		selectItem6.setValue(ReportConst.TECSPEC_TEC_RPT_VAL);
 		reportList.add(selectItem6);
+		
+		SelectItem selectItem23= new SelectItem();
+		selectItem23.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_TEC_RPT_NAME));
+		selectItem23.setValue(ReportConst.PSDAK_TEC_RPT_VAL);
+		reportList.add(selectItem23);
+		
+		SelectItem selectItem24= new SelectItem();
+		selectItem24.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_TEC_RPT_NAME));
+		selectItem24.setValue(ReportConst.PSDABK_TEC_RPT_VAL);
+		reportList.add(selectItem24);
 		
 		SelectItem selectItem7= new SelectItem();
 		selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_NAME));
@@ -1417,13 +1432,28 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem11.setValue(ReportConst.HARGA_TAWARAN_FEC_RPT_VAL);
 		reportList.add(selectItem11);
 		
+		SelectItem selectItem27= new SelectItem();
+		selectItem27.setLabel(CommonMethod.getMessageCommon(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_NAME));
+		selectItem27.setValue(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL);
+		reportList.add(selectItem27);
+		
+		SelectItem selectItem25= new SelectItem();
+		selectItem25.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME));
+		selectItem25.setValue(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL);
+		reportList.add(selectItem25);
+		
+		SelectItem selectItem26= new SelectItem();
+		selectItem26.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME));
+		selectItem26.setValue(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL);
+		reportList.add(selectItem26);
+		
 		SelectItem selectItem12= new SelectItem();
 		selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_FEC_RPT_NAME));
 		selectItem12.setValue(ReportConst.OVRL_FINRS_FEC_RPT_VAL);
 		reportList.add(selectItem12);
 		
 		SelectItem selectItem13= new SelectItem();
-		selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL));
+		selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPP1_PEMATUHAN_EC_RPT_NAME));
 		selectItem13.setValue(ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL);
 		reportList.add(selectItem13);
 		
@@ -1431,6 +1461,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.KPP1_PEMATUHAN_EC_RPT_NAME));
 		selectItem14.setValue(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL);
 		reportList.add(selectItem14);
+		
+		SelectItem selectItem29 = new SelectItem();
+		selectItem29.setLabel(CommonMethod.getMessageCommon(ReportConst.PDW_EC_RPT_NAME));
+		selectItem29.setValue(ReportConst.PDW_EC_RPT_VAL);
+		reportList.add(selectItem29);
 		
 		SelectItem selectItem15= new SelectItem();
 		selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_EC_RPT_NAME));
@@ -1452,6 +1487,36 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem18.setValue(ReportConst.TECSPEC_EC_RPT_VAL);
 		reportList.add(selectItem18);
 		
+		SelectItem selectItem30= new SelectItem();
+		selectItem30.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME));
+		selectItem30.setValue(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL);
+		reportList.add(selectItem30);
+		
+		SelectItem selectItem31= new SelectItem();
+		selectItem31.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME));
+		selectItem31.setValue(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL);
+		reportList.add(selectItem31);
+		
+		SelectItem selectItem32= new SelectItem();
+		selectItem32.setLabel(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_EC_RPT_NAME));
+		selectItem32.setValue(ReportConst.HARGA_TAWARAN_EC_RPT_VAL);
+		reportList.add(selectItem32);
+		
+		SelectItem selectItem33= new SelectItem();
+		selectItem33.setLabel(CommonMethod.getMessageCommon(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_NAME));
+		selectItem33.setValue(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL);
+		reportList.add(selectItem33);
+		
+		SelectItem selectItem34= new SelectItem();
+		selectItem34.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME));
+		selectItem34.setValue(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL);
+		reportList.add(selectItem34);
+		
+		SelectItem selectItem35= new SelectItem();
+		selectItem35.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME));
+		selectItem35.setValue(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL);
+		reportList.add(selectItem35);
+		
 		SelectItem selectItem19= new SelectItem();
 		selectItem19.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_NAME));
 		selectItem19.setValue(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL);
@@ -1467,30 +1532,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		selectItem20.setValue(ReportConst.OVRL_FINRS_EC_RPT_VAL);
 		reportList.add(selectItem20);
 		
-		SelectItem selectItem23= new SelectItem();
-		selectItem23.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
-		selectItem23.setValue(ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL);
-		reportList.add(selectItem23);
 		
-		SelectItem selectItem24= new SelectItem();
-		selectItem24.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
-		selectItem24.setValue(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL);
-		reportList.add(selectItem24);
 		
-		SelectItem selectItem25= new SelectItem();
-		selectItem25.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME));
-		selectItem25.setValue(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL);
-		reportList.add(selectItem25);
-		
-		SelectItem selectItem26= new SelectItem();
-		selectItem26.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME));
-		selectItem26.setValue(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL);
-		reportList.add(selectItem26);
-		
-		SelectItem selectItem27= new SelectItem();
-		selectItem27.setLabel(CommonMethod.getMessageCommon(ReportConst.FINANCE_POSITION_RPT_NAME));
-		selectItem27.setValue(ReportConst.FINANCE_POSITION_RPT_VAL);
-		reportList.add(selectItem27);		
+				
 		
 	}
 	/*
@@ -2371,6 +2415,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	            break;
 	        case ReportConst.SM_DETAILS_OF_APPLICATION_RPT_VAL:	        	
 	        	rptGenBean.setApplicationNoView(true);
+	        	rptGenBean.setExtraTwoColumnView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);	
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_DETAILS_OF_APPLICATION_RPT_NAME));			
@@ -2608,6 +2653,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PDDW_OC_RPT_NAME));
 	            break;
+	        case ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPP_PEMATUHAN_OC_RPT_NAME));
+	            break;
 	        case ReportConst.SPPSAP2_TEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
@@ -2686,6 +2737,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);*/
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPP1_PEMATUHAN_EC_RPT_NAME));		
 	            break;
+	        case ReportConst.PDW_EC_RPT_VAL:
+	        	/*rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);*/
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PDW_EC_RPT_NAME));		
+	            break;
 	        case ReportConst.SPPSAP2_EC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
@@ -2710,6 +2767,42 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TECSPEC_EC_RPT_NAME));
 	            break;
+	        case ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME));
+	            break;
+	        case ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME));
+	            break;
+	        case ReportConst.HARGA_TAWARAN_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_EC_RPT_NAME));
+	            break;
+	        case ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_NAME));
+	            break;
+	        case ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME));
+	            break;
+	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL:
+	        	rptGenBean.setQuotationNoView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME));
+	            break;
 	        case ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
@@ -2728,35 +2821,35 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				rptGenBean.setToDateView(true);
 				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_EC_RPT_NAME));			
 	            break;	        	 
-	        case ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL:
+	        case ReportConst.PSDAK_TEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_TEC_RPT_NAME));
 	            break;
-	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL:
+	        case ReportConst.PSDABK_TEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME));
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_TEC_RPT_NAME));
 	            break;
-	        case ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL:
+	        case ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME));
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME));
 	            break;
-	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL:
+	        case ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME));
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME));
 	            break;
-	        case ReportConst.FINANCE_POSITION_RPT_VAL:
+	        case ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL:
 	        	rptGenBean.setQuotationNoView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FINANCE_POSITION_RPT_NAME));
+				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_NAME));
 	            break;
 	        default:            
 	            break;
@@ -3535,11 +3628,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	/*
 	 *Generate all modules reports 
 	 */
-	public void generateReport(){
-		RequestContext context1 = RequestContext.getCurrentInstance();
-		 
+	public void generateReport(){		
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
-			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
+			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
 				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getReleaseFromDate()==null)&&(this.getReleaseToDate()!=null))||((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){		
 					RequestContext context = RequestContext.getCurrentInstance();					 
 			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
@@ -3670,7 +3761,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		gnrtdURL.append(paramConstrString); 
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		//HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		HttpURLConnection urlConnection = null;		
 		//ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
        // byte[] buf = new byte[1024];
@@ -3679,7 +3770,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				URL obj = new URL(gnrtdURL.toString());
 				urlConnection = (HttpURLConnection) obj.openConnection();				
 				//input = new BufferedInputStream(urlConnection.getInputStream()); 
-				pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"octet-stream");	           
+				pdfFile=new DefaultStreamedContent(urlConnection.getInputStream(),"application/pdf");	           
 				/*InputStream in = urlConnection.getInputStream();
 				byte[] buf = new byte[512];
 				int len;
@@ -3918,15 +4009,18 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Generate SC module report  
 	 */
 	public void generateSCReport(){
-		if((getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
+		if((getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))||(getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL))){
 			if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL)){
 				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP);	
 			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL)){
 				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);	
+			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL)){
+				rptGenBean.setUrlReportJSPName(ReportConst.SC_PDW_EC_RPT_JSP);	
 			}			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				String url =ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;				
-				setGeneratedURL(url);
+				//setGeneratedURL(url);
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName());
 				log.info(url);
 			}else{
 				RequestContext context = RequestContext.getCurrentInstance();  
@@ -3948,6 +4042,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.PDDW_OC_RPT_VAL, ReportConst.SC_PDDW_OC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL, ReportConst.AKPP_PEMATUHAN_OC_RPT_JSP);			
 			urlSCReportJsps.put(ReportConst.SPPSAP2_TEC_RPT_VAL, ReportConst.SC_SPPSAP2_TEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.AKPT_TEC_RPT_VAL, ReportConst.SC_AKPT_TEC_RPT_JSP);
@@ -3960,19 +4055,27 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.HARGA_TAWARAN_FEC_RPT_VAL, ReportConst.SC_HARGA_TAWARAN_FEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.OVRL_FINRS_FEC_RPT_VAL, ReportConst.SC_OVRL_FINRS_FEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL, ReportConst.SC_SPPP1_PEMATUHAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL, ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);
+			//urlSCReportJsps.put(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL, ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.SPPSAP2_EC_RPT_VAL, ReportConst.SC_SPPSAP2_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.AKPTPH_EC_RPT_VAL, ReportConst.SC_AKPTPH_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.TECSPEC_EC_RPT_VAL, ReportConst.SC_TECSPEC_EC_RPT_JSP);
+			
+			urlSCReportJsps.put(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL, ReportConst.SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL, ReportConst.SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.HARGA_TAWARAN_EC_RPT_VAL, ReportConst.SC_HARGA_TAWARAN_EC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL, ReportConst.SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.EMPTY_VAL);
+			
 			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.OVRL_FINRS_EC_RPT_VAL, ReportConst.SC_OVRL_FINRS_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.FINANCE_POSITION_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);			
+			urlSCReportJsps.put(ReportConst.PSDAK_TEC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.PSDABK_TEC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);			
 			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));						
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
 				String url =ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
@@ -4518,8 +4621,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		out.flush();
 		out.close(); 		
 		return localFile;
-	}
-	
+	}	
 	/*
 	public StreamedContent getStreamedContentPDFFile(String url) {
 		  
@@ -4622,8 +4724,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
                 }
             	  
 //            	  out.write(getPdfStream());
-            
+                  out.flush();
             	  out.close();
+            	 
 
 		} catch (IOException ex) {
 	          ex.printStackTrace();

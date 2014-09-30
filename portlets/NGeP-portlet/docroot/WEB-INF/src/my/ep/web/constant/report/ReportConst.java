@@ -15,6 +15,8 @@ public class ReportConst {
 	public static final String KPPP1_PEMATUHAN_OC_RPT_NAME = "lbl.rpt.sc.KPPP1_PEMATUHAN_OC_RPT_NAME";
 	public static final String KPPP1_PEMATUHAN_OC_RPT_VAL = "KPPP1(Pematuhan)-OC";
 	public static final String PDDW_OC_RPT_NAME = "lbl.rpt.sc.PDDW_OC_RPT_NAME";
+	public static final String AKPP_PEMATUHAN_OC_RPT_NAME = "lbl.rpt.sc.AKPP_PEMATUHAN_OC_RPT_NAME";
+	public static final String AKPP_PEMATUHAN_OC_RPT_VAL = "AKPP(Pematuhan)-OC";
 	public static final String PDDW_OC_RPT_VAL = "PDDW-OC";
 	public static final String SPPSAP2_TEC_RPT_NAME = "lbl.rpt.sc.SPPSAP2_TEC_RPT_NAME";
 	public static final String SPPSAP2_TEC_RPT_VAL = "SPPSAP2-TEC";
@@ -24,6 +26,12 @@ public class ReportConst {
 	public static final String AKPT_TEC_RPT_VAL = "AKPT-TEC";
 	public static final String TECSPEC_TEC_RPT_NAME = "lbl.rpt.sc.TECSPEC_TEC_RPT_NAME";
 	public static final String TECSPEC_TEC_RPT_VAL = "TecSpec-TEC";
+	
+	public static final String PSDAK_TEC_RPT_NAME = "lbl.rpt.sc.PSDAK_TEC_RPT_NAME";
+	public static final String PSDAK_TEC_RPT_VAL = "PSDAK-TEC";
+	public static final String PSDABK_TEC_RPT_NAME = "lbl.rpt.sc.PSDABK_TEC_RPT_NAME";
+	public static final String PSDABK_TEC_RPT_VAL = "PSDABK-TEC";
+	
 	public static final String OVRL_TECRES_WITH_WEI_TEC_RPT_NAME = "lbl.rpt.sc.OVRL_TECRES_WITH_WEI_TEC_RPT_NAME";
 	public static final String OVRL_TECRES_WITH_WEI_TEC_RPT_VAL = "OvrlTecRsWithWei-TEC";
 	public static final String OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_NAME = "lbl.rpt.sc.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_NAME";
@@ -36,12 +44,24 @@ public class ReportConst {
 	public static final String AKPT_FEC_RPT_VAL = "AKPT-FEC";
 	public static final String HARGA_TAWARAN_FEC_RPT_NAME = "lbl.rpt.sc.HARGA_TAWARAN_FEC_RPT_NAME";
 	public static final String HARGA_TAWARAN_FEC_RPT_VAL = "HargaTawaran-FEC";
+	
+	public static final String KEDUDUKAN_KEWANGAN_FEC_RPT_NAME = "lbl.rpt.sc.KEDUDUKAN_KEWANGAN_FEC_RPT_NAME";
+	public static final String KEDUDUKAN_KEWANGAN_FEC_RPT_VAL = "KedudukanKewangan-FEC";
+	public static final String PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME = "lbl.rpt.sc.PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME";
+	public static final String PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL = "PSDAKJumlahKontrak-FEC";
+	public static final String PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME = "lbl.rpt.sc.PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME";
+	public static final String PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL = "PSDABKJumlahKontrak-FEC";
+	
 	public static final String OVRL_FINRS_FEC_RPT_NAME = "lbl.rpt.sc.OVRL_FINRS_FEC_RPT_NAME";
 	public static final String OVRL_FINRS_FEC_RPT_VAL = "OvrlFinRs-FEC";
 	public static final String SPPP1_PEMATUHAN_EC_RPT_NAME = "lbl.rpt.sc.SPPP1_PEMATUHAN_EC_RPT_NAME";
 	public static final String SPPP1_PEMATUHAN_EC_RPT_VAL = "SPPP1(Pematuhan)-EC";
 	public static final String KPP1_PEMATUHAN_EC_RPT_NAME = "lbl.rpt.sc.KPP1_PEMATUHAN_EC_RPT_NAME";
 	public static final String KPP1_PEMATUHAN_EC_RPT_VAL = "KPP1(Pematuhan)-EC";
+	
+	public static final String PDW_EC_RPT_NAME = "lbl.rpt.sc.PDW_EC_RPT_NAME";
+	public static final String PDW_EC_RPT_VAL = "PematuhanDokumenWajib-EC";
+	
 	public static final String SPPSAP2_EC_RPT_NAME = "lbl.rpt.sc.SPPSAP2_EC_RPT_NAME";
 	public static final String SPPSAP2_EC_RPT_VAL = "SPPSAP2-EC";
 	public static final String KPSAP2_PEMARKAHAN_EC_RPT_NAME = "lbl.rpt.sc.KPSAP2_PEMARKAHAN_EC_RPT_NAME";
@@ -50,6 +70,20 @@ public class ReportConst {
 	public static final String AKPTPH_EC_RPT_VAL = "AKPTPH-EC";
 	public static final String TECSPEC_EC_RPT_NAME = "lbl.rpt.sc.TECSPEC_EC_RPT_NAME";
 	public static final String TECSPEC_EC_RPT_VAL = "TecSpec-EC";
+	
+	public static final String PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME = "lbl.rpt.sc.PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME";
+	public static final String PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL = "PSDAK(BilanganKontrak)-EC";
+	public static final String PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME = "lbl.rpt.sc.PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME";
+	public static final String PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL = "PSDABK(BilanganKontrak)-EC";
+	public static final String HARGA_TAWARAN_EC_RPT_NAME = "lbl.rpt.sc.HARGA_TAWARAN_EC_RPT_NAME";
+	public static final String HARGA_TAWARAN_EC_RPT_VAL = "HargaTwaran-EC";
+	public static final String KEMUDAHAN_KEWANGAN_EC_RPT_NAME = "lbl.rpt.sc.KEMUDAHAN_KEWANGAN_EC_RPT_NAME";
+	public static final String KEMUDAHAN_KEWANGAN_EC_RPT_VAL = "KemudahanKewangan-EC";
+	public static final String COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME";
+	public static final String COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL = "CompExpGovtAgency-Contract";
+	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME = "lbl.rpt.sc.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME";
+	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL = "CompExpNonGovtAgency-Contract";
+	
 	public static final String OVRL_TECRS_WITH_WEI_EC_RPT_NAME = "lbl.rpt.sc.OVRL_TECRS_WITH_WEI_EC_RPT_NAME";
 	public static final String OVRL_TECRS_WITH_WEI_EC_RPT_VAL = "OvrlTecRsWithWei-EC";
 	public static final String OVRL_TECRS_WITH_OUT_WEI_EC_RPT_NAME = "lbl.rpt.sc.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_NAME";
@@ -58,20 +92,21 @@ public class ReportConst {
 	public static final String OVRL_FINRS_EC_RPT_VAL = "OvrlFinRs-EC";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
 	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
-	public static final String COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME";
+	/*public static final String COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME";
 	public static final String COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL = "CompExpGovtAgency-NoOfContract";
 	public static final String COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME";
-	public static final String COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL = "CompExpNonGovtAgency-NoOfContract";
-	public static final String COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME";
+	public static final String COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL = "CompExpNonGovtAgency-NoOfContract";*/
+	/*public static final String COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME";
 	public static final String COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL = "CompExpGovtAgency-Contract";
 	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME";
 	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL = "CompExpNonGovtAgency-Contract";
 	public static final String FINANCE_POSITION_RPT_NAME = "lbl.rpt.sc.FINANCE_POSITION_RPT_NAME";
-	public static final String FINANCE_POSITION_RPT_VAL = "FinacialPosition";
+	public static final String FINANCE_POSITION_RPT_VAL = "FinacialPosition";*/
 	//JSP
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
+	public static final String AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
 	public static final String SC_SPPSAP2_TEC_RPT_JSP = "sc_tec_shlisttech_eval_2a.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "sc_tec_techasses_2b.jsp";
 	public static final String SC_AKPT_TEC_RPT_JSP = "sc_tec_eval_tech_2c.jsp";
@@ -85,10 +120,20 @@ public class ReportConst {
 	public static final String SC_OVRL_FINRS_FEC_RPT_JSP = "sc_fec_overall_fin_3e.jsp";
 	public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_shortlist_asses_4a.jsp";
 	public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_method_of_asses_4b.jsp";
+	public static final String SC_PDW_EC_RPT_JSP = "sc_ec_method_of_asses_4l.jsp";
+	
 	public static final String SC_SPPSAP2_EC_RPT_JSP = "sc_ec_gen_spec_4c.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "sc_ec_gen_spec_4d.jsp";
 	public static final String SC_AKPTPH_EC_RPT_JSP = "sc_ec_price_eval_4e.jsp";
 	public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";
+	
+	public static final String SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_govt_4j.jsp";
+	public static final String SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_non_govt_4k.jsp";
+	public static final String SC_HARGA_TAWARAN_EC_RPT_JSP = "sc_ec_priceoffer_4m.jsp";
+	public static final String SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP = "sc_ec_fin_position_4n.jsp";
+	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP = "";
+	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "";
+	
 	public static final String SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP = "sc_ec_overall_tech_4g.jsp";
 	public static final String SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP = "sc_ec_overalltech_with_wei_4h.jsp";
 	public static final String SC_OVRL_FINRS_EC_RPT_JSP = "sc_ec_overall_fin_4i.jsp";
@@ -97,6 +142,7 @@ public class ReportConst {
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
 	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
+	
 	
 	//S1 Report
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
