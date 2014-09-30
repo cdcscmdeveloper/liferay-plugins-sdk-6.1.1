@@ -58,6 +58,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -557,18 +558,24 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
-			PARENT_ENTITY parent, List<REMARK_CLASS> scRemarks,
+			PARENT_ENTITY parent, PmStatus pmStatus, List<REMARK_CLASS> scRemarks,
 			Class<REMARK_CLASS> clazz) {
 
 		try {
 			if (scRemarks == null) {
 				scRemarks = new ArrayList<REMARK_CLASS>();
 			}
+			
+			REMARK_CLASS prevRemark = null;
+			if (scRemarks.size() > 0) {
+				prevRemark = scRemarks.get(0);
+			}
 
 			FacesScopes facesScopes = new FacesScopes();
-			if (scRemarks.size() == 0
-					|| !compareUserName(scRemarks.get(0).getCreatedUser()
-							.getLoginId())) {
+			if (scRemarks.size() == 0 || 
+				!compareUserName(prevRemark.getCreatedUser().getLoginId()) ||
+				(pmStatus != null && !prevRemark.getPmStatus().getStatusId().equals(pmStatus.getStatusId()))) {
+				
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
 						.getUserId());
@@ -576,6 +583,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setParent(parent);
+				remark.setPmStatus(pmStatus);
 
 				scRemarks.add(0, remark);
 			}

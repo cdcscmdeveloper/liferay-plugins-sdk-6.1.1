@@ -1255,7 +1255,7 @@ public class QTDetailBackingBean extends
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
+							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv, null,
 									scQtBsv.getBsvRemarks(),
 									ScQtBSVRemark.class));
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
@@ -1270,7 +1270,7 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					qtBsv.setBsvRemarks(initializeRemarks(qtBsv,
+					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, null,
 							qtBsv.getBsvRemarks(), ScQtBSVRemark.class));
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							null, resDTO.getBriefingList(),
@@ -1606,6 +1606,7 @@ public class QTDetailBackingBean extends
 										.getParameterCode()));
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
 								qtApproval,
+								null,
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
 						// qtApproval.setScQtApprovalAttachment(null);
@@ -2000,7 +2001,7 @@ public class QTDetailBackingBean extends
 			if (publicationApproval == null) {
 				publicationApproval = new ScQtApproval();
 				publicationApproval.setScQtApprovalRemarks(initializeRemarks(
-						publicationApproval,
+						publicationApproval, null,
 						publicationApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
 				publicationApproval.setScQtApprovalAttachment(null);
@@ -2010,7 +2011,7 @@ public class QTDetailBackingBean extends
 				publicationApproval.setScQtApprovalDtls(qtApprovalRequests);
 			} else {
 				publicationApproval.setScQtApprovalRemarks(initializeRemarks(
-						publicationApproval,
+						publicationApproval, null,
 						publicationApproval.getScQtApprovalRemarks(),
 						ScQtApprovalRemark.class));
 

@@ -633,7 +633,7 @@ public class LOADetailBackingBean extends
 		getManagedBean().setApproverList(resDTO.getApproverList());
 
 		// Remarks
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa.getScLoaRemarks(),
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null, scLoa.getScLoaRemarks(),
 				ScLoaRemark.class));
 
 		if (scLoa.getBondAmt() != null) {
