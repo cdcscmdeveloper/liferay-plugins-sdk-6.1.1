@@ -31,11 +31,32 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	private List<PmUser> availableUsers;
 	private PmUser selectedUser;
 	private boolean orgProfileRequired;
+//	private boolean epAdmin;
+	private boolean filterOrg;
+	private String filterOrgCondition;
+	private String userActiveOrgs;
 	
 	
 	private PmUser resultUser;
 	private PmOrgProfile resultOrgProfile;
 	
+	private String tempRole;
+	
+	
+
+	/**
+	 * @return the tempRole
+	 */
+	public String getTempRole() {
+		return tempRole;
+	}
+
+	/**
+	 * @param tempRole the tempRole to set
+	 */
+	public void setTempRole(String tempRole) {
+		this.tempRole = tempRole;
+	}
 
 	/**
 	 * @return the resultOrgProfile
@@ -134,6 +155,62 @@ public class TaskAssignmentManagedBean extends BaseManagedBean {
 	 */
 	public void setResultUser(PmUser resultUser) {
 		this.resultUser = resultUser;
+	}
+
+//	/**
+//	 * @return the epAdmin
+//	 */
+//	public boolean isEpAdmin() {
+//		return epAdmin;
+//	}
+//
+//	/**
+//	 * @param epAdmin the epAdmin to set
+//	 */
+//	public void setEpAdmin(boolean epAdmin) {
+//		this.epAdmin = epAdmin;
+//	}
+
+	/**
+	 * @return the userActiveOrgs
+	 */
+	public String getUserActiveOrgs() {
+		return userActiveOrgs;
+	}
+
+	/**
+	 * @param userActiveOrgs the userActiveOrgs to set
+	 */
+	public void setUserActiveOrgs(String userActiveOrgs) {
+		this.userActiveOrgs = userActiveOrgs;
+	}
+
+	/**
+	 * @return the filterOrg
+	 */
+	public boolean isFilterOrg() {
+		return filterOrg;
+	}
+
+	/**
+	 * @param filterOrg the filterOrg to set
+	 */
+	public void setFilterOrg(boolean filterOrg) {
+		this.filterOrg = filterOrg;
+	}
+
+	/**
+	 * @return the filterOrgCondition
+	 */
+	public String getFilterOrgCondition() {
+		return filterOrgCondition;
+	}
+
+	/**
+	 * @param filterOrgCondition the filterOrgCondition to set
+	 */
+	public void setFilterOrgCondition(String filterOrgCondition) {
+		this.filterOrgCondition = filterOrgCondition;
 	}
 
 	

@@ -21,10 +21,8 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
-import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -37,7 +35,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
@@ -46,8 +43,6 @@ import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -58,10 +53,12 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -74,6 +71,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 /**
@@ -90,7 +88,6 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	public static final boolean SEARCH_DEFAULT = false;
 	//Navigation Details
 	public static final String NAV_TO_SEARCH = "taskAssignment";
-	public static final String NAV_TO_MAINTAIN = "taskAssignment";
 
 	//Mapper for DDL object
 	private static Map<Long, Object> orgTypeMapper;
@@ -101,16 +98,25 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	private String currentDate;
 	public static final String APPROVER = "APPROVER";
 	
-	public void preLoading(){
+	public void preLoading() throws EpException{
 		log.info("preLoading");
 		this.retrieveOrgTypeMap();
 		this.resetTaskAssignSearchBean();
 		this.getManagedBean().setOrgProfileRequired(true);
 		this.getManagedBean().setResultUser(null);
 		this.getManagedBean().setResultOrgProfile(null);
+		
+		this.getManagedBean().setFilterOrg(true); // for org filter 
+		this.getManagedBean().setUserActiveOrgs(null); // for org filter 
+		this.getManagedBean().setFilterOrgCondition(null); // for org filter 
+		
+		roleCheck();
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
 	}
+	
+	
+	
 	
 	/**
 	 * get faces scopes
@@ -120,6 +126,8 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
+	
+	
 	
 	/**
 	 * reset search bean fields
@@ -181,6 +189,100 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				, new ArrayList(Arrays.asList(ProfileManagementConst.TASK_ASSIGNMENT_ORG_TYPE_INCLUDE)));
 	}
 	
+	public void roleCheck2(){
+		log.info("roleCheck");
+		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
+			String tempRole = this.getManagedBean().getTempRole(); //TODO
+			if(RoleCode.EP_ADMIN.value().equalsIgnoreCase(tempRole)){
+				this.getManagedBean().setFilterOrg(false);
+			}else if(RoleCode.MINISTRY_ADMIN.value().equalsIgnoreCase(tempRole)){
+				this.getManagedBean().setFilterOrg(true);
+				StringBuilder sb = new StringBuilder();
+				//parentId = orgProfileId
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+					int count = 1;
+					for(PmUserOrg pmUserOrg: pmUserOrgs){
+						sb.append(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+						if(count<pmUserOrgs.size()){
+							sb.append(",");
+						}
+						count++;
+					}
+				}
+				this.getManagedBean().setUserActiveOrgs(sb.toString());
+			} else if(RoleCode.PTJ_ADMIN.value().equalsIgnoreCase(tempRole)){
+				this.getManagedBean().setFilterOrg(true);
+				StringBuilder sb = new StringBuilder();
+				//parentId = parentOrg.orgProfileId
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+					int count = 1;
+					for(PmUserOrg pmUserOrg: pmUserOrgs){
+						if(pmUserOrg.getPmOrgProfile().getParentOrgProfile()!=null){
+							sb.append(pmUserOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
+							if(count<pmUserOrgs.size()){
+								sb.append(",");
+							}
+						}
+						count++;
+					}
+				}
+				this.getManagedBean().setUserActiveOrgs(sb.toString());
+				
+			}
+		}
+		log.info("UserActiveOrgs: " + this.getManagedBean().getUserActiveOrgs());
+		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
+	}
+	
+	public void roleCheck(){
+		log.info("roleCheck");
+		if(getFacesScopes().getUserSessionBean().getLoginId()!=null){
+			if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value())){
+				this.getManagedBean().setFilterOrg(false);
+			}else if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				this.getManagedBean().setFilterOrg(true);
+				StringBuilder sb = new StringBuilder();
+				//parentId = orgProfileId
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+					int count = 1;
+					for(PmUserOrg pmUserOrg: pmUserOrgs){
+						sb.append(pmUserOrg.getPmOrgProfile().getOrgProfileId());
+						if(count<pmUserOrgs.size()){
+							sb.append(",");
+						}
+						count++;
+					}
+				}
+				this.getManagedBean().setUserActiveOrgs(sb.toString());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+				this.getManagedBean().setFilterOrg(true);
+				StringBuilder sb = new StringBuilder();
+				//parentId = parentOrg.orgProfileId
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId(), true);
+				if(pmUserOrgs!=null && !pmUserOrgs.isEmpty()){
+					int count = 1;
+					for(PmUserOrg pmUserOrg: pmUserOrgs){
+						if(pmUserOrg.getPmOrgProfile().getParentOrgProfile()!=null){
+							sb.append(pmUserOrg.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
+							if(count<pmUserOrgs.size()){
+								sb.append(",");
+							}
+						}
+						count++;
+					}
+				}
+				this.getManagedBean().setUserActiveOrgs(sb.toString());
+				
+			}
+		}
+		log.info("UserActiveOrgs: " + this.getManagedBean().getUserActiveOrgs());
+		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
+	}
+	
+	
 	/**
 	 * change organization type
 	 */
@@ -209,10 +311,58 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				}else{
 					this.getManagedBean().setOrgProfileRequired(true);
 				}
+				
+				
+				generateOrgFilter(pmParameter.getParameterCode());
 			}
 		}
 		
 	}
+	
+		
+	
+	public void generateOrgFilter(String orgTypeCode){
+		log.info("generateOrgFilter");
+		StringBuilder conditionSB = new StringBuilder();
+		if(this.getManagedBean().isFilterOrg()){
+			if(StringUtils.isBlank(this.getManagedBean().getUserActiveOrgs())){
+				throw new EpException("User does not have active org. for lov. Please check logged in user configuration.");
+			}
+			conditionSB.append("orgTypeCode.parameterType^");
+			conditionSB.append(ParameterTypeConst.ORGANISATION_TYPES);
+			conditionSB.append("|");
+			conditionSB.append("orgTypeCode.parameterCode^");
+			conditionSB.append(orgTypeCode);
+			conditionSB.append("|");
+			conditionSB.append("recordStatus^1");
+
+			if(ParameterConst.ORG_TYPE_MINISTRY.equals(orgTypeCode)){
+				conditionSB.append("|");
+				conditionSB.append("orgProfileId^");
+				conditionSB.append(this.getManagedBean().getUserActiveOrgs());
+				conditionSB.append("^9");
+			}else{
+				conditionSB.append("|");
+				conditionSB.append("parentOrgProfile.orgProfileId^");
+				conditionSB.append(this.getManagedBean().getUserActiveOrgs());
+				conditionSB.append("^9");
+			}
+		}else{
+			conditionSB.append("orgTypeCode.parameterType^");
+			conditionSB.append(ParameterTypeConst.ORGANISATION_TYPES);
+			conditionSB.append("|");
+			conditionSB.append("orgTypeCode.parameterCode^");
+			conditionSB.append(orgTypeCode);
+			conditionSB.append("|");
+			conditionSB.append("recordStatus^1");
+		}
+		this.getManagedBean().setFilterOrgCondition(conditionSB.toString());
+
+		log.info("FilterOrg: " + this.getManagedBean().isFilterOrg());
+		log.info("OrgProfiles: " + this.getManagedBean().getUserActiveOrgs());
+		log.info("FilterOrgCondition: " + this.getManagedBean().getFilterOrgCondition());
+	}
+		
 	
 	/**
 	 * retrieve valid org profile based on selected org type

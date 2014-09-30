@@ -1493,7 +1493,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}
 			if(activeUserOrgId>0 || isChanged){
 				// retrieve previous active org list
-				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId());
+				List <PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(user.getUserId(), false);
 				System.out.println("size " + pmUserOrgs.size());
 				for(PmUserOrg pmUserOrg:pmUserOrgs){
 					if(pmUserOrg.getUserOrgId()!=activeUserOrgId){
