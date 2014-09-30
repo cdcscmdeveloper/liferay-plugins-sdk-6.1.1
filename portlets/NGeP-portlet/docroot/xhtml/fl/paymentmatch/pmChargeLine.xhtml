@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="ITEM DETAIL" toggleable="true" styleClass="pmChargeLinePnlClass">
-
+	<p:panel header="#{lbl['lbl.fl.menu.charge.line.summary']}" toggleable="true" styleClass="pmChargeLinePnlClass">
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
@@ -20,41 +20,57 @@
 			<p:ajax event="unselect"
 				listener="#{paymentMatchBackingBean.onNodeUnSelect()}"
 				update="@(.chargeLineSection)" />				
-			<p:column headerText="Item Code">
+			<p:column style="white-space:normal;">
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+				</f:facet>
 				<h:outputText
 					value="#{chargeLineNode.flItem.cmItem.extensionCode}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Item Name" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="UOM">
+			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="Unit &lt;br /&gt; Price (RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flItem.unitPrice}"
 					rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Qty." style="text-align:right">
+			<p:column style="white-space:normal;">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.fl.ordered.qty']}"></h:outputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ordered.quantity']}"/>
+			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Received &lt;br /&gt; Qty." style="text-align:right">
+			<p:column style="white-space:normal">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.fl.received.qty']}"></h:outputText>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.received.quantity']}"/>
+			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Recalled &lt;br /&gt; Qty." style="text-align:right">
+			<p:column style="white-space:normal">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.fl.frn.recalled.qty']}"></h:outputText>
+			<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recalled.quantity']}"/>
+			</f:facet>
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.recalledQty}" rendered="#{chargeLineNode.parent == 'false'}">		
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -62,7 +78,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Received &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -70,7 +86,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Invoice &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.amount.invoice']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.parent == 'true'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -78,12 +94,12 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="DAN &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.dan.amount']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flAdjustmentItem.flAdjustment.docType eq 'DN'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="CAN &lt;br /&gt; Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.payment.match.can.amount']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flAdjustmentItem.flAdjustment.docType eq 'CN'}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -99,37 +115,40 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.votFundCode}"
-							size="9" disabled="true" /> </td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+							size="9" disabled="true" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
 					<td><p:inputText
 							size="9" disabled="true" value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.assetInd, paymentMatchBackingBean.managedBean.assetIndCode)}"/></td>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
+							value="#{lbl['lbl.fl.gosodo']}" /></td>
 					<td><p:inputText
 							size="9" disabled="true" value="#{paymentMatchBackingBean.managedBean.glAccountCode}" /></td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
+							value="#{lbl['lbl.fl.program.activiti']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.prgActivityCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.projectCode}"
 							size="9" disabled="true" /></td>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
+							value="#{lbl['lbl.fl.setia.subsetia']}" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.setiaCode}"
 							size="9" disabled="true" /></td>
 					<td><p:inputText
 							value="#{paymentMatchBackingBean.managedBean.subSetiaCode}"
 							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td>
 					<td><p:inputText value="#{paymentMatchBackingBean.getParameterDesc(ParameterTypeConst.financingType,paymentMatchBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
 
