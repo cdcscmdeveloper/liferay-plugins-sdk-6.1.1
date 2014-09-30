@@ -8,7 +8,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:panel id="pTaskAssignSearch" header="#{lbl['lbl.pm.ta.search']}" toggleable="true">
-		<br/>
+		
 		<table class="ppTwoTable">
 			<tr>
 				<th width="15%">
@@ -24,15 +24,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				     	<p:ajax event="change" listener="#{taskAssignBackingBean.changeOrgType()}" 
 				     		update=":form:pTaskAssignSearch"/> 
 		            </p:selectOneMenu>	
-					<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55" 
+	            	<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55" 
 						disabled="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId==null
 							or !taskAssignBackingBean.managedBean.orgProfileRequired}"
 		            	update=":form:pTaskAssignSearch" readonly="true" 
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
-						conditionField="orgTypeCode.parameterType^#{ParameterTypeConst.organisationTypes}|orgTypeCode.parameterCode^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterCode}|recordStatus^1"/>
-				
+						conditionField="#{taskAssignBackingBean.managedBean.filterOrgCondition}"/>
 				</td>
 				<td width="40%">
 					
