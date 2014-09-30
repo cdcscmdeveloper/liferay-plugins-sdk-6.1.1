@@ -515,7 +515,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		StateResDTO resDTO = stateSO.retriveStateByID(reqDTO);
+		StateResDTO resDTO = stateSO.retriveStateDetailsByID(reqDTO);
 		getManagedBean().setState(resDTO.getPmState());
 
 	}
@@ -527,7 +527,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		StateResDTO resDTO = stateSO.retriveStateByID(reqDTO);
+		StateResDTO resDTO = stateSO.retriveStateDetailsByID(reqDTO);
 		getManagedBean().setState(resDTO.getPmState());
 
 	}
