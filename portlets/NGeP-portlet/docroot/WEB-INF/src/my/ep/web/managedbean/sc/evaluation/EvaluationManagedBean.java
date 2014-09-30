@@ -174,10 +174,32 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int totalNoOfYearsExperience;
 	private List<ScQtMeeting> meetingRemoveList;
 	private List<ScQtMeetingAttendance> meetingAttendanceRemoveList;
-	//Added by vidyasagarreddy for reusing commmon screens from proposal
+	// Added by vidyasagarreddy for reusing commmon screens from proposal
 	private String evaluationPage;
 	private String proposalPage;
 	private String docDefinitionKey;
+	private List<ScQtProposalChecklist> technicalComplinaceList;
+	private boolean isStatusHide;
+	
+
+
+
+	public boolean isStatusHide() {
+		return isStatusHide;
+	}
+
+	public void setStatusHide(boolean isStatusHide) {
+		this.isStatusHide = isStatusHide;
+	}
+
+	public List<ScQtProposalChecklist> getTechnicalComplinaceList() {
+		return technicalComplinaceList;
+	}
+
+	public void setTechnicalComplinaceList(
+			List<ScQtProposalChecklist> technicalComplinaceList) {
+		this.technicalComplinaceList = technicalComplinaceList;
+	}
 
 	public List<ScQtMeeting> getMeetingRemoveList() {
 		return meetingRemoveList;
