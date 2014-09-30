@@ -159,7 +159,7 @@ public class TemplateSpecHelper {
 								}
 								newSpecQuestion.setScoreTypeCode(null);
 								newSpecQuestion.setMaxScore(null);
-								
+								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								newSpecQuestion.setTplSpecEstimations(null);
