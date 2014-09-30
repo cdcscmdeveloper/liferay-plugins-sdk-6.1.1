@@ -38,7 +38,11 @@
 				<h:outputText value="#{chargeLineNode.coaValue}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.item.code']}" sortBy="#{chargeLineNode.cmItem.extensionCode}">
+			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}">
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+				</f:facet>
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem==null}" value="#{chargeLineNode.scRequestItem.tempUnspscCode}" />
 				<h:outputText rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.scRequestItem.cmItem!=null}" value="#{chargeLineNode.scRequestItem.cmItem.extensionCode}" />			
 			</p:column>
@@ -76,7 +80,8 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.charge.line.query']}"  rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}">
+			<p:column rendered="#{purchaseRequestBackingBean.managedBean.queryDisplay}">
+			<f:facet name="header" style="width:8%;">
 			<h:outputText style="text-align:right" />
 				<p:commandLink oncomplete="addQuery.show();"
 					action="#{purchaseRequestBackingBean.showItemQuery(chargeLineNode)}"
@@ -86,6 +91,9 @@
 						value="/resources/ep/images/design/exclamation.png"
 						title="Query" />
 				</p:commandLink>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.query']}"/>
+			</f:facet>
+			
 			</p:column>
 		</p:treeTable>
 		<br />
@@ -120,7 +128,10 @@
 							<p:ajax event="change"
 							listener="#{purchaseRequestBackingBean.checkVotFundDropdown}"
 							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/>
+					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
 					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
 						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
@@ -144,12 +155,14 @@
 						readonly="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	>
-					</ac:lov></h:panelGroup></td>
+					</ac:lov></h:panelGroup>
+					</td>
+					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 					
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td> 
-					<td><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
+					<td colspan="2"><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
 						lovId="PM_PRG_ACTIVITY" headerText="Program Activity LOV "
 						saveObject="purchaseRequestBackingBean.managedBean.pmPrgActivity"
 						readonly="true"
@@ -179,7 +192,7 @@
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
 					</td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td> 
-					<td>
+					<td colspan="2">
 						<p:inputText size="5" id="cpCode"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.getParameterDesc(purchaseRequestBackingBean.managedBean.pmSubSetia.financingType)}" />
@@ -191,7 +204,7 @@
 			<table style="width: 100%;">
 			<tr>
 
-				<td colspan="4" style="text-align: right"><p:commandButton
+				<td colspan="4" style="text-align: right"><p:commandButton title="#{lbl['lbl.fl.btn.bulk.update']}"
 						value="#{lbl['lbl.fl.bulk.update']}" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						update="chargeLineTbl,chargeAss,chargeLineSection"
