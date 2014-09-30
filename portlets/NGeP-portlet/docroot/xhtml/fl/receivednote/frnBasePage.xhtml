@@ -20,13 +20,14 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{receivedNoteBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{receivedNoteBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right">
 					<ui:repeat
 						var="bpmAction"
 						value="#{receivedNoteBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" update="@form" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{receivedNoteBackingBean.submitAction(bpmAction)}" />
@@ -34,7 +35,7 @@
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
-								value="UPDATE" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								value="#{lbl['lbl.btn.update']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
 								<f:param name="actionName" value="UPDATE" />
 							</p:commandButton></td>
@@ -42,7 +43,7 @@
 					<c:if
 						test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
 						<td colspan="4" style="text-align: right"><p:commandButton
-								value="CANCEL" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								value="#{lbl['lbl.btn.cancel']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
 								<f:param name="actionName" value="CANCEL" />
 							</p:commandButton></td>
@@ -56,17 +57,17 @@
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu"
 						activeIndex="#{receivedNoteBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="FRN Item" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.items']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Evaluation" update="@form">
+						<p:menuitem  value="#{lbl['lbl.fl.menu.frn.evaluation']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{receivedNoteBackingBean.managedBean.selectedTabIndex}"
 								value="2" />

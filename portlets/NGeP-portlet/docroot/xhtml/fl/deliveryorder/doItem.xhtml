@@ -5,7 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.delivery.address']}"  toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.del.address']}" escape="false"/>
 		<p:dataTable id="doDelAddress" var="doDelAddress"
 			styleClass="orderSummaryChange hide-column-names "
 			rowIndexVar="index" rowKey="#{doDelAddress}"
@@ -24,7 +26,7 @@
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="width:2%">
-				<h:outputText value="Delivery Start / End" />
+				<h:outputText value="#{lbl['lbl.fl.do.delivery.service.start.end.date']}" />
 				<p:spacer width="4" />
 				<p:inputText size="9" disabled="true"
 					value="#{doDelAddress.startDate}">
@@ -40,10 +42,11 @@
 			</p:column>
 			<p:column>
 				<h:outputText value="*" styleClass="mandatory" />
-				<h:outputText value="Supplier DO. No." />
+				<h:outputText value="#{lbl['lbl.fl.do.supp.do.no']}" />
 				<p:spacer width="4" />
 				<p:inputText size="9" maxlength="30"
 					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
 				<p:commandLink oncomplete="addRemarks.show();"
 					action="#{fulfilmentBackingBean.openAttachmentPage(doDelAddress)}"
 					update=":form:addRemarmAttachmentDialog">
@@ -62,39 +65,51 @@
 					value="#{doDelAddress.flFulfilmentItemAddr}" rowIndexVar="index"
 					rowKey="#{flItem}"
 					styleClass="itemsSelectedPanel show-column-names">
-					<p:column headerText="Item Name" style="white-space:normal;">
+					<p:column headerText="#{lbl['lbl.fl.item.name']}"   style="white-space:normal;">
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
 					</p:column>
-					<p:column headerText="UOM">
+					<p:column>
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.uom']}"/>
+    				</f:facet>
 						<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 					</p:column>
-					<p:column headerText="Unit Price &lt;br /&gt; (RM)"
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}"
 						style="text-align:right">
 						<h:outputText disabled="true" value="#{doItems.unitPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered &lt;br /&gt; Qty."
-						style="text-align:right">
+					<p:column> 
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
+    				</f:facet>
 						<h:outputText value="#{doItems.orderedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Remaining &lt;br /&gt; Qty."
-						style="text-align:right">
+					<p:column >
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.remaining.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
+    				</f:facet>
 						<h:outputText id="remaingQtyTxt"
 							value="#{doItems.orderedQty - doItems.sumDeliveredQty - doItems.deliveredQty + doItems.rejectedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Delivery &lt;br /&gt; Qty."
-						style="text-align:right">
+					<p:column >
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
+    				</f:facet>
 						<h:panelGroup id="delQtyTxt">
 							<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled}"
 								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}">
@@ -110,7 +125,7 @@
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)"
+					<p:column headerText="#{lbl['lbl.fl.delivery.amount']}"
 						style="text-align:right">
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
@@ -127,29 +142,35 @@
 							</p:inputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)"
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"
 						style="text-align:right">
 						<h:outputText value="#{doItems.orderedAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Received &lt;br /&gt; Qty."
-						style="text-align:right">
+					<p:column>
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
+    				</f:facet>
 						<h:outputText value="#{doItems.chargeReceivedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Received &lt;br /&gt; Amt.(RM)"
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"
 						style="text-align:right">
 						<h:outputText value="#{doItems.chargeReceivedAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Rejected &lt;br /&gt; Qty."
-						style="text-align:right">
+					<p:column >
+						<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.rejected.qty']}"/>
+    				</f:facet>
 						<h:outputText value="#{doItems.rejectedQty}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
@@ -171,7 +192,7 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:dialog id="addRemarmAttachmentDialog" header="Remarks"
+	<p:dialog id="addRemarmAttachmentDialog" header="#{lbl['lbl.txt.remarks']}"
 		widgetVar="addRemarks" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" resizable="false">
 		<table>
@@ -197,26 +218,26 @@
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Ok" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
 				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
-			<p:commandButton value="Close" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-cancel"
 				oncomplete="addRemarks.hide();" process="@this">
 			</p:commandButton>
 		</div>
 	</p:dialog>
 
-	<p:dialog id="rejectionDialog" header="Rejection History"
+	<p:dialog id="rejectionDialog" header="#{lbl['lbl.fl.do.rejection.history']}" 
 		widgetVar="rejectionDialog" showEffect="fade" hideEffect="fade"
 		modal="true" width="800" resizable="false">
 		<table>
 			<tr>
-				<td><p:outputLabel value="Item Code" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.cmItem.extensionCode}" />
-				</td>
+				</td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
 				<td width="10"></td>
-				<td><p:outputLabel value="Item Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
 				<td><p:inputText disabled="true" style="width: 400px;"
 						value="#{createDOBackingBean.managedBean.selectedItemRow.scRequestItem.itemName}" />
 				</td>
@@ -226,20 +247,28 @@
 			rowKey="#{frnItem}"
 			value="#{createDOBackingBean.managedBean.rejectionList}">
 			<ac:paginator for="rejectionHistoryDt" />
-			<p:column headerText="Del. Order No.">
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.relected.delivery.ord.no']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.rejected.del.ord.no']}"/>
+    				</f:facet>
 				<h:outputText
 					value="#{frnItem.flDelOrderItem.flDeliveryOrder.deliveryOrderNo}" />
 			</p:column>
-			<p:column headerText="Remarks" style="white-space:normal;">
+			<p:column value="#{lbl['lbl.txt.remarks']}"  style="white-space:normal;">
 				<h:outputText value="#{frnItem.rejectionRemark}" />
 			</p:column>
-			<p:column headerText="Rejected Qty." style="text-align:right;">
+			<p:column >
+				<f:facet name="header" style="width:8%;">
+    				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}"/>
+     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.rejected.qty']}"/>
+    				</f:facet>
 				<h:outputText value="#{frnItem.rejectedQty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, frnItem.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Amount (RM)" style="text-align:right;">
+			<p:column headerText="#{lbl['lbl.fl.amount']}"  style="text-align:right;">
 				<h:outputText value="#{frnItem.rejectedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -248,7 +277,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.btn.close']}" icon="ui-icon-cancel"
 				oncomplete="rejectionDialog.hide();">
 			</p:commandButton>
 		</div>

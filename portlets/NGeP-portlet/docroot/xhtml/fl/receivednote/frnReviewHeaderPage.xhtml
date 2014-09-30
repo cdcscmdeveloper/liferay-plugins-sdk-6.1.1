@@ -3,27 +3,29 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.fl.supp.del.ord.no']} " />
+				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " />
 				</td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.deliveryOrderNo}
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.no']}"/>
 				</td>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.rev.hed.frn.rec.note.no']} " /></td>
+						value="#{lbl['lbl.fl.frn.no']} " /></td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo == null ? '-- System Generated --':receivedNoteBackingBean.managedBean.fulfilmentNote.fulfilmentNoteNo}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " />
 				</td>
 				<td class="header-info-text">
 					#{receivedNoteBackingBean.getStatusDescById(receivedNoteBackingBean.managedBean.fulfilmentNote.status.statusId)}
