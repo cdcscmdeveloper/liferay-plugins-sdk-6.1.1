@@ -358,6 +358,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
 	private UserCommitteeSearchBean userCommitteeSearchBean;
 	private String commType;
+	
+	private List<PmUser> pmUsersSecretaryList;
 
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
@@ -2632,6 +2634,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setToBeDelCommitteMemebers(
 			List<ScCommitteeMember> toBeDelCommitteMemebers) {
 		this.toBeDelCommitteMemebers = toBeDelCommitteMemebers;
+	}
+
+	public List<PmUser> getPmUsersSecretaryList() {
+		return pmUsersSecretaryList;
+	}
+
+	public void setPmUsersSecretaryList(List<PmUser> pmUsersSecretaryList) {
+		this.pmUsersSecretaryList = pmUsersSecretaryList;
 	}
 
 }
