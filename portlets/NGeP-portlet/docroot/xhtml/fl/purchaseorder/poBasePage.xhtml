@@ -25,7 +25,7 @@
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"  
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						icon="ui-icon-back" action="#{flOrderBB.backToPervious}"
 						rendered="#{flOrderBB.managedBean.taskId==null}" /></td>
 				<c:if
@@ -54,11 +54,11 @@
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu"
 						activeIndex="#{flOrderBB.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="Order Summary" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{flOrderBB.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>

@@ -5,19 +5,19 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.delivery.address']}" toggleable="true">
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange hide-column-names"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column headerText="Delivery Address" style="white-space:normal;">
+			<p:column headerText="#{lbl['bl.fl.delivery.address']}" style="white-space:normal;">
 				<h:outputText value="#{flOrderBB.getFullAddress(delAddressSummary.pmAddress)}" />
 			</p:column>
 			<p:column>
 				<p:spacer width="7" />
-				<h:outputText value="Delivery Term" />
+				<h:outputText value="#{lbl['lbl.fl.delivery.period']}" />
 				<p:spacer width="7" />
 				<p:inputText size="4" disabled="true" style="text-align:right;"
 					value="#{delAddressSummary.deliveryTerm}" />
@@ -25,7 +25,7 @@
 				<h:inputText size="4" disabled="true"  style="width:50px"
 					value="#{flOrderBB.getParameterDesc(delAddressSummary.pmUom)}" />
 				<p:spacer width="7" />
-				<h:outputText value="Delivery Start" />
+				<h:outputText value="#{lbl['lbl.fl.delivery.start']}" />
 				<p:spacer width="7" />
 				<p:inputText size="9"
 					value="#{flOrderBB.managedBean.flRequest.startDate}"
@@ -34,7 +34,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="7" />
-				<h:outputText value="Delivery End" />
+				<h:outputText value="#{lbl['lbl.fl.delivery.end']}" />
 				<p:spacer width="7" />
 				<p:inputText size="9"
 					value="#{flOrderBB.managedBean.flRequest.endDate}" disabled="true">
@@ -47,27 +47,31 @@
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}">
-					<p:column headerText="Item Code">
+					<p:column>
+						<f:facet name="header" style="width:8%;">
+							<h:outputText value="#{lbl['lbl.fl.item.code']}" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}" />
+						</f:facet>
 						<h:outputText
 							value="#{newItems.scRequestItem.cmItem.extensionCode}" />
 					</p:column>
-					<p:column headerText="Item Name" style="white-space:normal;" >
+					<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;" >
 						<h:outputText value="#{newItems.scRequestItem.itemName}" />
 					</p:column>
-					<p:column headerText="UOM">
+					<p:column headerText="#{lbl['lbl.fl.uom']}">
 						<h:outputText value="#{newItems.scRequestItem.uom.uomName}"/>
 					</p:column>
-					<p:column headerText="Unit Price (RM)" style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
 						<h:outputText value="#{newItems.unitPrice}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered Qty." style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 						<h:outputText value="#{newItems.orderedQty}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, newItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 						<h:outputText value="#{newItems.orderedAmt}" >
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
