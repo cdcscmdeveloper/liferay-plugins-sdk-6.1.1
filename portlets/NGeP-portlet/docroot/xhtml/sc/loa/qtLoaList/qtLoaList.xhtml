@@ -38,7 +38,7 @@
 					#{scLoiLoa.supplierName}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-					<p:commandButton icon="ui-icon-add"
+					<p:commandButton icon="ui-icon-add" value="Create LOA"
 						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
 						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}"
 						rendered="#{empty scLoiLoa.scloas}" />

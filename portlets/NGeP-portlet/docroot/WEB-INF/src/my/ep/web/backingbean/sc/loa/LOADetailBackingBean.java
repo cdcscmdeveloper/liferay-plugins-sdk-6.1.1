@@ -443,7 +443,7 @@ public class LOADetailBackingBean extends
 				int count = 0;
 
 				if (eYear >= sYear) {
-					if (endYear != startYear) {
+					if (!endYear.equals(startYear)) {
 						diffYear = eYear - sYear;
 					}
 					for (int i = start + 1; i <= end + 1; i++) {
@@ -1798,6 +1798,7 @@ public class LOADetailBackingBean extends
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+			scLoa.setBondResDueDate(new Date());
 		} else {
 			saveScheduleList();
 			saveProgressivePaymntList();

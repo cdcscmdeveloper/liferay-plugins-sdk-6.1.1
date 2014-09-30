@@ -11,9 +11,11 @@
 			action="#{lOIDetailBackingBean.backToPervious}" />
 
 		<p:commandButton value="Preview Letter" icon="ui-icon-search"
-			action="loiLetterOfAcceptance.xhtml" process="@form"
-			update="@form" />
+			action="loiLetterOfAcceptance.xhtml" process="@this"
+			action="#{lOIDetailBackingBean.getBondLetterStreamContent}"
+			oncomplete="loiLetterDlg.show();" />
 			
+					
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
 			action="#{lOIDetailBackingBean.saveAction}" 
 			process="@form" update="@form" />

@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
@@ -46,6 +47,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private SmMofAccount smMofAccount;
 	
 	private int selectedTabIndex;
+	private SmPersonnel supplierHQPersonnel;
 
 	
 	private ScLoiNegoLocation scNegoLocation;
@@ -91,6 +93,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScLoiLoa selectedLoiLoa = new ScLoiLoa();
 
 	private List<ScLoiLoaItem> scLoiLoaItems;
+	private PmUser contractSignerUser;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -716,6 +719,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
 		this.selectedLoiLoa = selectedLoiLoa;
+	}
+
+	public SmPersonnel getSupplierHQPersonnel() {
+		return supplierHQPersonnel;
+	}
+
+	public void setSupplierHQPersonnel(SmPersonnel supplierHQPersonnel) {
+		this.supplierHQPersonnel = supplierHQPersonnel;
+	}
+
+	public PmUser getContractSignerUser() {
+		return contractSignerUser;
+	}
+
+	public void setContractSignerUser(PmUser contractSignerUser) {
+		this.contractSignerUser = contractSignerUser;
 	}
 	
 }
