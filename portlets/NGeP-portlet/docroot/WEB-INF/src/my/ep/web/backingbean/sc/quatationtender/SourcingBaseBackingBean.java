@@ -14,12 +14,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -68,6 +71,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -672,6 +676,63 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public String gotoQtSearchPage() {
 		return QTConstants.SEARCH_PAGE;
+	}
+
+	
+	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment) throws IOException {
+		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
+		reportUrl.append(ReportConst.AMP_REPORT_NAME);
+		reportUrl.append(reportName);
+		for (Entry<String, String> params : paramMap.entrySet()) {
+			reportUrl.append(params.getKey());
+			reportUrl.append(params.getValue());
+		}
+		reportUrl.append(excNextUrl);
+		
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename="+attachment.getFileName());
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		File localFile = new File(getActualFilePath(attachment));
+		
+		if (reportUrl.toString() != null) {
+			InputStream input = null;
+			try {
+				URL obj = new URL(reportUrl.toString());
+				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();				
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	        byte[] buf = new byte[1024];
+	        try {
+	            for (int readNum; (readNum = input.read(buf)) != -1;) {
+	                bos.write(buf, 0, readNum); 	               
+	            }
+	        } catch (IOException ex) {
+	        	ex.printStackTrace();
+	        }
+	        byte[] bytes = bos.toByteArray();	        
+	        FileOutputStream fos = new FileOutputStream(localFile);
+	        fos.write(bytes);
+	        fos.flush();
+	        fos.close();			
+			input.close();	
+		}				
+		out.flush();
+		out.close(); 		
+		return localFile;
 	}
 
 }
