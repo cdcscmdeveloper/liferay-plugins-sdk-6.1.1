@@ -4,10 +4,34 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<p:panel header="#{lbl['lbl.sc.loiloa.loi.req.for.approval']}"  
-	    id="approvalId"
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loi.contract.signer.dtl']}"
 		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.contract.signer']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" />
+				</td>
+				<td width="82%"><p:selectOneMenu id="contractSigner"
+						value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
+						style="width: 280px;margin-bottom: 5px;" required="true"
+						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{lOIDetailBackingBean.managedBean.contractSigners}"
+							var="contractUser" itemLabel="#{contractUser.userName}"
+							itemValue="#{contractUser.userId}" />
+					</p:selectOneMenu> <p:message id="contractSignerMsg" for="contractSigner"
+						display="icon" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loi.req.for.approval']}"
+		id="approvalId" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
@@ -15,15 +39,19 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-						<p:ajax event="change" update="approvalId"/>
+						<p:ajax event="change" update="approvalId" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td style="width: 154px;"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loi.approver']}"  rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"/></td>
-				<td><p:selectOneMenu id="approversId" value="#{lOIDetailBackingBean.managedBean.reqApprove}" rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+						value="#{lbl['lbl.sc.loiloa.loi.approver']}"
+						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}" /></td>
+				<td><p:selectOneMenu id="approversId"
+						value="#{lOIDetailBackingBean.managedBean.reqApprove}"
+						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOIDetailBackingBean.managedBean.approverNames}"
 							var="appName" itemLabel="#{appName.userName}"
@@ -32,39 +60,42 @@
 			</tr>
 		</table>
 	</p:panel>
-	
-	<p:panel label="REMARK" header="REMARK" toggleable="true" toggleSpeed="500">
-	<table style="width: 100%">
-		<tr>
-			<td class="TableFieldLeft" width="12%"></td>
-			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
-					<table>
-						<tr>
-							<td rowspan="2" style="vertical-align: top;" align="left">
-								<h:graphicImage value="#{lOIDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
-							</td>
-							<td width="5"></td>
-							<td>
-								<h:outputText value="#{remarkVar.createdUser.userName}"/>,
-								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
+
+	<p:panel label="REMARK" header="REMARK" toggleable="true"
+		toggleSpeed="500">
+		<table style="width: 100%">
+			<tr>
+				<td class="TableFieldLeft" width="12%"></td>
+				<td class="TableFieldRight"><p:dataGrid id="catatan"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage
+										value="#{lOIDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" />
+								</td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-								</h:outputText>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  maxlength="1000"/>
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;"/>
-							</td>
-						</tr>
-					</table>
-				</p:dataGrid>
-			</td>
-		</tr>
-	</table>
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea style="width:350px;" id="remarks"
+										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
+										maxlength="1000" /> <h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkIndex>0}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
 	</p:panel>
 
 	<p:panel header="History" toggleable="true">

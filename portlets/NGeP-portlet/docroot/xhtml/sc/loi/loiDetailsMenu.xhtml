@@ -12,13 +12,13 @@
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.mofno']}" /></td>
 				<td colspan="2"><p:inputText size="30"
-						value="#{lOIDetailBackingBean.managedBean.smMofAccount.mofNo}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.supp.name']}" /></td>
 				<td colspan="2"><p:inputText size="30"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierContact}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.supplierName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -26,7 +26,7 @@
 				<td colspan="2"><p:selectOneMenu
 						value="#{lOIDetailBackingBean.managedBean.branchName}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItem  itemLabel="HQ"  itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOIDetailBackingBean.managedBean.branchsList}"
 							var="brList" itemLabel="#{brList.branchName}"
@@ -43,7 +43,8 @@
 				<td><p:inputTextarea id="delAddrText" cols="32"
 						rows="5"
 						value="test"
-						style=" margin-bottom:5px;" disabled="true" /></td>
+						style=" margin-bottom:5px;" disabled="true" />
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -55,7 +56,7 @@
 			<tr>
 				<td><p:outputLabel value="Tel No" /></td>
 				<td><p:inputText size="30"
-						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierFaxNo}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierPhoneNo}"
 						disabled="true" /></td>
 						
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" /></td>
