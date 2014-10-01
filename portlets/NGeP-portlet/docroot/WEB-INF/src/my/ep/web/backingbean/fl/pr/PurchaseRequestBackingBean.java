@@ -317,7 +317,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
+					messageId = MessageConst.INFO_745004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -329,12 +329,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-							MessageUtils.getMessage(MessageConst.INFO_700002, 
-									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}	
+//				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+//							MessageUtils.getMessage(MessageConst.INFO_700002, 
+//									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
+//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+//				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
