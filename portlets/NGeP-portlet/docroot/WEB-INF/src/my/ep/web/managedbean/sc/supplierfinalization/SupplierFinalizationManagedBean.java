@@ -5,6 +5,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -45,6 +46,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//Header
 	private ScQt scQt;
+	private List<TplSpecZoneDtl> zoneDetails;
 	private List<TabBean> tabList;
 	public TabBean selectedTabBean;
 	
@@ -77,7 +79,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean reqSpecChanges;
 	private boolean reEvaluateReqForTech;
 	private boolean reEvaluateReqForFin;*/
-	private String recommendBy;
+	private PmParameter recommendBy;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
@@ -92,6 +94,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isRecommendSupplier;
 	private boolean isReEvaluate;
 	private boolean isRePublish;
+	private boolean isCancel;
 	private boolean isForward;
 	private boolean isForwardToBpk = false;
 	private boolean isSingleAward;
@@ -104,8 +107,12 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private ScQtEvaluationResult recommendedSupplier;
 	
+	
+	private List<ScQtEvaluationResult> shortlistedPackageList;
+	private List<ScQtEvaluationResult> shortlistedItemList;
 	private List<ScQtEvaluationResult> shortlistedSupplierList;
 	private List<ScQtEvaluationResult> recommendedSupplierList;
+	private List<ScQtEvaluationResult> unRecommendedSupplierList;
 	private List<ScQtRecommend> selectedRecommendList; 
 	private List<SmSupplier> awardSupplierList; 
 	
@@ -294,14 +301,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the recommendBy
 	 */
-	public String getRecommendBy() {
+	public PmParameter getRecommendBy() {
 		return recommendBy;
 	}
 
 	/**
 	 * @param recommendBy the recommendBy to set
 	 */
-	public void setRecommendBy(String recommendBy) {
+	public void setRecommendBy(PmParameter recommendBy) {
 		this.recommendBy = recommendBy;
 	}
 
@@ -868,6 +875,79 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
 		this.selectedRecommendList = selectedRecommendList;
+	}
+
+	/**
+	 * @return the zoneDetails
+	 */
+	public List<TplSpecZoneDtl> getZoneDetails() {
+		return zoneDetails;
+	}
+
+	/**
+	 * @param zoneDetails the zoneDetails to set
+	 */
+	public void setZoneDetails(List<TplSpecZoneDtl> zoneDetails) {
+		this.zoneDetails = zoneDetails;
+	}
+
+	/**
+	 * @return the unRecommendedSupplierList
+	 */
+	public List<ScQtEvaluationResult> getUnRecommendedSupplierList() {
+		return unRecommendedSupplierList;
+	}
+
+	/**
+	 * @param unRecommendedSupplierList the unRecommendedSupplierList to set
+	 */
+	public void setUnRecommendedSupplierList(
+			List<ScQtEvaluationResult> unRecommendedSupplierList) {
+		this.unRecommendedSupplierList = unRecommendedSupplierList;
+	}
+
+	/**
+	 * @return the shortlistedPackageList
+	 */
+	public List<ScQtEvaluationResult> getShortlistedPackageList() {
+		return shortlistedPackageList;
+	}
+
+	/**
+	 * @param shortlistedPackageList the shortlistedPackageList to set
+	 */
+	public void setShortlistedPackageList(
+			List<ScQtEvaluationResult> shortlistedPackageList) {
+		this.shortlistedPackageList = shortlistedPackageList;
+	}
+
+	/**
+	 * @return the shortlistedItemList
+	 */
+	public List<ScQtEvaluationResult> getShortlistedItemList() {
+		return shortlistedItemList;
+	}
+
+	/**
+	 * @param shortlistedItemList the shortlistedItemList to set
+	 */
+	public void setShortlistedItemList(
+			List<ScQtEvaluationResult> shortlistedItemList) {
+		this.shortlistedItemList = shortlistedItemList;
+	}
+
+	/**
+	 * @return the isCancel
+	 */
+	public boolean isCancel() {
+		return isCancel;
+	}
+
+	/**
+	 * @param isCancel the isCancel to set
+	 */
+	public void setCancel(boolean isCancel) {
+		this.isCancel = isCancel;
 	}
 
 }
