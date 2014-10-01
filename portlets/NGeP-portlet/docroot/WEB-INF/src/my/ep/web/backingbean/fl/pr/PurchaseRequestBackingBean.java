@@ -317,7 +317,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					messageId = MessageConst.INFO_700004;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_745004;
+					//messageId = MessageConst.INFO_745004;
+					messageId = MessageConst.INFO_700007;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 					messageId = MessageConst.INFO_700009;
 				} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -329,12 +330,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						MessageUtils.getMessage(messageId, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_REQUEST), flFulfilmentRequest.getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-//							MessageUtils.getMessage(MessageConst.INFO_700002, 
-//									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
-//									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-//				}	
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_700002, 
+									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_PURCHASE_ORDER), resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -1918,6 +1919,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}		
 		
 		boolean isVotSOrAmanahExist = false;
+		boolean isVotBOrPOrTExist = false;
 		String votFundType = null;
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
@@ -1930,8 +1932,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
 						isVotSOrAmanahExist = true;
 						break;
+					} else {
+						isVotBOrPOrTExist = true;
+						break;
 					}
 				}
+			}
+			if(isVotSOrAmanahExist || isVotBOrPOrTExist) {
+				break;
 			}
 		}		
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
@@ -1939,6 +1947,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value()) ||
 			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
 			if(isVotSOrAmanahExist) {
+				throw new EpException(MessageConst.ERROR_740005);
+			}
+		} else {
+			if(isVotBOrPOrTExist) {
 				throw new EpException(MessageConst.ERROR_740005);
 			}
 		}
