@@ -2769,13 +2769,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setVotFundCode("");
 		getManagedBean().setVotFundId(0L);
 		getManagedBean().getPmSubSetia().setSubSetiaCode("");
-		/*getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
+		getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
 		getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
-		if(null !=getManagedBean().getPmSubSetia().getFinancingType()){
-			if(getManagedBean().getPmSubSetia().getFinancingType().getPmParameterDescs().size() >0){
-				getManagedBean().getPmSubSetia().getFinancingType().getPmParameterDescs().get(0).setCodeName("");
-			}
-		}*/
+		getManagedBean().getPmSubSetia().setFinancingType(null);
 		getManagedBean().setPmPrgActivity(null);
 		
 		if(null != getManagedBean().getPmVoteFund()){
