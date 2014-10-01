@@ -62,7 +62,6 @@ public class gpkiBackingBean {
 		debugLogger("reflectAction=====================================: "+obj);
 		
 		pmDigiSign.setCreatedBy(userId);
-        pmDigiSign.setCertificate("111111");
         pmDigiSign.setCreatedDate(date);
         pmDigiSign.setOrginalData(textBeforeSign);
         pmDigiSign.setSignedData(signedText);
