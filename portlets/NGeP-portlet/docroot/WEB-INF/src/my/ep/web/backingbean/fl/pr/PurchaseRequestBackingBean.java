@@ -1761,6 +1761,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			PmProject pmProject = projectCodeMap.get(getManagedBean().getProjectId());
 			PmSetia pmSetia = setiaCodeMap.get(getManagedBean().getSetiaId());
 			PmSubSetia pmSubSetia = subSetiaCodeMap.get(getManagedBean().getSubSetiaId());
+			if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
+				pmPrgActivity = null;
+				pmProject = null;
+				pmSetia = null;
+				pmSubSetia = null;
+			}
 			
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 			paramReqDTO.setParameterId(getManagedBean().getAssetIndId());
