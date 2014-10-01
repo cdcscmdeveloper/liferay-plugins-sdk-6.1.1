@@ -23,6 +23,7 @@
 						converter="approverPickListConverter">
 						<f:facet name="sourceCaption">#{lbl['lbl.sc.available.approver']}</f:facet>
 						<f:facet name="targetCaption">#{lbl['lbl.sc.selected.approvers']}</f:facet>
+						<p:ajax event="transfer" partialSubmit="true" process="@this" update="@this" />
 					</p:pickList></td>
 				<td
 					style="vertical-align: top; padding-right: 1px; text-align: right;">

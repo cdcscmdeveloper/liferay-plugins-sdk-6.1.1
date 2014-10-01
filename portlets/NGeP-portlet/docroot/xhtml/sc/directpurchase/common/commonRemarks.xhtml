@@ -28,7 +28,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea style="width:350px;" id="remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  maxlength="1000"/>
+								<p:inputTextarea style="width:350px;" id="remarks" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"  maxlength="1000">
+									<p:ajax partialSubmit="true" process="@this" update="@this" />
+								</p:inputTextarea>
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;"/>
 							</td>
 						</tr>
