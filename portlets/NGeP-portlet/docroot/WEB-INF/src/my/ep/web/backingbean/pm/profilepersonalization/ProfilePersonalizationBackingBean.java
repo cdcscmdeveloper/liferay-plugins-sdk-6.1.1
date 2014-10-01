@@ -511,7 +511,7 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	/**
 	 * Method to update the user details
 	 */
-	public void saveUserProfile() {
+	public void saveUserProfile() throws Exception{
 		debugLogger("saveUserProfile");
 		PmUser user = this.getManagedBean().getSelectedUser();
 		
