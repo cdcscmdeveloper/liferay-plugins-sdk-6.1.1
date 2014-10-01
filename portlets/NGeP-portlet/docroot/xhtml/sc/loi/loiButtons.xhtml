@@ -11,8 +11,8 @@
 			action="#{lOIDetailBackingBean.backToPervious}" />
 
 		<p:commandButton value="Preview Letter" icon="ui-icon-search"
-			action="loiLetterOfAcceptance.xhtml" process="@this"
-			action="#{lOIDetailBackingBean.getBondLetterStreamContent}"
+			process="@this"
+			action="#{lOIDetailBackingBean.getLoiLetterStreamContent}"
 			oncomplete="loiLetterDlg.show();" />
 			
 					

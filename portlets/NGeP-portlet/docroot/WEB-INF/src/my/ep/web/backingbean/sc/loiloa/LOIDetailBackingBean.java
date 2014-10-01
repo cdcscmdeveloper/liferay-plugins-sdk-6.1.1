@@ -75,6 +75,7 @@ import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.loiloa.LOIDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
@@ -837,6 +838,10 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			handleBranchDetailsChanged();
 		}
 		
+		// Issue & Acknowledge Date
+		scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
+		scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), 14));
+		
 		// approvers
 		if(resDTO.getApproverList() != null && resDTO.getApproverList().size() >0){
 			getManagedBean().setApproverNames(resDTO.getApproverList());
@@ -853,7 +858,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 		// status
 		getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
-
+		
 		populateUserMinistryList();
 		initializeRemarks(new ScLoi());
 		//getApproverNames();
