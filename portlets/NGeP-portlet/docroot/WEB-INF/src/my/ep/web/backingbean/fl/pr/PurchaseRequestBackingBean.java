@@ -1918,11 +1918,22 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			throw new EpException(MessageConst.ERROR_100022, new String[]{"GOSODO"});
 		}		
 		
+		List<String> selectedItemAddressList = new ArrayList<String>();
+		updateSelectedTreeNodes();
+		FlFulfilmentItemAddr flTemp = null;
+		for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+			flTemp = (FlFulfilmentItemAddr)selectedNode.getData();
+			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId()+ " "+flTemp.getUnitPrice().doubleValue());
+		}
+		
 		boolean isVotSOrAmanahExist = false;
 		boolean isVotBOrPOrTExist = false;
 		String votFundType = null;
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId()+ " "+itemAddress.getUnitPrice().doubleValue())) {
+					continue;
+				}
 				if(itemAddress.getPmVotFund()!=null) {
 					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
 						votFundType=itemAddress.getPmVotFund().getVotFundType();
