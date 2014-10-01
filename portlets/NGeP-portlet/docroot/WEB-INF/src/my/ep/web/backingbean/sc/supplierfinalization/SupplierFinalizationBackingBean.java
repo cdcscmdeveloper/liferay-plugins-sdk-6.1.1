@@ -48,6 +48,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
@@ -132,10 +133,10 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		debugLogger("preRenderView");
 
 		try {
-			//SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 
-			//Long qtId = Long.valueOf(dataType.getQtId());
-			Long qtId = 2923L;
+			Long qtId = Long.valueOf(dataType.getQtId());
+			//Long qtId = 2923L;
 
 			renewSesionObject();
 			retrieveQTDetails(qtId);
