@@ -6,37 +6,40 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="SUMMARY" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.dan.summary']}" toggleable="true">
 		<table>
 			<tr>
-				<td style="width: 152px"><p:outputLabel
-						value="#{lbl['lbl.fl.total.oredered.amt']}"	 /></td>
+				<td style="width: 216px"><p:outputLabel
+						value="#{lbl['lbl.fl.dan.total.ordered.amount']}"	 /></td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.orderedAmtTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.total.order.amt']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.total.inv.amt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.total.invoice.amount']}" /></td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.invAmtTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.total.invoice.amt']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.total.dan.amt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.dan.total.dan.amount']}" /></td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.danAmtTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.total.dan.amt']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="CHARGE LINE ITEMS">
-
+	<p:panel header="#{lbl['lbl.fl.dan.charge.line.items']}">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
 		<p:dataTable id="danItemDt" var="danItem" width="100%"
 			value="#{danBackingBean.managedBean.adjustment.flAdjustmentItem}"
 			rowIndexVar="index"
@@ -47,34 +50,38 @@
 			<p:ajax event="rowUnselect" listener="#{danBackingBean.onNodeUnSelect()}"
 				update=":form:chargeLineSection" />				
 			<ac:paginator for="itemDataTable" />
-			<p:column headerText="Item Code">
+			<p:column>
+			<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+				</f:facet>
 				<h:outputText value="#{danItem.flItem.cmItem.extensionCode}" />
 			</p:column>
-			<p:column headerText="Item Name" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" />
 			</p:column>
-			<p:column headerText="UOM">
+			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="Unit Price (RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
 				<h:outputText value="#{danItem.flItem.unitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 				<h:outputText value="#{danItem.flInvoiceItem.orderedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Invoice Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.amount.invoice']}" style="text-align:right">
 				<h:outputText value="#{danItem.flInvoiceItem.invAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="DAN Amt.(RM)" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.dan.dan.amount']}" style="text-align:right">
 				<h:outputText
 					value="#{danItem.adjustedAmt}">
 					<f:convertNumber
@@ -88,34 +95,36 @@
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.vot']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.votFundCode}" size="9"
-							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
+							disabled="true" />
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.vot.code']}"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
 					<td><p:inputText size="9" disabled="true"
 							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.assetInd, danBackingBean.managedBean.assetIndCode)}" /></td>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-					<td><p:inputText size="9" disabled="true" value="#{danBackingBean.managedBean.glAccountCode}" /></td>
+							value="#{lbl['lbl.fl.gosodo']}" /></td>
+					<td><p:inputText size="9" disabled="true" value="#{danBackingBean.managedBean.glAccountCode}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.program.activiti']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.prgActivityCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.project']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.projectCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.setia.subsetia']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.setiaCode}" size="9"
 							disabled="true" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.managedBean.subSetiaCode}" size="9"
 							disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.cp']}" /></td>
 					<td><p:inputText
 							value="#{danBackingBean.getParameterDesc(ParameterTypeConst.financingType,danBackingBean.managedBean.financingTypeCode)}"
 							size="9" disabled="true" /></td>
