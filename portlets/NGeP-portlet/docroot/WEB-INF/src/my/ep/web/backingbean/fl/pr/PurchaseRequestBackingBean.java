@@ -1809,6 +1809,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						}
 					}
 				}
+				
+				for(FlFulfilmentItem item : getManagedBean().getFulfilmentRequest().getFlFulfilmentItems()){
+					if(item.getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().longValue()==childItemAddress.getScRequestItem().getRequestNoteItemId().longValue()
+							&& item.getUnitPrice().doubleValue()==childItemAddress.getUnitPrice().doubleValue()) {
+						item.setPmVotFund(pmVotFund);
+						item.setAssetInd(assetInd);
+						item.setPmGlAccount(pmGlAccount);
+						item.setPmPrgActivity(pmPrgActivity);
+						item.setPmSubSetia(pmSubSetia);
+						break;
+					}
+				}
 			}
 			populateChargeLineData(true);
 			onNodeSelect();
