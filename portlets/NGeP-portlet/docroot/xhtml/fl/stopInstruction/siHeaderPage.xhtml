@@ -7,20 +7,20 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.fl.po.co.no']} " /></td>
+				<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{stopInstrBB.managedBean.stopInstr.flFulfilmentOrder.docNo}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.pm.stop.instr.no']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']} " /></td>
 				<td class="header-info-text">
 					#{stopInstrBB.managedBean.stopInstr.stopInstrNo == null ? '-- System Generated --':stopInstrBB.managedBean.stopInstr.stopInstrNo}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
+				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
 				<td class="header-info-text">
 					#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}
 				</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']} " /></td>
 				<td class="header-info-text">
 					#{stopInstrBB.getStatusDescById(stopInstrBB.managedBean.stopInstr.pmStatus.statusId)}
 				</td>

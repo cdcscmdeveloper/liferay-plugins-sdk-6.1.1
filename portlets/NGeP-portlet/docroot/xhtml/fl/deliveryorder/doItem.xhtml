@@ -71,21 +71,20 @@
 						<h:outputText value="#{doItems.scRequestItem.itemName}"
 							rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
 					</p:column>
-					<p:column>
-						<f:facet name="header" style="width:8%;">
+					<p:column style="white-space:normal;">
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.uom']}"/>
     				</f:facet>
 						<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.unit.price']}"
-						style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;">
 						<h:outputText disabled="true" value="#{doItems.unitPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column> 
-						<f:facet name="header" style="width:8%;">
+					<p:column style="white-space:normal;text-align:right;"> 
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
     				</f:facet>
@@ -94,8 +93,8 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column >
-						<f:facet name="header" style="width:8%;">
+					<p:column  style="white-space:normal;text-align:right;">
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.do.remaining.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.remain.qty']}"/>
     				</f:facet>
@@ -105,8 +104,8 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column >
-						<f:facet name="header" style="width:8%;">
+					<p:column style="white-space:normal;text-align:right;">
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
     				</f:facet>
@@ -125,8 +124,7 @@
 							</h:outputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.delivery.amount']}"
-						style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="white-space:normal;text-align:right;">
 						<h:panelGroup id="delAmountTxt">
 							<h:outputText value="#{doItems.deliveredAmt}" disabled="true"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
@@ -142,15 +140,14 @@
 							</p:inputText>
 						</h:panelGroup>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"
-						style="text-align:right">
+					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:right;">
 						<h:outputText value="#{doItems.orderedAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column>
-						<f:facet name="header" style="width:8%;">
+					<p:column style="white-space:normal;text-align:right;">
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
@@ -160,14 +157,14 @@
 						</h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"
-						style="text-align:right">
+						style="white-space:normal;text-align:right;">
 						<h:outputText value="#{doItems.chargeReceivedAmt}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
 					</p:column>
-					<p:column >
-						<f:facet name="header" style="width:8%;">
+					<p:column style="white-space:normal;text-align:right;">
+						<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.do.rejected.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.rejected.qty']}"/>
     				</f:facet>

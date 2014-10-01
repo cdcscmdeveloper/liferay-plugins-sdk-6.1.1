@@ -20,20 +20,21 @@
 		<table style="width: 100%;">
 			<tr>
 				<td>
-					<p:commandButton value="Back" immediate="true" icon="ui-icon-back" 
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" 
 						action="/xhtml/fl/docsearch/flDocSearch.xhtml"
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						rendered="#{stopInstrBB.managedBean.taskId==null}" />
 				</td>
 				<td colspan="4" style="text-align: right">
 					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" ajax='false' styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}" process="@this"
 							action="#{stopInstrBB.saveStopInstruction(bpmAction)}"  />
 					</ui:repeat> 
 					<c:if test='#{stopInstrBB.managedBean.stopInstr.brandNew}'>
-						<p:commandButton value="STOP FULFILMENT" icon="ui-icon-terminate"
+						<p:commandButton value="#{lbl['lbl.btn.stop.fulfilment']}" icon="ui-icon-terminate"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{stopInstrBB.saveStopInstruction('STOP FULFILMENT')}">
 						</p:commandButton>
@@ -47,10 +48,10 @@
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu"
 						activeIndex="#{stopInstrBB.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="Charge Line Summary" update="@form" actionListener="#{stopInstrBB.onTabChange(1)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form" actionListener="#{stopInstrBB.onTabChange(1)}">
 							<f:setPropertyActionListener target="#{stopInstrBB.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>
 					</p:tabMenu>

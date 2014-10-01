@@ -86,6 +86,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Date searchContractFromDuration;
 	private Date searchContractToDuration;
 	private String searchOrderNo;
+	private String searchPhysLoaNo;
+	private String searchPhysContractNo;
 	
 	private List<PmStatusDesc> docStatusList;
 	private List<PmParameterDesc> procurementTypeList;
@@ -156,12 +158,18 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
 				}
+				/*if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+				}*/
 				if(getSearchCircularNo()!=null && getSearchCircularNo()!="")  {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getSearchCircularNo()));
 				}
 				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
-				}		
+				}
+				/*if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
+				}	*/
 				if(getSearchProcurementTypeId()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getSearchProcurementTypeId()));
 				}			
@@ -996,6 +1004,30 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public IPagingDataModel<VFlDocument> getFlDocumentDataModel() {
 		return flDocumentDataModel;
+	}
+	/**
+	 * @return the searchPhysLoaNo
+	 */
+	public String getSearchPhysLoaNo() {
+		return searchPhysLoaNo;
+	}
+	/**
+	 * @return the searchPhysContractNo
+	 */
+	public String getSearchPhysContractNo() {
+		return searchPhysContractNo;
+	}
+	/**
+	 * @param searchPhysLoaNo the searchPhysLoaNo to set
+	 */
+	public void setSearchPhysLoaNo(String searchPhysLoaNo) {
+		this.searchPhysLoaNo = searchPhysLoaNo;
+	}
+	/**
+	 * @param searchPhysContractNo the searchPhysContractNo to set
+	 */
+	public void setSearchPhysContractNo(String searchPhysContractNo) {
+		this.searchPhysContractNo = searchPhysContractNo;
 	}
 
 }
