@@ -12,7 +12,7 @@
 		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
     </p:panel>
 	
-	<p:panel header="SEARCH" id="professionalCertSearch" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.search.search']}" id="professionalCertSearch" toggleable="true">
 		
 	<h:panelGrid style="width:100%;">
 	</h:panelGrid>
@@ -29,7 +29,7 @@
 	<br/>
 	</p:panel>
 	
-	<p:panel header="RESULT" id="professionalCertResult" toggleable="true">
+	<p:panel header="#{lbl['lbl.pm.search.result']}" id="professionalCertResult" toggleable="true">
 	<p:dataTable id="searchProfCertResult"  var="certBody" editable="true" value="#{profcertifiedbodyBackingBean.profCertBodyModel}" lazy="true">
 	<ac:paginator for="searchProfCertResult" />
        <p:column headerText="#{lbl['lbl.pm.pc.code']}" style="width:10%"> 
