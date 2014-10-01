@@ -7,6 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="centralItemId" header="#{lbl['lbl.ct.panel.product']}"   toggleable="true"  toggleSpeed="500">
+       <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
        <h:panelGrid  style="width:100%;">
            <p:dataTable id="centralitemTable" var="data" widgetVar="centralProductObj"
               value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}"  
@@ -22,27 +23,39 @@
 		           <p:outputLabel value="#{data.uom.uomName}" style="float:left;"/> 
 		       </p:column>        
 		
-		        <p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="text-align: right;width:15%;">
-		           <h:outputText value="#{data.minimumOrderQty}">
+		        <p:column style="text-align: right;width:15%;">
+		           <f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
+	               	</f:facet>
+	               	<h:outputText value="#{data.minimumOrderQty}">
 		               <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		            </h:outputText>
 		        </p:column>   
 		
-		        <p:column headerText="#{lbl['lbl.ct.max.order.qty']}" style="text-align: right;width:15%;">
+		        <p:column style="text-align: right;width:15%;">
+		            <f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
+	               	</f:facet>
 		            <h:outputText value="#{data.maxProcureAmt}">
 		               <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.uom.uomCode)}" />					
 		            </h:outputText>
 		        </p:column>     
 		   
-		        <p:column headerText="#{lbl['lbl.ct.type.of.goods']}" style="width:10%;">
+		        <p:column style="width:10%;">
+		            <f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.type.of.goods']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
+	               	</f:facet>
 		            <h:outputLabel rendered="#{data.itemOrigin.parameterCode eq 'Local'}" 
 		               value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" style="float:left;"/>
 		            <p:commandLink value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" 
 		                styleClass="blue_font" rendered="#{data.itemOrigin.parameterCode eq 'Imported'}"  onclick="importedDlg.show();return false;" />	
 		        </p:column> 
 		   
-		       <p:column headerText="Status" style="width:10%;">
-		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  'Active' : 'Inactive' }"/>
+		       <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		            <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
 		        </p:column> 
 		                         
     	 </p:dataTable> 
@@ -72,11 +85,23 @@
 			       </c:if>  
 			   
 			       <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
-			             <p:column headerText="#{lbl['lbl.ct.from.qty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+			             <p:column style="text-align: right;">
+			             	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.fromQty}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			             </p:column>       
-			             <p:column headerText="#{lbl['lbl.ct.to.qty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+			             <p:column style="text-align: right;">
+			             	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				           	<p:outputLabel value="#{data.toQty}">
+     		               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+		               		</p:outputLabel>
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			                <p:outputLabel value="#{data.unitPrice}"/>
@@ -118,11 +143,23 @@
 			             <p:column headerText="#{lbl['lbl.ct.zone']}">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
-			            <p:column headerText="#{lbl['lbl.ct.from.qty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+			            <p:column style="text-align: right;">
+			            	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.fromQty}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			             </p:column>       
-			             <p:column headerText="#{lbl['lbl.ct.to.qty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+			             <p:column style="text-align: right;">
+			             	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				           	<p:outputLabel value="#{data.toQty}">
+     		               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+		               		</p:outputLabel>
 			            </p:column>    
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			                <p:outputLabel value="#{data.unitPrice}"/>
@@ -141,14 +178,32 @@
                  
                      <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			            eq ParameterConst.priceTypeTariff}">
-			             <p:column headerText="#{lbl['lbl.ct.from.qty']}" style="text-align: right;">
-				            <p:outputLabel value="#{data.fromQty}"/>
+			             <p:column style="text-align: right;">
+			             	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.fromQty}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			            </p:column>       
-			            <p:column headerText="#{lbl['lbl.ct.to.qty']}" style="text-align: right;">
-				            <p:outputLabel value="#{data.toQty}"/>
+			            <p:column  style="text-align: right;">
+			            	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				           	<p:outputLabel value="#{data.toQty}">
+     		               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+		               		</p:outputLabel>
 			            </p:column>  
-			            <p:column headerText="#{lbl['lbl.ct.sub.seq']}" style="text-align: right;">
-				           <p:outputLabel/>
+			            <p:column style="text-align: right;">
+			            	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.subSequence}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			            </p:column> 
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			                <p:outputLabel value="#{data.unitPrice}"/>
@@ -170,14 +225,32 @@
 			         <p:column headerText="#{lbl['lbl.ct.zone']}">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
-			            <p:column headerText="#{lbl['lbl.ct.from.qty']}" style="text-align: right;">
-				              <p:outputLabel value="#{data.fromQty}"/>
+			            <p:column style="text-align: right;">
+				              <f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.fromQty}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			             </p:column>       
-			             <p:column headerText="#{lbl['lbl.ct.to.qty']}" style="text-align: right;">
-				           <p:outputLabel value="#{data.toQty}"/>
+			             <p:column style="text-align: right;">
+				           	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				           	<p:outputLabel value="#{data.toQty}">
+     		               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />					
+		               		</p:outputLabel>
 			            </p:column>
-			             <p:column headerText="#{lbl['lbl.ct.sub.seq']}" style="text-align: right;">
-				           <p:outputLabel/>
+			             <p:column style="text-align: right;">
+			             	<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+			               	</f:facet>
+				            <p:outputLabel value="#{data.subSequence}">
+     		              		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+		              		</p:outputLabel>
 			            </p:column>     
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
 			                <p:outputLabel value="#{data.unitPrice}"/>
@@ -293,6 +366,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

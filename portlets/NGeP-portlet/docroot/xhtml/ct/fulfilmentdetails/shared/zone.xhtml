@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="#{lbl['lbl.ct.panel.zone']}" toggleable="true">
+		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.zone.dtls']}"/> -->
 		<table style="width: 100%">
 		  <tr>
 			  <td style="width: 105px"><p:outputLabel value="#{lbl['lbl.ct.location.level']}" /></td>
@@ -35,7 +36,10 @@
         </p:column>
  
         <p:column style="width:30%;">
-            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />#{lbl['lbl.ct.delivery.term']}</f:facet>
+            <f:facet name="header"><h:outputText value="*" styleClass="mandatory" />
+            	#{lbl['lbl.ct.delivery.term']}
+            	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.term']}"/>
+            </f:facet>
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true"
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="Delivery Term" />
@@ -75,6 +79,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>
