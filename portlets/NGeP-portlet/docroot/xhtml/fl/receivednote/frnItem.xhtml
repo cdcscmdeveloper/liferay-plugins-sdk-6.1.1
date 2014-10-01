@@ -28,27 +28,27 @@
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;">
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column >
-				<f:facet name="header" style="width:8%;">
+			<p:column style="white-space:normal;text-align:right;">
+				<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
     				</f:facet>
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
+			</p:column >
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"  style="white-space:normal;text-align:right;">
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedAmt}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>			
-			<p:column >
-				<f:facet name="header" style="width:8%;">
+			<p:column  style="white-space:normal;text-align:right;">
+				<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.do.delivery.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.del.qty']}"/>
     				</f:facet>
@@ -56,15 +56,15 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.delivery.amount']}" style="white-space:normal;text-align:right;">
 				<h:panelGroup id="delAmountTxt">
 					<h:outputText  styleClass="colFloatRight" value="#{item.flDelOrderItem.deliveredAmt}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</h:panelGroup>
 			</p:column>
-			<p:column >
-				<f:facet name="header" style="width:8%;">
+			<p:column style="white-space:normal;text-align:right;">
+				<f:facet name="header" >
     				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
@@ -79,7 +79,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="text-align:right">
+			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
 				<p:inputText styleClass="colFloatRight" id="receivedAmtVal"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
 					<p:ajax update="receivedAmtVal" listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}"></p:ajax>

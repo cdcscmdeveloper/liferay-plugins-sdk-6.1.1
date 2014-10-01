@@ -17,32 +17,32 @@
 		</tr>
 	</table>
 		
-	<p:panel header="DELIVERY ITEMS" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.do.delivery.items']}" toggleable="true">
 		<p:dataTable id="doItems" var="doItems" rowIndexVar="index"
 			rowKey="#{flItem}"
 			value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDeliveryAddress.flFulfilmentItemAddr}">
 			<ac:paginator for="doItems" />
-			<p:column headerText="Item Name" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 				<h:outputText value="#{doItems.scRequestItem.itemName}" />
 			</p:column>
-			<p:column headerText="UOM">
+			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="Unit Price &lt;br /&gt; (RM)"
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}"
 				style="text-align:right">
 				<h:outputText disabled="true" value="#{doItems.unitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Qty."
+			<p:column headerText="#{lbl['lbl.fl.ordered.qty']}"
 				style="text-align:right">
 				<h:outputText value="#{doItems.orderedQty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, doItems.scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Delivery &lt;br /&gt; Qty."
+			<p:column headerText="#{lbl['lbl.fl.do.delivery.qty']}"
 				style="text-align:right">
 				<h:panelGroup id="delQtyTxt">
 					<h:outputText value="#{doItems.deliveredQty}" size="5"
@@ -52,7 +52,7 @@
 					</h:outputText>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="Delivery &lt;br /&gt; Amt.(RM)"
+			<p:column headerText="#{lbl['lbl.fl.delivery.amount']}"
 				style="text-align:right">
 				<h:panelGroup id="delAmountTxt">
 					<h:outputText value="#{doItems.deliveredAmt}" disabled="true">
@@ -61,7 +61,7 @@
 					</h:outputText>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="Ordered &lt;br /&gt; Amt.(RM)"
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}"
 				style="text-align:right">
 				<h:outputText value="#{doItems.orderedAmt}">
 					<f:convertNumber
