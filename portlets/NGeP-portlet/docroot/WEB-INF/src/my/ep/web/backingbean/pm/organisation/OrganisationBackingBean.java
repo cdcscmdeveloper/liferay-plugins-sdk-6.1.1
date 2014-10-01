@@ -124,15 +124,16 @@ public class OrganisationBackingBean extends
 		getManagedBean().getOfficeAddress().setPmState(new PmState());
 		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-		getManagedBean().getOfficeAddress().setPmDivision(new PmDivision());
-		getManagedBean().getOfficeAddress().getPmDivision().setDivisionId(1L);
+		// getManagedBean().getOfficeAddress().setPmDivision(new PmDivision());
+		// getManagedBean().getOfficeAddress().getPmDivision().setDivisionId(1L);
 		getManagedBean().setDeliveryAddress(new PmAddress());
 		getManagedBean().getDeliveryAddress().setPmCountry(new PmCountry());
 		getManagedBean().setDeliveryContactPerson(new PmContact());
 		getManagedBean().getDeliveryAddress().setPmState(new PmState());
 		getManagedBean().getDeliveryAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getDeliveryAddress().setPmCity(new PmCity());
-		getManagedBean().getDeliveryAddress().setPmDivision(new PmDivision());
+		// getManagedBean().getDeliveryAddress().setPmDivision(new
+		// PmDivision());
 		getManagedBean().setOfficeContactPerson(new PmContact());
 		getManagedBean().getOrgProfile().setPmZone(new PmZone());
 		getManagedBean().setOrgType(null);
@@ -248,10 +249,10 @@ public class OrganisationBackingBean extends
 
 					retrieveCountryList();
 
-					if (pmAddressType.getPmAddress().getPmDivision() == null) {
+					/*if (pmAddressType.getPmAddress().getPmDivision() == null) {
 						pmAddressType.getPmAddress().setPmDivision(
 								new PmDivision());
-					}
+					}*/
 
 					StateReqDTO stateReqDTO = new StateReqDTO();
 					stateReqDTO.setCountryId(pmAddressType.getPmAddress()
@@ -269,7 +270,7 @@ public class OrganisationBackingBean extends
 							.getInstance().getServiceObject(
 									ModuleCodeConst.PROFILE_MANAGEMENT,
 									IDistrictSO.class);
-					if (pmAddressType.getPmAddress().getPmDivision()
+					/*if (pmAddressType.getPmAddress().getPmDivision()
 							.getDivisionId() != null) {
 						DivisionReqDTO divReqDTO = new DivisionReqDTO();
 						divReqDTO.setStateId(pmAddressType.getPmAddress()
@@ -296,16 +297,14 @@ public class OrganisationBackingBean extends
 								.retriveDistrictListByStateID(districtReqDTO);
 						getManagedBean().setDistrictList(
 								districtResDTO.getDistrictList());
-					}
+					}*/
 
-					/*
-					 * districtReqDTO.setStateId(pmAddressType.getPmAddress()
-					 * .getPmState().getStateId()); DistrictResDTO
-					 * districtResDTO = districtSO
-					 * .retriveDistrictListByStateID(districtReqDTO);
-					 * getManagedBean().setDistrictList(
-					 * districtResDTO.getDistrictList());
-					 */
+					districtReqDTO.setStateId(pmAddressType.getPmAddress()
+							.getPmState().getStateId());
+					DistrictResDTO districtResDTO = districtSO
+							.retriveDistrictListByStateID(districtReqDTO);
+					getManagedBean().setDistrictList(
+							districtResDTO.getDistrictList());
 
 					CityReqDTO cityReqDTO = new CityReqDTO();
 					cityReqDTO.setDistrictId(pmAddressType.getPmAddress()
@@ -400,6 +399,7 @@ public class OrganisationBackingBean extends
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
 
 		PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
+		if (orgProfile.isBrandNew()) {
 
 		orgProfile.setOrgTypeCode(parameterResDTO.getPmParameter());
 		PmOrgValidity orgValidity = this.getManagedBean().getOrgValidity();
@@ -436,21 +436,23 @@ public class OrganisationBackingBean extends
 
 		}
 
-		/*
-		 * PmAddressType addressType = getManagedBean().getPmAddressType();
-		 * addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
-		 * .value()); List<PmAddressType> pmAddressTypes = getManagedBean()
-		 * .getOfficeAddressTypeList(); pmAddressTypes.add(addressType);
-		 * 
-		 * PmAddress address = getManagedBean().getOfficeAddress(); PmContact
-		 * contact = getManagedBean().getOfficeContactPerson();
-		 * contact.setPmAddressType(addressType); List<PmContact> contactLst =
-		 * getManagedBean().getContactList(); contactLst.add(contact);
-		 * addressType.setPmAddress(address);
-		 * addressType.setPmContacts(contactLst);
-		 * addressType.setPmOrgProfile(orgProfile);
-		 * orgProfile.setPmAddressTypes(pmAddressTypes);
-		 */
+		PmAddressType addressType = getManagedBean().getPmAddressType();
+		addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
+				.value());
+		List<PmAddressType> pmAddressTypes = getManagedBean()
+				.getOfficeAddressTypeList();
+		pmAddressTypes.add(addressType);
+
+		PmAddress address = getManagedBean().getOfficeAddress();
+		PmContact contact = getManagedBean().getOfficeContactPerson();
+		contact.setPmAddressType(addressType);
+		List<PmContact> contactLst = getManagedBean().getContactList();
+		contactLst.add(contact);
+		addressType.setPmAddress(address);
+		addressType.setPmContacts(contactLst);
+		addressType.setPmOrgProfile(orgProfile);
+		orgProfile.setPmAddressTypes(pmAddressTypes);
+
 		/*
 		 * PmAddressType addressType = getManagedBean().getPmAddressType();
 		 * addressType.setAddressType(AddressType.RECEIVING_OFFICER_ADDRESS
@@ -475,8 +477,9 @@ public class OrganisationBackingBean extends
 		 * addressType.setPmOrgProfile(orgProfile);
 		 * orgProfile.setPmAddressTypes(pmAddressTypes);
 		 */
-
 		orgProfile.setPmOrgValidity(orgValidity);
+		}
+		
 		reqDTO.setPmOrgProfile(orgProfile);
 
 		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
@@ -522,7 +525,7 @@ public class OrganisationBackingBean extends
 		getManagedBean().getOfficeAddress().setPmState(new PmState());
 		getManagedBean().getOfficeAddress().setPmDistrict(new PmDistrict());
 		getManagedBean().getOfficeAddress().setPmCity(new PmCity());
-		getManagedBean().getOfficeAddress().setPmDivision(new PmDivision());
+		// getManagedBean().getOfficeAddress().setPmDivision(new PmDivision());
 
 	}
 
