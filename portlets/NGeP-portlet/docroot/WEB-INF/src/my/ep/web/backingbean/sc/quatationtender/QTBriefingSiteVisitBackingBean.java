@@ -186,7 +186,6 @@ public class QTBriefingSiteVisitBackingBean extends
 		ScQtBsvDtl bsvDetail = this.getManagedBean().getQtBriefing();
 		// Checking for duplication.. if it is add flow..
 		if (!bsvDetail.isSelected()) {
-
 			if (null != briefingBean.getBriefingList()
 					&& briefingBean.getBriefingList().contains(bsvDetail)) {
 				throw new EpException(MessageConst.ERROR_760099);
@@ -195,7 +194,6 @@ public class QTBriefingSiteVisitBackingBean extends
 				throw new EpException(MessageConst.ERROR_760099);
 			}
 			bsvDetail.setScQtBsv(briefingBean.getScQtBsv());
-
 		}
 		if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> briefingDetails = briefingBean.getBriefingList();
@@ -223,10 +221,8 @@ public class QTBriefingSiteVisitBackingBean extends
 				siteVisitDetails.add(this.getManagedBean().getBsvIndex(),
 						bsvDetail);
 			}
-
 			briefingBean.setSitevisitList(siteVisitDetails);
 		}
-
 		if (this.getManagedBean().getQt().isZonal()) {
 			List<BriefingZoneBean> zoneBeans = this.getManagedBean()
 					.getBriefingZoneBean();
@@ -245,7 +241,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			this.getManagedBean().setBsvDtlBean(briefingBean);
 		}
 		this.getManagedBean().setQtBriefing(null);
-		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
+		//facesmgs error hide..
+		RequestContext.getCurrentInstance().execute("addbsvdtls.hide()");
+		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
 	public void deleteBsvDetails(String bsvType) {
@@ -556,6 +554,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void cancelBriefingList() {
 		this.getManagedBean().setQtBriefing(null);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide();");
+		getManagedBean().setRequired(Boolean.FALSE);
 	}
 
 	public void briefingClickEvent(AjaxBehaviorEvent event) {
