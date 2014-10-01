@@ -138,8 +138,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private CtAgreementParty[] selectedSupplierSigner;
 
 	public AgreementBackingBean() {
-		if(this.getManagedBean().getAction() == null) {
-			  this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT });
+		if(getManagedBean().getAction() == null) {
+			  getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT });
 		 }
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
@@ -180,8 +180,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
-			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setSelectedTabIndex(0);
 
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
@@ -305,10 +305,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
 		}
 
-		getManagedBean().setFileDirectory(
-				DocumentRepositoryUtils.getUploadDirectoryPath(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, docType,
-						getManagedBean().getCtContract().getContractNo()));
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+		  ModuleCodeConst.CONTRACT_MANAGEMENT, docType,getManagedBean().getCtContract().getContractNo()));
 		initializeRemarks();
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(),
