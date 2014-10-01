@@ -4,24 +4,45 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 		<p:panel  header="#{lbl['lbl.ct.panel.fulfilment.setting']}"  toggleable="true"  toggleSpeed="500">
          <h:panelGrid columns="3" style="width:100%;" columnClasses="columnWidth240">  
              <p:outputLabel value="#{lbl['lbl.ct.contract.notify']}"  />
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.ctNotifyDays}"  style="width:50px;" label="#{lbl['lbl.ct.set.ct.notify']}" />
-             <p:outputLabel value="#{lbl['lbl.ct.contract.notify.desc']}" style="float:left;" />
+             <h:panelGrid columns="3">
+             	<p:outputLabel value="#{lbl['lbl.ct.contract.notify.desc']}" style="float:left;" />
+             	<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.notification']}" />
+			 </h:panelGrid>
              <p:outputLabel value="#{lbl['lbl.ct.agreement.notify']}"  />  
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.agNotifyDaysB4Ag}" style="width:50px;" label="#{lbl['lbl.ct.set.ag.notify']}"   />  
-             <p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;"/>
-             <p:outputLabel value="#{lbl['lbl.ct.pb.notify']}" />  
+             <h:panelGrid columns="3">
+	       		<p:outputLabel value="#{lbl['lbl.ct.agreement.notify.desc']}" style="float:left;"/>
+	            <p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.notification']}" />
+			 </h:panelGrid>
+			 <p:outputLabel value="#{lbl['lbl.ct.pb.notify']}" />  
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.bondNotifyDays}" style="width:50px;" label="#{lbl['lbl.ct.set.pb.notify']}"  />  
-             <p:outputLabel value="#{lbl['lbl.ct.pb.notify.desc']}" style="float:left;"/>
+             <h:panelGrid columns="3">
+             	<p:outputLabel value="#{lbl['lbl.ct.pb.notify.desc']}" style="float:left;"/>
+             	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.perforamnce.bond.notification']}" />
+			 </h:panelGrid>
              <h:outputLabel value="#{lbl['lbl.ct.termination.notify']}"  />  
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.terminationNotifyDays}" style="width:50px;" label="#{lbl['lbl.ct.set.ter.notify']}"  />  
-             <p:outputLabel value="#{lbl['lbl.ct.termination.notify.desc']}" style="float:left;"/>
+             <h:panelGrid columns="3">
+             	<p:outputLabel value="#{lbl['lbl.ct.termination.notify.desc']}" style="float:left;"/>
+             	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.termination.notification']}" />
+			 </h:panelGrid>
              <p:outputLabel value="#{lbl['lbl.ct.do.notify']}" />  
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.supplierDoDays}" style="width:50px;" label="#{lbl['lbl.ct.set.sup.notify']}" />  
-             <p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;"/>
+             <h:panelGrid columns="3">
+             	<p:outputLabel value="#{lbl['lbl.ct.do.notify.desc']}" style="float:left;"/>
+             	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.delivery.order.notification']}" />
+			 </h:panelGrid>
              <p:outputLabel value="#{lbl['lbl.ct.approver.notify']}"  />  
              <p:inputText   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSetting.approverMtoDays}" style="width:50px;" label="#{lbl['lbl.ct.set.mto.notify']}" />  
              <h:outputLabel value="#{lbl['lbl.ct.approver.notify.desc']}" style="float:left;"/>
@@ -57,6 +78,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

@@ -8,6 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}"
          rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
+  	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
   	     <h:panelGrid  style="width:100%;">
   	       
   	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
@@ -123,6 +124,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

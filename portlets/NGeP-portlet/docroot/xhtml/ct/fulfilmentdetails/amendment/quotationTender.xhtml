@@ -3,37 +3,56 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">	
 	<p:panel id="qtnTenderPnl" header="#{lbl['lbl.ct.panel.procurement']}" toggleable="true"  toggleSpeed="500">
+	 <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.procurement.dtls']}" /> -->
 	 <h:panelGrid columns="4" style="width:100%;" columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
+			
 			<p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />
 		    <p:inputText  style="width:170px;" disabled="true"
 		      value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.procurementMode)}" />
 		    
+		    <p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
+			<p:inputText style="width:170px;" disabled="true"  value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.fulfillmentType)}" />			
+			
+			<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:170px;" disabled="true" maxlength="30"
+					value="#{amendmentBackingBean.managedBean.ctContract.loa.loaNo}" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
+			</h:panelGrid>
+				   
+			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+			<h:panelGrid columns="3">
+				<p:inputText style="width:170px;" disabled="true" maxlength="30"
+				   value="#{amendmentBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+			</h:panelGrid>
+			   
+			<p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{amendmentBackingBean.managedBean.ctContract.ackDate}" >
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+			</p:inputText>
+			
 			<p:outputLabel value="#{lbl['lbl.ct.pub.date']}" rendered="#{!amendmentBackingBean.managedBean.directPurchase}"/>
 			<p:inputText style="width:170px;" disabled="true" rendered="#{!amendmentBackingBean.managedBean.directPurchase}"
 				value="#{amendmentBackingBean.managedBean.ctContract.publishDate}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>			
-			<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
-			<p:inputText style="width:170px;" disabled="true" 
-				value="#{amendmentBackingBean.managedBean.ctContract.loaPhysicalNo}" />
-			<p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
-			<p:inputText style="width:170px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.ctContract.ackDate}" >
-				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-			</p:inputText>	
-			<p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
-			<p:inputText style="width:170px;" disabled="true"  value="#{amendmentBackingBean.getParameterDesc(amendmentBackingBean.managedBean.ctContract.fulfillmentType)}" />			
+			
 			<p:outputLabel value="#{lbl['lbl.ct.service.fee']}" />
-			<h:panelGrid columns="2">
-			<p:inputText styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.ctContract.serviceFee}"
-				style="width:160px;" disabled="true" />	
+			<h:panelGrid columns="3">
+				<p:inputText styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.ctContract.serviceFee}"
+					style="width:150px;" disabled="true" />	
 				<p:outputLabel value="%" />
-		</h:panelGrid>		
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
+		    </h:panelGrid>
 		</h:panelGrid>
-		</p:panel>
+	</p:panel>
 </ui:composition>
 
 

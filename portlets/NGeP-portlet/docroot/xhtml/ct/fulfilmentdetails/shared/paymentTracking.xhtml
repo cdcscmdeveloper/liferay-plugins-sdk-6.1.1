@@ -3,55 +3,83 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="advancePayment" header="#{lbl['lbl.ct.panel.adv.payment.tracking']}"    toggleable="true"  toggleSpeed="500">     
+        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.advance.payment.dtls']}"/> -->
         <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
+           	 <p:outputLabel  value="#{lbl['lbl.ct.advance.payment.amt']}"/>
+           	 <h:panelGrid columns="3">	            
+	            <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
+                  	value="#{contractDetailsBackingBean.managedBean.advancePaymentAmt}">
+                  	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+             	</p:inputText>
+	            <p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.advance.payment.amt']}" />
+			 </h:panelGrid>
+			 
+			 <p:outputLabel  value="#{lbl['lbl.ct.paid.amount']}"  />
+             <h:panelGrid columns="3">
+             	<p:inputText  style="width:170px;"  styleClass="ppRightBtn" disabled="true"
+	            	value="#{contractDetailsBackingBean.managedBean.paidAdvancePaymentAmt}">
+	                <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+	            </p:inputText>
+             	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.paid.amt']}" />
+			 </h:panelGrid>
+             
+       		<p:outputLabel  value="#{lbl['lbl.ct.paid.percentage']}"/>  
+            <h:panelGrid columns="3">
+            	<p:inputText style="width:170px;" styleClass="ppRightBtn"
+                 	disabled="true"  value="#{contractDetailsBackingBean.paidAdvancePercentage}">
+                 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+           		</p:inputText>
+            	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.paid.percentage']}" />
+			 </h:panelGrid>
             
-             <p:outputLabel  value="#{lbl['lbl.ct.advance.payment.amt']}"/>  
-             <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
-                  value="#{contractDetailsBackingBean.managedBean.advancePaymentAmt}">
-                  <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-             </p:inputText>
-     
-             <p:outputLabel  value="#{lbl['lbl.ct.paid.amount']}"  />  
-             <p:inputText  style="width:170px;"  styleClass="ppRightBtn" disabled="true"
-                  value="#{contractDetailsBackingBean.managedBean.paidAdvancePaymentAmt}">
-                  <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-             </p:inputText>
-       
-            <p:outputLabel  value="#{lbl['lbl.ct.paid.percentage']}"/>  
-            <p:inputText style="width:170px;" styleClass="ppRightBtn"
-                 disabled="true"  value="#{contractDetailsBackingBean.paidAdvancePercentage}">
-                 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-            </p:inputText>
-     
-           <p:outputLabel  value="#{lbl['lbl.ct.balance.to.be.paid']}"/>
-           <p:inputText style="width:170px;" styleClass="ppRightBtn" 
-               disabled="true" value="#{contractDetailsBackingBean.balanceToPaid}" >
-               <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-           </p:inputText> 
+     		<p:outputLabel  value="#{lbl['lbl.ct.balance.to.be.paid']}"/>
+           	<h:panelGrid columns="3">
+           		<p:inputText style="width:170px;" styleClass="ppRightBtn" 
+               		disabled="true" value="#{contractDetailsBackingBean.balanceToPaid}" >
+               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+           		</p:inputText> 
+           		<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.balance.to.paid']}" />
+		   	</h:panelGrid>
+           
         </h:panelGrid>
 	  </p:panel>
 	  
 	  <p:panel id="contractCompletion" header="#{lbl['lbl.ct.panel.contract.utilization']}"    toggleable="true"  toggleSpeed="500">     
+	       <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.utilization.dtls']}"/> -->
 	       <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth250" >  
                 <p:outputLabel  value="#{lbl['lbl.ct.contract.amount']}" />  
                 <p:inputText style="width:170px;" styleClass="ppRightBtn" disabled="true"
                     value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}">
                     <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
                 </p:inputText>
-       
-                <p:outputLabel  value="#{lbl['lbl.ct.utilization.amount']}" />  
-                <p:inputText    style="width:170px;" styleClass="ppRightBtn"
-                   disabled="true" value="#{contractDetailsBackingBean.managedBean.paidInvoiceAmt}">
-                   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-                </p:inputText>
-       
-                <p:outputLabel  value="#{lbl['lbl.ct.utilization.percentage']}"  />  
-                <p:inputText    style="width:170px;" styleClass="ppRightBtn"
-                    disabled="true"  value="#{contractDetailsBackingBean.paidPercentage}">
-                    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-                </p:inputText>
+       			
+       			<p:outputLabel  value="#{lbl['lbl.ct.utilization.amount']}" />  
+                <h:panelGrid columns="3">
+                	<p:inputText    style="width:170px;" styleClass="ppRightBtn"
+                   		disabled="true" value="#{contractDetailsBackingBean.managedBean.paidInvoiceAmt}">
+                   	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+                	</p:inputText>
+                	<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.utilization.amt']}" />
+		   		</h:panelGrid>
+               
+       			<p:outputLabel  value="#{lbl['lbl.ct.utilization.percentage']}"  /> 
+                <h:panelGrid columns="3">
+                	<p:inputText    style="width:170px;" styleClass="ppRightBtn"
+                    	disabled="true"  value="#{contractDetailsBackingBean.paidPercentage}">
+                    	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+                	</p:inputText>
+                	<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.utilization.percentage']}" />
+		   		</h:panelGrid> 
+                
            </h:panelGrid>
        </p:panel>
 </ui:composition>

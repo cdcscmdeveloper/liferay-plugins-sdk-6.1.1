@@ -75,9 +75,17 @@
 		     </p:dataTable>  
 	         <p:spacer height="2"  />
 		        <div class="ppRightBtn"> 
-		            <p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
-		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule"/>
-		 	        <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete" />  
+		            <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
+		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule">
+		               <p:tooltip for="addScheduleBtn">
+						    <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
+						</p:tooltip>
+		       		</p:commandButton>
+		 	        <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete">
+		 	        	<p:tooltip for="deleteScheduleBtn">
+						    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
+						</p:tooltip>
+		 	        </p:commandButton>  
 	           </div>
 	         
 	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="350"
@@ -209,6 +217,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

@@ -6,9 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
    <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
+     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/> -->
      <div style="overflow-x:auto">
        <p:dataTable id="tableAgencyDetails" var="agencyData" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
@@ -25,13 +26,17 @@
 					rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}"
 					action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
 					<p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address"
-						title="#{lbl['lbl.ct.delivery.address']}" style="margin-bottom: -5px;" />
+						title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
 				</p:commandLink>
 			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.ceiling.amount']}" style="width:130px;">
-				<p:inputText value="#{agencyData.ceilingAmount}"  required="true"
-				     maxlength="23"  styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.ceiling.amount']}">
-				 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 <p:column style="width:130px;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	</f:facet>
+           		<p:inputText value="#{agencyData.ceilingAmount}"  required="true"
+			     	maxlength="23"  styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.ceiling.amount']}">
+			 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 		   	 </p:column>
 		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:80px;">
@@ -42,7 +47,11 @@
 				<h:outputText value="#{agencyData.expDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.ap178']}" style="width:50px;">
+		   	 <p:column style="width:50px;">
+		   	 	<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.ap178']}"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
+               	</f:facet>
 		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"
 		   	      rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
 		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
@@ -50,10 +59,18 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/> 
+       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
+       			<p:tooltip for="addBtn">
+				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
+				</p:tooltip>
+       		</p:commandButton> 
 			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}"/>
+       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
+       			<p:tooltip for="delBtn">
+				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
+				</p:tooltip>
+			</p:commandButton>
 	  	</div>
 	  	    
         <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
@@ -168,7 +185,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" />
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

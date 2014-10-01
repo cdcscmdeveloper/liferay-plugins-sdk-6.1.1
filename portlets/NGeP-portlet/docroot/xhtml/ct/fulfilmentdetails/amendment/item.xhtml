@@ -8,6 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="itemId" header="#{lbl['lbl.ct.panel.product']}" toggleable="true"	
 	     toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
+	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
 		<h:panelGrid style="width:100%;">
 		
 			<p:dataTable id="itemTable" var="ctItemVar" widgetVar="ctItemsTableObj"
@@ -157,26 +158,44 @@
 						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName}" style="float:left;" />
 					             </p:column>
 					
-					            <p:column headerText="#{lbl['lbl.ct.from.qty']}" style="width:10%; white-space:normal;"
+					            <p:column style="width:10%; white-space:normal;"
 						            rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 					  		        amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-						               <p:outputLabel value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn" />
+						     		<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					               	</f:facet>
+						            <p:outputLabel value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn">
+						            	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+						            </p:outputLabel>
 					           </p:column>
 				
-								<p:column headerText="#{lbl['lbl.ct.to.qty']}" style="width:10%; white-space:normal;"
+								<p:column style="width:10%; white-space:normal;"
 									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier or 
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-									<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn" />
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					            	</f:facet>
+									<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
+										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+						            </p:outputLabel>
 								</p:column>
 							
-								<p:column headerText="#{lbl['lbl.ct.sub.seq']}" style="width:10%; white-space:normal;"
+								<p:column style="width:10%; white-space:normal;"
 									rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff or 
 								  		amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
-									<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn" />
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
+					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
+					               	</f:facet>
+					               	<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
+					               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
+						            </p:outputLabel>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
@@ -247,7 +266,11 @@
 					<p:column headerText="#{lbl['lbl.ct.ptj']}"	style="width:30%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.ceiling.qty']}" style="width:10%; white-space:normal;">
+					<p:column style="width:10%; white-space:normal;">
+						 <f:facet name="header">
+							<h:outputText value="#{lbl['lbl.ct.ceiling.qty']}"/>
+		               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.qty']}"/>
+	               		 </f:facet>
 					     <h:panelGroup style="float:right;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
@@ -303,6 +326,7 @@
 	</p:panel>
 	<p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}" 
 	  toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
+		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
 		<h:panelGrid style="width:100%;">
 			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">

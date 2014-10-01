@@ -3,26 +3,39 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
    <p:panel id="sbd" header="#{lbl['lbl.ct.panel.supplier']}"  toggleable="true"  toggleSpeed="500">
+     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.dtls']}"/> -->
      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
          columnClasses="columnWidth150,columnWidth350,columnWidth150,columnWidth200">
           <p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" />  
-          <h:panelGrid columns="4" style="width:300px;">
-             <p:inputText disabled="true" style="width:100px;" 
-                value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
+          <h:panelGrid columns="4" style="width:350px;">
+          	<h:panelGrid columns="3">
+	            <p:inputText disabled="true" style="width:100px;" 
+	                value="#{amendmentBackingBean.managedBean.contractVer.ctContract.smSupplier.regNo}" />
+                <p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+			 </h:panelGrid>
              <p:spacer width="2"/>
-             <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />  
-             <p:inputText disabled="true" style="width:100px;" 
-             	value="#{amendmentBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
+             <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
+             <h:panelGrid columns="3">
+	             <p:inputText disabled="true" style="width:100px;" 
+	             	value="#{amendmentBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
+	             <p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
+			 </h:panelGrid>
           </h:panelGrid>
            <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  
            <p:inputText disabled="true" style="width:170px;" 
               value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
           <p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
+          <h:panelGrid columns="3">
           	 <p:inputText disabled="true" style="width:220px;" id="supplierCompanyName"
              	value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-             	
+              <p:spacer width="1"/>
+			  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
+		   </h:panelGrid>	
            <p:outputLabel  value="#{lbl['lbl.ct.tel']}"/>  
            <p:inputText  value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}"  disabled="true" style="width:170px;" />
           

@@ -8,6 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}"  toggleable="true"  toggleSpeed="500"
 	    rendered="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds.size() > 0}"  >
+        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
         <p:dataTable  id="tableBond" var="data" 
            value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />
@@ -47,10 +48,14 @@
 				</h:panelGroup> 
 			</p:column>
             
-             <p:column style="width:10%;" headerText="#{lbl['lbl.ct.status']}">
-               <p:selectOneMenu id="rStatus" value="#{data.recordStatusFlg}" style="width:100%;" disabled="true" >
-                  <f:selectItems value="#{amendmentBackingBean.getStatusDropdown()}"/>
-               </p:selectOneMenu>   
+             <p:column style="width:10%;">
+             	<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.status']}"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.status']}"/>
+               		<p:selectOneMenu id="rStatus" value="#{data.recordStatusFlg}" style="width:100%;" disabled="true" >
+                  		<f:selectItems value="#{amendmentBackingBean.getStatusDropdown()}"/>
+               		</p:selectOneMenu>
+               	</f:facet>
              </p:column>
 	    
 	    </p:dataTable>
