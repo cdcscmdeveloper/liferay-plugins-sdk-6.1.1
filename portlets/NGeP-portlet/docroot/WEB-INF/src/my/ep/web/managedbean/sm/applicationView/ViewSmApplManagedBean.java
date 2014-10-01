@@ -4,13 +4,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.dto.pm.common.country.CountryReqDTO;
-import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -43,7 +39,6 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
