@@ -678,8 +678,14 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		userReqDTO.setPmUser(user);
 		
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserResDTO resDTO = userSO.saveUser(userReqDTO);
-		return resDTO.getPmUser();
+		UserResDTO resDTO;
+		try {
+			resDTO = userSO.saveUser(userReqDTO);
+			return resDTO.getPmUser();
+		} catch (Exception e) {
+			log.debug(e.getMessage());
+		}
+		return null;
 	}
 	
 	private List<ScCommitteeMember> addExistingUser (){
