@@ -208,6 +208,7 @@
 						value="#{lbl['lbl.fl.bulk.update']}" icon="ui-icon-add" ajax='true'
 						styleClass="ui-button" process="@this,chargeAss"
 						update="chargeLineTbl,chargeAss,chargeLineSection"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						action="#{purchaseRequestBackingBean.chargeLineApply}" /></td>
 			</tr>
