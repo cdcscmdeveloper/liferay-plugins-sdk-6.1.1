@@ -836,9 +836,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(isFlFulfilmentRecevingOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);	
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			}
+			if(isFlFulfilmentSupplier()) {
+				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 			}
 		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getManagedBean().getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
@@ -858,15 +868,26 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(isFlFulfilmentRecevingOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
 			}
 			if(isFlFulfilmentPaymentOfficer()){
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);				
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
 		}
 		if(isFlFulfilmentSupplier()) {
 			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+			flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+			flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+			flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
+			flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 		}
 		return flDocTypes;
 	}
