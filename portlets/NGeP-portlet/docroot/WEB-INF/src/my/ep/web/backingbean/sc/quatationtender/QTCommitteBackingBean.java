@@ -775,7 +775,13 @@ public class QTCommitteBackingBean extends
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
 			userReqDTO.setPmUser(user);
-			UserResDTO resDTO = getUserSO().saveUser(userReqDTO);
+			UserResDTO resDTO = new UserResDTO();
+			try {
+				resDTO = getUserSO().saveUser(userReqDTO);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			member.setPmUser(resDTO.getPmUser());
 			setUserDetails(member);
