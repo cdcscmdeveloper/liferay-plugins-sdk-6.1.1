@@ -24,11 +24,12 @@
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 		
+		<ui:remove>
 		<p:commandButton id="reportLink" value="#{lbl['lbl.cm.download']} Report"
 			update=":form" icon="ui-icon-download" ajax="false">
 			<p:fileDownload value="#{reportBackingBean.reportPdf}" />
 		</p:commandButton>		
-		
+		</ui:remove>
 
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}" icon="ui-icon-submit" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
