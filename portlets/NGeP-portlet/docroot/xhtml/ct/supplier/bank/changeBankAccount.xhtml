@@ -37,10 +37,10 @@
 				          <td style="width: 13%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.loaPhysicalNo}</td>
 				          <td style="width: 7%"> <h:outputLabel value="#{lbl['lbl.ct.contract.no']}" /></td>
 				          <td style="width: 13%" class="header-info-text"> #{supplierBackingBean.managedBean.ctContract.contractNo}</td>
-				          <td style="width: 7%"> <h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" /></td>
-					      <td style="width: 18%" class="header-info-text"> #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>		
-				          <td style="width: 7%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
-				          <td style="width: 15%" class="header-info-text">
+				          <td style="width: 10%"> <h:outputLabel value="#{lbl['lbl.ct.supplier.name']}" /></td>
+					      <td style="width: 15%" class="header-info-text"> #{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}</td>		
+				          <td style="width: 10%"><h:outputLabel value="#{lbl['lbl.ct.status']}" /></td>
+				          <td style="width: 12%" class="header-info-text">
 				            #{supplierBackingBean.getStatusDescById(supplierBackingBean.managedBean.contractVer.status.statusId)}</td>
 			       </tr>
 		        </table>

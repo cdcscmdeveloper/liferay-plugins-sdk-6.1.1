@@ -114,15 +114,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	public SupplierBackingBean(){
 	
-	    	 if (this.getManagedBean().getAction() == null) 
-			     this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SUBMIT });
+	    	 if(getManagedBean().getAction() == null) 
+			     getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SUBMIT });
 	   	 
-	    	if (getManagedBean().getFactoring() == null) 
+	    	if(getManagedBean().getFactoring() == null) 
 			     initializeFactoring();
 		 
-		   if(ctBB == null){
-			     ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-		    	ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+		   if(ctBB == null) {
+			     ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		    	 ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	    	}
 	}
 	
@@ -132,12 +132,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    PmStatus pmStatus = new PmStatus();
 		    pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
 		    getManagedBean().getFactoring().setStatus(pmStatus);
-		 
-		    if(this.getManagedBean().getFactoring().getFinancialOrg() == null) 
-			     this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-		
-		    if(this.getManagedBean().getFactoring().getPmFinancialBranch() == null) 
-			     this.getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+		    getManagedBean().getFactoring().setCtContract(new CtContract());
+		    getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
+		    getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
 	}
 	
 	 private FacesScopes getFacesScopes(){
@@ -147,15 +144,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	 public void preRenderChangeBankAccount() {
 	    	renewSesionObject();
 	    	FacesContext fc = FacesContext.getCurrentInstance();
-		    fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "changeBankAccount.xhtml?faces-redirect=true");
+		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "changeBankAccount.xhtml?faces-redirect=true");
 	  }
 	
 	  public void preRenderRequestFactoring() {
 		    renewSesionObject();
 		    FacesContext fc = FacesContext.getCurrentInstance();
-		    fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "requestOfFactoring.xhtml?faces-redirect=true");
+		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "requestOfFactoring.xhtml?faces-redirect=true");
 	  }
     
 	  public void preRenderView() {
@@ -522,10 +517,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				throw new EpException("Failed.");
 			}
 		} finally {
-			supplierSO = null;
-			log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-			log.info("SupplierBackingBean: Performance Testing saveFactoringRequest Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-			
+			supplierSO = null;		
 		}
 		return null;
 	}
@@ -626,53 +618,28 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				         
 				           resDTO = contractSO.retrieveContractByLoaId(reqDTO);
 			          	   if(resDTO.getContract() != null && resDTO.isSuccessful()) {
-					           this.getManagedBean().setLoaDate(resDTO.getContract().getLoa().getAckDate());
-					           this.getManagedBean().setContractNo(resDTO.getContract().getContractNo());
-					           this.getManagedBean().setContractName(resDTO.getContract().getContractName());
-					           this.getManagedBean().setEffDate(resDTO.getContract().getCurrentContractVer().getCtContractValue().getEffDate());
-					           this.getManagedBean().setExpDate(resDTO.getContract().getCurrentContractVer().getCtContractValue().getExpDate());
-					           this.getManagedBean().setCtContract(resDTO.getContract());
-					
-					           if(resDTO.getContract().getCtFactoring()!=null) {
-						            getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
-						            getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-						            getManagedBean().setRemoveFactoring(true);
-						            PmStatus pmStatus = new PmStatus();
-						            pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
-						            getManagedBean().getFactoring().setStatus(pmStatus);
-					          	    reset();
-					              	if (this.getManagedBean().getFactoring().getPmFinancialBranch() == null) 
-							              this.getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
-						            else 
-							           resetBranch();
-					      }
-			    	} else {
-					this.getManagedBean().setLoaDate(null);
-					this.getManagedBean().setContractNo(null);
-					this.getManagedBean().setContractName(null);
-					this.getManagedBean().setEffDate(null);
-					this.getManagedBean().setExpDate(null);
-					this.getManagedBean().setCtContract(null);
-					this.getManagedBean().setAccountNo(null);
-					getManagedBean().setRemoveFactoring(false);
-					initializeFactoring();
-				}
-		
-	      } else {
-				this.getManagedBean().setLoaDate(null);
-				this.getManagedBean().setContractNo(null);
-				this.getManagedBean().setContractName(null);
-				this.getManagedBean().setEffDate(null);
-				this.getManagedBean().setExpDate(null);
-				this.getManagedBean().setCtContract(null);
-				this.getManagedBean().setAccountNo(null);
-				getManagedBean().setRemoveFactoring(false);
-				initializeFactoring();
-			}
-		} finally {
-			contractSO = null;
-		}
-	}
+					               if(resDTO.getContract().getCtFactoring()!=null) {
+						                    getManagedBean().setFactoring(resDTO.getContract().getCtFactoring());
+						                    getManagedBean().getFactoring().setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						                    getManagedBean().setRemoveFactoring(true);
+						                    PmStatus pmStatus = new PmStatus();
+						                    pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
+						                    getManagedBean().getFactoring().setStatus(pmStatus);
+					          	            reset();
+					              	        if(getManagedBean().getFactoring().getPmFinancialBranch() == null) 
+							                     getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+						                   else 
+							                    resetBranch();
+					                  }
+			    	          } else {
+					                     getManagedBean().setRemoveFactoring(false);
+					                     initializeFactoring();
+				              }
+		              } 
+		   } finally {
+			     contractSO = null;
+		   }
+	 }
     
     public void fileUpload(FileUploadEvent event) throws Exception {
     	UploadedFile item = event.getFile();
@@ -734,18 +701,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		       ContractSupplierResDTO contractSupplierResDTO = null;
 		       ContractAmendmentResDTO amendmentResDTO = null;
 		       SupplierSearchResDTO resDTO = null;
+		     
 		       try {
 			
 		    	        supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			            
 		    	        reqDTO = new SupplierSearchReqDTO();
 			            reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			            supplierIdList = new ArrayList<Long>();
 			            
 			            resDTO = supplierSearchSO.retriveSupplierProfiles(reqDTO);
-			            for(SmSupplier smSupplier : resDTO.getResultBean().getResultList()) {
-				                supplierIdList.add(smSupplier.getSupplierId());
-			             }
+			            for(SmSupplier smSupplier : resDTO.getResultBean().getResultList()) 
+				              supplierIdList.add(smSupplier.getSupplierId());
+			             
 			           
 			            // Retrieve amendment loa list
 			            contractAmendmentSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
@@ -759,7 +726,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			
 			           if(amendmentResDTO.getAmendmentLoaIds()!=null && amendmentResDTO.getAmendmentLoaIds().size()>0) {
 				               if(reqDTO1.getExcludeLoaIdList() == null)
-					                  reqDTO1.setExcludeLoaIdList(new ArrayList<Long>());
+					              reqDTO1.setExcludeLoaIdList(new ArrayList<Long>());
 				               reqDTO1.getExcludeLoaIdList().addAll(amendmentResDTO.getAmendmentLoaIds());
 			           }
 			
@@ -802,69 +769,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			return "Factoring Company Name";
 		}
 	}
-	
-//	public void previewAction() throws UnsupportedEncodingException {
-//		IContractTemplateSO contractTemplateSO = null;
-//		Calendar cal = Calendar.getInstance();
-//	     log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to start >>>>"+ cal.getTime());
-//	
-//		try {
-//			contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
-//			ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
-//			if(getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-//				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
-//				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER);	
-//			} else if(getUserRole().equalsIgnoreCase(RoleCode.MIN_CONTRACT_ADMIN.value()) || getUserRole().equalsIgnoreCase(RoleCode.BPK_CCA.value())) {
-//				reqDTO.setTemplateName(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA);	
-//			}
-//			
-//			ContractTemplateResDTO resDTO = contractTemplateSO.retrieveTemplateByName(reqDTO);
-//			setEditorValue("");
-//			if(resDTO.getCtTemplate()!=null) {
-//				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-//				String content = new String(resDTO.getCtTemplate().getContent(), "UTF-8");
-//				
-//				Map<String, String> valuesMap = new HashMap<String, String>();
-//				valuesMap.put("FACTORING_COMP_NAME", getFactoringCompany());
-//				valuesMap.put("FACTORING_ACCOUNT_NO", getManagedBean().getAccountNo());
-//				
-//				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_SUPPLIER)) {
-//					valuesMap.put("CURRENT_DATE", df.format(new Date()));
-//					valuesMap.put("FACTORING_BANK_NAME", getManagedBean().getFactoringBankName());
-//					valuesMap.put("FACTORING_BANK_ADDRESS", getManagedBean().getFactoringBankAddress());
-//					valuesMap.put("SUPPLIER_OFFICER_NAME", getFacesScopes().getUserSessionBean().getUserName());
-//					valuesMap.put("SUPPLIER_OFFICER_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
-//				}
-//				
-//				if(reqDTO.getTemplateName().equalsIgnoreCase(ContractConst.TEMPLATE_FACTORING_CLAUSE_CA)) {
-//					valuesMap.put("CONTRAT_ADMIN_NAME", getFacesScopes().getUserSessionBean().getUserName());
-//					valuesMap.put("CONTRACT_ADMIN_DESIGNATION", getFacesScopes().getUserSessionBean().getDesignation());
-//					String jabatanMinistry = null;
-//						if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()==null) {
-//							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
-//						}
-//						else {
-//							jabatanMinistry = getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName() + " / " + getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
-//						}
-//								
-//					valuesMap.put("JABATAN_MINISTRY", jabatanMinistry);
-//					if(getManagedBean().getCtContract().getContractPhysicalNo()==null) {
-//						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractNo());
-//					} else {
-//						valuesMap.put("CONTRACT_PHYSICAL_NO",getManagedBean().getCtContract().getContractPhysicalNo());
-//					}
-//					valuesMap.put("CONTRACT_NO",getManagedBean().getCtContract().getContractNo());
-//				}
-//				
-//				StrSubstitutor sub = new StrSubstitutor(valuesMap);
-//				setEditorValue(sub.replace(content));
-//			}
-//		} finally {
-//			contractTemplateSO = null;
-//			log.info("SupplierBackingBean: Performance Testing previewAction Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-//			log.info("SupplierBackingBean: Performance Testing previewAction Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-//		}
-//	}
 	
 	public void previewAction() {		  
 		VelocityContext context = null;
@@ -930,7 +834,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 
 	public String getPortletTitle() {
 		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.request.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-         
 		if(getManagedBean().isRemoveFactoring()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
@@ -944,6 +847,4 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
 	}
-
-
 }
