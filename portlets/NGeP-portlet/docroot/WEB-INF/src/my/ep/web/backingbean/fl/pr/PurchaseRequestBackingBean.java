@@ -2641,8 +2641,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		  Comparator<FlFulfilmentItemAddr> comparator = new Comparator<FlFulfilmentItemAddr>() {
 	            @Override
 	            public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
+	            	String object1Code = o1.getScRequestItem().getCmItem()!=null?o1.getScRequestItem().getCmItem().getExtensionCode():o1.getScRequestItem().getTempUnspscCode();
+	            	String object2Code = o2.getScRequestItem().getCmItem()!=null?o2.getScRequestItem().getCmItem().getExtensionCode():o2.getScRequestItem().getTempUnspscCode();
 	                return new CompareToBuilder()
-		                .append(o1.getScRequestItem().getCmItem().getExtensionCode(), o2.getScRequestItem().getCmItem().getExtensionCode())
+		                .append(object1Code, object2Code)
 		                .toComparison();
 	            }
 	        };
