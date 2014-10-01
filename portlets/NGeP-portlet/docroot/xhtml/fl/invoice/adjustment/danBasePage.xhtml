@@ -22,7 +22,7 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{danBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
@@ -40,12 +40,12 @@
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu" 
 						activeIndex="#{danBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form" >
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form" >
 							<f:setPropertyActionListener
 								target="#{danBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Charge Line Summary" update="@form" >
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form" >
 							<f:setPropertyActionListener
 								target="#{danBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
