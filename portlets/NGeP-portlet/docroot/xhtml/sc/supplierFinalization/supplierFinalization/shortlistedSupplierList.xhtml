@@ -17,7 +17,7 @@
 				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
 			</h:column>
 			<h:column>
-				<p:selectOneMenu id="recommendBy" value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
+				<p:selectOneMenu id="recommendBy" value="#{suppFinalizationBackingBean.managedBean.recommendBy.parameterCode}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
 					<p:ajax event="change" update=":form:tab:onlineBiddingPanel,:form:tab:supplierListTblPanel" 
 						listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
@@ -138,11 +138,11 @@
 					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselect"
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
+					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
 					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 					
 				<p:ajax event="rowUnselectCheckbox"
-					listener="#{suppFinalizationBackingBean.selectSupplierEvent}"
+					listener="#{suppFinalizationBackingBean.unSelectSupplierEvent(shortlistedSupp)}"
 					update="@([id$=itemListTbl])" process="@this"  partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
