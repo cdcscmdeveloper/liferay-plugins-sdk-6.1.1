@@ -539,7 +539,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IDistrictSO.class);
-		DistrictResDTO resDTO = districtSO.retriveDistrictByID(reqDTO);
+		DistrictResDTO resDTO = districtSO.retriveDistrictDtlByID(reqDTO);
 		getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 	}
