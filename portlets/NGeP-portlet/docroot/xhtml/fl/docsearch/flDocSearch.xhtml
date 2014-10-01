@@ -21,10 +21,11 @@
 				text-align: center !important;
 				}
 		</style>
-		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 			<h:panelGroup id="orderTypeSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.type']}" />
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
@@ -33,14 +34,14 @@
 						<p:ajax event="change" update="searchPanel"
 							listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.order.no']}" style="padding-left : 300px;"/>
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.order.no']}" style="padding-left : 300px;"/>
 					<p:inputText size="28" maxlength="17" 
 						value="#{flDocumentBackingBean.managedBean.searchOrderNo}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTYpeSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}"	/>
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.type']}"	/>
 					<p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
@@ -49,14 +50,14 @@
 							update="docTypeSearch,docStatusSearch,docDoStatusSearch,docInvStatusSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" style="padding-left : 305px;"/>
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}" style="padding-left : 274px;"/>
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>	
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.status']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.doc.status']}" />
 					<p:selectOneMenu id="statusId"
 						value="#{flDocumentBackingBean.managedBean.statusDescId}"
 						style="width: 314px;">
@@ -65,22 +66,23 @@
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
-				<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.name']}" />
+				<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" />
 				<p:inputText size="45"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
 			<h:panelGroup id="docDoStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.do.ref']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.reference']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchSuppDoRef}"></p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.supp.ref']}"/>	
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docInvStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkInDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.supp.inv.ref']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.inv.ref']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchSuppInvRef}"></p:inputText>
 				</h:panelGrid>
@@ -88,26 +90,42 @@
 			<h:panelGroup id="docTypeSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.circular.no']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.physical.loa.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phyloa']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" />
 					<p:inputText size="28"
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/>
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" />
+					<p:inputText size="28"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.phycontr.no']}"/>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel
-						value="#{lbl['lbl.fl.doc.search.contract.duration']}" />
+						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
 					<p:calendar mode="popup" showOn="button"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
@@ -127,62 +145,63 @@
 			<f:verbatim></f:verbatim>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lblfl.doc.search.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{flDocumentBackingBean.searchDocument}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					icon="ui-icon-search" update="resultPanel" />
-				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
-					update=":form" />
+					update=":form" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
-		<p:panel id="resultPanel" header="RESULT" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.doc.maintain.result']}"/>
 			<p:dataTable id="flDocListDt"
 				value="#{flDocumentBackingBean.managedBean.flDocumentDataModel}" lazy="true"
 				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
 				width="100%">
 				<ac:paginator for="flDocListDt" />
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.type']}">
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.type']}">
 					<h:outputText
 						value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.doc.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.circular.doc.no']}">
 					<h:outputText value="#{flDocument.docNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.order.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.order.no']}">
 					<h:outputText value="#{flDocument.orderNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.title']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.doc.title']}">
 					<h:outputText value="#{flDocument.title}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.cont.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.contract.no']}">
 					<h:outputText value="#{flDocument.contractNo}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.search.datatable.circular.no']}">
+					headerText="#{lbl['lbl.fl.doc.maintain.circular.no']}">
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.doc.search.datatable.doc.status']}">
+					headerText="#{lbl['lbl.fl.doc.maintain.doc.status']}">
 					<h:outputText
 						value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
 				</p:column>  
-				<p:column headerText="#{lbl['lbl.fl.doc.search.datatable.action']}"
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
 					<p:menuButton value="">
-									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.view']}"  
+									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.view']}"  
 							        rendered="#{flDocument.isViewAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"/>
-									<p:menuitem value="#{lbl['lbl.fl.doc.search.action.update']}"  
+									<p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.update']}"  
 							        rendered="#{flDocument.isUpdateAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"/>
-							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.cancel']}" 
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.cancel']}" 
 							        rendered="#{flDocument.isCancelAction()}"
 									onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"/>
-							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.stop.fulfilment']}"  
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.stop.fulfilment']}"  
 							        rendered="#{flDocument.isStopFulfilmentAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Stop Fulfilment'}])"/>
-							        <p:menuitem value="#{lbl['lbl.fl.doc.search.action.factory.comp.removal']}"  
+							        <p:menuitem value="#{lbl['lbl.fl.doc.maintain.action.factory.comp.removal']}"  
 							        rendered="#{flDocument.isRemoveFactoringAction()}"
 							        onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Remove Factoring'}])"/>
 					</p:menuButton>

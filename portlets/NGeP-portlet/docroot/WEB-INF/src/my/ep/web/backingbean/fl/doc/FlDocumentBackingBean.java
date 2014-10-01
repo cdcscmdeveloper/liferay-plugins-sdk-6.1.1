@@ -488,6 +488,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		getManagedBean().setSearchContractFromDuration(null);
 		getManagedBean().setSearchContractToDuration(null);
 		getManagedBean().setSearchOrderNo(null);
+		getManagedBean().setSearchPhysContractNo(null);
+		getManagedBean().setSearchPhysLoaNo(null);
 	}
 	
 	public void selectedDoctype(AjaxBehaviorEvent e) {
@@ -559,6 +561,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setSearchCircularNo(null);
 		this.getManagedBean().setSearchOrderType(null);
 		this.getManagedBean().setSearchDocType(null);
+		this.getManagedBean().setSearchPhysContractNo(null);
+		this.getManagedBean().setSearchPhysLoaNo(null);
 		
 		// reset everything to false
 		//this.getManagedBean().setCheckDocNo(false);
