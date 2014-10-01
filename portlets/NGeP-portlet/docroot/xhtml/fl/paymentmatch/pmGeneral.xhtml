@@ -242,19 +242,17 @@
 						value="#{lbl['lbl.fl.factoring.company']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.pmFinancialOrg.finOrgName}" /></td>
-				<td style="width: 133px;"><p:outputLabel
-						value="#{lbl['lbl.fl.payment.match.paymentbankname']}" /></td>
-				<td><p:inputText size="45" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}" /></td>
+				<td style="width: 170px;"><p:outputLabel
+						value="#{lbl['lbl.fl.invoice.acc.bank']}" /></td>
+				<td><p:inputText size="55" disabled="true" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}  #{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.bank.name']}"/>
+				</td>						
 			</tr>
 			<tr>
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.factoring.branch']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.branchName}" /></td>
-				<td><p:outputLabel value="Account No." /></td>
-				<td><p:inputText size="45" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
