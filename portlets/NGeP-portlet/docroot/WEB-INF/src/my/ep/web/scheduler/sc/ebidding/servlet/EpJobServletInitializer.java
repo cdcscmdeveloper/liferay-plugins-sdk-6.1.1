@@ -21,30 +21,27 @@ public class EpJobServletInitializer extends HttpServlet {
 	private static final long serialVersionUID = 2591757747850240619L;
 
 	public void init(ServletConfig config) throws ServletException {
-		
-		// Sc Daily job
-				EpSchedulerHelper.scheduleJob(config.getServletContext(), new JobKey(
-						EPSchedulerConstants.EP_DAILY_JOB,
-						EPSchedulerConstants.EP_JOB_GROUP),
-						BidSchedulesPoolingCronJob.class,
-						"Job run every day at 11:55 PM", "0 55 23 * * ?");
 
-		// daily Job to be run at server startup
-		
-		EpSchedulerHelper.scheduleStartupJob(config.getServletContext(), new JobKey(
+		// Sc Daily job
+		EpSchedulerHelper.scheduleJob(new JobKey(
 				EPSchedulerConstants.EP_DAILY_JOB,
 				EPSchedulerConstants.EP_JOB_GROUP),
-				BidSchedulesPoolingCronJob.class, "Job to run at server start-up");
+				BidSchedulesPoolingCronJob.class,
+				"Job run every day at 11:55 PM", "0 55 23 * * ?");
+
+		// daily Job to be run at server startup
+
+		EpSchedulerHelper.runBuildJobNow(new JobKey(
+				EPSchedulerConstants.EP_DAILY_JOB,
+				EPSchedulerConstants.EP_JOB_GROUP));
 
 		// Sc Continous job
-		EpSchedulerHelper.scheduleJob(config.getServletContext(), new JobKey(
+		EpSchedulerHelper.scheduleJob(new JobKey(
 				EPSchedulerConstants.EP_CONTINOUS_JOB,
 				EPSchedulerConstants.EP_JOB_GROUP),
 				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
 				"0/60 * * * * ?");
 
-		
-		
 	}
 
 }

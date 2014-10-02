@@ -10,6 +10,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
+import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.sc.ebidding.util.SchedulerFactoryUtil;
 import my.ep.web.vo.EpJobVO;
 
@@ -26,7 +27,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 @ManagedBean(name = "schedulerManagerBB")
 @RequestScoped
 public class SchedulerManagerBackingBean extends
-		BaseBackingBean<SchedulerManagerManagedBean > {
+		BaseBackingBean<SchedulerManagerManagedBean> {
 
 	public static Logger log = EpLogger
 			.getLogger(SchedulerManagerBackingBean.class);
@@ -46,20 +47,21 @@ public class SchedulerManagerBackingBean extends
 			String jobState = "";
 			Trigger trigger = null;
 			if (getManagedBean().getScheduler() == null) {
-				getManagedBean().setScheduler( SchedulerFactoryUtil.getFacesContextSchedulerFactory());
+				getManagedBean().setScheduler(EpSchedulerHelper.getScheduler());
 			}
 			getManagedBean().setEpSchedulerJobList(new ArrayList<EpJobVO>());
 
-			for (String groupName : getManagedBean().getScheduler().getJobGroupNames()) {
+			for (String groupName : getManagedBean().getScheduler()
+					.getJobGroupNames()) {
 
 				// get jobkey
-				for (JobKey jobKey : getManagedBean().getScheduler().getJobKeys(GroupMatcher
-						.jobGroupEquals(groupName))) {
+				for (JobKey jobKey : getManagedBean().getScheduler()
+						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
 					// get job's trigger
 					trigger = getTrigger(jobKey);
-					
-					//get trigger state
+
+					// get trigger state
 					jobState = getTriggerState(trigger);
 
 					if (jobState.equals(TriggerState.PAUSED.toString())) {
@@ -69,8 +71,11 @@ public class SchedulerManagerBackingBean extends
 					}
 
 					getManagedBean().getEpSchedulerJobList().add(
-							new EpJobVO(jobKey, trigger, getJobStatus(jobKey), jobAction,
-									jobState,getManagedBean().getScheduler().getJobDetail(jobKey).getDescription()));
+							new EpJobVO(jobKey, trigger, getJobStatus(jobKey),
+									jobAction, jobState, getManagedBean()
+											.getScheduler()
+											.getJobDetail(jobKey)
+											.getDescription()));
 
 				}
 
@@ -92,30 +97,22 @@ public class SchedulerManagerBackingBean extends
 			log.error(e.getMessage());
 		}
 	}
-	
+
 	public void runNowJob(EpJobVO epJobVO) {
-		try {
-			if (epJobVO.getStatus().equals(EPSchedulerConstants.JOB_WAIT)) {
 
-				// specify trigger
-				Trigger trigger = TriggerBuilder.newTrigger().startNow()
-						.forJob(getManagedBean().getScheduler().getJobDetail(epJobVO.getJobKey()))
-						.build();
-
-				// schedule the job
-				getManagedBean().getScheduler().scheduleJob(trigger);
-			}
-		} catch (SchedulerException e) {
-			log.error(e.getMessage());
+		if (epJobVO.getStatus().equals(EPSchedulerConstants.JOB_WAIT)) {
+			// schedule the job
+			EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
 		}
+
 	}
 
 	private boolean jobRun(JobKey jobKey) {
 		boolean retVal = false;
 
 		try {
-			for (JobExecutionContext jobExecute : getManagedBean().getScheduler()
-					.getCurrentlyExecutingJobs()) {
+			for (JobExecutionContext jobExecute : getManagedBean()
+					.getScheduler().getCurrentlyExecutingJobs()) {
 				if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
 					retVal = true;
 					break;
@@ -137,13 +134,15 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	private Trigger getTrigger(JobKey jobKey) throws SchedulerException {
-		return (Trigger) getManagedBean().getScheduler().getTriggersOfJob(jobKey).get(0);
+		return (Trigger) getManagedBean().getScheduler()
+				.getTriggersOfJob(jobKey).get(0);
 	}
 
 	private String getTriggerState(Trigger trigger) {
 		String state = TriggerState.NONE.toString();
 		try {
-			state = getManagedBean().getScheduler().getTriggerState(trigger.getKey()).toString();
+			state = getManagedBean().getScheduler()
+					.getTriggerState(trigger.getKey()).toString();
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 		}
