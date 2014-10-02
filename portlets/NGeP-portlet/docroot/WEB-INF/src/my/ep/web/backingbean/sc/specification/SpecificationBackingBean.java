@@ -166,6 +166,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.specification.SpecificationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -2102,6 +2103,8 @@ public class SpecificationBackingBean extends
 				List<ScQtCheckList> specChecklist = new ArrayList<ScQtCheckList>();
 
 				float addScore = 0;
+				float financialWeightageScore = 0;
+				float financialWeightage = 0;
 				// String localTitle="";
 				StringBuffer sb = new StringBuffer();
 				for (ScQtCheckList list : checklist) {
@@ -2122,7 +2125,16 @@ public class SpecificationBackingBean extends
 									.getParameterCode())) {
 						// String Title=list.getTitle();
 						// =localTitle.concat(Title)+"<br/>";
-
+						financialWeightageScore = financialWeightageScore
+								+ list.getQtScoreWeightage().getScore()
+										.intValue();
+						if (null == list.getQtScoreWeightage().getWeightage()) {
+							list.getQtScoreWeightage().setWeightage(
+									new BigDecimal(0));
+						}
+						financialWeightage = financialWeightage
+								+ list.getQtScoreWeightage().getWeightage()
+										.intValue();
 						sb.append(list.getTitle());
 						sb.append(",");
 
@@ -2143,6 +2155,11 @@ public class SpecificationBackingBean extends
 					// .setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION);
 					tmpCheckList.setDefinationType(specChecklist.get(0)
 							.getDefinationType());
+					specChecklist.get(0).getQtScoreWeightage()
+							.setScore(new BigDecimal(financialWeightageScore));
+
+					specChecklist.get(0).getQtScoreWeightage()
+							.setWeightage(new BigDecimal(financialWeightage));
 					tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 							.getQtScoreWeightage());
 					// this.getManagedBean().setScQtChecklist(tmpCheckList);
@@ -2421,11 +2438,20 @@ public class SpecificationBackingBean extends
 							count++;
 						}
 
+						DateUtils dateUtil = new DateUtils();
+
+						long days = dateUtil.getDaysDifference(
+								scQtSchedule.getFromDate(),
+								scQtSchedule.getToDate());
+						int day = (int) days;
+						int months = day / 30;
+						scQtSchedule.setTotalMonths(new BigDecimal(months));
+
 						scQtSchedule.setStartMonth(startMonth);
 						scQtSchedule.setEndMonth(endMonth);
 						scQtSchedule.setStartYear(startYear);
 						scQtSchedule.setEndYear(endYear);
-						scQtSchedule.setTotalMonths(new BigDecimal(count));
+
 						scheduleList.add(scQtSchedule);
 
 						this.getManagedBean().setScheduleList(scheduleList);
@@ -5037,13 +5063,17 @@ public class SpecificationBackingBean extends
 								.getDocDefinitionKey())) {
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
-					if (null == resDTO.getCheckListScores()) {
-
+					if (null == resDTO.getCheckListScores()
+							|| resDTO.getCheckListScores().isEmpty()) {
 						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
-
-						this.getManagedBean().setCheckListScore(
-								new ArrayList<ScQtCheckListScore>());
+								QTConstants.USER_SCORE);
+						ScQtCheckListScore checklistScore = new ScQtCheckListScore();
+						checklistScore.setCriteriaType(new Integer("30"));
+						checklistScore.setScoreType(new BigDecimal(this
+								.getManagedBean().getChecklistScoreType()));
+						setUserDetails(checklistScore);
+						this.getManagedBean().setScQtCheckListScore(
+								checklistScore);
 
 					} else {
 
@@ -5999,7 +6029,8 @@ public class SpecificationBackingBean extends
 	}
 
 	public void addScheduleDetails() {
-
+		IQTSpecSO specso = getSpecSO();
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		try {
 
 			int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -6014,9 +6045,23 @@ public class SpecificationBackingBean extends
 
 				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
 				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
-					localSchedule.add(freqSchedule.get(j));
+					// localSchedule.add(freqSchedule.get(j));
+					ScQtSchedule schedule = new ScQtSchedule();
+					schedule.setStartYear(String.valueOf(year));
+					schedule.setEndYear(String.valueOf(year));
+					PmParameter parameter = new PmParameter();
+					schedule.setScheduleType(parameter);
+					setUserDetails(schedule);
+					// freqSchedule.add(schedule);
+					localSchedule.add(schedule);
 
 				}
+				this.getManagedBean().getScQt()
+						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+				specReqDTO.setScQt(this.getManagedBean().getScQt());
+				specReqDTO.setFullfilementType(this.getManagedBean()
+						.getFulfilmentType());
+				specso.removefulfillmentDtls(specReqDTO);
 				this.getManagedBean().setScheduleList(localSchedule);
 			} else {
 				for (int i = freqSchedule.size(); i < this.getManagedBean()
@@ -6068,24 +6113,84 @@ public class SpecificationBackingBean extends
 		}
 
 		int start = Integer.parseInt(schedule.getStartMonth());
+		String fromMonth = retriveMonthDtls(start);
 		int end = Integer.parseInt(schedule.getEndMonth());
-		int count = 0;
+		String toMonth = retriveMonthDtls(end);
 
-		for (int i = start + 1; i <= end + 1; i++) {
+		Date d1 = new Date();
 
-			count++;
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String localDate = format.format(d1);
+		String date = localDate.substring(0, 2);
+		String fromdate = date + "/" + fromMonth + "/"
+				+ schedule.getStartYear();
+		String toDate = date + "/" + toMonth + "/" + schedule.getEndYear();
 
-			schedule.setTotalMonths(new BigDecimal(count));
+		// schedule.setScheduleNo(schedule.getScheduleNo());
+
+		try {
+			DateUtils dateUtil = new DateUtils();
+			Date date1;
+			Date date2;
+			try {
+				date1 = format.parse(fromdate);
+				date2 = format.parse(toDate);
+				long days = dateUtil.getDaysDifference(date1, date2);
+				int day = (int) days;
+				int months = day / 30;
+				schedule.setTotalMonths(new BigDecimal(months));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// schedule.setFromDate(df.parse(fromdate));
+			// schedule.setToDate(df.parse(toDate));
+
+			int index = freqSchedule.indexOf(schedule);
+			freqSchedule.set(index, schedule);
+
+			this.getManagedBean().setScheduleList(freqSchedule);
+		} finally {
+
 		}
 
-		int index = freqSchedule.indexOf(schedule);
-		freqSchedule.set(index, schedule);
+	}
 
-		this.getManagedBean().setScheduleList(freqSchedule);
+	private String retriveMonthDtls(int Start) {
+		String month = "";
+		if (Start == 0) {
+			month = "01";
+		} else if (Start == 1) {
+			month = "02";
+		} else if (Start == 2) {
+			month = "03";
+		} else if (Start == 3) {
+			month = "04";
+		} else if (Start == 4) {
+			month = "05";
+		} else if (Start == 5) {
+			month = "06";
+		} else if (Start == 6) {
+			month = "07";
+		} else if (Start == 7) {
+			month = "08";
+		} else if (Start == 8) {
+			month = "09";
+		} else if (Start == 9) {
+			month = "10";
+		} else if (Start == 10) {
+			month = "11";
+		} else if (Start == 11) {
+			month = "12";
+		}
+		return month;
 	}
 
 	public void addProgressiveDetails() {
-
+		IQTSpecSO specso = getSpecSO();
+		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 		try {
 			/* System.out.println("=enter addscore method==="); */
 			int year = Calendar.getInstance().get(Calendar.YEAR);
@@ -6102,9 +6207,24 @@ public class SpecificationBackingBean extends
 				List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
 				for (int j = 0; j < this.getManagedBean()
 						.getTotalProgressivePayment(); j++) {
-					progressiveList.add(progressive.get(j));
+					// progressiveList.add(progressive.get(j));
+					ScQtProgressivePayment payment = new ScQtProgressivePayment();
+					payment.setStartYear(String.valueOf(year));
+					payment.setEndYear(String.valueOf(year));
+					// payment.setScheduleType(new BigDecimal(1));
+
+					setUserDetails(payment);
+					progressive.add(payment);
+					progressiveList.add(payment);
 
 				}
+				this.getManagedBean().getScQt()
+						.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+				specReqDTO.setScQt(this.getManagedBean().getScQt());
+				specReqDTO.setFullfilementType(this.getManagedBean()
+						.getFulfilmentType());
+				specso.removefulfillmentDtls(specReqDTO);
+
 				this.getManagedBean()
 						.setProgressivePaymentList(progressiveList);
 			} else {
@@ -6216,6 +6336,9 @@ public class SpecificationBackingBean extends
 			} else {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
+				if (null == checkListScore) {
+					checkListScore = new ArrayList<ScQtCheckListScore>();
+				}
 				if (checkListScore.size() < 2) {
 					throw new EpException("At least Two Auto Scores Required");
 				}
@@ -6244,6 +6367,10 @@ public class SpecificationBackingBean extends
 				} else {
 					List<ScQtCheckListScore> scoreYears = this.getManagedBean()
 							.getScoringForYears();
+
+					if (null == scoreYears) {
+						scoreYears = new ArrayList<ScQtCheckListScore>();
+					}
 					if (scoreYears.size() < 2) {
 						throw new EpException(
 								"At least Two Auto Scores Required");
@@ -6324,6 +6451,9 @@ public class SpecificationBackingBean extends
 			} else {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
+				if (null == checkListScore) {
+					checkListScore = new ArrayList<ScQtCheckListScore>();
+				}
 				if (checkListScore.size() < 2) {
 					throw new EpException("At least Two Auto Scores Required");
 				}
@@ -7778,9 +7908,9 @@ public class SpecificationBackingBean extends
 
 					schedule.setScQt(this.getManagedBean().getScQt());
 					localScheduleList.add(schedule);
-					scQt.setScQtSchedules(localScheduleList);
 
 				}
+				scQt.setScQtSchedules(localScheduleList);
 			} else {
 				scQt.setScQtSchedules(null);
 			}
@@ -7869,9 +7999,10 @@ public class SpecificationBackingBean extends
 
 					schedule.setScQt(this.getManagedBean().getScQt());
 					paymentList.add(schedule);
-					scQt.setScQtProgressivePayments(paymentList);
+					
 
 				}
+				scQt.setScQtProgressivePayments(paymentList);
 			} else {
 				scQt.setScQtProgressivePayments(null);
 			}
