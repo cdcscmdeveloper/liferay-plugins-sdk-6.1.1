@@ -216,6 +216,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     			scRequestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
     		}
     	}
+    	
+    	for (ScRequestNoteDtl requestNoteDtl : scRequestNoteDtls) {
+    		if (requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getSupplierId() == null) {
+				requestNoteDtl.setScRequestSupplierItem(null);
+			}
+    		
+    		if (requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() == null) {
+				requestNoteDtl.setPriceType(null);
+			}
+    		
+			if (requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId() == null) {
+				requestNoteDtl.setAssignedUser(null);
+			}
+		}
+    	
     	requestNote.setRequestNoteDtls(scRequestNoteDtls);
     	
 		// Target Approver
