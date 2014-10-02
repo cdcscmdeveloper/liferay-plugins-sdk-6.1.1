@@ -5388,9 +5388,13 @@ public class SmApplicationBackingBean extends
 		String revSupUrl = portalUrl + currentUrl
 				+ "/view-revision-application?applicationNo="
 				+ getManagedBean().getSmAppl().getApplNo() + "_SUP";
+		
+		String rA = getManagedBean().getSmAppl().getApprovedSerFile();
+		String revApp = rA.substring(rA.lastIndexOf('/') + 1, rA.indexOf("_APP"));
 		String revAppUrl = portalUrl + currentUrl
 				+ "/view-revision-application?applicationNo="
-				+ getManagedBean().getSmAppl().getApplNo() + "_APP";
+				+ revApp + "_APP";
+		
 
 		getManagedBean().setRevSupUrl(revSupUrl);
 		getManagedBean().setRevAppUrl(revAppUrl);
