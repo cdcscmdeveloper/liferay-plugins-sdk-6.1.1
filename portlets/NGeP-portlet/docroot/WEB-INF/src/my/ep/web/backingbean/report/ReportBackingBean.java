@@ -3678,6 +3678,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if(null!=constructedParamString && !"".equals(constructedParamString)){
 				//loadReport(generatedURL);	
 				loadReportWithParamsString(constructedParamString);
+				//loadReportWithParams(paramLst);
 				//getStreamedContentPDFFile(constructedParamString);
 				//getReportPdf();
 			}
@@ -3687,11 +3688,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
-	private void loadReportWithParams(List param) {
+	private void loadReportWithParams(List paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
-		 for (int i = 1; i <= param.size(); i++) {
-			 gnrtdURL.append(param.get(i));
+		 for (int i = 1; i <= paramLst.size(); i++) {
+			 gnrtdURL.append(paramLst.get(i));
 		 }
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));		
 		try {			
