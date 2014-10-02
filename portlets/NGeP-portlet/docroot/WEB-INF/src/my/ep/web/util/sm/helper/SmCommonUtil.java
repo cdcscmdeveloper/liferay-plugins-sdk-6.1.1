@@ -8,17 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.constant.MessageConst;
+import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
+import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -124,6 +126,16 @@ public class SmCommonUtil {
 		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
 
 		return resDTO.getPmParameter();
+	}
+	
+	public static PmBusinessNature retrieveBusinessNatureById(Long bizId){
+		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
+		reqDTO.setBusinessNatureId(bizId);
+		
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureDtlById(reqDTO);
+		
+		return resDTO.getBusinessNature();
 	}
 
 	public static String getApplTypeDesc(String applType) {
@@ -602,4 +614,6 @@ public class SmCommonUtil {
 		}
 
 	}
+	
+	
 }
