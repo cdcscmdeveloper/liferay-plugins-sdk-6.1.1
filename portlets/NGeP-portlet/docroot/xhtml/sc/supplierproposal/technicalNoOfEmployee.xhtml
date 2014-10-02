@@ -30,11 +30,22 @@
 							size="30" required="true" maxlength="6"
 							label="#{lbl['lbl.sc.sp.ttlemployees']}"
 							value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPEmployee.totalEmployees}"
-							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}">
+							disabled="#{supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee or statusHide}">
 						</p:inputText>
 						<p:message id="totalEmployeesMsg" for="totalEmployees"
 							display="icon" />
 					</h:panelGroup></td>
+			</tr>
+			<tr>
+				<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+						rendered="#{checklistScoreType eq '1'}" /> <h:outputText
+						value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						rendered="#{ checklistScoreType eq '2'}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{noOfContracts.autoScore}" style="text-align:right"
+						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						value="#{noOfContracts.userScore}" maxlength="18"
+						style="text-align:right" rendered="#{checklistScoreType eq '2'}"></p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>

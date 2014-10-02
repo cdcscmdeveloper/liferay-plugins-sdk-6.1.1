@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,18 +7,28 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-		
-		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
-			toggleable="true">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
-				<p:inputText style="text-align:right"
-					value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}" 
-					disabled="true" >
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-			</h:panelGrid>
-		</p:panel>
-		
+
+	<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
+		toggleable="true">
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.sc.spec.paid.up.capital.ringgit']}"></h:outputLabel>
+			<p:inputText style="text-align:right"
+				value="#{supplierProposalDetailBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
+				disabled="true">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			</p:inputText>
+			<h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+				rendered="#{checklistScoreType eq '1'}" />
+			<h:outputText value="#{lbl['lbl.sc.eva.s1.user.score']}"
+				rendered="#{checklistScoreType eq '2'}" />
+			<p:inputText readonly="true" disabled="true"
+				value="#{noOfContracts.autoScore}" style="text-align:right"
+				rendered="#{ checklistScoreType eq '1'}"></p:inputText>
+			<p:inputText value="#{noOfContracts.userScore}" maxlength="18"
+				style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText>
+		</h:panelGrid>
+	</p:panel>
+
 
 </ui:composition>

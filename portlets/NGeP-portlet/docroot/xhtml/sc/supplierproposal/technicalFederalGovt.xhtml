@@ -63,6 +63,15 @@
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
 						readonly="true" disabled="true" size="30" /></td>
+				<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+						rendered="#{checklistScoreType eq '1'}" /> <h:outputText
+						value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						rendered="#{ checklistScoreType eq '2'}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{noOfContracts.autoScore}" style="text-align:right"
+						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						value="#{noOfContracts.userScore}" maxlength="18"
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
@@ -72,8 +81,21 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</p:inputText></td>
+				<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+						rendered="#{companyScoreType eq '1'}" /> <h:outputText
+						value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						rendered="#{companyScoreType eq '2'}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{noOfYears.autoScore}" style="text-align:right"
+						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
+						maxlength="18" style="text-align:right"
+						value="#{noOfYears.userScore}"
+						rendered="#{companyScoreType eq '2'}"></p:inputText></td>
 			</tr>
 		</table>
+
+
+
 	</p:panel>
 
 
