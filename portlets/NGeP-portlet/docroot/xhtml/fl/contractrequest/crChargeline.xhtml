@@ -13,6 +13,7 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedNode}"
 			selectionMode="single"
 			value="#{contractRequestBackingBean.managedBean.chargeLineItemRoot}" >
+			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select"
 				listener="#{contractRequestBackingBean.onNodeSelect()}"
 				update="@(.chargeLineSection)" />
@@ -24,6 +25,9 @@
 					value="#{chargeLineNode.selectedChargeItem}"
 					rendered="#{chargeLineNode.parent == 'true'}"
 					styleClass="myCustomChekBox">
+					<p:ajax event="change"
+					listener="#{contractRequestBackingBean.selectCheckbox}"
+					update="@(.chargeLineSection)"/>	
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="COA">
@@ -88,59 +92,103 @@
 				</td>
 			</tr>
 		</table>
-		<table style="width: 100%;">
-			<tr>
-
-				<td colspan="4" style="text-align: left"><p:commandButton
-						value="Update COA" icon="ui-icon-add" ajax='true'
-						styleClass="ui-button" process="@this,chargeAss"
-						update=":form:applyBulkChargeDialog"
-						action="#{contractRequestBackingBean.clearPopupLists}" /></td>
-
-			</tr>
-		</table>
 		<br />
 		<br />
 		<br />
 		<h:panelGroup styleClass="chargeLineSection" id="chargeLineSection">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.vot.code']}" /></td>
-					<td><p:inputText
-							value="#{contractRequestBackingBean.managedBean.votFundCode}"
-							size="9" disabled="true" /> </td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td>
+					<td><p:selectOneMenu id="votCode1" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
+						value="#{contractRequestBackingBean.managedBean.votFundId}"
+						style="width: 150px; margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="votCodeList"
+							value="#{contractRequestBackingBean.managedBean.votFundList}"
+							itemLabel="#{votCodeList.votFundCode}"
+							itemValue="#{votCodeList.votFundId}" />
+							<p:ajax event="change"
+							listener="#{contractRequestBackingBean.checkVotFundDropdown}"
+							update="fundLov,pmActiveLov,projectLov,setiaCode,subSetiaCode,cpCode" />
+					</p:selectOneMenu></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fund']}" /></td> 
+					<td><h:panelGroup styleClass="fundLov" id="fundLov"><ac:lov id="fund"
+						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
+						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
+						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
+						readonly="true"
+						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
+						postUpdateListener="contractRequestBackingBean.checkVotFundLov()" 
+						conditionField="votFundType^A"
+						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
+					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.ind']}" /></td>
-					<td><p:inputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.assetInd,contractRequestBackingBean.managedBean.assetIndCode)}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td>
-					<td><p:inputText value="#{contractRequestBackingBean.managedBean.glAccountCode}"
-							size="9" disabled="true" /></td>
+					<td><p:selectOneMenu style="margin-bottom:5px;" value="#{contractRequestBackingBean.managedBean.assetIndId}" disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}">
+						<f:selectItems value="#{contractRequestBackingBean.getDropdownValues(ParameterTypeConst.assetInd)}" />
+					</p:selectOneMenu></td>
+					
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.asset.gosodo']}" /></td> 
+					<td><h:panelGroup styleClass="gosodoLov" id="gosodoLov"><ac:lov id="gosodo"
+						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
+						saveObject="contractRequestBackingBean.managedBean.gosodo"
+						readonly="true"
+						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
+						value="#{contractRequestBackingBean.managedBean.gosodo.glAccCode}"	>
+					</ac:lov></h:panelGroup></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.program.activity']}" /></td>
-					<td><p:inputText
-							value="#{contractRequestBackingBean.managedBean.prgActivityCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td>
-					<td><p:inputText
-							value="#{contractRequestBackingBean.managedBean.projectCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}"/></td>
-					<td><p:inputText
-							value="#{contractRequestBackingBean.managedBean.setiaCode}"
-							size="9" disabled="true" /></td>
-					<td><p:inputText
-							value="#{contractRequestBackingBean.managedBean.subSetiaCode}"
-							size="9" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td>
-					<td><p:inputText value="#{contractRequestBackingBean.getParameterDesc(ParameterTypeConst.financingType,contractRequestBackingBean.managedBean.financingTypeCode)}"
-							size="9" disabled="true" /></td>
-
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.program.activity']}" /></td> 
+					<td><h:panelGroup styleClass="pmActiveLov" id="pmActiveLov"><ac:lov id="pmActive"
+						lovId="PM_PRG_ACTIVITY" headerText="Program Activity LOV "
+						saveObject="contractRequestBackingBean.managedBean.pmPrgActivity"
+						readonly="true"
+						disabled="#{!contractRequestBackingBean.managedBean.programLov}" 
+						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
+						postUpdateListener="contractRequestBackingBean.checkProgramLov()" 
+						value="#{contractRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
+					</ac:lov></h:panelGroup></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.Project']}" /></td> 
+					<td><h:panelGroup styleClass="projectLov" id="projectLov"><ac:lov id="pmProject"
+						lovId="PM_PROJECT" headerText="Project/Setia/Sub Setia LOV "
+						saveObject="contractRequestBackingBean.managedBean.pmSubSetia"
+						readonly="true"
+						disabled="#{!contractRequestBackingBean.managedBean.projectLov}" 
+						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
+						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{contractRequestBackingBean.managedBean.votFundId}" 
+						postUpdateListener="contractRequestBackingBean.checkProjectLov()" 
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
+					</ac:lov></h:panelGroup></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.setia.subsetia']}" /></td> 
+					<td><h:panelGroup styleClass="setiaLov" id="setiaLov">
+						<p:inputText size="5" id="setiaCode"
+						readonly="true"
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.pmSetia.setiaCode}" /><p:inputText size="5" id="subSetiaCode"
+						readonly="true"
+						value="#{contractRequestBackingBean.managedBean.pmSubSetia.subSetiaCode}" /></h:panelGroup>
+					</td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.charge.cp']}" /></td> 
+					<td>
+						<p:inputText size="5" id="cpCode"
+						readonly="true"
+						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.pmSubSetia.financingType)}" />
+					</td>		
+					
 				</tr>
+				
 			</table>
+			<table style="width: 100%;">
+			<tr>
+
+				<td colspan="4" style="text-align: right"><p:commandButton
+						value="Update COA" icon="ui-icon-add" ajax='true'
+						styleClass="ui-button" process="@this,chargeAss"
+						update="chargeLineTbl,chargeAss,chargeLineSection"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
+						action="#{contractRequestBackingBean.chargeLineApply}" /></td>
+			</tr>
+		</table>
 		</h:panelGroup>
-		
 	</p:panel>
 	<p:dialog id="queryDialog" header="QUERY" widgetVar="addQuery"
 		showEffect="fade" hideEffect="fade" modal="true" width="600px"
@@ -299,4 +347,5 @@
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	<ac:lovPopup />	
 </ui:composition>

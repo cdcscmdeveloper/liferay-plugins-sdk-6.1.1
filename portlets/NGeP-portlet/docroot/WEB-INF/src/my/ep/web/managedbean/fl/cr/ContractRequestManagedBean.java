@@ -9,13 +9,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
@@ -42,11 +40,9 @@ import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -197,115 +193,27 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	}
 	
+	//charge line new screen 
+	private boolean chargeLinePanel=false;
+	private boolean programLov=false;
+	private boolean projectLov=false;
+	private boolean votFundDisplay=false;
 	
-	public void populateChargeLineData(){
-		 this.chargeLineItemRoot = new DefaultTreeNode("root", null);
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=processChargeLineItems();
-			prepareChargeLineTreeNode(chargeLineItemsMap,chargeLineItemRoot);
-	}
+	private PmVotFund pmVoteFund;
+	private PmGlAccount gosodo;
+	private PmPrgActivity pmPrgActivity;
+	private PmProject pmProject;
+	private PmSetia pmSetia;
+	private PmSubSetia pmSubSetia;
+	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
 
+	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
 	 */
 	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
 		this.chargeLineItemRoot = chargeLineItemRoot;
 	}
-
-	public Map<Long, List<FlFulfilmentItemAddr>> processChargeLineItems(){
-		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap=new HashMap<Long, List<FlFulfilmentItemAddr>>();
-			if(null !=this.getFlRequest().getFlDeliveryAddresses()){
-				for(FlDeliveryAddress  deliveryAddress :this.getFlRequest().getFlDeliveryAddresses()){
-					if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-						for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-							itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
-							itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
-							itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
-							//itemAddress.getCmItem().setExtensionCode(itemAddress.getCmItem().getExtensionCode());
-							
-							if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
-								//code for calculating duplicate charge line order amount and quantity for same unit price 
-								//Condition for checking unit price same.
-								boolean notContained=true;
-								for(FlFulfilmentItemAddr containedItem:chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
-									if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
-										//BigDecimal chargeOrderedAmt=containedItem.getChargeOrderedAmt();
-										containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
-										containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
-										notContained=false;
-									}
-								}
-								if(notContained){
-									chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId()).add(itemAddress);
-								}
-								
-							} else {
-								List<FlFulfilmentItemAddr> itemAddressList=new ArrayList<FlFulfilmentItemAddr>();
-								itemAddressList.add(itemAddress);
-								//Copy order amount ,qty to charge line fields and set.
-								chargeLineItemsMap.put(itemAddress.getScRequestItem().getRequestNoteItemId(),itemAddressList);
-							}
-						}
-					}
-				}
-			}
-			return chargeLineItemsMap;
-		}
-	
-	
-	private void prepareChargeLineTreeNode(
-			Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap,TreeNode chargeLineItemRoot) {
-		BigDecimal grandTotalOrderAmt=new BigDecimal(0);
-		for(Entry<Long, List<FlFulfilmentItemAddr>> itemEntry:chargeLineItemsMap.entrySet()){
-			List<FlFulfilmentItemAddr> itemAddress=itemEntry.getValue();
-			FlFulfilmentItemAddr flItemAddress=getFulfilmentItemAddress(itemAddress.get(0));
-			if(null!=flItemAddress){
-				//Do create New Item Address and copy the first element data manually.
-				TreeNode childItemNode=new DefaultTreeNode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString(),flItemAddress,chargeLineItemRoot);
-				BigDecimal totalOrderAmt=new BigDecimal(0);
-				for(FlFulfilmentItemAddr itemAddr:itemAddress){
-					new DefaultTreeNode(itemAddr.getScRequestItem().getRequestNoteItemId().toString(),itemAddr,childItemNode);
-					totalOrderAmt=totalOrderAmt.add(itemAddr.getChargeOrderedAmt());
-				}
-				flItemAddress.setChargeOrderedAmt(totalOrderAmt);
-				grandTotalOrderAmt=grandTotalOrderAmt.add(totalOrderAmt);
-				setOrderedAmtGrandTotal(grandTotalOrderAmt);
-			}
-		}
-	}
-	
-	private FlFulfilmentItemAddr getFulfilmentItemAddress(
-			FlFulfilmentItemAddr flFulfilmentItemAddr) {
-		FlFulfilmentItemAddr itemAddress = new FlFulfilmentItemAddr();
-		// Do Convertions
-
-		//itemAddress.setFlFulfilmentItem(new FlFulfilmentItem());
-		//itemAddress.getFlFulfilmentItem().setScRequestNoteDtl(new ScRequestNoteDtl());
-		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().setScRequestSupplierItem(new ScRequestSupplierItem());
-		//itemAddress.getFlFulfilmentItem().getScRequestNoteDtl().getScRequestSupplierItem().setRequestNoteItem(new ScRequestItem());
-		itemAddress.setScRequestItem(new ScRequestItem());
-		itemAddress.setParent(true);
-		itemAddress.getScRequestItem().setRequestNoteItemId(flFulfilmentItemAddr.getScRequestItem().getRequestNoteItemId());
-		itemAddress.getScRequestItem().setItemType(flFulfilmentItemAddr.getScRequestItem().getItemType());
-		itemAddress.getScRequestItem().setUom(flFulfilmentItemAddr.getScRequestItem().getUom());
-		if(null==itemAddress.getCmItem()){
-			itemAddress.setCmItem(new CmItem());
-		}
-		itemAddress.getCmItem().setExtensionCode(flFulfilmentItemAddr.getCmItem().getExtensionCode());
-		itemAddress.getScRequestItem().setItemName(flFulfilmentItemAddr.getScRequestItem().getItemName());
-		itemAddress.setUnitPrice(flFulfilmentItemAddr.getUnitPrice());
-		itemAddress.setOrderedQty(flFulfilmentItemAddr.getOrderedQty());
-		itemAddress.setOrderedAmt(flFulfilmentItemAddr.getOrderedAmt());
-		if(null !=flFulfilmentItemAddr.getPmVotFund()){
-			if(null !=flFulfilmentItemAddr.getPmVotFund().getVotFundId()){
-				itemAddress.setCoaValue("Y");
-			}
-		}else{
-			itemAddress.setCoaValue("N");
-		}
-		
-		return itemAddress;
-	}
-
 
 	public FlFulfilmentRequest getFlRequest() {
 		return flRequest;
@@ -1873,6 +1781,160 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentPreparedOrgId(Long currentPreparedOrgId) {
 		this.currentPreparedOrgId = currentPreparedOrgId;
+	}
+
+	/**
+	 * @return the chargeLinePanel
+	 */
+	public boolean isChargeLinePanel() {
+		return chargeLinePanel;
+	}
+
+	/**
+	 * @return the programLov
+	 */
+	public boolean isProgramLov() {
+		return programLov;
+	}
+
+	/**
+	 * @return the projectLov
+	 */
+	public boolean isProjectLov() {
+		return projectLov;
+	}
+
+	/**
+	 * @return the votFundDisplay
+	 */
+	public boolean isVotFundDisplay() {
+		return votFundDisplay;
+	}
+
+	/**
+	 * @return the pmVoteFund
+	 */
+	public PmVotFund getPmVoteFund() {
+		return pmVoteFund;
+	}
+
+	/**
+	 * @return the gosodo
+	 */
+	public PmGlAccount getGosodo() {
+		return gosodo;
+	}
+
+	/**
+	 * @return the pmPrgActivity
+	 */
+	public PmPrgActivity getPmPrgActivity() {
+		return pmPrgActivity;
+	}
+
+	/**
+	 * @return the pmProject
+	 */
+	public PmProject getPmProject() {
+		return pmProject;
+	}
+
+	/**
+	 * @return the pmSetia
+	 */
+	public PmSetia getPmSetia() {
+		return pmSetia;
+	}
+
+	/**
+	 * @return the pmSubSetia
+	 */
+	public PmSubSetia getPmSubSetia() {
+		return pmSubSetia;
+	}
+
+	/**
+	 * @return the itemAddrVoteFundDisp
+	 */
+	public FlFulfilmentItemAddr getItemAddrVoteFundDisp() {
+		return itemAddrVoteFundDisp;
+	}
+
+	/**
+	 * @param chargeLinePanel the chargeLinePanel to set
+	 */
+	public void setChargeLinePanel(boolean chargeLinePanel) {
+		this.chargeLinePanel = chargeLinePanel;
+	}
+
+	/**
+	 * @param programLov the programLov to set
+	 */
+	public void setProgramLov(boolean programLov) {
+		this.programLov = programLov;
+	}
+
+	/**
+	 * @param projectLov the projectLov to set
+	 */
+	public void setProjectLov(boolean projectLov) {
+		this.projectLov = projectLov;
+	}
+
+	/**
+	 * @param votFundDisplay the votFundDisplay to set
+	 */
+	public void setVotFundDisplay(boolean votFundDisplay) {
+		this.votFundDisplay = votFundDisplay;
+	}
+
+	/**
+	 * @param pmVoteFund the pmVoteFund to set
+	 */
+	public void setPmVoteFund(PmVotFund pmVoteFund) {
+		this.pmVoteFund = pmVoteFund;
+	}
+
+	/**
+	 * @param gosodo the gosodo to set
+	 */
+	public void setGosodo(PmGlAccount gosodo) {
+		this.gosodo = gosodo;
+	}
+
+	/**
+	 * @param pmPrgActivity the pmPrgActivity to set
+	 */
+	public void setPmPrgActivity(PmPrgActivity pmPrgActivity) {
+		this.pmPrgActivity = pmPrgActivity;
+	}
+
+	/**
+	 * @param pmProject the pmProject to set
+	 */
+	public void setPmProject(PmProject pmProject) {
+		this.pmProject = pmProject;
+	}
+
+	/**
+	 * @param pmSetia the pmSetia to set
+	 */
+	public void setPmSetia(PmSetia pmSetia) {
+		this.pmSetia = pmSetia;
+	}
+
+	/**
+	 * @param pmSubSetia the pmSubSetia to set
+	 */
+	public void setPmSubSetia(PmSubSetia pmSubSetia) {
+		this.pmSubSetia = pmSubSetia;
+	}
+
+	/**
+	 * @param itemAddrVoteFundDisp the itemAddrVoteFundDisp to set
+	 */
+	public void setItemAddrVoteFundDisp(FlFulfilmentItemAddr itemAddrVoteFundDisp) {
+		this.itemAddrVoteFundDisp = itemAddrVoteFundDisp;
 	}
 
 

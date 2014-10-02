@@ -39,12 +39,12 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
-import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -82,8 +82,6 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
-import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
@@ -93,6 +91,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -186,6 +186,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
 	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
 	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
+	
 	
 	// bulk charge popup
 	private Long pmPrjSetia;
@@ -1367,6 +1368,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
 			getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			getManagedBean().setChargeLinePanel(false);
+			getManagedBean().setProgramLov(false);
+			getManagedBean().setProjectLov(false);
+			getManagedBean().setVotFundDisplay(false);
 		}
 		if(selectedTabIndex==1){
 			if(getManagedBean().getSelectedDelAddr()==null) { 
@@ -1449,22 +1454,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 	}
 	public void onNodeSelect() {
+
+		getManagedBean().setChargeLinePanel(false);
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
 		if(null!=selectedNode){
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+					if("A".equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
+						getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+						getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
+					}else{
+						getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+						getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
+					}
 				}
 				
 				if(childData.getAssetInd()!=null) {
 					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+					getManagedBean().setAssetIndId(childData.getAssetInd().getParameterId());
 				}
 					
 				if(childData.getPmGlAccount()!=null) {
-					String glAccountCode = glAccountCodeMap.get(childData.getPmGlAccount().getGlAccountId()).getGlAccCode();
-					getManagedBean().setGlAccountCode(glAccountCode);
+					getManagedBean().setGosodo(childData.getPmGlAccount());
 				}
 				
 				if(childData.getPmPrgActivity()!=null) {
@@ -1478,8 +1491,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 							progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
 						}
 					}
-					String progActvCode = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId()).getPrgActivityCode();
-					getManagedBean().setPrgActivityCode(progActvCode);
+					PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId());
+					//getManagedBean().setPmPrgActivity(pmPrgActivity);
+					getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
 				}
 				
 				if(childData.getPmSubSetia()!=null) {
@@ -1492,22 +1506,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 							subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
 						}						
 					}
-					String subSetiaCode = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getSubSetiaCode();
-					getManagedBean().setSubSetiaCode((subSetiaCode));
-					
-					if(childData.getPmSubSetia().getPmSetia()!=null) {
-						//String setiaCode = setiaCodeMap.get(childData.getPmSubSetia().getPmSetia().getSetiaId()).getSetiaCode();
-						getManagedBean().setSetiaCode(childData.getPmSubSetia().getPmSetia().getSetiaCode());
-						
-						if(childData.getPmSubSetia().getPmSetia().getPmProject()!=null) {
-//							String projectCode = projectCodeMap.get(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectId()).getProjectCode();
-							getManagedBean().setProjectCode(childData.getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
-						}
-					}
-					getManagedBean().setFinancingTypeCode(subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId()).getFinancingType().getParameterCode());
+					PmSubSetia pmSubSetia = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId());
+					getManagedBean().setPmSubSetia(pmSubSetia);
 				}
 			}
 		}
+	
 	}
 	public void clearPopupLists(){
 		getManagedBean().setVotFundId(0L);
@@ -1549,14 +1553,28 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void onNodeUnSelect() {
+
+		getManagedBean().setProgramLov(false);
+		getManagedBean().setProjectLov(false);
+		getManagedBean().setChargeLinePanel(false);
 		getManagedBean().setVotFundCode("");
+		getManagedBean().setVotFundId(0L);
+		getManagedBean().setPmVoteFund(new PmVotFund());
+		getManagedBean().setPmSubSetia(new PmSubSetia());
+		getManagedBean().getPmSubSetia().setPmSetia(new PmSetia());
+		getManagedBean().getPmSubSetia().getPmSetia().setPmProject(new PmProject());
+		getManagedBean().setPmPrgActivity(new PmPrgActivity());
+		getManagedBean().setGosodo(new PmGlAccount());
 		getManagedBean().setAssetIndCode("");
+		getManagedBean().setAssetIndId(0L);
 		getManagedBean().setGlAccountCode("");
 		getManagedBean().setPrgActivityCode("");
+		getManagedBean().setPrgActivityId(0L);
 		getManagedBean().setProjectCode("");
 		getManagedBean().setSetiaCode("");
 		getManagedBean().setSubSetiaCode("");
 		getManagedBean().setFinancingTypeCode("");		
+	
 	}
 	public void selectAllCheckboxSelect(AjaxBehaviorEvent e){
 		if((boolean) e.getComponent().getAttributes().get("value")){
@@ -1579,23 +1597,44 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void chargeLineApply() {
+
 		IParameterSO parameterSO = null;
 		try {
+			if(null == getManagedBean().getVotFundId()){
+				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
+			}
+			if(null != getManagedBean().getGosodo()){
+				getManagedBean().setGlAccountId(getManagedBean().getGosodo().getGlAccountId());
+			}
+			if(null != getManagedBean().getPmPrgActivity()){
+				getManagedBean().setPrgActivityId(getManagedBean().getPmPrgActivity().getPrgActivityId());
+			}
+			if(null != getManagedBean().getPmSubSetia()){
+				getManagedBean().setSubSetiaId(getManagedBean().getPmSubSetia().getSubSetiaId());
+				getManagedBean().setSetiaId(getManagedBean().getPmSubSetia().getPmSetia().getSetiaId());
+				getManagedBean().setProjectId(getManagedBean().getPmSubSetia().getPmSetia().getPmProject().getProjectId());
+			}
+			
 			chargeLineValidation();
 			
 			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-			PmGlAccount pmGlAccount = glAccountCodeMap.get(getManagedBean().getGlAccountId());
+			PmGlAccount pmGlAccount = getManagedBean().getGosodo();
 			PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(getManagedBean().getPrgActivityId());
 			PmProject pmProject = projectCodeMap.get(getManagedBean().getProjectId());
 			PmSetia pmSetia = setiaCodeMap.get(getManagedBean().getSetiaId());
 			PmSubSetia pmSubSetia = subSetiaCodeMap.get(getManagedBean().getSubSetiaId());
+			if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
+				pmPrgActivity = null;
+				pmProject = null;
+				pmSetia = null;
+				pmSubSetia = null;
+			}
 			
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 			paramReqDTO.setParameterId(getManagedBean().getAssetIndId());
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			PmParameter assetInd = parameterSO.retrieveParameterById(paramReqDTO).getPmParameter();
-			
-			updateAllItemsWithChargeDrops(getManagedBean().getSelectedNodes()); // set COA to Y
+			updateAllItemsWithChargeDrops(); // set COA to Y
 			FlFulfilmentItemAddr childItemAddress = null;
 			boolean selected=false;
 			for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
@@ -1617,8 +1656,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					childItemAddress.getFlFulfilmentItem().setPmGlAccount(pmGlAccount);
 					childItemAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
 					childItemAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
+					childItemAddress.setVotFundDisplay(getManagedBean().isVotFundDisplay());
 				}
 				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
+				
 				//Code for multiple delivery addresses based on item code
 				for (FlDeliveryAddress delAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
 					for (FlFulfilmentItemAddr itemDelAddress : delAddress.getFlFulfilmentItemAddr()) {
@@ -1637,15 +1678,32 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 				}
+				
+				for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
+					if(item.getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().longValue()==childItemAddress.getScRequestItem().getRequestNoteItemId().longValue()
+							&& item.getUnitPrice().doubleValue()==childItemAddress.getUnitPrice().doubleValue()) {
+						item.setPmVotFund(pmVotFund);
+						item.setAssetInd(assetInd);
+						item.setPmGlAccount(pmGlAccount);
+						item.setPmPrgActivity(pmPrgActivity);
+						item.setPmSubSetia(pmSubSetia);
+						break;
+					}
+				}
 			}
 			populateChargeLineData(true);
 			onNodeSelect();
-			RequestContext.getCurrentInstance().execute("applyBulkCharge.hide()");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745052, new String[]{}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
 		} finally {
 			parameterSO = null;
 		}
+	
 	}
 	private void chargeLineValidation() {
+
 		if(getManagedBean().getVotFundId()==null) {
 			throw new EpException(MessageConst.ERROR_100022, new String[]{"VOT Code"});
 		}
@@ -1656,17 +1714,39 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			throw new EpException(MessageConst.ERROR_100022, new String[]{"GOSODO"});
 		}		
 		
+		List<String> selectedItemAddressList = new ArrayList<String>();
+		updateSelectedTreeNodes();
+		FlFulfilmentItemAddr flTemp = null;
+		for(TreeNode selectedNode : getManagedBean().getSelectedNodes()){
+			flTemp = (FlFulfilmentItemAddr)selectedNode.getData();
+			selectedItemAddressList.add(flTemp.getScRequestItem().getRequestNoteItemId()+ " "+flTemp.getUnitPrice().doubleValue());
+		}
+		
 		boolean isVotSOrAmanahExist = false;
+		boolean isVotBOrPOrTExist = false;
 		String votFundType = null;
 		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+				if(selectedItemAddressList.contains(itemAddress.getScRequestItem().getRequestNoteItemId()+ " "+itemAddress.getUnitPrice().doubleValue())) {
+					continue;
+				}
 				if(itemAddress.getPmVotFund()!=null) {
-					votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
+					if(null == votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId())){
+						votFundType=itemAddress.getPmVotFund().getVotFundType();
+					}else{
+						votFundType = votFundCodeMap.get(itemAddress.getPmVotFund().getVotFundId()).getVotFundType();
+					}
 					if(votFundType.equalsIgnoreCase(VotFundType.SETIA.value()) || votFundType.equalsIgnoreCase(VotFundType.AMANAH.value())) {
 						isVotSOrAmanahExist = true;
 						break;
+					} else {
+						isVotBOrPOrTExist = true;
+						break;
 					}
 				}
+			}
+			if(isVotSOrAmanahExist || isVotBOrPOrTExist) {
+				break;
 			}
 		}		
 		PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
@@ -1674,6 +1754,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value()) ||
 			pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value())) {
 			if(isVotSOrAmanahExist) {
+				throw new EpException(MessageConst.ERROR_740005);
+			}
+		} else {
+			if(isVotBOrPOrTExist) {
 				throw new EpException(MessageConst.ERROR_740005);
 			}
 		}
@@ -1692,6 +1776,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Sub Setia"});
 			}			
 		}
+	
 	}
 	//itemAddress.getScRequestItem().getRequestNoteItemId().equals(arg0)
 
@@ -1710,29 +1795,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	}
 
-	private void updateAllItemsWithChargeDrops(TreeNode[] selectedNodes) {
-		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-			for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-				if(null!=deliveryAddress.getFlFulfilmentItemAddr()){
-					for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
-						if(null !=selectedNodes){
-							for(TreeNode node:selectedNodes){
-								//getRequestNoteItemId()
-								FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
-								//itemAddress.getCmItem().getItemId()
-								if(itemAddress.getCmItem().getItemId().equals(selectedItem.getCmItem().getItemId())){
-									PmPrgActivity pmPrgActivity=new PmPrgActivity();
-									itemAddress.setCoaValue("Y");
-									//itemAddress.setPmSubSetia(getManagedBean().getSetiaId());
-									//itemAddress.setPmPrgActivity(getManagedBean().getPrgActivityId());
-								}
-							}
-						}
+	private void updateAllItemsWithChargeDrops() {
+		updateSelectedTreeNodes();
+		if(getManagedBean().getSelectedNodes().length==0) {
+			throw new EpException(MessageConst.ERROR_100049);
+		}
+		for(FlDeliveryAddress  deliveryAddress :getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress:deliveryAddress.getFlFulfilmentItemAddr()){
+				for(TreeNode node:getManagedBean().getSelectedNodes()){
+					FlFulfilmentItemAddr selectedItem=(FlFulfilmentItemAddr)node.getData();
+					if(itemAddress.getScRequestItem().getRequestNoteItemId().equals(selectedItem.getScRequestItem().getRequestNoteItemId())){
+						itemAddress.setCoaValue("Y");
+						break;
 					}
-				}	
+				}
 			}
-		}	
-		
+		}
 	}
 	
 	public void getVotFundList(Long profileId){
@@ -2298,10 +2376,96 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	
+	// chargeLine Panel enable if  checkbox selected
+		public void selectCheckbox(AjaxBehaviorEvent e){
+			onNodeUnSelect();
+			getManagedBean().setProgramLov(false);
+			getManagedBean().setProjectLov(false);
+			boolean checkValue=(boolean)e.getComponent().getAttributes().get("value");
+			System.out.println("checkValue:::: "+checkValue);
+			if((boolean) e.getComponent().getAttributes().get("value")){
+				getManagedBean().setChargeLinePanel(true);
+			}else{
+				getManagedBean().setChargeLinePanel(false);
+			}
+		}
+		public void checkVotFundLov(){
+			getManagedBean().setProgramLov(false);
+			getManagedBean().setProjectLov(false);
+			getManagedBean().setVotFundDisplay(false);
+			getManagedBean().setVotFundCode("");
+			getManagedBean().setVotFundId(0L);
+			getManagedBean().getPmSubSetia().setSubSetiaCode("");
+			getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
+			getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
+			getManagedBean().getPmSubSetia().setFinancingType(null);
+			getManagedBean().setPmPrgActivity(null);
+			
+			if(null != getManagedBean().getPmVoteFund()){
+				votFundCodeMap.put(getManagedBean().getPmVoteFund().getVotFundId(), getManagedBean().getPmVoteFund());
+			}
+			
+		}
+		public void checkVotFundDropdown(){
+			getManagedBean().setProgramLov(false);
+			getManagedBean().setProjectLov(false);
+			getManagedBean().setVotFundDisplay(true);
+			if(null != getManagedBean().getPmVoteFund()){
+				if(!"".equalsIgnoreCase(getManagedBean().getPmVoteFund().getVotFundCode())){
+					getManagedBean().getPmVoteFund().setVotFundCode("");
+					getManagedBean().getPmVoteFund().getVotFundCode();
+				}
+			}
+			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
+			if(null != getManagedBean().getPmSubSetia()){
+				getManagedBean().getPmSubSetia().setSubSetiaCode("");
+				getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
+				getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
+				getManagedBean().getPmSubSetia().setFinancingType(null);
+			}			
+			if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
+				if("B".equalsIgnoreCase(pmVotFund.getVotFundType()) || "T".equalsIgnoreCase(pmVotFund.getVotFundType())){
+					getManagedBean().setProgramLov(true);
+				} else if("P".equalsIgnoreCase(pmVotFund.getVotFundType()) || "S".equalsIgnoreCase(pmVotFund.getVotFundType())){
+					getManagedBean().setProjectLov(true);
+					if(null != getManagedBean().getPmPrgActivity()){
+						getManagedBean().getPmPrgActivity().setPrgActivityCode("");
+					}
+				}
+			}
+		}
+		public void checkProjectLov(){
+			if(null != getManagedBean().getPmSubSetia()){
+				projectCodeMap.put(getManagedBean().getPmSubSetia().getPmSetia().getPmProject().getProjectId(), getManagedBean().getPmSubSetia().getPmSetia().getPmProject());
+				subSetiaCodeMap.put(getManagedBean().getPmSubSetia().getSubSetiaId(), getManagedBean().getPmSubSetia());
+				setiaCodeMap.put(getManagedBean().getPmSubSetia().getPmSetia().getSetiaId(), getManagedBean().getPmSubSetia().getPmSetia());
+			}
+			
+		}
+
+		public void checkProgramLov(){
+			if(null != getManagedBean().getPmPrgActivity()){
+				progmActivityCodeMap.put(getManagedBean().getPmPrgActivity().getPrgActivityId(),getManagedBean().getPmPrgActivity());
+			}
+		}
+		
+	
 	/**
 	 * Page navigation to FLDoc search page in CR
 	 */
-	public String backToPervious() {
-		return "flDocSearch";
-	}
+		public String backToPervious() {
+			return "flDocSearch";
+		}
+	
+		public String retrieveMofNo(SmSupplier smSupplier) {
+			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+			if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+				return resDTO.getMofAccount().getMofNo();
+			}
+			return null;
+		}
 }
