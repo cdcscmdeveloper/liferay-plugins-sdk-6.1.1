@@ -1818,11 +1818,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		FacesContext fc = FacesContext.getCurrentInstance();
 		PurchaseInDefaultBackingBean purchaseInDefaultBackingBean = new PurchaseInDefaultBackingBean();
 	 try{
-		if(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault() != null){
+		if(requestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
 			// Purchase In Default	
 		     purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-			purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestNoteDtl.getScRequestSupplierItem().getRequestNoteItem().getPurchaseInDefault().getPurchaseInDefaultId());
+			purchaseInDefaultReqDTO.setPurchaseInDefaultId(requestNoteDtl.getRequestItem().getPurchaseInDefault().getPurchaseInDefaultId());
 			purchaseInDefaultReqDTO.setFetchSubEntity(true);
 			PurchaseInDefaultResDTO purchaseInDefaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
 			ScPurchaseInDefault purchaseInDefault = purchaseInDefaultResDTO.getPurchaseInDefaultDtl();
