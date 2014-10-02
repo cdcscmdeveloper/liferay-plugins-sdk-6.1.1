@@ -23,12 +23,12 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptCompanyScoring}" >
+				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="51" />
-				
-				</p:commandButton>
+
+			</p:commandButton>
 
 
 
@@ -77,16 +77,27 @@
 
 		</p:panel>
 
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.sc.spec.total.credit']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.total.credit.amount.paid']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-			<h:outputLabel value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.credit']}"></h:outputLabel></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<p:spacer height="10"></p:spacer>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.spec.total.credit.amount.paid']}"></h:outputLabel></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+				<p:spacer height="10"></p:spacer>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}"></h:outputLabel></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+			</tr>
+		</table>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.credit.facility']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -122,9 +133,13 @@
 								actionListener="#{specificationBackingBean.addScoring(51)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>

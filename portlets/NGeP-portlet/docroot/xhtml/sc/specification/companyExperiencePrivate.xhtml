@@ -23,15 +23,15 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptCompanyScoring}" >
+				action="#{specificationBackingBean.acceptCompanyScoring}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="15" />
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.otherCriteriaType}"
 					value="16" />
-				
-				</p:commandButton>
+
+			</p:commandButton>
 
 
 
@@ -104,6 +104,7 @@
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
+				<p:spacer height="10"></p:spacer>
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
 					</td>
@@ -120,7 +121,8 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -157,9 +159,13 @@
 								actionListener="#{specificationBackingBean.addScoring(15)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>
@@ -185,7 +191,8 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.score.total.no.years']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -221,15 +228,19 @@
 								actionListener="#{specificationBackingBean.addScoringyears(16)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring('NoOfYears')}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>
 
 				</p:panel>
-				<p:panel 
+				<p:panel
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>
 						<tr>

@@ -45,12 +45,14 @@
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
-					rendered="#{tech.qtScoreWeightage.score!='0'}" />
+					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					id="techScoreWeight" required="true" maxlength="18"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
-					rendered="#{tech.qtScoreWeightage.score=='0'}">
-					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+					rendered="#{tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD'}">
+					<ac:validateNumber integerOnly="
+					true" maxIntegerDigits="14">
+					</ac:validateNumber>
 					<p:ajax event="blur" process="@this"
 						listener="#{specificationBackingBean.techScoreSum}"
 						update=":form:addpoints" />
