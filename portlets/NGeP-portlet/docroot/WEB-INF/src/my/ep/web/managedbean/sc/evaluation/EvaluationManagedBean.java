@@ -180,9 +180,27 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String docDefinitionKey;
 	private List<ScQtProposalChecklist> technicalComplinaceList;
 	private boolean isStatusHide;
-	
+	private ScQtProposalScore noOfContractsProposalScore;
+	private ScQtProposalScore noOfyearsProposalScore;
 
 
+
+	public ScQtProposalScore getNoOfContractsProposalScore() {
+		return noOfContractsProposalScore;
+	}
+
+	public void setNoOfContractsProposalScore(
+			ScQtProposalScore noOfContractsProposalScore) {
+		this.noOfContractsProposalScore = noOfContractsProposalScore;
+	}
+
+	public ScQtProposalScore getNoOfyearsProposalScore() {
+		return noOfyearsProposalScore;
+	}
+
+	public void setNoOfyearsProposalScore(ScQtProposalScore noOfyearsProposalScore) {
+		this.noOfyearsProposalScore = noOfyearsProposalScore;
+	}
 
 	public boolean isStatusHide() {
 		return isStatusHide;
