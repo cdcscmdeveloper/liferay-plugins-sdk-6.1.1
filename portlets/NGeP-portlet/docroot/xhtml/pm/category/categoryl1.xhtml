@@ -10,7 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<table style="width: 100%;">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
