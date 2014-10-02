@@ -24,14 +24,14 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private PmCategoryL1 pmCategoryL1;
 	private PmCategoryL2 pmCategoryL2;
 	private PmCategoryL3 pmCategoryL3;
-	private int catLevel;
+	private String catLevel;
 	private boolean newCategory = false;
 	
-	public int getCatLevel() {
+	public String getCatLevel() {
 		return catLevel;
 	}
 
-	public void setCatLevel(int i) {
+	public void setCatLevel(String i) {
 		this.catLevel = i;
 	}
 

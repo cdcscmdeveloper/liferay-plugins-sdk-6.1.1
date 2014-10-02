@@ -63,7 +63,9 @@
 
 				<p:column headerText="#{lbl['lbl.pm.category.level']}" 
 					style="width :15%">
-					<h:outputText value="#{category[0]}" />
+					<h:outputText value="#{lbl['lbl.pm.main.category']}" rendered="#{category[0]==1}" />
+					<h:outputText value="#{lbl['lbl.pm.sub.category']}" rendered="#{category[0]==2}" />
+					<h:outputText value="#{lbl['lbl.pm.sub.div']}" rendered="#{category[0]==3}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.pm.category.code']}"
@@ -87,13 +89,36 @@
 				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 					style="width :5%">
 					
-					<p:commandLink
-						action="#{categoryBackingBean.editCategory(category[1])}"
-						update="@form">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							title="#{lbl['lbl.pm.edit.category']}"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
+					
+					   <p:commandLink rendered="#{category[0]==1}"
+							action="#{categoryBackingBean.editCategory(category[1])}"
+							update="@form">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								title="#{lbl['lbl.pm.edit.category']}"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+					
+						
+					   
+					   <p:commandLink rendered="#{category[0]==2}" 
+							action="#{categoryBackingBean.editSubCategory(category[1])}"
+							update="@form">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								title="#{lbl['lbl.pm.edit.sub.category']}"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+					   
+					   
+					   
+					   <p:commandLink rendered="#{category[0]==3}" 
+							action="#{categoryBackingBean.editSubDivision(category[1])}"
+							update="@form">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+								title="#{lbl['lbl.pm.edit.sub.div']}"
+								value="/resources/ep/images/design/edit.png" />
+						</p:commandLink>
+					  
+					
 					
 				</p:column>
 			</p:dataTable>

@@ -13,12 +13,22 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-						icon="ui-icon-back" update=":form" process="@this"
-						action="#{categoryBackingBean.backToSearch}"
-						style="float:left;" /></td>
+				<td>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+					icon="ui-icon-back" update=":form" process="@this"
+					rendered="#{categoryBackingBean.managedBean.newCategory}"
+					action="#{categoryBackingBean.editCategory(categoryBackingBean.managedBean.pmCategoryL1.categoryL1Id)}"
+					style="float:left;" 
+				/>
+				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+					icon="ui-icon-back" update=":form" process="@this"
+					rendered="#{!categoryBackingBean.managedBean.newCategory}"
+					action="#{categoryBackingBean.backToSearch}"
+					style="float:left;" 
+				/>
+				</td>
 				<td><p:commandButton value="#{lbl['lbl.btn.save']}"
-						action="#{categoryBackingBean.saveCategory}"
+						action="#{categoryBackingBean.saveSubCategory}"
 						update="@([id$=Msg])" icon="ui-icon-save" style="float:right;" /></td>
 			</tr>
 
@@ -31,31 +41,31 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
 				</h:panelGroup>
-				<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}" disabled="true"
+				<h:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}" disabled="true"
 					style="width: 108px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}" itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}" itemValue="2" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-				</p:selectOneMenu>
+				</h:selectOneMenu>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" />
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryL2Code}" size="15" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.desc']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryName}" size="120" />
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL2.categoryName}" size="120" />
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.status']}" />
 				</h:panelGroup>
-				<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}" disabled="false"
+				<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL2.recordStatusFlg}" disabled="false"
 					style="width: 108px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
@@ -64,38 +74,55 @@
 			</h:panelGrid>
 		</p:panel>
 		
+		<p:panel header="#{lbl['lbl.pm.parent.category']}" toggleable="true" id="catParent">
+			<h:panelGrid columns="4" columnClasses="cmWidth1,cmPadding5,cmWidth1,cmPadding5">
+				
+				<h:panelGroup style="float: right">
+				<h:outputText value="#{lbl['lbl.pm.main.category.code']}" />
+				</h:panelGroup>
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryL1Code}" size="15" disabled="true" readonly="true"/>
+				
+				
+				<h:panelGroup style="float: right">
+				<h:outputText value="#{lbl['lbl.pm.main.category.desc']}" />
+				</h:panelGroup>
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL1.categoryName}" size="120" disabled="true" readonly="true"/>
+				
+				
+			</h:panelGrid>
+		</p:panel>
 		
 		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 		<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true" id="catdetails">
 		<p:dataTable id="catdetailsId" rowIndexVar="rowIndex"
-			value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
-			width="100%" var="pmCategoryL2">
+			value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL3s}"
+			width="100%" var="pmCategoryL3">
 
 			<ac:paginator for="catdetailsId"></ac:paginator>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.bn.level']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.sub.category']}" />
+				<h:outputText value="#{lbl['lbl.pm.sub.div']}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.bn.code']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL2.categoryL2Code}" />
+				<h:outputText value="#{pmCategoryL3.categoryL3Code}" />
             </p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.contact.name']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL2.categoryName}" />
+				<h:outputText value="#{pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.status']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.status.active']}" rendered="#{pmCategoryL2.recordStatusFlg == 1}"/>
-				<h:outputText value="#{lbl['lbl.pm.status.inactive']}" rendered="#{pmCategoryL2.recordStatusFlg == 0}"/>
+				<h:outputText value="#{lbl['lbl.pm.status.active']}" rendered="#{pmCategoryL3.recordStatusFlg == 1}"/>
+				<h:outputText value="#{lbl['lbl.pm.status.inactive']}" rendered="#{pmCategoryL3.recordStatusFlg == 0}"/>
 			</p:column>
 
 		</p:dataTable>
@@ -103,24 +130,11 @@
 		<div class="ppRightBtn">
 			<p:commandButton
 				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-				action="#{categoryBackingBean.addSubCategory()}" />
+				action="#{categoryBackingBean.addSubDivision()}" />
 		</div>
 		
 		</p:panel>	
 		</c:if>
-		
-		<ui:remove>
-				<c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '0'}">
-						<ui:include src="orgProfileDetails.xhtml" />
-					</c:if> <c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '1'}">
-						<ui:include src="orgGovernmentSeller.xhtml" />
-					</c:if> <c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '2'}">
-						<ui:include src="orgResponsibleProfile.xhtml" />
-					</c:if>
-		</ui:remove>
 		
 	</ui:define>
 </ui:composition>
