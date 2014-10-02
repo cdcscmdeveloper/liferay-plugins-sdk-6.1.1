@@ -26,6 +26,7 @@ public class DpLOAManagedBean extends BaseManagedBean {
 	private ScRequestNote scRequestNote;
 	private List<ScPurchaseRequest> purchaseRequestList;
 	private Boolean showBPMButtons;
+	private Long sourceId;
 	
 	public DpLOAManagedBean() {
 	}
@@ -64,6 +65,14 @@ public class DpLOAManagedBean extends BaseManagedBean {
 
 	public void setShowBPMButtons(Boolean showBPMButtons) {
 		this.showBPMButtons = showBPMButtons;
+	}
+
+	public Long getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(Long sourceId) {
+		this.sourceId = sourceId;
 	}
 
 }

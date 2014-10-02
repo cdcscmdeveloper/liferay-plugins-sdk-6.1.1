@@ -8,13 +8,13 @@
 
 	<div class="ppRightBtn">
 		<ui:repeat var="bpmAction"
-			value="#{lOADetailBackingBean.managedBean.outComes}">
+			value="#{dpLOABackingBean.managedBean.outComes}">
 			<ui:param name="buttonLabel"
 				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				
 			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 				icon="ui-icon-#{fn:toLowerCase(bpmAction)}" 
-				action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+				action="#{dpLOABackingBean.updateBpmTaskAction(bpmAction)}"
 				rendered="#{dpLOABackingBean.managedBean.showBPMButtons}"
 				partialSubmit="true" process="@form"
 				update="@form" />
