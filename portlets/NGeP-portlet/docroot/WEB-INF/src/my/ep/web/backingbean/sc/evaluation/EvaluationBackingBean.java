@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
@@ -55,6 +56,7 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReportReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationReqDTO;
 import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -95,7 +97,6 @@ import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.sc.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -2510,8 +2511,8 @@ public class EvaluationBackingBean extends
 								.getDocDefinitionTypeCode());
 						scQtEvaluationReports.add(evaluationReport);
 					}
-					this.getManagedBean().setScQtEvaluationReportList(
-							scQtEvaluationReports);
+					this.getManagedBean().setScQtEvaluationReportList(scQtEvaluationReports);
+					saveQtReportDtls();
 				}
 			}
 		} finally {
@@ -3405,9 +3406,7 @@ public class EvaluationBackingBean extends
 			context.put("bean", this);
 		}
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.DOCPATH_EV_COMMITTEE_DTLS, context,
-				new FileOutputStream(getActualFilePath(attachment)));
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_EV_COMMITTEE_DTLS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	private void generateMeetingDetailsPdfFromVelocity(ScAttachment attachment,
@@ -3416,9 +3415,7 @@ public class EvaluationBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 
 		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
@@ -3555,28 +3552,26 @@ public class EvaluationBackingBean extends
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 
 			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
-			TplDocMaster docMaster = null;
-
+			
+			
 			ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
 			if (qtEvaluationReport != null) {
 				scQtEvaluationReport = qtEvaluationReport;
 			} else {
 				scQtEvaluationReport = saveScQtReportList(scQtEvaluationReport);
 			}
-
-			if (scQtEvaluationReport.getTplDocMaster() != null) {
-				// clone standard tplDocMaster
+			
+			TplDocMaster docMaster = scQtEvaluationReport.getTplDocMaster();
+			if (docMaster == null) {
+				//clone standard tplDocMaster
 				TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtEvaluationReport);
 				scQtEvaluationReport.setTplDocMaster(tplDocMaster);
-
-				// save clone to db
+				
+				//save clone to db
 				docMaster = saveClonedTplDocMaster(scQtEvaluationReport);
-			} else {
-				docMaster = scQtEvaluationReport.getTplDocMaster();
 			}
 			templateDocUrl = tplDocBB.goToMaint(docMaster);
-		} finally {
-		}
+		} finally {}
 		return templateDocUrl;
 	}
 
@@ -3589,13 +3584,11 @@ public class EvaluationBackingBean extends
 
 			QTTemplateDocReqDTO reqDTO = new QTTemplateDocReqDTO();
 			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
-
-			QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
-			getManagedBean().setScQtEvaluationReport(
-					resDTO.getScQtEvaluationReport());
-
-			TplDocMaster tplDocMaster = getManagedBean()
-					.getScQtEvaluationReport().getTplDocMaster();
+			
+			QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtEvalReports(reqDTO);
+			getManagedBean().setScQtEvaluationReport(resDTO.getScQtEvaluationReport());
+			
+			TplDocMaster tplDocMaster = getManagedBean().getScQtEvaluationReport().getTplDocMaster();
 			return tplDocMaster;
 		} finally {
 			qtTemplateSO = null;
@@ -3611,17 +3604,16 @@ public class EvaluationBackingBean extends
 		TplDocMaster templateDocMaster = retrieveTplDocMasterById(tplMasterId);
 
 		// clone TplDocMaster Details
-		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster
-				.cloneEntity();
+		TplDocMaster tplDocMaster = (TplDocMaster) templateDocMaster.cloneEntity();
 		tplDocMaster.setDocMasterId(null);
 		tplDocMaster.setOrgProfile(null);
 		tplDocMaster.setTplDocSectionCollection(null);
 		tplDocMaster.setDocTitle(scQtEvaluationReport.getTitle());
 		tplDocMaster.setDocName(scQtEvaluationReport.getTitle());
-
+		
 		setUserDetails(tplDocMaster);
 
-		// clone tplDocSection Details
+		//clone tplDocSection Details
 		tplDocMaster.setTplDocSections(new ArrayList<TplDocSection>());
 		List<TplDocSection> docSections = tplDocMaster.getTplDocSections();
 		for (TplDocSection tplDocSection : docSections) {
@@ -3712,41 +3704,65 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	// save to scQtEvaluationReport
-	private ScQtEvaluationReport saveScQtReportList(
-			ScQtEvaluationReport scQtEvaluationReport) {
+	//save to scQtEvaluationReport
+	private ScQtEvaluationReport saveScQtReportList(ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("ScQtEvaluationReport");
-		QTDetailBackingBean qTDetailBackingBean = new QTDetailBackingBean();
+		
 		if (scQtEvaluationReport.getQtReportId() == null) {
-			// qTDetailBackingBean.validateQtDetails();
-			ScQtEvaluationReport evaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
-			return evaluationReport;
+			saveQtReportDtls();
+			ScQtEvaluationReport qtEvaluationReport = retriveRulesAndRegulationReport(scQtEvaluationReport);
+			return qtEvaluationReport;
 		} else {
 			return null;
 		}
 	}
-
-	// retrieve the scQtEvaluationReport for Syarat-syarat Am/
-	// Arahan/Syarat-syarat Khas
-	private ScQtEvaluationReport retriveRulesAndRegulationReport(
-			ScQtEvaluationReport scQtEvaluationReport) {
+	
+	public void saveQtReportDtls() {
+		IQTEvaluationReportSO evaluationReportSO = null;
+		try {
+			evaluationReportSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationReportSO.class);
+			
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
+			
+			List<ScQtEvaluationReport> evaluationReportList = null;
+			List<ScQtEvaluationReport> docReportsList = getManagedBean().getScQtEvaluationReportList();
+			if (docReportsList != null && !docReportsList.isEmpty()) {
+				evaluationReportList = new ArrayList<ScQtEvaluationReport>();
+				evaluationReportList.addAll(docReportsList);
+			}
+			
+			EvaluationReportReqDTO reqDTO = new EvaluationReportReqDTO();
+			reqDTO.setScQtEvaluationReportList(evaluationReportList);
+			evaluationReportSO.saveQTDtl(reqDTO);
+			
+			renewSesionObject();
+			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setOutComes(outComes);
+			retrieveReportTabDtl();
+			
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Evaluation is successfully saved", ""));
+		} finally {
+			evaluationReportSO = null;
+		}
+	}
+	
+	//retrieve the scQtEvaluationReport for Maklumat Tender/Sebut Harga/ Asas-Asas Penilaian / Perakuan
+	private ScQtEvaluationReport retriveRulesAndRegulationReport(ScQtEvaluationReport scQtEvaluationReport) {
 		debugLogger("retriveRulesAndRegulationReport");
 		IQTDetailSO qTDetailSO = null;
 		try {
-			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTDetailSO.class);
-
+			qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
-			reqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
-			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_RULES_REGULATION);
+			reqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_EVALUATION_REPORT);
+			reqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_QT_INFO);
 			reqDTO.setScQtEvaluationReport(scQtEvaluationReport);
-
-			QuationTenderResDTO resDTO = qTDetailSO
-					.retriveScQtReportByDefKey(reqDTO);
-			ScQtEvaluationReport qtEvaluationReport = resDTO
-					.getScQtEvaluationReport();
+			
+			QuationTenderResDTO resDTO = qTDetailSO.retriveScQtReportByDefKey(reqDTO);
+			ScQtEvaluationReport qtEvaluationReport = resDTO.getScQtEvaluationReport();
 			return qtEvaluationReport;
 		} finally {
 			qTDetailSO = null;
