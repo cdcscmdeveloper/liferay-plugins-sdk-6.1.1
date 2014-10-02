@@ -687,7 +687,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				requestNoteBackingBean.getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
 				requestNoteBackingBean.getManagedBean().setTaskId(getManagedBean().getTaskId());
 				// created by 
-				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getCreatedBy(requestNote.getCreatedBy()).getUserName());
+				requestNoteBackingBean.getManagedBean().setCreatedBy(requestNoteBackingBean.getUserById(requestNote.getCreatedBy()).getUserName());
 				
 				requestNoteBackingBean.initialInformation(requestNote);
 				IStatusSO statusSO = null;

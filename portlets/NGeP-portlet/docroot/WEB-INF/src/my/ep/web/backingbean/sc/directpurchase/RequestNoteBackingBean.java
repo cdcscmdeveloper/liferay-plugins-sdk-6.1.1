@@ -506,7 +506,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
 
 		// created by 
-		getManagedBean().setCreatedBy(getCreatedBy(requestNote.getCreatedBy()).getUserName());
+		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
 
 		if (requestNote.getQuote() != null) {
 			getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
@@ -713,6 +713,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestNoteDtl>	requestNoteDtls	= new ArrayList<ScRequestNoteDtl>();
 
 		if(getManagedBean().getRequestNoteDtls() != null && getManagedBean().getRequestNoteDtls().size() >0) {
+			PmUser assignedUser = null;
+			if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
+				assignedUser= getUserById(getManagedBean().getAssignedToUserId());
+			}
+			
 			for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
 				if(selectedReqDtl.isSelected()){
 					
@@ -720,10 +725,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
 
 					// prepare by
-					if(getManagedBean().getAssignedToUserId() != null && getManagedBean().getAssignedToUserId() > 0){
-						PmUser pmUser = new PmUser();
-						pmUser.setUserId(getManagedBean().getAssignedToUserId());
-						selectedReqDtl.setAssignedUser(pmUser);
+					if(assignedUser != null){
+						selectedReqDtl.setAssignedUser(assignedUser);
 						applyPrepareByForSupplierRecs(selectedReqDtl, getManagedBean().getAssignedToUserId());
 
 					} else{
@@ -1312,7 +1315,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 		
 		if(requestNote.getCreatedUser() == null){
-			getManagedBean().setCreatedBy(getCreatedBy(facesScopes.getUserSessionBean().getUserId()).getUserName());
+			getManagedBean().setCreatedBy(getUserById(facesScopes.getUserSessionBean().getUserId()).getUserName());
 		}
 		
 		initialInformation(requestNote);
@@ -1700,12 +1703,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequestNoteStatus(pmStatus);
 	}
 	
-	public PmUser  getCreatedBy(Long createdBy) {
+	public PmUser  getUserById(Long userId) {
 		PmUser user = null;
 		IUserSO userSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		if(createdBy != null){
-			reqDTO.setUserId(createdBy);
+		if(userId != null){
+			reqDTO.setUserId(userId);
 			UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
 
 			if(resDTO.getPmUser() != null){
@@ -2193,7 +2196,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			for(ScRequestNoteDtl requestNoteDtl : getManagedBean().getSupplierRecList()) {
 
 				if(requestNoteDtl.getRequestItem().getRequestNoteItemId().equals(selectedReqDtl.getRequestItem().getRequestNoteItemId())){
-					requestNoteDtl.setAssignedUser(getCreatedBy(assignedUserId));
+					requestNoteDtl.setAssignedUser(getUserById(assignedUserId));
 				}
 				requestNoteDtls.add(requestNoteDtl);
 			}
