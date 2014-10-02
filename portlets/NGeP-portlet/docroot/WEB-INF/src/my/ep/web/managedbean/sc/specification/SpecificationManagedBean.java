@@ -294,6 +294,24 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> checklistRemoveList;
 	//Added by vidyasagarReddy.. for making readonly based on userrole.
 	private boolean readOnly;
+	private int technicalTableRow;
+	private int financialTableRow;
+
+	public int getTechnicalTableRow() {
+		return technicalTableRow;
+	}
+
+	public void setTechnicalTableRow(int technicalTableRow) {
+		this.technicalTableRow = technicalTableRow;
+	}
+
+	public int getFinancialTableRow() {
+		return financialTableRow;
+	}
+
+	public void setFinancialTableRow(int financialTableRow) {
+		this.financialTableRow = financialTableRow;
+	}
 
 	public List<ScQtDeliveryLoc> getDeliveryLocRemoveList() {
 		return deliveryLocRemoveList;
