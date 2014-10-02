@@ -21,9 +21,11 @@
 			<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
 
-			<p:column style="text-align:left;"
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
 				rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }" />
-			<p:column style="text-align:left;"
+			<p:column style="text-align:left;" disabledSelection="true"
+				selectionMode="multiple"
 				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" />
 
 
