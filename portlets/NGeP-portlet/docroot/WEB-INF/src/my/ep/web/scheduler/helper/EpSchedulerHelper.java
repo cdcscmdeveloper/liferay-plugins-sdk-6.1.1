@@ -25,18 +25,14 @@ import org.quartz.impl.StdSchedulerFactory;
  */
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
+	
+	private static Scheduler instance;
 
-	public static void scheduleJob(ServletContext ctx, JobKey jobKey,
+	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
-
-		Scheduler scheduler = null;
+		
 		try {
-
-			// get scheduler
-			scheduler = ((StdSchedulerFactory) ctx
-					.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY))
-					.getScheduler();
 
 			// specify the job' s details..
 			final JobDetail job = JobBuilder.newJob(jobClass)
@@ -51,50 +47,45 @@ public class EpSchedulerHelper {
 					.build();
 
 			// start scheduler if not started yet
-			if (!scheduler.isStarted()) {
-				scheduler.start();
+			if (!EpSchedulerHelper.getScheduler().isStarted()) {
+				EpSchedulerHelper.getScheduler().start();
 			}
 
 			// schedule the job
-			scheduler.scheduleJob(job, cronTrigger);
+			EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
 
 		} catch (final SchedulerException | ParseException e) {
 			log.error(e.getMessage());
 		}
 
 	}
-
-	public static void scheduleStartupJob(ServletContext context,
-			JobKey jobKey, Class<? extends Job> jobClass, String jobDetailDesc) {
-		Scheduler scheduler = null;
+	
+	public static void runBuildJobNow(JobKey jobKey){
+		// specify trigger
+		Trigger trigger;
 		try {
-
-			// get scheduler
-			scheduler = ((StdSchedulerFactory) context
-					.getAttribute(QuartzInitializerListener.QUARTZ_FACTORY_KEY))
-					.getScheduler();
-
-			// specify the job' s details..
-			JobDetail job = scheduler.getJobDetail(jobKey);
-			// specify trigger
-			Trigger trigger = TriggerBuilder.newTrigger().startNow()
-					.forJob(job).build();
-			// start scheduler if not started yet
-			if (!scheduler.isStarted()) {
-				scheduler.start();
-			}
-
+			trigger = TriggerBuilder.newTrigger().startNow()
+					.forJob(EpSchedulerHelper.getScheduler().getJobDetail(jobKey))
+					.build();
+			
 			// schedule the job
-			scheduler.scheduleJob(trigger);
-
-		} catch (Exception e) {
+			EpSchedulerHelper.getScheduler().scheduleJob(trigger);
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		finally {
-			scheduler = null;
+	}
+	
+	public static Scheduler getScheduler(){
+		if (instance == null){
+			try {
+				instance = new StdSchedulerFactory().getScheduler();
+			} catch (SchedulerException e) {
+				log.error(e.getMessage());
+			}
 		}
-
+		return instance;
+		
 	}
 
 }

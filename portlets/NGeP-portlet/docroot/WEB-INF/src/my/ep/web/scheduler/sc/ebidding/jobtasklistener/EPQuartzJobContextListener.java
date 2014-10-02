@@ -31,19 +31,25 @@ public class EPQuartzJobContextListener implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(final ServletContextEvent ctx) {
-		// Sc Continous job
-		EpSchedulerHelper.scheduleJob(ctx.getServletContext(), new JobKey(
-				EPSchedulerConstants.EP_CONTINOUS_JOB,
-				EPSchedulerConstants.EP_JOB_GROUP),
-				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
-				"0/60 * * * * ?");
-
 		// Sc Daily job
-		EpSchedulerHelper.scheduleJob(ctx.getServletContext(), new JobKey(
+		EpSchedulerHelper.scheduleJob(new JobKey(
 				EPSchedulerConstants.EP_DAILY_JOB,
 				EPSchedulerConstants.EP_JOB_GROUP),
 				BidSchedulesPoolingCronJob.class,
 				"Job run every day at 11:55 PM", "0 55 23 * * ?");
+
+		// daily Job to be run at server startup
+
+		EpSchedulerHelper.runBuildJobNow(new JobKey(
+				EPSchedulerConstants.EP_DAILY_JOB,
+				EPSchedulerConstants.EP_JOB_GROUP));
+
+		// Sc Continous job
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				EPSchedulerConstants.EP_CONTINOUS_JOB,
+				EPSchedulerConstants.EP_JOB_GROUP),
+				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
+				"0/60 * * * * ?");
 
 	}
 }
