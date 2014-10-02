@@ -580,21 +580,19 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-			if (agreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterConst.AGENCY_SIGNER_CODE)) {
-				  if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
+		  if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
 					       reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 			     	} else if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getParentOrgProfile() != null && agreementParty.getOrgProfile().getParentOrgProfile()	.getOrgProfileId() != null) { // Department
 				        	reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId());
 				} else { // default to ministry
 					reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 				}
-			}
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 			List<PmUser> list = resDTO.getUserList();
 			items = new SelectItem[list.size() + 1];
 			items[0] = new SelectItem(null, "- Select One -");
 			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(),pmUser.getUserName());
+				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
 			}
 		} finally {
 			userSO = null;
@@ -1002,19 +1000,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		try {
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
-			ctAgreementParty.setAgreementPartyType(retrieveParameterByCodeType(
-					ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-					ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
-			if (ctAgreementParty.getOfficer() == null)
-				ctAgreementParty.setOfficer(new PmUser());
-			if (ctAgreementParty.getOrgProfile() == null) {
-				ctAgreementParty.setOrgProfile(new PmOrgProfile());
-				if (ctAgreementParty.getOrgProfile().getParentOrgProfile() == null) {
-					ctAgreementParty.getOrgProfile().setParentOrgProfile(
-							new PmOrgProfile());
-				}
-			}
-			this.getManagedBean().getCtAgencySigner().add(ctAgreementParty);
+			ctAgreementParty.setAgreementPartyType(retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
+		    ctAgreementParty.setOfficer(new PmUser());
+			ctAgreementParty.setOrgProfile(new PmOrgProfile());
+			ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
+		    getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -1200,17 +1190,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return sourceList;
 	}
 
-	public void setUserValueAgency(CtAgreementParty ctParty, Long userId) {
+	public void setUserValueAgency(CtAgreementParty ctParty) {
 		for (CtAgreementParty party : this.getManagedBean().getCtAgencySigner()) {
-			if (party.equals(ctParty)) {
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserId(userId);
-				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
-				party.setOfficerName(resDTO.getPmUser().getUserName());
-				party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
-				party.setOfficerPosition(resDTO.getPmUser().getDesignation());
-			}
+			 if (party.equals(ctParty)) {
+				   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
+				   UserReqDTO reqDTO = new UserReqDTO();
+				   reqDTO.setUserId(ctParty.getOfficer().getUserId());
+				   UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
+				   party.setOfficerName(resDTO.getPmUser().getUserName());
+				   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
+				   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
+			 }
 		}
 	}
 
