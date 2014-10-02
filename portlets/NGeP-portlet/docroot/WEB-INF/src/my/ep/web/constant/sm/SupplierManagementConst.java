@@ -118,7 +118,7 @@ public class SupplierManagementConst {
 	public static final int FIRST_USER_AUTHO = 1;
 	public static final int FIRST_USER_CONT_SIGNER = 1;
 	public static final boolean FIRST_USER_CONT_PERSON = true;
-	public static final int REG_SOFTCERT = 0;
+	public static final int REG_SOFTCERT = 2;
 	public static final int REG_BUMI = 0;
 	public static final String BASIC_IND_IDENT_TYPE = "I";
 	public static final Long BASIC_IND_IDENT_TYPE_ID = 88L;
