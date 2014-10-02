@@ -55,8 +55,12 @@
 						</p:tooltip>
 					</p:commandLink>
 				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:6%; white-space: normal;">
+					#{requestNoteDtl.requestItem.uom.uomName}
+				</p:column>
 				  
-				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%;">
+				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%; white-space: normal;">
 				<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'N'}">
 						<h:outputText value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
 					</ui:fragment>
@@ -80,7 +84,7 @@
 					</ui:fragment>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%;">
+				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%; white-space: normal;">
 				    <h:commandLink immediate="true"  action="#{requestNoteBackingBean.downloadMarketResearchSummary(requestNoteDtl)}"
 				    	id="marketSummaryIcon">
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
@@ -157,7 +161,7 @@
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
 				
-			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:9%;text-align:right">
+			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:7%; text-align:right; white-space: normal;">
 			    <h:panelGroup id="offerPriceId">
 						<h:panelGroup
 							rendered="#{requestNoteDtl.scRequestSupplierItem.supplierItemPrice.priceType.parameterCode eq ParameterConst.priceTypeStandard or
@@ -191,7 +195,7 @@
 					   disabled="true" size="6" style="margin-top: 8px;"  />
 				</p:column>
 				
-				<p:column style="width:12%;">
+				<p:column style="width:12%; white-space: normal;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
