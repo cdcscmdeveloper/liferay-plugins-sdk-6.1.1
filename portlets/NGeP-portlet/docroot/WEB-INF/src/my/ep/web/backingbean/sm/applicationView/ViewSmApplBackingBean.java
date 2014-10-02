@@ -318,12 +318,12 @@ public class ViewSmApplBackingBean extends
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-		//initTesting();
+//		initTesting();
 	}
 	
 	private void initTesting(){
 		//testing user
-		getManagedBean().setApproverUser(true);
+		getManagedBean().setPoUser(true);
 		
 		SmApplSectionReview apprSec = new SmApplSectionReview();
 		apprSec.setBasicRemark("approver basic remark");
@@ -578,7 +578,7 @@ public class ViewSmApplBackingBean extends
 		for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
 				.getSmChequeSignatories()) {
 			i++;
-			if(i<=3){
+			if(i<=2){
 				sb.append(smChequeSignatoryTmp.getSmPersonnel().getName()).append(
 						",");
 			}else{
