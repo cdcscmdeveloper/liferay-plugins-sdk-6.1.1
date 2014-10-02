@@ -654,10 +654,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		PmBusinessNature pmBizNat = selectedBiz.getPmBusinessNature();
 		
 		//Get Parent Obj of L5(lv 4) value and List of Level 5
-		PmBusinessNature pmBizObjL4 = pmBizNat.getParentBusinessNature();
-		PmBusinessNature pmBizObjL3 = pmBizObjL4.getParentBusinessNature();
-		PmBusinessNature pmBizObjL2 = pmBizObjL3.getParentBusinessNature();
-		PmBusinessNature pmBizObjL1 = pmBizObjL2.getParentBusinessNature();
+		PmBusinessNature pmBizObjL4 = SmCommonUtil.retrieveBusinessNatureById(pmBizNat.getParentBusinessNature().getBusinessNatureId());
+		PmBusinessNature pmBizObjL3 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL4.getParentBusinessNature().getBusinessNatureId());
+		PmBusinessNature pmBizObjL2 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL3.getParentBusinessNature().getBusinessNatureId());
+		PmBusinessNature pmBizObjL1 = SmCommonUtil.retrieveBusinessNatureById(pmBizObjL2.getParentBusinessNature().getBusinessNatureId());
 		
 		this.getManagedBean().setSelectedBusinessNature(selectedBiz);
 		this.getManagedBean().getSelectedBusinessNature().setLvl5(selectedBiz.getPmBusinessNature().getBusinessNatureId());
@@ -1381,7 +1381,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}*/
 
 	}
-
 }
 
 
