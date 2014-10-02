@@ -17,14 +17,14 @@
 						  <tr>
 						    <td width="100%">
 						    <h:panelGrid id="rptModule" columns="4"  style="margin-bottom:5px;width:85%;">
-						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:130px;"/>
+						    <p:outputLabel value="#{lbl['lbl.rpt.module']}" style="margin-bottom:5px;width:160px;"/>
 						    <p:selectOneMenu  value="#{reportBackingBean.managedBean.moduleName}" style="margin-bottom:5px;width:300px;" >
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.retriveModuleList()}"></f:selectItems>
 								<p:ajax event="change" listener="#{reportBackingBean.retriveReportListBymoduleName}" process="@this"
 								 partialSubmit="true"  update="@form"/>
 							</p:selectOneMenu>
-							<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="margin-bottom:5px;width:130px;"/>
+							<p:outputLabel value="#{lbl['lbl.rpt.rptName']}" style="margin-bottom:5px;width:160px;"/>
 							<p:selectOneMenu value="#{reportBackingBean.managedBean.reportNameValue}" style="margin-bottom:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.managedBean.reportList}"></f:selectItems>
@@ -47,23 +47,23 @@
 							    <h:panelGrid  id="rptCriteria" columns="4" style="margin-bottom:5px;width:85%;">
 							    
 							        <c:if test="#{reportBackingBean.managedBean.rptGenBean.quotationNoView}" >			
-									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.qtNo']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText id="rptQuotation" value="#{reportBackingBean.quotationNo}" style="margin-top:5px;width:290px;">									
 									<p:ajax event="blur" listener="#{reportBackingBean.quotationNumberValidation()}" process="@form"
 					 				partialSubmit="true" update="rptQuotation"/>	
 									</p:inputText>
-									<p:outputLabel value=""  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>												
 									</c:if>			
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.paymentIdView}">			
-									<p:outputLabel value="#{lbl['lbl.rpt.pymtId']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.pymtId']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.paymentId}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
-									<p:outputLabel value=""  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
 									</c:if>	
 							    	<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:130px;margin-left:-100px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:160px;margin-left:-100px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.itemType}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
@@ -71,7 +71,7 @@
 									</p:selectOneMenu>
 									</c:if>			
 								    <c:if test="#{reportBackingBean.managedBean.rptGenBean.itemStatusView}">
-									<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}" style="margin-top:5px;width:130px;"/>									
+									<h:outputLabel value="#{lbl['lbl.rpt.itemStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.itemStatus}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmActive']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
@@ -79,188 +79,188 @@
 									</p:selectOneMenu>
 									</c:if>			
 									  <c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText  value="#{reportBackingBean.unspscCode}" style="margin-top:5px;width:140px;" maxlength="8">																		
 									</p:inputText>
 									</c:if>			
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.unspscTitleView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.unspscTitle}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.companyNameView}">
-									<p:outputLabel  value="#{lbl['lbl.rpt.cmpName']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.cmpName']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.companyName}" style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>			
 														
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemCategoryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.catItm']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.catItm']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.itemCategory}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemNameView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.itemName}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 												
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ptjView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:130px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />
 									<p:inputText value="#{reportBackingBean.ptj}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.contractNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.contractNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.sstView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.sst}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.jabatanView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.jabatan']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.jabatan']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.jabatan}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ministryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.ministry}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.supplier}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.statusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.status}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.durationView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.duration']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.duration']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.duration}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.recievingOfficerView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.recievingOfficer}" style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.deliveryAddressView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.deliveryAddress}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.flRecNoteNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.flRecNoteNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.contractTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.contractType']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.contractType']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.contractType}" style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.requisitionerView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.requisitioner}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mtoContractView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mtoContract']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mtoContract']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.mtoContract}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.invoiceNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.invoiceNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.invoiceNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.invoiceNo}" style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.deductionTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.deductionType']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.deductionType']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.deductionType}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.crNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.crNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.crNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.crNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.approverNameView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.approverName}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.documentTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.documentType']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.documentType']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.documentType}"  style="margin-top:5px;width:290px;" >									
 									</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.criteriaView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.criteria']}" style="margin-top:5px;width:130px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.criteria']}" style="margin-top:5px;width:160px;" />
 									<p:inputText value="#{reportBackingBean.criteria}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.scoringView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.scoring']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.scoring']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.scoring}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.pkpNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.pkpNo}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.deliveryOrderNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.deliveryOrderNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.deliveryOrderNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.deliveryOrderNo}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.itemCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.itemCode}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.poAmountView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.poAmount']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.poAmount']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.poAmount}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.prNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.prNo']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.prNo']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.prNo}"  style="margin-top:5px;width:290px;" >									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.pmoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.pmo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.pmo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.pmo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>			
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.extentionCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extType']}" style="margin-top:5px;width:130px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.extType']}" style="margin-top:5px;width:160px;" />
 									<p:inputText value="#{reportBackingBean.extentionType}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									
-									<p:outputLabel value="#{lbl['lbl.rpt.extBrand']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.extBrand']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.extentionBrand}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									
-									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurment']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurment']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.extentionMeasurment}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									
-									<p:outputLabel value="#{lbl['lbl.rpt.extColour']}" style="margin-top:5px;width:130px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.extColour']}" style="margin-top:5px;width:160px;" />
 									<p:inputText value="#{reportBackingBean.extentionColour}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									
 										
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.roleView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.role']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.role']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.role}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.director']}" itemValue="#{lbl['lbl.rpt.director']}"></f:selectItem>
@@ -269,7 +269,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 							      <c:if test="#{reportBackingBean.managedBean.rptGenBean.registrationStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" style="margin-top:5px;width:130px;" />			
+									<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.registrationStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.rgstBumiputera']}" itemValue="#{lbl['lbl.rpt.rgstBumiputera']}"></f:selectItem>
@@ -281,7 +281,7 @@
 									</p:selectOneMenu>
 									</c:if>
 							      <c:if test="#{reportBackingBean.managedBean.rptGenBean.supportingDocumentView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supportingDocument']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.supportingDocument']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.supportingDocument}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.online']}" itemValue="#{lbl['lbl.rpt.online']}"></f:selectItem>
@@ -289,7 +289,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.docStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.docStatus']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.docStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.docStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendsuppdocStatus']}" itemValue="#{lbl['lbl.rpt.pendsuppdocStatus']}"></f:selectItem>
@@ -300,7 +300,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.suppDocStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.suppDocStatus']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.suppDocStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.suppDocStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.complete']}" itemValue="#{lbl['lbl.rpt.complete']}"></f:selectItem>
@@ -309,7 +309,7 @@
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.zoneView}">
 								  <p:column>								  
-        								<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:130px;"/>	   															
+        								<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:160px;"/>	   															
 								  </p:column>
 									<p:column>								
         								<p:selectOneMenu value="#{reportBackingBean.zone}" style="margin-top:5px;width:300px;">
@@ -323,7 +323,7 @@
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryZoneView}">
 								  <p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:91px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>														
 								  </p:column>
 								  <p:column>
@@ -345,7 +345,7 @@
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.supplierType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}" itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
@@ -354,7 +354,7 @@
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatorySupplierTypeView}">
 									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:47px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>														
 								  </p:column>
 								  <p:column>
@@ -376,38 +376,38 @@
 								  </c:if>
 								  
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.caseNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.caseNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.caseNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.caseNo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.registrationNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.registrationNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.registrationNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.registrationNo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>	
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.complaintNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.complaintNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.complaintNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.complaintNo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.mofRegNo}"  style="margin-top:5px;width:290px;">						
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegNoFromView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.mofRegNoFrom}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegNoToView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.mofRegNoTo}"  style="margin-top:5px;width:290px;">
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryMofRegNoView}">
 									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:24px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>														
 								  </p:column>
 								  <p:column>
@@ -424,7 +424,7 @@
 									</table>														
 									</p:column>
 									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:33px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>														
 								  </p:column>
 								  <p:column>
@@ -442,62 +442,62 @@
 									</p:column>									
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.ePNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.epNumber}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.applicationNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.applicationNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.applicationNo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.paidUpCapitalNaccumShareView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.paidUpCapitalNaccum']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.paidUpCapitalNaccum']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.paidUpCapitalNaccumShare}"  style="margin-top:5px;width:290px;">
 									
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.capitalNaccumView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumFrm']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumFrm']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.capitalNaccumFrm}"  style="margin-top:5px;width:290px;"/>									
-					 				<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumTo']}"  style="margin-top:5px;width:130px;"/>
+					 				<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumTo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.capitalNaccumTo}"  style="margin-top:5px;width:290px;"/>				 				
 									</c:if>	
 										
 									 <c:if test="#{reportBackingBean.managedBean.rptGenBean.categoryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mainCategory']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.mainCategory']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.mainCategory}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.levOneCatLst}"></f:selectItems>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveCategoryLevTwo}" process="@this"
 					 					partialSubmit="true" update="subCategory"/>																					
 									</p:selectOneMenu>
-									<p:outputLabel value="#{lbl['lbl.rpt.subCategory']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.subCategory']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu id="subCategory" value="#{reportBackingBean.subCategory}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.levTwoCatLst}"></f:selectItems>
 										<p:ajax event="change" listener="#{reportBackingBean.retrieveCategoryLevThree}" process="@this"
 					 					partialSubmit="true" update="subCategoryDivision"/>																				
 									</p:selectOneMenu>
-									<p:outputLabel value="#{lbl['lbl.rpt.subCategoryDivision']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.subCategoryDivision']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu id="subCategoryDivision" value="#{reportBackingBean.subCategoryDivision}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.levThreeCatLst}"></f:selectItems>																				
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.noOfCategoryView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.noOfCategory']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.noOfCategory']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.noOfCategory}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>											
 									</p:selectOneMenu>
 									</c:if>	
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.proofIdentityView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.proofIdentity']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.proofIdentity']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.proofIdentity}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								   </c:if>
 								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.applicationStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.applicationStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}" itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
@@ -508,7 +508,7 @@
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationStatusView}">
 								  <p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:56px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>														
 								  </p:column>
 								  <p:column>
@@ -531,7 +531,7 @@
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.cancelledByView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.cancelledBy']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.cancelledBy']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.cancelledBy}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplier']}" itemValue="#{lbl['lbl.rpt.supplier']}"></f:selectItem>
@@ -540,7 +540,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.paymentTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.paymentType']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.paymentType']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.paymentType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.processingFee']}" itemValue="#{lbl['lbl.rpt.processingFee']}"></f:selectItem>
@@ -548,7 +548,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.applicationTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.applicationType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.new']}" itemValue="#{lbl['lbl.rpt.new']}"></f:selectItem>
@@ -556,27 +556,27 @@
 									</p:selectOneMenu>
 								  </c:if>
 								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.categoryCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.categoryCode']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.categoryCode']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.categoryCode}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								   </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.supplierNameView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierName']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.supplierName}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								   </c:if>	
 								    <c:if test="#{reportBackingBean.managedBean.rptGenBean.siteVisitOfficerView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.siteVisitOfficer']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.siteVisitOfficer']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.siteVisitOfficer}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 								   </c:if>							   
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mofNoView}">
-								   <p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" style="margin-top:5px;width:130px;" />
+								   <p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" style="margin-top:5px;width:160px;" />
 									<p:inputText value="#{reportBackingBean.mofNumber}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 					 			  </c:if>
 					 			  <c:if test="#{reportBackingBean.managedBean.rptGenBean.reportTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.reportType']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.reportType']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.reportType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.recieved']}" itemValue="#{lbl['lbl.rpt.recieved']}"></f:selectItem>
@@ -585,7 +585,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.organizationTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.organizationType']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.organizationType']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.organizationType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.kerajaanPersekutuan']}" itemValue="#{lbl['lbl.rpt.kerajaanPersekutuan']}"></f:selectItem>																				
@@ -596,15 +596,15 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.kementerianView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.kementerian']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.kementerian']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.kementerian}"  style="margin-top:5px;width:290px;"/>									
 								   </c:if>
 								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.namAgensiView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.namAgensi']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.namAgensi']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.namAgensi}"  style="margin-top:5px;width:290px;"/>									
 								   </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.compApplStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.compApplStatus']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.compApplStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.compApplStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.approved']}" itemValue="#{lbl['lbl.rpt.approved']}"></f:selectItem>
@@ -612,7 +612,7 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.companyStatusView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.companyStatus']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.companyStatus']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.companyStatus}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{lbl['lbl.rpt.active']}"></f:selectItem>
@@ -620,11 +620,11 @@
 									</p:selectOneMenu>
 								  </c:if>								  
 								   <c:if test="#{reportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
-								  <p:outputLabel value=""  style="margin-top:5px;width:130px;"/>
+								  <p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.registrationTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" style="margin-top:5px;width:130px;" />			
+									<p:outputLabel value="#{lbl['lbl.rpt.rgstType']}" style="margin-top:5px;width:160px;" />			
 									<p:selectOneMenu value="#{reportBackingBean.registrationType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
@@ -634,7 +634,7 @@
 									</p:selectOneMenu>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.stateView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.state']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.state']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu value="#{reportBackingBean.state}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>	
 										<f:selectItems value="#{reportBackingBean.stateLst}"></f:selectItems>
@@ -650,12 +650,12 @@
 						    <td width="100%">
 							    <h:panelGrid  id="district" columns="4" style="margin-bottom:5px;width:85%;">
 							    <c:if test="#{reportBackingBean.managedBean.rptGenBean.districtView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.district']}" style="margin-top:5px;width:130px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.district']}" style="margin-top:5px;width:160px;"/>									
 									<p:selectOneMenu  value="#{reportBackingBean.district}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.districtLst}"></f:selectItems>																				
 									</p:selectOneMenu>
-									<p:outputLabel value=""  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
 									</c:if>
 								</h:panelGrid>
@@ -666,27 +666,27 @@
 							    <h:panelGrid  id="rptCriteriaRegtype" columns="4" style="margin-bottom:5px;width:85%;">
 							      
 							     <c:if test="#{reportBackingBean.managedBean.rptGenBean.basicRegView}">
-									<p:outputLabel id="epNolbl" value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel id="epNolbl" value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText id="epNo" value="#{reportBackingBean.epNumber}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.basicRegView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.busRegNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.busRegNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText id="businessRegNo" value="#{reportBackingBean.businessRegNo}"  style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.basicRegView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.icNo']}" style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.icNo']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText id="icNumber" value="#{reportBackingBean.icNumber}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									</c:if>
 									
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mofRegView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" style="margin-top:5px;width:130px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" style="margin-top:5px;width:160px;" />
 									<p:inputText id="mofNumber" value="#{reportBackingBean.mofNumber}" style="margin-top:5px;width:290px;">									
 					 				</p:inputText>
 									
-									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:130px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText id="epNumber" value="#{reportBackingBean.epNumber}" style="margin-top:5px;width:290px;">
 					 				</p:inputText>
 									</c:if> 					  
@@ -699,7 +699,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.printedDt']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.printedDt']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.printedFromDate}" 
@@ -748,7 +748,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>								    
-									<p:outputLabel  value="#{lbl['lbl.rpt.expiryDt']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.expiryDt']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.expiryFromDate}" 
@@ -797,7 +797,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.receiveDt']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.receiveDt']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.receiveFromDate}" 
@@ -818,7 +818,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.applicationDt']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.applicationDt']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.applicationFromDate}" 
@@ -871,7 +871,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.releaseDt']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.releaseDt']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.releaseFromDate}" 
@@ -894,7 +894,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:-18px;width:130px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:-18px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.fromDate}" 
