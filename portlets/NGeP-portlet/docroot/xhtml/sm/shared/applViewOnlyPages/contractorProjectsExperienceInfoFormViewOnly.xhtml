@@ -42,113 +42,115 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.experienceRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.experienceRemark}" 
-						isInsideTable="false"/>
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.experienceRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.experienceRemark}" />
 	</p:panel>
-	<p:dialog header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
+	<p:dialog style="max-height:350px;width:500px" 
+		header="#{lbl['lbl.sm.projDtls.projDiaHdr']}"
 		widgetVar="contDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="contDialog"
-		width="550px" height="500px">
-		<table style="width: 100%">
-			<tr>
-				<td valign="top">
-
-					<table style="width: 100%">
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
-							<td>
-								<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" />
-							</td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
-							<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementModeId}"
-									style="width: 207px;margin-bottom: 5px;" disabled="true">
-									<f:selectItems value="#{viewSmApplBackingBean.getDropdownValues('PM')}" />
-								</p:selectOneMenu>
-							</td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
-							<td><p:selectOneRadio disabled="true"
-									value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}">
-									<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}" itemValue="O" />
-								</p:selectOneRadio></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
-							<td><p:selectOneRadio disabled="true" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}">
-									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
-									<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}" itemValue="F" />
-								</p:selectOneRadio></td>
-						</tr>
-						<tr>
-						
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
-							<td>
-								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
-							</td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
-							<td>
-								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<table width="100%">
-									<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<c:if test="#{not empty exp.pmCategoryL1}">
-											<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL1.categoryName}"/></td></tr>
-										</c:if>
-									</ui:repeat>
-									</table>
-								</c:if>
-							</td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
-							<td>
-								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<table width="100%">
-									<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<c:if test="#{not empty exp.pmCategoryL2}">
-											<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL2.categoryName}"/></td></tr>
-										</c:if>
-									</ui:repeat>
-									</table>
-								</c:if>
-							</td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
-							<td>
-								<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-									<table width="100%">
-									<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
-										<c:if test="#{not empty exp.pmCategoryL3}">
-											<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL3.categoryName}"/></td></tr>
-										</c:if>
-									</ui:repeat>
-									</table>
-								</c:if>
-							</td>
-						</tr>
-
-					</table>
-				</td>
-			</tr>
-		</table>
+		hideEffect="fade" modal="true" id="contDialog">
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td valign="top">
+	
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
+								<td>
+									<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" />
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
+								<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementModeId}"
+										style="width: 207px;margin-bottom: 5px;" disabled="true">
+										<f:selectItems value="#{viewSmApplBackingBean.getDropdownValues('PM')}" />
+									</p:selectOneMenu>
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+								<td><p:selectOneRadio disabled="true"
+										value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}">
+										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}" itemValue="O" />
+									</p:selectOneRadio></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
+								<td><p:selectOneRadio disabled="true" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}">
+										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
+										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}" itemValue="F" />
+									</p:selectOneRadio></td>
+							</tr>
+							<tr>
+							
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
+								<td>
+									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
+								<td>
+									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+										<table width="100%">
+										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+											<c:if test="#{not empty exp.pmCategoryL1}">
+												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL1.categoryName}"/></td></tr>
+											</c:if>
+										</ui:repeat>
+										</table>
+									</c:if>
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
+								<td>
+									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+										<table width="100%">
+										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+											<c:if test="#{not empty exp.pmCategoryL2}">
+												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL2.categoryName}"/></td></tr>
+											</c:if>
+										</ui:repeat>
+										</table>
+									</c:if>
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
+								<td>
+									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+										<table width="100%">
+										<ui:repeat var="exp" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
+											<c:if test="#{not empty exp.pmCategoryL3}">
+												<tr><td><p:outputLabel styleClass="outputLabel-view" value="#{exp.pmCategoryL3.categoryName}"/></td></tr>
+											</c:if>
+										</ui:repeat>
+										</table>
+									</c:if>
+								</td>
+							</tr>
+	
+						</table>
+					</td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

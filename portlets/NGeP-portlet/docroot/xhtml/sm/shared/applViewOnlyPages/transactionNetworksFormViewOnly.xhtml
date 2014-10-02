@@ -38,13 +38,12 @@
 				</tr>
 				
 			</table>
-			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.trnsNetworkRemark}" 
-				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.trnsNetworkRemark}" 
-				isInsideTable="false"/>
 				
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.trnsNetworkRemark}" 
+				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.trnsNetworkRemark}" />
 	
 	</p:panel>
 </ui:composition>

@@ -206,11 +206,12 @@
 				</p:column>
 			</p:dataTable>
 			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryRemark}" 
-						isInsideTable="false"/>
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.categoryRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.categoryRemark}" />
+						
 	</p:panel>
 	
 </ui:composition>

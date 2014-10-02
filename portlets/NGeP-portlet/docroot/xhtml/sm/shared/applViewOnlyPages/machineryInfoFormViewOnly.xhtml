@@ -41,53 +41,52 @@
 				</p:column>
 
 			</p:dataTable>
-			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" 
-						isInsideTable="false"/>
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.machineryRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.machineryRemark}" />
 	</p:panel>
-	<p:dialog width="600px" height="350px"
+	<p:dialog style="max-height:350px;width:500px"
 		header="#{lbl['lbl.sm.machine.diaHdr']}" widgetVar="equipmentDialog"
 		resizable="false" showEffect="fade" closable="true" hideEffect="fade"
 		modal="true" id="equipmentDialog">
-
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.brandName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineFunction}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.qty}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']} :" /></td>
-				<td>
-					<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.value}" />
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachineryPurchaseMethod}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']} :" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.guarantorName}"/></td>
-			</tr>
-
-
-		</table>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.equiType']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineType}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.brandName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.function']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.machineFunction}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.quantity']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.qty}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.value']} :" /></td>
+					<td>
+						<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.value}" />
+					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.purMthd']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachineryPurchaseMethod}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedMachine.guarantorName}"/></td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

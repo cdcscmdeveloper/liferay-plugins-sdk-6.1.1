@@ -40,23 +40,26 @@
 			
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.branchRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.branchRemark}" 
-						isInsideTable="false"/>
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.branchRemark}" />
 			
 		</p:panel>
 	</p:panel>
 	
-	<p:dialog header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
+	<p:dialog style="max-height:350px;width:500px"
+		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="branchDialogId" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<ui:fragment
-			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
-			<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
-		</ui:fragment>
-		<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
-			rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'MKM'}">
-			<ui:include src="branchDetailsTablePageConsultantViewOnly.xhtml" />
-		</p:panel>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<ui:fragment
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
+				<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
+			</ui:fragment>
+			<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
+				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'MKM'}">
+				<ui:include src="branchDetailsTablePageConsultantViewOnly.xhtml" />
+			</p:panel>
+		</p:scrollPanel>
 	</p:dialog>
 	
 </ui:composition>
