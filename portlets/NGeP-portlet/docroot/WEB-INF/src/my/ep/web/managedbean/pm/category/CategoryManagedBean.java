@@ -1,11 +1,14 @@
 package my.ep.web.managedbean.pm.category;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "categoryPM")
@@ -26,6 +29,8 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private PmCategoryL3 pmCategoryL3;
 	private String catLevel;
 	private boolean newCategory = false;
+	private List<PmParameterDesc> supplierType;
+	private List<PmParameterDesc> specialCategory;
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -134,6 +139,22 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 
 	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
 		this.pmCategoryL3 = pmCategoryL3;
+	}
+
+	public List<PmParameterDesc> getSupplierType() {
+		return supplierType;
+	}
+
+	public void setSupplierType(List<PmParameterDesc> supplierType) {
+		this.supplierType = supplierType;
+	}
+
+	public List<PmParameterDesc> getSpecialCategory() {
+		return specialCategory;
+	}
+
+	public void setSpecialCategory(List<PmParameterDesc> specialCategory) {
+		this.specialCategory = specialCategory;
 	}
 
 	

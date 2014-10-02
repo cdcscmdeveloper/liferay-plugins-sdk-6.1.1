@@ -14,15 +14,19 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -121,10 +125,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	public String addSubDivision() {
 		PmCategoryL3 pmCategoryL3 = new PmCategoryL3();
 		pmCategoryL3.setPmCategoryL2(this.getManagedBean().getPmCategoryL2());
+		pmCategoryL3.setSupplierTypeCode(new PmParameter());
+		pmCategoryL3.setCategoryTypeCode(new PmParameter());
 		
 		this.getManagedBean().setPmCategoryL3(pmCategoryL3);
 		this.getManagedBean().setCatLevel("3");
 		this.getManagedBean().setNewCategory(true);
+		reloadSelectionPmCategoryL3();
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
@@ -185,6 +192,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().setCatLevel("3");
 				this.getManagedBean().setPmCategoryL3(resDTO.getCategoryL3());
 				this.getManagedBean().setNewCategory(false);
+				reloadSelectionPmCategoryL3();
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -290,6 +298,27 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		}else
 			return "/xhtml/pm/category/search.xhtml";
+	}
+	
+	public void reloadSelectionPmCategoryL3() {
+		IParameterSO parameterSO;
+		try{
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+			reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+			
+			reqDTO.setParameterType("ST");
+			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+			this.getManagedBean().setSupplierType(resDTO.getParameterDescList());
+			
+			reqDTO.setParameterType("CAT");
+			resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+			this.getManagedBean().setSpecialCategory(resDTO.getParameterDescList());
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally {
+			parameterSO = null;
+		}
 	}
 	
 	public void resetCategory() {
