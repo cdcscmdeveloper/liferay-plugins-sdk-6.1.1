@@ -9,6 +9,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">  
 	<ui:define name="contentSection">
+	<style>
+      .top-aligned-columns td{ vertical-align: top;}
+      </style>
     <p:panel>
     	<f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
 	   	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
