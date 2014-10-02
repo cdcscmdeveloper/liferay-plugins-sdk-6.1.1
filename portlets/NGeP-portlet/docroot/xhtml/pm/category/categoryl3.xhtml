@@ -70,9 +70,11 @@
 					<h:outputText value="#{lbl['lbl.pm.supplier.type']}" />
 					</h:panelGroup>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.supplierTypeCode.parameterId}" 
-						style="width: 108px;">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+						>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.supplierType}"
+							var="supplierType" itemLabel="#{supplierType.codeName}" itemValue="#{supplierType.pmParameter.parameterId}"></f:selectItems>
 					</p:selectOneMenu>
 					
 					<h:panelGroup style="float: right">
@@ -80,9 +82,11 @@
 					<h:outputText value="#{lbl['lbl.pm.special.category']}" />
 					</h:panelGroup>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryTypeCode.parameterId}" 
-						style="width: 108px;">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+						>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.specialCategory}"
+							var="specialCategory" itemLabel="#{specialCategory.codeName}" itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
 					</p:selectOneMenu>
 					
 					<h:panelGroup style="float: right">
@@ -97,8 +101,8 @@
 					</h:panelGroup>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}" 
 						style="width: 108px;">
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="1" />
-						<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="0" />
+						<f:selectItem itemLabel="51%" itemValue="51" />
+						<f:selectItem itemLabel="100%" itemValue="100" />
 					</p:selectOneMenu>
 					
 					<h:panelGroup style="float: right">

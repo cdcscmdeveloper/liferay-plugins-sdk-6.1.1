@@ -113,18 +113,5 @@
 		</p:panel>	
 		</c:if>
 		
-		<ui:remove>
-				<c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '0'}">
-						<ui:include src="orgProfileDetails.xhtml" />
-					</c:if> <c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '1'}">
-						<ui:include src="orgGovernmentSeller.xhtml" />
-					</c:if> <c:if
-						test="#{categoryBackingBean.managedBean.organisationActiveIndex eq '2'}">
-						<ui:include src="orgResponsibleProfile.xhtml" />
-					</c:if>
-		</ui:remove>
-		
 	</ui:define>
 </ui:composition>
