@@ -10,18 +10,11 @@
 
 	<ui:define name="resourceSection">
 		<meta http-equiv="refresh" content="10" />
-		
-		<script
-				src="#{facesContext.externalContext.requestContextPath}/countdown.js"
-				type="text/javascript"></script> <!--  this is not the one that worked -->
-				<script src="#{resource['countdown.js']}"></script><!-- not yet -->
-				<h:outputScript library="countdown" name="countdown.js" /><!-- not yet -->
-				<script src="countdown.js" type="text/javascript"></script><!-- adding at header level no impact -->
 	</ui:define>
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="onlineBiddingPreRenderViewId">
-			<f:event listener="#{onlineBiddingBB.retrieveOnlineBiddingDtls}"
+			<f:event listener="#{onlineBiddingBB.preRenderView}"
 				type="preRenderView" />
 		</h:panelGroup>
 
