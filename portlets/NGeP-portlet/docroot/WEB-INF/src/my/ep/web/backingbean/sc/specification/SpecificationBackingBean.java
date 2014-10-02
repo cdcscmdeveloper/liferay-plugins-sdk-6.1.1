@@ -146,6 +146,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -4205,6 +4206,7 @@ public class SpecificationBackingBean extends
 	public void fromChange(AjaxBehaviorEvent event) {
 		String formvalue = (String) event.getComponent().getAttributes()
 				.get("value");
+		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
 		this.getManagedBean().setFromMonth(formvalue);
 		int n = Integer.parseInt(this.getManagedBean().getFromMonth());
@@ -4235,10 +4237,20 @@ public class SpecificationBackingBean extends
 		} else if (j == 10) {
 			Startmonth = "November";
 		} else if (j == 11) {
+
 			Startmonth = "December";
+		} else if (j == 12) {
+			currentYear = currentYear + 1;
+			Startmonth = "January";
+
+		} else if (j == 13) {
+			currentYear = currentYear + 1;
+			Startmonth = "February";
+
 		}
 		this.getManagedBean().setBankstmntTomonth(Startmonth);
 		this.getManagedBean().setToMonth(String.valueOf(j));
+		this.getManagedBean().setEndYear(String.valueOf(currentYear));
 	}
 
 	// While Technical Checklist click on edit will call this..
@@ -5299,38 +5311,48 @@ public class SpecificationBackingBean extends
 			List<PmDocument> selectList = this.getManagedBean()
 					.getStageTwoTechComplianceSelect();
 
-			if (compilance == null) {
-				compilance = new ArrayList<ScQtCheckList>();
+			if (null == selectList || selectList.isEmpty()) {
+				throw new EpException("Please Select At least One record");
 			}
 
 			for (int i = 0; i < selectList.size(); i++) {
 				PmDocument document = selectList.get(i);
-				ScQtCheckList scqtlist = createSpecList("2");
+				boolean isRequired = false;
+				for (ScQtCheckList techStandard : compilance) {
+					if (techStandard.getTitle().equals(document.getDocName())) {
+						isRequired = true;
+					}
+				}
+				if (!isRequired) {
+					ScQtCheckList scqtlist = createSpecList("2");
 
-				scqtlist.setTitle(document.getDocName());
-				scqtlist.setDefinationType(document.getDocDefinitionTypeCode());
-				scqtlist.setAction(document.getChecklistActionCode());
-				scqtlist.setManditory(false);
-				scqtlist.setScoringReq(true);
-				scqtlist.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
-				scqtlist.setChecklistSeq(1);
-				scqtlist.setPmDocument(document);
-				setUserDetails(scqtlist);
+					scqtlist.setTitle(document.getDocName());
+					scqtlist.setDefinationType(document
+							.getDocDefinitionTypeCode());
+					scqtlist.setAction(document.getChecklistActionCode());
+					scqtlist.setManditory(false);
+					scqtlist.setScoringReq(document.isScoringReq());
+					scqtlist.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
+					scqtlist.setChecklistSeq(1);
+					scqtlist.setPmDocument(document);
+					setUserDetails(scqtlist);
 
-				scqtlist.setScQt(this.getManagedBean().getScQt());
+					scqtlist.setScQt(this.getManagedBean().getScQt());
 
-				// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
-				IStatusSO statussO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IStatusSO.class);
+					// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
+					IStatusSO statussO = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IStatusSO.class);
 
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(1L);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
+					StatusReqDTO statusreq = new StatusReqDTO();
+					statusreq.setStatusId(1L);
+					StatusResDTO statusres = statussO
+							.retrieveStatusByStatusId(statusreq);
 
-				scqtlist.setPmStatus(statusres.getPmStatus());
-				compilance.add(scqtlist);
+					scqtlist.setPmStatus(statusres.getPmStatus());
+					compilance.add(scqtlist);
+				}
 
 			}
 
@@ -5339,6 +5361,7 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
+		RequestContext.getCurrentInstance().execute("stageTwoTech.hide()");
 	}
 
 	// Technical Checklist Add method in Spec committee
@@ -5399,35 +5422,49 @@ public class SpecificationBackingBean extends
 			if (compilance == null) {
 				compilance = new ArrayList<ScQtCheckList>();
 			}
+			if (null == selectList || selectList.isEmpty()) {
+				throw new EpException("Please Select At least One record");
+			}
 
 			for (int i = 0; i < selectList.size(); i++) {
 				PmDocument document = selectList.get(i);
-				ScQtCheckList scqtlist = createSpecList("2");
-				scqtlist.setTitle(document.getDocName());
-				scqtlist.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
-				scqtlist.setScoringReq(true);
-				// scqtlist.setEnable(true);
-				scqtlist.setDefinationType(document.getDocDefinitionTypeCode());
-				scqtlist.setAction(document.getChecklistActionCode());
-				// scqtlist.setEvaluationStage("2");
-				scqtlist.setManditory(false);
-				scqtlist.setChecklistSeq(1);
-				scqtlist.setPmDocument(document);
+				boolean isRequired = false;
+				for (ScQtCheckList techStandard : compilance) {
+					if (techStandard.getTitle().equals(document.getDocName())) {
+						isRequired = true;
+					}
+				}
+				if (!isRequired) {
+					ScQtCheckList scqtlist = createSpecList("2");
+					scqtlist.setTitle(document.getDocName());
+					scqtlist.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
+					scqtlist.setScoringReq(document.isScoringReq());
+					// scqtlist.setEnable(true);
+					scqtlist.setDefinationType(document
+							.getDocDefinitionTypeCode());
+					scqtlist.setAction(document.getChecklistActionCode());
+					// scqtlist.setEvaluationStage("2");
+					scqtlist.setManditory(false);
+					scqtlist.setChecklistSeq(1);
+					scqtlist.setPmDocument(document);
 
-				scqtlist.setScQt(this.getManagedBean().getScQt());
+					scqtlist.setScQt(this.getManagedBean().getScQt());
 
-				setUserDetails(scqtlist);
-				// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
-				statussO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+					setUserDetails(scqtlist);
+					// scqtlist.setQtScoreWeightage(new ScQtScoreWeightage());
+					statussO = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IStatusSO.class);
 
-				StatusReqDTO statusreq = new StatusReqDTO();
-				statusreq.setStatusId(1L);
-				StatusResDTO statusres = statussO
-						.retrieveStatusByStatusId(statusreq);
+					StatusReqDTO statusreq = new StatusReqDTO();
+					statusreq.setStatusId(1L);
+					StatusResDTO statusres = statussO
+							.retrieveStatusByStatusId(statusreq);
 
-				scqtlist.setPmStatus(statusres.getPmStatus());
-				compilance.add(scqtlist);
+					scqtlist.setPmStatus(statusres.getPmStatus());
+					compilance.add(scqtlist);
+				}
 			}
 
 			getManagedBean().setScQtCheckSt2financeProposalList(compilance);
@@ -5435,6 +5472,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			statussO = null;
 		}
+		RequestContext.getCurrentInstance().execute("stageTwoFinance.hide();");
 	}
 
 	// Technical Checklist Pm Documnet method
@@ -5796,18 +5834,30 @@ public class SpecificationBackingBean extends
 	public void addScoring(String criteriaType) {
 
 		try {
-
+			ScQtCheckListScore prevSpecScoring = null;
 			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 					.getCheckListScore();
 			if (null == checkListScore) {
 				checkListScore = new ArrayList<ScQtCheckListScore>();
 
 			}
+
+			if (checkListScore.size() > 0) {
+				prevSpecScoring = checkListScore.get(checkListScore.size() - 1);
+			}
+
 			ScQtCheckListScore score = createCheckList();
 			score.setCriteriaType(new Integer(criteriaType));
 			score.setScoreType(new BigDecimal(this.getManagedBean()
 					.getChecklistScoreType()));
+			if (prevSpecScoring != null) {
+				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
+				if (prevRangeTo != null) {
+					score.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
+				}
+			}
 			checkListScore.add(score);
+
 			this.getManagedBean().setCheckListScore(checkListScore);
 
 		} finally {
@@ -5818,17 +5868,27 @@ public class SpecificationBackingBean extends
 	public void addScoringyears(String CriteriaType) {
 
 		try {
-
+			ScQtCheckListScore prevSpecScoring = null;
 			List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 					.getScoringForYears();
 			if (null == checkListScore) {
 				checkListScore = new ArrayList<ScQtCheckListScore>();
 
 			}
+			if (checkListScore.size() > 0) {
+				prevSpecScoring = checkListScore.get(checkListScore.size() - 1);
+			}
+
 			ScQtCheckListScore score = createCheckList();
 			score.setCriteriaType(new Integer(CriteriaType));
 			score.setScoreType(new BigDecimal(this.getManagedBean()
-					.getCompanyScoreType()));
+					.getChecklistScoreType()));
+			if (prevSpecScoring != null) {
+				BigDecimal prevRangeTo = prevSpecScoring.getRangeTo();
+				if (prevRangeTo != null) {
+					score.setRangeFrom(prevRangeTo.add(BigDecimal.valueOf(1)));
+				}
+			}
 			checkListScore.add(score);
 			this.getManagedBean().setScoringForYears(checkListScore);
 
@@ -6055,7 +6115,12 @@ public class SpecificationBackingBean extends
 			} else {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
-				noOfContractScore.addAll(checkListScore);
+				if (checkListScore.size() < 2) {
+					throw new EpException("At least Two Auto Scores Required");
+				}
+				if (null != checkListScore) {
+					noOfContractScore.addAll(checkListScore);
+				}
 			}
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
 			if ((null != checkList && null != checkList.getPmDocument())
@@ -6078,6 +6143,10 @@ public class SpecificationBackingBean extends
 				} else {
 					List<ScQtCheckListScore> scoreYears = this.getManagedBean()
 							.getScoringForYears();
+					if (scoreYears.size() < 2) {
+						throw new EpException(
+								"At least Two Auto Scores Required");
+					}
 					if (null != scoreYears) {
 						noOfYearsScore.addAll(scoreYears);
 					}
@@ -6154,84 +6223,88 @@ public class SpecificationBackingBean extends
 			} else {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
-				noOfContractScore.addAll(checkListScore);
+				if (checkListScore.size() < 2) {
+					throw new EpException("At least Two Auto Scores Required");
+				}
+				if (null != checkListScore) {
+					noOfContractScore.addAll(checkListScore);
+				}
 			}
 			String Startmonth = "";
 			String endmonth = "";
 			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("0")) {
 				Startmonth = "01";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("1")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("1")) {
 				Startmonth = "02";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("2")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("2")) {
 				Startmonth = "03";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("3")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("3")) {
 				Startmonth = "04";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("4")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("4")) {
 				Startmonth = "05";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("5")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("5")) {
 				Startmonth = "06";
 			}
 
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("6")) {
+			else if (this.getManagedBean().getFromMonth().equalsIgnoreCase("6")) {
 				Startmonth = "07";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("7")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("7")) {
 				Startmonth = "08";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("8")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("8")) {
 				Startmonth = "09";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("9")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("9")) {
 				Startmonth = "10";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("10")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("10")) {
 				Startmonth = "11";
-			}
-			if (this.getManagedBean().getFromMonth().equalsIgnoreCase("11")) {
+			} else if (this.getManagedBean().getFromMonth()
+					.equalsIgnoreCase("11")) {
 				Startmonth = "12";
 			}
 			if (this.getManagedBean().getToMonth().equalsIgnoreCase("0")) {
 				endmonth = "01";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("1")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("1")) {
 				endmonth = "02";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("2")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("2")) {
 				endmonth = "03";
 			}
 
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("3")) {
+			else if (this.getManagedBean().getToMonth().equalsIgnoreCase("3")) {
 				endmonth = "04";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("4")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("4")) {
 				endmonth = "05";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("5")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("5")) {
 				endmonth = "06";
 			}
 
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("6")) {
+			else if (this.getManagedBean().getToMonth().equalsIgnoreCase("6")) {
 				endmonth = "07";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("7")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("7")) {
 				endmonth = "08";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("8")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("8")) {
 				endmonth = "09";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("9")) {
+			} else if (this.getManagedBean().getToMonth().equalsIgnoreCase("9")) {
 				endmonth = "10";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("10")) {
+			} else if (this.getManagedBean().getToMonth()
+					.equalsIgnoreCase("10")) {
 				endmonth = "11";
-			}
-			if (this.getManagedBean().getToMonth().equalsIgnoreCase("11")) {
+			} else if (this.getManagedBean().getToMonth()
+					.equalsIgnoreCase("11")) {
 				endmonth = "12";
+			} else if (this.getManagedBean().getToMonth()
+					.equalsIgnoreCase("12")) {
+				endmonth = "01";
+			} else if (this.getManagedBean().getToMonth()
+					.equalsIgnoreCase("13")) {
+				endmonth = "02";
 			}
 			Date d1 = new Date();
 
@@ -8878,20 +8951,35 @@ public class SpecificationBackingBean extends
 					for (ScQtCheckList checkList : savedCheckLists) {
 						if (SourcingConstants.TECHNICAL_DOCTYPE
 								.equalsIgnoreCase(checkList.getDocCategory())) {
-							this.getManagedBean().getScQtCheckSt2techProposal()
-									.remove(this.getManagedBean().getIndex());
-							this.getManagedBean()
-									.getScQtCheckSt2techProposal()
-									.add(this.getManagedBean().getIndex(),
-											checkList);
+							if (this.getManagedBean().getIndex() == -1) {
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.add(checkList);
+							} else {
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.remove(this.getManagedBean()
+												.getIndex());
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.add(this.getManagedBean().getIndex(),
+												checkList);
+							}
 						} else {
-							this.getManagedBean()
-									.getScQtCheckSt2financeProposalList()
-									.remove(this.getManagedBean().getIndex());
-							this.getManagedBean()
-									.getScQtCheckSt2financeProposalList()
-									.add(this.getManagedBean().getIndex(),
-											checkList);
+							if (this.getManagedBean().getIndex() == -1) {
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.add(checkList);
+							} else {
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.remove(this.getManagedBean()
+												.getIndex());
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.add(this.getManagedBean().getIndex(),
+												checkList);
+							}
 
 						}
 					}
@@ -9048,20 +9136,35 @@ public class SpecificationBackingBean extends
 					for (ScQtCheckList checkList : savedCheckLists) {
 						if (SourcingConstants.TECHNICAL_DOCTYPE
 								.equalsIgnoreCase(checkList.getDocCategory())) {
-							this.getManagedBean().getScQtCheckSt2techProposal()
-									.remove(this.getManagedBean().getIndex());
-							this.getManagedBean()
-									.getScQtCheckSt2techProposal()
-									.add(this.getManagedBean().getIndex(),
-											checkList);
+							if (this.getManagedBean().getIndex() == -1) {
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.add(checkList);
+							} else {
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.remove(this.getManagedBean()
+												.getIndex());
+								this.getManagedBean()
+										.getScQtCheckSt2techProposal()
+										.add(this.getManagedBean().getIndex(),
+												checkList);
+							}
 						} else {
-							this.getManagedBean()
-									.getScQtCheckSt2financeProposalList()
-									.remove(this.getManagedBean().getIndex());
-							this.getManagedBean()
-									.getScQtCheckSt2financeProposalList()
-									.add(this.getManagedBean().getIndex(),
-											checkList);
+							if (this.getManagedBean().getIndex() == -1) {
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.add(checkList);
+							} else {
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.remove(this.getManagedBean()
+												.getIndex());
+								this.getManagedBean()
+										.getScQtCheckSt2financeProposalList()
+										.add(this.getManagedBean().getIndex(),
+												checkList);
+							}
 
 						}
 					}
@@ -9118,7 +9221,7 @@ public class SpecificationBackingBean extends
 			return "/xhtml/sc/main/newTemplateMaintenance.xhtml?faces-redirect=true";
 		} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 				.equalsIgnoreCase(flowtype)) {
-
+			this.getManagedBean().setIndex(-1);
 			return "/xhtml/sc/main/technicalCommitteeTemplate.xhtml?faces-redirect=true";
 		}
 
