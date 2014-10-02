@@ -69,6 +69,11 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    public SuspensionBackingBean(){
 	           if(this.getManagedBean().getAction() == null) 
 	    	       this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
+	           
+	           if(ctBB == null){
+	  			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+	  			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+	  		}
 	    }
 	 
 	   private FacesScopes getFacesScopes(){
