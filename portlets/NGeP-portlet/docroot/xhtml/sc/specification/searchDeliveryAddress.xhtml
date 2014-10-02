@@ -18,11 +18,9 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.spec.search.delivery.address.ministry']}" />
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td colspan="3"><p:selectOneMenu
-							required="#{specificationBackingBean.managedBean.required}"
-							label="#{lbl['lbl.sc.spec.search.delivery.address.ministry']}"
-							id="committeeMinistryId" style="width:500px;margin-bottom:5px;"
+					</td>
+					<td colspan="3"><p:selectOneMenu id="committeeMinistryId"
+							style="width:500px;margin-bottom:5px;"
 							value="#{specificationBackingBean.managedBean.ministryId}">
 							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
@@ -32,8 +30,7 @@
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="departMent"
 								listener="#{specificationBackingBean.dePartMentByMinistry}"></p:ajax>
-						</p:selectOneMenu> <p:message id="ministryCommitteeid" for="committeeMinistryId"
-							display="icon"></p:message></td>
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><h:outputLabel

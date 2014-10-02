@@ -24,12 +24,12 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptCompanyScoring}" >
-					<f:setPropertyActionListener
+				action="#{specificationBackingBean.acceptCompanyScoring}">
+				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="70" />
-				
-				</p:commandButton>
+
+			</p:commandButton>
 
 
 
@@ -67,52 +67,57 @@
 						</p:selectOneMenu></td>
 				</tr>
 			</table>
-		
-		<h:panelGroup id="paidUpCapital">
-			<p:panel
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
 
-				<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
-				<h:panelGroup id="paidGroupId">
-					<ui:param name="scoringList"
+			<h:panelGroup id="paidUpCapital">
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '1'}">
+
+					<ui:param name="scoringPnlGroupId" value="paidupCapitalId" />
+					<h:panelGroup id="paidGroupId">
+						<ui:param name="scoringList"
 							value="#{specificationBackingBean.managedBean.checkListScore}" />
 						<ui:param name="selectionList"
 							value="#{specificationBackingBean.managedBean.checkListSelectScore}" />
-					<ui:param name="componentName" value="Paid Up Capital" />
-					<ui:param name="scoringPnlId" value="paidUpId" />
-					<ui:param name="scoringPnlName" value="Scoring For Paid Up Capital"></ui:param>
-					<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
-					<div align="right">
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-							process="@this,#{scoringPnlId}" partialSubmit="true"
-							update="#{scoringPnlId}" icon="ui-icon-add"
-							actionListener="#{specificationBackingBean.addScoring(70)}" />
-						<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-							icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
-							action="#{specificationBackingBean.deleteScoring(null)}"
-							update="#{scoringPnlId}" />
+						<ui:param name="componentName" value="Paid Up Capital" />
+						<ui:param name="scoringPnlId" value="paidUpId" />
+						<ui:param name="scoringPnlName"
+							value="Scoring For Paid Up Capital"></ui:param>
+						<ui:include src="/xhtml/sc/specification/scoring.xhtml"></ui:include>
+						<div align="right">
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+								process="@this,#{scoringPnlId}" partialSubmit="true"
+								update="#{scoringPnlId}" icon="ui-icon-add"
+								actionListener="#{specificationBackingBean.addScoring(70)}" />
+							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
-					</div>
-				</h:panelGroup>
+						</div>
+					</h:panelGroup>
 
-			</p:panel>
-			<p:panel 
-				rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</td>
-						<td><p:inputText maxlength="18" required="true"
-								label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
-								value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
-								<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
-							</p:inputText> <p:message id="finpaidUpMaxScore" for="finpaidUpScore"
-								display="icon"></p:message></td>
-					</tr>
-				</table>
-			</p:panel>
-		</h:panelGroup>
+				</p:panel>
+				<p:panel
+					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
+					<table>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</td>
+							<td><p:inputText maxlength="18" required="true"
+									label="#{lbl['lbl.sc.spec.max.score']}" id="finpaidUpScore"
+									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
+									<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
+								</p:inputText> <p:message id="finpaidUpMaxScore" for="finpaidUpScore"
+									display="icon"></p:message></td>
+						</tr>
+					</table>
+				</p:panel>
+			</h:panelGroup>
 		</p:panel>
 
 

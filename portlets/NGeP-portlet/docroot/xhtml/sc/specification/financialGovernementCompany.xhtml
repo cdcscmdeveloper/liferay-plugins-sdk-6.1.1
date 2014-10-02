@@ -92,18 +92,7 @@
 
 
 			<table>
-				<tr>
-					<td><h:outputText
-							value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText>
-					</td>
-				</tr>
-				<tr>
-					<td><h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
-					</td>
-					<td><p:inputText readonly="true" disabled="true"></p:inputText>
-					</td>
-				</tr>
+
 				<tr>
 					<td><h:outputText
 							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
@@ -159,9 +148,13 @@
 								actionListener="#{specificationBackingBean.addScoring(12)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>

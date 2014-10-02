@@ -59,7 +59,7 @@
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
-						</p:selectOneMenu> <p:selectOneMenu
+						</p:selectOneMenu> <p:spacer width="5"></p:spacer> <p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.startYear}">
 
 							<f:selectItem
@@ -68,13 +68,14 @@
 							</f:selectItem>
 						</p:selectOneMenu></td>
 
-					<td style="width: 40%"><p:outputLabel
+					<td style="width: 30%"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
 
-							<p:inputText readonly="true" 
+							<p:inputText readonly="true"
 								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
+							<p:spacer width="5"></p:spacer>
 
 							<p:inputText readonly="true"
 								value="#{specificationBackingBean.managedBean.endYear}"></p:inputText>
@@ -89,14 +90,21 @@
 		</p:panel>
 
 		<h:panelGroup id="amountdetails">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel>
-				<p:inputText disabled="true"
-					value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText>
-				<h:outputLabel value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel>
-				<p:inputText disabled="true"
-					value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText>
-			</h:panelGrid>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.amount']}"></h:outputLabel></td>
+					<td><p:inputText disabled="true"
+							value="#{specificationBackingBean.managedBean.totalAmount}"></p:inputText></td>
+				</tr>
+				<p:spacer height="10"></p:spacer>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.spec.avg.bank.statement']}"></h:outputLabel></td>
+					<td><p:inputText disabled="true"
+							value="#{specificationBackingBean.managedBean.totalAmountAvg}"></p:inputText></td>
+				</tr>
+			</table>
+
 		</h:panelGroup>
 
 		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
@@ -137,10 +145,13 @@
 								actionListener="#{specificationBackingBean.addScoring(50)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}"
-								partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>

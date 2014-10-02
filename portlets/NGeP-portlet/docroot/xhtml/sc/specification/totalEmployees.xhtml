@@ -53,7 +53,7 @@
 				</p:selectOneRadio>
 			</h:panelGrid>
 
-
+			<p:spacer height="10"></p:spacer>
 
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.total.employees']}"></h:outputLabel>
@@ -98,9 +98,13 @@
 								update="#{scoringPnlId}" icon="ui-icon-add"
 								actionListener="#{specificationBackingBean.addScoring(21)}" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 						</div>
 					</h:panelGroup>
 				</p:panel>

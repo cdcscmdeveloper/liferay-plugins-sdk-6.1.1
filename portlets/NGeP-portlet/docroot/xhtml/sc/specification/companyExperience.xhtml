@@ -104,6 +104,7 @@
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
+				<p:spacer height="10"></p:spacer>
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
 					</td>
@@ -154,10 +155,13 @@
 								actionListener="#{specificationBackingBean.addScoring(10)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
-
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 						</div>
 					</h:panelGroup>
 				</p:panel>
@@ -221,9 +225,13 @@
 								actionListener="#{specificationBackingBean.addScoringyears(11)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring('NoOfYears')}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>

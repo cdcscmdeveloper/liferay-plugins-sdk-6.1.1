@@ -43,10 +43,12 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.spec.stage2.score']}" />
 				</f:facet>
-				<ui:fragment rendered="#{finance.qtScoreWeightage.score!='0'}">
+				<ui:fragment
+					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
 					<h:outputText value="#{finance.qtScoreWeightage.score}" />
 				</ui:fragment>
-				<ui:fragment rendered="#{finance.qtScoreWeightage.score=='0'}">
+				<ui:fragment
+					rendered="#{finance.definationType.parameterCode eq 'UP' }">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
 						maxlength="18" required="true"
 						label="#{lbl['lbl.sc.spec.stage2.score']}" id="finScoreWeightage"

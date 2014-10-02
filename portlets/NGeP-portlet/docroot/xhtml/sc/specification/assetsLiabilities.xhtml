@@ -54,6 +54,7 @@
 
 						</p:inputText></td>
 				</tr>
+				<p:spacer height="10"></p:spacer>
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.sc.sp.current.liability']}" /></td>
@@ -61,6 +62,7 @@
 
 						</p:inputText></td>
 				</tr>
+				<p:spacer height="10"></p:spacer>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.sp.acid.ratio']}" /></td>
 					<td><p:inputText style="text-align:right" id="totalacidratio"
@@ -110,9 +112,13 @@
 								actionListener="#{specificationBackingBean.addScoring(60)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
-								action="#{specificationBackingBean.deleteScoring(null)}"
-								update="#{scoringPnlId}" />
+								process="@this" partialSubmit="true" icon="ui-icon-delete"
+								action="#{specificationBackingBean.deleteSelectedRowsAction(scoringList)}"
+								update="#{scoringPnlId}">
+								<f:setPropertyActionListener
+									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+									value="#{false}" />
+							</p:commandButton>
 
 						</div>
 					</h:panelGroup>

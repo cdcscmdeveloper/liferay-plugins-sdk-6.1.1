@@ -13,7 +13,16 @@
 			selection="#{selectionList}" var="checkListScoring"
 			rowKey="#{checkListScoring}">
 			<ac:paginator for="#{scoringPnlId}"></ac:paginator>
-			<p:column selectionMode="multiple" style="width:2px;"></p:column>
+			<p:column  style="width:2px;">
+			<f:facet name="header">
+					<p:selectBooleanCheckbox  value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="#{scoringPnlId}"  listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, scoringList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{checkListScoring.selected}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 			<p:column style="width:40%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
