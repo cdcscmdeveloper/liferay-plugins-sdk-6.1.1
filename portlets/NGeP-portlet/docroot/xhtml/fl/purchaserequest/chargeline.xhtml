@@ -167,7 +167,6 @@
 						saveObject="purchaseRequestBackingBean.managedBean.pmPrgActivity"
 						readonly="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.programLov}" 
-						postUpdateListener="purchaseRequestBackingBean.checkProgramLov()" 
 						conditionField="recordStatusFlg^1|pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
 						value="#{purchaseRequestBackingBean.managedBean.pmPrgActivity.prgActivityCode}"	>
 					</ac:lov></h:panelGroup></td>
@@ -179,7 +178,6 @@
 						disabled="#{!purchaseRequestBackingBean.managedBean.projectLov}" 
 						update=":form:setiaCode,:form:subSetiaCode,:form:cpCode" 
 						conditionField="recordStatusFlg^1|pmSetia.pmProject.pmVotFund.votFundId^#{purchaseRequestBackingBean.managedBean.votFundId}" 
-						postUpdateListener="purchaseRequestBackingBean.checkProjectLov()" 
 						value="#{purchaseRequestBackingBean.managedBean.pmSubSetia.pmSetia.pmProject.projectCode}"	>
 					</ac:lov>
 					</h:panelGroup></td>
