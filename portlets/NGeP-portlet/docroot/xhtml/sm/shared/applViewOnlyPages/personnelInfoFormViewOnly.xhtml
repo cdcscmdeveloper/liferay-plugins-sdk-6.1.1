@@ -354,12 +354,12 @@
 
 					</p:dataTable>
 				</p:panel>
-				
-				<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.personnelRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelRemark}" 
-						isInsideTable="false"/>
 			</p:panel>
+			
+			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.personnelRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.personnelRemark}" />
+						
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/branchCompanyInfoFormViewOnly.xhtml" />
 		</p:panel>
 	</h:panelGroup>

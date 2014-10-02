@@ -11,66 +11,66 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.name']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.name}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.nationality']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryName}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmCountry.countryName}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationTypeId}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationTypeId}" /></td>
 				<td>
 					<p:outputPanel id="equiPerDtlIdenTypeLblPan">
 						<p:outputLabel value="#{lbl['lbl.sm.shrHldrInfo.idNo']} :" id="equiPerIcNumLbl" />
 					</p:outputPanel>
 				</td>
-				<td style="float:left;"><p:outputPanel id="equiPerDtlIdenTypePan"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationNo}"/></p:outputPanel></td>
+				<td><p:outputPanel id="equiPerDtlIdenTypePan"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationNo}"/></p:outputPanel></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.dob']} :" /></td>
-				<td style="font-size: 12px;font-weight: normal;font-family: Arial">
-					<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" />
+				<td>
+					<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.birthDate}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.designation']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.designation}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epfNo}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.workExperienceYear}"/></td>
 
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.email}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.mobileNo']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.mobileNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.phoneNo}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxNo}"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.faxNo}"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']} :" /></td>
-				<td style="float:left;">
-					<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
-					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '1'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.bumiFlg eq '0'}" />
 				</td>
 				<td><p:outputLabel value=" #{lbl['lbl.sm.person.religion']} :" /></td>
-				<td style="float:left;">
-					<p:outputLabel value="#{lbl['lbl.sm.person.religion.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
-					<p:outputLabel value="#{lbl['lbl.sm.person.religion.non.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '1'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.religion.non.muslim']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.muslimFlg eq '0'}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.race']} :" /></td>
-				<td style="float:left;">
+				<td>
 					<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace}">
-						<p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceName}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.pmRace.raceName}" />
 					</c:if>
 				</td>
 			</tr>
@@ -85,25 +85,25 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']} :" /></td>
-				<td style="float:left;">
-					<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
-					<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}" />
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '0'}" />
 				</td>
 			</tr>
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']} :" /></td>
-					<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
 				</tr>
 			</c:if>
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
 							and viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']} :" /></td>
-					<td style="float:left;">
-						<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
-						<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
-						<p:outputLabel value="#{lbl['lbl.txt.issued']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2'}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.issued']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
 					</td>
 				</tr>
 			</c:if>
@@ -111,9 +111,9 @@
 				(viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '2' or viewSmApplBackingBean.managedBean.selectedShareHolder.softcertFlg eq '1')}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']} :"/></td>
-					<td style="float:left;">
-						<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '1'}" />
-						<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '0'}" />
+					<td>
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '1'}" />
+						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.contractSignerFlg eq '0'}" />
 					</td>
 				</tr>
 			</c:if>
@@ -128,7 +128,7 @@
 				<td style="width: 13%;"><p:outputLabel value="#{lbl['lbl.sm.person.shrAmt']}" /></td>
 				<td style="padding-right: 42px;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.shareAmt}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.shrPerc']}" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.sharePercentage}" /></td>
 
 			</tr>
 		</table>
@@ -182,27 +182,30 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="500px" height="200px" header="#{lbl['lbl.sm.job.function.details']}"
+	<p:dialog style="max-height:350px;width:500px" header="#{lbl['lbl.sm.job.function.details']}"
 		id="equiJobFunctionInfo" widgetVar="equiJobFunctionInfo" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.year.from']} :" /></td>
-				<td><p:outputLabel style="float:left; margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.year.to']} :" /></td>
-				<td><p:outputLabel style="float:left;" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"/></td>
-			</tr>
-		</table>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.companyName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.designation}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.year.from']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.fromYear}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.year.to']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedJobFunction.toYear}"/></td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 	
 	<c:if
@@ -252,34 +255,37 @@
 		</p:dataTable>
 	</p:panel>
 	
-	<p:dialog width="500px" height="300px" header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
+	<p:dialog style="max-height:350px;width:500px" header="#{lbl['lbl.sm.related.company.details']}" id="equiRelCompInfo"
 		widgetVar="equiRelCompInfo" resizable="false" showEffect="fade"	hideEffect="fade" modal="true">
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/></td>
-			</tr>
-		</table>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.companyName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.reg.no']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.regNo}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.designation']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.designation}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrAmt']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.shareAmt}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.equiComp.shrPerc']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.sharePercentage}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.no']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedRelatedCompany.mofNo}"/></td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 	
 	<p:panel header="#{lbl['lbl.sm.profBody.profBody']}" toggleable="true"
@@ -309,26 +315,28 @@
 
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="500px" height="300px" header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
+	<p:dialog style="max-height:350px;width:500px" header="#{lbl['lbl.sm.profBody.panHdr']}" id="equiShrProfBeanInfo"
 		widgetVar="equiShrProfBeanInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.bodyName}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']} :" /></td>
-				<td>
-					<ac:labelDate value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.expDate}" />
-				</td>
-			</tr>
-
-		</table>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.pmCertBody.bodyName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.regNo}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.prof.enddate']} :" /></td>
+					<td>
+						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStfPrfBdy.expDate}" />
+					</td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 	</c:if>
 	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true"
@@ -375,32 +383,35 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:dialog width="450px" height="300px" header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
+	<p:dialog style="max-height:350px;width:500px" header="#{lbl['lbl.sm.staff.academic.details']}" id="equiAcadInfo"
 		widgetVar="equiAcadInfo" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']} :" /></td>
-				<td><p:outputLabel style="float:left; margin-bottom : 5px;" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.year}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.institute']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationLevelId}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.major.in']} :" /></td>
-				<td style="float:left;"><p:outputLabel value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/></td>
-			</tr>
-		</table>
+		
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.year}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.institute']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.instituteName}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.qualificationLevelId}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.education.field']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.pmEduField.fieldName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.major.in']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedStaffAcademic.fieldMajor}"/></td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 
 

@@ -31,42 +31,41 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			
-			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.assocBodyRemark}" 
-				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.assocBodyRemark}" 
-				isInsideTable="false"/>
 				
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.assocBodyRemark}" 
+				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.assocBodyRemark}" />
+				
 	</p:panel>
-	<p:dialog width="390px"
+	<p:dialog style="max-height:350px;width:500px"
 		header="#{lbl['lbl.sm.profBody.profBodDiaHdr']}"
 		widgetVar="profDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="profPop" closable="true">
 		
-		<table style="width: 100%">
-
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.otherAssociation}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.regNo}"/></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.profBody.expDate']}" /></td>
-				<td>
-					<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}" />
-				</td>
-			</tr>
-
-		</table>
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.profBody']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.pmCertBody.bodyName}" /></td>
+				</tr>
+	
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.others']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.otherAssociation}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.regNo']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.regNo}"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.profBody.expDate']}" /></td>
+					<td>
+						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedAssocBody.expDate}" />
+					</td>
+				</tr>
+			</table>
+		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

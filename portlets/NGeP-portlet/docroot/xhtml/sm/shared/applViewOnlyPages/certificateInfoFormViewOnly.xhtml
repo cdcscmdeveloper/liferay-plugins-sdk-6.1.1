@@ -38,52 +38,52 @@
 			
 			<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
 				poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.certRemark}" 
-				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.certRemark}" 
-				isInsideTable="false"/>
+				approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.certRemark}" />
 				
 		</p:panel>
 		
 	</p:panel>
-	<p:dialog width="350px" height="150px"
+	<p:dialog style="max-height:350px;width:500px"
 		header="#{lbl['lbl.sm.cert.certDiaHdrMsg']}" widgetVar="certDialog"
 		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
 		id="certPop" closable="true">
 		
-		<p:outputPanel id="certificateDetailsPanel">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']} :" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']} :" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
-				</tr>
-	
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']} :" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
-					<td>
-						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
-					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
-					<td>
-						<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
-					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']} :" /></td>
-					<td>
-						<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
-					</td>
-				</tr>
-			</table>
-		</p:outputPanel>
-
+		<p:scrollPanel mode="native" style="max-height:300px;width:450px;border:none">
+			<p:outputPanel id="certificateDetailsPanel">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
+					</tr>
+		
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
+						<td>
+							<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
+						<td>
+							<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']} :" /></td>
+						<td>
+							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:scrollPanel>
 	</p:dialog>
 </ui:composition>

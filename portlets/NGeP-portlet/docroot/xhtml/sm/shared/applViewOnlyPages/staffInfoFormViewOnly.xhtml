@@ -41,13 +41,13 @@
 							<p:outputLabel value="#{staff.totalForeigner}" />
 						</td>
 					</tr>
-					<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.staffRemark}" 
-						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.staffRemark}" 
-						isInsideTable="true"/>
 				</table>
 			</p:dataGrid>
 				
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+						poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.staffRemark}" 
+						approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.staffRemark}" />
 	</p:panel>
 </ui:composition>

@@ -162,13 +162,12 @@
 					</tr>
 					</c:if>
 					
-					<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
-					poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" 
-					approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.officeFacilityRemark}" 
-					isInsideTable="true"/>
-					
 				</table>
 				
 		</p:panel>
+		
+		<ac:smRevisionRemark backingBean="#{viewSmApplBackingBean}" 
+					poRemark="#{viewSmApplBackingBean.managedBean.poSecReview.officeFacilityRemark}" 
+					approverRemark="#{viewSmApplBackingBean.managedBean.apprvrSecReview.officeFacilityRemark}" />
 	</p:panel>
 </ui:composition>
