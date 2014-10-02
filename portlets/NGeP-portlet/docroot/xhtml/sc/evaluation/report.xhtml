@@ -51,7 +51,7 @@
 		<tr>
 			<td><div align="left" style="width: 99%">
 					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
@@ -59,9 +59,31 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','1')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.scQt.demoRequired}">
 						<p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' and !evaluationBackingBean.managedBean.scQt.demoRequired}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('4','2')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
 							icon="ui-icon-prev" update=":form" />
 					</ui:fragment>

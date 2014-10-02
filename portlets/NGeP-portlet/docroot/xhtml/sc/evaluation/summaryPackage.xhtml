@@ -12,11 +12,10 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="finEvaluationqualifiedSupplier"
-			id="#{qualifiedListId}"
-			value="#{qualifiedList}"
-			editable="true" rowIndexVar="index" rowKey="#{qualifiedSupplier}">
-			<ac:paginator for="#{qualifiedListId}" />
+		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
+			id="summaryQualifiedpackage" value="#{qualifiedList}" editable="true"
+			rowIndexVar="index" rowKey="#{qualifiedSupplier}">
+			<ac:paginator for="summaryQualifiedpackage" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
@@ -64,11 +63,11 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier"
-			id="#{disQualifiedListId}" editable="true"
-			value="#{disQualifiedList}"
-			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="#{disQualifiedListId}" />
+		<p:dataTable var="disQualifiedSupplier" rows="10"
+			id="summaryDisqualifiedQualifiedpackage" editable="true"
+			value="#{disQualifiedList}" rowIndexVar="index"
+			rowKey="#{disQualifiedSupplier}">
+			<ac:paginator for="summaryDisqualifiedQualifiedpackage" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"

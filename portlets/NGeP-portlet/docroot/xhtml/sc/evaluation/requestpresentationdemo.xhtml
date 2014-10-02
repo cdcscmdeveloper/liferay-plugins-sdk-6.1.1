@@ -13,7 +13,7 @@
 			header="#{lbl['lbl.sc.eva.present.request.head']}" toggleable="true">
 
 			<p:commandLink value="#{lbl['lbl.sc.eva.present.request.tech.list']}"></p:commandLink>
-			<p:dataTable id="requestDemo" var="reminderpopup"
+			<p:dataTable id="requestDemo" var="reminderpopup" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2TechSupplier}"
 				selection="#{evaluationBackingBean.managedBean.requestDemoSelect}"
 				rowKey="#{reminderpopup.evaluationResultId}">

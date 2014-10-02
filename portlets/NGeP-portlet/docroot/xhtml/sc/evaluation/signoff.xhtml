@@ -12,7 +12,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.main.menu.endors.stg']}"
 		toggleable="true">
 		
-		<p:dataTable id="evaluationSignOff" var="signOffMember"
+		<p:dataTable id="evaluationSignOff" var="signOffMember" rows="10"
 			value="#{evaluationBackingBean.managedBean.endorscommitteeMemberList}"
 			rowKey="#{signOffMember}" rowIndexVar="index">
 

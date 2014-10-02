@@ -14,7 +14,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
 		toggleable="true">
 
-		<p:dataTable var="meeting" id="evaluationmeetingDetails"
+		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
 			widgetVar="evaluationMeeting"
 			value="#{evaluationBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationBackingBean.managedBean.meetingMultiSelect}"

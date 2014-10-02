@@ -11,7 +11,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="finEvaluationqualifiedSupplier"
+		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
 			id="qualifiedListId"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"
 			editable="true" rowIndexVar="index" rowKey="#{qualifiedSupplier}">
@@ -63,7 +63,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier"
+		<p:dataTable var="disQualifiedSupplier" rows="10"
 			id="disQualifiedListId" editable="true"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"
 			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">

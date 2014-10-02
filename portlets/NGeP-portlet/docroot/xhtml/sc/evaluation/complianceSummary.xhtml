@@ -16,7 +16,8 @@
 		toggleable="true">
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
-			editable="true" rowIndexVar="index" style="width: 1000px;" value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
+			rows="10" editable="true" rowIndexVar="index" style="width: 1000px;"
+			value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
 
@@ -35,12 +36,13 @@
 	</p:panel>
 
 	<p:panel>
-		<table >
+		<table>
 
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true" value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>
@@ -51,8 +53,9 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier" value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
-			id="complianceDisQualifiedSupplier" editable="true"
+		<p:dataTable var="disQualifiedSupplier"
+			value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
+			id="complianceDisQualifiedSupplier" editable="true" rows="10"
 			rowIndexVar="index" style="width: 1000px;"
 			rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
@@ -60,7 +63,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}">
 
-				<h:outputText value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
+				<h:outputText
+					value="#{disQualifiedSupplier.scQtProposal.supplierNo}"></h:outputText>
 
 
 			</p:column>
@@ -77,7 +81,8 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.eva.compliance.sum.total.sup']}" /></td>
-				<td><p:inputText readonly="true" disabled="true" value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
 			</tr>
 
 		</table>

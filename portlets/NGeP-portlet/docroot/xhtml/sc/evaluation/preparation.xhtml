@@ -21,7 +21,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
 		toggleable="true">
 
-		<p:dataTable var="meeting" id="evaluationmeetingDetails"
+		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
 			value="#{evaluationBackingBean.managedBean.scQtMeetings}"
 			selection="#{evaluationBackingBean.managedBean.meetingMultiSelect}"
 			editable="true" rowIndexVar="index" style="width:100%"
@@ -61,7 +61,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.committee.details']}"
 		toggleable="true">
 
-		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
+		<p:dataTable id="evaluationpreparecommittee" var="committeeMember" rows="10"
 			rowKey="#{committeeMember.qtCommitteeActivityId}" 
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}" 
 				selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}">

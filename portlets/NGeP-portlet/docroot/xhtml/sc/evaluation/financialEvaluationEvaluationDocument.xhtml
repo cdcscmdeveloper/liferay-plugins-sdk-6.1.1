@@ -36,7 +36,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="evaFinSupplier"
+			<p:dataTable var="evaFinSupplier" rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				id="evaluateFinSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
@@ -79,7 +79,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.eva.tech.user.score']}"
 					style="width:15%">
-
+					<p:inputText value="#{evaFinSupplier.totalUserScore}"></p:inputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"

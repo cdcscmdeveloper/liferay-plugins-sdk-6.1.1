@@ -11,7 +11,7 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.eva.s1.manual.head']}" toggleable="true">
-		<p:dataTable id="evManual" var="manuals1Evaluation"
+		<p:dataTable id="evManual" var="manuals1Evaluation" rows="10"
 			value="#{evaluationBackingBean.managedBean.manuals1EvaluationList}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			rowKey="#{manuals1Evaluation}">

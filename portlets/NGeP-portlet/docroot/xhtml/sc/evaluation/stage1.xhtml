@@ -17,7 +17,7 @@
 
 <c:if test="#{evaluationBackingBean.managedBean.manualList gt 0 and evaluationBackingBean.managedBean.committeeType eq'OC'}">
 	<p:panel header="#{lbl['lbl.sc.eva.s1.manual.head']}" toggleable="true">
-		<p:dataTable id="evManual" var="manuals1Evaluation"
+		<p:dataTable id="evManual" var="manuals1Evaluation" rows="10"
 			value="#{evaluationBackingBean.managedBean.manuals1SupplierList}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			rowKey="#{manuals1Evaluation}">
@@ -55,7 +55,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.s1.tech.head']}" toggleable="true">
 
 		<p:dataTable id="evaluationst1Technical" var="evaluations1Tech"
-			rowIndexVar="index"
+			rowIndexVar="index" rows="10"
 			value="#{evaluationBackingBean.managedBean.s1TechEvalList}">
 
 			<ac:paginator for="evaluationst1Technical" />
@@ -98,7 +98,7 @@
 							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s1.fin.head']}" toggleable="true">
 
-		<p:dataTable id="evaluationst1Financial" var="s1evalFin"
+		<p:dataTable id="evaluationst1Financial" var="s1evalFin" rows="10"
 		value="#{evaluationBackingBean.managedBean.s1FinEvalList}"
 		rowKey="#{s1evalFin}"
 			rowIndexVar="index">

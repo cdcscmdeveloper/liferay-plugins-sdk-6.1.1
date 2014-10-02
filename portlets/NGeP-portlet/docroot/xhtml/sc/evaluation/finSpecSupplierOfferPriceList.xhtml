@@ -15,7 +15,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-		<p:dataTable var="finSpec" editable="true" id="#{finSpecSupplierId}"
+		<p:dataTable var="finSpec" editable="true" id="#{finSpecSupplierId}" rows="10"
 			value="#{finSpecsupplierList}" rowIndexVar="index" style="width:100%"
 			rowKey="#{finSpec}">
 
@@ -63,7 +63,7 @@
 				style="width:15%">
 
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
-					process="@this"
+					process="@this" 
 					action="#{evaluationBackingBean.othersFinancialEvaluate(finSpec)}"
 					partialSubmit="true" />
 			</p:column>

@@ -73,20 +73,17 @@
 							<ui:include src="TECSummary.xhtml" />
 						</ui:fragment>
 					</c:if>
+				</ui:fragment> <ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+					<c:if
+						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
 
-					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<c:if
-							test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
 
-							<ui:fragment
-								rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-								<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
+						<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
-							</ui:fragment>
-						</c:if>
-					</ui:fragment>
+
+					</c:if>
 				</ui:fragment></td>
 		</tr>
 	</table>
@@ -94,10 +91,20 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.prev']}"
-						actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
-						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
-						update=":form" />
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('2','1')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}"
+							actionListener="#{evaluationBackingBean.setTabValue('2','0')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-prev" update=":form" />
+					</ui:fragment>
 				</div></td>
 			<td>
 				<div align="right" style="width: 99%">

@@ -24,7 +24,7 @@
 			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText>
 		</h:panelGrid>
 	<ui:fragment rendered="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality eq 'Yes'}">
-		<p:dataTable id="evaluationsummarystage2Location" var="zones"
+		<p:dataTable id="evaluationsummarystage2Location" var="zones" rows="10"
 			rowKey="#{zones}" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.locationList}" >
 			<ac:paginator for="evaluationsummarystage2Location" />
@@ -41,7 +41,7 @@
 		<p:spacer height="20" />
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.item.list']}"></p:commandLink>
 
-		<p:dataTable id="evaluationsummarystage2Item" var="item"
+		<p:dataTable id="evaluationsummarystage2Item" var="item" rows="10"
 			rowKey="#{item}" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.scQtItemList}">
 			<ac:paginator for="evaluationsummarystage2Item" />
@@ -62,7 +62,7 @@
 		<p:spacer height="20" />
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
 	
-		<p:dataTable id="evaluationsummarystage2supplier" var="qualified"
+		<p:dataTable id="evaluationsummarystage2supplier" var="qualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarystage2supplier" />
@@ -105,7 +105,7 @@
 		<p:spacer height="20" />
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
 
-		<p:dataTable id="evaluationsummarystage2disqualified" var="disqualified"
+		<p:dataTable id="evaluationsummarystage2disqualified" var="disqualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.disQualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarystage2disqualified" />

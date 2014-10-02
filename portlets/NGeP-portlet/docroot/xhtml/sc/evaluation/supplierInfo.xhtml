@@ -47,47 +47,43 @@
 
 		<p:panel>
 
-			<p:tabView id="supplietrtabView" dynamic="true">
+			<p:tabView id="supplierinfotabViewid" dynamic="true">
+				<ui:param name="smSupplier"
+					value="#{evaluationBackingBean.managedBean.smSupplier}" />
+				<ui:param name="smAppl"
+					value="#{evaluationBackingBean.managedBean.smAppl}" />
 
-				<p:tab id="tab1" title="#{lbl['lbl.sc.spec.tabs.title']}"
+				<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/supplierDetails.xhtml" />
+					<ui:include src="/xhtml/sc/supplierproposal/supplierDetails.xhtml" />
 				</p:tab>
 
-
-
-				<p:tab id="tab2" title="Branch/Assocs"
+				<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/branchInfo.xhtml" />
+					<ui:include src="/xhtml/sc/supplierproposal/branchInfo.xhtml" />
 				</p:tab>
 
-				<p:tab id="tab3" title="Capital Info"
+				<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/capitalInfo.xhtml" />
-
-
+					<ui:include src="/xhtml/sc/supplierproposal/capitalInfo.xhtml" />
 				</p:tab>
 
-				<p:tab id="tab4" title="Personnel"
+				<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/personnelInfo.xhtml" />
-
-
+					<ui:include src="/xhtml/sc/supplierproposal/personnelInfo.xhtml" />
 				</p:tab>
 
-				<p:tab id="tab5" title="Bank Info"
+				<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/bankInfo.xhtml" />
-
+					<ui:include src="/xhtml/sc/supplierproposal/bankInfo.xhtml" />
 				</p:tab>
 
-				<p:tab id="tab6" title="Category Codes"
+				<p:tab id="tab6" title="#{lbl['lbl.sc.sp.categories.code']}"
 					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/specification/category.xhtml" />
-
+					<ui:include src="/xhtml/sc/supplierproposal/category.xhtml" />
 				</p:tab>
-
 			</p:tabView>
+
 		</p:panel>
 	</ui:define>
 

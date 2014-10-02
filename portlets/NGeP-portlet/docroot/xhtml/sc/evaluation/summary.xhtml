@@ -32,7 +32,7 @@
 		<p:spacer height="20" /> -->
 		<p:panel>
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
-		<p:dataTable id="evaluationsummarysupplier" var="qualified"
+		<p:dataTable id="evaluationsummarysupplier" var="qualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarysupplier" />
@@ -57,7 +57,7 @@
 		<p:spacer height="20" />
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
 
-		<p:dataTable id="evaluationsummarydisqualified" var="disqualified"
+		<p:dataTable id="evaluationsummarydisqualified" var="disqualified" rows="10"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarydisqualified" />

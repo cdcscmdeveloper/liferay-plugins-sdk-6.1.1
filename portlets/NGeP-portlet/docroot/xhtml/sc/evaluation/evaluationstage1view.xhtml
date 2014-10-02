@@ -20,7 +20,7 @@
 		</ui:fragment>
 
 		<ui:fragment
-			rendered="#{((evaluationBackingBean.managedBean.tabActiveIndex eq 5 and evaluationBackingBean.managedBean.committeeType ne 'OC') or (evaluationBackingBean.managedBean.tabActiveIndex eq 1 and evaluationBackingBean.managedBean.committeeType eq 'OC'))}">
+			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
 			<ui:repeat var="bpmAction"
 				value="#{evaluationBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel"
