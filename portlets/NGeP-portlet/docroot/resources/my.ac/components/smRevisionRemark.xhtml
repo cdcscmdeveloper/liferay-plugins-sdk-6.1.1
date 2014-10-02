@@ -8,60 +8,30 @@
 
 	<cc:interface>
 		<cc:attribute name="backingBean" required="true" />
-		<cc:attribute name="isInsideTable" required="true"/>
 		<cc:attribute name="poRemark" />
 		<cc:attribute name="approverRemark" />
 	</cc:interface>
 
 	<cc:implementation>
-
-			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.poUser}">
-				<c:choose>
-					<c:when test="#{cc.attrs.isInsideTable eq 'true'}">
-						<tr height="15"><td></td></tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}" /></td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<table style="width: 30%;">
-							<tr height="15"><td></td></tr>
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-								<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}" /></td>
-							</tr>
-						</table>
-					</c:otherwise>
-				</c:choose>
-			</p:outputPanel>
-			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.approverUser}">
-				<c:choose>
-					<c:when test="#{cc.attrs.isInsideTable eq 'true'}">
-						<tr height="15"><td></td></tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-							<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}" /></td>
-						</tr>
-					</c:when>
-					<c:otherwise>
-						<table style="width: 30%;">
-							<tr height="15"><td></td></tr>
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']} :" /></td>
-								<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']} :" /></td>
-								<td><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}" /></td>
-							</tr>
-						</table>
-					</c:otherwise>
-				 </c:choose>
+			
+			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.approverUser or cc.attrs.backingBean.managedBean.poUser}">
+				<br />
+				<br />
+				<p:panelGrid styleClass="tablePanel" id="remarkTableId" style="table-layout: fixed; width: 50%">
+					<p:row id="remarkHeaderId">
+						<p:column style="background-color: #F0EFEF;font-weight: bold;word-wrap: break-word">#{lbl['lbl.sm.remarks.officer']}</p:column>
+						<p:column style="background-color: #F0EFEF;font-weight: bold;word-wrap: break-word">#{lbl['lbl.sm.remarks']}</p:column>
+					</p:row>
+					<p:row id="remarkDataPoId">
+						<p:column style="word-wrap: break-word">#{lbl['lbl.sm.sectionPoRmrk']}</p:column>
+						<p:column style="word-wrap: break-word">#{cc.attrs.poRemark}</p:column>
+					</p:row>
+					<p:row id="remarkDataApprvId" rendered="#{cc.attrs.backingBean.managedBean.approverUser}">
+						<p:column style="word-wrap: break-word">#{lbl['lbl.sm.sectionApprRmrk']}</p:column>
+						<p:column style="word-wrap: break-word">#{cc.attrs.approverRemark}</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
 			</p:outputPanel>
 	</cc:implementation>
 </ui:component>
