@@ -941,10 +941,9 @@
 			}
 			function handleLocalesDialogComplete(xhr, status, args)
 			{
-				//alert(args);
 			   if (args) {
-			      var reportInValid = args.reportInValid;
-			     if(!reportInValid){
+			      var reportInValid = args.reportInValid;			
+			     if(reportInValid){
 			    	 window.open(args.reportViewUrl,'_blank');
 			    	 //reportGenDialog.show();
 			     }
