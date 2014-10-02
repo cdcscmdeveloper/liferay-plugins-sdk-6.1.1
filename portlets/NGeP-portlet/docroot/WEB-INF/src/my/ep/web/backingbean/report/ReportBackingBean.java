@@ -29,7 +29,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -3631,51 +3632,37 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void generateReport(){		
 		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
 			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
-				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getReleaseFromDate()==null)&&(this.getReleaseToDate()!=null))||((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){		
-					RequestContext context = RequestContext.getCurrentInstance();					 
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getReleaseFromDate()==null)&&(this.getReleaseToDate()!=null))||((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
 			if((this.getFromDate()!=null)&&(this.getToDate()!=null)){
-				if(this.getFromDate().after(this.getToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getFromDate().after(this.getToDate())){					  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}				
 			}
 			if((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()!=null)){
-				if(this.getApplicationFromDate().after(this.getApplicationToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getApplicationFromDate().after(this.getApplicationToDate())){					 
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
 			if((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()!=null)){
-				if(this.getReceiveFromDate().after(this.getReceiveToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getReceiveFromDate().after(this.getReceiveToDate())){					  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
 			if((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()!=null)){
-				if(this.getReleaseFromDate().after(this.getReleaseToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getReleaseFromDate().after(this.getReleaseToDate())){					
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
 			if((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()!=null)){
-				if(this.getPrintedFromDate().after(this.getPrintedToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getPrintedFromDate().after(this.getPrintedToDate())){					
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
 			if((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()!=null)){
-				if(this.getExpiryFromDate().after(this.getExpiryToDate())){
-					RequestContext context = RequestContext.getCurrentInstance();  
-			        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+				if(this.getExpiryFromDate().after(this.getExpiryToDate())){					
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}			
@@ -3694,9 +3681,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				//getStreamedContentPDFFile(constructedParamString);
 				//getReportPdf();
 			}
-		}else{	
 			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
+	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
+		}else{			
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
 		}		
 	}
@@ -3995,13 +3982,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
-				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 		}else{
-			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -4022,9 +4005,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName());
 				log.info(url);
-			}else{
-				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
+			}else{				
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
@@ -4083,13 +4064,9 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
-				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
-		}else{
-			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
+		}else{			
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -4184,14 +4161,10 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 			}else{
-				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 			log.info(url);
 		}else{
-			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);  
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}	
@@ -4392,8 +4365,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 				log.info(url);
 			}else{
-				RequestContext context = RequestContext.getCurrentInstance();  
-		        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
 			/*try {
@@ -4403,8 +4374,6 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				e.printStackTrace();
 			}*/			
 		}else{
-			RequestContext context = RequestContext.getCurrentInstance();  
-	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
@@ -4703,12 +4672,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 //            	out.write(b, 0, size);
 //            }
 //            out.close();
-            
-            
-            PortletResponse portletResponse = (PortletResponse) FacesContext
+		    ResourceResponse portletResponse = (ResourceResponse) FacesContext
             	      .getCurrentInstance().getExternalContext().getResponse();
-            	     HttpServletResponse res = PortalUtil
-            	      .getHttpServletResponse(portletResponse);
+            
+     /*       PortletResponse portletResponse = (PortletResponse) FacesContext
+            	      .getCurrentInstance().getExternalContext().getResponse();*/
+            	     HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
             	     res.setHeader("Content-Disposition", "attachment; filename=\""
             	          + "test-report.pdf" + "\"");//
             	     res.setHeader("Content-Transfer-Encoding", "binary");
