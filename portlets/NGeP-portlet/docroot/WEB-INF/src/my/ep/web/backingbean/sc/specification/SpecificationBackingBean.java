@@ -2405,6 +2405,9 @@ public class SpecificationBackingBean extends
 						if (enddate.equalsIgnoreCase("09")) {
 							endMonth = "8";
 						}
+						if (enddate.equalsIgnoreCase("10")) {
+							endMonth = "9";
+						}
 						if (enddate.equalsIgnoreCase("11")) {
 							endMonth = "10";
 						}
@@ -4911,12 +4914,14 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(checkList.getPmDocument()
 								.getDocDefinitionKey())) {
 					int year = Calendar.getInstance().get(Calendar.YEAR);
-					this.getManagedBean().setStartYear(String.valueOf(year));
-					this.getManagedBean().setEndYear(String.valueOf(year));
+
 					reqDTO.setScQtCheckList(checkList);
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
+						this.getManagedBean()
+								.setStartYear(String.valueOf(year));
+						this.getManagedBean().setEndYear(String.valueOf(year));
 
 						this.getManagedBean().setChecklistScoreType(
 								QTConstants.AUTO_SCORE);
@@ -4962,6 +4967,8 @@ public class SpecificationBackingBean extends
 
 						}
 						checkList.setScQtCheckListValue(resDTO
+								.getScQtCheckListValue());
+						retriveFromMonthToManthDtls(resDTO
 								.getScQtCheckListValue());
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
@@ -5132,6 +5139,100 @@ public class SpecificationBackingBean extends
 
 		return null;
 
+	}
+
+	private void retriveFromMonthToManthDtls(ScQtCheckListValue checkListValue) {
+		if (null != checkListValue) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			String startMonth = "";
+			String endMonth = "";
+			String fromdate = dateFormat.format(checkListValue.getFromDate());
+			String todate = dateFormat.format(checkListValue.getToDate());
+			String startdate = fromdate.substring(3, 5);
+			String startYear = fromdate.substring(6, fromdate.length());
+			String enddate = todate.substring(3, 5);
+			String endYear = todate.substring(6, todate.length());
+
+			if (startdate.equalsIgnoreCase("01")) {
+				startMonth = "0";
+			}
+			if (startdate.equalsIgnoreCase("02")) {
+				startMonth = "1";
+			}
+			if (startdate.equalsIgnoreCase("03")) {
+				startMonth = "2";
+			}
+			if (startdate.equalsIgnoreCase("04")) {
+				startMonth = "3";
+			}
+			if (startdate.equalsIgnoreCase("05")) {
+				startMonth = "4";
+			}
+			if (startdate.equalsIgnoreCase("06")) {
+				startMonth = "5";
+			}
+
+			if (startdate.equalsIgnoreCase("07")) {
+				startMonth = "6";
+			}
+			if (startdate.equalsIgnoreCase("08")) {
+				startMonth = "7";
+			}
+			if (startdate.equalsIgnoreCase("09")) {
+				startMonth = "8";
+			}
+			if (startdate.equalsIgnoreCase("10")) {
+				startMonth = "9";
+			}
+			if (startdate.equalsIgnoreCase("11")) {
+				startMonth = "10";
+			}
+			if (startdate.equalsIgnoreCase("12")) {
+				startMonth = "11";
+			}
+
+			if (enddate.equalsIgnoreCase("01")) {
+				endMonth = "January";
+			}
+			if (enddate.equalsIgnoreCase("02")) {
+				endMonth = "February";
+			}
+			if (enddate.equalsIgnoreCase("03")) {
+				endMonth = "March";
+			}
+			if (enddate.equalsIgnoreCase("04")) {
+				endMonth = "April";
+			}
+			if (enddate.equalsIgnoreCase("05")) {
+				endMonth = "May";
+			}
+			if (enddate.equalsIgnoreCase("06")) {
+				endMonth = "June";
+			}
+
+			if (enddate.equalsIgnoreCase("07")) {
+				endMonth = "July";
+			}
+			if (enddate.equalsIgnoreCase("08")) {
+				endMonth = "August";
+			}
+			if (enddate.equalsIgnoreCase("09")) {
+				endMonth = "September";
+			}
+			if (enddate.equalsIgnoreCase("10")) {
+				endMonth = "October";
+			}
+			if (enddate.equalsIgnoreCase("11")) {
+				endMonth = "November";
+			}
+			if (enddate.equalsIgnoreCase("12")) {
+				endMonth = "December";
+			}
+			this.getManagedBean().setFromMonth(startMonth);
+			this.getManagedBean().setBankstmntTomonth(endMonth);
+			this.getManagedBean().setStartYear(startYear);
+			this.getManagedBean().setEndYear(endYear);
+		}
 	}
 
 	public void compareChecklistScore(int index,
