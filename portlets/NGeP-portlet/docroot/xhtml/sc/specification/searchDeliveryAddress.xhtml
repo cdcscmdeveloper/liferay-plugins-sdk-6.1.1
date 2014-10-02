@@ -106,7 +106,7 @@
 		</p:panel>
 		<p:panel header="PTJ Delivery Address List">
 
-			<p:dataTable id="deliveryAddress" var="deliveryLoc"
+			<p:dataTable id="deliveryAddress" var="deliveryLoc" rows="10"
 				rowKey="#{deliveryLoc}" rowIndexVar="index"
 				value="#{specificationBackingBean.searchDeliveryAddress}"
 				selection="#{specificationBackingBean.managedBean.deliveryAddressSelect}"

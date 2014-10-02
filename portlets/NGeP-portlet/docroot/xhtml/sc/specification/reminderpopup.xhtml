@@ -10,7 +10,7 @@
 	<p:dialog header="#{lbl['lbl.sc.spec.reminder']}" widgetVar="reminder"
 		modal="true" width="600" height="250" position="top">
 		<p:panel id="signOffreminder">
-			<p:dataTable id="specificationReminder" var="reminderpopup"
+			<p:dataTable id="specificationReminder" var="reminderpopup" rows="10"
 				editable="true">
 				<ac:paginator for="specificationReminder" />
 				<p:column headerText="#{lbl['lbl.sc.spec.reminder.name']}"

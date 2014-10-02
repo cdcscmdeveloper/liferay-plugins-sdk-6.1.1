@@ -80,7 +80,7 @@
 						process="@parent" />
 					<p:spacer height="40" />
 					<p:panel header="Search Result" toggleable="true">
-						<p:dataTable id="existingcommitteesearch"
+						<p:dataTable id="existingcommitteesearch" rows="10"
 							widgetVar="existingCommittee" lazy="true"
 							value="#{evaluationMeetingBackingBean.searchExistingUser}"
 							selection="#{evaluationMeetingBackingBean.managedBean.selectedPmUser}"

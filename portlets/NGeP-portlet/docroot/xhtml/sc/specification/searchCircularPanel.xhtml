@@ -48,7 +48,7 @@
 
 
 		<p:dataTable id="circularList" var="circular" style="width:100%"
-			value="#{specificationBackingBean.searchCircular}"
+			value="#{specificationBackingBean.searchCircular}" rows="10"
 			rowKey="#{circular.circularVerId}" rowIndexVar="index" lazy="true"
 			selection="#{specificationBackingBean.managedBean.circularVer}">
 			<ac:paginator for="circularList"></ac:paginator>
@@ -139,7 +139,7 @@
 
 
 				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
-					style="width:100%"
+					style="width:100%" rows="10"
 					value="#{specificationBackingBean.managedBean.panelItemList}"
 					rowKey="#{panelItem}">
 

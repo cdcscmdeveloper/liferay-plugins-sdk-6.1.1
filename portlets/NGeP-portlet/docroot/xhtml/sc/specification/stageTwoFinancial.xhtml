@@ -11,9 +11,11 @@
 		position="top"
 		header="#{lbl['lbl.sc.spec.btn.standard.financial.check.list']}"
 		height="500">
-		<p:panel>
+		<p:messages id="technicalChecklistPopup" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
+		<p:panel id="financialChecklistPopup">
 
-			<p:dataTable id="stageTwoFinPopup" var="compilance"
+			<p:dataTable id="stageTwoFinPopup" var="compilance" rows="10"
 				value="#{specificationBackingBean.managedBean.stageTwoFinComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoFinComplianceSelect}"
@@ -34,8 +36,7 @@
 			style="float:right;" process="@all" partialSubmit="true"
 			oncomplete="financialChecklist.paginator.endLink.click();"
 			action="#{specificationBackingBean.stageTwoFinanceCheckList}"
-			onclick="stageTwoFinance.hide();" update="financeProposaltwo"
-			icon="ui-icon-accept"></p:commandButton>
+			update="financeProposaltwo" icon="ui-icon-accept"></p:commandButton>
 
 
 	</p:dialog>

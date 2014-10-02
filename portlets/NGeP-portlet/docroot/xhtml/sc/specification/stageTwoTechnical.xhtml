@@ -11,9 +11,11 @@
 		position="top"
 		header="#{lbl['lbl.sc.spec.btn.standard.tech.check.list']} "
 		height="500">
-		<p:panel>
+		<p:messages id="technicalChecklistPopup" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
+		<p:panel id="specCommitteeTechnicalChecklist">
 
-			<p:dataTable id="compilencestageTwo" var="compilance"
+			<p:dataTable id="compilencestageTwo" var="compilance" rows="10"
 				value="#{specificationBackingBean.managedBean.stageTwoTechComplianceList}"
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoTechComplianceSelect}"
@@ -34,8 +36,7 @@
 			style="float:right;" process="@all" partialSubmit="true"
 			oncomplete="technicalChecklist.paginator.endLink.click();"
 			action="#{specificationBackingBean.stageTwoTechProposal}"
-			onclick="stageTwoTech.hide();" update="stageTwotechProposal"
-			icon="ui-icon-accept"></p:commandButton>
+			update="stageTwotechProposal" icon="ui-icon-accept"></p:commandButton>
 
 
 	</p:dialog>

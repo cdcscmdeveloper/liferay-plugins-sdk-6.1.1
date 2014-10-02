@@ -221,7 +221,7 @@
 								actionListener="#{specificationBackingBean.addScoringyears(11)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete"
+								icon="ui-icon-delete" process="@this" partialSubmit="true"
 								action="#{specificationBackingBean.deleteScoring('NoOfYears')}"
 								update="#{scoringPnlId}" />
 

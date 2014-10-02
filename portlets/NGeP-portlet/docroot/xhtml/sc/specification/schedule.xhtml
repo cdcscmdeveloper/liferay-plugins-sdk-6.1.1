@@ -41,7 +41,7 @@
 
 
 
-				<p:dataTable id="frequencySchedule" var="frequency"
+				<p:dataTable id="frequencySchedule" var="frequency" rows="10"
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}"
 					rowIndexVar="index"
 					value="#{specificationBackingBean.managedBean.scheduleList}">
@@ -159,7 +159,7 @@
 
 
 				<p:dataTable id="progressivePayment" var="payment"
-					rowIndexVar="index"
+					rowIndexVar="index" rows="10"
 					value="#{specificationBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 

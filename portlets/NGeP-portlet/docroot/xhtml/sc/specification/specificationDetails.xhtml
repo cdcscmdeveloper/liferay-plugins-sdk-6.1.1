@@ -7,8 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel  header="#{lbl['lbl.sc.spec.details']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.details']}" toggleable="true">
 
 		<table style="width: 100%">
 			<tr>
@@ -73,7 +72,7 @@
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true" /></td>
-				<td><h:outputLabel
+				<td style="width:215px;"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
 				<td><p:inputText size="30"
@@ -139,7 +138,7 @@
 	<p:panel
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<h:panelGrid width="100%">
-			<p:dataTable id="zoneGeneralDataTable"
+			<p:dataTable id="zoneGeneralDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 				var="zoneTree" style="width:100%" rowIndexVar="index">
 				<p:column headerText="Location">

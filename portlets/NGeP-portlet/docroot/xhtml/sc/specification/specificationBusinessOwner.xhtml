@@ -223,7 +223,7 @@
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 			<h:panelGrid width="100%" >
-				<p:dataTable id="zoneGeneralDataTable"
+				<p:dataTable id="zoneGeneralDataTable" rows="10"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
 					rowKey="#{zoneTree}" >
