@@ -2695,6 +2695,16 @@ public class SmApplicationBackingBean extends
 
 	public void addOrUpdateShareHolderAddress(SmPersonnel shareHolderBean)
 			throws ParseException {
+		if (shareHolderBean.getAuthorizedFlg() == 0) {
+			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
+		}
+		
+		if(shareHolderBean.isDirector() || shareHolderBean.isDirector() || shareHolderBean.isHigherManagement()){
+			//do nothing
+		} else {
+			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
+			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
+		}
 		// clone the addrs start
 		SmApplicationUtil.cloneShareHolderAddress(getManagedBean());
 		// clone the addrs end
@@ -2820,6 +2830,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
 		// getManagedBean().setSelectedPersonnel(null);
+		
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
 		manageEquityLimit(shr);
