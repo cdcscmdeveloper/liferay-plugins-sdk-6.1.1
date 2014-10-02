@@ -15,10 +15,12 @@
        <p:blockUI block=":form" trigger="searchButtonId" widgetVar="blkContractSearchTable">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 			</p:blockUI>
-       <p:messages id="messages" showDetail="true" showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
+       <p:messages id="messages" showDetail="true" 
+          showSummary="false" autoUpdate="true" closable="true" severity="error, info, warning" />
     </p:panel>
      <p:panel id="searchId" header="#{lbl['lbl.btn.search']}" toggleable="true"  toggleSpeed="500">
-     	<h:panelGrid columns="4" style="width:100%;">
+     	<h:panelGrid columns="4" style="width:100%;" 
+     	   columnClasses="columnWidth15,columnWidth20,columnWidth15,columnWidth20">
            <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" maxlength="17" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
