@@ -386,7 +386,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			tplDocBB.getManagedBean().setExternalPageUrl(DOCUMENT_PAGE);
 			
 			getManagedBean().setScQtDocReport(scQtDocReport);
-			TplDocMaster docMaster = null;
 			
 			ScQtDocReport qtDocReport = retriveRulesAndRegulationReport(scQtDocReport);
 			if(qtDocReport != null){
@@ -396,15 +395,14 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				scQtDocReport = saveScQtReportList(scQtDocReport);
 			}
 				
-			if(scQtDocReport.getTplDocMaster() == null) {
+			TplDocMaster docMaster = scQtDocReport.getTplDocMaster();
+			if (docMaster == null) {
 				//clone standard tplDocMaster
 				TplDocMaster tplDocMaster = cloneTplDocMasterDtls(scQtDocReport);
 				scQtDocReport.setTplDocMaster(tplDocMaster);
 				
 				//save clone to db
 				docMaster = saveClonedTplDocMaster(scQtDocReport);
-			} else {
-				docMaster = scQtDocReport.getTplDocMaster();
 			}
 			templateDocUrl = tplDocBB.goToMaint(docMaster);
 			
