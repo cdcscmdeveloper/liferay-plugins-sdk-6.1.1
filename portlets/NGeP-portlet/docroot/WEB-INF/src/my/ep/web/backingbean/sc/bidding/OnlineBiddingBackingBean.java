@@ -7,65 +7,96 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
+import my.ep.persistence.entity.sc.bidding.ScBidPackage;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "onlineBiddingBB")
-@RequestScoped
-public class OnlineBiddingBackingBean extends
-		BaseBackingBean{
+@ViewScoped
+public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private static final long serialVersionUID = 1L;
 
 	private List<ScBidSchedule> activeBidSchedules;
 	private ScBidSchedule scBidSchedule;
 	private List<ScBidPrice> bidPrices;
 	private List<ScBidContactPerson> bidContactPersons;
+	private SmSupplier smSupplier;
+	private ScBidAction scBidAction;
+	private ScBidPackage scBidPackage;
 	private ScBidPrice scBidPrice;
 	private ScBidPrice newScBidPrice;
 	private BigDecimal selectedDecrementAmt;
 	private BigDecimal newBidPrice;
+
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
 	private String itemNewBidPriceTotal;
-
+	private Long interval = 30L;
 	private Long remainingBidTime;
 	private Long remainingTimeToBid;
-	
+
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
 		log.info(message);
 	}
-	
+
 	CommonUtils commonUtils = new CommonUtils();
 	DecimalFormat nf = new DecimalFormat(
 			commonUtils
 					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
+	/**
+	 * To redirect to Supplier online Bidding Screen..
+	 */
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String bidScheduleId = originalServletRequest
+				.getParameter("bidScheduleId");
+		String encodedSupplierId = originalServletRequest
+				.getParameter("supplierId");
+		retrieveOnlineBiddingDtls(Long.parseLong(bidScheduleId),
+				encodedSupplierId,
+				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "onlineBiddingMain.xhtml");
+	}
 
-	public void retrieveOnlineBiddingDtls() {
-		
+	private void retrieveOnlineBiddingDtls(Long bidScheduleId,
+			String supplierId, Long userId) {
+
 		log.info("retrieveOnlineBiddingDtls");
-		// TODO temporary hard coded
-		Long supplierId = 1l;
-		Long bidScheduleId = 1l;
 
 		IBiddingSO biddingSO = null;
 
@@ -75,22 +106,23 @@ public class OnlineBiddingBackingBean extends
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 
+			reqDTO.setUserID(userId);
+			reqDTO.setHashSupplierId(supplierId);
 			reqDTO.setBidScheduleId(bidScheduleId);
-			reqDTO.setSupplierId(supplierId);
 
 			BiddingResDTO resDTO = biddingSO
 					.retrieveSupplierBidScheduleDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				setActiveBidSchedules(
-						resDTO.getActiveBidSchedules());
+				setActiveBidSchedules(resDTO.getActiveBidSchedules());
 				setScBidSchedule(resDTO.getScBidSchedule());
-				setBidContactPersons(
-						resDTO.getBidContactPersons());
+				setBidContactPersons(resDTO.getBidContactPersons());
+				setSmSupplier(resDTO.getSmSupplier());
+
 				if (resDTO.getBidPrices() != null) {
 					setBidPrices(resDTO.getBidPrices());
 				}
-			} 
+			}
 		}
 
 		finally {
@@ -98,18 +130,35 @@ public class OnlineBiddingBackingBean extends
 		}
 		itemStartPriceTotal();
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "onlineBiddingMain.xhtml");
 	}
 
 	public void selectedBidChangeListener(ScBidSchedule bid) {
 		log.info("selectedBidChangeListener");
+		getOnlineBidScheduleDetails(bid.getBidScheduleId(), getSmSupplier()
+				.getSupplierId());
 
-		// TODO temporary hard coded
-		Long supplierId = 1l;
-		Long bidScheduleId = 1L;
-		// Long bidScheduleId = bid.getBidScheduleId();
+		if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_CANCELLED)
+				|| getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PAUSED)) {
+			RequestContext.getCurrentInstance().execute("onlineBiddingNotification.show()");
+		}
+	}
+
+	public void pollListener() {
+		log.info("pollListener");
+		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
+				getSmSupplier().getSupplierId());
+		
+		if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_CANCELLED)
+				|| getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PAUSED)) {
+			RequestContext.getCurrentInstance().execute("onlineBiddingNotification.show()");
+		}
+	}
+
+	private void getOnlineBidScheduleDetails(Long bidScheduleID, Long supplierID) {
 		IBiddingSO biddingSO = null;
 
 		try {
@@ -117,20 +166,19 @@ public class OnlineBiddingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-			reqDTO.setBidScheduleId(bidScheduleId);
-			reqDTO.setSupplierId(supplierId);
+			reqDTO.setBidScheduleId(bidScheduleID);
+			reqDTO.setSupplierId(supplierID);
 
 			BiddingResDTO resDTO = biddingSO
-					.retrieveSupplierBidScheduleDtl(reqDTO);
+					.retrieveOnlineBidScheduleDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				setActiveBidSchedules(
-						resDTO.getActiveBidSchedules());
-				setBidContactPersons(
-						resDTO.getBidContactPersons());
+				setBidContactPersons(resDTO.getBidContactPersons());
 				setBidPrices(resDTO.getBidPrices());
 				setScBidSchedule(resDTO.getScBidSchedule());
-			} 
+				setScBidPackage(resDTO.getScBidPackage());
+				setScBidAction(resDTO.getScBidAction());
+			}
 		} finally {
 			biddingSO = null;
 		}
@@ -143,17 +191,16 @@ public class OnlineBiddingBackingBean extends
 
 	}
 
-	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice){
+	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 		log.info("decrementAmountValueChangeListener");
-		
+
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal bidPrice;
-		///TODO 
-		if(scBidPrice.getNewPrice() != null){
-			 bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
-					.doubleValue()
-					-scBidPrice.getNewPrice().doubleValue());
-		}else {
+		// /TODO
+		if (scBidPrice.getNewPrice() != null) {
+			bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
+					.doubleValue() - scBidPrice.getNewPrice().doubleValue());
+		} else {
 			bidPrice = scBidPrice.getBidPrice();
 		}
 		newBidPrice.setBidPrice(bidPrice);
@@ -163,14 +210,12 @@ public class OnlineBiddingBackingBean extends
 		getBidPrices().set(index, scBidPrice);
 		setNewScBidPrice(newBidPrice);
 		setScBidPrice(scBidPrice);
-		//itemNewBidPriceTotal();
-		
+		// itemNewBidPriceTotal();
+
 	}
-	
-	public void submitBidPrice() {
-		
-		log.info("submitBidPrice");
-		
+
+	public void updateBidPriceAndCalculateRank() {
+		log.info("updateBidPriceNDcalculateRank");
 		IBiddingSO biddingSO = null;
 
 		try {
@@ -186,28 +231,25 @@ public class OnlineBiddingBackingBean extends
 			if (resDTO.isSuccessful()) {
 				setScBidSchedule(resDTO.getScBidSchedule());
 				int index = getBidPrices().indexOf(getScBidPrice());
-				getBidPrices().set(index,resDTO.getScBidPrice());
-				
-				List<ScBidPrice> bidPriceList =  getBidPrices();
-				
-				for(ScBidPrice bidPrice : bidPriceList){
-					
+				getBidPrices().set(index, resDTO.getScBidPrice());
+
+				List<ScBidPrice> bidPriceList = getBidPrices();
+
+				for (ScBidPrice bidPrice : bidPriceList) {
+
 					bidPrice.setNewBidPrice(null);
 				}
 				setBidPrices(bidPriceList);
-			} 
-	
-		}
-		finally {
+			}
+
+		} finally {
 			biddingSO = null;
 		}
-
 	}
 
 	private void itemStartPriceTotal() {
 		Double startPriceTotal = 0D;
-		if (getBidPrices() != null
-				&& getBidPrices().size() != 0) {
+		if (getBidPrices() != null && getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : getBidPrices()) {
 				startPriceTotal += (bidPrice.getScBidSupplierItem()
 						.getItemStartPrice().doubleValue() * bidPrice
@@ -217,13 +259,6 @@ public class OnlineBiddingBackingBean extends
 
 		setItemStartPriceTotal(nf.format(startPriceTotal));
 	}
-	
-	public void pollListener(){
-		
-		log.info("pollListener");
-		
-	}
-	
 
 	/**
 	 * @return the newScBidPrice
@@ -244,30 +279,30 @@ public class OnlineBiddingBackingBean extends
 	 * @return the itemNewBidPriceTotal
 	 */
 	public String getItemNewBidPriceTotal() {
-		
-		System.out.println("******!!!$$$$ inside getItemNewBidPriceTotal method ***** ");
-		
+
+		System.out
+				.println("******!!!$$$$ inside getItemNewBidPriceTotal method ***** ");
+
 		Double newBidPriceTotal = 0D;
 		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
-				
-				if(bidPrice.getNewBidPrice() != null && bidPrice.getNewBidPrice().getBidPrice() != null){
-					
-					newBidPriceTotal += (bidPrice.getNewBidPrice().getBidPrice().doubleValue() * bidPrice
+
+				if (bidPrice.getNewBidPrice() != null
+						&& bidPrice.getNewBidPrice().getBidPrice() != null) {
+
+					newBidPriceTotal += (bidPrice.getNewBidPrice()
+							.getBidPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
-				}else {
-					
+				} else {
+
 					newBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
 				}
-				
-				
+
 			}
 		}
 		this.setItemNewBidPriceTotal(nf.format(newBidPriceTotal));
-		
-		
-		
+
 		return itemNewBidPriceTotal;
 	}
 
@@ -329,8 +364,7 @@ public class OnlineBiddingBackingBean extends
 
 		Double lastBidPriceTotal = 0D;
 		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
-			
-			
+
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
 				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
 						.getScBidSupplierItem().getScBidItem().getQty());
@@ -468,6 +502,74 @@ public class OnlineBiddingBackingBean extends
 		this.bidContactPersons = bidContactPersons;
 	}
 
+	/**
+	 * @return the interval
+	 */
+	public Long getInterval() {
+
+		/*
+		 * if
+		 * (getScBidSchedule().getPmStatus().getStatusId().equals(BidStatusConst
+		 * .BID_PENDING_BIDDING)){ setInterval(getRemainingTimeToBid()); }else
+		 * if
+		 * (getScBidSchedule().getPmStatus().getStatusId().equals(BidStatusConst
+		 * .BID_IN_PROGRESS)){ setInterval(5L); }
+		 */
+		return interval;
+	}
+
+	/**
+	 * @param interval
+	 *            the interval to set
+	 */
+	public void setInterval(Long interval) {
+		this.interval = interval;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier
+	 *            the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	/**
+	 * @return the scBidPackage
+	 */
+	public ScBidPackage getScBidPackage() {
+		return scBidPackage;
+	}
+
+	/**
+	 * @param scBidPackage
+	 *            the scBidPackage to set
+	 */
+	public void setScBidPackage(ScBidPackage scBidPackage) {
+		this.scBidPackage = scBidPackage;
+	}
+
+	/**
+	 * @return the scBidAction
+	 */
+	public ScBidAction getScBidAction() {
+		return scBidAction;
+	}
+
+	/**
+	 * @param scBidAction the scBidAction to set
+	 */
+	public void setScBidAction(ScBidAction scBidAction) {
+		this.scBidAction = scBidAction;
+	}
+
 	private Long durationCalculator(Date startDate, Date endDate) {
 
 		long durationInMills = endDate.getTime() - startDate.getTime();
@@ -477,5 +579,5 @@ public class OnlineBiddingBackingBean extends
 
 		return time;
 	}
-	
+
 }
