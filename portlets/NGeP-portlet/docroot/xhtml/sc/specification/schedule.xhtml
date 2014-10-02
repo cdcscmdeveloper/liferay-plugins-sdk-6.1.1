@@ -79,6 +79,8 @@
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+							<p:ajax event="change"
+								listener="#{specificationBackingBean.calculateStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -100,7 +102,7 @@
 						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
-								<p:ajax event="change" update="scheduleDetails"
+							<p:ajax event="change" update="scheduleDetails"
 								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
 						</p:selectOneMenu>
 
@@ -207,6 +209,8 @@
 						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
+							<p:ajax event="change"
+								listener="#{specificationBackingBean.calculateProgressiveStartMonth}"></p:ajax>
 						</p:selectOneMenu>
 
 
