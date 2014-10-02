@@ -150,7 +150,7 @@
 					icon="ui-icon-search" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{flDocumentBackingBean.searchReset}" icon="ui-icon-reset"
-					update=":form" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+					update=":form"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
