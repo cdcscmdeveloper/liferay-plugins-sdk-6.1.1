@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.sm.applicationView;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -12,26 +10,14 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
@@ -39,10 +25,6 @@ import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
-import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
-import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
@@ -91,7 +73,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
@@ -337,7 +318,7 @@ public class ViewSmApplBackingBean extends
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-//		initTesting();
+		//initTesting();
 	}
 	
 	private void initTesting(){
@@ -593,10 +574,20 @@ public class ViewSmApplBackingBean extends
 		getManagedBean().setSelBankBranchName("");
 
 		StringBuffer sb = new StringBuffer();
+		int i = 0;
 		for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
 				.getSmChequeSignatories()) {
-			sb.append(smChequeSignatoryTmp.getSmPersonnel().getName()).append(
-					"\n");
+			i++;
+			if(i<=3){
+				sb.append(smChequeSignatoryTmp.getSmPersonnel().getName()).append(
+						",");
+			}else{
+				sb.append("<br />");
+				i = 0;
+			}
+		}
+		if(sb.length()>0){
+			sb.deleteCharAt(sb.lastIndexOf(","));
 		}
 		getManagedBean().setChequeSignPersonnelName(sb.toString());
 
