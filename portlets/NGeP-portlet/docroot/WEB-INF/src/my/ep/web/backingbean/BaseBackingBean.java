@@ -607,7 +607,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 		uploadDir = tempDir + file.getFileName();
 		
-		genFile(uploadDir, file.getContents());
+//		genFile(uploadDir, file.getContents());
+		genFile(tempDir, file.getContents());
 
 	}
 	
