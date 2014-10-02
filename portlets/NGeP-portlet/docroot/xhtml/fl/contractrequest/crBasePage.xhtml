@@ -21,11 +21,12 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true"  
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"  
 						icon="ui-icon-back" action="#{contractRequestBackingBean.backToPervious}" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{contractRequestBackingBean.managedBean.outComes}">
+						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<p:commandButton value="#{bpmAction}" update="@form" 
 							styleClass="ui-button" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
@@ -41,29 +42,29 @@
 				<td width="20%" valign="top" class="sidemenutd">
 					<p:tabMenu styleClass="sidemenu"
 						activeIndex="#{contractRequestBackingBean.managedBean.selectedTabIndex}">
-						<p:menuitem value="General" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.general']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="Delivery Address and Item" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form"
 							actionListener="#{contractRequestBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
-						<p:menuitem value="Order Summary" update="@form">
+						<p:menuitem value="#{lbl['lbl.fl.menu.order.summary']}" update="@form">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
 						</p:menuitem>
-						<p:menuitem value="Charge Line Summary" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.charge.line.summary']}" update="@form"
 							actionListener="#{contractRequestBackingBean.onTabChange(3)}">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
-						<p:menuitem value="Approval Setting" update="@form" actionListener="#{contractRequestBackingBean.onTabChange(4)}"
+						<p:menuitem value="#{lbl['lbl.fl.menu.approver.list']}" update="@form" actionListener="#{contractRequestBackingBean.onTabChange(4)}"
 						rendered="#{contractRequestBackingBean.isFlFulfilmentRequisitioner()}"
 							>
 							<f:setPropertyActionListener
