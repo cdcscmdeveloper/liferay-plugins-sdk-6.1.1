@@ -9,9 +9,9 @@
 	<p:spacer height="5px" />
 	  <table style="width:100%;">
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
-				<td>
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="panel" required="true"
@@ -26,15 +26,11 @@
 						</tr>
 					</table>
 				</td>
-
-				<td style="width: 150px;"><p:outputLabel
-						value="#{lbl['lbl.sc.sq.gen.info.created.by']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{simpleQuoteBackingBean.managedBean.createdBy}"/></td>
 			</tr>
 			<tr>
-				<td style="width: 150px;">
+				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td style="width: 150px;" colspan="4">
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:inputText size="95" id="title" required="true" maxlength="100"
@@ -49,7 +45,7 @@
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.proc.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td>
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio style="margin-bottom: 5px;"
@@ -76,11 +72,11 @@
 				<table style="width: 100%">
 				    <tr>
 					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-						 <td style="width: 150px">
+						 <td style="width: 15%">
 						     <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.just']}" />
 						     <p:outputLabel value="*" styleClass="mandatory" />
 						 </td>
-						 <td> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
+						 <td style="width: 85%"> <p:selectOneMenu style="width: 120px;margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.sq.gen.info.just']}"
 						       required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
 						         disabled="#{isPendingRnCreationStatus}" 
@@ -112,9 +108,9 @@
 			   </p:outputPanel></td>
 			</tr>
 			<tr>
-				<td style="width: 150px;">
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.zonal']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="zonal" required="true"
@@ -135,9 +131,9 @@
 			</tr>
 			
 			<tr>
-				<td style="width: 150px;">
+				<td style="width: 15%;">
 				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.start.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td>
+				<td style="width: 30%;">
 					<table>
 						<tr>
 						 <td> 
@@ -157,9 +153,9 @@
 					</table>
 				</td>
 			
-				<td style="width: 150px;">
+				<td style="width: 15%;">
 				 <p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.end.date']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:calendar showOn="button" id="endDate" label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
+				<td style="width: 40%;"><p:calendar showOn="button" id="endDate" label="#{lbl['lbl.sc.sq.gen.info.end.date']}"
 				       mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
 				       readonlyInput="true"  required="true" 
 				       disabled="#{isPendingRnCreationStatus}"
@@ -171,9 +167,9 @@
 				    <td><p:message id="endDateMsg" for="endDate" display="icon" /></td>
 			</tr>
 			<tr>
-				<td style="width: 150px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sc.sq.gen.info.duration']}" /></td>
-				<td>
+				<td colspan="3">
 				 <p:outputPanel autoUpdate="true" id="durationId">
 				   <p:inputText  size="6" label="#{lbl['lbl.sc.sq.gen.info.duration']}" maxlength="5"
 				      value="#{simpleQuoteBackingBean.managedBean.duration}" disabled="true"
@@ -189,9 +185,9 @@
 			
 			
 			<tr>
-				<td style="width: 150px;">
-				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td>
+				<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.no.of.quote']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:selectOneRadio id="noOfQuote"
