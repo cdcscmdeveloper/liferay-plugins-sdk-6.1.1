@@ -3,7 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-	<p:panel header="#{lbl['lbl.pm.menu.factoringbranch.finance']}" id="factoringBranch"
+	<p:panel header="#{lbl['lbl.pm.menu.factoringbranch.finance']}" 
 		toggleable="true">
 		<p:dataTable id="financialbranchid" var="financialbranch"
 			value="#{financialOrgBackingBean.managedBean.pmFinancialBranch}"
@@ -47,7 +47,7 @@
 
 	</p:panel>
 
-	<p:panel id="">
+	<p:panel >
 
 		<h:panelGrid id="factoringAddress" style="width:100%;" toggleable="true">
 			<p:tabView>
