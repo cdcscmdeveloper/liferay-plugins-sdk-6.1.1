@@ -7,14 +7,12 @@
 
 	<cc:interface>
 		<cc:attribute name="value" required="true" />
-		<cc:attribute name="rendered" />
+		<cc:attribute name="rendered" default="true"/>
 		<cc:attribute name="styleClass" />
 	</cc:interface>
 
 	<cc:implementation>
-		<h:outputText value="#{cc.attrs.value}"
-			rendered="#{cc.attrs.rendered==null?'true':cc.attrs.rendered}"
-			styleClass="#{cc.attrs.styleClass}">
+		<h:outputText value="#{cc.attrs.value}" rendered="#{cc.attrs.rendered}" styleClass="#{cc.attrs.styleClass}">
 			<f:convertNumber
 				pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 		</h:outputText>
