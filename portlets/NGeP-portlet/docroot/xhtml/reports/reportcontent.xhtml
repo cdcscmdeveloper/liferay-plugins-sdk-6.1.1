@@ -322,11 +322,17 @@
 									</p:column>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryZoneView}">
-								  <p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
-									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>														
+								  <p:column style="width:160px;">
+								  <table style="width:160px;">
+									<tr style="width:100%;">
+									<td style="width:100%;">								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:112px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>	
+									</td>
+									</tr>
+									</table>													
 								  </p:column>
-								  <p:column>
+								  <p:column >
 								  <table style="width: 100%" >
 									<tr>
 										<td style="width:84%">																
@@ -353,11 +359,17 @@
 									</p:selectOneMenu>									
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatorySupplierTypeView}">
-									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
-									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>														
+									<p:column style="width:160px;">	
+									<table style="width:160px;">
+									<tr style="width:100%;">
+									<td style="width:100%;">							 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:65px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>	
+									</td>
+									</tr>
+									</table>													
 								  </p:column>
-								  <p:column>
+								  <p:column >
 								  <table style="width: 100%" >
 									<tr>
 										<td style="width:84%">																
@@ -406,11 +418,17 @@
 					 				</p:inputText>
 									</c:if>	
 									<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryMofRegNoView}">
-									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>														
+									<p:column style="width:160px;">
+									<table style="width:160px;">
+									<tr style="width:100%;">
+									<td style="width:100%;">								 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:44px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>	
+									</td>
+									</tr>
+									</table>													
 								  </p:column>
-								  <p:column>
+								  <p:column >
 								  <table style="width: 100%" >
 									<tr>
 										<td style="width:84%">																
@@ -423,11 +441,17 @@
 									</tr>
 									</table>														
 									</p:column>
-									<p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>														
+									<p:column style="width:160px;">	
+									<table style="width:160px;">
+									<tr style="width:100%;">
+									<td style="width:100%;">							 					    
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:51px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>
+									</td>
+									</tr>
+									</table>														
 								  </p:column>
-								  <p:column>
+								  <p:column >
 								  <table style="width: 100%" >
 									<tr>
 										<td style="width:84%">																
@@ -507,11 +531,18 @@
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationStatusView}">
-								  <p:column>								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:0px;"/>
-									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>														
-								  </p:column>
 								  <p:column>
+								  <table style="width:160px;">
+									<tr style="width:100%;">
+									<td style="width:100%;">
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:77px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>
+									</td>
+									</tr>
+									</table>								 					    
+																							
+								  </p:column>
+								  <p:column >
 								  	<table style="width: 100%" >
 									<tr>
 										<td style="width:84%">															
