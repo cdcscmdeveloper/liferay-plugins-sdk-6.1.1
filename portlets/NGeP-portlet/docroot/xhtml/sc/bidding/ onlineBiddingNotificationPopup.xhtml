@@ -13,18 +13,18 @@
 				<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 				<TD><p:inputText id="popupBiddingNo"
 						
-						size="20" disabled="true" /></TD>
+						size="20" disabled="true" value="#{onlineBiddingBB.scBidSchedule.bidNo}" /></TD>
 			</tr>
 
 			<tr>
 				<TD><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></TD>
 				<TD><p:inputText id="popupDocumentNo"
 						
-						size="20" disabled="true" /></TD>
+						size="20" disabled="true" value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}" /></TD>
 			</tr>
 
 			<tr>
-				<TD colspan="2"><p:inputTextarea cols="80" rows="10" disabled="true"></p:inputTextarea>
+				<TD colspan="2"><p:inputTextarea cols="80" rows="10" disabled="true" value="#{onlineBiddingBB.scBidAction.remark}" />
 				</TD>
 				
 			</tr>
@@ -32,6 +32,6 @@
 			
 		</table>
 
-	<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-close" onclick="notification.hide();"/>
+	<p:commandButton value="#{lbl['lbl.btn.ok']}"  onclick="onlineBiddingNotification.hide();"/>
 
 </ui:composition>
