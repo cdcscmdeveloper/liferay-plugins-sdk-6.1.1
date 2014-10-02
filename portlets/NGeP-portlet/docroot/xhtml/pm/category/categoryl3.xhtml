@@ -105,13 +105,13 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.special.group']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReq}" />
+					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReq==0}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.operate.from.home']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperated}" />
+					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperated==1}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
