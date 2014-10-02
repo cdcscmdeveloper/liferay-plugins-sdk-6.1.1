@@ -9,6 +9,7 @@
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange hide-column-names"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			<p:ajax event="rowToggle" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
@@ -44,7 +45,6 @@
 				</p:inputText>
 			</p:column>
 			<p:rowExpansion>
-
 				<p:dataTable id="newItems" var="newItems"
 					styleClass="show-column-names"
 					value="#{delAddressSummary.flFulfilmentItemAddr}" >
