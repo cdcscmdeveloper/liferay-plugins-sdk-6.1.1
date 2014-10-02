@@ -92,7 +92,7 @@
 		</p:panel>
 		<p:spacer height="3" />
 		<p:panel header="Quotation/Tender List" toggleable="true">
-			<p:dataTable id="clonesearchCommitteid"
+			<p:dataTable id="clonesearchCommitteid" rows="10"
 				value="#{evaluationMeetingBackingBean.searchQuotatioTender}"
 				rowKey="#{scQt}" selectionMode="single" var="scQt" lazy="true"
 				styleClass="cloneResults">
@@ -134,7 +134,7 @@
 		<p:panel id="committeedtlsid"
 			header="#{lbl['lbl.sc.eva.committee.details']}" toggleable="true">
 
-			<p:dataTable id="cloneCommittee" var="committeeMember"
+			<p:dataTable id="cloneCommittee" var="committeeMember" rows="10"
 				value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
 				selection="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebersSelect}"
 				rowKey="#{committeeMember.committeeMemberId}">

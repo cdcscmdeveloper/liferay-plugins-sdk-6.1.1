@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.spec.stage.technical']}" toggleable="true">
 		<p:commandLink value="#{lbl['lbl.sc.spec.stage.proposal.checklist']}"></p:commandLink>
 
-		<p:dataTable id="compilence" var="stageoneTechnical"
+		<p:dataTable id="compilence" var="stageoneTechnical" rows="10"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			selection="#{specificationBackingBean.managedBean.s1TechSelect}"
@@ -78,7 +78,7 @@
 
 <p:commandLink value="#{lbl['lbl.sc.spec.stage.addproposal.checklist']}"></p:commandLink>
 <p:dataTable id="additionaltech" var="stageoneaddTechnical"
-			rowKey="#{stageoneaddTechnical}"
+			rowKey="#{stageoneaddTechnical}" rows="10"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
 			selection="#{specificationBackingBean.managedBean.s1TechAddSelect}"
 			rowIndexVar="index" style="width:100%">

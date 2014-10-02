@@ -27,7 +27,7 @@
 
 		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
 			value="#{specificationBackingBean.managedBean.financialScoring}"
-			style="width:100%" rowIndexVar="index">
+			rows="10" style="width:100%" rowIndexVar="index">
 			<ac:paginator for="financialweightage" />
 			<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
 

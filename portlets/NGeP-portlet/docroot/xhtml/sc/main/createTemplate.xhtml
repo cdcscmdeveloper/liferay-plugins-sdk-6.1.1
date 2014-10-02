@@ -120,7 +120,7 @@
 			toggleable="true">
 
 			<h:panelGrid style="width:100%;">
-				<p:dataTable id="createList" var="tplSpecMaster"
+				<p:dataTable id="createList" var="tplSpecMaster" rows="10"
 					value="#{specificationBackingBean.templateSpecCreate}"
 					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index" lazy="true">
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->

@@ -15,7 +15,7 @@
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
-			rowIndexVar="index" styleClass="openPnlId"
+			rowIndexVar="index" styleClass="openPnlId" rows="10"
 			selection="#{specificationBackingBean.managedBean.suppCriteriaopenSelectList}"
 			rowKey="#{cateGory}">
 
@@ -169,7 +169,7 @@
 			<p:panel
 				rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and !specificationBackingBean.managedBean.scQt.zonal) or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal))}">
 				<h:panelGrid width="100%">
-					<p:dataTable id="zoneLocationDataTable"
+					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
 						rowKey="#{zoneTree}">
@@ -256,7 +256,7 @@
 			<p:panel
 				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<h:panelGrid width="100%">
-					<p:dataTable id="zoneyesDataTable"
+					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location" style="width:90%">

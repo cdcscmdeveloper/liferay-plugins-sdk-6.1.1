@@ -11,7 +11,7 @@
 		toggleable="true">
 
 		<p:dataTable id="financialSpecification" var="financialSpec"
-			style="width:100%" rowIndexVar="index"
+			style="width:100%" rowIndexVar="index" rows="10"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowKey="#{financialSpec}">
 			<ac:paginator for="financialSpecification" />

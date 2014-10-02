@@ -11,7 +11,7 @@
 		toggleable="true">
 
 		<p:dataTable id="templateTechSpecification" var="technicalSpec"
-			style="width:100%" rowIndexVar="index"
+			style="width:100%" rowIndexVar="index" rows="10"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowKey="#{technicalSpec}">
 			<ac:paginator for="templateTechSpecification" />

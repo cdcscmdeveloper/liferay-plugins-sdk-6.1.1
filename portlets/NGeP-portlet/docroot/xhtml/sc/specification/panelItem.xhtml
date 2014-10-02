@@ -20,7 +20,7 @@
 
 			<h:panelGrid id="panel" style="width:450px;">
 				<p:dataTable id="panelItemSupplierList" var="panelItem" rowIndexVar="index"
-					value="#{specificationBackingBean.managedBean.panelItemList}"
+					value="#{specificationBackingBean.managedBean.panelItemList}" rows="10"
 					selection="#{specificationBackingBean.managedBean.selectpanelItem}"
 					rowKey="#{panelItem}">
 

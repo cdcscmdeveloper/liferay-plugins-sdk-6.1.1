@@ -31,7 +31,7 @@
 		<c:if test="#{!specificationBackingBean.managedBean.scQt.zonal 
 					and specificationBackingBean.managedBean.scQt.qtType != PmCodeConst.quotationTenderTypePanel}">
 			<p:dataTable id="suppliersTbl" 
-				var="qtSupplier"
+				var="qtSupplier" rows="10"
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtSupplierList}">
 				
 				<ac:paginator for="suppliersTbl" />

@@ -24,13 +24,13 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;" icon="ui-icon-save"
-				action="#{specificationBackingBean.acceptBankScore}" >
-					<f:setPropertyActionListener
+				action="#{specificationBackingBean.acceptBankScore}">
+				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
 					value="50" />
-				
-				</p:commandButton>
-				
+
+			</p:commandButton>
+
 
 
 
@@ -73,7 +73,7 @@
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
 
-							<p:inputText readonly="true"
+							<p:inputText readonly="true" 
 								value="#{specificationBackingBean.managedBean.bankstmntTomonth}"></p:inputText>
 
 							<p:inputText readonly="true"
@@ -84,21 +84,7 @@
 			</table>
 			<h:panelGroup id="bankInfo">
 
-				<p:dataTable id="specbank" var="banking"
-					rendered="#{specificationBackingBean.managedBean.toMonth !=null}"
-					value="#{specificationBackingBean.managedBean.bankList}"
-					editable="true" style="width:100%" rowIndexVar="index"
-					rowKey="#{banking}">
 
-					<p:column headerText="#{lbl['lbl.sc.spec.month']}"
-						style="width:50%">
-						<p:inputText value="#{banking.month}"></p:inputText>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.spec.amount']}"
-						style="width:50%">
-						<h:outputText value="#{banking.amount}"></h:outputText>
-					</p:column>
-				</p:dataTable>
 			</h:panelGroup>
 		</p:panel>
 
@@ -113,7 +99,8 @@
 			</h:panelGrid>
 		</h:panelGroup>
 
-		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.score.avg.bank.statement']}"
+			toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -150,7 +137,8 @@
 								actionListener="#{specificationBackingBean.addScoring(50)}"
 								update="#{scoringPnlId}" icon="ui-icon-add" />
 							<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-								icon="ui-icon-delete" process="@this,#{scoringPnlId}" partialSubmit="true"
+								icon="ui-icon-delete" process="@this,#{scoringPnlId}"
+								partialSubmit="true"
 								action="#{specificationBackingBean.deleteScoring(null)}"
 								update="#{scoringPnlId}" />
 
