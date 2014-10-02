@@ -72,6 +72,15 @@
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
+							<td><h:outputText value="#{lbl['lbl.sc.eva.auto.score']}"
+						rendered="#{checklistScoreType eq '1'}" /> <h:outputText
+						value="#{lbl['lbl.sc.eva.s1.user.score']}"
+						rendered="#{checklistScoreType eq '2'}" /></td>
+				<td><p:inputText readonly="true" disabled="true"
+						value="#{noOfContracts.autoScore}" style="text-align:right"
+						rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
+						value="#{noOfContracts.userScore}" maxlength="18"
+						style="text-align:right" rendered="#{ checklistScoreType eq '2'}"></p:inputText></td>
 				</tr>
 			</table>
 		</p:panel>
