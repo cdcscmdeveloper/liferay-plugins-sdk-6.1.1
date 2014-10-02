@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<p:panel>
 		<table>
 
@@ -35,7 +35,7 @@
 
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-					<p:accordionPanel id="summaryPackageList" dynamic="true"
+					<p:accordionPanel dynamic="true"
 						value="#{evaluationBackingBean.managedBean.summaryZoneBean}"
 						var="zonePnlList">
 						<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
@@ -47,8 +47,8 @@
 							</c:if>
 
 							<c:if test="#{zonePnlList.tplSpecZoneDtl.zoneName eq null}">
-								<ui:param name="qualifiedListId" value="zone1"></ui:param>
-								<ui:param name="disQualifiedListId" value="zone2"></ui:param>
+								<ui:param name="qualifiedListId" value="hello1"></ui:param>
+								<ui:param name="disQualifiedListId" value="hello2"></ui:param>
 							</c:if>
 
 							<ui:param name="qualifiedList"
@@ -77,35 +77,35 @@
 				rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'FI'}">
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-					<p:accordionPanel id="itempnllist" dynamic="true"
+					<p:accordionPanel dynamic="true"
 						value="#{evaluationBackingBean.managedBean.summaryZoneBean}"
 						var="zonePnlList">
 						<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">
 							<c:if test="#{zonePnlList.tplSpecZoneDtl.zoneName ne null}">
 								<ui:param name="itemListId"
 									value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
-									<ui:param name="itemSelectQualifiedId"
+								<ui:param name="itemSelectQualifiedId"
 									value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
-									<ui:param name="itemSelectDisQualifiedId"
+								<ui:param name="itemSelectDisQualifiedId"
 									value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
-									<ui:param name="qualifiedSupplierItemId"
+								<ui:param name="qualifiedSupplierItemId"
 									value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
-									<ui:param name="disQualifiedSupplierItemId"
+								<ui:param name="disQualifiedSupplierItemId"
 									value="#{zonePnlList.tplSpecZoneDtl.zoneName}"></ui:param>
-									
-									
+
+
 
 							</c:if>
 
 							<c:if test="#{zonePnlList.tplSpecZoneDtl.zoneName eq null}">
 								<ui:param name="itemListId" value="itemLst1"></ui:param>
-									<ui:param name="itemSelectDisQualifiedId"
+								<ui:param name="itemSelectDisQualifiedId"
 									value="supplierItemsdisSelected"></ui:param>
-									<ui:param name="qualifiedSupplierItemId"
+								<ui:param name="qualifiedSupplierItemId"
 									value="qualifiedSuppliersZone"></ui:param>
-									<ui:param name="disQualifiedSupplierItemId"
+								<ui:param name="disQualifiedSupplierItemId"
 									value="disQualifiedSupplierszone"></ui:param>
-										<ui:param name="itemSelectQualifiedId"
+								<ui:param name="itemSelectQualifiedId"
 									value="supplierItemsSelected"></ui:param>
 
 							</c:if>
@@ -119,15 +119,16 @@
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 					<ui:param name="itemListId" value="itemLstwithoutzone"></ui:param>
-								<ui:param name="itemSelectQualifiedId"
-									value="itemSupplierQualifiedoutzoneId"></ui:param>
-									<ui:param name="itemSelectDisQualifiedId"
-									value="itemSupplierDisQualifiedoutzoneId"></ui:param>
-									<ui:param name="qualifiedSupplierItemId"
-									value="qualifiedSupplierswithOutZone"></ui:param>
-									<ui:param name="disQualifiedSupplierItemId"
-									value="disQualifiedSupplierswithOutzone"></ui:param>
-					<ui:param name="itemList" value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
+					<ui:param name="itemSelectQualifiedId"
+						value="itemSupplierQualifiedoutzoneId"></ui:param>
+					<ui:param name="itemSelectDisQualifiedId"
+						value="itemSupplierDisQualifiedoutzoneId"></ui:param>
+					<ui:param name="qualifiedSupplierItemId"
+						value="qualifiedSupplierswithOutZone"></ui:param>
+					<ui:param name="disQualifiedSupplierItemId"
+						value="disQualifiedSupplierswithOutzone"></ui:param>
+					<ui:param name="itemList"
+						value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
 					<ui:include src="summaryItem.xhtml"></ui:include>
 				</ui:fragment>
 			</ui:fragment>
@@ -137,7 +138,7 @@
 
 				<ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
-					<p:accordionPanel id="preferencepnllist" dynamic="true"
+					<p:accordionPanel dynamic="true"
 						value="#{evaluationBackingBean.managedBean.summaryZoneBean}"
 						var="zonePnlList">
 						<p:tab title="#{zonePnlList.tplSpecZoneDtl.zoneName}">

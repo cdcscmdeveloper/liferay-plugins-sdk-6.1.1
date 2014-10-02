@@ -39,7 +39,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-			<p:dataTable var="complianceFinancialSupplier"
+			<p:dataTable var="complianceFinancialSupplier" rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 				id="complianceFinancialSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceFinancialSupplier}">

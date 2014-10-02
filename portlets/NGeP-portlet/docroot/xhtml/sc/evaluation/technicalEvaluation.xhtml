@@ -13,7 +13,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.tech.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="technicalEvaluate" id="technicalEvaluation"
+		<p:dataTable var="technicalEvaluate" id="technicalEvaluation" rows="10"
 			editable="true" rowIndexVar="index" style="white-space: normal;"
 			rowKey="#{technicalEvaluate}" value="#{evaluationBackingBean.managedBean.evaluationStgTechnicalCheckList}">
 			<ac:paginator for="technicalEvaluation" />

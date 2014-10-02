@@ -6,12 +6,12 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="docDefinationKey"
+	<!-- <ui:param name="docDefinationKey"
 		value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
 
-	<c:if test="#{'TS' ne docDefinationKey}">
+	<c:if test="#{'TS' ne docDefinationKey}"> -->
 		<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 			style="float:right;" icon="ui-icon-save" update="@all"
 			action="#{evaluationBackingBean.saveProposalScoreDtls}" />
-	</c:if>
+	<!-- </c:if> -->
 </ui:composition>

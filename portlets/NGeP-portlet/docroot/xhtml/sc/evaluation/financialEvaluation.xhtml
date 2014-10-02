@@ -7,15 +7,17 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	
+
 
 	<p:spacer height="40"></p:spacer>
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="financialEval" id="financialEvaluation" style="white-space: normal;"
+		<p:dataTable var="financialEval" id="financialEvaluation"
+			style="white-space: normal;" 
 			value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
-			editable="true" rowIndexVar="index" rowKey="#{financialEval}">
+			rows="10" editable="true" rowIndexVar="index"
+			rowKey="#{financialEval}">
 			<ac:paginator for="financialEvaluation" />
 
 
@@ -39,12 +41,13 @@
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.fin.action']}"
 				style="width:10%">
 				<ui:fragment rendered="#{financialEval.scoringReq eq 'false'}">
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}" process="@this" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.view']}"
+						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.viewfinacialEvaluation(financialEval)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{financialEval.scoringReq ne 'false'}">
-					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}" process="@this"
-						partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
+						process="@this" partialSubmit="true"
 						action="#{evaluationBackingBean.evaluatefinancialEvaluation(financialEval)}" />
 				</ui:fragment>
 

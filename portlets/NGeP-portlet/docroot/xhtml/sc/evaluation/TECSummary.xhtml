@@ -13,7 +13,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
+		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier" rows="10"
 			editable="true" rowIndexVar="index" style="width: 1000px;"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"
 			rowKey="#{qualifiedSupplier}">
@@ -62,7 +62,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier"
+		<p:dataTable var="disQualifiedSupplier" rows="10"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"
 			id="oneTierDisQualifiedSupplier" editable="true" rowIndexVar="index"
 			style="width: 1000px;" rowKey="#{disQualifiedSupplier}">

@@ -44,7 +44,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.list']}"
 			toggleable="true">
-			<p:dataTable var="cashHand" id="cashHandId"
+			<p:dataTable var="cashHand" id="cashHandId" rows="10"
 				value="#{evaluationBackingBean.managedBean.evaluationComplianceList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
 				<ac:paginator for="cashHandId" />
@@ -69,6 +69,12 @@
 			</p:dataTable>
 
 		</p:panel>
+		<ui:param name="statusHide"
+			value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
+		<ui:param name="checklistScoreType"
+			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
+		<ui:param name="noOfContracts"
+			value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore}"></ui:param>
 
 		<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
 

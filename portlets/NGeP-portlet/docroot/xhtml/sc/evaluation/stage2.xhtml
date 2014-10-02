@@ -24,7 +24,7 @@
 
 			</h:panelGrid>
 
-			<p:dataTable id="technicalst2supplierList" var="s2techSupplier"
+			<p:dataTable id="technicalst2supplierList" var="s2techSupplier" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2TechSupplier}"
 				selection="#{evaluationBackingBean.managedBean.s2techSingleSelect}"
 				rowKey="#{s2techSupplier.evaluationResultId}" selectionMode="single"
@@ -67,7 +67,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.s2.tech.list.head']}"
 			toggleable="true">
 
-			<p:dataTable id="technicalst2checkList" var="s2techlist"
+			<p:dataTable id="technicalst2checkList" var="s2techlist" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2TechChecklist}"
 				rowIndexVar="index">
 
@@ -108,7 +108,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.present.demo.s2.head']}"
 			toggleable="true">
 
-			<p:dataTable id="stageTwoPresentation" var="s2techlist"
+			<p:dataTable id="stageTwoPresentation" var="s2techlist" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2TechChecklist}"
 				rowIndexVar="index">
 
@@ -142,7 +142,7 @@
 		test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s2.fin.head']}" toggleable="true">
 
-			<p:dataTable id="finanicalst2supplierList" var="s2finsupplier"
+			<p:dataTable id="finanicalst2supplierList" var="s2finsupplier" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2FinSupplier}"
 				selection="#{evaluationBackingBean.managedBean.s2finSingleSelect}"
 				rowKey="#{s2finsupplier}" rowIndexVar="index" selectionMode="single">
@@ -173,7 +173,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.s2.fin.list.head']}"
 			toggleable="true">
 
-			<p:dataTable id="finanicalst2checkList" var="s2finchecklist"
+			<p:dataTable id="finanicalst2checkList" var="s2finchecklist" rows="10"
 				value="#{evaluationBackingBean.managedBean.s2FinChecklist}"
 				rowIndexVar="index">
 

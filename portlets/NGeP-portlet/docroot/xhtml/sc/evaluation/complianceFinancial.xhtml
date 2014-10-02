@@ -14,7 +14,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.fin.proposal']}"
 		toggleable="true">
 
-		<p:dataTable var="complianceFinancial"
+		<p:dataTable var="complianceFinancial" rows="10"
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.compliancefinancialCheckList}"
 			rowKey="#{complianceFinancial}">

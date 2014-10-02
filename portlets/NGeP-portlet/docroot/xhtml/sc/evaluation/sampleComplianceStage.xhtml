@@ -44,7 +44,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}"
 			toggleable="true">
-			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
+			<p:dataTable var="sampleItem" id="sampleItemId" editable="true" rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{sampleItem}">
 				<ac:paginator for="sampleItemId" />
@@ -91,7 +91,7 @@
 
 		<p:panel header="#{lbl['lbl.sc.eva.smpl.item.spec']}"
 			toggleable="true">
-			<p:dataTable var="itemspec" id="itemSpecId" editable="true"
+			<p:dataTable var="itemspec" id="itemSpecId" editable="true" rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
 				rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
 				<ac:paginator for="itemSpecId" />

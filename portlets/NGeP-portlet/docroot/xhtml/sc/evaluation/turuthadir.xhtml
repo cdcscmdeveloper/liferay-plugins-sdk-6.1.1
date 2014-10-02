@@ -13,7 +13,7 @@
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.turut.hadir']}"
 		toggleable="true">
 
-		<p:dataTable var="meetingAttendance" id="turuthadir"
+		<p:dataTable var="meetingAttendance" id="turuthadir" rows="10"
 			widgetVar="tirutWidget"
 			value="#{evaluationBackingBean.managedBean.meetingAttendanceList}"
 			selection="#{evaluationBackingBean.managedBean.meetingAttendanceSelectList}"

@@ -35,7 +35,7 @@
 		<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
 			<p:dataTable var="othersList" id="othersTechListId" editable="true" value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
-				rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}">
+				rowIndexVar="index" style="width:100%" rowKey="#{templateSpec}" rows="10">
 				<ac:paginator for="othersTechListId" />
 
 

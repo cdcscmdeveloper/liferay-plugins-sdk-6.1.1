@@ -89,9 +89,17 @@
 			<td><div align="right" style="width: 99%">
 
 					<ui:fragment
-						rendered="#{evaluationBackingBean.managedBean.committeeType ne 'OC'}">
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
 						<p:commandButton value="#{lbl['lbl.sm.next']}"
 							actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
+							action="#{evaluationBackingBean.updateSmAppl}"
+							icon="ui-icon-next" iconPos="right" update=":form" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
+						<p:commandButton value="#{lbl['lbl.sm.next']}"
+							actionListener="#{evaluationBackingBean.setTabValue('1','4')}"
 							action="#{evaluationBackingBean.updateSmAppl}"
 							icon="ui-icon-next" iconPos="right" update=":form" />
 					</ui:fragment>

@@ -47,10 +47,21 @@
 			<td></td>
 			<td>
 				<div align="right" style="width: 99%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
-						iconPos="right"
-						actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
-						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' or evaluationBackingBean.managedBean.committeeType eq 'OC'}">
+						<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+							iconPos="right"
+							actionListener="#{evaluationBackingBean.setTabValue(0,1)}"
+							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{evaluationBackingBean.managedBean.committeeType eq 'TEC' or evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
+						<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+							iconPos="right"
+							actionListener="#{evaluationBackingBean.setTabValue(0,2)}"
+							action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
+					</ui:fragment>
 				</div>
 			</td>
 		</tr>

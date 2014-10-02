@@ -13,16 +13,16 @@
 
 
 
-	
 
 
-<p:spacer height="25"></p:spacer>
+
+	<p:spacer height="25"></p:spacer>
 
 	<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
-		value="#{evaluationBackingBean.managedBean.presentationDemoSupplierList}"
-			rowIndexVar="index"  rowKey="#{demoSupplier}">
+		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true" rows="10"
+			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierList}"
+			rowIndexVar="index" rowKey="#{demoSupplier}">
 			<ac:paginator for="complianceTechnicalSupplier" />
 
 
@@ -43,7 +43,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.user.scores']}"
 				style="width:15%">
-				<p:inputText value="#{demoSupplier.proposalScore[0].userScore}"></p:inputText>
+				<p:inputText value="#{demoSupplier.totalScore}"></p:inputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.remark']}"
@@ -55,35 +55,35 @@
 
 
 
-<p:panel header="#{lbl['lbl.sc.eva.report.eva.report']}">
+	<p:panel header="#{lbl['lbl.sc.eva.report.eva.report']}">
 		<h:panelGrid columns="2">
 
 			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
 
 			<h:panelGroup>
 
-				
-				<p:commandButton onclick="presntDemoDlg.show();return false;" ajax="false" process="@this" partialSubmit="true"
-					icon="iconAttachment" update="presentDemoFile" 
-					value="Attach file(s)" actionListener="#{evaluationBackingBean.reportUpload}"/>
+
+				<p:commandButton onclick="presntDemoDlg.show();return false;"
+					ajax="false" process="@this" partialSubmit="true"
+					icon="iconAttachment" update="presentDemoFile"
+					value="Attach file(s)"
+					actionListener="#{evaluationBackingBean.reportUpload}" />
 
 			</h:panelGroup>
-			
-			
+
+
 			<h:panelGrid columns="3" id="presentDemoRemove">
 
-			<p:spacer width="40"></p:spacer>
-			<p:outputLabel id="presefile"
-				></p:outputLabel>
-			<p:commandLink 
-				process="@this,presentDemoRemove" update="presentDemoRemove" partialSubmit="true"
-				style="width:40%;">
-				<p:graphicImage library="ep/images/design" name="delete.png"
-					value="/resources/ep/images/design/delete.png" />
+				<p:spacer width="40"></p:spacer>
+				<p:outputLabel id="presefile"></p:outputLabel>
+				<p:commandLink process="@this,presentDemoRemove"
+					update="presentDemoRemove" partialSubmit="true" style="width:40%;">
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
 
-			</p:commandLink>
+				</p:commandLink>
 
-		</h:panelGrid>
+			</h:panelGrid>
 		</h:panelGrid>
 
 

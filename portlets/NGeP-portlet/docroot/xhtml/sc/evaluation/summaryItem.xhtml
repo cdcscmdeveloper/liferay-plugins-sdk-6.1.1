@@ -10,14 +10,15 @@
 
 	<p:panel header="#{lbl['lbl.sc.eva.smpl.item.list']}" toggleable="true">
 
-		<p:dataTable var="summaryItem" id="#{itemListId}" editable="true"
-			value="#{itemList}"
+		<p:dataTable var="summaryItem" id="evaluationSummaryItem"
+			editable="true" value="#{itemList}" rows="10"
 			selection="#{evaluationBackingBean.managedBean.singlesummaryItemList}"
-			selectionMode="single" rowIndexVar="index"
-			rowKey="#{summaryItem.requestNoteItemId}">
-			<ac:paginator for="#{itemListId}" />
+			selectionMode="single" rowIndexVar="index" rowKey="#{summaryItem}">
 
-			<p:ajax event="rowSelect" update="@form"
+			<ac:paginator for="evaluationSummaryItem" />
+
+			<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+				update="@form"
 				listener="#{evaluationBackingBean.summaryItemSelect}"></p:ajax>
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
 				style="width:35%">
@@ -29,17 +30,18 @@
 	</p:panel>
 
 
-	<h:panelGroup>
+	<h:panelGroup id="summaryItemQualified">
 
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 			toggleable="true">
 
-			<p:dataTable var="summaryqualSup" id="#{qualifiedSupplierItemId}"
+			<p:dataTable var="summaryqualSup"
+				id="evaluationSummaryItemQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.itemSummaryQualSuppliers}"
 				editable="true" rowIndexVar="index" rowKey="#{summaryqualSup}">
 
 
-                 <ac:paginator for="#{qualifiedSupplierItemId}"></ac:paginator>
+				<ac:paginator for="evaluationSummaryItemQualifiedSuppliers"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}">
 
@@ -79,17 +81,18 @@
 
 			</table>
 		</p:panel>
-</h:panelGroup>
+	</h:panelGroup>
 
-<h:panelGroup>
+	<h:panelGroup id="summaryItemDisQualified">
 		<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 			toggleable="true">
 
-			<p:dataTable var="disQualifiedSupplier" id="#{disQualifiedSupplierItemId}"
+			<p:dataTable var="disQualifiedSupplier"
+				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"
 				value="#{evaluationBackingBean.managedBean.itemSummaryDisQualSuppliers}"
 				editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 
-                <ac:paginator for="#{disQualifiedSupplierItemId}"></ac:paginator>
+				<ac:paginator for="evaluationSummaryItemDisQualifiedSuppliers"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
 					style="width:30%">
@@ -122,5 +125,5 @@
 
 			</table>
 		</p:panel>
-		</h:panelGroup>
+	</h:panelGroup>
 </ui:composition>

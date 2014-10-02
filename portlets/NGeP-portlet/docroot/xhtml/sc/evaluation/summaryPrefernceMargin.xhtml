@@ -12,10 +12,12 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="prefQualSupplier" id="#{qualifiedPreferenceListId}"
-			value="#{qualifiedPreferenceList}"
-			editable="true" rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
-			<ac:paginator for="#{qualifiedPreferenceList}" />
+		<p:dataTable var="prefQualSupplier"
+			id="evaluationSummaryPreferencemarginQualifiedSuppliers"
+			value="#{qualifiedPreferenceList}" rows="10" editable="true"
+			rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
+			<ac:paginator
+				for="evaluationSummaryPreferencemarginQualifiedSuppliers" />
 
 
 
@@ -97,10 +99,12 @@
 	<p:panel header="#{lbl['lbl.sc.eva.compliance.sum.dis.qul.sup']}"
 		toggleable="true">
 
-		<p:dataTable var="disQualifiedSupplier" id="#{disQualifiedPreferenceListId}"
-			value="#{disQualifiedPreferenceList}"
-			editable="true" rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
-			<ac:paginator for="#{disQualifiedPreferenceListId}" />
+		<p:dataTable var="disQualifiedSupplier"
+			id="evaluationSummaryPreferencemarginDisQualifiedSuppliers"
+			value="#{disQualifiedPreferenceList}" rows="10" editable="true"
+			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
+			<ac:paginator
+				for="evaluationSummaryPreferencemarginDisQualifiedSuppliers" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.compliance.sum.sup.code']}"
