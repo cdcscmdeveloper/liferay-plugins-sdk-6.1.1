@@ -165,7 +165,13 @@ public class SupplierUserActivationBackingBean extends
 					}
 					
 					if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
-						resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
+						try{
+							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
+						}catch(Exception ex){
+							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
+							log.info("Personnel ID>>>" + reqDTO.getSmPersonnel().getPersonnelId());
+							
+						}
 						if(resDTO.isSuccessful()){
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
@@ -187,7 +193,14 @@ public class SupplierUserActivationBackingBean extends
 						log.info("*******>Personnel add - " + this.getManagedBean().getSmPersonnel().getSmAppl().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress().getPmState());
 						SupplierUserActivationResDTO resDTO = new SupplierUserActivationResDTO();
 						
-						resDTO = reqSO.createPmProfile(reqDTO);
+						try{
+							resDTO = reqSO.createPmProfile(reqDTO);
+						}catch(Exception ex){
+							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
+							log.info("Personnel ID>>>" + reqDTO.getSmPersonnel().getPersonnelId());
+							
+						}
+						
 						if(resDTO.isSuccessful()){
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
