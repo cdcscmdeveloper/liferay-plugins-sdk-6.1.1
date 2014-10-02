@@ -9,28 +9,35 @@
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 10%">
+				<td style="width: 13%">
 					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.simple.quote.no']}" />
 				</td>
-				<td style="width: 10%" class="header-info-text">
+				<td style="width: 11%" class="header-info-text">
 					#{simpleQuoteBackingBean.managedBean.scQuote.quoteNo}
 				</td>
 				
 				<td style="width: 10%">
 					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.proc.type']}" />
 				</td>
-				<td style="width: 8%" class="header-info-text">
+				<td style="width: 7%" class="header-info-text">
 				  #{simpleQuoteBackingBean.getParameterDesc(ParameterTypeConst.procurementType,simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode)}
 				</td>
 				
-				<td style="width: 6%">
+				<td style="width: 3%">
 					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.ptn.name']}" />
 				</td>
-				<td style="width: 25%" class="header-info-text">
+				<td style="width: 26%" class="header-info-text">
 				   #{simpleQuoteBackingBean.managedBean.requestNote.pmOrgProfile.orgName}
 				</td>
 				
-				<td style="width: 6%">
+				<td style="width: 7%">
+					<p:outputLabel value="#{lbl['lbl.sc.sq.gen.info.created.by']}" />
+				</td>
+				<td style="width: 9%" class="header-info-text">
+				   #{simpleQuoteBackingBean.managedBean.createdBy}
+				</td>
+				
+				<td style="width: 4%">
 					<h:outputLabel value="#{lbl['lbl.sc.sq.gen.info.header.status']}" />
 				</td>
 				<td style="width: 10%" class="header-info-text">
