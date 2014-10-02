@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -1690,7 +1691,7 @@ public class LOADetailBackingBean extends
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
+			
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
@@ -1698,6 +1699,18 @@ public class LOADetailBackingBean extends
 
 			parseLOADetails(scLoa);
 
+			// if reject, remove the new witness
+			if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+				ScLoaWitness scLoaWitness = null;
+				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses().iterator();
+	            while (it.hasNext()) {
+	            	scLoaWitness = it.next();
+	                if (scLoaWitness.isBrandNew() && null == scLoaWitness.getWitnessName()) {
+	                    it.remove();
+	                }
+	            }
+			}
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -1731,7 +1744,12 @@ public class LOADetailBackingBean extends
 					messageCode = MessageConst.INFO_700026;
 				} else if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
-					messageCode = MessageConst.INFO_700013;
+					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700013;
+					} else if (BpmOutcomeConst.BPM_REJECT
+							.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700008;
+					}					
 				} else if (QTStatusConst.LOA_PENDING_VERIFICATION
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;

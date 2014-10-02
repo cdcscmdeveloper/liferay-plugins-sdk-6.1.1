@@ -98,7 +98,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	private String bondAmountWord;
 	
-	
 	public LOADetailManagedBean() {
 	}
 
