@@ -1,0 +1,81 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:dp="http://openam.com/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"	
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<h:head>
+		<h:outputStylesheet library="ep/css" name="ep.css" />
+	</h:head>
+	<ui:define name="contentSection">
+		<p:panel id="suppQualPnl" header="Trackng Diary" toggleable="true">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20">
+				
+				<h:column>
+					<h:outputLabel value="* Trackng Diary Function" />
+				</h:column>
+				<h:column>
+					<p:selectOneMenu value="#{trackingDiaryBackingBean.managedBean.codeType}">
+<!-- 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" /> -->
+			 			<f:selectItem itemLabel="Select One" itemValue="" />
+			            <f:selectItem itemLabel="Supplier Management" itemValue="SM" />
+			            <f:selectItem itemLabel="Procurement Plan" itemValue="PP" />					
+			            <f:selectItem itemLabel="Contract Management" itemValue="CT" />
+			            <f:selectItem itemLabel="Order Fufillment" itemValue="FL" />					
+			            <f:selectItem itemLabel="Catalogue Management" itemValue="CM" />
+			            <f:selectItem itemLabel="Sourcing Management" itemValue="SC" />					
+			            <f:selectItem itemLabel="Codification" itemValue="CD" />					
+			        	<p:ajax event="change" partialSubmit="true" process="@this" update="suppQualPG"/>
+					</p:selectOneMenu>
+
+				</h:column>
+			</h:panelGrid>
+					
+			<h:panelGroup id="suppQualPG">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'SM'}">
+					<ui:include src="/xhtml/trackingdiary/smTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'PP'}">
+					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CT'}">
+					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'FL'}">
+					<ui:include src="/xhtml/trackingdiary/flTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CM'}">
+					<ui:include src="/xhtml/trackingdiary/cmTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'SC'}">
+					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
+				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.codeType == 'CD'}">
+					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
+				</c:if>
+			</h:panelGroup>
+
+
+		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
+			modal="true">
+
+			<ui:include src="wishListPopUp.xhtml" />
+
+		</p:dialog>
+
+		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
+			width="500px" modal="true">
+			<ui:include src="viewWishListItem.xhtml"></ui:include>
+		</p:dialog> -->
+				
+			<br />
+			<br />
+		</p:panel>
+	</ui:define>
+</ui:composition>
