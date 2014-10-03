@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="uploadDocument" header="#{lbl['lbl.ct.menu.signed']}" toggleable="true" toggleSpeed="500">
 		<p:spacer width="15" />
 		<h:panelGrid style="width:100%" columns="2"	columnClasses="columnWidth15">
@@ -12,10 +13,13 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="4">
 				<p:calendar	value="#{agreementBackingBean.managedBean.ctAgreement.signedDate}" id="popupButtonCal4" 
 					showOn="button" size="25" required="true" label="Signed Date" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.dated']}" />
+				<p:spacer width="1"/>
 				<p:message for="popupButtonCal4" display="icon" />
 			</h:panelGrid>
 			<h:panelGrid columns="2">
@@ -34,6 +38,8 @@
 						styleClass="blue_font"
 						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.signedPagePath,
 							agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName)}" />
+					<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
 			<h:panelGrid columns="2">
@@ -52,6 +58,8 @@
 						styleClass="blue_font"
 						action="#{agreementBackingBean.downloadFile(agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPagePath,
 							agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName)}" />
+					<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.stamped.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
 		</h:panelGrid>

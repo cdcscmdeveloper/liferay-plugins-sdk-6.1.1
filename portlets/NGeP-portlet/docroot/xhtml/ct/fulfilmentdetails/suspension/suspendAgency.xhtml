@@ -21,7 +21,11 @@
 			         <h:outputText  value="#{data.orgProfile.orgName}"/>
 		       </p:column>
 		
-		       <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:15%;">
+		       <p:column style="width:15%;">
+		           <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.effective.date']}"/>
+			   	   </f:facet>
 		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth"
 			            disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
 			             mindate="#{suspensionBackingBean.currentDate}"  readonlyInput="true" navigator="true"
@@ -30,7 +34,11 @@
 			       </p:calendar>
 		       </p:column> 	
 	    
-	           <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:15%;">
+	           <p:column style="width:15%;">
+		            <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.expiry.date']}"/>
+			   	   	</f:facet>
 		            <p:calendar  id="agencyDateExp" value="#{data.expDate}" styleClass="calanderWidth"
 			          disabled="#{data.recordStatusFlg == 1 ? true : false}"  showOn="button" 
 			          mindate="#{data.effDate}" readonlyInput="true" navigator="true"
@@ -40,7 +48,11 @@
 			      </p:calendar>
 	           </p:column> 	
 		      
-		       <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		       <p:column style="width:10%;">
+			         <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.status']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.status']}"/>
+			   	   	 </f:facet>
 			         <p:selectOneMenu value="#{data.recordStatusFlg}" style="width:85px;">
 			              <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				          <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />

@@ -11,8 +11,11 @@
        header="#{lbl['lbl.ct.panel.agency.signing']}"  toggleable="true"  >
         
            <h:panelGrid style="width:100%">
-               
-                 <p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
+           		<h:panelGrid columns="3">
+   					<p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
+      				<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.signer']}" />
+		 		 </h:panelGrid>
                  <p:dataTable id="AgSignerTable" var="agSignerVar"  
                        value="#{agreementBackingBean.managedBean.ctAgencySigner}" 
                         selection="#{agreementBackingBean.selectedAgencySigner}" rowKey="#{agSignerVar}" rowIndexVar="index">
@@ -57,9 +60,17 @@
             </p:dataTable>
         </h:panelGrid>
         <div class="ppRightBtn"> 
-		  <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
-		     action="#{agreementBackingBean.addAgencySignerParty()}" icon="ui-icon-add" update=":form:AgSignerTable"/>
-		  <p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSignerDel.show()"/>
+		  <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}" process="@form" 
+		     action="#{agreementBackingBean.addAgencySignerParty()}" icon="ui-icon-add" update=":form:AgSignerTable">
+		     <p:tooltip for="addAgencySignerBtn">
+			 	<h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.signer']}" escape="false" />
+			 </p:tooltip>
+		  </p:commandButton>
+		  <p:commandButton id="delAgencySignerBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSignerDel.show()">
+		  	<p:tooltip for="delAgencySignerBtn">
+				<h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.signer']}" escape="false" />
+			</p:tooltip>
+		  </p:commandButton>
 	    </div>
 	  
 	   <p:dialog id="dlgAgSignerDel" widgetVar="dlgAgSignerDel" 
@@ -78,8 +89,12 @@
         </p:dialog>  
 	 
 	    <p:spacer width="15"/>
-        <h:panelGrid style="width:100%">  
-               <p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
+        <h:panelGrid style="width:100%">
+			   <h:panelGrid columns="3">
+   					<p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
+      				<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.witness']}" />
+		 	   </h:panelGrid>
                <p:dataTable id="AgWitnessTable" var="signAgWitnessVar" 
                   value="#{agreementBackingBean.managedBean.ctSignAgencyWitness}" 
 	              selection="#{agreementBackingBean.selectedAgencyWitnes}" rowKey="#{signAgWitnessVar}">
@@ -102,10 +117,18 @@
       </h:panelGrid>
       
       <div class="ppRightBtn"> 
-		  <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
-		     action="#{agreementBackingBean.addAgencyWitnes()}" update=":form:AgWitnessTable"/>
-		  <p:commandButton value="#{lbl['lbl.btn.delete']}" 
-		    icon="ui-icon-delete" process="@form" onsuccess="dlgAgWitnessDel.show()"/>
+		  <p:commandButton id="addAgencyWitnessBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+		     action="#{agreementBackingBean.addAgencyWitnes()}" update=":form:AgWitnessTable">
+		     <p:tooltip for="addAgencyWitnessBtn">
+				<h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.witness']}" escape="false" />
+			 </p:tooltip>
+		  </p:commandButton>
+		  <p:commandButton id="delAgencyWitnessBtn" value="#{lbl['lbl.btn.delete']}" 
+		    icon="ui-icon-delete" process="@form" onsuccess="dlgAgWitnessDel.show()">
+		    <p:tooltip for="delAgencyWitnessBtn">
+			    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency.witness']}" escape="false" />
+			</p:tooltip>
+		  </p:commandButton>
 	  </div>
 	   <p:dialog id="dlgAgWitnessDel" widgetVar="dlgAgWitnessDel"
 	      styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  

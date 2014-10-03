@@ -340,13 +340,13 @@
            </h:panelGrid>
 		</p:dialog>
   	 </p:panel>
-  	 <p:panel header="Remarks" toggleable="true">
+  	 <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{contractDetailsBackingBean.managedBean.contractVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -358,7 +358,7 @@
 											<td>
 												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 												<h:outputText value="#{remarkVar.changedDate}">
-													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+													<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 												</h:outputText>
 											</td>
 										</tr>
@@ -366,7 +366,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
-												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

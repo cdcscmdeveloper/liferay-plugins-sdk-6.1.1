@@ -51,6 +51,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private String identificationNo = null;
 	private String identificationType;
 	private String witnessHeader;
+	private String witnessHeaderTooltip;
 	private String editorValue;
 	private String fileDirectory;
 	
@@ -511,6 +512,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setWitnessHeader(String witnessHeader) {
 		this.witnessHeader = witnessHeader;
+	}
+	
+	public String getWitnessHeaderTooltip() {
+		return witnessHeaderTooltip;
+	}
+
+	public void setWitnessHeaderTooltip(String witnessHeaderTooltip) {
+		this.witnessHeaderTooltip = witnessHeaderTooltip;
 	}
 
 	public String getAckFA() {

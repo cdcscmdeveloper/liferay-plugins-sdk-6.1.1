@@ -18,7 +18,10 @@
 					<p:ajax event="change" update=":form:amend" process="@form" listener="#{amendmentBackingBean.onContractExtensionChecked}" />
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.contract.extension']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.extension']}" />
+				</h:panelGrid>
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -28,7 +31,10 @@
 					 <p:ajax event="change" update=":form"  process="@form" listener="#{amendmentBackingBean.onItemPriceChecked}" /> 
 					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.item.price']}" />
+				</h:panelGrid>
 			</h:panelGrid>
 			<f:verbatim/>
 		    <h:panelGrid columns="3">
@@ -38,7 +44,10 @@
 					<p:ajax event="change" update=":form" process="@form" listener="#{amendmentBackingBean.onQuantityChecked}" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.quantity']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.quantity']}" />
+				</h:panelGrid>
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -49,7 +58,10 @@
 					<p:ajax event="change"  update=":form:amend" process="@form" /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.contract.value']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.contract.amount']}" />
+				</h:panelGrid>
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
@@ -58,7 +70,10 @@
 					<p:ajax event="change"  update=":form:amend" process="@form"/> 
 				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.change.clause']}"  />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.change.clause']}" />
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
+				</h:panelGrid>
 			</h:panelGrid>
 	     </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
@@ -66,9 +81,12 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:170px;" required="true" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
+			    <p:spacer width="1"/>
 				<p:message for="txtfrno" display="icon" />
 			</h:panelGrid>
 			<h:panelGrid columns="2" style="float:right;">
@@ -133,7 +151,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.additional.contract.amt']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 			          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 			          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" >
 				<p:inputText id="addValueTxt" style="width:70px;" styleClass="ppRightBtn" required="true" label="#{lbl['lbl.ct.additional.contract.amt']}"
@@ -141,20 +159,24 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" update="addValueTxt, addValue" process="@this" listener="#{amendmentBackingBean.addContractValue}" />
 				</p:inputText>
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.additional.contract.amount']}" />
+			    <p:spacer width="1"/>
 				<p:message for="addValueTxt" display="icon" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}"
+			<h:panelGrid columns="4" 
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
-		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
-		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
-			<p:inputText id="addValue"
-				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				styleClass="ppRightBtn" style="width:100px;" disabled="true"
-				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
-		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
-		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			</p:inputText>
+			          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
+			          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}">
+				<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" />
+				<p:inputText id="addValue"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+					styleClass="ppRightBtn" style="width:100px;" disabled="true">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
+			</h:panelGrid>
 			<h:panelGrid columns="2" rendered="#{(amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange or 
@@ -163,7 +185,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
-			<h:panelGrid columns="2" rendered="#{(amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
+			<h:panelGrid columns="5" rendered="#{(amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange or
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange or 
 		          amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange) and 
@@ -175,7 +197,10 @@
 				    mindate="#{amendmentBackingBean.currentDate}">
 				        <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
 				 </p:calendar>
-				<p:message for="edateCal1" display="icon" />	
+				 <p:spacer width="1"/>
+			     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.effective.date']}" />
+			     <p:spacer width="1"/>
+				 <p:message for="edateCal1" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
 		<h:panelGrid columns="2" style="width:100%"

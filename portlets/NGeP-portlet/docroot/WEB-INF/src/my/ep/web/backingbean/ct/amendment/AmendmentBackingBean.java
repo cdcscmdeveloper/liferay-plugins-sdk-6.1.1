@@ -272,6 +272,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				             this.getManagedBean().setLetterOfAcceptance(true);
 				             this.getManagedBean().setPrepareLOA(true);
 				             this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.agency.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				             this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.agency.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
 				             if(this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0 && this.getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null){
 					             this.getManagedBean().setDecisionPbQcLOA(true);
 			                 } 
@@ -294,7 +295,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				   
 	            	      this.getManagedBean().setAckFA(ContractConst.SUPPLIER_ACK_LOA);
 				          this.getManagedBean().setWitnessHeader(ResourceBundleUtils.getMessage("lbl.ct.panel.supplier.witness", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-				
+				          this.getManagedBean().setWitnessHeaderTooltip(ResourceBundleUtils.getMessage("lbl.ct.tooltip.supplier.witness.dtls", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+				            
 				          contractTemplateSO = (IContractTemplateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractTemplateSO.class);
 				          ContractTemplateReqDTO templateReqDTO = new ContractTemplateReqDTO();
 				          templateReqDTO.setTemplateName(ContractConst.TEMPLATE_INTEGRITY_PACT);

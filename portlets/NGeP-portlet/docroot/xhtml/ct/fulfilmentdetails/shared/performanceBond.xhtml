@@ -102,10 +102,18 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<c:if test='#{contractDetailsBackingBean.managedBean.updateContract}'>
-				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" 
-				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond" />
+				<p:commandButton id="addPdBtn"  value="#{lbl['lbl.btn.add']}" process="@form" 
+				    icon="ui-icon-add" action="#{contractDetailsBackingBean.addBondDetails}" update="tableBond">
+					<p:tooltip for="addPdBtn">
+					    <h:outputText value="#{lbl['lbl.ct.tooltip.add.performance.bond']}" escape="false" />
+					</p:tooltip>
+				</p:commandButton>
 				<p:spacer width="1" />
-				<p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();" />
+				<p:commandButton id="delPdBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgPerformDel.show();">
+					<p:tooltip for="delPdBtn">
+					    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.performance.bond']}" escape="false" />
+					</p:tooltip>
+				</p:commandButton>
 			</c:if>
 		</div>
 		<p:dialog id="uploadBondDlg" widgetVar="uploadBondDlg" modal="false"

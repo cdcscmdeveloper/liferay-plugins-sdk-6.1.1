@@ -6,9 +6,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="itemId" header="#{lbl['lbl.ct.panel.product']}" toggleable="true"	
-	     toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
-	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
+	<p:panel id="itemId" toggleable="true" toggleSpeed="500"  rendered="#{amendmentBackingBean.managedBean.itemProductExist}" >
+	    <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.product']}"/>
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/>
+	  	</f:facet>
 		<h:panelGrid style="width:100%;">
 		
 			<p:dataTable id="itemTable" var="ctItemVar" widgetVar="ctItemsTableObj"
@@ -30,13 +32,21 @@
 					<p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;" />
 				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.ct.min.order.qty']}" style="width:10%; white-space:normal;text-align: right;">
+				<p:column style="width:10%; white-space:normal;text-align: right;">
+					<f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
+	               	</f:facet>
 					<h:outputText value="#{ctItemVar.minimumOrderQty}" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
 					</h:outputText>
 				</p:column>
 			
-				<p:column headerText="#{lbl['lbl.ct.max.order.qty']}" style="width:10%; white-space:normal;text-align: right;">
+				<p:column style="width:10%; white-space:normal;text-align: right;">
+					<f:facet name="header">
+			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
+	               	</f:facet>
 					<h:outputText value="#{ctItemVar.maxQuantity}" >
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />
 					</h:outputText>
@@ -136,10 +146,14 @@
 			       <h:panelGrid columns="2" style="height:50px;text-align:bottom;"
 				        rendered="#{amendmentBackingBean.managedBean.selectedItem != null}">
 				        <h:outputLabel for="show" value="#{lbl['lbl.ct.show']}" style="width:50px;" />
-				        <p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
-				           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList()}" />
-					        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeField}" process="@form" />
-				       </p:selectOneMenu>
+					    <h:panelGrid columns="3">
+					    	<p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
+					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList()}" />
+						        <p:ajax event="change" update=":form:changeField" listener="#{amendmentBackingBean.changeField}" process="@form" />
+					       	</p:selectOneMenu>
+					       	<p:spacer width="1"/>
+				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
+			             </h:panelGrid>
 			       </h:panelGrid>
 			
 			       <p:outputPanel style="width:100%" 
@@ -324,9 +338,11 @@
 			</p:dialog>
 		</p:outputPanel>
 	</p:panel>
-	<p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}" 
-	  toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
-		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
+	<p:panel id="serviceId" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
+	  	</f:facet>
 		<h:panelGrid style="width:100%;">
 			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
@@ -437,6 +453,7 @@
 											<td></td>
 											<td>
 												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>
