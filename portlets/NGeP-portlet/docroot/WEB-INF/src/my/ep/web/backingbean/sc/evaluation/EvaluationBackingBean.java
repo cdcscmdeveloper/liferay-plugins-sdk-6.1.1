@@ -70,7 +70,6 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -2476,9 +2475,7 @@ public class EvaluationBackingBean extends
 		}
 	}
 
-	/**
-	 * 
-	 */
+/*	
 	private void retrieveReportTabDtl() {
 		debugLogger("retrieveReportTabDtl");
 		retrieveReportHeader();
@@ -2518,11 +2515,34 @@ public class EvaluationBackingBean extends
 		} finally {
 			evaluationSO = null;
 		}
-	}
+	}*/
 
-	/**
-	 * 
-	 */
+	private void retrieveReportTabDtl() {
+		debugLogger("retrieveReportTabDtl");
+		retrieveReportHeader();
+		IQTEvaluationSO evaluationSO;
+		EvaluationResDTO resDTO = null;
+		try {
+			evaluationSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			reqDTO.setScQt(getManagedBean().getScQt());
+			reqDTO.setCommType(getManagedBean().getCommitteeType());
+
+			if (null == this.getManagedBean().getScQtEvaluationReportList()) {
+				resDTO = evaluationSO.retriveReportDetails(reqDTO);
+				if (null != resDTO.getReports()
+						&& !resDTO.getReports().isEmpty()) {
+					this.getManagedBean().setScQtEvaluationReportList(
+							resDTO.getReports());
+				}
+
+			}
+		} finally {
+			evaluationSO = null;
+		}
+	}
+	
 	private void retrieveReportHeader() {
 		debugLogger("retrieveReportHeader");
 		String reportHeader = "";
