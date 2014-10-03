@@ -134,8 +134,8 @@ public class ReportConst {
 	public static final String SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_non_govt_4k.jsp";
 	public static final String SC_HARGA_TAWARAN_EC_RPT_JSP = "sc_ec_priceoffer_4m.jsp";
 	public static final String SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP = "sc_ec_fin_position_4n.jsp";
-	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP = "";
-	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "";
+	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
+	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_ec_exp_non_govt_6b.jsp";
 	
 	public static final String SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP = "sc_ec_overall_tech_4g.jsp";
 	public static final String SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP = "sc_ec_overalltech_with_wei_4h.jsp";
