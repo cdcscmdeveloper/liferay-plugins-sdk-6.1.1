@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.spec.general']}" toggleable="true" >
+	<p:panel header="#{lbl['lbl.sc.spec.general']}" toggleable="true">
 
 		<table style="width: 100%" border="0">
 			<tr>
@@ -14,15 +14,14 @@
 						value="#{lbl['lbl.sc.spec.stage.title']}s" /></td>
 				<td colspan="3"><p:inputTextarea readonly="true" rows="2"
 						cols="143" style="margin-bottom:5px;width: 80%;"
-						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
-						></p:inputTextarea></td>
+						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"></p:inputTextarea></td>
 			</tr>
 
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
 				<td><p:inputText size="30"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-						readonly="true" ></p:inputText></td>
+						readonly="true"></p:inputText></td>
 
 
 			</tr>
@@ -34,7 +33,8 @@
 						id="estPrice" required="true"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.est.price']}" maxlength="18"
-						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}" readonly="#{specificationBackingBean.managedBean.readOnly}">
+						value="#{specificationBackingBean.managedBean.scQt.estimatedAmount}"
+						readonly="#{specificationBackingBean.managedBean.readOnly}">
 
 						<p:ajax event="blur" process="@this" partialSubmit="true"
 							update="@form"
@@ -56,7 +56,8 @@
 							style="margin-bottom:5px;width: 80%;"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							maxlength="200"
-							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}" readonly="#{specificationBackingBean.managedBean.readOnly}"></p:inputTextarea></td>
+							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
+							readonly="#{specificationBackingBean.managedBean.readOnly}"></p:inputTextarea></td>
 				</ui:fragment>
 
 			</tr>
@@ -71,7 +72,7 @@
 						rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
 						<p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.scQt.qtType}"
-							disabled="true" >
+							disabled="true">
 							<f:selectItems
 								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
 								var="parameter" itemLabel="#{parameter.codeName}"
@@ -84,7 +85,7 @@
 						<p:selectOneRadio required="true" id="tenderType"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.qut.tender.type']}"
-							value="#{specificationBackingBean.managedBean.scQt.qtType}" >
+							value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
 							<f:selectItems
 								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
@@ -212,7 +213,7 @@
 
 							<f:selectItems
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change"
+							<p:ajax event="change" update="zoneGeneralDataTable"
 								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 						</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
 					</td>
@@ -222,13 +223,13 @@
 
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
-			<h:panelGrid width="100%" >
+			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable" rows="10"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 					var="zoneTree" style="width:100%" rowIndexVar="index"
-					rowKey="#{zoneTree}" >
+					rowKey="#{zoneTree}">
 
-					<p:column headerText="Location" style="width:90%" >
+					<p:column headerText="Location" style="width:90%">
 						<p:tree value="#{zoneTree}" var="location"
 							selectionMode="checkbox">
 							<p:ajax event="select"
@@ -272,7 +273,7 @@
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
 				<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-					update="@([id$=zonePopupGeneral])" 
+					update="@([id$=zonePopupGeneral])"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
 					icon="ui-icon-add" />
@@ -328,7 +329,7 @@
 			</table>
 		</p:panel>
 
-		<p:commandButton 
+		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
 			style="float:right;" onclick="ZoneGeneral.hide();"
 			icon="ui-icon-cancel" />
@@ -337,7 +338,7 @@
 			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
 			update="@this, zoneGeneralDataTable,zonePopupGeneral"
 			icon="ui-icon-accept"
-			action="#{specificationBackingBean.updateZoneGeneralLocation}" >
+			action="#{specificationBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
 
 	</p:dialog>

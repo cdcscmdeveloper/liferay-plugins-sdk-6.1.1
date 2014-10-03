@@ -28,10 +28,10 @@
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					postUpdateListener="specificationBackingBean.categoryCodesUpdate(#{index},specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
-					update=":form:openPnlId" >
+					update=":form:openPnlId">
 
 				</ac:lov>
-				
+
 
 			</p:column>
 
@@ -93,7 +93,7 @@
 							<h:outputLabel value="#{lbl['lbl.so.allstate']}"
 								style="width : 80px" />
 							<p:selectBooleanCheckbox
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 								<f:selectItem
 									itemValue="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}"></f:selectItem>
@@ -151,14 +151,14 @@
 								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels" required="true"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.spec.zone.location.level']}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-								<p:ajax event="change"
+								<p:ajax event="change" update="zoneLocationDataTable"
 									listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 							</p:selectOneMenu> <p:message id="withOutzone" for="locLevels" display="icon"></p:message>
 						</td>
@@ -195,7 +195,7 @@
 
 						<p:column headerText="Action" style="width:10%">
 							<p:commandLink
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								actionListener="#{specificationBackingBean.editZoneLocation(zoneTree,index)}"
 								process="@this" update="@([id$=zonePopupPanel])"
 								oncomplete="ZoneLocation.show();">
@@ -208,13 +208,13 @@
 				</h:panelGrid>
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
-						update="@([id$=zonePopupPanel])" 
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
+						update="@([id$=zonePopupPanel])"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						actionListener="#{specificationBackingBean.showZoneLocationPopup}"
 						icon="ui-icon-add" />
 					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
 						update="zoneLocationDataTable" icon="ui-icon-delete"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.deleteSupplierQualificationTreeNode}" />
 				</div>
 			</p:panel>
@@ -228,7 +228,7 @@
 								value="#{lbl['lbl.so.paidup']}" /></td>
 						<td><p:inputText size="30" maxlength="18"
 								rendered="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'}"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<f:convertNumber
@@ -239,13 +239,14 @@
 					<tr>
 						<td style="width: 94px"><p:outputLabel
 								value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
-						<td><p:selectOneMenu id="locZoneLevels" disabled="true"
+						<td><p:selectOneMenu id="locZoneLevels"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 								style="width: 178px;">
 
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-								<p:ajax event="change"
+								<p:ajax event="change" update="zoneyesDataTable"
 									listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 							</p:selectOneMenu></td>
 					</tr>
@@ -260,7 +261,12 @@
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
 						<p:column headerText="Location" style="width:90%">
-							<p:tree value="#{zoneTree}" var="location">
+							<p:tree value="#{zoneTree}" var="location"
+								selectionMode="checkbox">
+								<p:ajax event="select"
+									listener="#{specificationBackingBean.selectZoneTreeNode}" />
+								<p:ajax event="unselect"
+									listener="#{specificationBackingBean.unSelectZoneTreeNode}" />
 
 								<p:treeNode type="zone">
 									<h:outputText value="#{location.zoneName}" />
@@ -281,11 +287,34 @@
 
 							</p:tree>
 						</p:column>
-
+						<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
+							style="width:10%">
+							<p:commandLink
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								actionListener="#{specificationBackingBean.editBusinessOwnerZoneLocation(zoneTree,index)}"
+								process="@this" update="@([id$=zonePopupGeneral])"
+								oncomplete="ZoneGeneral.show();">
+								<p:graphicImage library="ep/images/design" name="edit.png"
+									value="/resources/ep/images/design/edit.png" />
+							</p:commandLink>
+						</p:column>
 
 
 					</p:dataTable>
+
 				</h:panelGrid>
+				<div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+						update="@([id$=zonePopupGeneral])"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						actionListener="#{specificationBackingBean.showGeneralZoneLocationPopup}"
+						icon="ui-icon-add" />
+					<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+						icon="ui-icon-delete"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						action="#{specificationBackingBean.deleteTreeNode}"
+						update="zoneyesDataTable" />
+				</div>
 
 			</p:panel>
 
@@ -337,6 +366,66 @@
 
 
 			</p:dialog>
+
+
+			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
+				widgetVar="ZoneGeneral" modal="true" width="600" position="top"
+				height="400">
+				<p:panel id="zonePopupGeneral">
+					<table styleClass="noBorders tr,noBorders td" border="0">
+
+						<TR>
+							<TD width="20%" valign="top"><p:outputLabel
+									value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel></TD>
+							<TD width="80%"><p:inputText size="70"
+									value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
+							</TD>
+						</TR>
+
+
+						<TR>
+							<TD width="20%" valign="top"><p:outputLabel
+									value="#{lbl['lbl.sc.spec.zone.location']}" /></TD>
+							<TD width="80%"><p:panel></p:panel>
+								<div style="height: 300px; overflow-y: scroll;">
+									<p:tree id="treeZoneGeneralPopup"
+										value="#{specificationBackingBean.managedBean.rootZoanlTree}"
+										var="location"
+										selection="#{specificationBackingBean.managedBean.selectedGeneralTreeNodes}"
+										selectionMode="checkbox">
+										<p:treeNode type="state">
+											<h:outputText value="#{location.pmState.stateName}" />
+										</p:treeNode>
+										<p:treeNode type="division">
+											<h:outputText value="#{location.pmDivision.divisionName}" />
+										</p:treeNode>
+										<p:treeNode type="district">
+											<h:outputText value="#{location.pmDistrict.districtName}" />
+										</p:treeNode>
+										<p:treeNode type="city">
+											<h:outputText value="#{pmCity.cityName}" />
+										</p:treeNode>
+									</p:tree>
+								</div></TD>
+						</TR>
+
+					</table>
+				</p:panel>
+
+				<p:commandButton
+					value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+					style="float:right;" onclick="ZoneGeneral.hide();"
+					icon="ui-icon-cancel" />
+			&#160;&#160;
+		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
+					style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
+					update="@this, zoneyesDataTable,zonePopupGeneral"
+					icon="ui-icon-accept"
+					action="#{specificationBackingBean.updateZoneGeneralLocation}">
+				</p:commandButton>
+
+			</p:dialog>
+
 		</h:panelGroup>
 	</p:panel>
 
@@ -350,7 +439,7 @@
 						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
 				<td><p:inputText style="margin-right:5px;" disabled="true" />
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						icon="ui-icon-search" partialSubmit="true" /></td>
 			</tr>
 		</table>
