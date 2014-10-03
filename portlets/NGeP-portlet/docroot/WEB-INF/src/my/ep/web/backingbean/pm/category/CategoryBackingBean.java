@@ -135,6 +135,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 	
+	public void addBasicCategory() {
+		this.getManagedBean().getPmCategoryL3();
+	}
+	
 	public String editCategory(Long id) {
 		ICategoryCodeSO categoryCodeSO;
 		try{
@@ -298,6 +302,21 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			return editSubCategory(this.getManagedBean().getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 		}else
 			return "/xhtml/pm/category/search.xhtml";
+	}
+	
+	public boolean validatePmCategoryL1(PmCategoryL1 pmCategoryL1){
+		
+		return false;
+	}
+	
+	public boolean validatePmCategoryL2(PmCategoryL2 pmCategoryL2){
+		
+		return false;
+	}
+
+	public boolean validatePmCategoryL3(PmCategoryL3 pmCategoryL3){
+		
+		return false;
 	}
 	
 	public void reloadSelectionPmCategoryL3() {

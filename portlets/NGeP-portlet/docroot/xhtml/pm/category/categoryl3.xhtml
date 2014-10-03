@@ -101,6 +101,7 @@
 					</h:panelGroup>
 					<p:selectOneMenu value="#{categoryBackingBean.managedBean.pmCategoryL3.bumiPercentage}" 
 						style="width: 108px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 						<f:selectItem itemLabel="51%" itemValue="51" />
 						<f:selectItem itemLabel="100%" itemValue="100" />
 					</p:selectOneMenu>
@@ -158,38 +159,38 @@
 			</h:panelGrid>
 		</p:panel>
 		
-		<ui:remove>
-		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
-		<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true" id="catdetails">
-		<p:dataTable id="catdetailsId" rowIndexVar="rowIndex"
-			value="#{categoryBackingBean.managedBean.pmCategoryL2.pmCategoryL3s}"
-			width="100%" var="pmCategoryL3">
-
-			<ac:paginator for="catdetailsId"></ac:paginator>
+		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" id="groupdetails">
+		<p:dataTable id="groupdetailsId" rowIndexVar="rowIndex"
+			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
+			selection="#{categoryBackingBean.managedBean.selectedBasicCategory}"
+			width="100%" var="pmBasicCategory">
+			<ac:paginator for="groupdetailsId"></ac:paginator>
+			
+			<p:column selectionMode="multiple" style="width:2%" />
+			
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.bn.level']}
+					#{lbl['lbl.pm.category.code']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.sub.div']}" />
+				<h:outputText value="#{pmBasicCategory.pmCategoryL1.categoryL1Code}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.bn.code']}
+					#{lbl['lbl.pm.main.category.desc']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL3.categoryL3Code}" />
+				<h:outputText value="#{pmBasicCategory.pmCategoryL1.categoryName}" />
             </p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.contact.name']}
+					#{lbl['lbl.pm.sub.category.desc']}
 				</f:facet>
-				<h:outputText value="#{pmCategoryL3.categoryName}" />
+				<h:outputText value="#{pmBasicCategory.pmCategoryL2.categoryName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.pm.status']}
+					#{lbl['lbl.pm.sub.div.desc']}
 				</f:facet>
-				<h:outputText value="#{lbl['lbl.pm.status.active']}" rendered="#{pmCategoryL3.recordStatusFlg == 1}"/>
-				<h:outputText value="#{lbl['lbl.pm.status.inactive']}" rendered="#{pmCategoryL3.recordStatusFlg == 0}"/>
+				<h:outputText value="" />
 			</p:column>
 
 		</p:dataTable>
@@ -197,11 +198,51 @@
 		<div class="ppRightBtn">
 			<p:commandButton
 				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				action="#{categoryBackingBean.addBasicCategory()}" />
+			<p:commandButton
+				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
 				action="#{categoryBackingBean.addSubCategory()}" />
 		</div>
 		
-		</p:panel>	
-		</c:if>
+		
+		
+		</p:panel>
+		
+		<ui:remove>
+		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true" id="specialdetails">
+		<p:dataTable id="specialdetailsId" rowIndexVar="rowIndex"
+			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL3s}"
+			width="100%" var="pmCategoryL3">
+
+			<ac:paginator for="specialdetailsId"></ac:paginator>
+			
+			<p:column selectionMode="multiple" style="width:2%" />
+			
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.pm.category.code']}
+				</f:facet>
+				<h:outputText value="" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.pm.main.category.desc']}
+				</f:facet>
+				<h:outputText value="" />
+            </p:column>
+			
+
+		</p:dataTable>
+		<p>&nbsp;</p>
+		<div class="ppRightBtn">
+			<p:commandButton
+				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+				action="#{categoryBackingBean.addSubCategory()}" />
+			<p:commandButton
+				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
+				action="#{categoryBackingBean.addSubCategory()}" />
+		</div>
+		</p:panel>
 		</ui:remove>
 		
 	</ui:define>
