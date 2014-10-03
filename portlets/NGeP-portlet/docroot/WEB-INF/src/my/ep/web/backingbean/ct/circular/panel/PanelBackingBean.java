@@ -690,6 +690,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					if(panelItem.getCategoryParameterId() == null) {
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Category"});
 					}
+					else {
+						if(getItemGeneralCode(panelItem.getCategoryParameterId()).equalsIgnoreCase(ParameterConst.ITEM_CATEGORY_TYPE_SPECIFIC)) {
+							if(panelItem.getSpecification().length()==0) {
+								throw new EpException(MessageConst.ERROR_100022, new String[]{"Specification"});
+							}
+						}
+					}
 					
 					if(panelItem.getItemName().length()==0) {
 						throw new EpException(MessageConst.ERROR_100022, new String[]{"Item Name"});
