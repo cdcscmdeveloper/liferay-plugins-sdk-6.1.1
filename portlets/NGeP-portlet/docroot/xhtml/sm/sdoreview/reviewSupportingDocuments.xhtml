@@ -18,10 +18,20 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.inquiry']}" id="btnInquiryId" disabled="#{empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" 
 				update="inquiryDlg" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_INQUIRY)}">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" 
+				disabled="#{!empty sdoReviewBackingBean.managedBean.unselectedSmApplSuppDocs}" action="#{sdoReviewBackingBean.showVerifyConfirmation}">
 				<f:param name="disableValidation" value="true" />
 			</p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sm.supportingdoc.verify']}" id="btnSubmitId" action="#{sdoReviewBackingBean.showSdoActionDialog(SupplierManagementConst.BPM_VERIFY)}" />
 		</div>
+		
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
+   			 #{lbl['lbl.sm.confirm.proceed']}
+   			<div align="right">
+				<p:commandButton value="Yes" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+				<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+			</div>
+		</p:dialog>
 
 		<p:outputPanel id="resOutPanelId">
 			<p:dialog header="#{lbl['lbl.sm.supportingdoc.panel.response']}" widgetVar="responseDlg" modal="true" height="auto">
@@ -98,42 +108,6 @@
 			</div>
 		</p:dialog>
 		
-		<p:dialog widgetVar="submissionDlg" modal="true" height="300" width="580">
-			<p:panel header="#{lbl['lbl.sm.remark']}">
-				<p:messages id="submissionMessageId" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-				<table>
-					<ui:remove>
-					<tr>
-						<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
-						<td class="tdContent"><p:calendar id="receiveCalId"
-								navigator="true" label="#{lbl['lbl.sm.receivedate']}"
-								value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
-								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
-								maxdate="#{CommonConstants.CURRENT_DATE}" 
-								display="inline" size="30" showOn="button" /> <p:message
-								id="receiveCalIdMsg" for="receiveCalId" display="icon" /></td>
-					</tr>
-					</ui:remove>
-
-					<tr>
-						<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.remark']}" /></td>
-						<td class="tdContent">
-						<p:inputTextarea id="remarkId" rows="6"
-								cols="80" label="#{lbl['lbl.sm.remark']}"
-								value="#{sdoReviewBackingBean.managedBean.smRemark.remark}" /> 
-						<p:message id="remarkIdMsg" for="remarkId" display="icon" /></td>
-					</tr>
-				</table>
-
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_VERIFY)}"
-						update="@([id$=Msg])"></p:commandButton>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="submissionDlg.hide();"></p:commandButton>
-				</div>
-				<br />
-			</p:panel>
-		</p:dialog>
 
 		<p:panel header="#{lbl['lbl.sm.companyinfo']}" toggleable="true" id="pnlCompInfo">
 			<table class="customTbl">
@@ -270,7 +244,7 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
 					<td class="tdContent"><p:calendar id="receiveCalId" navigator="true"
-							label="#{lbl['lbl.sm.receivedate']}" required="#{empty param['disableValidation']}"
+							label="#{lbl['lbl.sm.receivedate']}" required="#{!empty param['disableValidation']}"
 							value="#{sdoReviewBackingBean.managedBean.smAppl.sdoReceivedDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 							maxdate="#{CommonConstants.CURRENT_DATE}" display="inline"
@@ -288,7 +262,7 @@
 
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
 					<p:selectBooleanCheckbox value="#{suppDoc.received}">
-						<p:ajax event="change" update=":form:btnInquiryId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
+						<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
 					</p:selectBooleanCheckbox>
 				</p:column>
 				
