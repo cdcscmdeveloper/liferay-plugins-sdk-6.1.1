@@ -11,7 +11,9 @@
 				test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 				<div align="right">
 					<p:commandButton value="Submit" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
-						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])" />
+						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])">
+							<f:param name="disableValidation" value="true" />
+					</p:commandButton>
 				</div>
 				
 				<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
@@ -28,10 +30,11 @@
 				<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
 
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.mofsuppliertype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:selectOneMenu id="suppTypeId"
-							required="true"
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.mofsuppliertype']}" />
+					</td>
+					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
 							label="#{lbl['lbl.sm.mofsuppliertype']}" style="width:200px"
 							disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
@@ -40,20 +43,22 @@
 								itemValue="#{SupplierManagementConst.STYPE_CONTRACTOR}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}"
 								itemValue="#{SupplierManagementConst.STYPE_CONSULTANT}" />
-							<p:ajax event="change" update="busTypeId,outPnlRegForm" />
+							<p:ajax event="change" update="busTypeId,outPnlRegForm" process="@form" />
 						</p:selectOneMenu>
 						<p:message id="suppTypeIdMsg" for="suppTypeId" display="icon" /></td>
 				</c:if>
 
-				<td class="tdTitle"><p:outputLabel
-						value="#{lbl['lbl.sm.businesscomptype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td class="tdTitle">
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
+				</td>
 				<td class="tdContent">
-					<p:selectOneMenu id="busTypeId" required="true" label="#{lbl['lbl.sm.businesscomptype']}"
+					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}"
 						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}"
 						readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}" style="width:200px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
-						<p:ajax event="change" update="outPnlRegForm"></p:ajax>
+						<p:ajax event="change" update="outPnlRegForm" process="@form"></p:ajax>
 					</p:selectOneMenu><p:message id="busTypeIdMsg" for="busTypeId" display="icon" /></td>
 				<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">
