@@ -1,4 +1,7 @@
 package my.ep.web.constant.report;
+
+import java.text.SimpleDateFormat;
+
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -518,4 +521,14 @@ public class ReportConst {
 	public static final String AMP_NO_OF_DAYS_EQ = "&noofdays=";
 	public static final String RECENT_PRICE_RPT_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?&report=";
 	public static final String RECENT_PRICE_RPT_NEXT_URL = "&destype=cache&desformat=pdf&cmdkey=key1";
+	
+	public static final String PARAM_SEPARATOR = "&";
+	public static final String VALUE_SEPARATOR = "=";
+	public static final SimpleDateFormat REPORT_DATE_TIME = new SimpleDateFormat("yyMMddHHmmss");
+	
+	// Report Parameter Key
+	public static final String PARAM_KEY_REPORT = "report";
+	public static final String PARAM_KEY_ITEM_ID = "itemid";
+	public static final String PARAM_KEY_SUPPLIER_ID = "supplierid";
+	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 }

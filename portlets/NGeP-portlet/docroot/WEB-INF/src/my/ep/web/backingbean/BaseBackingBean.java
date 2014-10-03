@@ -15,6 +15,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -685,15 +686,21 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 	}
 	
-	protected void generateReport(String reportName, String reportFile, Map<String, String> paramMap) throws IOException {
+	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
-		reportUrl.append(ReportConst.AMP_REPORT_NAME);
+		reportUrl.append(ReportConst.PARAM_SEPARATOR);
+		reportUrl.append(ReportConst.PARAM_KEY_REPORT);
+		reportUrl.append(ReportConst.VALUE_SEPARATOR);
 		reportUrl.append(reportFile);
+		
 		for (Entry<String, String> params : paramMap.entrySet()) {
+			reportUrl.append(ReportConst.PARAM_SEPARATOR);
 			reportUrl.append(params.getKey());
+			reportUrl.append(ReportConst.VALUE_SEPARATOR);
 			reportUrl.append(params.getValue());
 		}
 		reportUrl.append(excNextUrl);
@@ -713,7 +720,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	    HttpServletResponse res = PortalUtil
 	      	      .getHttpServletResponse(portletResponse);
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + reportName + "\"");//
+    	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + "\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");
 	    res.setContentType("application/pdf");
 	    res.flushBuffer();

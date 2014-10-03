@@ -2673,11 +2673,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			String reportName = ReportConst.SC_RECENT_PRICE_RPT_JSP;
 			
 			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.AMP_ITM_ID_EQ, itemId+"");
-			paramMap.put(ReportConst.AMP_SUPPLIER_ID_EQ, supplierId+"");
-			paramMap.put(ReportConst.AMP_NO_OF_DAYS_EQ, noDays);
+			paramMap.put(ReportConst.PARAM_KEY_ITEM_ID, itemId+"");
+			paramMap.put(ReportConst.PARAM_KEY_SUPPLIER_ID, supplierId+"");
+			paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays);
 			
-			generateReport("Recent_Price_Report.pdf", reportName, paramMap);
+			generateReport(reportName, paramMap);
 		}
 	}
 
