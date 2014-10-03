@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -31,6 +33,7 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private boolean newCategory = false;
 	private List<PmParameterDesc> supplierType;
 	private List<PmParameterDesc> specialCategory;
+	private PmBasicCategory[] selectedBasicCategory;
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -155,6 +158,14 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 
 	public void setSpecialCategory(List<PmParameterDesc> specialCategory) {
 		this.specialCategory = specialCategory;
+	}
+
+	public PmBasicCategory[] getSelectedBasicCategory() {
+		return selectedBasicCategory;
+	}
+
+	public void setSelectedBasicCategory(PmBasicCategory[] selectedBasicCategory) {
+		this.selectedBasicCategory = selectedBasicCategory;
 	}
 
 	
