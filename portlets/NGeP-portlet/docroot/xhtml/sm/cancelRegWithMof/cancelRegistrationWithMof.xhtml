@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:panel
-			header="Cancel Registration With MOF - #{backingBean.managedBean.smAppl.applNo}">
+			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
 
 			<!-- 	<div>
 
@@ -26,7 +26,7 @@
 			<table style="width: 100%; float: center">
 
 				<tr>
-					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /></td>
 					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
 							id="cancelReson"
 							value="#{backingBean.managedBean.supplierRemarks}"
@@ -36,28 +36,26 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="*Attach Supporting Doc" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.suppdoc.attach']}" /></td>
 					<td><p:fileUpload mode="simple" /></td>
 
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="Submit" onclick="canRegConfirm.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="canRegConfirm.show();" />
 
 			</div>
 		</p:panel>
 
 		<p:confirmDialog id="canRegConfirm" width="350px"
-			message="The MOF account will be de-activated / removed once approved by
-				Approver and you can only you the basic account.Do you still
-				want to proceed with the cancellation process?"
-			header="Cancel Reg With MOF" severity="alert"
+			message="#{lbl['lbl.sm.mof.reg.cancel.confirm']}"
+			header="#{lbl['lbl.sm.mof.reg.cancel']}" severity="alert"
 			widgetVar="canRegConfirm">
 			<div align="center">
-				<p:commandButton id="confCanDel" value="Yes"
+				<p:commandButton id="confCanDel" value="#{lbl['lbl.btn.yes']}"
 					onclick="canRegConfirm.hide()" partialSubmit="true" process="@form"
 					action="#{backingBean.submitCancelMofApplToBpm}" />
-				<p:commandButton id="declineCancDel" value="No"
+				<p:commandButton id="declineCancDel" value="#{lbl['lbl.btn.no']}"
 					onclick="canRegConfirm.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
