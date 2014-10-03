@@ -320,14 +320,14 @@
 					<property name="columnName" value="contractNo" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.ct.search.cno" />
+					<property name="bundleKey" value="lbl.ct.contract.no" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="contractName" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.ct.search.cname" />
+					<property name="bundleKey" value="lbl.so.contract.name" />
 					<!-- <property name="columnWidth" value="150" /> -->
 				</bean>
 			</list>
