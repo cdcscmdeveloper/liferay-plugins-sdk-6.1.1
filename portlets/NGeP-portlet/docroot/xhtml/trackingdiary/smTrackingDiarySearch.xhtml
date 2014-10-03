@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<h:panelGroup id="supplierItemViewID">
+	<script>
+	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
+	</script>
+
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+			
+		<table style="width: 100%">
+			<tr>
+				<td><p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchTabId">
+
+						<table style="margin-top: 10px; width: 60%;align:center">
+							<tr>
+								<td width="25%"><p:outputLabel value="Business Reg. No." /></td>
+								<td width="25%"><p:inputText size="50" value="#{trackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:outputLabel value="MOF No." /></td>
+								<td width="25%"><p:inputText size="50" value="#{trackingDiaryBackingBean.MOFFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+
+							<tr>
+								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
+								<td width="65%"><p:inputText size="50" value="#{trackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel value="Company Type" /></td>
+							
+								<td width="35%">					
+									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
+										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
+									</p:selectOneMenu>
+								</td>						
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel value="Registration Status" /></td>
+								<td width="35%">					
+									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
+										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('PT')}" />
+									</p:selectOneMenu>
+								</td>						
+							</tr>
+							
+						</table>
+
+
+
+
+						<div style="text-align: right;">
+							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{trackingDiaryBackingBean.searchTrackingDiary}" id="searchButtonId">
+								<f:param name="unspscCode" value="aaaaaaaaaaa" />
+							</p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{trackingDiaryBackingBean.resetAction}">
+							</p:commandButton>
+						</div>
+					</p:panel></td>
+			</tr>
+		</table>
+			
+			
+		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+
+			<p:dataTable id="supplierItemID" lazy="true" value="#{trackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
+
+				<ac:paginator for="supplierItemID"></ac:paginator>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Creation Date
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					Business Reg. No.
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
+				<p:column width="15%">
+					<f:facet name="header">
+					MOF No.
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
+
+				<p:column width="15%">
+					<f:facet name="header">
+					Supplier Name
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Reg. Status
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					Action
+					</f:facet>
+					<p:commandLink action="#{trackingDiaryBackingBean.goToExtensionSearch(smSupplier)}">
+						#{smSupplier.regNo}
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<div class="clear"></div>
+
+		</p:panel>
+		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
+			modal="true">
+
+			<ui:include src="wishListPopUp.xhtml" />
+
+		</p:dialog>
+
+		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
+			width="500px" modal="true">
+			<ui:include src="viewWishListItem.xhtml"></ui:include>
+		</p:dialog> -->
+	</h:panelGroup>
+
+
+</ui:composition>
