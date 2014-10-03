@@ -326,7 +326,7 @@
 								  <table style="width:160px;">
 									<tr style="width:100%;">
 									<td style="width:100%;">								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:112px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:102px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.zone']}"/>	
 									</td>
 									</tr>
@@ -363,7 +363,7 @@
 									<table style="width:160px;">
 									<tr style="width:100%;">
 									<td style="width:100%;">							 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:65px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:45px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"/>	
 									</td>
 									</tr>
@@ -422,7 +422,7 @@
 									<table style="width:160px;">
 									<tr style="width:100%;">
 									<td style="width:100%;">								 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:44px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:18px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"/>	
 									</td>
 									</tr>
@@ -445,7 +445,7 @@
 									<table style="width:160px;">
 									<tr style="width:100%;">
 									<td style="width:100%;">							 					    
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:51px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:27px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoTo']}"/>
 									</td>
 									</tr>
@@ -535,7 +535,7 @@
 								  <table style="width:160px;">
 									<tr style="width:100%;">
 									<td style="width:100%;">
-									<p:outputLabel value="*" styleClass="mandatory"  style="width:77px;"/>
+									<p:outputLabel value="*" styleClass="mandatory"  style="width:61px;"/>
 									<p:outputLabel value="#{lbl['lbl.rpt.applStatus']}"/>
 									</td>
 									</tr>
@@ -925,7 +925,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:-18px;width:160px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.dtRange']}" style="margin-left:-27px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.fromDate}" 
@@ -946,7 +946,7 @@
 		           <h:panelGroup id="rptbtnGroup">
 		            <div align="right">		            		                    	
 		           <p:commandLink actionListener="#{reportBackingBean.generateReport}" process="@form" oncomplete="handleLocalesDialogComplete(xhr, status, args)" update="@form">
-				    <h:graphicImage  value="/css/images/design/icon_generate.png" />
+				    <h:graphicImage  value="/css/images/design/icon_generate.png" />				   
 					</p:commandLink>										   
 				    <h:commandLink target="_self" action="#{reportBackingBean.resetReportForm}" process="@form"  update="@form">
 				    <h:graphicImage value="/css/images/design/icon_reset.png" styleClass="tasklist_title1"/>
