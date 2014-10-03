@@ -75,11 +75,7 @@
 						<tr>
 							<td></td>
 							<td><p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}">
-									<f:selectItems
-										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
-										var="ans" itemLabel="#{ans.answerValue}"
-										itemValue="#{ans.answerId}">
-									</f:selectItems>
+									<f:selectItems value="#{questionnaireBackingBean.getAnswerOptions(ques.smQuestion.smAnswerCategory.smAnswers)}" />
 								</p:selectOneRadio></td>
 						</tr>
 						<tr>

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.questionnaire.IQuestionnaireSO;
@@ -30,6 +31,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.docx4j.docProps.variantTypes.Array;
 
 @ManagedBean(name = "questionnaireBackingBean")
 @RequestScoped
@@ -184,5 +186,19 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		}
 		
 		return smMofAcc;
+	}
+	
+	public List<SelectItem> getAnswerOptions(List<SmAnswer> answers) {
+		log.debug("In getAnswerOptions");
+		List<SelectItem> answerOptions = new ArrayList<SelectItem>();
+		
+		for(SmAnswer answer : answers) {
+			if(answer.isRecordStatus()) {
+				SelectItem item = new SelectItem(answer.getAnswerId(), answer.getAnswerValue());
+				answerOptions.add(item);
+			}
+		}
+		log.debug("Exit getAnswerOptions");
+		return answerOptions;
 	}
 }
