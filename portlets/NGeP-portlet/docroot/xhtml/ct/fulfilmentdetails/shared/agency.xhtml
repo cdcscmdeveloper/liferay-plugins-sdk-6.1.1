@@ -10,6 +10,9 @@
 	
    <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
      <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/> -->
+     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
+	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
+	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address']}" escape="false"/><br/><br/>
      <div style="overflow-x:auto">
        <p:dataTable id="tableAgencyDetails" var="agencyData" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
@@ -90,6 +93,7 @@
         </p:dialog>  
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="650" height="450">
+		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <p:panel  id="agencyies">
               <h:panelGrid columns="7">
                  <p:selectOneMenu for="ministry"  style="width:100px" disabled="true" >
@@ -161,6 +165,7 @@
 	   </p:dataTable>
 	</p:dialog>
 	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
@@ -198,7 +203,7 @@
 				</td>
 				<td width="50%" valign="top">
 				    <table style="width: 100%">
-		             <tr>
+				    <tr>
 			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td class="TableFieldRight">
 				         <p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 

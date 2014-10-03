@@ -76,10 +76,11 @@
 			              <p:outputLabel value="*" styleClass="mandatory" />
 				  	      <p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
 				  	   </h:panelGrid>
-				        <h:panelGrid columns="2">
+				        <h:panelGrid columns="3">
 					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="#{lbl['lbl.ct.mobile']}"
 					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
+					       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.email']}" escape="false"/>
 					   </h:panelGrid>
 				</h:panelGrid>
 			</h:panelGrid>

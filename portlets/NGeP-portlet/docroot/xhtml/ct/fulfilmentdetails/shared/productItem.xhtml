@@ -9,6 +9,7 @@
     <p:panel id="itemId" header="#{lbl['lbl.ct.panel.product']}" toggleable="true"  
        rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}"  toggleSpeed="500">
        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
        <h:panelGrid  style="width:100%;">
              
              <p:dataTable id="itemTable" var="ctItemVar" 

@@ -8,6 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="deductionId" header="#{lbl['lbl.ct.panel.deduction']}"   toggleable="true"  toggleSpeed="500">
 		<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.deduction.dtls']}"/> -->
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.deduction']}" escape="false"/><br/><br/>
 		<p:dataTable id="tableDeduction" var="datas" 
 		    value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" rowKey="#{datas}" 
 		      selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedDeduction}"> 
