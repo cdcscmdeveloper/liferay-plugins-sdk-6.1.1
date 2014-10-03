@@ -36,6 +36,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -55,6 +56,8 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
+import my.ep.dto.ct.circular.CircularDetailResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -88,6 +91,8 @@ import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -96,6 +101,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
@@ -1002,15 +1008,52 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			reqDTO.setDocId(supplierItem.getDocId());
 			reqDTO.setOutcome("Active");
-	
-			CatalogueResDTO resDTO = null;
-			resDTO = catalogueSO.viewSupplierItem(reqDTO);
-			this.getManagedBean().setDisplayCatalogue(true);
-			this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
 			
-			reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
-			resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-			this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			// TODO, need to cater for contract item
+			// Panel Circular Item
+			if((supplierItem.getCircularNo()!=null && supplierItem.getCircularNo().length()>0) && 
+				(supplierItem.getContractNo()==null)) {
+				CmSupplierItem cmSupplierItem = new CmSupplierItem();
+				this.getManagedBean().setDisplayCatalogue(true);
+				
+				ICircularDetailSO circularDetailSO = (ICircularDetailSO) EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, ICircularDetailSO.class);
+				CircularDetailReqDTO circularReqDTO = new CircularDetailReqDTO();
+				circularReqDTO.setPanelItemId(supplierItem.getDocId());
+				CircularDetailResDTO circularseqDTO = circularDetailSO.getPanelItemById(circularReqDTO);
+				CtPanelItem ctPanelItem = circularseqDTO.getCtPanelItem();
+				if(ctPanelItem.getScRequestItem().getCmItem()!=null) {
+					cmSupplierItem.setCmItem(ctPanelItem.getScRequestItem().getCmItem());
+				} else {
+					CmItem cmItem = new CmItem();
+					cmItem.setExtensionCode(ctPanelItem.getScRequestItem().getTempUnspscCode());
+					// TODO temp unspc code should have value.
+					if(cmItem.getExtensionCode()==null) {
+						cmItem.setExtensionCode("000"); 
+					}
+					cmItem.setItemName(ctPanelItem.getItemName());
+					cmSupplierItem.setCmItem(cmItem);
+				}
+				cmSupplierItem.setPmUom(ctPanelItem.getPmUom());
+				cmSupplierItem.setMinOrder(Double.valueOf(ctPanelItem.getMinimumOrderQty()).intValue());
+				cmSupplierItem.setItemDesc(ctPanelItem.getSpecification());
+				
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				
+				SupplierSearchReqDTO suppReqDTO = new SupplierSearchReqDTO();
+				suppReqDTO.setRegNo(supplierItem.getBizRegNo());
+				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierByEpNo(suppReqDTO);
+				cmSupplierItem.setSmSupplier(suppResDTO.getSmSupplier());
+				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
+			} else { // Catalogue Item
+				CatalogueResDTO resDTO = null;
+				resDTO = catalogueSO.viewSupplierItem(reqDTO);
+				this.getManagedBean().setDisplayCatalogue(true);
+				this.getManagedBean().setSelectedMaintainItem(resDTO.getSupplierItemList().get(0));
+				
+				reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
+				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
+				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+			}
 
 			System.out.println("*****************end********************");
 			
