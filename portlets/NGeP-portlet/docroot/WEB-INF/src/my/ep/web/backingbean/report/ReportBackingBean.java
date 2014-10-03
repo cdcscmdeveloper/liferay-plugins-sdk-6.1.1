@@ -73,6 +73,9 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import com.liferay.portal.util.PortalUtil;
+import com.lowagie.text.DocumentException;
+
+import org.xhtmlrenderer.pdf.ITextRenderer;
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -3679,8 +3682,12 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				//loadReport(generatedURL);	
 				loadReportWithParamsString(constructedParamString);
 				//loadReportWithParams(paramLst);
-				//getStreamedContentPDFFile(constructedParamString);
-				//getReportPdf();
+				//getReportPdf();				
+				/*try {
+					getStreamPDFFile(constructedParamString);
+				} catch (IOException e) {					
+					e.printStackTrace();
+				}*/				
 			}
 			RequestContext context = RequestContext.getCurrentInstance();  
 	        context.addCallbackParam(ReportConst.RPT_IN_VALID, ReportConst.RPT_TRUE);
@@ -3743,6 +3750,43 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}	
+	public void getStreamPDFFile(String paramConstrString, String filename) throws IOException {
+		StringBuilder gnrtdURL = new StringBuilder();
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
+		gnrtdURL.append(paramConstrString); 
+		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_NEXT_URL));
+		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
+		reportUrl.append(ReportConst.AMP_REPORT_NAME);
+		reportUrl.append(paramConstrString);		
+		reportUrl.append(excNextUrl);		
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}		
+		HttpURLConnection urlConnection = null;
+		URL obj = new URL(reportUrl.toString());
+	    urlConnection = (HttpURLConnection) obj.openConnection();	    
+	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
+	    PortletResponse portletResponse = (PortletResponse) FacesContext
+      	      .getCurrentInstance().getExternalContext().getResponse();
+	    HttpServletResponse res = PortalUtil
+	      	      .getHttpServletResponse(portletResponse);
+	    res.setHeader("Content-Disposition", "attachment; filename=\""
+    	          + filename + "\"");//
+	    res.setHeader("Content-Transfer-Encoding", "binary");
+	    res.setContentType("application/pdf");
+	    res.flushBuffer();	    
+	    OutputStream out = res.getOutputStream();        	  
+	    byte[] b = new byte[128];
+        int size;
+        while ((size = buf.read(b, 0, b.length)) != -1) {
+        	out.write(b, 0, size);
+        }
+        buf.close();
+        out.close();
+	}
 	public StreamedContent getStreamedContentPDFFile(String paramConstrString) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
@@ -4047,8 +4091,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL, ReportConst.SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.HARGA_TAWARAN_EC_RPT_VAL, ReportConst.SC_HARGA_TAWARAN_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL, ReportConst.SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.EMPTY_VAL);
+			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP);
+			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP);
 			
 			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP);
@@ -4593,8 +4637,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		return localFile;
 	}	
 	/*
-	public StreamedContent getStreamedContentPDFFile(String url) {
-		  
+	public StreamedContent getStreamedContentPDFFile(String url) {		  
 		  PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		  HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		  HttpURLConnection urlConnection = null;
@@ -4605,9 +4648,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		  res.setHeader("Content-Transfer-Encoding", "binary");
 		  res.setContentType("application/octet-stream"); 
 		  res.flushBuffer();  
-		  ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		  
-		  
+		  ByteArrayOutputStream bos = new ByteArrayOutputStream();		  
 		  ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
 		       // byte[] buf = new byte[1024];
 		  if(url!=null) {
@@ -4637,71 +4678,53 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		    tmpOut.close();
 		    ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray(), 0,
 		      tmpOut.size());
-
 		    ByteArrayInputStream stream = new ByteArrayInputStream(bb.array());
 		    pdfFile= new DefaultStreamedContent(stream, "application/pdf");
 		    urlConnection.disconnect();
 		         } catch (IOException ex) {
 		          ex.printStackTrace();
-		         }
-		   
-		  
-		         //byte[] bytes = bos.toByteArray();       
+		         }	  
+		    //byte[] bytes = bos.toByteArray();       
 		    //render.setDocumentFromString(html);
 		          //render.layout();  
 		  }
 		  return pdfFile;
 		 }
-	*/
-	
-	public StreamedContent getReportPdf() {
-		
+	*/	
+	public StreamedContent getReportPdf() {		
 		String reportUrl = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=Total_Catalog_Item_Unspscwise.jsp&frdt=26/09/2014&todt=30/09/2014&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 		HttpURLConnection urlConnection = null;
 		try {
 		    URL obj = new URL(reportUrl);
-		    urlConnection = (HttpURLConnection) obj.openConnection();  
-		    
+		    urlConnection = (HttpURLConnection) obj.openConnection();	    
 		    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
-		    
-//			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-//			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-//			OutputStream out = res.getOutputStream();
-//            byte[] b = new byte[128];
-//            int size;
-//            while ((size = buf.read(b, 0, b.length)) != -1) {
-//            	out.write(b, 0, size);
-//            }
-//            out.close();
-		    ResourceResponse portletResponse = (ResourceResponse) FacesContext
-            	      .getCurrentInstance().getExternalContext().getResponse();
-            
+		    ResourceResponse portletResponse = (ResourceResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();            
      /*       PortletResponse portletResponse = (PortletResponse) FacesContext
             	      .getCurrentInstance().getExternalContext().getResponse();*/
-            	     HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
-            	     res.setHeader("Content-Disposition", "attachment; filename=\""
+            HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
+            res.setHeader("Content-Disposition", "attachment; filename=\""
             	          + "test-report.pdf" + "\"");//
-            	     res.setHeader("Content-Transfer-Encoding", "binary");
-            	     res.setContentType("application/pdf");
-
-            	  res.flushBuffer();
-            	  OutputStream out = res.getOutputStream();
-            	  
-                byte[] b = new byte[128];
-                int size;
-                while ((size = buf.read(b, 0, b.length)) != -1) {
-                	out.write(b, 0, size);
-                }
-            	  
-//            	  out.write(getPdfStream());
-                  out.flush();
-            	  out.close();
-            	 
-
-		} catch (IOException ex) {
+            res.setHeader("Content-Transfer-Encoding", "binary");
+            res.setContentType("application/pdf");
+            res.flushBuffer();
+            OutputStream out = res.getOutputStream();            	  
+            byte[] b = new byte[128];
+            int size;
+            while ((size = buf.read(b, 0, b.length)) != -1) {
+                out.write(b, 0, size);
+            }
+            ITextRenderer renderer = new ITextRenderer();
+            //renderer.setDocument(doc, null);
+            //renderer.layout();               
+		    renderer.createPDF(out);					
+		    //out.write(getPdfStream());
+            out.flush();
+            out.close();
+        } catch (IOException ex) {
 	          ex.printStackTrace();
-	    }
-		
+	    }catch (DocumentException e) {
+			e.printStackTrace();
+		}		
 		return null;
 	}
 }
