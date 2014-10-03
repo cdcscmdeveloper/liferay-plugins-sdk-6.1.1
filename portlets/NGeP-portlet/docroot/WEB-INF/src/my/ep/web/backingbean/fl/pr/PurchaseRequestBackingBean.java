@@ -1148,6 +1148,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 								break;
 							}
 						}
+						if(flItemAddr.getPmVotFund()!=null) {
+							break;
+						}
 					}
 				}
 				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
