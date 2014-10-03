@@ -49,6 +49,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -97,6 +98,8 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.specification.SpecificationReqDTO;
 import my.ep.dto.sc.specification.SpecificationResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -146,7 +149,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
@@ -4177,9 +4179,17 @@ public class SpecificationBackingBean extends
 		if (this.getManagedBean().getScQt().isZonal()) {
 			this.getManagedBean().getScQt().getZoneLocationLevel()
 					.setParameterId(location);
+			if (null != this.getManagedBean().getZoneGeneralTrees()
+					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+				this.getManagedBean().setZoneGeneralTrees(null);
+			}
 		} else {
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.getLocationLevel().setParameterId(location);
+			if (null != getManagedBean().getZoneTrees()
+					&& !getManagedBean().getZoneTrees().isEmpty()) {
+				getManagedBean().setZoneTrees(null);
+			}
 		}
 	}
 
@@ -7999,7 +8009,6 @@ public class SpecificationBackingBean extends
 
 					schedule.setScQt(this.getManagedBean().getScQt());
 					paymentList.add(schedule);
-					
 
 				}
 				scQt.setScQtProgressivePayments(paymentList);
@@ -9543,6 +9552,81 @@ public class SpecificationBackingBean extends
 			return "/xhtml/sc/main/financialTemplate.xhtml?faces-redirect=true";
 		}
 		return null;
+
+	}
+
+	/**
+	 * Method to find the total suppliers count based on supplier qualification
+	 * criteria..
+	 */
+	public void searchForSupplierCount() {
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		supplierSearchReqDTO.setCategoryCodes(constructL3Codes(null));
+		supplierSearchReqDTO.setPaidUpCapital(null);
+		supplierSearchReqDTO.setStateCodes(null);
+		supplierSearchReqDTO.setDistrictCodes(null);
+		supplierSearchReqDTO.setDivisionCodes(null);
+		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierSearchSO.class);
+		SupplierSearchResDTO searchResDTO = supplierSearchSO
+				.retriveSupplierProfiles(supplierSearchReqDTO);
+		searchResDTO.getResultBean().getTotalRecord();
+
+	}
+
+	private List<String> constructL3Codes(List<ScQtCategory> categories) {
+		List<String> categoryCodes = null;
+
+		if (null != categories) {
+			categoryCodes = new ArrayList<String>();
+			for (ScQtCategory category : categories) {
+				String code = category.getPmCategoryL3().getCategoryL3Code();
+				categoryCodes.add(code);
+
+			}
+		}
+
+		return categoryCodes;
+
+	}
+
+	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
+			List<PmState> states, List<PmDistrict> districts,
+			List<PmDivision> divisions, String locLevel) {
+		states = new ArrayList<PmState>();
+		districts = new ArrayList<PmDistrict>();
+		divisions = new ArrayList<PmDivision>();
+		if (null != locations) {
+			for (TplSpecLoc specLoc : locations) {
+				if (ParameterConst.LOCATION_LEVEL_STATE
+						.equalsIgnoreCase(locLevel)) {
+					PmState state = specLoc.getPmState();
+					if (null != state) {
+						if (!states.contains(state)) {
+							states.add(state);
+						}
+					}
+				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
+						.equalsIgnoreCase(locLevel)) {
+					PmDistrict district = specLoc.getPmDistrict();
+					if (null != district) {
+						if (!districts.contains(district)) {
+							districts.add(district);
+						}
+					}
+				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
+						.equalsIgnoreCase(locLevel)) {
+					PmDivision divison = specLoc.getPmDivision();
+					if (null != divison) {
+						if (!divisions.contains(divison)) {
+							divisions.add(divison);
+						}
+					}
+				}
+			}
+		}
 
 	}
 
