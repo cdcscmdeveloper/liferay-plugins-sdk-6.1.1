@@ -8,8 +8,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="uploadDocument" header="#{lbl['lbl.ct.menu.signed']}" toggleable="true" toggleSpeed="500">
 		<p:spacer width="15" />
-		<h:panelGrid style="width:100%" columns="2"	columnClasses="columnWidth15">
-			<h:panelGrid columns="2">
+		<h:panelGrid style="width:400px;" columns="2"	columnClasses="columnWidth150,columnWidth200">
+			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}" />
 			</h:panelGrid>
@@ -22,7 +22,7 @@
 				<p:spacer width="1"/>
 				<p:message for="popupButtonCal4" display="icon" />
 			</h:panelGrid>
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.signed.page']}" />
 			</h:panelGrid>
@@ -42,7 +42,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" />
 			</h:panelGrid>

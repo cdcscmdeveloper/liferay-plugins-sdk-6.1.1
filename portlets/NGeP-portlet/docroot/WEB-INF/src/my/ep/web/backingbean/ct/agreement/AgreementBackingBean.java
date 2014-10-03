@@ -116,7 +116,7 @@ import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
-/**
+/*
  * Backing Bean For Agreement
  * 
  * @author Alam
@@ -199,38 +199,39 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CTAgreementDataType dataType = (CTAgreementDataType) obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
+			ctReqDTO.setDocId(new Long(dataType.getDocId()));
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
 
 			ContractAgreementResDTO resDTO = new ContractAgreementResDTO();
 			String agrrementType = dataType.getAgreementType() == null ? "": dataType.getAgreementType();
 			getManagedBean().setAgreementType(agrrementType);
 
-			if (getManagedBean().getAgreementType() != null && getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
-				ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-                    
-				   if (dataType.getAgreementId().intValue() == 0) {
-				         ContractReqDTO conReqDTO = new ContractReqDTO();
+			if(getManagedBean().getAgreementType() != null && getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
+				  ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+				 
+				  if(dataType.getAgreementId().intValue() == 0) {  
+					     ContractReqDTO conReqDTO = new ContractReqDTO();
 					     conReqDTO.setContractVerId(new Long(dataType.getDocId()));
 					     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 					     ContractResDTO conResDTO = contractSO.retrieveContractVerDtls(conReqDTO);
 					     ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
 					     resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
 					     getManagedBean().setContractVer(conResDTO.getCtContractVer());
-				 } else {
-					resDTO = agreementSO.retrieveAgreement(ctReqDTO);
-				}
-			} else {
-				ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
-				resDTO = agreementSO.retrieveAgreement(ctReqDTO);
-			}
+				
+				  } else {
+					       resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+			      }
+			 } else {
+				       ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
+				       resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+			 }
 
 			setCtAgreementDetails(resDTO);
 			if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
 				   getManagedBean().setUploadStampedAndSignedPage(true);
 				   getManagedBean().setUploadFinalAgreement(true);
 			
-			} else if (res.getTaskName().equalsIgnoreCase(
-				  CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
+			} else if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
 				  getManagedBean().setUploadFinalAgreement(true);
 			}
 		} catch (Exception ex) {
@@ -269,29 +270,20 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				     getManagedBean().getCtSupplierWitness().clear();
 
 			     for(CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()) {
-				        if(ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(
-								ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_SIGNER).getParameterId())) {
-                                  if (ctAgreementParty.getOrgProfile() == null) 
-						               ctAgreementParty.setOrgProfile(new PmOrgProfile());
-					             
-                                  if (ctAgreementParty.getOrgProfile().getParentOrgProfile() == null) {
-						                ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
-					      }
-				    	  getManagedBean().getCtAgencySigner().add(ctAgreementParty);
+				        if(ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_SIGNER)) {
+                              getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 
-			        } else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(
-								ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId())) {
+			            } else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)) {
 					            getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
 
-				   } else if (ctAgreementParty.getAgreementPartyType().getParameterId().equals(retrieveParameterByCodeType(
-								ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId())) {
-					            getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-			    	} else {
-					      getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
-				    }
-			   }
-		 } else {
-			getManagedBean().setCtAgreement(new CtAgreement());
+				        } else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)) {
+					                 getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+			    	    } else {
+					               getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+				       }
+			     }
+		  } else {
+		    	getManagedBean().setCtAgreement(new CtAgreement());
 		}
 
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
@@ -314,224 +306,167 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public String saveAgreement(String action) throws Exception {
-		IAgreementSO agreementSO = null;
-		try {
-			validateAgreement(action);
-			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IAgreementSO.class);
-			if (getManagedBean().getAgreementType().equalsIgnoreCase(
-					ContractConst.SUP_AGREEMENT)) {
-				reqDTO.setAgreementType(ContractConst.SUP_AGREEMENT);
-				reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-			} else {
-				reqDTO.setAgreementType(ContractConst.AGREEMENT);
-				reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
-			}
+		      IAgreementSO agreementSO = null;
+		      try {
+		    	 
+		    	       if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) 
+		            	   validateAgreement(action);
+		    	       
+		            	ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+			            String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			            agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IAgreementSO.class);
+			         
+			            if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
+				               reqDTO.setAgreementType(ContractConst.SUP_AGREEMENT);
+				               reqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+			           
+			            } else {
+				               reqDTO.setAgreementType(ContractConst.AGREEMENT);
+				               reqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
+			             }
 
-			getManagedBean().getCtAgreement().setCtContract(
-					getManagedBean().getCtContract());
-			reqDTO.setToken(token);
-			reqDTO.setOutcome(action);
-			reqDTO.setUserRole(getUserRole());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			            getManagedBean().getCtAgreement().setCtContract(getManagedBean().getCtContract());
+			            reqDTO.setToken(token);
+			            reqDTO.setOutcome(action);
+			            reqDTO.setUserRole(getUserRole());
+			            reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			            reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 
-			if (getManagedBean().getCtAgreement().getCtSignParties().size() > 0) {
-				getManagedBean().getCtAgreement().getCtSignParties().clear();
-			}
-			getManagedBean().getCtAgreement().getCtSignParties()
-					.addAll(this.getManagedBean().getCtAgencySigner());
-			getManagedBean().getCtAgreement().getCtSignParties()
-					.addAll(this.getManagedBean().getCtSupplierSigner());
-			getManagedBean().getCtAgreement().getCtSignParties()
-					.addAll(this.getManagedBean().getCtSignAgencyWitness());
-			getManagedBean().getCtAgreement().getCtSignParties()
-					.addAll(this.getManagedBean().getCtSupplierWitness());
+			            if(getManagedBean().getCtAgreement().getCtSignParties().size() > 0) 
+				             getManagedBean().getCtAgreement().getCtSignParties().clear();
+			
+			           getManagedBean().getCtAgreement().getCtSignParties().addAll(this.getManagedBean().getCtAgencySigner());
+			           getManagedBean().getCtAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSupplierSigner());
+			           getManagedBean().getCtAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSignAgencyWitness());
+			           getManagedBean().getCtAgreement().getCtSignParties().addAll(this.getManagedBean().getCtSupplierWitness());
 
-			boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
+			           boolean isBrandNew = getManagedBean().getCtAgreement().isBrandNew();
 
-			reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-			reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
-			reqDTO.setUserMap(getManagedBean().getUserMap());
-			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel()
-					.getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel()
-					.getSource());
-			reqDTO.setAgreement(getManagedBean().getCtAgreement());
-			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				String messageId = MessageConst.INFO_700026;
-				if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-					messageId = MessageConst.INFO_700005;
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-					messageId = MessageConst.INFO_700025;
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-					messageId = MessageConst.INFO_700009;
-				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					messageId = MessageConst.INFO_700007;
-				} else if (action
-						.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
-					messageId = MessageConst.INFO_700001;
-				}
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														messageId,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		reqDTO.getDocType()),
-																this.getManagedBean()
-																		.getCtContract()
-																		.getContractNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
-						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean()
-								.getTaskId() == null)) {
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else if (isBrandNew) {
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else {
-					ContractAgreementReqDTO agreementReqDTO = new ContractAgreementReqDTO();
-					agreementReqDTO.setAgreementId(resDTO.getAgreement().getAgreementId());
-					
-					ContractAgreementResDTO agreementResDTO = agreementSO.retrieveAgreement(agreementReqDTO);
-					setCtAgreementDetails(agreementResDTO);
-				}
-			} else {
-				throw new EpException("Failed.");
-			}
-		} finally {
-			agreementSO = null;
-		}
-		return null;
-	}
+			           reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
+			           reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+			           reqDTO.setUserMap(getManagedBean().getUserMap());
+			           reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			           reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			           reqDTO.setAgreement(getManagedBean().getCtAgreement());
+			           ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
+			           if (resDTO.isSuccessful()) {
+				             log.info("Record saved successfully");
+				             String messageId = MessageConst.INFO_700026;
+				             if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					                  messageId = MessageConst.INFO_700005;
+				             } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					                  messageId = MessageConst.INFO_700025;
+				             } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					                    messageId = MessageConst.INFO_700009;
+				             } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					                    messageId = MessageConst.INFO_700007;
+				             } else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)) {
+					                    messageId = MessageConst.INFO_700001;
+				             }
+			          	  
+				             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+										FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(messageId,
+														new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,
+																		reqDTO.getDocType()),getManagedBean().getCtContract().getContractNo() },
+														                MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				                             if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
+						                          || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean()	.getTaskId() == null)) {
+				                                    	renewSesionObject();
+					                                    return CommonUIConst.ACKNOWLEDGE_PAGE;
+				                              } else if (isBrandNew) {
+					                               renewSesionObject();
+					                               return CommonUIConst.ACKNOWLEDGE_PAGE;
+				                              } else {
+					                                ContractAgreementReqDTO agreementReqDTO = new ContractAgreementReqDTO();
+					                                agreementReqDTO.setAgreementId(resDTO.getAgreement().getAgreementId());
+					                                ContractAgreementResDTO agreementResDTO = agreementSO.retrieveAgreement(agreementReqDTO);
+					                                setCtAgreementDetails(agreementResDTO);
+				                             }
+			                       } else {
+				                       throw new EpException("Failed.");
+			                       }
+		                 } finally {
+			                 agreementSO = null;
+		                 }
+	         	return null;
+	     }
 
 	private void validateAgreement(String outcome) {
+	
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { "Remark" });
-			}
+			if (getManagedBean().getRemarkList().get(0).getRemark().length() == 0) 
+				throw new EpException(MessageConst.ERROR_100022,new String[] { "Remark" });
 		}
 
 		if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			if (getManagedBean().getApproverModel().getTarget().size() == 0) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { "Selected approver(s)" });
-			}
+			if (getManagedBean().getApproverModel().getTarget().size() == 0) 
+				throw new EpException(MessageConst.ERROR_100022,new String[] { "Selected approver(s)" });
 		}
 
-		if (getManagedBean().getTaskName().equalsIgnoreCase(
-				CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)
-					&& getManagedBean().getCtAgreement().getFileName() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { "Attachment for Finalist Agreement" });
-			}
-		} else if (getManagedBean().getTaskName().equalsIgnoreCase(
-				CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)
-					&& getManagedBean().getCtAgreement().getSignedPageName() == null) {
-				throw new EpException(MessageConst.ERROR_100022,
-						new String[] { "Attachment for Agreement Signed Page" });
-			}
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE)
-					&& getManagedBean().getCtAgreement().getStampedPageName() == null) {
-				throw new EpException(
-						MessageConst.ERROR_100022,
-						new String[] { "Attachment for Agreement Stamped Page" });
-			}
+		if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PRINT_FINALIST_AGREEMENT_HT_NAME)) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_PRINT)&& getManagedBean().getCtAgreement().getFileName() == null) 
+				throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachment for Finalist Agreement" });
+		
+		} else if (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) && getManagedBean().getCtAgreement().getSignedPageName() == null) 
+				throw new EpException(MessageConst.ERROR_100022, new String[] { "Attachment for Agreement Signed Page" });
+			
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_COMPLETE) && getManagedBean().getCtAgreement().getStampedPageName() == null) 
+				throw new EpException(MessageConst.ERROR_100022,new String[] { "Attachment for Agreement Stamped Page" });
 		}
 
 		if (getManagedBean().getCtAgencySigner().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023,
-					new String[] { "Agency Signer" });
+			throw new EpException(MessageConst.ERROR_100023,new String[] { "Agency Signer" });
 		} else {
-			for (CtAgreementParty agencySigner : getManagedBean()
-					.getCtAgencySigner()) {
-				if (getManagedBean().getCtContract().getOwnerOrgProfile()
-						.getParentOrgProfile() != null
-						&& getManagedBean().getCtContract()
-								.getOwnerOrgProfile().getParentOrgProfile()
-								.getOrgProfileId() != null
+			for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
+				if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null
+						&& getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() != null
 						&& agencySigner.getOrgProfile().getOrgProfileId() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "PTJ" });
+					      throw new EpException(MessageConst.ERROR_100022,new String[] { "PTJ" });
 				}
-				if (agencySigner.getOfficer().getUserId() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Contract Signer of Agency" });
-				}
+				if (agencySigner.getOfficer().getUserId() == null) 
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "Contract Signer of Agency" });
 			}
 		}
 
 		if (getManagedBean().getCtSignAgencyWitness().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023,
-					new String[] { "Agency Witness" });
+			throw new EpException(MessageConst.ERROR_100023,new String[] { "Agency Witness" });
 		} else {
-			for (CtAgreementParty agencyWitness : getManagedBean()
-					.getCtSignAgencyWitness()) {
+			for (CtAgreementParty agencyWitness : getManagedBean().getCtSignAgencyWitness()) {
 				if (agencyWitness.getOfficerName() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Name of Agency Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Agency Witness" });
 				}
 				if (agencyWitness.getOfficerIc() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "IC No of Agency Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "IC No of Agency Witness" });
 				}
 				if (agencyWitness.getOfficerPosition() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Position of Agency Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "Position of Agency Witness" });
 				}
 			}
 		}
 
 		if (getManagedBean().getCtSupplierSigner().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023,
-					new String[] { "Supplier Signer" });
+			throw new EpException(MessageConst.ERROR_100023,new String[] { "Supplier Signer" });
 		} else {
-			for (CtAgreementParty supplierSigner : getManagedBean()
-					.getCtSupplierSigner()) {
+			for (CtAgreementParty supplierSigner : getManagedBean().getCtSupplierSigner()) {
 				if (supplierSigner.getOfficerName() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Contract Signer of Supplier" });
+					  throw new EpException(MessageConst.ERROR_100022,new String[] { "Contract Signer of Supplier" });
 				}
 			}
 		}
 
 		if (getManagedBean().getCtSupplierWitness().size() == 0) {
-			throw new EpException(MessageConst.ERROR_100023,
-					new String[] { "Supplier Witness" });
+			   throw new EpException(MessageConst.ERROR_100023,new String[] { "Supplier Witness" });
 		} else {
-			for (CtAgreementParty supplierWitness : getManagedBean()
-					.getCtSupplierWitness()) {
+			for (CtAgreementParty supplierWitness : getManagedBean().getCtSupplierWitness()) {
 				if (supplierWitness.getOfficerName() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Name of Supplier Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "Name of Supplier Witness" });
 				}
 				if (supplierWitness.getOfficerIc() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "IC No of Supplier Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "IC No of Supplier Witness" });
 				}
 				if (supplierWitness.getOfficerPosition() == null) {
-					throw new EpException(MessageConst.ERROR_100022,
-							new String[] { "Postion of Supplier Witness" });
+					throw new EpException(MessageConst.ERROR_100022,new String[] { "Postion of Supplier Witness" });
 				}
 			}
 		}
@@ -603,30 +538,23 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public SelectItem[] getSupplierSignerDropdown() {
 		SelectItem[] items = null;
 		ISupplierSearchSO supplierSearchSO;
+	
 		try {
-			int i = 1;
-			supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISupplierSearchSO.class);
-			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-			reqDTO.setSupplierId(this.getManagedBean().getCtContract()
-					.getSmSupplier().getSupplierId());
+			    int i = 1;
+			    supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+			    SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+			    reqDTO.setSupplierId(this.getManagedBean().getCtContract().getSmSupplier().getSupplierId());
 
-			SupplierSearchResDTO resDTO = supplierSearchSO
-					.retrieveContractSigners(reqDTO);
-
-			items = new SelectItem[resDTO.getPersonnels().size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			for (SmPersonnel personnel : resDTO.getPersonnels()) {
-				items[i++] = new SelectItem(personnel.getName(),
-						personnel.getName());
-				getManagedBean().getSupplierUserMap().put(personnel.getName(),
-						personnel);
-			}
-		} finally {
-			supplierSearchSO = null;
-		}
+			    SupplierSearchResDTO resDTO = supplierSearchSO.retrieveContractSigners(reqDTO);
+			    items = new SelectItem[resDTO.getPersonnels().size() + 1];
+			    items[0] = new SelectItem(null, "- Select One -");
+			    for (SmPersonnel personnel : resDTO.getPersonnels()) {
+				    items[i++] = new SelectItem(personnel.getName(),personnel.getName());
+				    getManagedBean().getSupplierUserMap().put(personnel.getName(),personnel);
+			   }
+		 } finally {
+			   supplierSearchSO = null;
+		 }
 		return items;
 	}
 
@@ -635,24 +563,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public String gotoContractView() {
-		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
-				.get("contractVerId"));
+		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
 
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractVerId(contractVerId);
     	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-						IContractSO.class);
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 		ContractDetailsBackingBean contractDetailsBB = new ContractDetailsBackingBean();
 		contractDetailsBB.setValidateContractField(resDTO);
 		contractDetailsBB.getManagedBean().setViewContract(true);
-		contractDetailsBB.getManagedBean().setExternalPageUrl(
-				AGREEMENT_DOC_PAGE);
-
+		contractDetailsBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
 		return CONTRACT_PAGE;
 	}
 
@@ -663,16 +584,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + "/"
-				+ attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
-		for (CtAgreementContent agreementContent : getManagedBean()
-				.getCtAgreement().getAgreementContents()) {
-			if (agreementContent.equals(getManagedBean()
-					.getSelectedAgreementContent())) {
+		for (CtAgreementContent agreementContent : getManagedBean().getCtAgreement().getAgreementContents()) {
+			if (agreementContent.equals(getManagedBean().getSelectedAgreementContent())) {
 				agreementContent.setFileName(item.getFileName());
 				agreementContent.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 			}
@@ -686,8 +604,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + "/"
-				+ attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
 		fileOuputStream.write(item.getContents());
@@ -703,12 +620,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + "/"
-				+ attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-		this.getManagedBean().getCtAgreement()
-				.setStampedPageName(item.getFileName());
+		this.getManagedBean().getCtAgreement().setStampedPageName(item.getFileName());
 		this.getManagedBean().getCtAgreement().setStampedPagePath(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
@@ -721,26 +636,20 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
-		filePath = filePath + "/"
-				+ attachmentFormat.format(item.getFileName(), null);
+		filePath = filePath + "/"+ attachmentFormat.format(item.getFileName(), null);
 
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath);
-		this.getManagedBean().getCtAgreement()
-				.setSignedPageName(item.getFileName());
+		this.getManagedBean().getCtAgreement().setSignedPageName(item.getFileName());
 		this.getManagedBean().getCtAgreement().setSignedPagePath(filePath);
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 	}
 
-	public void downloadFile(String filePath, String fileName)
-			throws IOException {
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil
-				.getHttpServletResponse(portletResponse);
+	public void downloadFile(String filePath, String fileName) throws IOException {
+		PortletResponse portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ fileName + "\"");//
+		res.setHeader("Content-Disposition", "attachment; filename=\""+ fileName + "\"");//
 		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
@@ -768,8 +677,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
-	public void downloadDocFile(CtAgreementContent agreementContent)
-			throws IOException, Exception {		
+	public void downloadDocFile(CtAgreementContent agreementContent) throws IOException, Exception {		
 		AttachmentFormat attachmentFormat = null;
 
 		try {
@@ -781,22 +689,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				file.mkdirs();
 
 				attachmentFormat = new AttachmentDateFormat();
-				filePath = filePath + "/"
-						+ attachmentFormat.format(fileName, null);
-
+				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
 				content = getContent(agreementContent.getTitle());
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
 					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
 				}
-
 			} else {
 				if (agreementContent.getFilePath() == null) {
-					throw new EpException(MessageConst.INFO_100052,
-							new String[] { agreementContent.getTitle() });
+					throw new EpException(MessageConst.INFO_100052,new String[] { agreementContent.getTitle() });
 				}
-				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
-						agreementContent.getFileName());
+				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),agreementContent.getFileName());
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -876,14 +779,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	private String getTemplateFileName(String templateType) {
-		if (templateType.trim().equalsIgnoreCase(
-				ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE)) {
+		if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE)) {
 			return "AgreementCoverPage.docx";
-		} else if (templateType.trim().equalsIgnoreCase(
-				ContractConst.TEMPLATE_AGREEMENT_PARTY)) {
+		} else if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_PARTY)) {
 			return "AgreementPartyPage.docx";
-		} else if (templateType.trim().equalsIgnoreCase(
-				ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
+		} else if (templateType.trim().equalsIgnoreCase(ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE)) {
 			return "AgreementSigningPage.docx";
 		}
 		return null;
@@ -893,18 +793,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		WordprocessingMLPackage wordMLPackage;
 		try {
 			wordMLPackage = WordprocessingMLPackage.createPackage();
-			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(
-					new PartName("/hw.html"));
+			AlternativeFormatInputPart afiPart = new AlternativeFormatInputPart(new PartName("/hw.html"));
 			afiPart.setBinaryData(content.getBytes());
 			afiPart.setContentType(new ContentType("text/html"));
-			Relationship altChunkRel = wordMLPackage.getMainDocumentPart()
-					.addTargetPart(afiPart);
+			Relationship altChunkRel = wordMLPackage.getMainDocumentPart().addTargetPart(afiPart);
 
 			CTAltChunk ac = Context.getWmlObjectFactory().createCTAltChunk();
 			ac.setId(altChunkRel.getId());
 			wordMLPackage.getMainDocumentPart().addObject(ac);
-			wordMLPackage.getContentTypeManager().addDefaultContentType("html",
-					"text/html");
+			wordMLPackage.getContentTypeManager().addDefaultContentType("html","text/html");
 			wordMLPackage.save(new java.io.File(filePath));
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
@@ -937,16 +834,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String templateDocUrl = null;
 
 		TemplateDocBackingBean tplDocBB = new TemplateDocBackingBean();
-		tplDocBB.getManagedBean().setProcessType(
-				ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+		tplDocBB.getManagedBean().setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
 		tplDocBB.getManagedBean().setExternalPageUrl(AGREEMENT_DOC_PAGE);
 		tplDocBB.getManagedBean().setCtAgreementContent(agreementContent);
 		// Create new template doc
 		if (agreementContent.getTplDocMaster() == null) {
 			templateDocUrl = tplDocBB.createNewTemplate();
 		} else {
-			templateDocUrl = tplDocBB.goToMaint(agreementContent
-					.getTplDocMaster());
+			templateDocUrl = tplDocBB.goToMaint(agreementContent.getTplDocMaster());
 		}
 		return templateDocUrl;
 	}
@@ -954,26 +849,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public PmParameter retrieveParameterByCodeType(String parameterType,
 			String parameterCode) throws NamingException {
 
-		IParameterSO parameterSO = null;
-		ParameterReqDTO reqDTO = null;
-		try {
+		    IParameterSO parameterSO = null;
+		    ParameterReqDTO reqDTO = null;
+		    try {
 
-			reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType(parameterType);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO
-					.retrieveParameterByTypeAndCode(reqDTO);
-			return resDTO.getPmParameter();
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			       reqDTO = new ParameterReqDTO();
+			       reqDTO.setParameterCode(parameterCode);
+			       reqDTO.setParameterType(parameterType);
+			       parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+			       ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			       return resDTO.getPmParameter();
+	  	  } catch (Exception e) {
+			   log.error("Exception>>", e);
+			   e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
 		} finally {
 			parameterSO = null;
 		}
@@ -984,16 +874,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		CtAgreementContent contents = new CtAgreementContent();
 		if (contents.getContentType() == null) {
 			contents.setContentType(new PmParameter());
-			contents.setContentType(retrieveParameterByCodeType(
-					ParameterConst.DOCUMENT_DEFINITION_TYPE,
-					ParameterConst.AGREEMENT_USER_UPLOAD_DOC));
+			contents.setContentType(retrieveParameterByCodeType(ParameterConst.DOCUMENT_DEFINITION_TYPE,ParameterConst.AGREEMENT_USER_UPLOAD_DOC));
 		}
 		getManagedBean().getCtAgreement().getAgreementContents().add(contents);
 	}
 
 	public void delAgreementContents() {
-		this.getManagedBean().getCtAgreement().getAgreementContents()
-				.remove(getManagedBean().getSelectedAgreementContent());
+		this.getManagedBean().getCtAgreement().getAgreementContents().remove(getManagedBean().getSelectedAgreementContent());
 	}
 
 	public void addAgencySignerParty() {
@@ -1023,13 +910,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
 			ctAgreementParty.getAgreementPartyType().setParameterId(
-					retrieveParameterByCodeType(
-							ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-							ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)
-							.getParameterId());
+					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER).getParameterId());
 			if (ctAgreementParty.getOfficer() == null)
 				ctAgreementParty.setOfficer(new PmUser());
-			this.getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+			    getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -1038,8 +922,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void deleteSupplierSigner() {
 		for (int i = 0; i < selectedSupplierSigner.length; i++) {
 			CtAgreementParty ctAgreementParty = selectedSupplierSigner[i];
-			this.getManagedBean().getCtSupplierSigner()
-					.remove(ctAgreementParty);
+			getManagedBean().getCtSupplierSigner().remove(ctAgreementParty);
 		}
 		selectedSupplierSigner = null;
 	}
@@ -1049,11 +932,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
 			ctAgreementParty.getAgreementPartyType().setParameterId(
-					retrieveParameterByCodeType(
-							ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-							ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS)
-							.getParameterId());
-			this.getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_SUPPLIER_WITNESS).getParameterId());
+			        getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -1062,8 +942,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void deleteSupplierWitness() {
 		for (int i = 0; i < selectedSupplierWitnes.length; i++) {
 			CtAgreementParty ctAgreementParty = selectedSupplierWitnes[i];
-			this.getManagedBean().getCtSupplierWitness()
-					.remove(ctAgreementParty);
+			getManagedBean().getCtSupplierWitness().remove(ctAgreementParty);
 		}
 		selectedSupplierWitnes = null;
 	}
@@ -1073,12 +952,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CtAgreementParty ctAgreementParty = new CtAgreementParty();
 			ctAgreementParty.setAgreementPartyType(new PmParameter());
 			ctAgreementParty.getAgreementPartyType().setParameterId(
-					retrieveParameterByCodeType(
-							ParameterTypeConst.AGREEMENT_PARTY_TYPE,
-							ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)
-							.getParameterId());
-			this.getManagedBean().getCtSignAgencyWitness()
-					.add(ctAgreementParty);
+					retrieveParameterByCodeType(ParameterTypeConst.AGREEMENT_PARTY_TYPE,ParameterTypeConst.AGREEMENT_AGENCY_WITNESS).getParameterId());
+			        getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1088,15 +963,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void deleteAgencyWitnes() {
 		for (int i = 0; i < selectedAgencyWitnes.length; i++) {
 			CtAgreementParty ctAgreementParty = selectedAgencyWitnes[i];
-			this.getManagedBean().getCtSignAgencyWitness()
-					.remove(ctAgreementParty);
+			getManagedBean().getCtSignAgencyWitness().remove(ctAgreementParty);
 		}
 		selectedAgencyWitnes = null;
 	}
 
 	public boolean isContractAdmin() {
-		return getFacesScopes()
-				.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
+		return getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
 	}
 
 	private String getUserRole() {
@@ -1126,8 +999,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public String fileNames(String filePath) {
-		if (filePath.equalsIgnoreCase("") || filePath.equalsIgnoreCase(null)
-				|| filePath.equalsIgnoreCase(" "))
+		if (filePath.equalsIgnoreCase("") || filePath.equalsIgnoreCase(null)|| filePath.equalsIgnoreCase(" "))
 			return null;
 
 		String fileName = null;
@@ -1145,8 +1017,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getApproverModel() == null) {
 			List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();
-			getManagedBean().setApproverModel(
-					new DualListModel<String>(source, target));
+			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
 	}
 
@@ -1154,18 +1025,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		IUserSO userSO = null;
 		List<String> sourceList = new ArrayList<String>();
 		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0)
-					.getPmOrgProfile().getOrgProfileId());
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
 
-			if (getManagedBean().getCtContract().getContractType()
-					.getParameterCode()
-					.equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
 			} else { // Central Contract
 				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
@@ -1180,10 +1047,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),e.getMessage()));
 		} finally {
 			userSO = null;
 		}
@@ -1204,10 +1068,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 
-	public void setSupplierUserValue(CtAgreementParty ctParty,
-			String officerName) {
-		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(
-				officerName);
+	public void setSupplierUserValue(CtAgreementParty ctParty, String officerName) {
+		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(officerName);
 		if (personnel != null) {
 			ctParty.setOfficerIc(personnel.getIdentificationNo());
 			ctParty.setOfficerPosition(personnel.getDesignation());
@@ -1215,17 +1077,13 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	private void initializeRemarks() {
-		initiateRemark(getManagedBean().getCtAgreement()
-				.getSignAgreementRemark());
+		initiateRemark(getManagedBean().getCtAgreement().getSignAgreementRemark());
 	}
 
 	private void initiateRemark(List<CtRemark> remarks) {
-		if (remarks.size() == 0
-				|| !compareUserName(remarks.get(0).getCreatedUser()
-						.getLoginId())) {
+		if (remarks.size() == 0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
 			CtRemark remark = new CtRemark();
-			remark.setCreatedBy(getFacesScopes().getUserSessionBean()
-					.getUserId());
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
@@ -1236,84 +1094,43 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 	public String getContent(String parameterCode) throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat df = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-		DecimalFormat nf = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		Calendar c = Calendar.getInstance();
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
 
-		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE
-				.equalsIgnoreCase(parameterCode)) {
+		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 
-			String imgUrl = getServerUrl()
-					+ "NGeP-portlet/images/letter/gov.png";
+			String imgUrl = getServerUrl()+ "NGeP-portlet/images/letter/gov.png";
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-cover-page.vm";
 			context.put("imgUrl", imgUrl);
-			context.put("contractTitle", getManagedBean().getCtContract()
-					.getQuotationTender().getQtTitle());
-			context.put("supplierName", getManagedBean().getCtContract()
-					.getCurrentContractVer().getCtContractValue()
-					.getSupplierName());
-			context.put("supplierRegistrationNo", getManagedBean()
-					.getCtContract().getSmSupplier().getRegNo());
-			context.put("physicalContactNo", getManagedBean().getCtContract()
-					.getContractPhysicalNo());
-			context.put(
-					"contractStartDate",
-					df.format(getManagedBean().getCtContract()
-							.getCurrentContractVer().getCtContractValue()
-							.getEffDate()));
-			context.put(
-					"contractEndDate",
-					df.format(getManagedBean().getCtContract()
-							.getCurrentContractVer().getCtContractValue()
-							.getExpDate()));
-			context.put("contractPeriod", getManagedBean().getCtContract()
-					.getCurrentContractVer().getCtContractValue()
-					.getContractPeriod()
-					+ "");
-			context.put(
-					"contractValue",
-					nf.format(getManagedBean().getCtContract()
-							.getCurrentContractVer().getCtContractValue()
-							.getContractAmount())
-							+ "");
-			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getCtContract()
-					.getCurrentContractVer().getCtContractValue()
-					.getContractAmount().toString())
-					);
-			context.put("isBondReq", getManagedBean().getCtContract()
-					.isBondReq());
+			context.put("contractTitle", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
+			context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+			context.put("supplierRegistrationNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+			context.put("physicalContactNo", getManagedBean().getCtContract().getContractPhysicalNo());
+			context.put("contractStartDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getEffDate()));
+			context.put("contractEndDate",df.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getExpDate()));
+			context.put("contractPeriod", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractPeriod()+ "");
+			context.put("contractValue",nf.format(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount())+ "");
+			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getContractAmount().toString()));
+			context.put("isBondReq", getManagedBean().getCtContract().isBondReq());
 			if (getManagedBean().getCtContract().isBondReq()) {
 				if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
-					context.put(
-							"performanceBondValue",
-							nf.format(getManagedBean().getCtContract().getLoa()
-									.getBondAmt())
-									+ "");
-					context.put("performanceBondValueText", NumberWordUtil.convert(getManagedBean()
-							.getCtContract().getLoa().getBondAmt().toString())
-							);
+					context.put("performanceBondValue",nf.format(getManagedBean().getCtContract().getLoa().getBondAmt())+ "");
+					context.put("performanceBondValueText", NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString()));
 				}
 			}
-		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY
-				.equalsIgnoreCase(parameterCode)) {
+		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)) {
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-party.vm";
-			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IAddressSO.class);
+			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAddressSO.class);
 			AddressReqDTO addressReqDTO = new AddressReqDTO();
 			addressReqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
-			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract()
-					.getOwnerOrgProfile().getOrgProfileId());
-			AddressResDTO addressResDTO = addressSO
-					.retrieveAddressTypeList(addressReqDTO);
+			addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			AddressResDTO addressResDTO = addressSO.retrieveAddressTypeList(addressReqDTO);
 			PmAddressType pmAddressType = null;
 			if (addressResDTO.getAddressTypeList().size() > 0) {
 				pmAddressType = addressResDTO.getAddressTypeList().get(0);
@@ -1322,85 +1139,54 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("userInputDate", c.get(Calendar.DATE) + "");
 			context.put("userInputMonth", c.get(Calendar.MONTH) + "");
 			context.put("currentYear", c.get(Calendar.YEAR) + "");
-			context.put("jabatanName", getManagedBean().getCtContract()
-					.getOwnerOrgProfile().getOrgName());
-			if (getManagedBean().getCtContract().getOwnerOrgProfile()
-					.getParentOrgProfile() != null) {
-				context.put("ministryName", getManagedBean().getCtContract()
-						.getOwnerOrgProfile().getParentOrgProfile()
-						.getOrgName());
+			context.put("jabatanName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+			if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null) {
+				context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
 			} else {
 				context.put("ministryName", "");
 			}
 			if (pmAddressType != null) {
-				context.put("jabatanAddress", AddressUtils
-						.getFullAddress(pmAddressType.getPmAddress()));
+				context.put("jabatanAddress", AddressUtils.getFullAddress(pmAddressType.getPmAddress()));
 			} else {
 				context.put("jabatanAddress", "");
 			}
-			context.put("supplierName", getManagedBean().getCtContract()
-					.getCurrentContractVer().getCtContractValue()
-					.getSupplierName());
-			context.put("supplierRegNo", getManagedBean().getCtContract()
-					.getSmSupplier().getRegNo());
-			context.put(
-					"supplierAddress",
-					AddressUtils.getFullAddress(getManagedBean()
-							.getCtContract().getCurrentContractVer()
-							.getCtContractValue().getSupplierAddress()));
-			context.put("contractTitle", getManagedBean().getCtContract()
-					.getQuotationTender().getQtTitle());
+			context.put("supplierName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+			context.put("supplierRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
+			context.put("supplierAddress",AddressUtils.getFullAddress(getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierAddress()));
+			context.put("contractTitle", getManagedBean().getCtContract().getQuotationTender().getQtTitle());
 
-		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE
-				.equalsIgnoreCase(parameterCode)) {
+		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-signing-page.vm";
-			context.put("ctAgencySignerList", getManagedBean()
-					.getCtAgencySigner());
-			context.put("ctSignAgencyWitnessList", getManagedBean()
-					.getCtSignAgencyWitness());
-			context.put("ctSupplierSignerList", getManagedBean()
-					.getCtSupplierSigner());
-			context.put("ctSupplierWitnessList", getManagedBean()
-					.getCtSupplierWitness());
+			context.put("ctAgencySignerList", getManagedBean().getCtAgencySigner());
+			context.put("ctSignAgencyWitnessList", getManagedBean().getCtSignAgencyWitness());
+			context.put("ctSupplierSignerList", getManagedBean().getCtSupplierSigner());
+			context.put("ctSupplierWitnessList", getManagedBean().getCtSupplierWitness());
 
 			context.put("currentYear", c.get(Calendar.YEAR) + "");
-			if (getManagedBean().getCtContract().getOwnerOrgProfile()
-					.getParentOrgProfile() != null) {
-				context.put("ministryName", getManagedBean().getCtContract()
-						.getOwnerOrgProfile().getParentOrgProfile()
-						.getOrgName());
+			if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null) {
+				context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
 			} else {
 				context.put("ministryName", "");
 
 			}
-			context.put("companyName", getManagedBean().getCtContract()
-					.getCurrentContractVer().getCtContractValue()
-					.getSupplierName());
-			context.put("companyRegNo", getManagedBean().getCtContract()
-					.getSmSupplier().getRegNo());
+			context.put("companyName", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierName());
+			context.put("companyRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 		}
 
 		if (vmFile != null && context != null) {
-			content = DocumentGenerator.getInstance().getHtmlFromVelocity(
-					vmFile, context);
+			content = DocumentGenerator.getInstance().getHtmlFromVelocity(vmFile, context);
 		}
 
 		return content;
 	}
 
 	private String getServerUrl() {
-		ExternalContext extcontext = FacesContext.getCurrentInstance()
-				.getExternalContext();
-		PortletRequest portletRequest = (PortletRequest) extcontext
-				.getRequest();
-		HttpServletRequest httpServletRequest = PortalUtil
-				.getOriginalServletRequest(PortalUtil
-						.getHttpServletRequest(portletRequest));
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
 		String requestURL = httpServletRequest.getRequestURL().toString();
-		String url = requestURL.substring(0, requestURL.length()
-				- httpServletRequest.getRequestURI().length())
-				+ httpServletRequest.getContextPath() + "/";
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
 
 		return url;
 	}

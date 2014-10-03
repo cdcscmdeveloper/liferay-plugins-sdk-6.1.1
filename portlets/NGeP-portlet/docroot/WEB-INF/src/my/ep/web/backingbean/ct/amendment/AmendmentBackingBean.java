@@ -193,6 +193,11 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public AmendmentBackingBean(){
 		  if(this.getManagedBean().getAction() == null) 
 			   this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+		  
+		  if(ctBackingBean == null){
+			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
+			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		  }
 	}
 	
 	private FacesScopes getFacesScopes(){
