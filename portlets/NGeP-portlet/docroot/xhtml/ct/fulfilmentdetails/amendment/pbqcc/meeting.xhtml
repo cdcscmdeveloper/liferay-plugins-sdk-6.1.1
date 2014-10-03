@@ -7,6 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="meetingPanel" header="#{lbl['lbl.ct.menu.meeting']}" toggleable="true"  toggleSpeed="500">
+           <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
            <p:dataTable id="meetingTable" var="ctMeetingsVar" 
                 value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.ctMeetings}"
                 selection="#{amendmentBackingBean.selectedMeetingUser}" rowKey="#{ctMeetingsVar}">

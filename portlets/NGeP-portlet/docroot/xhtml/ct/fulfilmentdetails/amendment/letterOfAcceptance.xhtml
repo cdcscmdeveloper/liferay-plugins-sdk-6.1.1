@@ -84,7 +84,8 @@
 			</div>
 		</p:dialog>
 	  </p:panel>
-	  <p:panel id="letterOfAcceptance" header="Letter of Acceptance" toggleable="true" toggleSpeed="500">
+	  <p:panel id="letterOfAcceptance" header="#{lbl['lbl.ct.menu.loa']}" toggleable="true" toggleSpeed="500">
+	     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
 	     <h:panelGroup id="uploadLoaPg">
 			  <h:panelGrid columns="5">			  	  
 			  	  <p:outputLabel value="*" styleClass="mandatory" />

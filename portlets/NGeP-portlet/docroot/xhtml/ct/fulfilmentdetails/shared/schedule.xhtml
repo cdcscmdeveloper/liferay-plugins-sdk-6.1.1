@@ -7,7 +7,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.panel.schedule']}"  toggleable="true"  toggleSpeed="500">
-	   
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.schedule']}" escape="false"/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.schedule']}" escape="false"/><br/><br/>
 	   <h:panelGrid columns="4">
            <p:selectOneRadio id="radiOptions"  required="true"
                value="#{contractDetailsBackingBean.managedBean.frequencySchedule}" 

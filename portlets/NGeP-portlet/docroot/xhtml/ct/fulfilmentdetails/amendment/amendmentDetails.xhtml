@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">	
+	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
