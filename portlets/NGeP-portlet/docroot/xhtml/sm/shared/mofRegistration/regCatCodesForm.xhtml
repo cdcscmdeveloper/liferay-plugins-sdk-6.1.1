@@ -10,9 +10,6 @@
 
 		<br />
 		<p:panel id="catCodeInfPan">
-			<p:blockUI block=":form:tt:catCodeInfPan" widgetVar="buiPoCatCode"
-				id="poCatCodeBlc"
-				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.categoryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
 			<c:choose>
 				<c:when
 					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
