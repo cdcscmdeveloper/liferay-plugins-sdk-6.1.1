@@ -1801,16 +1801,20 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 				}*/
 				
 				loadUserProfile(resDTO.getPmUser().getUserId());
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(
-						    FacesMessage.SEVERITY_INFO,
-						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
-					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					    		new FacesScopes().getUserLocale())
-				    		));
 				
-				
+				if(!StringUtils.isBlank(resDTO.getRemarks())) {
+					//OIM user creation successfully, problem with roles.
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, resDTO.getRemarks(), resDTO.getRemarks()));
+				}else{
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(
+							    FacesMessage.SEVERITY_INFO,
+							    null,
+					    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
+						    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+						    		new FacesScopes().getUserLocale())
+					    		));
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
