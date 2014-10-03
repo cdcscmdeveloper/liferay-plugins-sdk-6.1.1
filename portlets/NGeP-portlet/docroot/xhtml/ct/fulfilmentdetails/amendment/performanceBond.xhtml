@@ -6,9 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}"  toggleable="true"  toggleSpeed="500"
+	<p:panel id="bondId" toggleable="true"  toggleSpeed="500"
 	    rendered="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds.size() > 0}"  >
-        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/> -->
+        <f:facet name="header">
+			<h:outputText value="#{lbl['lbl.ct.panel.performance.bond']}"/>
+	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.performance.bond.dtls']}"/>
+	  	</f:facet>
         <p:dataTable  id="tableBond" var="data" 
            value="#{amendmentBackingBean.managedBean.contractVer.ctPerformanceBonds}"> 
 	      <ac:paginator for="tableBond" />

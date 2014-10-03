@@ -40,7 +40,10 @@
 	</table>	 
 	</p:panel>
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.contract']}" toggleable="true" collapsed="false" toggleSpeed="500">
-	<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/> -->
+	<f:facet name="header">
+		<h:outputText value="#{lbl['lbl.ct.panel.contract']}"/>
+        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/>
+	</f:facet>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
 		<h:panelGrid columns="4" style="width:900px;" columnClasses="columnWidth15,columnWidth20,columnWidth15,columnWidth20">
 	    	<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />

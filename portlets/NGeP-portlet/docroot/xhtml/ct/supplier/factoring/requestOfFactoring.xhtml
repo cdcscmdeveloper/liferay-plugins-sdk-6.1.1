@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">  
 	<ui:define name="contentSection">
 		<script> $('#portlet_ctRequestFactoring_WAR_NGePportlet').find('.portlet-title-text').html('#{supplierBackingBean.getPortletTitle()}'); </script>
 		
@@ -44,7 +45,7 @@
 	       </div> 	  		
 	  </p:panel>
 	 
-	  <p:panel id="loaId" header="LOA Details" toggleable="true"  toggleSpeed="500">
+	  <p:panel id="loaId" header="#{lbl['lbl.ct.menu.loa.details']}" toggleable="true"  toggleSpeed="500">
 	         <h:panelGrid columns="4" style="width:100%;" 
 	              columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
 		
@@ -52,13 +53,16 @@
 			         <p:outputLabel value="*" styleClass="mandatory" />
 			         <p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			    </h:panelGrid>  
-			    <h:panelGrid columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
+			    <h:panelGrid columns="5"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			         <p:selectOneMenu id="menuLoaId" style="width:210px;" 
 			              value="#{supplierBackingBean.managedBean.loaId}" required="true" label="#{lbl['lbl.ct.loa.no']}">
 			              <f:selectItems value="#{supplierBackingBean.getContractSupplierLoa()}"/>
 			              <p:ajax event="change" process="@this" 
 			                  update="@form" listener="#{supplierBackingBean.changeLoaActionListener()}"/> 
 		             </p:selectOneMenu>
+		             <p:spacer width="1"/>
+			    	 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
+			    	 <p:spacer width="1"/>
 		             <p:message for="menuLoaId" display="icon"/>
 		       </h:panelGrid>
 			   <p:inputText  rendered="#{supplierBackingBean.managedBean.taskId != null}"
@@ -71,9 +75,12 @@
 		       </p:inputText>
 		    
 		       <p:outputLabel value="#{lbl['lbl.ct.contract.no']}" />
-		       <p:inputText style="width:200px;"  
-		          value="#{supplierBackingBean.managedBean.ctContract.contractNo}" disabled="true"/>
-		    
+		       <h:panelGrid columns="3">
+		       		<p:inputText style="width:200px;"  
+		          		value="#{supplierBackingBean.managedBean.ctContract.contractNo}" disabled="true"/>
+		       		<p:spacer width="1"/>
+			      	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
+			   </h:panelGrid>
 		       <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
 		       <p:inputText style="width:200px;"  disabled="true"
 		            value="#{supplierBackingBean.managedBean.ctContract.contractName}"/> 
@@ -93,7 +100,11 @@
 	       </h:panelGrid>
         </p:panel>
    
-         <p:panel id="factoringPanel" header="#{lbl['lbl.ct.panel.factoring']}" toggleable="true"  toggleSpeed="500">
+         <p:panel id="factoringPanel" toggleable="true"  toggleSpeed="500">
+              <f:facet name="header">
+					<h:outputText value="#{lbl['lbl.ct.panel.factoring']}"/>
+			        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.dtls']}"/>
+			  </f:facet>
               <h:panelGrid columns="4" style="width:100%;"
                   columnClasses="columnVCenterWidth15,columnWidth20,columnWidth20,columnWidth20">
           
@@ -145,8 +156,12 @@
 				     </h:panelGrid>		    			
            
                    <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/> 
-                    <p:inputText id="bankName"  style="width:200px;" 
-                       value="#{supplierBackingBean.managedBean.factoringBankName}" disabled="true"/>
+                    <h:panelGrid columns="3">
+                    	<p:inputText id="bankName"  style="width:200px;" 
+                       		value="#{supplierBackingBean.managedBean.factoringBankName}" disabled="true"/>
+                       	<p:spacer width="1"/>
+			    	 	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.bank.name']}" />
+			    	</h:panelGrid>
 				
 				   <h:panelGrid columns="2" style="float:right;">
 				    	<p:outputLabel value="*" styleClass="mandatory" />
@@ -161,8 +176,12 @@
 				</h:panelGrid>		  		    			 
 		       
 		        <p:outputLabel value="#{lbl['lbl.ct.bank.account.no']}"/> 
-                <p:inputText id="accNo" style="width:200px;"  
-                    disabled="true" value="#{supplierBackingBean.managedBean.accountNo}"/>
+                <h:panelGrid columns="3">
+                	<p:inputText id="accNo" style="width:200px;"  
+                    	disabled="true" value="#{supplierBackingBean.managedBean.accountNo}"/>
+                    <p:spacer width="1"/>
+			    	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
+			    </h:panelGrid>			 	
 				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
 				    

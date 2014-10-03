@@ -21,7 +21,11 @@
 			        <p:outputLabel value="#{itemData.itemName}" style="float:left;" />
 			   </p:column>
 			
-			   <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:15%;">
+			   <p:column style="width:15%;">
+			      <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.effective.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.effective.date']}"/>
+			   	  </f:facet>
 			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true" 
 			         disabled="#{itemData.recordStatusFlg == 1 ? true : false}" styleClass="calanderWidth"  showOn="button"  navigator="true"
 			         mindate="#{suspensionBackingBean.currentDate}"  
@@ -30,7 +34,11 @@
 			    </p:calendar>
 			  </p:column>
 			
-		       <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:15%;">
+		       <p:column style="width:15%;">
+			      <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.expiry.date']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.expiry.date']}"/>
+			   	  </f:facet>
 			      <p:calendar id="expDateActive" value="#{itemData.expDate}"  styleClass="calanderWidth"
 			          showOn="button" disabled="#{itemData.recordStatusFlg == 1 ? true : false}" readonlyInput="true" navigator="true"
 			          mindate="#{itemData.effDate}"
@@ -40,7 +48,11 @@
 			      </p:calendar>
 			  </p:column>
 		   	  
-		   	  <p:column style="width:10%;" headerText="#{lbl['lbl.ct.status']}">
+		   	  <p:column style="width:10%;">
+		   	  	   <f:facet name="header">
+						<h:outputText value="#{lbl['lbl.ct.status']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.status']}"/>
+			   	   </f:facet>
 			       <p:selectOneMenu value="#{itemData.recordStatusFlg}" style="width:85px;">
 				         <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 				         <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />

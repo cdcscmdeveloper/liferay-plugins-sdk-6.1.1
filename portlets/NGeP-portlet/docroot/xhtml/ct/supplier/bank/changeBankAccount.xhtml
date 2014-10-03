@@ -6,7 +6,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">   
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">   
 	<ui:define name="contentSection">
 	 <style>
         .column-align-center { text-align: center !important;}
@@ -55,7 +56,7 @@
                             <h:outputLabel for="contractId" value="#{lbl['lbl.ct.contract.no']}" />
                        </h:panelGrid>
                       
-                       <h:panelGrid id="menuContractId" columns="2" rendered="#{supplierBackingBean.managedBean.taskId==null}">
+                       <h:panelGrid id="menuContractId" columns="3" rendered="#{supplierBackingBean.managedBean.taskId==null}">
 			                <p:selectOneMenu id="contractId"  style="width:210px;margin-bottom: 3px;"
 			                      value="#{supplierBackingBean.managedBean.contractVerId}"  required="true" label="#{lbl['lbl.ct.contract.no']}">
 			         	          <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="123" />
@@ -63,14 +64,19 @@
 				                 <p:ajax  update="fulfilmentDetail,bankHeader,bankId,supplierDetails" 
 				                      event="change" process="@this"   listener="#{supplierBackingBean.changeContractActionListener}"/>
 				            </p:selectOneMenu>
-				           <p:message for="contractId" display="icon"/>
+			      			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
+				            <p:message for="contractId" display="icon"/>
 				    </h:panelGrid>
 			        <p:inputText id="contractNo" value="#{supplierBackingBean.managedBean.ctContract.contractNo}"
 			            style="width:200px;" disabled="true" rendered="#{supplierBackingBean.managedBean.taskId != null}"/>
 			       
 			        <p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
-		            <p:inputText id="physicalNo"  disabled="true" style="width:200px;"
-			             value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}"/>	
+		            <h:panelGrid columns="3">
+		            	<p:inputText id="physicalNo"  disabled="true" style="width:200px;"
+			             	value="#{supplierBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
+				         <p:spacer width="1"/>
+				         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
+				    </h:panelGrid>
 			    
 			         <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 			         <p:inputText id="effDate" disabled="true" style="width:200px;" 
@@ -103,7 +109,7 @@
 			          <p:outputLabel value="*" styleClass="mandatory" />
                       <p:outputLabel  value="#{lbl['lbl.ct.bank.account.name']}" />
                   </h:panelGrid>
-                  <h:panelGrid id="menuBankId" columns="2"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
+                  <h:panelGrid id="menuBankId" columns="3"  rendered="#{supplierBackingBean.managedBean.taskId==null}">
                        <p:selectOneMenu id="accountId" required="true" style="width:210px;margin-bottom: 5px;"
                            value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.bankAccountNo}" label="#{lbl['lbl.ct.bank.account.name']}">
 			               <f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -111,6 +117,7 @@
 			               <p:ajax event="change" process="@this" partialSubmit="true"
 			                   update="bankBranch,bankAddress"  listener="#{supplierBackingBean.changeAccountActionListener}"/>
 		              </p:selectOneMenu>
+					  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.bank.name']}" />
 		              <p:message for="accountId" display="icon"/>
 		         </h:panelGrid>
 		         <p:inputText  rendered="#{supplierBackingBean.managedBean.taskId!=null}"
@@ -136,14 +143,22 @@
 	      <h:panelGrid columns="4" style="width:100%;" styleClass="top-aligned-columns"
 	          columnClasses="columnWidth15,columnWidth20,columnWidth20,columnWidth20">
             
-             <p:outputLabel value="#{lbl['lbl.txt.business.reg.no']}" /> 
-             <h:panelGrid columns="4" style="width:255px;">
-                <p:inputText disabled="true" style="width:70px;" 
-                   value="#{supplierBackingBean.managedBean.ctContract.smSupplier.regNo}"/>
-                   <p:spacer width="1"/>
+             <p:outputLabel value="#{lbl['lbl.ct.business.reg.no']}" /> 
+             <h:panelGrid columns="4" style="width:350px;">
+                <h:panelGrid columns="3">
+                	<p:inputText disabled="true" style="width:100px;" 
+                   		value="#{supplierBackingBean.managedBean.ctContract.smSupplier.regNo}"/>
+                   	<p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+				</h:panelGrid>
+                <p:spacer width="1"/>
                 <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />  
-                <p:inputText disabled="true" style="width:100px;" 
-                	value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
+                <h:panelGrid columns="3">
+	                <p:inputText disabled="true" style="width:100px;" 
+	                	value="#{supplierBackingBean.managedBean.ctContract.loa.scLoiLoa.mofNo}" />
+	                <p:spacer width="1"/>
+					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+				</h:panelGrid>
              </h:panelGrid> 
            
              <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  
@@ -151,9 +166,12 @@
                  value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}"/>
             
              <p:outputLabel value="#{lbl['lbl.ct.business.name']}" /> 
-             <p:inputText disabled="true" style="width:230px;"
-                value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" /> 
-            
+             <h:panelGrid columns="3">
+             	<p:inputText disabled="true" style="width:230px;"
+                	value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+             	<p:spacer width="1"/>
+				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
+			 </h:panelGrid>
              <p:outputLabel  value="#{lbl['lbl.ct.tel']}" />
              <p:inputText disabled="true"  style="width:200px;"
                 value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
