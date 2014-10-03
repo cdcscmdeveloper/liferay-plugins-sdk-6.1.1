@@ -18,10 +18,10 @@
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
 
-				
-
 				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;"
-					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])" />
+					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
+					<f:param name="disableValidation" value="true" />
+				</p:commandButton>
 				<!-- 			<p:commandButton value="Ajax" update="pnlCompInfo"  validateClient="true" /> -->
 		</div>
 		<div style="clear: both;"></div>
