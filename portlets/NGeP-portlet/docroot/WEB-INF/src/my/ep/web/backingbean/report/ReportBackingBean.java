@@ -3750,7 +3750,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			e.printStackTrace();		
 		}
 	}	
-	public void getStreamPDFFile(String paramConstrString, String filename) throws IOException {
+	public void getStreamPDFFile(String paramConstrString) throws IOException {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.EXC_PREV_URL));
 		gnrtdURL.append(paramConstrString); 
@@ -3774,7 +3774,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	    HttpServletResponse res = PortalUtil
 	      	      .getHttpServletResponse(portletResponse);
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
-    	          + filename + "\"");//
+    	          + "NGeP_Report.pdf" + "\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");
 	    res.setContentType("application/pdf");
 	    res.flushBuffer();	    
