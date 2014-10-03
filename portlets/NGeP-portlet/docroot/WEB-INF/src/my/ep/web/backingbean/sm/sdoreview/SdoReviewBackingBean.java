@@ -96,7 +96,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					throw new EpException(MessageConst.ERROR_721105);
 
 				}
-			} else if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
+			} 
+			
+			/*else if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
 				if(this.getManagedBean().getSmAppl().getSdoReceivedDate() == null 
 						|| this.getManagedBean().getSmAppl().getSdoReceivedDate().equals("")){ 
 					RequestContext.getCurrentInstance().update("submissionMessageId");
@@ -108,7 +110,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					throw new EpException(MessageConst.ERROR_721107);
 				}
 
-			}
+			}*/
 
 			try{
 				String token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -123,15 +125,15 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 				//reqDTO.setBpmUserName(bpmUsrName);
 				
-				SmRemark smRmk = this.getManagedBean().getSmRemark();
+/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
-				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());
+				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
 				
 				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(resAction);
-				reqDTO.setSmRemark(smRmk);
+				//reqDTO.setSmRemark(smRmk);
 								
 				this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
@@ -140,8 +142,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 				if (resDTO.isSuccessful()) {
 					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-					RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
-
+					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
+					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 					return navigateToAck();
 				} else {
 					throw new EpException(MessageConst.ERROR_721109);
@@ -220,5 +222,8 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		return SmCommonUtil.getApplTypeDesc(applType);
 	}
 	
+	public void showVerifyConfirmation(){
+		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+	}
 	
 }
