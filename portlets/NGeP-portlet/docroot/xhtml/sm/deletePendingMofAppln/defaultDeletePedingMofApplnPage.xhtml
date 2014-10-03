@@ -17,11 +17,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputPanel>
-						<p>Please provide a valid reason and attach supporting
-							documents (if any) for deleting the pending MOF application.</p>
-						<br />
-								NOTE : The MOF application with status upto pending Supporting documents
-								 are deleted immediately, <br />but applications after this status need to go through the approval process.
+						<p:outputLabel value="#{lbl['lbl.sm.pending.mof.app.msg']}" escape="false" />
 						</p:outputPanel></td>
 			</tr>
 		</table>
@@ -38,7 +34,7 @@
 
 		</table>
 		<div align="right">
-			<p:commandButton value="Proceed" id="delPendCmdBtn"
+			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="delPendCmdBtn"
 				action="#{backingBean.deletePendingMofApplication}"
 				disabled="#{!backingBean.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel"

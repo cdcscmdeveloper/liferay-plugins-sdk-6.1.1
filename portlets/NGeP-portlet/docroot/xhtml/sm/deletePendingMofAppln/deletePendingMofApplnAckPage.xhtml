@@ -12,11 +12,11 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Delete Pending MOF Applicaiton">
+		<p:panel header="#{lbl['lbl.sm.pending.mof.delete']}">
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The Pending MOF Application - Application No :
+						#{lbl['lbl.sm.pending.mof.application.no']} :
 						<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
 							style="color: blue; font-weight: bold;" />
 						<h:outputText

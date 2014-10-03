@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:panel
-			header="Delete Pending MOF Application - #{backingBean.managedBean.smAppl.applNo}">
+			header="#{lbl['lbl.sm.pending.mof.delete']} - #{backingBean.managedBean.smAppl.applNo}">
 
 			<!-- <div>
 
@@ -25,37 +25,37 @@
 			<br />
 			<table style="width: 100%;">
 				<tr>
-					<td><p:outputLabel value="Application No : " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.application.no']} : " /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.smAppl.applNo}" readonly="true"
 							disabled="true" size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Application Type : " /></td>
-					<td><p:inputText value="New Mof Application " readonly="true"
+					<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} : " /></td>
+					<td><p:inputText value="#{lbl['lbl.sm.mofReg.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"
-							size="35" /> <p:inputText value=" Renew Mof Application "
+							size="35" /> <p:inputText value="#{lbl['lbl.sm.renewMof.headerLbl']}"
 							readonly="true" disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
 							size="35" /> <p:inputText
-							value=" Update Mof Profile Application " readonly="true"
+							value="#{lbl['lbl.sm.updateMof.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'U'}"
 							size="35" /> <p:inputText
-							value="Application For Bumiputera Status" readonly="true"
+							value="#{lbl['lbl.sm.bumi.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}"
 							size="35" /> <p:inputText
-							value="Application For Additional Category Codes" readonly="true"
+							value="#{lbl['lbl.sm.addnlCat.headerLbl']}" readonly="true"
 							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'A'}"
 							size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Submitted On : " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']} : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 							disabled="true" size="35">
@@ -65,39 +65,39 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Current Status : " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.current.status']} : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.currentStatus}" disabled="true"
 							size="35" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Reason : " /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.reason']} : " /></td>
 					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;"
 							value="#{backingBean.managedBean.supplierRemarks}" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Supporting Doc (If any)" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.if.any']}" /></td>
 					<td><p:fileUpload mode="simple" /></td>
 
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="Submit" onclick="delPenRegConfirm.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="delPenRegConfirm.show();" />
 
 			</div>
 		</p:panel>
 
 		<p:confirmDialog id="delPenRegConfirm" width="350px"
-			message="Are you sure to proceed with the cancellation process?"
-			header="Cancel Reg With MOF" severity="alert"
+			message="#{lbl['lbl.sm.cancel.mof.confirm']}"
+			header="#{lbl['lbl.sm.cancel.mof']}" severity="alert"
 			widgetVar="delPenRegConfirm">
 			<div align="center">
-				<p:commandButton id="confDelPen" value="Yes"
+				<p:commandButton id="confDelPen" value="#{lbl['lbl.btn.yes']}"
 					onclick="canRegConfirm.hide()"
 					action="#{backingBean.submitDeletePendingMofApplToBpm}" />
-				<p:commandButton id="declineDelPen" value="No"
+				<p:commandButton id="declineDelPen" value="#{lbl['lbl.btn.no']}"
 					onclick="canRegConfirm.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
