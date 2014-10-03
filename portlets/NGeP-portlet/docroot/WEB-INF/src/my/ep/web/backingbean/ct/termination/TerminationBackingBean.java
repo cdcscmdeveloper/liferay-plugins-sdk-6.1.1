@@ -499,7 +499,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()))
 			return RoleCode.BPK_APPROVER.value();		
 		else 
-			return null;
+			 return null;
 	}
 	
     public SelectItem[] getTerminationReasonDesc() {

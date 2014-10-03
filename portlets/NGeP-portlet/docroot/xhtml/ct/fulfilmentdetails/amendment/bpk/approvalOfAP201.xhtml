@@ -11,17 +11,20 @@
 				value="#{lbl['lbl.ct.special.ap201.content']}" />
 			<p:spacer height="10" />
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
+				<p:selectBooleanCheckbox disabled="true" 
+				    value="#{amendmentBackingBean.managedBean.contractVer.ctContract.recordStatusFlg!=1}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.contract.not.active']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" />
+				<p:selectBooleanCheckbox disabled="true" 
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.change.item.price']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" />
+				<p:selectBooleanCheckbox disabled="true" 
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" />
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.change.contract.clause']}" />
 			</h:panelGrid>
