@@ -293,6 +293,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile()==null){
 				this.getManagedBean().getTaskAssignmentSearchBean().setOrgProfile(new PmOrgProfile());
 			}
+			if(this.getManagedBean().getTaskAssignmentSearchBean().getUser()==null){
+				this.getManagedBean().getTaskAssignmentSearchBean().setUser(new PmUser());
+			}
 			this.getManagedBean().getTaskAssignmentSearchBean().getOrgProfile().setOrgName("");
 			
 			if(this.getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId()!=null){
