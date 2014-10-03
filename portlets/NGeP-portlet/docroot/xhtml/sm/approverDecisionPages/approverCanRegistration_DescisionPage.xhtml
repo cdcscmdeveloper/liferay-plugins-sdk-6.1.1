@@ -13,7 +13,7 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"/>
 
-		<p:panel header="Approver Decision For Cancel Registration">
+		<p:panel header="#{lbl['lbl.sm.approver.decision.cancel.header']}">
 			<table>
 				<!-- <tr>
 				<td colspan="3"><h4
@@ -23,7 +23,7 @@
 					</h4></td>
 			</tr> -->
 				<tr>
-					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
@@ -31,7 +31,7 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Date Submitted" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
@@ -42,14 +42,14 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Current Status" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
 					<td><p:inputText readonly="true"
 							value="#{backingBean.managedBean.currentStatus}" disabled="true" /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Reason From Supplier" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.reason.supplier']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
 					<td><p:inputTextarea cols="60" readonly="true"
 							value="#{backingBean.managedBean.supplierRemarks}"
@@ -57,9 +57,9 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Supporting Doc" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:commandButton value="Download"
+					<td><p:commandButton value="#{lbl['lbl.btn.download']}"
 							icon="ui-icon-arrowthichk-s" /></td>
 				</tr>
 
@@ -76,29 +76,29 @@
 			<p:separator />
 
 			<div style="width: 100%" align="right">
-				<p:commandButton value="Approve"
+				<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 					onclick="approveAppCanDialog.show();" />
-				<p:commandButton value="Reject" onclick="rejectAppCanDialog.show();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.reject']}" onclick="rejectAppCanDialog.show();" />
 
 			</div>
 		</p:panel>
 
 
-		<p:dialog width="650px" header="Approve Application"
+		<p:dialog width="650px" header="#{lbl['lbl.sm.approve.application']}"
 			widgetVar="approveAppCanDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="Submit"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					onclick="approveAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
-				<p:commandButton value="Cancel"
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
-		<p:dialog width="650px" header="Reject Application"
+		<p:dialog width="650px" header="#{lbl['lbl.sm.reject.application']}"
 			widgetVar="rejectAppCanDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 

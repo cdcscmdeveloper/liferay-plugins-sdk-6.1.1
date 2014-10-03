@@ -12,11 +12,11 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Approver Decision Acknowlegment">
+		<p:panel header="#{lbl['lbl.sm.approver.decision.cancel.header']}">
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The Application for :
+						#{lbl['lbl.sm.button.approve']} :
 						<h:outputText
 							value="#{backingBean.managedBean.smSupplier.companyName}"
 							style="color: blue; font-weight: bold;" />
