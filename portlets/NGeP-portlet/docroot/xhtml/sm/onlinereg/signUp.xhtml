@@ -89,6 +89,10 @@
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
 			disabled="#{(!registrationBackingBean.managedBean.agreeTC || registrationBackingBean.managedBean.applType == null)}"
 				action="#{registrationBackingBean.proceedToCompanyInfo}" />
+				<p:commandButton id="btnPayment" value="Test Payment" action="#{paymentBackingBean.retrieveBillInfo}" />
+				<p:commandButton id="btnTest" value="Test PTJ" action="#{registrationBackingBean.testPTJSupplier}" />
+				<p:commandButton id="btnSV" value="Site Visit Report" action="#{registrationBackingBean.viewSiteVisitReport}" />
+				<p:commandButton value="test Converter" action="#{registrationBackingBean.testConverter}"></p:commandButton>
 		</div>
 
 	</ui:define>

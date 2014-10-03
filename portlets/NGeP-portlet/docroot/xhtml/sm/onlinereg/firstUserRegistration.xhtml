@@ -12,7 +12,9 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnSubmit" update="@([id$=Msg])" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
-				action="#{registrationBackingBean.submitRegistration}" />
+				action="#{registrationBackingBean.submitRegistration}">
+				<f:param name="disableValidation" value="true" />
+		</p:commandButton>
 	</div>
 
 		<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
@@ -24,10 +26,12 @@
 		<p:panel header="#{lbl['lbl.sm.userinfo']}" toggleable="true" id="pnlUsrInfo">
 			<table class="customTbl">
 				<tr>
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.fullname']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.fullname']}" />
+					</td>
 					<td class="tdContent" colspan="3">
-						<p:inputText size="40" required="true" label="#{lbl['lbl.sm.fullname']}"
+						<p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.fullname']}"
 							id="fullName" maxlength="80"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
 						&#160;
@@ -40,10 +44,12 @@
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.nationality']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.nationality']}" />
+					</td>
 					<td class="tdContent">
-						<p:selectOneMenu id="nationalityId" required="true" label="#{lbl['lbl.sm.nationality']}"
+						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.nationality']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}">
 							<f:selectItem itemValue="" itemLabel="---Select---" />
 							<f:selectItems var="counLs"
@@ -53,10 +59,13 @@
 						</p:selectOneMenu>
 						<p:message id="nationalityIdMsg" for="nationalityId" display="icon" /></td>
 				
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.userprofile.dob']}" />
+					</td>
 					<td class="tdContent">
 						<p:calendar id="dobCalId"
-							navigator="true" required="true" label="#{lbl['lbl.sm.userprofile.dob']}"
+							navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.userprofile.dob']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:-16">
@@ -65,10 +74,12 @@
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.identificationtype']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" />
+					</td>
 					<td class="tdContent">
-					<p:selectOneMenu id="cmbUsrIdenType" required="true" label="#{lbl['lbl.sm.identificationtype']}"
+					<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.identificationtype']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
 							<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
 							<p:ajax event="change" update="txtIdNumber"
@@ -76,12 +87,14 @@
 						</p:selectOneMenu>
 						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
 
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.identificationno']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+					</td>
 					<td class="tdContent">
 						<c:choose>
 						<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
-							<p:inputText id="txtIdNumber" required="true"
+							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.identificationno']}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="12" validatorMessage="#{lbl['lbl.sm.individual.newicno']} - #{lbl['lbl.sm.invalidIcNo']}">
@@ -91,7 +104,7 @@
 						</c:when>
 						
 						<c:otherwise>
-							<p:inputText id="txtIdNumber" required="true"
+							<p:inputText id="txtIdNumber" required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.sm.identificationno']}"
 								value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
 								size="30" maxlength="15">
@@ -110,10 +123,12 @@
 				</tr>
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.permenantaddress']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" />
+					</td>
 					<td class="tdContent"><p:inputText size="40" maxlength="35"
-							required="true" label="#{lbl['lbl.sm.permenantaddress']}"
+							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
 							library="ep/images/design" name="tooltips.png" /> <p:tooltip
@@ -123,9 +138,11 @@
 						</p:tooltip> <p:message id="txtPermAdd1Msg" for="txtPermAdd1" display="icon" />
 					</td>
 
-					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.country']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td id="tdContent"><p:selectOneMenu required="true"
+					<td id="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.country']}" />	
+					</td>
+					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
 							id="cmbPermCounrty">
@@ -146,9 +163,11 @@
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}"
 							id="txtPermAdd2" maxlength="35" /></td>
 							
-					<td class="tdTitle"><p:outputLabel
-							value="* #{lbl['lbl.sm.state']}" /></td>
-					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="true" label="#{lbl['lbl.sm.state']}"
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+					</td>
+					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="state"
@@ -166,9 +185,11 @@
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}"
 							id="txtPermAdd3" maxlength="35" /></td>
 							
-					<td class="tdTitle"><p:outputLabel
-							value="* #{lbl['lbl.sm.district']}" /></td>
-					<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict" required="true" label="#{lbl['lbl.sm.district']}"
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+					</td>
+					<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="dist"
@@ -185,9 +206,11 @@
 					<td class="tdTitle"></td>
 					<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}"
 							id="txtPermAdd4" maxlength="35" /></td>
-					<td class="tdTitle"><p:outputLabel
-							value="* #{lbl['lbl.sm.towncity']}" /></td>
-					<td class="tdContent"><p:selectOneMenu id="cmbPermCity" required="true" label="#{lbl['lbl.sm.towncity']}"
+					<td class="tdTitle">
+						<p:outputLabel value="*" styleClass="mandatory" />
+						<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+					</td>
+					<td class="tdContent"><p:selectOneMenu id="cmbPermCity" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
 							<f:selectItem itemLabel="---Select---" itemValue="" />
 							<f:selectItems var="pcity"
@@ -198,16 +221,15 @@
 						</td>
 				</tr>
 				<tr>
-					<td class="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.postcode']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText size="40" required="true" label="#{lbl['lbl.sm.postcode']}" maxlength="10"
+					<td class="tdTitle"><p:outputLabel value="*" styleClass="mandatory" /><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td class="tdContent"><p:inputText size="40" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.postcode']}" maxlength="10"
 					value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" id="txtPermPostcode" /></td>
 				</tr>
 
 
 				<tr>
-					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.designation']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}" required="true" maxlength="30" label="#{lbl['lbl.sm.designation']}" /></td>
+					<td class="tdTitle"><p:outputLabel value="*" styleClass="mandatory" /><p:outputLabel value="#{lbl['lbl.sm.designation']}" /></td>
+					<td class="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smPersonnel.designation}" required="#{!empty param['disableValidation']}" maxlength="30" label="#{lbl['lbl.sm.designation']}" /></td>
 				</tr>
 
 			</table>
@@ -218,8 +240,8 @@
 		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 
 		<div align="left">
-			<p:commandButton value="#{lbl['lbl.sm.prev']}"
-				action="#{registrationBackingBean.returnToCompanyInfo}" immediate="false" />
+			<p:commandButton value="#{lbl['lbl.sm.prev']}" action="#{registrationBackingBean.returnToCompanyInfo}" />
+			
 		</div>
 	</ui:define>
 
