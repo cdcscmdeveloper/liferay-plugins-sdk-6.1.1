@@ -99,9 +99,9 @@
 			<h:panelGroup id="dayUOMPG">
 				<p:inputText id="dayUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 					value="#{question.clUomPerDay}" 
-					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
-					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 				</p:inputText>
 				<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
 			</h:panelGroup>
@@ -114,9 +114,9 @@
 			<h:panelGroup id="monthUOMPG">
 				<p:inputText id="monthUOM" style="min-width:0px !important;width:96%;" styleClass="ppNumericAlign"
 					value="#{question.clUomPerMonth}" 
-					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
-					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
 				</p:inputText>
 				<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
 			</h:panelGroup>
