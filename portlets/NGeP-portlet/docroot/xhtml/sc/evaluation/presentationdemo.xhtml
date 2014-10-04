@@ -20,10 +20,11 @@
 
 	<p:panel header="#{lbl['lbl.sc.eva.comp.sup.list']}" toggleable="true">
 
-		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true" rows="10"
+		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
+			rows="10"
 			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierList}"
 			rowIndexVar="index" rowKey="#{demoSupplier}">
-			<ac:paginator for="complianceTechnicalSupplier" />
+			<ac:paginator for="demoSupplierId" />
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.sup.code']}"
@@ -35,7 +36,16 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 				style="width:15%">
-				<h:outputText></h:outputText>
+				<p:commandLink onclick="uploadDlg.show();return false;" update="demoSupplierId">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{demoSupplier}"
+						target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
+
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{demoSupplier.scQtProposalChecklistAttachment.fileName}"></h:outputText>
 
 			</p:column>
 
@@ -86,7 +96,19 @@
 			</h:panelGrid>
 		</h:panelGrid>
 
-
+		<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
+			dynamic="true" hideEffect="explode" resizable="false" width="700px"
+			height="200" styleClass="pop_up_top"
+			header="#{lbl['lbl.bpm.choose.file']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{evaluationBackingBean.preSentationDemoFileUpload}"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update="demoSupplierId" oncomplete="uploadDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
 
 	</p:panel>
 

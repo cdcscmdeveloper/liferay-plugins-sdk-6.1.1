@@ -17,6 +17,7 @@
 		<p:dataTable var="complianceFinancial" rows="10"
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
 			value="#{evaluationBackingBean.managedBean.compliancefinancialCheckList}"
+			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
 			rowKey="#{complianceFinancial}">
 			<ac:paginator for="complianceFinancialProposal" />
 
