@@ -93,7 +93,9 @@
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.eprole']} :" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.suppAdmin']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_ADMIN'}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.suppUser']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER'}"/></td>
+					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.catUser']}" rendered="#{viewSmApplBackingBean.managedBean.selectedShareHolder.epRole eq 'CM_USER'}"/></td>
 				</tr>
 			</c:if>
 			<c:if test="#{viewSmApplBackingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' 
