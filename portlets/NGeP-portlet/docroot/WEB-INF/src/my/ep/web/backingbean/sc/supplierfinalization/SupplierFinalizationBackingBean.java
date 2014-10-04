@@ -844,10 +844,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 				if(scQtRecommend.getRecommendBy().getParameterCode().equals(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD)){
 					scQtRecommendDtl.setAwardQty(evalResult.getQtyAward());
 				}else{
-					for(ScQtEvaluationResultDtl evalResultDtl : evalResult.getEvaluationResultDtls()){
-						scQtRecommendDtl.setAwardQty(evalResultDtl.getScRequestItem().getQuantity());
-						break;
-					}
+					scQtRecommendDtl.setAwardQty(scQtRecommend.getRequestItem().getQuantity());
 				}
 				scQtRecommendDtl.setScQtRecommend(scQtRecommend);
 				scQtRecommendDtlList.add(scQtRecommendDtl);
