@@ -65,7 +65,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	// OC,EC,TEC,FEC
 	private String committeeType;
-	private boolean isDemo = true;
+	private boolean isDemo;
 
 	private boolean isEvaluateStatus;
 	private Long evaluationResultId;
@@ -182,8 +182,42 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean isStatusHide;
 	private ScQtProposalScore noOfContractsProposalScore;
 	private ScQtProposalScore noOfyearsProposalScore;
+	private int specZoneTabIndex;
+	private int evaluationtechnicalTableRow;
+	private int evaluationfinancialTableRow;
+	private int evaluationsampleTableRow;
 
+	public int getEvaluationsampleTableRow() {
+		return evaluationsampleTableRow;
+	}
 
+	public void setEvaluationsampleTableRow(int evaluationsampleTableRow) {
+		this.evaluationsampleTableRow = evaluationsampleTableRow;
+	}
+
+	public int getEvaluationtechnicalTableRow() {
+		return evaluationtechnicalTableRow;
+	}
+
+	public void setEvaluationtechnicalTableRow(int evaluationtechnicalTableRow) {
+		this.evaluationtechnicalTableRow = evaluationtechnicalTableRow;
+	}
+
+	public int getEvaluationfinancialTableRow() {
+		return evaluationfinancialTableRow;
+	}
+
+	public void setEvaluationfinancialTableRow(int evaluationfinancialTableRow) {
+		this.evaluationfinancialTableRow = evaluationfinancialTableRow;
+	}
+
+	public int getSpecZoneTabIndex() {
+		return specZoneTabIndex;
+	}
+
+	public void setSpecZoneTabIndex(int specZoneTabIndex) {
+		this.specZoneTabIndex = specZoneTabIndex;
+	}
 
 	public ScQtProposalScore getNoOfContractsProposalScore() {
 		return noOfContractsProposalScore;
@@ -198,7 +232,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		return noOfyearsProposalScore;
 	}
 
-	public void setNoOfyearsProposalScore(ScQtProposalScore noOfyearsProposalScore) {
+	public void setNoOfyearsProposalScore(
+			ScQtProposalScore noOfyearsProposalScore) {
 		this.noOfyearsProposalScore = noOfyearsProposalScore;
 	}
 
