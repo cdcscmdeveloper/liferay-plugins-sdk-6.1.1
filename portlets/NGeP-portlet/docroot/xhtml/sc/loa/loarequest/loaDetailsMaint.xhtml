@@ -47,10 +47,10 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 6 : 5}" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}" update="@form">
-						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="7" />
+						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
 				</p:tabMenu>
 			</td>
@@ -80,11 +80,11 @@
 						<ui:include src="loaPerformanceBondMenu.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 6 : 5)}">
 						<ui:include src="loaLetterOfAcceptance.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 7}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 7 : 6)}">
 						<ui:include src="loaApprovalMenu.xhtml" />
 					</c:if>
 				</h:panelGroup>
