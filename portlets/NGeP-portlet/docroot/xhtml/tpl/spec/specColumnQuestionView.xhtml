@@ -29,14 +29,10 @@
 			</h:outputText>
 		</p:column>
 		<p:column style="width:60px;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
-			<h:outputText value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem and !isRepeated}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-			</h:outputText>
+			<h:outputText value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem and !isRepeated}" />
 		</p:column>
 		<p:column style="width:65px;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
-			<h:outputText value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem and !isRepeated}">
-				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
-			</h:outputText>
+			<h:outputText value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem and !isRepeated}" />
 		</p:column>
 		<p:column style="width:60px;white-space:normal;text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.duration.month']}" rendered="#{isDurationByItem}">
 			<h:outputText value="#{question.clDurationMonth}" rendered="#{isQuestionTypeItem and !isRepeated}">
