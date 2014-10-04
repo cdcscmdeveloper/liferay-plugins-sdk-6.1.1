@@ -12,7 +12,7 @@
 	<ui:define name="contentSection">
 
 		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1 and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')}">
+			rendered="#{ ((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.tabActiveIndex eq 1 and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')) or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 ) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 ))}">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
 				style="float:right;" icon="ui-icon-evaluate" update="@form"
 				rendered="#{evaluationBackingBean.managedBean.generateEvaluationButton eq 'false'}"

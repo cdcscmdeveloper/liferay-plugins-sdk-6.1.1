@@ -14,7 +14,8 @@
 		toggleable="true">
 
 		<p:dataTable var="financialEval" id="financialEvaluation"
-			style="white-space: normal;" 
+			style="white-space: normal;"
+			first="#{evaluationBackingBean.managedBean.evaluationfinancialTableRow}"
 			value="#{evaluationBackingBean.managedBean.evaluationStgfinancialCheckList}"
 			rows="10" editable="true" rowIndexVar="index"
 			rowKey="#{financialEval}">
