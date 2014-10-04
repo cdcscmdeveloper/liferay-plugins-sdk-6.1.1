@@ -292,9 +292,6 @@
 			toggleable="true" id="smPersonnelParentPan">
 
 			<p:panel id="persInfPan">
-				<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
-					id="poPersBlc"
-					blocked="#{viewSmApplBackingBean.managedBean.poUser ? viewSmApplBackingBean.managedBean.poSecReview.personnelVerified : (viewSmApplBackingBean.managedBean.approverUser ? viewSmApplBackingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 				<p:panel id="persInfoDtPanel">
 					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar"
 						value="#{viewSmApplBackingBean.managedBean.smAppl.smPersonnels}"
