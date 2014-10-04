@@ -24,7 +24,6 @@ import java.util.Vector;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
@@ -37,6 +36,7 @@ import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
+import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -58,6 +58,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularDetailResDTO;
+import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -83,19 +84,22 @@ import my.ep.persistence.entity.cm.catalog.CmStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmSupplierZoneDTL;
+import my.ep.persistence.entity.cm.catalog.CmTariffPricing;
 import my.ep.persistence.entity.cm.catalog.CmTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
+import my.ep.persistence.entity.cm.catalog.CmZonalTariffPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -1008,8 +1012,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			reqDTO.setDocId(supplierItem.getDocId());
 			reqDTO.setOutcome("Active");
+			getManagedBean().setPriceTypeTariff(false);
+			getManagedBean().setPricingTabIndex(0);
 			
-			// TODO, need to cater for contract item
 			// Panel Circular Item
 			if((supplierItem.getCircularNo()!=null && supplierItem.getCircularNo().length()>0) && 
 				(supplierItem.getContractNo()==null)) {
@@ -1044,6 +1049,39 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierByEpNo(suppReqDTO);
 				cmSupplierItem.setSmSupplier(suppResDTO.getSmSupplier());
 				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
+			} else if(supplierItem.getContractNo()!=null) { // Contract Item 
+				CmSupplierItem cmSupplierItem = new CmSupplierItem();
+				this.getManagedBean().setDisplayCatalogue(true);
+				
+				IContractItemSO contractItemSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+				ContractItemReqDTO itemReqDTO = new ContractItemReqDTO();
+				itemReqDTO.setContractItemId(supplierItem.getDocId());
+				CtContractItem ctContractItem = contractItemSO.getContractItemForCatalogueView(itemReqDTO).getCtContractItem();
+				
+				if(ctContractItem.getScRequestItem().getCmItem()!=null) {
+					cmSupplierItem.setCmItem(ctContractItem.getScRequestItem().getCmItem());
+				} else {
+					CmItem cmItem = new CmItem();
+					cmItem.setExtensionCode(ctContractItem.getScRequestItem().getTempUnspscCode());
+					// TODO temp unspc code should have value.
+					if(cmItem.getExtensionCode()==null) {
+						cmItem.setExtensionCode("000"); 
+					}
+					cmItem.setItemName(ctContractItem.getItemName());
+					cmSupplierItem.setCmItem(cmItem);
+				}
+				cmSupplierItem.setPmUom(ctContractItem.getUom());
+				cmSupplierItem.setMinOrder(Double.valueOf(ctContractItem.getMinimumOrderQty()).intValue());
+				cmSupplierItem.setSkuNumber(ctContractItem.getSku());
+				getContractItemPricing(cmSupplierItem, ctContractItem);
+				
+				ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+				SupplierSearchReqDTO suppReqDTO = new SupplierSearchReqDTO();
+				suppReqDTO.setRegNo(supplierItem.getBizRegNo());
+				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierByEpNo(suppReqDTO);
+				cmSupplierItem.setSmSupplier(suppResDTO.getSmSupplier());
+				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
+				
 			} else { // Catalogue Item
 				CatalogueResDTO resDTO = null;
 				resDTO = catalogueSO.viewSupplierItem(reqDTO);
@@ -1064,6 +1102,126 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 		return "addCatalogView?faces-redirect=true";
+	}
+	
+	private void getContractItemPricing(CmSupplierItem cmSupplierItem, CtContractItem ctContractItem) {
+		Date today = new Date();
+		if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+			CmStandardPricing cmStandardPricing = new CmStandardPricing();
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					cmStandardPricing.setPrice(ctItemPrice.getUnitPrice());
+					cmStandardPricing.setStartDate(ctItemPrice.getEffDate());
+					cmStandardPricing.setEndDate(ctItemPrice.getExpDate());
+					break;
+				}
+			}
+			cmSupplierItem.setCmStandardPricing(cmStandardPricing);
+		} else if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+			List<CmZonalStandardPricing> zStdPrices = new ArrayList<CmZonalStandardPricing>();
+			CmZonalStandardPricing zonalStdPrice = null;
+			CmSupplierZone supplierZone = null;
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					zonalStdPrice = new CmZonalStandardPricing();
+					supplierZone = new CmSupplierZone();
+					supplierZone.setSuppZoneId(ctItemPrice.getCtContractZone().getContractZoneId());
+					zonalStdPrice.setCmSupplierZone(supplierZone);
+					zonalStdPrice.setPrice(ctItemPrice.getUnitPrice());
+					zonalStdPrice.setStartDate(ctItemPrice.getEffDate());
+					zonalStdPrice.setEndDate(ctItemPrice.getExpDate());
+					zStdPrices.add(zonalStdPrice);
+				}
+			}
+			cmSupplierItem.setzStdPrices(zStdPrices);
+			setSupplierZoneList(ctContractItem.getCtContractVer().getCtContractZones());
+		} else if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)) {
+			List<CmTierPricing> cmTierPricings = new ArrayList<CmTierPricing>();
+			CmTierPricing tierPricing = null;
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					tierPricing = new CmTierPricing();
+					tierPricing.setFromQty(ctItemPrice.getFromQty().intValue());
+					tierPricing.setToQty(ctItemPrice.getToQty().intValue());
+					tierPricing.setPrice(ctItemPrice.getUnitPrice());
+					tierPricing.setStartDate(ctItemPrice.getEffDate());
+					tierPricing.setEndDate(ctItemPrice.getExpDate());
+					cmTierPricings.add(tierPricing);
+				}
+			}
+			cmSupplierItem.setCmTierPricings(cmTierPricings);
+		} else if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)) {
+			List<CmZonalTierPricing> cmZonalTierPricings = new ArrayList<CmZonalTierPricing>();
+			CmZonalTierPricing zonalTierPricing = null;
+			CmSupplierZone supplierZone = null;
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					zonalTierPricing = new CmZonalTierPricing();
+					supplierZone = new CmSupplierZone();
+					supplierZone.setSuppZoneId(ctItemPrice.getCtContractZone().getContractZoneId());
+					zonalTierPricing.setCmSupplierZone(supplierZone);
+					zonalTierPricing.setFromQty(ctItemPrice.getFromQty().intValue());
+					zonalTierPricing.setToQty(ctItemPrice.getToQty().intValue());							
+					zonalTierPricing.setPrice(ctItemPrice.getUnitPrice());
+					zonalTierPricing.setStartDate(ctItemPrice.getEffDate());
+					zonalTierPricing.setEndDate(ctItemPrice.getExpDate());
+					cmZonalTierPricings.add(zonalTierPricing);
+				}
+			}
+			cmSupplierItem.setCmZonalTierPricings(cmZonalTierPricings);
+			setSupplierZoneList(ctContractItem.getCtContractVer().getCtContractZones());
+		} else if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)) {
+			List<CmTariffPricing> cmTariffPricings = new ArrayList<CmTariffPricing>();
+			CmTariffPricing tariffPricing = null;
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					tariffPricing = new CmTariffPricing();
+					tariffPricing.setFromQty(ctItemPrice.getFromQty().intValue());
+					tariffPricing.setToQty(ctItemPrice.getToQty().intValue());
+					tariffPricing.setSubSequence(ctItemPrice.getSubSequence());
+					tariffPricing.setPrice(ctItemPrice.getUnitPrice());
+					tariffPricing.setStartDate(ctItemPrice.getEffDate());
+					tariffPricing.setEndDate(ctItemPrice.getExpDate());
+					cmTariffPricings.add(tariffPricing);
+				}
+			}
+			cmSupplierItem.setCmTariffPricings(cmTariffPricings);
+			getManagedBean().setPriceTypeTariff(true);
+		} else if(ctContractItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+			List<CmZonalTariffPricing> cmZonalTariffPricings = new ArrayList<CmZonalTariffPricing>();
+			CmZonalTariffPricing zonalTariffPricing = null;
+			CmSupplierZone supplierZone = null;
+			for(CtItemPrice ctItemPrice : ctContractItem.getCtItemPrices()) {
+				if(ctItemPrice.getEffDate().before(today) && ctItemPrice.getExpDate().after(today)) {
+					zonalTariffPricing = new CmZonalTariffPricing();
+					supplierZone = new CmSupplierZone();
+					supplierZone.setSuppZoneId(ctItemPrice.getCtContractZone().getContractZoneId());
+					zonalTariffPricing.setCmSupplierZone(supplierZone);
+					zonalTariffPricing.setFromQty(ctItemPrice.getFromQty().intValue());
+					zonalTariffPricing.setToQty(ctItemPrice.getToQty().intValue());	
+					zonalTariffPricing.setSubSequence(ctItemPrice.getSubSequence());
+					zonalTariffPricing.setPrice(ctItemPrice.getUnitPrice());
+					zonalTariffPricing.setStartDate(ctItemPrice.getEffDate());
+					zonalTariffPricing.setEndDate(ctItemPrice.getExpDate());
+					cmZonalTariffPricings.add(zonalTariffPricing);
+				}
+			}
+			cmSupplierItem.setCmZonalTariffPricings(cmZonalTariffPricings);
+			setSupplierZoneList(ctContractItem.getCtContractVer().getCtContractZones());
+			getManagedBean().setPriceTypeTariff(true);
+		}
+	}
+	
+	private void setSupplierZoneList(List<CtContractZone> contractZoneList) {
+		List<CmSupplierZone> supplierZoneList = new ArrayList<CmSupplierZone>();
+		CmSupplierZone cmSupplierZone = null;
+		for(CtContractZone ctContractZone : contractZoneList) {
+			cmSupplierZone = new CmSupplierZone();
+			cmSupplierZone.setSuppZoneId(ctContractZone.getContractZoneId());
+			cmSupplierZone.setSuppZoneName(ctContractZone.getZoneName());
+			supplierZoneList.add(cmSupplierZone);
+		}
+		getManagedBean().setSupplierZoneList(supplierZoneList);
 	}
 
 	public <T extends CmPricing> int countTierPricesByStandGroupId(List<T> cmPricings, int standGroupId){

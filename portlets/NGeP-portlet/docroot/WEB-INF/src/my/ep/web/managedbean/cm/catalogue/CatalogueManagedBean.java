@@ -85,6 +85,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean districtIND = false;
 	private boolean renderTableView = true;
 	private boolean renderGridView = false;
+	private boolean priceTypeTariff = false;
 	
 	private CmUnspsc unspsc;
 
@@ -1455,6 +1456,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setError9(boolean error9) {
 		this.error9 = error9;
+	}
+
+
+	public boolean isPriceTypeTariff() {
+		return priceTypeTariff;
+	}
+
+
+	public void setPriceTypeTariff(boolean priceTypeTariff) {
+		this.priceTypeTariff = priceTypeTariff;
 	}
 
 	
