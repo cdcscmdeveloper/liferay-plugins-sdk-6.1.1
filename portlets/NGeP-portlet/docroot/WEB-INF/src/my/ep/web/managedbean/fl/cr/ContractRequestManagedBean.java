@@ -18,6 +18,7 @@ import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -34,12 +35,14 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -206,6 +209,19 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private PmSetia pmSetia;
 	private PmSubSetia pmSubSetia;
 	private FlFulfilmentItemAddr itemAddrVoteFundDisp;
+	
+	//item price
+	//RequestItemInfo List
+	private List<CtItemPrice> reqItemInfoList;
+	private String itemName;
+	private Double quantity;
+	private Double standardUnitPrice;
+	private PmParameter priceType;
+	private boolean standardPrice = false;
+	private boolean zonalPrice = false;
+	private boolean zonalTierPrice = false;
+	private PmParameter pmPriceType;
+	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
 
 	
 	/**
@@ -1935,6 +1951,148 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setItemAddrVoteFundDisp(FlFulfilmentItemAddr itemAddrVoteFundDisp) {
 		this.itemAddrVoteFundDisp = itemAddrVoteFundDisp;
+	}
+
+
+	/**
+	 * @return the itemName
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+	/**
+	 * @return the quantity
+	 */
+	public Double getQuantity() {
+		return quantity;
+	}
+
+	/**
+	 * @return the standardUnitPrice
+	 */
+	public Double getStandardUnitPrice() {
+		return standardUnitPrice;
+	}
+
+	/**
+	 * @return the priceType
+	 */
+	public PmParameter getPriceType() {
+		return priceType;
+	}
+
+	/**
+	 * @return the standardPrice
+	 */
+	public boolean isStandardPrice() {
+		return standardPrice;
+	}
+
+	/**
+	 * @return the zonalPrice
+	 */
+	public boolean isZonalPrice() {
+		return zonalPrice;
+	}
+
+	/**
+	 * @return the zonalTierPrice
+	 */
+	public boolean isZonalTierPrice() {
+		return zonalTierPrice;
+	}
+
+	/**
+	 * @param itemName the itemName to set
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	/**
+	 * @param quantity the quantity to set
+	 */
+	public void setQuantity(Double quantity) {
+		this.quantity = quantity;
+	}
+
+	/**
+	 * @param standardUnitPrice the standardUnitPrice to set
+	 */
+	public void setStandardUnitPrice(Double standardUnitPrice) {
+		this.standardUnitPrice = standardUnitPrice;
+	}
+
+	/**
+	 * @param priceType the priceType to set
+	 */
+	public void setPriceType(PmParameter priceType) {
+		this.priceType = priceType;
+	}
+
+	/**
+	 * @param standardPrice the standardPrice to set
+	 */
+	public void setStandardPrice(boolean standardPrice) {
+		this.standardPrice = standardPrice;
+	}
+
+	/**
+	 * @param zonalPrice the zonalPrice to set
+	 */
+	public void setZonalPrice(boolean zonalPrice) {
+		this.zonalPrice = zonalPrice;
+	}
+
+	/**
+	 * @param zonalTierPrice the zonalTierPrice to set
+	 */
+	public void setZonalTierPrice(boolean zonalTierPrice) {
+		this.zonalTierPrice = zonalTierPrice;
+	}
+
+	/**
+	 * @return the reqItemInfoList
+	 */
+	public List<CtItemPrice> getReqItemInfoList() {
+		return reqItemInfoList;
+	}
+
+	/**
+	 * @param reqItemInfoList the reqItemInfoList to set
+	 */
+	public void setReqItemInfoList(List<CtItemPrice> reqItemInfoList) {
+		this.reqItemInfoList = reqItemInfoList;
+	}
+
+	/**
+	 * @return the pmPriceType
+	 */
+	public PmParameter getPmPriceType() {
+		return pmPriceType;
+	}
+
+	/**
+	 * @param pmPriceType the pmPriceType to set
+	 */
+	public void setPmPriceType(PmParameter pmPriceType) {
+		this.pmPriceType = pmPriceType;
+	}
+
+	/**
+	 * @return the supplierItemPriceList
+	 */
+	public List<FLCtSupplierItemVO> getSupplierItemPriceList() {
+		return supplierItemPriceList;
+	}
+
+	/**
+	 * @param supplierItemPriceList the supplierItemPriceList to set
+	 */
+	public void setSupplierItemPriceList(
+			List<FLCtSupplierItemVO> supplierItemPriceList) {
+		this.supplierItemPriceList = supplierItemPriceList;
 	}
 
 

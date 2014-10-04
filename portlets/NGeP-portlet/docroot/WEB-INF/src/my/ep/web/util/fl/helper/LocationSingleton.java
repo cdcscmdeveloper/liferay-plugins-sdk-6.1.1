@@ -14,12 +14,13 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZoneDtl;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -1909,6 +1910,53 @@ public class LocationSingleton {
 					divisions.add(division);
 				}
 				PmDistrict pmDistrict = locCriteria.getPmDistrict();
+
+				if (null != pmDistrict && !districts.contains(pmDistrict)) {
+					if (divisonNode == null) {
+						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+								locCriteria, stateNode);
+
+					} else {
+						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+								locCriteria, divisonNode);
+
+					}
+					districts.add(pmDistrict);
+				}
+				states.add(pmState);
+			}
+		} else {
+
+		}
+		return root;
+	}
+	public TreeNode constuctContractTreeNode(CtContractZone zone) {
+		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
+		if (zone != null) {
+			TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
+					zone, root);
+			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			List<PmDistrict> districts = new ArrayList<PmDistrict>();
+			TreeNode stateNode = null;
+			TreeNode divisonNode = null;
+			// List<TreeNode> locations = new ArrayList<TreeNode>();
+			 for (CtContractZoneDtl locCriteria : zone.getCtContractZoneDtls()) {
+				PmState pmState = locCriteria.getState();
+
+				if (null != pmState && !states.contains(pmState)) {
+					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+							locCriteria, zoneNode);
+					// locations.add(root);
+				}
+				PmDivision division = locCriteria.getDivision();
+
+				if (null != division && !divisions.contains(pmState)) {
+					divisonNode = new DefaultTreeNode(
+							QTConstants.NODE_DIVISION, locCriteria, stateNode);
+					divisions.add(division);
+				}
+				PmDistrict pmDistrict = locCriteria.getDistrict();
 
 				if (null != pmDistrict && !districts.contains(pmDistrict)) {
 					if (divisonNode == null) {
