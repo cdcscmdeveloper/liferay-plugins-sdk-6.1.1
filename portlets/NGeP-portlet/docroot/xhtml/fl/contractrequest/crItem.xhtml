@@ -123,6 +123,13 @@
 						required="true" requiredMessage="Please input the quantity.">
 						<p:ajax update="subTotalTxt"
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
+							<p:commandLink oncomplete="reqItemInfo.show();"
+					action="#{contractRequestBackingBean.reqItemInfoList(item)}"
+					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
+					<p:graphicImage library="ep/images/design" name="tooltips.png"
+						value="/resources/ep/images/design/tooltips.png"
+						title="Request Item Information" />
+					</p:commandLink>
 					</p:inputText>
 				</p:column>
 				<p:column headerText="Sub Total" style="text-align:right">
@@ -426,5 +433,77 @@
 				process="@this,receivingOfficerDt">
 			</p:commandButton>
 		</div>
+	</p:dialog>
+	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
+		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
+		modal="true" width="900" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{contractRequestBackingBean.managedBean.itemName}"
+						size="60" /></td>
+			</tr>
+			<tr>		
+				<td><p:outputLabel value="#{lbl['lbl.fl.requested.qty']}" style="text-align:right"/></td>
+				<td><p:inputText disabled="true" 
+						value="#{contractRequestBackingBean.managedBean.quantity ==0 ? 'N/A' : contractRequestBackingBean.managedBean.quantity}"
+						size="35" ><f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" /></p:inputText></td>
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.price.type']}" /></td>
+				<td><p:inputText disabled="true" rendered="#{contractRequestBackingBean.managedBean.priceType != null}"
+						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.priceType)}" 
+						size="35" /></td>					
+			</tr>
+			<tr>			
+				<td><p:outputLabel value="#{lbl['lbl.fl.standard.price']}" rendered="#{contractRequestBackingBean.managedBean.standardPrice}"/></td>
+				<td><p:inputText disabled="true"  rendered="#{contractRequestBackingBean.managedBean.standardPrice}"
+						value="#{contractRequestBackingBean.managedBean.standardUnitPrice}" 
+						size="35" >
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+							</p:inputText></td>					
+			</tr>
+		</table> 
+		<h:panelGroup >
+			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
+				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
+					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
+					rowKey="#{purchasedItem}">
+					<ac:paginator for="reqItemInfoDt" />
+					<p:column headerText="Zone" >
+						<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" >
+							<p:treeNode type="zone">
+								<h:outputText value="#{location.zoneName}" />
+							</p:treeNode>
+							<p:treeNode type="state">
+								<h:outputText value="#{location.state.stateName}" />
+							</p:treeNode>
+							<p:treeNode type="division">
+								<h:outputText value="#{location.division.divisionName}" />
+							</p:treeNode>
+							<p:treeNode type="district">
+								<h:outputText value="#{location.district.districtName}" />
+							</p:treeNode>
+						</p:tree>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.from.qty']}" style="text-align:right" >
+						<h:outputText value="#{reqItemInfoList.supplierItemPrice.fromQty}" styleClass="colFloatRight" >
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+						</h:outputText>			
+					</p:column>
+					<p:column headerText="#{lbl['lbl.fl.to.qty']}" style="text-align:right" >
+						<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" >
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
+						</h:outputText>			
+					</p:column>
+					
+				</p:dataTable>
+			</p:panel>
+		</h:panelGroup>
 	</p:dialog>
 </ui:composition>
