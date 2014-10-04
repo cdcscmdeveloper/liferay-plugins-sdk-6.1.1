@@ -534,22 +534,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
-	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {
-		List<TplSpecEstimation> specEstimations = null;
-		if (specQuestion.getTplSpecMaster().isEstCostReq() && 
-				TemplateSpecHelper.getInstance().isPriceTypeStandard(
-						specQuestion.getClPriceTypeCode().getParameterCode())) {
-			
-			specEstimations = new ArrayList<TplSpecEstimation>();
-			
-			TplSpecEstimation specEstimation = new TplSpecEstimation();
-			specEstimation.setTplSpecQuestion(specQuestion);
-			
-			specEstimations.add(specEstimation);
-		}
-		
+	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {		
 		specQuestion.setTplSpecTierQties(null);
-		specQuestion.setTplSpecEstimations(specEstimations);
+		
+		TemplateSpecHelper.getInstance().resetEstimations(specQuestion);
 	}
 	
 	public void answerTypeChange(TplSpecQuestion specQuestion) {

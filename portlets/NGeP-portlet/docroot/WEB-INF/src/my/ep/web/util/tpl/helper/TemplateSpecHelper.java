@@ -162,7 +162,9 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
-								newSpecQuestion.setTplSpecEstimations(null);
+								
+								resetEstimations(newSpecQuestion);
+								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
 								
@@ -373,6 +375,22 @@ public class TemplateSpecHelper {
 		}
 
 		return false;
+	}
+	
+	public void resetEstimations(TplSpecQuestion specQuestion) {
+		List<TplSpecEstimation> specEstimations = null;
+		if (specQuestion.getTplSpecMaster().isEstCostReq() && 
+				isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+			
+			specEstimations = new ArrayList<TplSpecEstimation>();
+			
+			TplSpecEstimation specEstimation = new TplSpecEstimation();
+			specEstimation.setTplSpecQuestion(specQuestion);
+			
+			specEstimations.add(specEstimation);
+		}
+		
+		specQuestion.setTplSpecEstimations(specEstimations);
 	}
 	
 	private void setUserDetails(BaseEntity baseObject) {
