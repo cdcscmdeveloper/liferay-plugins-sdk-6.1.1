@@ -109,19 +109,29 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 							.setPurchaseRequestList(purchaseRequestList);
 
 					Long statusId = null;
+					int completeCount = 0;
+					boolean isCancelled = false;
+					
 					for (ScPurchaseRequest scPurchaseRequest : purchaseRequestList) {
 						statusId = scPurchaseRequest.getScLoa().getPmStatus()
 								.getStatusId();
-						if (!QTStatusConst.LOA_PENDING_VERIFICATION
-								.equals(statusId)
-								&& !QTStatusConst.LOA_COMPLETED
-										.equals(statusId)
-								&& !QTStatusConst.LOA_REJECTED.equals(statusId)) {
-							getManagedBean().setShowBPMButtons(false);
-							break;
-						} else {
-							getManagedBean().setShowBPMButtons(true);
+						
+						if (QTStatusConst.LOA_REJECTED.equals(statusId)) {
+							isCancelled = true;
+							
+						} else if (!QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId) && 
+								!QTStatusConst.LOA_COMPLETED.equals(statusId)) {
+							
+							continue;
 						}
+						
+						completeCount++;
+					}
+					
+					if (isCancelled && completeCount == purchaseRequestList.size()) {
+						getManagedBean().setShowBPMButtons(true);
+					} else {
+						getManagedBean().setShowBPMButtons(false);
 					}
 				}
 			}
