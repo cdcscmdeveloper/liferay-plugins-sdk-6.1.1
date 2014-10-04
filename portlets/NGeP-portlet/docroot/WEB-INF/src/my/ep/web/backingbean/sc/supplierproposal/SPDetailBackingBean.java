@@ -1203,52 +1203,50 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	/*public String prepareTechnicalViewAction(
-			ScQtProposalChecklist scQtProposalChecklist) {
-		debugLogger("prepareTechnicalViewAction");
-
-		String definationType = scQtProposalChecklist.getScQtCheckList()
-				.getDefinationType().getParameterCode();
-
-		getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
-		getManagedBean().setScQtCheckList(
-				scQtProposalChecklist.getScQtCheckList());
-
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
-				.equalsIgnoreCase(definationType)) {
-			return retrieveSampleDetails(scQtProposalChecklist);
-
-		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-				.equalsIgnoreCase(definationType)) {
-			String docDefinitionKey = scQtProposalChecklist.getScQtCheckList()
-					.getPmDocument().getDocDefinitionKey();
-
-			if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
-					.equalsIgnoreCase(docDefinitionKey)) {
-				return retrieveTecCompanyExpDtls(scQtProposalChecklist);
-
-			} // to check proposalchecklist is technicalspecification -
-				// technical EMPL_LIST_PAGE
-			else if (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST
-					.equalsIgnoreCase(docDefinitionKey)) {
-				return retriveTechnicalStaffDtls(scQtProposalChecklist);
-
-			}
-		} else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
-				.equalsIgnoreCase(definationType)) {
-			String docDefinitionKey = scQtProposalChecklist.getScQtCheckList()
-					.getPmDocument().getDocDefinitionKey();
-
-			if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
-					.equalsIgnoreCase(docDefinitionKey)) {
-
-				return retrieveEmployeeDtls(scQtProposalChecklist);
-
-			}
-		}
-
-		return null;
-	}*/
+	/*
+	 * public String prepareTechnicalViewAction( ScQtProposalChecklist
+	 * scQtProposalChecklist) { debugLogger("prepareTechnicalViewAction");
+	 * 
+	 * String definationType = scQtProposalChecklist.getScQtCheckList()
+	 * .getDefinationType().getParameterCode();
+	 * 
+	 * getManagedBean().setQtProposalChecklist(scQtProposalChecklist);
+	 * getManagedBean().setScQtCheckList(
+	 * scQtProposalChecklist.getScQtCheckList());
+	 * 
+	 * if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
+	 * .equalsIgnoreCase(definationType)) { return
+	 * retrieveSampleDetails(scQtProposalChecklist);
+	 * 
+	 * } else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+	 * .equalsIgnoreCase(definationType)) { String docDefinitionKey =
+	 * scQtProposalChecklist.getScQtCheckList()
+	 * .getPmDocument().getDocDefinitionKey();
+	 * 
+	 * if (SourcingConstants.DOC_DEF_KEY_TEC_COMPANY_EXPERIENCE_FOR_FEDERAL_GOV
+	 * .equalsIgnoreCase(docDefinitionKey)) { return
+	 * retrieveTecCompanyExpDtls(scQtProposalChecklist);
+	 * 
+	 * } // to check proposalchecklist is technicalspecification - // technical
+	 * EMPL_LIST_PAGE else if
+	 * (SourcingConstants.DOC_DEF_KEY_TECHNICAL_STAFF_LIST
+	 * .equalsIgnoreCase(docDefinitionKey)) { return
+	 * retriveTechnicalStaffDtls(scQtProposalChecklist);
+	 * 
+	 * } } else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_WEB_FORM
+	 * .equalsIgnoreCase(definationType)) { String docDefinitionKey =
+	 * scQtProposalChecklist.getScQtCheckList()
+	 * .getPmDocument().getDocDefinitionKey();
+	 * 
+	 * if (SourcingConstants.DOC_DEF_KEY_NO_OF_EMPLOYEES
+	 * .equalsIgnoreCase(docDefinitionKey)) {
+	 * 
+	 * return retrieveEmployeeDtls(scQtProposalChecklist);
+	 * 
+	 * } }
+	 * 
+	 * return null; }
+	 */
 
 	private String retrieveSampleDetails(
 			ScQtProposalChecklist scQtProposalChecklist) {
@@ -1843,7 +1841,7 @@ public class SPDetailBackingBean extends
 		}
 	}
 
-	private String retrieveSupplierDtls(
+	public String retrieveSupplierDtls(
 			ScQtProposalChecklist scQtProposalChecklist) {
 		long supplierId = getManagedBean().getSupplierId();
 		log.info("Supplier Id : " + supplierId);
