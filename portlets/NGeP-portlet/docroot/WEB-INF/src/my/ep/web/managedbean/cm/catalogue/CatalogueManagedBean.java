@@ -10,17 +10,23 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.exception.EpException;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -29,11 +35,15 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierZone;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -43,13 +53,9 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
-import my.ep.util.EpPropertiesUtils;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import my.ep.constant.MessageConst;
-import javax.faces.context.FacesContext;
-import my.ep.util.MessageUtils;
 
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
@@ -329,7 +335,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				}
 				log.debug("stateLs"+stateLs);
+				
+				FacesScopes facesScopes = new FacesScopes();
+				Long userId = facesScopes.getUserSessionBean().getUserId();
 
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(userId);
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
+				String orgProfileId = "#"+userOrg.getPmOrgProfile().getOrgProfileId()+"#";
+				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(new SearchFilterBean("agencyList", SearchOperator.OPERATOR_IS_NULL.value(), null), 
+						new SearchFilterBean("agencyList", SearchOperator.OPERATOR_LIKE.value(), orgProfileId, SearchCondition.CONDITION_OR.value()));
+				searchBean.getDataFilterBeans().add(agencyFilterBean);
+				
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
 				
@@ -344,8 +363,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					return new SearchResultBean();
 				}
 				
-				FacesScopes facesScopes = new FacesScopes();
-				Long userId = facesScopes.getUserSessionBean().getUserId();
 				reqDTO.setUserId(userId);
 				log.debug("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
