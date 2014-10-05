@@ -186,6 +186,15 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int evaluationtechnicalTableRow;
 	private int evaluationfinancialTableRow;
 	private int evaluationsampleTableRow;
+	private List<TplSpecZoneDtl> specZoneDtls;
+
+	public List<TplSpecZoneDtl> getSpecZoneDtls() {
+		return specZoneDtls;
+	}
+
+	public void setSpecZoneDtls(List<TplSpecZoneDtl> specZoneDtls) {
+		this.specZoneDtls = specZoneDtls;
+	}
 
 	public int getEvaluationsampleTableRow() {
 		return evaluationsampleTableRow;
