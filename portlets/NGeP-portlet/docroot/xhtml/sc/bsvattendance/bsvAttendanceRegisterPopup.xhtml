@@ -27,10 +27,10 @@
 							style="float:left;" />
 					</p:column>
 					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
+						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save" process="@all"
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('null')}" />
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
-							icon="ui-icon-check"
+							icon="ui-icon-check" process="@all"
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" />
 					</p:column>
 				</p:row>
@@ -109,7 +109,7 @@
 				value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
 				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
 				selection="#{bsvAttendanceBackingBean.managedBean.scQtBriefingAttendance}"
-				selectionMode="single">
+				selectionMode="multiple">
 
 				<p:columnGroup type="header">
 					<p:row>
@@ -159,8 +159,8 @@
 					</p:column>
 					<p:column>
 						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}">
-							<p:ajax
-								listener="#{qTBusinessOwnerBackingBean.getConsolidateSelectAll}" />
+							<p:ajax update="attendanceDetailstbl" partialSubmit="true"
+								listener="#{bsvAttendanceBackingBean.updateIsAttandedFlag(scQtBriefAttendace)}" process="this"/>
 						</p:selectBooleanCheckbox>
 					</p:column>
 				</c:if>
@@ -190,13 +190,13 @@
 
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-					process="@this,attendanceDetailstbl" partialSubmit="true"
+					process="attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
 					action="#{bsvAttendanceBackingBean.addAttendanceForBSV}"
 					icon="ui-icon-add" />
 
 				<p:commandButton value="#{lbl['lbl.sc.action.delete']}"
-					process="@this,attendanceDetailstbl" partialSubmit="true"
+					process="attendanceDetailstbl" partialSubmit="true"
 					update="attendanceDetailstbl"
 					action="#{bsvAttendanceBackingBean.deleteBsvAttandances}"
 					icon="ui-icon-delete" />
