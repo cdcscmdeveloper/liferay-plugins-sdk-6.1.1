@@ -44,37 +44,8 @@
 				action="#{supplierProposalDetailBackingBean.saveTechEmployeesDtlAction(true)}"
 				rendered="#{!supplierProposalDetailBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scQtCheckListValue.allEmployee}" />
 				</c:if>
-		<c:if test="#{'CH' eq chkDefinationKey}">
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(false)}"
-				process="@all" partialSubmit="true" update="@all" />
-
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				action="#{supplierProposalDetailBackingBean.saveFinancialCashOnHandAction(true)}"
-				process="@all" partialSubmit="true" update="@all"
-				icon="ui-icon-check" />
-		</c:if>
-
-		<c:if test="#{'AL' eq chkDefinationKey}">
-
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				process="@all" partialSubmit="true" update="@all"
-				action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(false)}" />
-
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check" process="@all" partialSubmit="true"
-				update="@all"
-				action="#{supplierProposalDetailBackingBean.saveAssetLiabilityAction(true)}" />
-		</c:if>
-		<c:if test="#{'BS' eq chkDefinationKey}">
-			<p:commandButton value="#{lbl['lbl.btn.save']}" icon="ui-icon-save"
-				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(false)}"
-				partialSubmit="true" process="@all" update="@all" />
-			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				icon="ui-icon-check"
-				action="#{supplierProposalDetailBackingBean.saveBankStatementAction(true)}"
-				partialSubmit="true" process="@all" update="@all" />
-		</c:if>
+		
+			
 	</c:if>
 
 </ui:composition>
