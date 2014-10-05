@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,87 +7,15 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<ui:define name="resourceSection">
-	</ui:define>
 
-
-	<ui:define name="contentSection">
-
-		<div>
-			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				icon="ui-icon-back" style="float:left;"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
-
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="float:right;" icon="ui-icon-save"
-				action="#{evaluationBackingBean.saveFinSupplierInfoDtls}" />
-
-
-
-		</div>
-		<p:spacer height="75"></p:spacer>
-
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.eva.compliance.smpl.sup.code']}"></h:outputLabel></td>
-					<td><p:inputText disabled="true"
-							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
-					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea rows="2" cols="100" disabled="true"
-							value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"
-							style="width:90%"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
-
-
-		<p:panel>
-
-			<p:tabView id="supplierinfotabViewid" dynamic="true">
-				<ui:param name="smSupplier"
-					value="#{evaluationBackingBean.managedBean.smSupplier}" />
-				<ui:param name="smAppl"
-					value="#{evaluationBackingBean.managedBean.smAppl}" />
-
-				<p:tab id="tab1" title="#{lbl['lbl.sc.sp.supp.info']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/supplierDetails.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/branchInfo.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab3" title="#{lbl['lbl.sc.sp.capital.info']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/capitalInfo.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab4" title="#{lbl['lbl.sc.sp.personnel']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/personnelInfo.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab5" title="#{lbl['lbl.sc.sp.bank.info']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/bankInfo.xhtml" />
-				</p:tab>
-
-				<p:tab id="tab6" title="#{lbl['lbl.sc.sp.categories.code']}"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/sc/supplierproposal/category.xhtml" />
-				</p:tab>
-			</p:tabView>
-
-		</p:panel>
-	</ui:define>
-
-
-
+	<h:panelGroup id="govtotalContractAmount">
+		<ui:param name="scoringPnlId" value="govcontractorAmountId" />
+		<ui:param name="scoringList"
+			value="#{evaluationBackingBean.managedBean.technicalGovNoOfContracts}"></ui:param>
+		<ui:param name="scoringPnlName"
+			value="#{lbl['lbl.sc.eva.cmpny.score.tot.contract.amount']}"></ui:param>
+		<ui:include src="evaluationScoring.xhtml"></ui:include>
+	</h:panelGroup>
 
 
 </ui:composition>

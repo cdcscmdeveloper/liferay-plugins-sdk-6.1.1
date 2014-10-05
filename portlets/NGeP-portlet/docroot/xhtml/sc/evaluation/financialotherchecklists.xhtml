@@ -18,7 +18,7 @@
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
 				style="float:left;" icon="ui-icon-back"
-				action="#{evaluationBackingBean.evaluationBackaction}" />
+				action="#{evaluationBackingBean.financialBackaction}" />
 
 			<ui:include src="financialotherchecklistbuttons.xhtml"></ui:include>
 
@@ -75,10 +75,14 @@
 			value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
 		<ui:param name="noOfContracts"
 			value="#{evaluationBackingBean.managedBean.noOfContractsProposalScore}"></ui:param>
+		<ui:param name="docDefinationKey"
+			value="#{evaluationBackingBean.managedBean.docDefinitionKey}"></ui:param>
 
 		<ui:include src="#{evaluationBackingBean.managedBean.proposalPage}"></ui:include>
+		<c:if test="#{'SD' ne docDefinationKey}">
 
-		<ui:include src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
+			<ui:include src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
+		</c:if>
 
 
 	</ui:define>
