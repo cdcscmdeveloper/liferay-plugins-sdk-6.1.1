@@ -25,13 +25,15 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.util.MessageUtils;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.bidding.ScheduleBiddingManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -45,11 +47,28 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean(name = "scheduleBiddingBB")
 @ViewScoped
 public class ScheduleBiddingBackingBean extends
-		BaseBackingBean<ScheduleBiddingManagedBean> {
+		SourcingBaseBackingBean<ScheduleBiddingManagedBean> {
 
 	public ScheduleBiddingBackingBean() {
 		System.out.println("******retriveItemsToBid() called********");
 
+	}
+	
+	public void preRenderView() {
+		try {
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+
+			Long qtId = Long.valueOf(dpDataType.getSourceId());
+			// Long qtId = 146L;
+			
+			retriveItemsToBid(qtId);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
 	}
 
 	public void applyBidDates() {
@@ -168,9 +187,7 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-	public void retriveItemsToBid() {
-
-		Long qtId = 146L;
+	public void retriveItemsToBid(Long qtId) {
 		IScheduleBiddingSO scheduleBiddingSO = null;
 
 		try {
