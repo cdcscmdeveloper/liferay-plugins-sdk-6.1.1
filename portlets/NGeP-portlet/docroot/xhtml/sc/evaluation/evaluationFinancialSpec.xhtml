@@ -33,20 +33,23 @@
 
 
 		<p:panel>
-			<p:tabView var="zones" dynamic="true" cache="true" orientation="left"
+			<p:tabView var="zones" orientation="left"
 				activeIndex="#{evaluationBackingBean.managedBean.specZoneTabIndex}"
 				value="#{evaluationBackingBean.managedBean.finSpecZoneBean}">
-				<p:ajax event="tabChange" update="@form"
+				<p:ajax event="tabChange"
 					listener="#{evaluationBackingBean.specTabChange}" />
 				<p:tab title="#{zones.tplSpecZoneDtl.zoneName}">
+
 					<ui:param name="finSpecsupplierList"
 						value="#{zones.finSpecSupplierList}"></ui:param>
 					<ui:param name="finSpecofferPrice" value="#{zones.offerPrice}"></ui:param>
+
 					<ui:param name="finSpecSupplierId"
 						value="withZone#{zones.tplSpecZoneDtl.zoneName}"></ui:param>
 
 					<ui:include
 						src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+
 				</p:tab>
 
 			</p:tabView>
