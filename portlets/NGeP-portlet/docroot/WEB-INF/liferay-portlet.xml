@@ -1406,7 +1406,7 @@
 		</css-class-wrapper>
 	</portlet>
 		<portlet>
-		<portlet-name>Evaluation Meeting</portlet-name>
+		<portlet-name>Coordinate - Meeting</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>

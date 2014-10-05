@@ -97,7 +97,7 @@
 			<portlet id="scSupplierA1Form" />
 			<portlet id="scEvaluation Stage2" />
 			<portlet id="Proposal Evaluation" />
-			<portlet id="Evaluation Meeting" />
+			<portlet id="Coordinate - Meeting" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
