@@ -265,15 +265,15 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE, "qtdetails");
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
-				+ SCProcessNameConst.COORDINATE_EC_MEETING, "coordinatemeeting");
+				+ SCProcessNameConst.COORDINATE_EC_MEETING, "coordinate-meeting");
 		temp.put(SCProcessNameConst.OC_EVALUATION_PROCESS_NAME
-				+ SCProcessNameConst.COORDINATE_OC_MEETING, "coordinatemeeting");
+				+ SCProcessNameConst.COORDINATE_OC_MEETING, "coordinate-meeting");
 		temp.put(SCProcessNameConst.TEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_TEC_MEETING,
-				"coordinatemeeting");
+				"coordinate-meeting");
 		temp.put(SCProcessNameConst.FEC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.COORDINATE_FEC_MEETING,
-				"coordinatemeeting");
+				"coordinate-meeting");
 
 		temp.put(SCProcessNameConst.EC_EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_EC_EVALUATION,
