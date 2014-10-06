@@ -26,7 +26,8 @@
 				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 			</h:column>
 			<h:column>
-				<p:selectOneMenu id="decisionType" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}">
+				<p:selectOneMenu id="decisionType" required="true" label="#{lbl['lbl.sc.decision']}"
+					value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.decision.parameterCode}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 					<p:ajax event="change" 
 						update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],[id$=rePublishPanel],[id$=itemSupplierPanel],[id$=itemSupplierPanel])" 
@@ -44,7 +45,8 @@
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 				</h:column>
 				<h:column>
-					<p:selectOneRadio id="recommendType" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}">
+					<p:selectOneRadio id="recommendType" required="true" label="#{lbl['lbl.sc.recomend.type']}"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 						<p:ajax event="change" update="@([id$=itemSupplierPanel])" 
 							listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" />
@@ -61,7 +63,8 @@
 						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 					</h:column>
 					<h:column>
-						<p:selectOneRadio id="biddingEndorsement" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}">
+						<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
+							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}">
 							<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
 			   			</p:selectOneRadio>
 					</h:column>
@@ -76,7 +79,8 @@
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 				</h:column>
 				<h:column>
-					<p:selectOneRadio id="loiLoaPreparedBy" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}">
+					<p:selectOneRadio id="loiLoaPreparedBy" required="true" label="#{lbl['lbl.sc.loi.loa.prepared.by']}"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.loiLoaBy}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getLoiLoaPreparedByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>
@@ -86,7 +90,8 @@
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 				</h:column>
 				<h:column>
-					<p:selectOneRadio id="fwdHigherAuthority" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}">
+					<p:selectOneRadio id="fwdHigherAuthority" required="true" label="#{lbl['lbl.sc.forward.to.higher.authority']}"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.higherAuthReq}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getFwdHigherAuthorityRadioBtn()}" />
 						<p:ajax event="change" update="@([id$=fwdHigherAuthorityPanel])" 
 							listener="#{suppFinalizationBackingBean.fwdHigherAuthorityEvent}" process="@this" />
@@ -137,9 +142,11 @@
 				rendered="#{suppFinalizationBackingBean.managedBean.reEvaluate}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.reevaluate.by']}" />
+					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 				</h:column>
 				<h:column>
-					<p:selectOneRadio id="reEvaluateBy" value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}">
+					<p:selectOneRadio id="reEvaluateBy" required="true" label="#{lbl['lbl.sc.reevaluate.by']}"
+						value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
 		   			</p:selectOneRadio>
 				</h:column>

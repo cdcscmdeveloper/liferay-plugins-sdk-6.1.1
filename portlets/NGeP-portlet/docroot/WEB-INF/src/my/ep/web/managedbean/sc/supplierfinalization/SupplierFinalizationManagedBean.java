@@ -5,7 +5,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -79,7 +78,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean reqSpecChanges;
 	private boolean reEvaluateReqForTech;
 	private boolean reEvaluateReqForFin;*/
-	private PmParameter recommendBy;
+	private String recommendBy;
 	private String selectionMode = QTConstants.SF_SINGLE;
 	private String awardSupplier; 
 	
@@ -301,14 +300,14 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the recommendBy
 	 */
-	public PmParameter getRecommendBy() {
+	public String getRecommendBy() {
 		return recommendBy;
 	}
 
 	/**
 	 * @param recommendBy the recommendBy to set
 	 */
-	public void setRecommendBy(PmParameter recommendBy) {
+	public void setRecommendBy(String recommendBy) {
 		this.recommendBy = recommendBy;
 	}
 

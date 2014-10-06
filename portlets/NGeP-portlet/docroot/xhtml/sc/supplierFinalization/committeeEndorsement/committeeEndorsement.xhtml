@@ -11,7 +11,7 @@
 		
 		<p:dataTable id="committeeEndorsement" var="endorsement"
 			value="#{suppFinalizationBackingBean.managedBean.committeeEndorsementList}"
-			rowKey="#{endorsement}" rowIndexVar="index">
+			rowKey="#{endorsement}" rowIndexVar="index" rows="10">
 			<ac:paginator for="committeeEndorsement" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}" style="width:20%">

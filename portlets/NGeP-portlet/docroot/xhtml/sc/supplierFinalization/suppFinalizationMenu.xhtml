@@ -25,7 +25,7 @@
 				<p:commandButton value="#{lbl[buttonLabel]}"  
 					styleClass="ui-button"
 					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-					action="#{suppFinalizationBackingBean.submitSuppFinalization}"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
 					partialSubmit="true"
 					process="@form"
 					update="@form" />

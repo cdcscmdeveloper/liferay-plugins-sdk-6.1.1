@@ -15,11 +15,13 @@
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.recommend.by']}" />
+				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 			</h:column>
 			<h:column>
-				<p:selectOneMenu id="recommendBy" value="#{suppFinalizationBackingBean.managedBean.recommendBy.parameterCode}">
+				<p:selectOneMenu id="recommendBy" required="true" label="#{lbl['lbl.sc.recommend.by']}"
+					value="#{suppFinalizationBackingBean.managedBean.recommendBy}">
 					<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
-					<p:ajax event="change" update=":form:tab:onlineBiddingPanel,:form:tab:supplierListTblPanel" 
+					<p:ajax event="change" update="@([id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
 						listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
 	   			</p:selectOneMenu>
 			</h:column>
@@ -194,7 +196,7 @@
 				</p:column>
 				
 				<p:column>
-					<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}" />
+					<h:outputText value="Active" />
 				</p:column>
 				
 				<p:column>
