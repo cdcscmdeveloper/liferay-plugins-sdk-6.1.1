@@ -16,7 +16,7 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:poll update="@([id$=jobBeanDt,biddingListPanel])" interval="1"/>
+		<p:poll update="@form" interval="5"/>
 		
 		<p:panel header="#{schedulerManagerBB.managedBean.scheduler.schedulerName} jobs List" toggleable="true">
 		
