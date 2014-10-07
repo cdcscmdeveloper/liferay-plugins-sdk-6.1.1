@@ -360,7 +360,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else {
+				}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null){
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}
+				else {
 					reqDTO.setFlRequestId(resDTO.getFlRequestId());
 					resDTO = iFulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 					setFulfilmentRequestField(resDTO);
