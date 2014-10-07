@@ -68,27 +68,15 @@
 					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
-					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqPendingSubmission}"
-							onclick="gotoPage([{name:'action',value:'save'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
-					</p:commandLink>
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or 
 						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" 
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 					 <p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
-					<p:spacer width="5" rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission) or
-						data.status.statusId == CtStatusConst.pqApproved or 
-						(data.status.statusId == CtStatusConst.pqRejected and data.ctCircular.latestCircularVer != null)}" />	
-					<p:commandLink rendered="#{!(data.status.statusId == CtStatusConst.pqPendingSubmission)}"
-					onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+					<p:spacer width="5" />	
+					<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 					 <p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
-					</p:commandLink>	
-						<!-- 
-						<p:spacer width="1" />
-						<p:commandButton title="Cancel" icon="ui-icon-cancel" 
-							onclick="gotoPage([{name:'action',value:'cancel'},{name:'circularVerId',value:'#{data.circularVerId}'}])"  />
-						 -->		
+					</p:commandLink>		
 				</p:column>
 			</p:dataTable>		
 			<p:remoteCommand name="gotoPage" action="#{panelBackingBean.gotoPage}" />

@@ -65,20 +65,13 @@
 					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center">
-					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqPendingSubmission}"
-						onclick="gotoPage([{name:'action',value:'save'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
-					</p:commandLink>
 					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or 
 						(data.status.statusId == CtStatusConst.cqRejected and data.ctCircular.latestCircularVer != null)}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="edit.png" value="/css/images/design/edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>
-					<p:spacer width="5" rendered="#{data.status.statusId == CtStatusConst.cqPendingSubmission or
-						data.status.statusId == CtStatusConst.cqApproved or 
-						(data.status.statusId == CtStatusConst.cqRejected and data.ctCircular.latestCircularVer != null)}" />
-					<p:commandLink rendered="#{!(data.status.statusId == CtStatusConst.cqPendingSubmission)}"
-						onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+					<p:spacer width="5" />
+					<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" title="#{lbl['lbl.ct.view']}" />
 					</p:commandLink>
 				</p:column>

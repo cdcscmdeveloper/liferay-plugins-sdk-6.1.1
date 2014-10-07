@@ -576,7 +576,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
+			     if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else{
@@ -701,14 +701,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setAction(action);
 			CircularResDTO resDTO = null;
-			if(action.equalsIgnoreCase("view") || action.equalsIgnoreCase("save")) {
+			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(false);
-				if (action.equalsIgnoreCase("view"))
-					getManagedBean().setOutComes(new String[]{});
-				else
-					getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				getManagedBean().setOutComes(new String[]{});
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
@@ -716,8 +713,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			} else if(action.equalsIgnoreCase("cancel")) {
-				
 			}
 			
 			return "circularBase.xhtml?faces-redirect=true";
