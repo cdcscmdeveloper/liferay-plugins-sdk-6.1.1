@@ -18,7 +18,7 @@ public class SchedulerHelper {
 	private static SchedulerHelper instance;
 	
 	private static List<ScBidSchedule> jobBidScheduleList = new ArrayList<ScBidSchedule>();
-	
+	private static List<Long> jobBidScheduleIdList = new ArrayList<Long>();
 	
 	/**
 	 * Get singleton of SchedulerHelper
@@ -46,6 +46,22 @@ public class SchedulerHelper {
 	 */
 	public void setJobBidScheduleList(List<ScBidSchedule> jobBidScheduleList) {
 		this.jobBidScheduleList = jobBidScheduleList;
+	}
+
+
+	/**
+	 * @return the jobBidScheduleIdList
+	 */
+	public static List<Long> getJobBidScheduleIdList() {
+		return jobBidScheduleIdList;
+	}
+
+
+	/**
+	 * @param jobBidScheduleIdList the jobBidScheduleIdList to set
+	 */
+	public static void setJobBidScheduleIdList(List<Long> jobBidScheduleIdList) {
+		SchedulerHelper.jobBidScheduleIdList = jobBidScheduleIdList;
 	}
 	
 	

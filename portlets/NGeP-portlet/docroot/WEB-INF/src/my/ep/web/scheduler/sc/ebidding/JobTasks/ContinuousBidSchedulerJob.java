@@ -1,5 +1,6 @@
 package my.ep.web.scheduler.sc.ebidding.JobTasks;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,100 +30,73 @@ public class ContinuousBidSchedulerJob implements Job {
 
 		SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 
-		List<ScBidSchedule> localBidScheduleList = schedulerHelper
-				.getJobBidScheduleList();
+		List<Long> localBidScheduleIdList = schedulerHelper
+				.getJobBidScheduleIdList();
+		IBiddingSO biddingSO = null;
+		List<Long> toDeleteIdList = null;
 
-		if (localBidScheduleList != null && localBidScheduleList.size() > 0) {
+		for (int i = 0; i < localBidScheduleIdList.size(); i++) {
 
-			for (int i = 0; i < localBidScheduleList.size(); i++) {
-				ScBidSchedule scBidSchedule = localBidScheduleList.get(i);
-
-				if (scBidSchedule.getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_PENDING_BIDDING)) {
-
-					if (scBidSchedule.getStartDate().equals(getCompareTime())) {
-
-						IBiddingSO biddingSO = null;
-						try {
-							biddingSO = BusinessDelegate.getInstance()
-									.getServiceObject(
-											ModuleCodeConst.SUPPLIER_SELECTION,
-											IBiddingSO.class);
-							BiddingReqDTO reqDTO = new BiddingReqDTO();
-							reqDTO.setBidScheduleId(scBidSchedule
-									.getBidScheduleId());
-							BiddingResDTO resDTO = biddingSO
-									.retrieveBidScheduleById(reqDTO);
-							ScBidSchedule currentSchedule = resDTO
-									.getScBidSchedule();
-
-							if (currentSchedule
-									.getPmStatus()
-									.getStatusId()
-									.equals(scBidSchedule.getPmStatus()
-											.getStatusId())) {
-								currentSchedule.getPmStatus().setStatusId(
-										BidStatusConst.BID_IN_PROGRESS);
-								reqDTO.setScBidSchedule(currentSchedule);
-								resDTO = biddingSO
-										.updateSchedulerJobBidSchedule(reqDTO);
-								if (resDTO.isSuccessful()) {
-									schedulerHelper.getJobBidScheduleList()
-											.set(i, resDTO.getScBidSchedule());
-								}
-							} else {
-
-								schedulerHelper.getJobBidScheduleList().set(i,
-										currentSchedule);
-							}
-						} finally {
-							biddingSO = null;
-						}
+			try {
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				
+				BiddingReqDTO reqDTO = new BiddingReqDTO();
+				reqDTO.setBidScheduleId(localBidScheduleIdList.get(i));
+				BiddingResDTO resDTO = biddingSO
+						.retrieveBidScheduleById(reqDTO);
+				ScBidSchedule currentSchedule = resDTO
+						.getScBidSchedule();
+				if(currentSchedule.getStartDate().equals(getCompareTime())){
+					
+					if (currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_PENDING_BIDDING)) {
+						
+						currentSchedule.getPmStatus().setStatusId(
+								BidStatusConst.BID_IN_PROGRESS);
+						reqDTO.setScBidSchedule(currentSchedule);
+						resDTO = biddingSO
+								.updateSchedulerJobBidSchedule(reqDTO);
+					}else if(currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_CANCELLED)){
+						if(toDeleteIdList == null){
+							toDeleteIdList = new ArrayList<Long>();
+							toDeleteIdList.add(currentSchedule.getBidScheduleId());
+						}else{toDeleteIdList.add(currentSchedule.getBidScheduleId());}
 					}
-				}
-				if (scBidSchedule.getPmStatus().getStatusId()
-						.equals(BidStatusConst.BID_IN_PROGRESS)
-						&& scBidSchedule.getEndDate().equals(getCompareTime())) {
-
-					IBiddingSO biddingSO = null;
-
-					try {
-						biddingSO = BusinessDelegate.getInstance()
-								.getServiceObject(
-										ModuleCodeConst.SUPPLIER_SELECTION,
-										IBiddingSO.class);
-						BiddingReqDTO reqDTO = new BiddingReqDTO();
-						reqDTO.setBidScheduleId(scBidSchedule
-								.getBidScheduleId());
-						BiddingResDTO resDTO = biddingSO
-								.retrieveBidScheduleById(reqDTO);
-						ScBidSchedule currentSchedule = resDTO
-								.getScBidSchedule();
-						if (currentSchedule
-								.getPmStatus()
-								.getStatusId()
-								.equals(scBidSchedule.getPmStatus()
-										.getStatusId())) {
-							currentSchedule.getPmStatus().setStatusId(
-									BidStatusConst.BID_COMPLETED);
-							reqDTO.setScBidSchedule(currentSchedule);
-							resDTO = biddingSO
-									.updateSchedulerJobBidSchedule(reqDTO);
-							if (resDTO.isSuccessful()) {
-								schedulerHelper.getJobBidScheduleList().set(i,
-										currentSchedule);
-							}
-						} else {
-							schedulerHelper.getJobBidScheduleList().set(i,
-									currentSchedule);
+						
+				}else if (currentSchedule.getEndDate().equals(getCompareTime())){
+					//TODO check what if paused bid is not resumed
+					if (currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_IN_PROGRESS)|| currentSchedule.getPmStatus().getStatusId()
+							.equals(BidStatusConst.BID_PAUSED) ){
+						currentSchedule.getPmStatus().setStatusId(
+								BidStatusConst.BID_COMPLETED);
+						reqDTO.setScBidSchedule(currentSchedule);
+						resDTO = biddingSO
+								.updateSchedulerJobBidSchedule(reqDTO);
+						if(resDTO.isSuccessful()){
+							if(toDeleteIdList == null){
+								toDeleteIdList = new ArrayList<Long>();
+								toDeleteIdList.add(currentSchedule.getBidScheduleId());
+							}else{toDeleteIdList.add(currentSchedule.getBidScheduleId());}
 						}
-
-					} finally {
-						biddingSO = null;
+						
 					}
-
+					
 				}
+				
+			} finally {
+				biddingSO = null;
 			}
+		}
+		
+		if (toDeleteIdList != null && toDeleteIdList.size()>0){
+			for(Long deletedId : toDeleteIdList){
+				schedulerHelper
+				.getJobBidScheduleIdList().remove(deletedId);
+			}
+			toDeleteIdList = null;
 		}
 
 	}
