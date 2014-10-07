@@ -150,7 +150,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			String requestNoteNo = getManagedBean().getScRequestNote().getRequestNoteNo();
-			boolean isSuccessful = qtAwardSO.updateLoaListBPMTask(
+			boolean isSuccessful = qtAwardSO.updateBPMTask(
 					requestNoteNo,
 					getManagedBean().getSourceId(),
 					new FacesScopes().getBPMAuthenticationCtxToken(),
