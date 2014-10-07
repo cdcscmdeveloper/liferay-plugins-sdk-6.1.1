@@ -112,13 +112,13 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		debugLogger("preRenderLoiListView");
 		
 		try {
-			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			
-			getManagedBean().setSourceId(sourceId);*/
+			getManagedBean().setSourceId(sourceId);
 			
-			Long sourceId = 1450L;
+			//Long sourceId = 1450L;
 			
 			retrieveLOIList(sourceId);
 			
