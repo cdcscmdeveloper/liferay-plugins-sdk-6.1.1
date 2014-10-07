@@ -11,14 +11,14 @@
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId == 29001 }">
-				<p:tab title="First Review Info">
+				<p:tab title="#{lbl['lbl.sm.complaint.first.review.info']}">
 					<ui:include src="complaintFirstReviewInfo.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId == 29002 }">
-				<p:tab title="First Review Update">
+				<p:tab title="#{lbl['lbl.sm.complaint.first.review.update']}">
 					<ui:include src="updateComplaintFirstReview.xhtml" />
 				</p:tab>
 			</c:if>	

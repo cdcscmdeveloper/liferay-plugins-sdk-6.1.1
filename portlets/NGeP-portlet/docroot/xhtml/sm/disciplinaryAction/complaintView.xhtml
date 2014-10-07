@@ -12,50 +12,50 @@
 		<f:event listener="#{complaintBackingBean.retrieveAllActiveComplaint}"
 			type="preRenderView" />
 		<div align="right">
-			<p:commandLink value="Pending Show Cause/ Accusation Response"
+			<p:commandLink value="#{lbl['lbl.sm.complaint.pending.shwcause.accstnresp']}"
 				style="color:blue;"
 				action="#{complaintBackingBean.pendingResponseLetterView}"></p:commandLink>
 		</div>
-		<p:panel header="Search" toggleable="true" id="pnlSearch">
+		<p:panel header="#{lbl['lbl.sm.complaint.search']}" toggleable="true" id="pnlSearch">
 			<div align="center">
 				<table style="width: 80%;">
 					<tr>
-						<td><p:outputLabel value="Search by" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
 						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItem itemLabel="EP-No" itemValue="E" />
-								<f:selectItem itemLabel="Company Name" itemValue="CA" />
-								<f:selectItem itemLabel="Complaint No." itemValue="CO" />
-								<f:selectItem itemLabel="MOF No." itemValue="M" />
-								<f:selectItem itemLabel="Registration No." itemValue="R" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.ep.no']}" itemValue="E" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.companyname']}" itemValue="CA" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.no']}" itemValue="CO" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.mofno']}" itemValue="M" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.regno']}" itemValue="R" />
 							</p:selectOneMenu></td>
-						<td><p:outputLabel value="Keyword" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.keyword']}" /></td>
 						<td><p:inputText /></td>
 
-						<td><p:outputLabel value="Status" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItem itemLabel="Open" itemValue="O" />
-								<f:selectItem itemLabel="In Progress" itemValue="P" />
-								<f:selectItem itemLabel="Closed" itemValue="C" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.status.open']}" itemValue="O" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.status.in.progress']}" itemValue="P" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.status.closed']}" itemValue="C" />
 							</p:selectOneMenu></td>
-						<td><p:commandButton value="Search" /></td>
+						<td><p:commandButton value="#{lbl['lbl.sm.button.search']}" /></td>
 					</tr>
 				</table>
 			</div>
 		</p:panel>
 
-		<p:panel header="Complaint" toggleable="true" id="pnlCompList">
+		<p:panel header="#{lbl['lbl.sm.complaint.header']}" toggleable="true" id="pnlCompList">
 			<p:dataTable value="#{complaintBackingBean.managedBean.smComplLs}"
 				var="compl" id="complaintDt"
 				selection="#{complaintBackingBean.managedBean.selectedComplaint}" rowKey="#{compl}">
 
 				<ac:paginator for="complaintDt" />
-				<p:column headerText="Complaint No">
+				<p:column headerText="#{lbl['lbl.sm.complaint.no']}">
 					#{compl.complaintNo}
 				</p:column>
 
-				<p:column headerText="Complaint Date">
+				<p:column headerText="#{lbl['lbl.sm.complaint.date']}">
 					<h:outputText value="#{compl.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
@@ -69,18 +69,18 @@
 				<!-- 				<p:column headerText="MOF No"> -->
 				<!-- 					#{compl.supplierMofNo} -->
 				<!-- 				</p:column> -->
-				<p:column headerText="Supplier Name">
+				<p:column headerText="#{lbl['lbl.sm.suppname']}">
 					#{compl.smSupplier.companyName}
 				</p:column>
 
-				<p:column headerText="Registration No.">
+				<p:column headerText="#{lbl['lbl.sm.regno']}">
 					#{compl.smSupplier.regNo}
 				</p:column>
 
-				<p:column headerText="Status">
+				<p:column headerText="#{lbl['lbl.sm.status']}">
 				</p:column>
 
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink
 						action="#{complaintBackingBean.onComplaintRowSelect(compl.complaintId)}">
 						<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
@@ -92,7 +92,7 @@
 		</p:panel>
 
 		<div align="right">
-			<p:commandButton value="Generate Excel"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.generate.excel']}"></p:commandButton>
 		</div>
 	</ui:define>
 </ui:composition>

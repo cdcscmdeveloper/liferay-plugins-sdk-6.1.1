@@ -14,14 +14,14 @@
 		<p:tabView id="tabComplaint" dynamic="true" orientation="left">
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 0 }">
-				<p:tab title="Initial Review">
+				<p:tab title="#{lbl['lbl.sm.complaint.initial.review']}">
 					<ui:include src="initialReview.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
-				<p:tab title="First PTPK Decision">
+				<p:tab title="#{lbl['lbl.sm.complaint.first.ptk.decision']}">
 					<ui:include src="complaintFirstReviewInfo.xhtml" />
 					<ui:include src="updateComplaintFirstReview.xhtml" />
 				</p:tab>
@@ -29,7 +29,7 @@
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 2 }">
-				<p:tab title="Show Cause Letter">
+				<p:tab title="#{lbl['lbl.sm.complaint.show.cause.letter']}">
 					<ui:include src="updateShowCauseLetterInfo.xhtml" />
 					<ui:include src="updateShowCauseLetterResponse.xhtml" />
 				</p:tab>
@@ -38,7 +38,7 @@
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 3 }">
 
-				<p:tab title="Second PTPK Decision">
+				<p:tab title="#{lbl['lbl.sm.complaint.second.ptk.decision']}">
 					<ui:include src="complaintSecondReviewInfo.xhtml" />
 					<ui:include src="updateComplaintSecondReview.xhtml" />
 				</p:tab>
@@ -46,7 +46,7 @@
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 4 }">
-				<p:tab title="Accusation Letter Info">
+				<p:tab title="#{lbl['lbl.sm.complaint.accusation.letter.info']}">
 					<ui:include src="updateAccusationLetterInfo.xhtml" />
 					<ui:include src="updateAccusationLetterResponse.xhtml" />
 				</p:tab>
@@ -54,11 +54,11 @@
 
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 5 }">
-				<p:tab title="JKTT Decision">
+				<p:tab title="#{lbl['lbl.sm.complaint.jktt.decision']}">
 					<ui:include src="JKTTDecision.xhtml" />
 				</p:tab>
 			</c:if>
-			<p:tab title="Complaint Tracking">
+			<p:tab title="#{lbl['lbl.sm.complaint.tracking']}">
 				<ui:include
 					src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
 			</p:tab>

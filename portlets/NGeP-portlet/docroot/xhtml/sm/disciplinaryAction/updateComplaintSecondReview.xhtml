@@ -5,16 +5,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Second PTPK Decision" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complaint.second.ptk.decision']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* Actual Meeting Date" /></td>
+						value="* #{lbl['lbl.sm.complaint.actual.meeting.date']}" /></td>
 				<td class="tdContent"><p:calendar showOn="button"
 						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 				<td class="tdTitle"><p:outputLabel
-						value="* Meeting Minutes Ref No." /></td>
+						value="* #{lbl['lbl.sm.complaint.minute.ref.no']}" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}" /></td>
 			</tr>
@@ -27,7 +27,7 @@
 <!-- 			</tr> -->
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Remarks" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.remarks']}" /></td>
 				<td class="tdContent" colspan="3"><p:inputTextarea
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionRemark}"
 						rows="8" cols="100" /></td>
@@ -45,17 +45,17 @@
 				-->
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* Upload Decision Report"></p:outputLabel></td>
+						value="* #{lbl['lbl.sm.complaint.upload.dcsn.rpt']}"></p:outputLabel></td>
 				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Decision" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.decision']}" /></td>
 				<td class="tdContent"><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Valid" itemValue="1" />
-						<f:selectItem itemLabel="Invalid" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.valid']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.decision.invalid']}" itemValue="0" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>

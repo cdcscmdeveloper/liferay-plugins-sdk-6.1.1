@@ -7,22 +7,22 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="accusationDialog" header="Accusation Letter"
+	<p:dialog id="accusationDialog" header="#{lbl['lbl.sm.complaint.accusation.letter']}"
 		widgetVar="dlgAccusation" modal="true" height="500" width="1000">
 		<p:media value="/xhtml/sm/disciplinaryAction/sampleShowCause.pdf"
 			width="100%" height="450px">
 		</p:media>
 
 		<div align="right">
-			<p:commandButton value="Download" />
+			<p:commandButton value="#{lbl['lbl.btn.download']}" />
 		</div>
 	</p:dialog>
 
 	<div align="right">
-		<p:commandButton value="Download Accusation Letter"
+		<p:commandButton value="#{lbl['lbl.sm.complaint.accusation.download.header']}"
 			onclick="dlgAccusation.show();"></p:commandButton>
-		<p:commandButton value="Save" />
-		<p:commandButton value="Submit"
+		<p:commandButton value="#{lbl['lbl.sm.button.save']}" />
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
 	<ac:smPanel id="p4">
@@ -33,26 +33,26 @@
 	</ac:smPanel>
 
 
-	<p:panel header="Accusation Letter" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complaint.accusation.letter']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><h:outputText
-						value="* Upload Accusation Letter" /></td>
+						value="* #{lbl['lbl.sm.complaint.accusation.letter.upload']}" /></td>
 				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Date of Issuance" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complaint.date.issuance']}" /></td>
 				<td class="tdContent"><p:calendar showOn="button"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Ref No" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complaint.ref.no']}" /></td>
 				<td class="tdContent"><p:inputText /></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><h:outputText
-						value="* Date of Supplier Received" /></td>
+						value="* #{lbl['lbl.sm.complaint.date.supplier.received']}" /></td>
 				<td class="tdContent"><p:calendar showOn="button"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
