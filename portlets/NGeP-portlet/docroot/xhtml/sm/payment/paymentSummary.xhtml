@@ -9,14 +9,14 @@
 
 	<ui:define name="contentSection">
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-	<p:panel header="Payment Summary">
+	<p:panel header="#{lbl['lbl.sm.payment.summary']}">
 		<p:dataTable value="#{paymentBackingBean.managedBean.newSmBillDtlLs}" var="itemLs">
 			<p:column headerText="Item">
 					#{itemLs.itemDesc}
 					<h:outputText rendered="#{itemLs.pmParameter.parameterCode eq 'SF'}"  value="- #{itemLs.smPersonnel.name}" />
 				</p:column>
 
-			<p:column headerText="Price">
+			<p:column headerText="#{lbl['lbl.sm.price']}">
 					<h:outputText value="#{itemLs.itemPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -25,7 +25,7 @@
 	</p:panel>
 
 		<div align="right">
-			<h3>Total:
+			<h3><h:outputText value="#{lbl['lbl.sm.total']}" />
 			<h:outputText value="#{paymentBackingBean.managedBean.totalAmount}">
 				<f:convertNumber
 					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -35,10 +35,10 @@
 
 			<div align="right">
 			
-			<p:commandButton value="Proceed" id="btnProceed"
+			<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed"
 					action="#{paymentBackingBean.tempPaymentSuccess}"></p:commandButton>
 		
-			<p:commandButton value="Proceed - Payment Gateway" id="btnSubmit" action="#{paymentBackingBean.submitPayment}" />
+			<p:commandButton value="#{lbl['lbl.sm.button.proceed.pymnt.gateway']}" id="btnSubmit" action="#{paymentBackingBean.submitPayment}" />
 				
 			</div>
 

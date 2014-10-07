@@ -8,13 +8,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:panel header="Payment Item" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
+		<p:panel header="#{lbl['lbl.sm.payment.item']}" rendered="#{paymentBackingBean.managedBean.applicationPayment != null}">
 			<p:dataTable value="#{paymentBackingBean.managedBean.applicationPayment}" var="billItem">
-				<p:column headerText="Application Payment">
+				<p:column headerText="#{lbl['lbl.sm.payment.application']}">
 					#{billItem.itemDesc}
 				</p:column>
 				
-				<p:column headerText="Price">
+				<p:column headerText="#{lbl['lbl.sm.price']}">
 					<h:outputText value="#{billItem.itemPrice}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -22,7 +22,7 @@
 			</p:dataTable>
 		</p:panel>
 		
-		<p:panel header="Soft Certificate" rendered="#{not empty paymentBackingBean.managedBean.softCertReqPersonnels}">
+		<p:panel header="#{lbl['lbl.sm.soft.cert']}" rendered="#{not empty paymentBackingBean.managedBean.softCertReqPersonnels}">
 			<p:dataTable
 				value="#{paymentBackingBean.managedBean.softCertReqPersonnels}"
 				var="softCertReq"
@@ -31,18 +31,18 @@
 				
 				<p:column selectionMode="multiple" style="width:2%" />
 				
-				<p:column headerText="Name">
+				<p:column headerText="#{lbl['lbl.sm.soft.cert.name']}">
 					#{softCertReq.name}
 				</p:column>
 				
-				<p:column headerText="Identification No.">
+				<p:column headerText="#{lbl['lbl.sm.soft.cert.idno']}">
 					#{softCertReq.identificationNo}
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		
 		<div align="right">
-			<p:commandButton value="Proceed to Payment" action="#{paymentBackingBean.proceedToPaymentSummary}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" action="#{paymentBackingBean.proceedToPaymentSummary}"></p:commandButton>
 		</div>
 	</ui:define>
 </ui:composition>
