@@ -345,6 +345,12 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.CREATE_BIDDING_DETAILS,
 				SourcingConstants.SCHEDULE_BIDDING_PAGE);
+		temp.put(SCProcessNameConst.MULTI_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.PREPARE_LOI,
+				SourcingConstants.LOI_LIST_PAGE);
+		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.PREPARE_LOI,
+				SourcingConstants.LOI_LIST_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
 
