@@ -27,40 +27,40 @@
 					<p:menuitem value="#{lbl['lbl.qt.tecnical.spec']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 					<p:menuitem value="#{lbl['lbl.qt.finanial.spec']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 					<p:menuitem value="#{lbl['lbl.qt.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}" />
 
 					<p:menuitem value="#{lbl['lbl.qt.bsv.sample']}"
 						action="#{qTDetailBB.qtDetailsTabChange(4)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 					<p:menuitem value="#{lbl['lbl.qt.schedule.contact']}"
 						action="#{qTDetailBB.qtDetailsTabChange(5)}" update="@form"
 						style="white-space: normal;" process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 					<p:menuitem value="#{lbl['lbl.qt.deduction.payment']}"
 						action="#{qTDetailBB.qtDetailsTabChange(6)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 					<p:menuitem value="#{lbl['lbl.qt.documents']}"
 						action="#{qTDetailBB.qtDetailsTabChange(7)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 					<p:menuitem value="#{lbl['lbl.qt.activities']}"
 						action="#{qTDetailBB.qtDetailsTabChange(8)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 					<p:menuitem value="#{lbl['lbl.qt.public.approval']}"
 						action="#{qTDetailBB.qtDetailsTabChange(9)}" update="@form"
 						process="@form"
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}" />
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}" />
 
 				</p:tabMenu></td>
 			<td width="80%" style="vertical-align: top;"><h:panelGroup
@@ -79,7 +79,7 @@
 						<ui:include src="approvalWorkFlowMain.xhtml" />
 					</c:if>
 					<ui:fragment
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_QT_SUBMISSION) or (qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING)}">
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include src="qttechnicalchecklist.xhtml" />
 						</c:if>
@@ -91,7 +91,7 @@
 						</c:if>
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId gt QTStatusConst.QT_PENDING_QT_SUBMISSION)}">
+						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)}">
 
 						<c:if test="#{qTDetailBB.managedBean.activeIndex eq '4'}">
 							<ui:include
