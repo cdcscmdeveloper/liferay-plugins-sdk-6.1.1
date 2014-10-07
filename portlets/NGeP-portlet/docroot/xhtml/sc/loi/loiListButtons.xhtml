@@ -14,7 +14,7 @@
 				
 			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-				action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
+				action="#{lOIDetailBackingBean.updateLOIListBpmTaskAction(bpmAction)}"
 				partialSubmit="true" process="@form"
 				update="@form" />
 		</ui:repeat>

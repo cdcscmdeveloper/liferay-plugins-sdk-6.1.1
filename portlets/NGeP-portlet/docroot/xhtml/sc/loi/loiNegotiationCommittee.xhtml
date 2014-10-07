@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<c:if test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '1'}">
+		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeEvaluationCommittee)}" toggleable="true">
+			<p:dataTable id="ecMemberTbl" var="committeeDtl"
+				value="#{lOIDetailBackingBean.managedBean.ecMemberList}"
+				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+			
+				<ac:paginator for="ecMemberTbl" />
+	
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.id.no']}">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.pnp']}">
+					#{committeeDtl.scCommitteeMember.PNP}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.selection']}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</c:if>
+	
+	<c:if test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '2'}">
+		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeTechnicalEvaluationCommittee)}" toggleable="true">
+			<p:dataTable id="tecMemberTbl" var="committeeDtl"
+				value="#{lOIDetailBackingBean.managedBean.tecMemberList}"
+				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+			
+				<ac:paginator for="tecMemberTbl" />
+	
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.id.no']}">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.pnp']}">
+					#{committeeDtl.scCommitteeMember.PNP}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.selection']}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		
+		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeFinancialEvaluationCommittee)}" toggleable="true">
+			<p:dataTable id="fecMemberTbl" var="committeeDtl"
+				value="#{lOIDetailBackingBean.managedBean.fecMemberList}"
+				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+			
+				<ac:paginator for="fecMemberTbl" />
+	
+				<p:column headerText="#{lbl['lbl.sc.name']}">
+					#{committeeDtl.scCommitteeMember.memberName}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.id.no']}">
+					#{committeeDtl.scCommitteeMember.icPassport}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.designation']}">
+					#{committeeDtl.scCommitteeMember.designation}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.email']}">
+					#{committeeDtl.scCommitteeMember.email}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.grade']}">
+					#{committeeDtl.scCommitteeMember.grade}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.pnp']}">
+					#{committeeDtl.scCommitteeMember.PNP}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.role']}">
+					#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				</p:column>
+							
+				<p:column headerText="#{lbl['lbl.sc.selection']}">
+					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</c:if>
+
+	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="true">
+		<p:dataTable id="fcMemberTbl" var="committeeDtl"
+			value="#{lOIDetailBackingBean.managedBean.fcMemberList}"
+			rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
+		
+			<ac:paginator for="fcMemberTbl" />
+
+			<p:column headerText="#{lbl['lbl.sc.name']}">
+				#{committeeDtl.scCommitteeMember.memberName}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.id.no']}">
+				#{committeeDtl.scCommitteeMember.icPassport}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.designation']}">
+				#{committeeDtl.scCommitteeMember.designation}
+			</p:column>
+						
+			<p:column headerText="#{lbl['lbl.sc.email']}">
+				#{committeeDtl.scCommitteeMember.email}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.grade']}">
+				#{committeeDtl.scCommitteeMember.grade}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.pnp']}">
+				#{committeeDtl.scCommitteeMember.PNP}
+			</p:column>
+						
+			<p:column headerText="#{lbl['lbl.sc.role']}">
+				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+			</p:column>
+						
+			<p:column headerText="#{lbl['lbl.sc.representative.type']}">
+				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}
+			</p:column>
+						
+			<p:column headerText="#{lbl['lbl.sc.selection']}">
+				<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

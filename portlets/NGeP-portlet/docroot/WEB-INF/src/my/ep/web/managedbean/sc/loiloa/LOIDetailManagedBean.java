@@ -15,6 +15,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -94,6 +95,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	private List<ScLoiLoaItem> scLoiLoaItems;
 	private PmUser contractSignerUser;
+	private String docType;
+	private Object payLoadData;
+	
+	private List<ScCommitteeMember> ecMemberList;
+	private List<ScCommitteeMember> tecMemberList;
+	private List<ScCommitteeMember> fecMemberList;
+	private List<ScCommitteeMember> fcMemberList;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -735,6 +743,84 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setContractSignerUser(PmUser contractSignerUser) {
 		this.contractSignerUser = contractSignerUser;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	/**
+	 * @return the payLoadData
+	 */
+	public Object getPayLoadData() {
+		return payLoadData;
+	}
+
+	/**
+	 * @param payLoadData the payLoadData to set
+	 */
+	public void setPayLoadData(Object payLoadData) {
+		this.payLoadData = payLoadData;
+	}
+
+	/**
+	 * @return the ecMemberList
+	 */
+	public List<ScCommitteeMember> getEcMemberList() {
+		return ecMemberList;
+	}
+
+	/**
+	 * @param ecMemberList the ecMemberList to set
+	 */
+	public void setEcMemberList(List<ScCommitteeMember> ecMemberList) {
+		this.ecMemberList = ecMemberList;
+	}
+
+	/**
+	 * @return the tecMemberList
+	 */
+	public List<ScCommitteeMember> getTecMemberList() {
+		return tecMemberList;
+	}
+
+	/**
+	 * @param tecMemberList the tecMemberList to set
+	 */
+	public void setTecMemberList(List<ScCommitteeMember> tecMemberList) {
+		this.tecMemberList = tecMemberList;
+	}
+
+	/**
+	 * @return the fecMemberList
+	 */
+	public List<ScCommitteeMember> getFecMemberList() {
+		return fecMemberList;
+	}
+
+	/**
+	 * @param fecMemberList the fecMemberList to set
+	 */
+	public void setFecMemberList(List<ScCommitteeMember> fecMemberList) {
+		this.fecMemberList = fecMemberList;
+	}
+
+	/**
+	 * @return the fcMemberList
+	 */
+	public List<ScCommitteeMember> getFcMemberList() {
+		return fcMemberList;
+	}
+
+	/**
+	 * @param fcMemberList the fcMemberList to set
+	 */
+	public void setFcMemberList(List<ScCommitteeMember> fcMemberList) {
+		this.fcMemberList = fcMemberList;
 	}
 	
 }
