@@ -8,14 +8,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<ui:define name="contentSection">
-		<p:panel header="Virtual Certificate">
+		<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
 			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofAccountLs}"
 				var="mofAcc">
-				<p:column headerText="MOF No">
+				<p:column headerText="#{lbl['lbl.sm.mofno']}">
 					#{mofAcc.mofNo}
 				</p:column>
 
-				<p:column headerText="Type">
+				<p:column headerText="#{lbl['lbl.sm.virtual.cert.type']}">
 					<h:outputText
 						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONSULTANT}"
 						value="#{lbl['lbl.sm.consultant']}" />
@@ -25,8 +25,8 @@
 						value="#{lbl['lbl.sm.contractor']}" />
 				</p:column>
 				
-				<p:column headerText="Download">
-					<p:commandButton value="Download"
+				<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
+					<p:commandButton value="#{lbl['lbl.btn.download']}"
 						action="#{virtualCertBackingBean.generatePdf(mofAcc)}" ajax="false"></p:commandButton>
 				</p:column>
 			</p:dataTable>
