@@ -816,10 +816,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getFlFulfilmentRequest().getChargeOrgProfile());
 				getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
 				getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-				setFulfilmentRequestField(resDTO);
-			} else {
-				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			}
+				
+			} 
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -828,9 +826,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
+			setFulfilmentRequestField(resDTO);
 			if(isRequisitioner()){
-				getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
+				initializeApproverGroup();
 			}
 			
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
@@ -1018,7 +1016,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void checkCeilingAmount(FlFulfilmentRequest flRequest){
-		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getIssuedOrgProfile().getOrgProfileId());
