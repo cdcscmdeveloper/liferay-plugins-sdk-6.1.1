@@ -1,5 +1,8 @@
 package my.ep.web.scheduler.sc.ebidding.JobTasks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
@@ -49,9 +52,16 @@ public class BidSchedulesPoolingCronJob implements Job {
 					log.info("jobBidSchedulesList size is"+resDTO.getActiveBidSchedules().size());
 					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 					schedulerHelper.setJobBidScheduleList(resDTO.getActiveBidSchedules());
+					List<Long> jobBidScheduleIdList = new ArrayList<Long>();
 					for(ScBidSchedule ScBidSchedule : resDTO.getActiveBidSchedules()){
-						schedulerHelper.getJobBidScheduleIdList().add(ScBidSchedule.getBidScheduleId());
+						jobBidScheduleIdList.add(ScBidSchedule.getBidScheduleId());
 					}
+					schedulerHelper.setJobBidScheduleIdList(jobBidScheduleIdList);
+					jobBidScheduleIdList = null;
+				}else {
+					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
+					schedulerHelper.getJobBidScheduleList().clear();
+					schedulerHelper.getJobBidScheduleIdList().clear();
 				}
 			}
 
