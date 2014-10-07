@@ -858,6 +858,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 				updateDeliveryDate();
 			}
+			getManagedBean().setPmPriceType(contractResDTO.getContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(FulfilmentStatusConst.CR_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
