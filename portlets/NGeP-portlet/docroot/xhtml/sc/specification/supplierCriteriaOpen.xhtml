@@ -431,16 +431,19 @@
 
 
 
-	<p:panel
+	<p:panel id="businessOwnerTotalSuppliers"
 		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}">
 		<table>
 			<tr>
 				<td style="width: 150px"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
-				<td><p:inputText style="margin-right:5px;" disabled="true" />
+				<td><p:inputText style="margin-right:5px;" disabled="true"
+						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
 					<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+						update="businessOwnerTotalSuppliers"
+						action="#{specificationBackingBean.searchForSupplierCount}"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						icon="ui-icon-search" partialSubmit="true" /></td>
+						icon="ui-icon-search" partialSubmit="true" process="@this" /></td>
 			</tr>
 		</table>
 	</p:panel>
