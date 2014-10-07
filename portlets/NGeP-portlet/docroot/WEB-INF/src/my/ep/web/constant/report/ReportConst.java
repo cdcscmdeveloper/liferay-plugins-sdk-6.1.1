@@ -420,7 +420,42 @@ public class ReportConst {
 	public static final String SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL = "LstOrStatOfPendSiteVisit/PerformSiteVisit";
 	public static final String SM_DETAILS_OF_APPLICATION_RPT_NAME = "lbl.rpt.sm.SM_DETAILS_OF_APPLICATION_RPT_NAME";
 	public static final String SM_DETAILS_OF_APPLICATION_RPT_VAL = "DetailsOfApplication";
+	//jsp
+	public static final String SM_LST_OF_APP_RPT_JSP = "List_of_Application.jsp";
+	public static final String SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_JSP = "List_of_Company_Based_on_Type_and_Capital.jsp";
+	public static final String SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_JSP = "List_of_Company_Sorted_Alphabetically.jsp";
+	public static final String SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_JSP = "List_of_Company_Supplrtype_Sts_Catogry_Wise.jsp";
+	public static final String SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_JSP = "List_of_Company_with_Director_Owner_Ceo_Eqvnt.jsp";
+	public static final String SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_JSP = "List_of_Daily_Application_Submitted.jsp";
+	public static final String SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_JSP = "List_of_Director_Owner_Ceo_Eqvnt_in_Many_Company.jsp";
+	public static final String SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_JSP = "List_of_MOF-Registered_Cancellation_by_Supplier_and_System.jsp";
+	public static final String SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_JSP = "List_of_Payment_for_Processing_Registration_Fee.jsp";
+	public static final String SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_JSP = "List_of_Personnel_Staff_Belong_to_Many_Company.jsp";
+	public static final String SM_LST_PRE_EXP_COMP_RPT_JSP = "List_of_PreExpiry_Expired_Company.jsp";
+	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
+	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";
 	//SM Module report end
+	public static final String AMP_SUPP_DOC_EQ = "&supportingdocci=";
+	public static final String AMP_REG_NO_EQ = "&registrationno=";
+	public static final String AMP_SUPP_DOC_STATUS_MODE_EQ = "&supportingdocmode=";
+	public static final String AMP_DOC_STS_NAME_EQ = "&statusname=";
+	public static final String AMP_APPLICATION_NO_EQ = "&applicationno=";
+	public static final String AMP_FROM_RELEASE_DATE_EQ = "&releasedate=";
+	public static final String AMP_ZONE_NAME_EQ = "&zonename=";
+	public static final String AMP_SUPPLIER_TYPE_EQ = "&suppliertype=";
+	public static final String AMP_REG_MOF_FROM_EQ = "&frmofno=";
+	public static final String AMP_REG_MOF_TO_EQ = "&tomofno=";
+	public static final String AMP_REG_STATUS_EQ = "&registrationstatus=";
+	public static final String AMP_PUC_N_AS_EQ = "&puc_or_as=";
+	public static final String AMP_FRM_PUC_EQ = "&frpaidupcapital=";
+	public static final String AMP_TO_PUC_EQ = "&topaidupcapital=";
+	public static final String AMP_MAIN_CATEGORY_EQ = "&maincategoryname=";
+	public static final String AMP_SUB_CATEGORY_EQ = "&subcategoryname=";
+	public static final String AMP_SUB_DIV_CATEGORY_EQ = "&subdivisioncategoryname=";
+	public static final String AMP_FRM_EXPIRY_DT_EQ = "&frexpdt=";
+	public static final String AMP_TO_EXPIRY_DT_EQ = "&toexpdt=";
+	public static final String AMP_ROLE_EQ = "&role=";
+	
 	public static final String EMPTY_VAL = "";
 	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
