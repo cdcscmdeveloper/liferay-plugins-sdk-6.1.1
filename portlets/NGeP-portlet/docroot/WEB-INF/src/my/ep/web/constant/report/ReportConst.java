@@ -94,17 +94,7 @@ public class ReportConst {
 	public static final String OVRL_FINRS_EC_RPT_NAME = "lbl.rpt.sc.OVRL_FINRS_EC_RPT_NAME";
 	public static final String OVRL_FINRS_EC_RPT_VAL = "OvrlFinRs-EC";
 	public static final String PYMT_RCPT_RPT_NAME = "lbl.rpt.sc.PYMT_RCPT_RPT_NAME";
-	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";
-	/*public static final String COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_NAME";
-	public static final String COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_VAL = "CompExpGovtAgency-NoOfContract";
-	public static final String COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_NAME";
-	public static final String COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_VAL = "CompExpNonGovtAgency-NoOfContract";*/
-	/*public static final String COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_GOVT_AGEN_CONTR_RPT_NAME";
-	public static final String COMP_EXP_GOVT_AGEN_CONTR_RPT_VAL = "CompExpGovtAgency-Contract";
-	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME = "lbl.rpt.sc.COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_NAME";
-	public static final String COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_VAL = "CompExpNonGovtAgency-Contract";
-	public static final String FINANCE_POSITION_RPT_NAME = "lbl.rpt.sc.FINANCE_POSITION_RPT_NAME";
-	public static final String FINANCE_POSITION_RPT_VAL = "FinacialPosition";*/
+	public static final String PYMT_RCPT_RPT_VAL = "PymtRcpt";	
 	//JSP
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
@@ -123,20 +113,17 @@ public class ReportConst {
 	public static final String SC_OVRL_FINRS_FEC_RPT_JSP = "sc_fec_overall_fin_3e.jsp";
 	public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_shortlist_asses_4a.jsp";
 	public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "sc_ec_method_of_asses_4b.jsp";
-	public static final String SC_PDW_EC_RPT_JSP = "sc_ec_method_of_asses_4l.jsp";
-	
+	public static final String SC_PDW_EC_RPT_JSP = "sc_ec_method_of_asses_4l.jsp";	
 	public static final String SC_SPPSAP2_EC_RPT_JSP = "sc_ec_gen_spec_4c.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "sc_ec_gen_spec_4d.jsp";
 	public static final String SC_AKPTPH_EC_RPT_JSP = "sc_ec_price_eval_4e.jsp";
-	public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";
-	
+	public static final String SC_TECSPEC_EC_RPT_JSP = "sc_ec_tech_spec_4f.jsp";	
 	public static final String SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_govt_4j.jsp";
 	public static final String SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP = "sc_ec_exp_non_govt_4k.jsp";
 	public static final String SC_HARGA_TAWARAN_EC_RPT_JSP = "sc_ec_priceoffer_4m.jsp";
 	public static final String SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP = "sc_ec_fin_position_4n.jsp";
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
-	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_ec_exp_non_govt_6b.jsp";
-	
+	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP = "sc_ec_exp_non_govt_6b.jsp";	
 	public static final String SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP = "sc_ec_overall_tech_4g.jsp";
 	public static final String SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP = "sc_ec_overalltech_with_wei_4h.jsp";
 	public static final String SC_OVRL_FINRS_EC_RPT_JSP = "sc_ec_overall_fin_4i.jsp";
@@ -144,9 +131,7 @@ public class ReportConst {
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_non_govt_5b.jsp";
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
-	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
-	
-	
+	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";	
 	//S1 Report
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	//SC Module reports start
