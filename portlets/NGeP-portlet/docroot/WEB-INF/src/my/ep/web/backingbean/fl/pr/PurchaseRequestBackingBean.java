@@ -1220,7 +1220,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
 			setFulfilmentRequestField(resDTO);
-			initializeApproverGroup();
+			if(isRequisitioner()){
+				initializeApproverGroup();
+			}
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml?faces-redirect=true");
@@ -2031,92 +2033,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setVotFundList(votFundRes.getVotFundList());
 	}
 	
-	/*public void getProjectList(AjaxBehaviorEvent e) {
-		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
-		if(votFundId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setVotFundId(votFundId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
-			
-			for (PmProject pmProject : resDTO.getProjectList()) {
-				projectCodeMap.put(pmProject.getProjectId(), pmProject);
-			}
-			PmVotFund votFund = votFundCodeMap.get(votFundId);
-			getManagedBean().setVotFundType(votFund.getVotFundType());
-			getManagedBean().setProjectId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setProjectList(resDTO.getProjectList());
-		} else {
-			getManagedBean().setVotFundType(null);
-			getManagedBean().setProjectId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setProjectList(new ArrayList<PmProject>());
-		}
-	}*/
-	
-	/*public void getProgramList(AjaxBehaviorEvent e) {
-		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
-		if(votFundId!=null) {
-			IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject("pm",IProgramActivitySO.class);
-			ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-			reqDTO.setVotFundId(votFundId);
-			ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
-			
-			for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
-				progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
-			}
-			getManagedBean().setPrgActivityId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setPrgActivityList(resDTO.getPrgActivityList());
-		} else {
-			getManagedBean().setPrgActivityId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setPrgActivityList(new ArrayList<PmPrgActivity>());
-		}
-	}*/
-	
-	
-	/*public void getSetiaList(AjaxBehaviorEvent e) {
-		Long projectId = (Long) e.getComponent().getAttributes().get("value");
-		if(projectId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setProjectId(projectId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSetiaList(reqDTO);
-			for (PmSetia pmSetia : resDTO.getSetiaList()) {
-				setiaCodeMap.put(pmSetia.getSetiaId(), pmSetia);
-			}
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSetiaList(resDTO.getSetiaList());
-		} else {
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSetiaList(new ArrayList<PmSetia>());
-		}
-	}*/
-	
-	/*public void getSubSetiaList(AjaxBehaviorEvent e) {
-		Long setiaId = (Long) e.getComponent().getAttributes().get("value");
-		if(setiaId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setSetiaId(setiaId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
-			for (PmSubSetia pmSubSetia : resDTO.getSubSetiaList()) {
-				subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
-			}
-			getManagedBean().setSubSetiaId(0L);
-			getManagedBean().setSubSetiaList(resDTO.getSubSetiaList());
-		} else {
-			getManagedBean().setSubSetiaId(0L);
-			getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
-		}
-	}*/
-	
 	public void getFinancingType(AjaxBehaviorEvent e) {
 		Long subSetiaId = (Long) e.getComponent().getAttributes().get("value");
 		if(subSetiaId!=null) {
@@ -2584,6 +2500,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 */
 	public String backToPervious() {
 		return "flDocSearch";
+	}
+	
+	public boolean isRequisitioner() {
+		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
+
 	}
 	
 }
