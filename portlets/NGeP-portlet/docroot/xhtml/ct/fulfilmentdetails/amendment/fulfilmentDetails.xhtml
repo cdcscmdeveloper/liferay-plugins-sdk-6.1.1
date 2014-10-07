@@ -45,7 +45,7 @@
 			<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}" />
 			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}">
 				<p:inputText for="signBy"  value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.signedDate}"
-			   		disabled="true" style="width:170px;" label="#{lbl['lbl.ct.delivery.period']}" >
+			   		disabled="true" style="width:170px;">
 			   		<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<p:spacer width="1"/>
@@ -55,7 +55,7 @@
 			<h:panelGrid columns="3" rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}">
 				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;"  disabled="true" 
 				   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
-				<p:spacer width="2"/>
+				<p:spacer width="2" label="#{lbl['lbl.ct.delivery.period']}" />
 				<p:selectOneMenu  style="width:100px;"  disabled="true" 
 				   value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
 			       <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />

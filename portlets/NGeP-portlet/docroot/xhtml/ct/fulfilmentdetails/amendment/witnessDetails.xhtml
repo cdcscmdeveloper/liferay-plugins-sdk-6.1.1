@@ -10,6 +10,7 @@
 			<h:outputText value="#{amendmentBackingBean.managedBean.witnessHeader}"/>
 	        <ac:iconTooltip value="#{amendmentBackingBean.managedBean.witnessHeaderTooltip}"/>
 	  	</f:facet>
+	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.email']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:75%" columnClasses="columnWidth30">
 		   
 		    <h:panelGrid columns="2" style="float:right;">
@@ -80,7 +81,6 @@
 					       <p:inputText id="mobileNo" style="width:150px;"  required="true"  label="#{lbl['lbl.ct.mobile']}"
 					           value="#{amendmentBackingBean.managedBean.scLoaWitness.mobileNo}"  validator="#{webappBean.checkMobileNumber}"/>
 					       <p:message for="mobileNo" display="icon"/>
-					       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.email']}" escape="false"/>
 					   </h:panelGrid>
 				</h:panelGrid>
 			</h:panelGrid>
