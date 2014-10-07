@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -39,6 +40,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.specification.BankingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
@@ -225,8 +227,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private BigDecimal recommendfinancialScore;
 	private int tabActiveIndex;
 	private List<ScQtRemark> scQtRemarksList;
-	private List<PmState> stateList;
-	private List<PmDistrict> districtList;
+	
 	private Long stateId;
 	private Long districtId;
 	private Long ministryId;
@@ -296,6 +297,27 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean readOnly;
 	private int technicalTableRow;
 	private int financialTableRow;
+	private List<TplSpecLoc> totalSuppliersSpecLoc;
+	private List<PmState> stateList;
+	private List<PmDistrict> districtList;
+	private List<PmDivision> divisionList;
+	
+
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public List<TplSpecLoc> getTotalSuppliersSpecLoc() {
+		return totalSuppliersSpecLoc;
+	}
+
+	public void setTotalSuppliersSpecLoc(List<TplSpecLoc> totalSuppliersSpecLoc) {
+		this.totalSuppliersSpecLoc = totalSuppliersSpecLoc;
+	}
 
 	public int getTechnicalTableRow() {
 		return technicalTableRow;
