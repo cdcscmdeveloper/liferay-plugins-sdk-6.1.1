@@ -5,31 +5,31 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">	
 	
-	<p:panel header="Office Location" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.officeloc']}" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="Office Ownership" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.ownership']}" /></td>
 				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.owned}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Private, Purchasing Price(RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.prvt.prchs.price']}" /></td>
 				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.purchasePrice}" readonly="true"></p:inputText></td>
 				
-				<td><p:outputLabel value="Rent, Monthly Rate(RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.rent.mnthly.rate']}" /></td>
 				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.smFacility.rentalRate}" readonly="true"></p:inputText></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Sign Board" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.signboardValid}" /></td>
-				<td><p:outputLabel value="Share With" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
 				<td><p:selectBooleanCheckbox value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.share}" /></td>
 			</tr>
 
 			
 			<tr>
-				<td valign="top"><p:outputLabel value="Office Arrangement" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
 				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}"/></td>
 			</tr>
 		</table>

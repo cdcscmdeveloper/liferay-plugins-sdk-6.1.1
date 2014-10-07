@@ -6,51 +6,51 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:remove>
-	<p:panel header="Category">
+	<p:panel header="#{lbl['lbl.sm.category']}">
 		<p:dataTable var="cType" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}">
 			<p:column headerText="Category Type">
 				#{cType.pmParameter.pmParameterDescs[0].codeDesc}
 			</p:column>
 			
-			<p:column headerText="Template">
-				<p:commandButton value="Download"></p:commandButton>
+			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
+				<p:commandButton value="#{lbl['lbl.btn.download']}"></p:commandButton>
 			</p:column>
 			
 		</p:dataTable>
 	</p:panel>
 	</ui:remove>
 	
-	<p:panel header="Site Visit Address">
+	<p:panel header="#{lbl['lbl.sm.sitevist.address']}">
 		<p:dataTable var="addr" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvAddresses}">
-			<p:column headerText="Address">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{addr.smAddress.address1}<br />
 					#{addr.smAddress.address2}<br />
 					#{addr.smAddress.address3}<br />
 					#{addr.smAddress.address4}
 				</p:column>
 
-			<p:column headerText="Post Code">
+			<p:column headerText="#{lbl['lbl.sm.postcode']}">
 				#{addr.smAddress.postcode}
 				</p:column>
 
-			<p:column headerText="City">
+			<p:column headerText="#{lbl['lbl.sm.towncity']}">
 				#{addr.smAddress.pmCity.cityName}
 				</p:column>
 
 
-			<p:column headerText="District">
+			<p:column headerText="#{lbl['lbl.sm.district']}">
 				#{addr.smAddress.pmDistrict.districtName}
 				</p:column>
 
-			<p:column headerText="State">
+			<p:column headerText="#{lbl['lbl.sm.state']}">
 				#{addr.smAddress.pmState.stateName}
 				</p:column>
 
-			<p:column headerText="Country">
+			<p:column headerText="#{lbl['lbl.sm.country']}">
 				#{addr.smAddress.pmCountry.countryName}
 				</p:column>
 
-			<p:column headerText="Schedule Date">
+			<p:column headerText="#{lbl['lbl.sm.siteassign.pnl.scheduledate']}">
 				<h:outputText value="#{addr.scheduleDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>

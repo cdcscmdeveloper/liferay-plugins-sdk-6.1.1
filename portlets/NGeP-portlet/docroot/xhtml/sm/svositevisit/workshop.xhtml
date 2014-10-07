@@ -6,9 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<h:outputText value="Workshop" styleClass="screen-title" />
+	<h:outputText value="#{lbl['lbl.sm.workshop']}" styleClass="screen-title" />
 	<p:tabView>
-		<p:tab title="Site Info">
+		<p:tab title="#{lbl['lbl.sm.workshop.siteinfo']}">
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
@@ -21,7 +21,7 @@
 			<ui:include src="/xhtml/sm/shared/sitevisit/licenseInsurance.xhtml" />
 		</p:tab>
 		
-		<p:tab title="Equipment/ Machine/ Worker">
+		<p:tab title="#{lbl['lbl.sm.workshop.eqpmnt.machne.worker']}">
 		<ui:include src="/xhtml/sm/shared/sitevisit/equipment.xhtml" />
 		<ui:include src="/xhtml/sm/shared/sitevisit/worker.xhtml" />
 		<c:choose>
@@ -35,7 +35,7 @@
 			</c:choose>
 		</p:tab>
 		
-		<p:tab title="Comment &#38; Recommendation">
+		<p:tab title="#{lbl['lbl.sm.workshop.comment.recommndtn']}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/premiseLocation.xhtml" />
 			<ui:include src="/xhtml/sm/shared/sitevisit/commentRecommendation.xhtml" />
 		</p:tab>

@@ -6,10 +6,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<h:outputText value="Printing" styleClass="screen-title" /> 
+	<h:outputText value="#{lbl['lbl.sm.printing']}" styleClass="screen-title" /> 
 		
 	<p:tabView>
-		<p:tab title="Site Info">
+		<p:tab title="#{lbl['lbl.sm.printing.siteinfo']}">
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
@@ -22,12 +22,12 @@
 			<ui:include src="/xhtml/sm/shared/sitevisit/printing_licenseInsurance.xhtml" />
 		</p:tab>
 
-		<p:tab title="Accessories">
+		<p:tab title="#{lbl['lbl.sm.printing.accessories']}">
 		 	<ui:include src="/xhtml/sm/shared/sitevisit/printing_accessories.xhtml" />
 		 	<ui:include src="/xhtml/sm/shared/sitevisit/printing_typeWork.xhtml" />
 		</p:tab>
 		
-		<p:tab title="Comment &#38; Recommendation">
+		<p:tab title="#{lbl['lbl.sm.printing.comment.and.recommndtn']}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/printing_premiseLocation.xhtml" />
 <!-- 			<ui:include src="/xhtml/sm/shared/sitevisit/premiseLocation.xhtml" /> -->
 			<ui:include src="/xhtml/sm/shared/sitevisit/commentRecommendation.xhtml" />
