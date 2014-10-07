@@ -1180,7 +1180,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)){
 						if(getManagedBean().getShortlistedSupplierList() == null){
 							getManagedBean().setShortlistedSupplierList(new ArrayList<ScQtEvaluationResult>());
-							getManagedBean().getShortlistedSupplierList().addAll(getManagedBean().getShortlistedPackageList());
+							if(getManagedBean().getShortlistedPackageList() != null){
+								getManagedBean().getShortlistedSupplierList().addAll(getManagedBean().getShortlistedPackageList());
+							}
 						}
 						
 						if(scQtFinalization.getScQtRecommends().size() > 0){
@@ -1221,7 +1223,9 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 					}else{
 						if(getManagedBean().getShortlistedSupplierList() == null){
 							getManagedBean().setShortlistedSupplierList(new ArrayList<ScQtEvaluationResult>());
-							getManagedBean().getShortlistedSupplierList().addAll(getManagedBean().getShortlistedItemList());
+							if(getManagedBean().getShortlistedItemList() != null){
+								getManagedBean().getShortlistedSupplierList().addAll(getManagedBean().getShortlistedItemList());
+							}
 						}
 						
 						if(scQtFinalization.getScQtRecommends().size() > 0){
