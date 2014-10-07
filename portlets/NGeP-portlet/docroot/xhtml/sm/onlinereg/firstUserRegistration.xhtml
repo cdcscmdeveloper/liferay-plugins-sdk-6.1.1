@@ -51,7 +51,7 @@
 					<td class="tdContent">
 						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.nationality']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}">
-							<f:selectItem itemValue="" itemLabel="---Select---" />
+							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
@@ -146,7 +146,7 @@
 							label="#{lbl['lbl.sm.country']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
 							id="cmbPermCounrty">
-							<f:selectItem itemValue="" itemLabel="---Select---" />
+							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
 								itemLabel="#{counLs.countryName}"
@@ -169,7 +169,7 @@
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
 								itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
@@ -191,7 +191,7 @@
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="dist"
 								value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 								itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
@@ -212,7 +212,7 @@
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermCity" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
-							<f:selectItem itemLabel="---Select---" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="pcity"
 								value="#{registrationBackingBean.managedBean.permenantCityLs}"
 								itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />

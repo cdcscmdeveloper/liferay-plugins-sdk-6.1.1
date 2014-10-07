@@ -10,7 +10,7 @@
 	<ui:define name="contentSection">
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
-			<p:commandButton value="Save"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				action="#{registrationBackingBean.updateOnlineAccount}" />
 		</div>
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
