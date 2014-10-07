@@ -274,7 +274,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			if(null == getManagedBean().getPaymentAdvice().getDescription()){
 				String desc = "";
 				if(getManagedBean().getPaymentAdvice().getFlRequest().getTitle().length() > 25){
-					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle().substring(25);
+					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle().substring(0,25).trim();
 				}else{
 					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle();
 				}
