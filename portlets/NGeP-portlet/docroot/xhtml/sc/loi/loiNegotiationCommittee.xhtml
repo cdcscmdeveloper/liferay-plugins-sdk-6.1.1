@@ -134,7 +134,7 @@
 		</p:panel>
 	</c:if>
 
-	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="true">
+	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="true">
 		<p:dataTable id="fcMemberTbl" var="committeeDtl"
 			value="#{lOIDetailBackingBean.managedBean.fcMemberList}"
 			rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
