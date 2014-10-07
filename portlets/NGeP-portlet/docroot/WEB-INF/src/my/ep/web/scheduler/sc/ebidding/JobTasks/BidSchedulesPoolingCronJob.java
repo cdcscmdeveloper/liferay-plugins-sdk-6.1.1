@@ -5,6 +5,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 
@@ -48,6 +49,9 @@ public class BidSchedulesPoolingCronJob implements Job {
 					log.info("jobBidSchedulesList size is"+resDTO.getActiveBidSchedules().size());
 					SchedulerHelper schedulerHelper = SchedulerHelper.getInstance();
 					schedulerHelper.setJobBidScheduleList(resDTO.getActiveBidSchedules());
+					for(ScBidSchedule ScBidSchedule : resDTO.getActiveBidSchedules()){
+						schedulerHelper.getJobBidScheduleIdList().add(ScBidSchedule.getBidScheduleId());
+					}
 				}
 			}
 
