@@ -607,10 +607,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Circular(s) to be cancel"});
 				}
 				
-				if(getManagedBean().getApproverModel().getTarget().size()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
-				}
-			}
+				if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin())) {
+					    throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
+				    }
+			    }
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
