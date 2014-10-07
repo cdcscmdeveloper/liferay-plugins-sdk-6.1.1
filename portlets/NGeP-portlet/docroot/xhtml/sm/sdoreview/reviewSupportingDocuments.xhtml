@@ -28,8 +28,8 @@
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
    			 #{lbl['lbl.sm.confirm.proceed']}
    			<div align="right">
-				<p:commandButton value="Yes" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
-				<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" action="#{sdoReviewBackingBean.submitSDOReviewAction(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
 
@@ -239,7 +239,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel id="pnlSuppDoc" header="Supporting Document" toggleable="true">
+		<p:panel id="pnlSuppDoc" header="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" toggleable="true">
 			<table class="customTbl">
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.receivedate']}" /></td>
@@ -273,16 +273,16 @@
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Inquiry(s)" toggleable="true"
+		<p:panel header="#{lbl['lbl.sm.enquiry']}" toggleable="true"
 			rendered="#{not empty sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}">
 			<p:dataTable id="dtInquiryResponse" selectionMode="single" 
 			selection="#{sdoReviewBackingBean.managedBean.selectedInquiryResponse}" rowKey="#{applInq}" 
 			value="#{sdoReviewBackingBean.managedBean.smAppl.smApplInquiries}" var="applInq">
-				<p:column headerText="Subject">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.subject']}">
 				#{applInq.inquirySubject}
 				</p:column>
 				<p:ajax event="rowSelect" listener="#{sdoReviewBackingBean.inquiryRowSelect}"  update=":#{p:component('resOutPanelId')}" oncomplete="responseDlg.show();" />
-				<p:column headerText="Response Date">
+				<p:column headerText="#{lbl['lbl.sm.supportingdoc.responsedate']}">
 				
 				<h:outputText value="#{applInq.responseDate}">
 						<f:convertDateTime
