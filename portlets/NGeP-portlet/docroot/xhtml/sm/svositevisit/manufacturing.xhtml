@@ -6,9 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<h:outputText value="Manufacturing" styleClass="screen-title" />
+	<h:outputText value="#{lbl['lbl.sm.sitevisit.category.manufacturing']}" styleClass="screen-title" />
 	<p:tabView>
-		<p:tab title="Site Info">
+		<p:tab title="#{lbl['lbl.sm.manufacturing.siteinfo']}">
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/addressRepresentatives.xhtml" />
@@ -21,7 +21,7 @@
 			<ui:include src="/xhtml/sm/shared/sitevisit/financialDoc.xhtml" />
 		</p:tab>
 
-		<p:tab title="Machine/Equipment">
+		<p:tab title="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}">
 			<c:choose>
 				<c:when test="#{!viewFlag}">
 					<ui:include src="/xhtml/sm/shared/sitevisit/machine.xhtml" />
@@ -33,7 +33,7 @@
 			</c:choose>
 		</p:tab>
 		
-		<p:tab title="Comment &#38; Recommendation">
+		<p:tab title="#{lbl['lbl.sm.manufacturing.comment.and.recommndtn']}">
 			<ui:include src="/xhtml/sm/shared/sitevisit/manufacturingComment.xhtml" />
 			<ui:include src="/xhtml/sm/shared/sitevisit/commentRecommendation.xhtml" />
 		</p:tab>

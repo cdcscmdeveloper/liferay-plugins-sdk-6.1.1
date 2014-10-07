@@ -7,10 +7,10 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<c:set var="svTask" value="#{svoSiteVisitBackingBean.managedBean.smSvTask}" />
-	<p:panel header="Capital/Equity Details" toggleable="true" id="pnlCapital">
+	<p:panel header="#{lbl['lbl.sm.sitevist.capital.equity.details']}" toggleable="true" id="pnlCapital">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="Authorized Capital (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.authCap']}" /></td>
 				<td><p:inputText readonly="true" id="authoCapitalId"
 						value="#{svTask.smAppl.smCompanyBasic.authorizedCapital}">
 						<f:convertNumber
@@ -20,7 +20,7 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Paid-up Capital (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.equiStatus.paidUpCap']}" /></td>
 				<td><p:inputText readonly="true" id="paidUpCapitalId" value="#{svTask.smAppl.smCompanyBasic.paidUpCapital}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText></td>
@@ -29,16 +29,16 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Equity" toggleable="true" id="pnlEquity">
+	<p:panel header="#{lbl['lbl.sm.sitevist.equity']}" toggleable="true" id="pnlEquity">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="Total Owner" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.total.owner']}" /></td>
 				<td><p:inputText readonly="true" id="ttlOwnerId" value="#{fn:length(svTask.smAppl.smSupplier.smSupplierOwners)}"/>person(s)</td>
 			</tr>
 			
 			<ui:repeat varStatus="equityStat" var="owner" value="#{svTask.smAppl.smSupplier.smSupplierOwners}">
 				<tr>
-					<td><p:outputLabel value="Owner Name" rendered="#{equityStat.index == 0}" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.ownername']}" rendered="#{equityStat.index == 0}" />
 					<p:outputLabel value="&#160;" rendered="#{equityStat.index != 0}" /></td>
 					<td><p:inputText readonly="true" value="#{owner.ownerName}" /></td>
 					<td>&#160;</td>
@@ -55,12 +55,12 @@
 <!-- 			</tr> -->
 
 			<tr>
-				<td><p:outputLabel value="Company Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.assocCmpny.companyName']}" /></td>
 				<td><p:inputText readonly="true" id="eqCompanyNameId" value="#{svTask.smAppl.smCompanyBasic.companyName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Bumiputera (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.bumiamount']}" /></td>
 				<td><p:inputText readonly="true" id="eqBumiputeraId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.bumiEquity}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -69,7 +69,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non-Bumiputera (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.nonbumiamount']}" /></td>
 				<td><p:inputText readonly="true" id="eqNonBumiputeraId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.nonBumiEquity}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -78,7 +78,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non-Malaysian (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.nonmalaysianamount']}" /></td>
 				<td><p:inputText readonly="true" id="eqNonMalaysianId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.foreignerEquity}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -87,8 +87,8 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Gov Agency Equity" /><br /><p:outputLabel
-						value="Unit Trust Agency (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.gov.agency.equity']}" /><br /><p:outputLabel
+						value="#{lbl['lbl.sm.sitevist.unit.trust.agncy.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqUnitTrustId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.govtUnitrustEquity}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -97,7 +97,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Gov Equity (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.gov.equity.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqGovttId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.govtEquity}">
 						<f:convertNumber
@@ -107,7 +107,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Local Company (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.local.cmpny.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqLocalCompanyId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.localCompanyEquity}">
 						<f:convertNumber
@@ -117,7 +117,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Foreign Company (RM)" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.foreign.cmpny.amount']}" /></td>
 				<td><p:inputText readonly="true" id="eqForeignCompanyId"
 						value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smCompanyBasic.foreignCompanyEquity}">
 						<f:convertNumber
@@ -128,31 +128,31 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Board of Directors" toggleable="true" id="pnlBOD">
+	<p:panel header="#{lbl['lbl.sm.sitevist.board.directors']}" toggleable="true" id="pnlBOD">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="Total" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlBODId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalBOD}" />person(s)</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" /></td>
 				<td><p:inputText id="bodBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.dirBumi}"/>person(s)</td>
 				<td><p:inputText id="bodBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateDirectorPercentage(svoSiteVisitBackingBean.managedBean.dirBumi)}"/>%</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Non Bumiputera " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.nonBumi']}" /></td>
 				<td><p:inputText id="bodNonBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.dirNonBumi}"/>person(s)</td>
 				<td><p:inputText id="bodNonBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateDirectorPercentage(svoSiteVisitBackingBean.managedBean.dirNonBumi)}"/>%</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.Frg']}" /></td>
 				<td><p:inputText id="bodNonMalaysianId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.dirNonMalaysian}" />person(s)</td>
 				<td><p:inputText id="bodNonMalaysianPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateDirectorPercentage(svoSiteVisitBackingBean.managedBean.dirNonMalaysian)}"/>%</td>
 			</tr>
 			<ui:repeat varStatus="status" var="bod"
 				value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
 				<tr>
-					<td><p:outputLabel value="Director Name" rendered="#{status.index == 0}" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.director.name']}" rendered="#{status.index == 0}" />
 					<p:outputLabel value="&#160;" rendered="#{status.index != 0}" /></td>
 					<td><p:inputText readonly="true" value="#{bod.name}" /></td>
 					<td>&#160;</td>
@@ -161,27 +161,27 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Management" toggleable="true" id="pnlMgmt">
+	<p:panel header="#{lbl['lbl.sm.person.composition.mngt']}" toggleable="true" id="pnlMgmt">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="Total" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlMgmtId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalMgmt}" />person(s)</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" /></td>
 				<td><p:inputText id="mgmtBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.mgmtBumi}" />person(s)</td>
 				<td><p:inputText id="mgmtBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateMgmtPercentage(svoSiteVisitBackingBean.managedBean.mgmtBumi)}"/>%</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.nonBumi']}" /></td>
 				<td><p:inputText id="mgmtNonBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.mgmtNonBumi}"/>person(s)</td>
 				<td><p:inputText id="mgmtNonBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateMgmtPercentage(svoSiteVisitBackingBean.managedBean.mgmtNonBumi)}"/>%</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.Frg']}" /></td>
 				<td><p:inputText id="mgmtNonMalaysianId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.mgmtNonMalaysian}" />person(s)</td>
 				<td><p:inputText id="mgmtNonMalaysianPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateMgmtPercentage(svoSiteVisitBackingBean.managedBean.mgmtNonMalaysian)}"/>%</td>
 			</tr>
@@ -193,7 +193,7 @@
 			
 			<ui:repeat varStatus="mgmtStatus" var="mgmt" value="#{svoSiteVisitBackingBean.managedBean.bodLs}">
 				<tr>
-					<td><p:outputLabel value="Manager Name" rendered="#{mgmtStatus.index == 0}" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.manager.name']}" rendered="#{mgmtStatus.index == 0}" />
 					<p:outputLabel value="&#160;" rendered="#{mgmtStatus.index != 0}" /></td>
 					<td><p:inputText readonly="true" value="#{mgmt.name}" /></td>
 				</tr>
@@ -205,27 +205,27 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Workers" toggleable="true" id="pnlWorker">
+	<p:panel header="#{lbl['lbl.sm.sitevist.workers']}" toggleable="true" id="pnlWorker">
 		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="Total" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.total']}" /></td>
 				<td><p:inputText id="ttlWrkId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.totalWorker}" />person(s)</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" /></td>
 				<td><p:inputText id="wrkBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.wrkBumi}" />person(s)</td>
 				<td><p:inputText id="wrkBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateWorkerPercentage(svoSiteVisitBackingBean.managedBean.wrkBumi)}"/>%</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.nonBumi']}" /></td>
 				<td><p:inputText id="wrkNonBumiId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.wrkNonBumi}" />person(s)</td>
 				<td><p:inputText id="wrkNonBumiPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateWorkerPercentage(svoSiteVisitBackingBean.managedBean.wrkNonBumi)}"/>%</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non Malaysian" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.Frg']}" /></td>
 				<td><p:inputText id="wrkNonMalaysianId" readonly="true" value="#{svoSiteVisitBackingBean.managedBean.wrkNonMalaysian}" />person(s)</td>
 				<td><p:inputText id="wrkNonMalaysianPercId" readonly="true" value="#{svoSiteVisitBackingBean.calculateWorkerPercentage(svoSiteVisitBackingBean.managedBean.wrkNonMalaysian)}"/>%</td>
 			</tr>

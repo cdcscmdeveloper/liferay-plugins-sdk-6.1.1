@@ -9,34 +9,34 @@
 	<ui:param name="viewFlag" value="true" />
 
 	<div align="right">
-		<p:commandButton value="Submit" id="btnBpmSubmit" onclick="submissionConfirmDlg.show();"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" id="btnBpmSubmit" onclick="submissionConfirmDlg.show();"></p:commandButton>
 	</div>
 	
 
 	<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 Do you want to proceed ?	
+   			 #{lbl['lbl.sm.rptpreview.want.proceed.qmark']}	
    			<div align="right">
-			<p:commandButton value="Yes"
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
 				action="#{svoSiteVisitBackingBean.submitSiteVisitReport}"></p:commandButton>
-			<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 		</div>
 	</p:dialog>
 	
 	
 <!-- 	<ui:include src="/xhtml/sm/svositevisit/categoryApplicable.xhtml" /> -->
-	<p:panel header="Report by Category">
+	<p:panel header="#{lbl['lbl.sm.rptpreview.by.category']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvTemplates}" var="template">
-			<p:column headerText="Category Type">
+			<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}">
 					#{template.pmParameter.pmParameterDescs[0].codeDesc}
 			</p:column>
 	
-			<p:column headerText="Template">
-				<p:commandButton value="Preview" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
+			<p:column headerText="#{lbl['lbl.sm.rptpreview.template']}">
+				<p:commandButton value="#{lbl['lbl.sm.button.preview']}" update=":form:rptDialogId" oncomplete="rptDlg.show();" id="btnPreview" action="#{svoSiteVisitBackingBean.rptPreview(template.pmParameter.parameterCode)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
-	<p:dialog id="rptDialogId" header="Report Preview" widgetVar="rptDlg" modal="true" height="650" width="1200" dynamic="true">
+	<p:dialog id="rptDialogId" header="#{lbl['lbl.sm.rptpreview']}" widgetVar="rptDlg" modal="true" height="650" width="1200" dynamic="true">
 		<c:if test="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.pmParameter.parameterCode == SupplierManagementConst.CAT_TYPE_DOCKYARD}">
 			<ui:include src="/xhtml/sm/svositevisit/dockyard.xhtml" />
 		</c:if>

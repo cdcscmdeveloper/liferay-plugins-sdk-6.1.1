@@ -6,42 +6,42 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Site Visit Report" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.sitevist.report']}" toggleable="true">
 		<p:dataTable var="svo"
 			value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}">
 
-			<p:column headerText="Address">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 							#{svo.smAddress.address1}<br />
 							#{svo.smAddress.address2}<br />
 							#{svo.smAddress.address3}<br />
 							#{svo.smAddress.address4}
 						</p:column>
 
-			<p:column headerText="Post Code">
+			<p:column headerText="#{lbl['lbl.sm.postcode']}">
 						#{svo.smAddress.postcode}
 						</p:column>
 
-			<p:column headerText="City">
+			<p:column headerText="#{lbl['lbl.sm.towncity']}">
 			</p:column>
 
 
-			<p:column headerText="District">
+			<p:column headerText="#{lbl['lbl.sm.district']}">
 			</p:column>
 
-			<p:column headerText="State">
+			<p:column headerText="#{lbl['lbl.sm.state']}">
 			</p:column>
 
-			<p:column headerText="Country">
+			<p:column headerText="#{lbl['lbl.sm.country']}">
 						#{svo.smAddress.pmCountry.countryName}
 			</p:column>
 
-			<p:column headerText="Report Status">
+			<p:column headerText="#{lbl['lbl.sm.sitevist.report.status']}">
 				<p:commandLink id="rptPreview" value="preview"
 					onclick="dlg2.show();" />
 			</p:column>
 		</p:dataTable>
 
-		<p:dialog id="modalDialog" header="Site Visit Report Review"
+		<p:dialog id="modalDialog" header="#{lbl['lbl.sm.sitevist.report.preview']}"
 			widgetVar="dlg2" modal="true" height="500" width="800">
 			<ac:smPanel id="tt">
 				<ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml"></ui:include>

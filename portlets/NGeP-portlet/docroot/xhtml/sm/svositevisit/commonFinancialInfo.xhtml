@@ -11,59 +11,59 @@
 	</div>
 	</ui:remove>
 	
-	<p:panel header="Financial" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.financial']}" toggleable="true">
 		<table class="rptTbl">
 			<tr>
-				<td><p:outputLabel value="Cheque Signatories" /></td>
-				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.totalCheqSign}" /> person(s)</td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
+				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.totalCheqSign}" /> #{lbl['lbl.sm.persons']}</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqBumi}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqBumi)}" /> %</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non-Bumiputera" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.nonBumi']}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqNonBumi}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqNonBumi)}" /> %</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Non-Malaysian" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.composition.Frg']}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.managedBean.cheqNonMalaysian}" /></td>
 				<td><p:inputText disabled="true" value="#{svoSiteVisitBackingBean.calculatChequeSignatoryPercentage(svoSiteVisitBackingBean.managedBean.cheqNonMalaysian)}" /> %</td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel header="Bank Information" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" toggleable="true">
 		<p:dataTable var="bankInfo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvBankInfos}" style="width:80%">
 			<p:column>
-				<f:facet name="header">Bank Name</f:facet>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.bank']}</f:facet>
 				#{bankInfo.smSupplierBank.pmFinancialOrg.finOrgName}
 			</p:column>
 
 			<p:column>
-				<f:facet name="header">Account No.</f:facet>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.acctNo']}</f:facet>
 				#{bankInfo.smSupplierBank.accountNo}
 			</p:column>
 
 			<p:column>
-				<f:facet name="header">Cheque Signatory Name</f:facet>
+				<f:facet name="header">#{lbl['lbl.sm.bankDtls.cheSign.name']}</f:facet>
 				<ui:repeat var="cheqSign" value="#{bankInfo.smSupplierBank.smChequeSignatories}" >
 					#{cheqSign.smPersonnel.name}<br/>
 				</ui:repeat>
 			</p:column>
 
 			<p:column>
-				<f:facet name="header">Terms and Conditions</f:facet>
+				<f:facet name="header">#{lbl['lbl.sm.termsConditionsLbl']}</f:facet>
 				<p:inputTextarea rows="4" cols="35" autoResize="false" value="#{bankInfo.smSupplierBank.signatureInstruction}" readonly="true"/>
 			</p:column>
 			
 			<p:column>
-				<f:facet name="header">Verify</f:facet>
+				<f:facet name="header">#{lbl['lbl.sm.verifyLbl']}</f:facet>
 				<p:selectBooleanCheckbox value="#{bankInfo.valid}" disabled="#{viewFlag}"></p:selectBooleanCheckbox>
 			</p:column>
 		</p:dataTable>
@@ -74,22 +74,22 @@
 <!-- this.getManagedBean().getSmSvTask().getSmAppl().getSmSupplierBanks().get(0).getPmFinancialOrg().getFinOrgName() -->
 
 
-	<p:panel header="Check List" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.check.list.header']}" toggleable="true">
 		<p:dataTable var="finLsItem"
 			value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvFinChecklists}"
 			rowIndexVar="rowIndex" style="width:80%">
 
-			<p:column headerText="Items">
+			<p:column headerText="#{lbl['lbl.sm.itemsLbl']}">
 				#{finLsItem.pmParameter.pmParameterDescs[0].codeName}
 			</p:column>
 
-			<p:column headerText="Available">
+			<p:column headerText="#{lbl['lbl.sm.availableLbl']}">
 				<p:selectBooleanCheckbox value="#{finLsItem.valid}" disabled="#{viewFlag}">
 
 				</p:selectBooleanCheckbox>
 			</p:column>
 
-			<p:column headerText="Remark">
+			<p:column headerText="#{lbl['lbl.sm.remark']}">
 				<p:inputTextarea rows="2" cols="40" autoResize="false" disabled="#{viewFlag}"
 					value="#{svoSiteVisitBackingBean.managedBean.remarkMap[finLsItem.pmParameter.parameterId].remark}" />
 			</p:column>

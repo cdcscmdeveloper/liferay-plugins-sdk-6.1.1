@@ -11,15 +11,15 @@
 <!-- 				<td><p:outputLabel value="MOF Registration No." /></td> -->
 <!-- 				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applNo}" disabled="true" -->
 <!-- 						size="40" /></td> -->
-				<td><p:outputLabel value="Supplier Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}"
 						disabled="true" size="40" /></td>
 				
-				<td><p:outputLabel value="Application No." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td><p:inputText value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applNo}" disabled="true"
 						size="40" /></td>
 				
-				<td><p:outputLabel value="Application Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']}" /></td>
 				<td><p:inputText value="#{lbl[svoSiteVisitBackingBean.getsupplierApplTypeDesc(svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applType)]}" disabled="true"
 						size="40" /></td>
 			</tr>
