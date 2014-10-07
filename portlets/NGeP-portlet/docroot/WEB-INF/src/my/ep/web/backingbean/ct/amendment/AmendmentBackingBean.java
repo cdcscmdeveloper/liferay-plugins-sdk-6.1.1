@@ -575,7 +575,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				         FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						 MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 						   this.getManagedBean().getContractVer().getCtContract().getContractNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			             if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
+				         if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) {
 					           renewSesionObject();
 					           return CommonUIConst.ACKNOWLEDGE_PAGE;
 				         }

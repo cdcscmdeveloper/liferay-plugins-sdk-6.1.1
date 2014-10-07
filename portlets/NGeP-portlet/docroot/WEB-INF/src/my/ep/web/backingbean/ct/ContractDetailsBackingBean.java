@@ -284,7 +284,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			     this.getManagedBean().setSelectedTabIndex(0);
 
 			     ContractReqDTO ctReqDTO = new ContractReqDTO();
-			     if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
+			     if((res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) || res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) && res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
 				        CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
 				        ctReqDTO.setContractId(new Long(dataType.getContractId()));
 				        ctReqDTO.setContractVerId(new Long(dataType.getDocId()));
@@ -1733,7 +1733,7 @@ public void ConstructSideTabMenu(){
 		    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 		    setValidateContractField(resDTO);
 		    
-		    getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});		    
+		    getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
 	        getManagedBean().setViewContract(false);
 	        this.getManagedBean().setSelectedTabIndex(0);
 	        log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
