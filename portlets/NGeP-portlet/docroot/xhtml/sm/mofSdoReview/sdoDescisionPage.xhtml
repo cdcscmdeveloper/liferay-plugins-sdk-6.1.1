@@ -14,31 +14,18 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/sdoReviewSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="SDO Decision">			
+		<p:panel header="#{lbl['lbl.sm.sdo.decision']}">			
 			
-<table style="background-color:#FFCC66; ">
-  <tr>
-    <td><p:outputLabel value="You have finished reviewing all the necessary information for MOF account registration. Please perform one the below operations to provide your decision " /></td>
-  </tr>
-  <tr>
-    <td><p:outputLabel value="1. Click ' Send Enquiry ' to submit an enquiry to the supplier regarding missing / incomplete supporting documents  " /></td>
-  </tr>
-  <tr>
-    <td style="text-align: center;"><p:outputLabel value="or" /></td>
-  </tr>
-  <tr>
-    <td><p:outputLabel value="2. Click 'Submit To PO' for futher proceeding with the next step of registration i.e. submitting the application to the processing officer " /></td>
-  </tr>
-</table>
+			<h:outputText value="#{lbl['lbl.sm.sdo.dcsnNotes']}" escape="false" />
 			<p:separator />
 			<div align="center">
-				<p:splitButton value="-- Select Decision --">
-					<p:menuitem value="Submit To PO" />
-					<p:menuitem value="Send Enquiry" onclick="sendEnqDialog.show();" />
+				<p:splitButton value="#{lbl['lbl.sm.decision.select']}">
+					<p:menuitem value="#{lbl['lbl.sm.submit.po']}" />
+					<p:menuitem value="#{lbl['lbl.sm.send.enquiry']}" onclick="sendEnqDialog.show();" />
 				</p:splitButton>
 			</div>
 		</p:panel>
-		<p:dialog width="850px" height="500px" header="Send Enquiry"
+		<p:dialog width="850px" height="500px" header="#{lbl['lbl.sm.send.enquiry']}"
 			widgetVar="sendEnqDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
@@ -49,8 +36,8 @@
 				src="/xhtml/sm/shared/mofSdoSharedPages/sdoSendEnquiry.xhtml" />
 			
 			<div align="center">
-				<p:commandButton value="Submit" onclick="sendEnqDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="sendEnqDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="sendEnqDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="sendEnqDialog.hide();" />
 			</div>
 		</p:dialog>
 	</ui:define>
