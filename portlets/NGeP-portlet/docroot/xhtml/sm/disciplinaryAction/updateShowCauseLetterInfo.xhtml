@@ -8,10 +8,10 @@
 
 
 	<div align="right">
-		<p:commandButton value="Download Show Cause Letter"
+		<p:commandButton value="#{lbl['lbl.sm.complaint.show.cause.letter.download']}"
 			onclick="dlg2.show();"></p:commandButton>
-		<p:commandButton value="Save" />
-		<p:commandButton value="Submit"
+		<p:commandButton value="#{lbl['lbl.sm.button.save']}" />
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
 
@@ -22,39 +22,39 @@
 			src="/xhtml/sm/shared/complaintRegistration/complainantContact.xhtml" />
 	</ac:smPanel>
 
-	<p:dialog id="modalDialog" header="Show Cause Letter" widgetVar="dlg2"
+	<p:dialog id="modalDialog" header="#{lbl['lbl.sm.complaint.show.cause.letter']}" widgetVar="dlg2"
 		modal="true" height="500" width="1000">
 		<p:media value="/xhtml/sm/disciplinaryAction/sampleShowCause.pdf"
 			width="100%" height="450px">
 		</p:media>
 
 		<div align="right">
-			<p:commandButton value="Download" />
+			<p:commandButton value="#{lbl['lbl.btn.download']}" />
 		</div>
 	</p:dialog>
 
-	<p:panel header="Show Cause Letter" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complaint.show.cause.letter']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle"><h:outputText
-						value="* Upload Show Cause Letter" /></td>
+						value="* #{lbl['lbl.sm.complaint.show.cause.letter.upload']}" /></td>
 				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Date of Issuance" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complaint.date.issuance']}" /></td>
 				<td class="tdContent"><p:calendar showOn="button"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* Courier Tracking No" /></td>
+						value="* #{lbl['lbl.sm.complaint.courier.trckng.no']}" /></td>
 				<td class="tdContent"><p:inputText /></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* Received By Supplier" /></td>
+						value="* #{lbl['lbl.sm.complaint.received.by.supp']}" /></td>
 				<td class="tdContent"><p:calendar showOn="button"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></td>
 			</tr>

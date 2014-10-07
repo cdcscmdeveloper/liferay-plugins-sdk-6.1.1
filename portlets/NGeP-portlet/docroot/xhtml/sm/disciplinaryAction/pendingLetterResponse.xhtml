@@ -12,23 +12,23 @@
 			<div align="center">
 				<table style="width: 80%;">
 					<tr>
-						<td><p:outputLabel value="Search by" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
 						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItem itemLabel="Show Cause" itemValue="S" />
-								<f:selectItem itemLabel="Accusation" itemValue="A" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.show.cause']}" itemValue="S" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.complaint.accusation']}" itemValue="A" />
 							</p:selectOneMenu></td>
 
-						<td><p:outputLabel value="Ref No." /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.complaint.ref.no']}" /></td>
 						<td><p:inputText /></td>
 
-						<td><p:outputLabel value="Status" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.status']}" /></td>
 						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="---Select---" itemValue="" />
-								<f:selectItem itemLabel="Pending" itemValue="P" />
-								<f:selectItem itemLabel="Expired" itemValue="E" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.status.pending']}" itemValue="P" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.status.expired']}" itemValue="E" />
 							</p:selectOneMenu></td>
-						<td><p:commandButton value="Search" /></td>
+						<td><p:commandButton value="#{lbl['lbl.sm.button.search']}" /></td>
 					</tr>
 				</table>
 			</div>
@@ -36,26 +36,26 @@
 
 		<p:panel  toggleable="true" id="pnlCompList">
 			<p:dataTable var="pendingRes" id="complaintDt">
-				<p:column headerText="Complaint No">
+				<p:column headerText="#{lbl['lbl.sm.complaint.no']}">
 					#{pendingRes.complaintNo}
 				</p:column>
 
-				<p:column headerText="Complaint Date">
+				<p:column headerText="#{lbl['lbl.sm.complaint.date']}">
 					#{pendingRes.createdDate}
 				</p:column>
 
-				<p:column headerText="Date of Issuance">
+				<p:column headerText="#{lbl['lbl.sm.complaint.date.issuance']}">
 					#{pendingRes.smSupplier.companyName}
 				</p:column>
 
-				<p:column headerText="Ref No">
+				<p:column headerText="#{lbl['lbl.sm.complaint.ref.no']}">
 					#{pendingRes.smSupplier.regNo}
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		
 		<div align="right">
-			<p:commandButton value="Back" action="/xhtml/sm/disciplinaryAction/complaintView.xhtml"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.back']}" action="/xhtml/sm/disciplinaryAction/complaintView.xhtml"></p:commandButton>
 		</div>
 	</ui:define>
 </ui:composition>
