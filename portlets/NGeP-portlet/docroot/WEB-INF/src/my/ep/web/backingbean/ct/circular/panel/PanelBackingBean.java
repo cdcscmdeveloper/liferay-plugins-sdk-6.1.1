@@ -572,7 +572,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 				  
+			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  	
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else{
@@ -1134,20 +1134,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setSelectedTabIndex(0);
 			getManagedBean().setAction(action);
 			
-			if(action.equalsIgnoreCase("view") || action.equalsIgnoreCase("save")) {
+			if(action.equalsIgnoreCase("view")) {
 			        getManagedBean().setUpdateAction(false);
-				    if (action.equalsIgnoreCase("view"))
-					       getManagedBean().setOutComes(new String[]{});
-			    	else
-					       getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			        getManagedBean().setOutComes(new String[]{});
 			
 			} else if(action.equalsIgnoreCase("update")) {
 				    reqDTO.setUpdateAction(true);
 				    getManagedBean().setUpdateAction(true);
 				    getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			
-			} else if(action.equalsIgnoreCase("cancel")) {
-				
 			}
 			
 			setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
