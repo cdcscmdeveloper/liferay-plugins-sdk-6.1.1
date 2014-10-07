@@ -12,6 +12,7 @@ import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
 import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.sc.ebidding.util.SchedulerFactoryUtil;
+import my.ep.web.util.sc.helper.SchedulerHelper;
 import my.ep.web.vo.EpJobVO;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,7 @@ public class SchedulerManagerBackingBean extends
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 		initAllJobs();
+		getManagedBean().setCurrentDayBids(SchedulerHelper.getInstance().getJobBidScheduleList());
 	}
 
 	public void initAllJobs() {
