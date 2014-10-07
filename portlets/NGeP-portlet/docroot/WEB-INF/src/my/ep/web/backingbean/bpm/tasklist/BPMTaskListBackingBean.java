@@ -74,9 +74,11 @@ public class BPMTaskListBackingBean extends
 		// s1 module
 		temp.put(SCProcessNameConst.REVIEW_DIRECT_PURCHASE,
 				"review-directpurchase");
+		temp.put(SCProcessNameConst.START_DIRECT_PURCHASE_CREATION,
+				"review-directpurchase");
 		temp.put(SCProcessNameConst.DIRECT_PURCHASE_PROCESS_NAME,
 				"review-directpurchase");
-		temp.put(SCProcessNameConst.DIRECT_PURCHASE_DRAFT_NAME,
+		temp.put(SCProcessNameConst.SUBMIT_DIRECT_PURCHASE,
 				"review-directpurchase");
 
 		temp.put(SCProcessNameConst.PURCHASE_INQUIRY_PROCESS_NAME,
@@ -84,8 +86,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.PURCHASE_IN_DEFAULT_PROCESS_NAME,
 				"review-purchase-in-default");
 
-		temp.put(SCProcessNameConst.SIMPLE_QUOTE_DRAFT_NAME
-				+ SCProcessNameConst.CREATE_SIMPLE_QUOTE, "review-simple-quote");
+		temp.put(SCProcessNameConst.START_SIMPLE_QUOTE_CREATION
+				+ SCProcessNameConst.SUBMIT_SIMPLE_QUOTE, "review-simple-quote");
 		temp.put(SCProcessNameConst.SIMPLE_QUOTE_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_REQUEST_NOTE,
 				"review-directpurchase");

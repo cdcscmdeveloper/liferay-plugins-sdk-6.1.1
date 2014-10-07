@@ -191,9 +191,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					scQuote.setPanel(Boolean.TRUE);
 					scQuote.setZonal(Boolean.FALSE);
 
-					PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+					QuoteReqDTO reqDTO = new QuoteReqDTO();
 					reqDTO.setPanelItemId(docId);
-					PanelSupplierResDTO resDTO= panelSupplierSO.retrieveSupplierByPanelItem(reqDTO);
+					QuoteResDTO resDTO= quoteSO.getPanelSupplierByPanelItem(reqDTO);
 					CtPanelItem  selectedPanelItem = resDTO.getCtPanelItem();
 					if(selectedPanelItem != null) {
 						if(selectedPanelItem.getItemCategoryId() != null){
