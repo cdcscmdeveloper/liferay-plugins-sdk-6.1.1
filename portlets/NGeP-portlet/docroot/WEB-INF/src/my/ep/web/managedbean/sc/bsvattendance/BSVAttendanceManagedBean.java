@@ -49,6 +49,9 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private BriefingZoneBean normalBsvBean;
 	
 	private List<SmMofAccount> mofAccounts;
+	private String bsvZoneindx="0";
+	
+	
 
 	public List<ScQtBsvRegistration> getBriefingRegistrationList() {
 		return briefingRegistrationList;
@@ -175,4 +178,13 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 		this.mofAccounts = mofAccounts;
 	}
 
+	public String getBsvZoneindx() {
+		return bsvZoneindx;
+	}
+
+	public void setBsvZoneindx(String bsvZoneindx) {
+		this.bsvZoneindx = bsvZoneindx;
+	}
+
+	
 }
