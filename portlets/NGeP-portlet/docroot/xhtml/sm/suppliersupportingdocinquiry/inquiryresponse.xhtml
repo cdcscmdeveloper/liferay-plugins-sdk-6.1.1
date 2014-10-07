@@ -14,16 +14,16 @@
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
 		<div align="right">
-			<p:commandButton value="Submit" onclick="submissionConfirmDlg.show();" />
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="submissionConfirmDlg.show();" />
 		</div>
 
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100"
 			width="500">
-   			 Do you want to proceed ?	
+   			 #{lbl['lbl.sm.supportingdoc.want.proceed.qmark']}	
    		<div align="right">
-				<p:commandButton value="Yes"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					action="#{supportingDocInquiryBackingBean.submitInquiryResponse}"></p:commandButton>
-				<p:commandButton value="No" onclick="submissionDlg.hide();"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
 

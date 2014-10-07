@@ -21,7 +21,7 @@
 							immediate="true" action="#{softCertBackingBean.cancel}" />
 					</td>
 					<td style="white-space: nowrap; float: right;">
-					    <p:commandButton value="Make payment" style="float:right;" icon="ui-icon-next"
+					    <p:commandButton value="#{lbl['lbl.sm.makePayment']}" style="float:right;" icon="ui-icon-next"
 					    	action="#{softCertBackingBean.makePayment}"/>
 					</td>
 				</tr>
@@ -30,7 +30,7 @@
 
 	<h:panelGrid id="search" style="width:100%;">
 	 
-	<p:panel header="Payment Selection" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.payment.selection']}" toggleable="true">
 	<p:dataTable id="paymentList" rowKey="#{personnel}" rowIndexVar="index" 
 				value="#{softCertBackingBean.managedBean.softCertSelectList}" var="personnel" 
 				editable="true" style="word-wrap: break-word;table-layout: fixed;" 
@@ -39,8 +39,8 @@
  		<p:columnGroup type="header">
 			<p:row>
 				<p:column selectionMode="multiple" style="width:2%" />
-				<p:column headerText="Payment Description" />
-				<p:column headerText="Amount (RM.)" />
+				<p:column headerText="#{lbl['lbl.sm.payment.description']}" />
+				<p:column headerText="#{lbl['lbl.sm.person.shrAmt']}" />
 
 			</p:row>
 		</p:columnGroup>
@@ -54,7 +54,7 @@
 		<p:column selectionMode="multiple" style="width:2%"/> 
 						
        <p:column>
-        <h:outputText value="Soft Cert Payment for #{personnel.name}"/>  
+        <h:outputText value="#{lbl['lbl.sm.soft.cert.payment.for']} #{personnel.name}"/>  
        </p:column>
        
        <p:column>
@@ -64,7 +64,7 @@
        <p:columnGroup type="footer">
 			<p:row>
 				<p:column footerText=""></p:column>
-				<p:column footerText="Total"
+				<p:column footerText="#{lbl['lbl.sm.total']}"
 					style="text-align:left" />
 				<p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:left"/>
 
