@@ -17,12 +17,12 @@
 
 	<p:panel styleClass="noBorders tr,noBorders td" style="width:100%">
 		<div align="right">
-			<p:commandButton value="Save" ajax="false" icon="ui-icon-save" action="#{smPersonnelBackingBean.update(smPersonnelBackingBean.managedBean.updateSmPersonnel)}"/>
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" ajax="false" icon="ui-icon-save" action="#{smPersonnelBackingBean.update(smPersonnelBackingBean.managedBean.updateSmPersonnel)}"/>
 		</div>		
 	</p:panel>
 
 	<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-	<p:panel id="UserProfile" header="Update User" styleClass="noBorders tr,noBorders td" toggleable="true">
+	<p:panel id="UserProfile" header="#{lbl['lbl.sm.userprofile.update.user']}" styleClass="noBorders tr,noBorders td" toggleable="true">
 		<table style="width:100%;">
 			 	<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
@@ -35,7 +35,7 @@
 								value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.epRole}"
 								style="width: 207px;margin-bottom: 5px;" required="true" 
 								disabled="true">
-								<f:selectItem itemLabel="- Select One -" itemValue="" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 							</p:selectOneMenu></td>
 				</tr>
@@ -48,7 +48,7 @@
 							value="#{smPersonnelBackingBean.managedBean.updateSmPersonnel.pmCountry.countryId}"
 							style="width: 207px;margin-bottom: 5px;"
 							disabled="true">
-							<f:selectItem itemLabel="- Select One -" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.countryList}" />
 						</p:selectOneMenu></td>
@@ -138,7 +138,7 @@
 	
 		<p:panel toggleable="true">
 		<f:facet name="header">
-				<h:outputText value="Address Info"/>
+				<h:outputText value="#{lbl['lbl.sm.userprofile.addr.info']}"/>
 			</f:facet>
 				
 		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
@@ -209,7 +209,7 @@
 										label="#{lbl['lbl.sm.state']}" id="updatePermAddStateList"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmState.stateId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddStateList}" />
 										<p:ajax event="change"
@@ -228,7 +228,7 @@
 										label="#{lbl['lbl.sm.district']}" id="updatePermAddDistrictList"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmDistrict.districtId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddDistrictList}" />
 										<p:ajax event="change" update="updatePermAddCityList"
@@ -246,7 +246,7 @@
 										label="#{lbl['lbl.sm.towncity']}" id="updatePermAddCityList"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCity.cityId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddCityList}" />
 									</p:selectOneMenu>
@@ -279,7 +279,7 @@
 										<p:ajax event="change" update="@([id$=MailingAddressInfo])"
 											partialSubmit="true"
 											process="@this"/>
-									</p:selectBooleanCheckbox><p:outputLabel value="Same as permanent address" /></td>
+									</p:selectBooleanCheckbox><p:outputLabel value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
 							</tr>
 							<c:choose>
 								<c:when
@@ -343,7 +343,7 @@
 												label="#{lbl['lbl.sm.country']}"
 												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCountry.countryId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="- Select One -" itemValue="" />
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddCountryList}" />
 												<p:ajax event="change"
@@ -365,7 +365,7 @@
 												label="#{lbl['lbl.sm.state']}" id="updateMailAddStateList"
 												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmState.stateId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="- Select One -" itemValue="" />
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddStateList}" />
 												<p:ajax event="change"
@@ -387,7 +387,7 @@
 												id="updateMailAddDistrictList" label="#{lbl['lbl.sm.district']}"
 												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmDistrict.districtId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="- Select One -" itemValue="" />
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddDistrictList}" />
 												<p:ajax event="change" update="updateMailAddCityList"
@@ -408,7 +408,7 @@
 												id="updateMailAddCityList" label="#{lbl['lbl.sm.towncity']}"
 												value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelMailingAddress.smAddress.pmCity.cityId}"
 												style="width: 207px;margin-bottom: 5px;">
-												<f:selectItem itemLabel="- Select One -" itemValue="" />
+												<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 												<f:selectItems
 													value="#{smPersonnelBackingBean.managedBean.mailAddCityList}" />
 											</p:selectOneMenu>

@@ -15,7 +15,7 @@
 	<ui:define name="contentSection">
 
 
-		<p:panel id="searchSmUserProfile" header="Search Users"
+		<p:panel id="searchSmUserProfile" header="#{lbl['lbl.sm.userprofile.search.users']}"
 			styleClass="noBorders tr,noBorders td">
 			<table style="width: 100%;">
 				<tr>
@@ -31,7 +31,7 @@
 					<td><p:selectOneMenu id="userEPRole"
 							value="#{smPersonnelBackingBean.managedBean.searchEPRole}"
 							style="width: 207px; margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select One--" itemValue="" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{smPersonnelBackingBean.managedBean.searchRoleList}" />
 						</p:selectOneMenu></td>
@@ -59,7 +59,7 @@
 
 		<h:panelGrid id="search" style="width:100%;">
 
-			<p:panel header="Results" toggleable="true">
+			<p:panel header="#{lbl['lbl.sm.userprofile.results']}" toggleable="true">
 
 				<p:dataTable id="smPersonnelDataModelId" lazy="true"
 					value="#{smPersonnelBackingBean.managedBean.smPersonnelDataModel2}"
@@ -78,27 +78,27 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}">
-						<h:outputText value="Yes" rendered="#{personnel.authorized}" />
-						<h:outputText value="No" rendered="!#{personnel.authorized}" />
+						<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.authorized}" />
+						<h:outputText value="#{lbl['lbl.txt.no']}" rendered="!#{personnel.authorized}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
-						<h:outputText value="Active" rendered="#{personnel.recordStatus}" />
-						<h:outputText value="Inactive"
+						<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatus}" />
+						<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}"
 							rendered="!#{personnel.recordStatus}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
-						<h:outputText value="Supplier Admin"
+						<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
 							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" />
-						<h:outputText value="Supplier User"
+						<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
 							rendered="#{personnel.epRole eq 'BASIC_SUPPLIER_USER'}" />
-						<h:outputText value="Catalogue User"
+						<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
 							rendered="#{personnel.epRole eq 'CM_USER'}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.action']}">
-						<p:commandLink title="Edit" ajax="false"
+						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" ajax="false"
 							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}">
 							<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 						</p:commandLink>
@@ -109,7 +109,7 @@
 			<p:panel>
 				<table style="width: 100%">
 					<tr>
-						<td><p:commandButton value="Add New User"
+						<td><p:commandButton value="#{lbl['lbl.sm.userprofile.add.new']}"
 								oncomplete="confirmDialog.show();" style="float:right;"
 								icon="ui-icon-add"
 								disabled="#{smPersonnelBackingBean.managedBean.disableAddNewUser}">
@@ -128,21 +128,19 @@
 			</p:panel>
 		</h:panelGrid>
 
-		<p:dialog id="confirmDialog" header="Confirmation"
+		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
 			widgetVar="confirmDialog" modal="true" width="500" height="100">
 			<p:panel id="dPanel" style="width:100%">
 				<table>
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.search.userscount']}" />
-						</td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.search.userscount']}" /></td>
 					</tr>
 					<tr>
 						<td>
 							<div align="center">
-								<p:commandButton value="Yes" onclick="confirmDialog.hide();"
+								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
 									action="#{smPersonnelBackingBean.navigateToAddNewUserPage}" />
-								<p:commandButton value="No" onclick="confirmDialog.hide();" />
+								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 							</div>
 						</td>
 					</tr>
