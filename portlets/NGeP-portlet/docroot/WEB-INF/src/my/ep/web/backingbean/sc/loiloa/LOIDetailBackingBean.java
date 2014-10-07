@@ -111,12 +111,22 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 	public void preRenderLoiListView() {
 		debugLogger("preRenderLoiListView");
 		
+		IStatusSO statusSO;
 		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			
-			Long sourceId = Long.valueOf(dpDataType.getSourceId());
+			Long sourceId = Long.valueOf(awardDataType.getSourceId());
 			
 			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setPayLoadData(awardDataType);
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
+			
+			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(currentStatusId);
+			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
+			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
 			
 			//Long sourceId = 1450L;
 			
@@ -127,7 +137,9 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 					.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);	
 		} catch (Exception e) {
 			handleException(e);
-		}
+		} finally {
+			statusSO = null;
+		} 
 	}
 	
 	public void preRenderView() {
@@ -204,7 +216,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			getManagedBean().setRecSupplierList(resDTO.getPendingLoiLoas());
 
 			// status
-			getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
+			getCurrentStatus(getManagedBean().getCurrentStatusId());
 
 			populateUserMinistryList();
 			initializeRemarks(new ScLoi());
@@ -1170,6 +1182,38 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}
 
 		return null;
+	}
+	
+	public void updateLOIListBpmTaskAction(String outcome) {
+		debugLogger("updateLOIListBpmTaskAction");
+		
+		IQTAwardSO iqtAwardSO = null;
+		try {
+
+			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setOutcome(outcome);
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setPayLoad(getManagedBean().getPayLoadData());
+
+			AwardSupplierResDTO resDTO = iqtAwardSO
+					.updateBPMAction(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				String qtNo = getManagedBean().getScQtFinalization().getScQt().getQtNo();
+
+				renewSesionObject();
+
+				successMessage(MessageConst.INFO_700005, ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_INTENT,
+						qtNo);
+			}
+		} finally {
+			iqtAwardSO = null;
+		}
 	}
 
 	/**
