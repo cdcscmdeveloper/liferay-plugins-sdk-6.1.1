@@ -10,17 +10,17 @@
 			<td><p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" /></td>
 			<td><p:inputText readonly="true"
 					value="#{lbl['lbl.sm.newMofAppln']}" /></td>
-			<td><p:outputLabel value="Application NO." /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 			<td><p:inputText readonly="true" size="30"
 					value="  #{backingBean.managedBean.smAppl.applNo}" /></td>
-			<td><p:outputLabel value="Current Status" /></td>
-			<td><p:inputText readonly="true" value="-- Status Value --" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
+			<td><p:inputText readonly="true" value="-- #{lbl['lbl.sm.status.value']} --" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Date Submitted" /></td>
-			<td><p:inputText readonly="true" value="-- Date Value -- " /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
+			<td><p:inputText readonly="true" value="-- #{lbl['lbl.sm.dateValue']} -- " /></td>
 			<c:if test="#{backingBean.managedBean.approverUser}">
-				<td><p:outputLabel value="PO Recommendation" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']}" /></td>
 				<td><p:inputText readonly="true"
 						value="#{backingBean.managedBean.poSecReview.recommendation}" />
 				</td>
@@ -37,7 +37,7 @@
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.poSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
-						value=" Application Verified By PO"
+						value="#{lbl['lbl.sm.po.verified.application']}"
 						title="For PO to highlight the verified section " /></td>
 
 			</tr>
@@ -50,7 +50,7 @@
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.apprvrSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
-						value=" Application Verified By Approver"
+						value="#{lbl['lbl.sm.approver.verified.application']}"
 						title="For PO to highlight the verified section " /></td>
 
 			</tr>

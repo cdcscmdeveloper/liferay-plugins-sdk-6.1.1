@@ -21,17 +21,15 @@
 								<h:outputText value="#{lbl['lbl.sm.mofReg.descData']}"
 									escape="false" />
 							</p>
-							<br />
-
-							<p>NOTE : Before proceed please select the Supplier Type</p>
+							<h:outputText value="#{lbl['lbl.sm.mofReg.note']}" escape="false" />
 							<table style="width: 33%">
 								<tr>
 									<td><p:outputLabel
 											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
 									<td><p:selectOneMenu
 											value="#{backingBean.managedBean.newSupplierType}">
-											<f:selectItem itemLabel="Contractor " itemValue="K" />
-											<f:selectItem itemLabel="Consultant" itemValue="J" />
+											<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
+											<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
 										</p:selectOneMenu></td>
 								</tr>
 							</table>
