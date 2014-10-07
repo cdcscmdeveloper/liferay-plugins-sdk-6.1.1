@@ -580,8 +580,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				}else{
-			        getManagedBean().setCircularVer(resDTO.getCircularVer());
-					getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+					reqDTO = new CircularReqDTO();
+					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
+					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 					getManagedBean().setUpdateAction(false);
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
