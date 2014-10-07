@@ -94,6 +94,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -163,6 +164,7 @@ public class LOADetailBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 
 		try {
+			
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
@@ -307,7 +309,8 @@ public class LOADetailBackingBean extends
 
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
 		ScLoa scLoa = resDTO.getScLoa();
-		System.out.println("===== ScLoaLoiItem : " + scLoa.getScLoiLoaItems().size());
+		System.out.println("===== ScLoaLoiItem : "
+				+ scLoa.getScLoiLoaItems().size());
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
 
@@ -634,8 +637,8 @@ public class LOADetailBackingBean extends
 		getManagedBean().setApproverList(resDTO.getApproverList());
 
 		// Remarks
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null, scLoa.getScLoaRemarks(),
-				ScLoaRemark.class));
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
+				scLoa.getScLoaRemarks(), ScLoaRemark.class));
 
 		if (scLoa.getBondAmt() != null) {
 			getManagedBean().setBondAmountWord(
@@ -1576,7 +1579,7 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			parseLOADetails(scLoa);
+			parseLOADetails(scLoa,"SAVE");
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
@@ -1637,7 +1640,7 @@ public class LOADetailBackingBean extends
 
 			validateLOADetails(scLoa, outcome);
 
-			parseLOADetails(scLoa);
+			parseLOADetails(scLoa,"SUBMIT");
 
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
@@ -1691,26 +1694,28 @@ public class LOADetailBackingBean extends
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			
+
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
 			validateLOADetails(scLoa, outcome);
 
-			parseLOADetails(scLoa);
+			parseLOADetails(scLoa,outcome);
 
 			// if reject, remove the new witness
-			if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+			if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
 				ScLoaWitness scLoaWitness = null;
-				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses().iterator();
-	            while (it.hasNext()) {
-	            	scLoaWitness = it.next();
-	                if (scLoaWitness.isBrandNew() && null == scLoaWitness.getWitnessName()) {
-	                    it.remove();
-	                }
-	            }
+				Iterator<ScLoaWitness> it = scLoa.getScLoaWitnesses()
+						.iterator();
+				while (it.hasNext()) {
+					scLoaWitness = it.next();
+					if (scLoaWitness.isBrandNew()
+							&& null == scLoaWitness.getWitnessName()) {
+						it.remove();
+					}
+				}
 			}
-			
+
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -1749,7 +1754,7 @@ public class LOADetailBackingBean extends
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
-					}					
+					}
 				} else if (QTStatusConst.LOA_PENDING_VERIFICATION
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
@@ -1779,7 +1784,7 @@ public class LOADetailBackingBean extends
 		}
 	}
 
-	private void parseLOADetails(ScLoa scLoa) {
+	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
 
@@ -1811,6 +1816,22 @@ public class LOADetailBackingBean extends
 					scLoaApproval.setApprover(approverUser);
 				}
 			}
+		} else if (scLoa.isApprovalReq()
+				&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+			String action = null;
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				action = ApprovalAction.APPROVAL_APPROVED.value();
+			}else if(BpmOutcomeConst.BPM_REJECT.equals(outcome)){
+				action = ApprovalAction.APPROVAL_REJECTED.value();
+			}else if(BpmOutcomeConst.BPM_REVISE.equals(outcome)){
+				action = ApprovalAction.APPROVAL_REVISED.value();
+			}
+			
+			scLoaApproval.setApproverAction(action);
+			scLoaApproval.setApproverActionDate(new Date());
+
+			scLoa.setScLoaApproval(scLoaApproval);
 		}
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
@@ -2569,15 +2590,14 @@ public class LOADetailBackingBean extends
 		try {
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			scLoa.setScLoiLoa(scLoiLoa);
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			scLoa.setPmStatus(statusResDTO.getPmStatus());
-			
-			
+
 		} catch (Exception e) {
 			throw new EpException(e.toString());
 		} finally {
@@ -2799,5 +2819,9 @@ public class LOADetailBackingBean extends
 			}
 		};
 		Collections.sort(scQtScheduleList, comparator);
+	}
+	
+	public String getApprovalActionDisplayName(String value){
+		return ApprovalAction.getDisplayName(value);
 	}
 }

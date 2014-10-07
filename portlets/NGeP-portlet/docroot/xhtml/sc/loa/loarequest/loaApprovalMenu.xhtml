@@ -124,7 +124,8 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.qt.status']}" style="width:35%">
-				Approved
+				#{lOADetailBackingBean.getApprovalActionDisplayName(scLoaApproval.approverAction)}
+		
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.qt.date']}" style="width:25%">
