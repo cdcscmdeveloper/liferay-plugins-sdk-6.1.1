@@ -750,10 +750,13 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryPrintedDateView}">
 						<TABLE style="width:50%;">
 							<TR>
-								<TD>
-								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.printedDt']}"/>
 								</TD>
+								<TD>
+								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+								    </TD>
+								
 								<TD>
 									<p:calendar id="PrintedFromDate" showOn="button" value="#{reportBackingBean.printedFromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
@@ -799,10 +802,13 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryExpiryDateView}">
 						<TABLE style="width:50%;">
 							<TR>
-								<TD>
-								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+							   <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.expiryDt']}"/>
 								</TD>
+								<TD>
+								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+								    </TD>
+								
 								<TD>
 									<p:calendar id="ExpiryFromDate" showOn="button" value="#{reportBackingBean.expiryFromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">																				
@@ -871,10 +877,13 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.mandatoryApplicationDateView}">
 						<TABLE style="width:50%;">
 							<TR>
-								<TD>
-								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+							    <TD>
 									<p:outputLabel value="#{lbl['lbl.rpt.applicationDt']}"/>									
 								</TD>
+								<TD>
+								    <p:outputLabel value="*" styleClass="mandatory"  style="margin-left:0px;width:0px;"/>
+								</TD>
+								
 								<TD>
 									<p:calendar id="ApplicationFromDate"  showOn="button" value="#{reportBackingBean.applicationFromDate}" required="true"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" partialSubmit="true" process="@form">
@@ -902,7 +911,7 @@
 						<TABLE style="width:45%;">
 							<TR>
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.releaseDt']}" style="margin-left:-18px;width:160px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.releaseDt']}" style="margin-left:-98px;width:160px;"/>
 								</TD>
 								<TD>
 									<p:calendar  showOn="button" value="#{reportBackingBean.releaseFromDate}" 
