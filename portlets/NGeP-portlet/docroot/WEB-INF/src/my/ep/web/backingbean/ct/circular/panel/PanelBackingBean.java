@@ -526,7 +526,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				circularVer.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			}
 			
-			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin()) ) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select at least one approver.",""));
 				return null;
 			}
@@ -735,9 +735,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 			
-			if(getManagedBean().getApproverModel().getTarget().size()==0) {
+			/*if(getManagedBean().getApproverModel().getTarget().size()==0 && (isPanelAdmin() || isCentralContractAdmin()) ) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
-			}
+			}*/
 		//}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
