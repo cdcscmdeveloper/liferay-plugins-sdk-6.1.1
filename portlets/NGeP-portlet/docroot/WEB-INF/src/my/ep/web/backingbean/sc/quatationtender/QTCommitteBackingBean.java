@@ -619,8 +619,9 @@ public class QTCommitteBackingBean extends
 
 	public void addCloneToTecDtl() {
 		debugLogger("addCloneToTecDtl");
-		TabBean bean = getManagedBean().getSelectedTabBean();
-		List<ScCommitteeMember> selectedList = bean.getMembers();
+		//TabBean bean = getManagedBean().getSelectedTabBean();
+		List<ScCommitteeMember> selectedList = this.getManagedBean()
+				.getToBeDelCommitteMemebers();
 		if (null != selectedList && !selectedList.isEmpty()) {
 			List<TabBean> tabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
