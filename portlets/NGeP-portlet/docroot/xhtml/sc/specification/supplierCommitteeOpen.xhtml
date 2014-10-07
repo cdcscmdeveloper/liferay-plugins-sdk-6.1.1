@@ -135,8 +135,7 @@
 						value="#{lbl['lbl.so.allstate']}"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
-				<td><p:inputText disabled="true" 
-						value="No"
+				<td><p:inputText disabled="true" value="No"
 						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 
@@ -226,7 +225,8 @@
 			<tr>
 				<td style="width: 150px"><p:outputLabel
 						value="#{lbl['lbl.sc.spec.supplier.criteria.tot.suppliers']}" /></td>
-				<td><p:inputText style="margin-right:5px;" disabled="true" />
+				<td><p:inputText style="margin-right:5px;" disabled="true"
+						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
 				</td>
 			</tr>
 		</table>
