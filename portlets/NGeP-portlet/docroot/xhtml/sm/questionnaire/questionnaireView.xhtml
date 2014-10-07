@@ -9,23 +9,16 @@
 
 	<ui:define name="contentSection">
 	<f:event listener="#{questionnaireBackingBean.retrieveQuestionnaire}" type="preRenderView"></f:event>
-		<p:panel header="Answer Questionnaire" id="questionPanel">
+		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
 			<table style="width: 100%">
 				<tr>
-					<td>CUSTOMER SATISFACTION FEEDBACK FORM MALAYSIAN MINISTRY OF
-						FINANCE <BR />(SYARAKIT BEKALAN DAN PERKHIDMATAN)
-					</td>
+					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note1']}" escape="false"/></td>
 				</tr>
 				<tr>
 					<td><p:separator /></td>
 				</tr>
 				<tr>
-					<td>This feedback takes only 2-3 minutes, we request your
-						cooperation to participate.<br /> Your cooperation is greatly
-						appreciated and your valuable feedback will be used in improving
-						the quality of service and supply contractor MOF service. All
-						information provided will be kept confidential.
-					</td>
+					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note2']}" escape="false"/></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -33,20 +26,20 @@
 		<p:panel header="">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="MOF No." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mofno']}" /></td>
 					<td><p:inputText disabled="true" value="#{questionnaireBackingBean.managedBean.smMofAccount.mofNo}" /></td>
 
-					<td><p:outputLabel value="Company Name" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
 					<td><p:inputText
 							value="#{questionnaireBackingBean.managedBean.smSupp.companyName}"
 							disabled="true" /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="Application Reference NO." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.application.ref.no']}" /></td>
 					<td><p:inputText disabled="true" value="#{questionnaireBackingBean.managedBean.smSupp.smAppl.applNo}"/></td>
 
-					<td><p:outputLabel value="Type Of Application" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.questionaire.type.application']}" /></td>
 					<td><p:inputText
 							value="#{questionnaireBackingBean.managedBean.smSupp.smAppl.applType}"
 							disabled="true" /></td>
@@ -111,7 +104,7 @@
 		<div align="right">
 			<p:commandButton
 				action="#{questionnaireBackingBean.submitQuestionnaire}"
-				value="Submit" />
+				value="#{lbl['lbl.btn.submit']}" />
 		</div>
 	</ui:define>
 </ui:composition>
