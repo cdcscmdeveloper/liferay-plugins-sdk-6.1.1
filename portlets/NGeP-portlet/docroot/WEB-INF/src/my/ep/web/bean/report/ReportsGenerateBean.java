@@ -1,6 +1,8 @@
 package my.ep.web.bean.report;
 
 
+import java.util.Date;
+
 import my.ep.web.constant.report.ReportConst;
 
 /**
@@ -157,9 +159,350 @@ public class ReportsGenerateBean {
 		private String pmoTotVar=ReportConst.EMPTY_VAL;
 		private String fromDateVar=ReportConst.EMPTY_VAL;
 		private String toDateVar=ReportConst.EMPTY_VAL;
+		
+		private String supportingDocumentTotVar=ReportConst.EMPTY_VAL;	
+		private String docStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String suppDocStatusTotVar=ReportConst.EMPTY_VAL;		
+		private String registrationNoTotVar=ReportConst.EMPTY_VAL;	
+		private String ePNoTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationNoTotVar=ReportConst.EMPTY_VAL;	
+		private String zoneTotVar=ReportConst.EMPTY_VAL;	
+		private String supplierTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String mofRegNoTotVar=ReportConst.EMPTY_VAL;	
+		private String mofRegNoFromTotVar=ReportConst.EMPTY_VAL;	
+		private String mofRegNoToTotVar=ReportConst.EMPTY_VAL;	
+		private String registrationStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String capitalNaccumFrmTotVar=ReportConst.EMPTY_VAL;	
+		private String capitalNaccumToTotVar=ReportConst.EMPTY_VAL;		
+		private String paidUpCapitalNaccumShareTotVar=ReportConst.EMPTY_VAL;	
+		private String categoryTotVar=ReportConst.EMPTY_VAL;	
+		private String noOfCategoryTotVar=ReportConst.EMPTY_VAL;	
+		private String mainCategoryTotVar=ReportConst.EMPTY_VAL;	
+		private String subCategoryTotVar=ReportConst.EMPTY_VAL;	
+		private String subCategoryDivisionTotVar=ReportConst.EMPTY_VAL;	
+		private String roleTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String cancelledByTotVar=ReportConst.EMPTY_VAL;	
+		private String paymentTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String stateTotVar=ReportConst.EMPTY_VAL;	
+		private String districtTotVar=ReportConst.EMPTY_VAL;	
+		private String supplierNameTotVar=ReportConst.EMPTY_VAL;	
+		private String reportTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String organizationTypeTotVar=ReportConst.EMPTY_VAL;	
+		private String kementerianTotVar=ReportConst.EMPTY_VAL;	
+		private String namAgensiTotVar=ReportConst.EMPTY_VAL;	
+		private String complaintNoTotVar=ReportConst.EMPTY_VAL;	
+	
+		private String companyStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String caseNoTotVar=ReportConst.EMPTY_VAL;	
+		private String compApplStatusTotVar=ReportConst.EMPTY_VAL;	
+		private String categoryCodeTotVar=ReportConst.EMPTY_VAL;	
+		private String siteVisitOfficerTotVar=ReportConst.EMPTY_VAL;	
+		private String releaseFromDateTotVar=ReportConst.EMPTY_VAL;	
+		private String releaseToDateTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationFromDateTotVar=ReportConst.EMPTY_VAL;	
+		private String applicationToDateTotVar=ReportConst.EMPTY_VAL;	
+		private String receiveFromDateTotVar=ReportConst.EMPTY_VAL;		
+		private String receiveToDateTotVar=ReportConst.EMPTY_VAL;		
+		private String expiryFromDateTotVar=ReportConst.EMPTY_VAL;		
+		private String expiryToDateTotVar=ReportConst.EMPTY_VAL;	
+		private String printedFromDateTotVar=ReportConst.EMPTY_VAL;		
+		private String printedToDateTotVar=ReportConst.EMPTY_VAL;	
 
 		
 		
+		
+		public String getSupportingDocumentTotVar() {
+			return supportingDocumentTotVar;
+		}
+		public void setSupportingDocumentTotVar(String supportingDocumentTotVar) {
+			this.supportingDocumentTotVar = supportingDocumentTotVar;
+		}
+		public String getDocStatusTotVar() {
+			return docStatusTotVar;
+		}
+		public void setDocStatusTotVar(String docStatusTotVar) {
+			this.docStatusTotVar = docStatusTotVar;
+		}
+		
+		public String getSuppDocStatusTotVar() {
+			return suppDocStatusTotVar;
+		}
+		public void setSuppDocStatusTotVar(String suppDocStatusTotVar) {
+			this.suppDocStatusTotVar = suppDocStatusTotVar;
+		}
+		public String getRegistrationNoTotVar() {
+			return registrationNoTotVar;
+		}
+		public void setRegistrationNoTotVar(String registrationNoTotVar) {
+			this.registrationNoTotVar = registrationNoTotVar;
+		}
+		public String getePNoTotVar() {
+			return ePNoTotVar;
+		}
+		public void setePNoTotVar(String ePNoTotVar) {
+			this.ePNoTotVar = ePNoTotVar;
+		}
+		public String getApplicationNoTotVar() {
+			return applicationNoTotVar;
+		}
+		public void setApplicationNoTotVar(String applicationNoTotVar) {
+			this.applicationNoTotVar = applicationNoTotVar;
+		}
+		public String getZoneTotVar() {
+			return zoneTotVar;
+		}
+		public void setZoneTotVar(String zoneTotVar) {
+			this.zoneTotVar = zoneTotVar;
+		}
+		public String getSupplierTypeTotVar() {
+			return supplierTypeTotVar;
+		}
+		public void setSupplierTypeTotVar(String supplierTypeTotVar) {
+			this.supplierTypeTotVar = supplierTypeTotVar;
+		}
+		public String getMofRegNoTotVar() {
+			return mofRegNoTotVar;
+		}
+		public void setMofRegNoTotVar(String mofRegNoTotVar) {
+			this.mofRegNoTotVar = mofRegNoTotVar;
+		}
+		public String getMofRegNoFromTotVar() {
+			return mofRegNoFromTotVar;
+		}
+		public void setMofRegNoFromTotVar(String mofRegNoFromTotVar) {
+			this.mofRegNoFromTotVar = mofRegNoFromTotVar;
+		}
+		public String getMofRegNoToTotVar() {
+			return mofRegNoToTotVar;
+		}
+		public void setMofRegNoToTotVar(String mofRegNoToTotVar) {
+			this.mofRegNoToTotVar = mofRegNoToTotVar;
+		}
+		public String getRegistrationStatusTotVar() {
+			return registrationStatusTotVar;
+		}
+		public void setRegistrationStatusTotVar(String registrationStatusTotVar) {
+			this.registrationStatusTotVar = registrationStatusTotVar;
+		}
+		public String getCapitalNaccumFrmTotVar() {
+			return capitalNaccumFrmTotVar;
+		}
+		public void setCapitalNaccumFrmTotVar(String capitalNaccumFrmTotVar) {
+			this.capitalNaccumFrmTotVar = capitalNaccumFrmTotVar;
+		}
+		public String getCapitalNaccumToTotVar() {
+			return capitalNaccumToTotVar;
+		}
+		public void setCapitalNaccumToTotVar(String capitalNaccumToTotVar) {
+			this.capitalNaccumToTotVar = capitalNaccumToTotVar;
+		}
+		public String getPaidUpCapitalNaccumShareTotVar() {
+			return paidUpCapitalNaccumShareTotVar;
+		}
+		public void setPaidUpCapitalNaccumShareTotVar(
+				String paidUpCapitalNaccumShareTotVar) {
+			this.paidUpCapitalNaccumShareTotVar = paidUpCapitalNaccumShareTotVar;
+		}
+		public String getCategoryTotVar() {
+			return categoryTotVar;
+		}
+		public void setCategoryTotVar(String categoryTotVar) {
+			this.categoryTotVar = categoryTotVar;
+		}
+		public String getNoOfCategoryTotVar() {
+			return noOfCategoryTotVar;
+		}
+		public void setNoOfCategoryTotVar(String noOfCategoryTotVar) {
+			this.noOfCategoryTotVar = noOfCategoryTotVar;
+		}
+		public String getMainCategoryTotVar() {
+			return mainCategoryTotVar;
+		}
+		public void setMainCategoryTotVar(String mainCategoryTotVar) {
+			this.mainCategoryTotVar = mainCategoryTotVar;
+		}
+		public String getSubCategoryTotVar() {
+			return subCategoryTotVar;
+		}
+		public void setSubCategoryTotVar(String subCategoryTotVar) {
+			this.subCategoryTotVar = subCategoryTotVar;
+		}
+		public String getSubCategoryDivisionTotVar() {
+			return subCategoryDivisionTotVar;
+		}
+		public void setSubCategoryDivisionTotVar(String subCategoryDivisionTotVar) {
+			this.subCategoryDivisionTotVar = subCategoryDivisionTotVar;
+		}
+		public String getRoleTotVar() {
+			return roleTotVar;
+		}
+		public void setRoleTotVar(String roleTotVar) {
+			this.roleTotVar = roleTotVar;
+		}
+		public String getApplicationStatusTotVar() {
+			return applicationStatusTotVar;
+		}
+		public void setApplicationStatusTotVar(String applicationStatusTotVar) {
+			this.applicationStatusTotVar = applicationStatusTotVar;
+		}
+		public String getCancelledByTotVar() {
+			return cancelledByTotVar;
+		}
+		public void setCancelledByTotVar(String cancelledByTotVar) {
+			this.cancelledByTotVar = cancelledByTotVar;
+		}
+		public String getPaymentTypeTotVar() {
+			return paymentTypeTotVar;
+		}
+		public void setPaymentTypeTotVar(String paymentTypeTotVar) {
+			this.paymentTypeTotVar = paymentTypeTotVar;
+		}
+		public String getApplicationTypeTotVar() {
+			return applicationTypeTotVar;
+		}
+		public void setApplicationTypeTotVar(String applicationTypeTotVar) {
+			this.applicationTypeTotVar = applicationTypeTotVar;
+		}
+		public String getStateTotVar() {
+			return stateTotVar;
+		}
+		public void setStateTotVar(String stateTotVar) {
+			this.stateTotVar = stateTotVar;
+		}
+		public String getDistrictTotVar() {
+			return districtTotVar;
+		}
+		public void setDistrictTotVar(String districtTotVar) {
+			this.districtTotVar = districtTotVar;
+		}
+		public String getSupplierNameTotVar() {
+			return supplierNameTotVar;
+		}
+		public void setSupplierNameTotVar(String supplierNameTotVar) {
+			this.supplierNameTotVar = supplierNameTotVar;
+		}
+		public String getReportTypeTotVar() {
+			return reportTypeTotVar;
+		}
+		public void setReportTypeTotVar(String reportTypeTotVar) {
+			this.reportTypeTotVar = reportTypeTotVar;
+		}
+		public String getOrganizationTypeTotVar() {
+			return organizationTypeTotVar;
+		}
+		public void setOrganizationTypeTotVar(String organizationTypeTotVar) {
+			this.organizationTypeTotVar = organizationTypeTotVar;
+		}
+		public String getKementerianTotVar() {
+			return kementerianTotVar;
+		}
+		public void setKementerianTotVar(String kementerianTotVar) {
+			this.kementerianTotVar = kementerianTotVar;
+		}
+		public String getNamAgensiTotVar() {
+			return namAgensiTotVar;
+		}
+		public void setNamAgensiTotVar(String namAgensiTotVar) {
+			this.namAgensiTotVar = namAgensiTotVar;
+		}
+		public String getComplaintNoTotVar() {
+			return complaintNoTotVar;
+		}
+		public void setComplaintNoTotVar(String complaintNoTotVar) {
+			this.complaintNoTotVar = complaintNoTotVar;
+		}
+		public String getCompanyStatusTotVar() {
+			return companyStatusTotVar;
+		}
+		public void setCompanyStatusTotVar(String companyStatusTotVar) {
+			this.companyStatusTotVar = companyStatusTotVar;
+		}
+		public String getCaseNoTotVar() {
+			return caseNoTotVar;
+		}
+		public void setCaseNoTotVar(String caseNoTotVar) {
+			this.caseNoTotVar = caseNoTotVar;
+		}
+		public String getCompApplStatusTotVar() {
+			return compApplStatusTotVar;
+		}
+		public void setCompApplStatusTotVar(String compApplStatusTotVar) {
+			this.compApplStatusTotVar = compApplStatusTotVar;
+		}
+		public String getCategoryCodeTotVar() {
+			return categoryCodeTotVar;
+		}
+		public void setCategoryCodeTotVar(String categoryCodeTotVar) {
+			this.categoryCodeTotVar = categoryCodeTotVar;
+		}
+		public String getSiteVisitOfficerTotVar() {
+			return siteVisitOfficerTotVar;
+		}
+		public void setSiteVisitOfficerTotVar(String siteVisitOfficerTotVar) {
+			this.siteVisitOfficerTotVar = siteVisitOfficerTotVar;
+		}
+		public String getReleaseFromDateTotVar() {
+			return releaseFromDateTotVar;
+		}
+		public void setReleaseFromDateTotVar(String releaseFromDateTotVar) {
+			this.releaseFromDateTotVar = releaseFromDateTotVar;
+		}
+		public String getReleaseToDateTotVar() {
+			return releaseToDateTotVar;
+		}
+		public void setReleaseToDateTotVar(String releaseToDateTotVar) {
+			this.releaseToDateTotVar = releaseToDateTotVar;
+		}
+		public String getApplicationFromDateTotVar() {
+			return applicationFromDateTotVar;
+		}
+		public void setApplicationFromDateTotVar(String applicationFromDateTotVar) {
+			this.applicationFromDateTotVar = applicationFromDateTotVar;
+		}
+		public String getApplicationToDateTotVar() {
+			return applicationToDateTotVar;
+		}
+		public void setApplicationToDateTotVar(String applicationToDateTotVar) {
+			this.applicationToDateTotVar = applicationToDateTotVar;
+		}
+		public String getReceiveFromDateTotVar() {
+			return receiveFromDateTotVar;
+		}
+		public void setReceiveFromDateTotVar(String receiveFromDateTotVar) {
+			this.receiveFromDateTotVar = receiveFromDateTotVar;
+		}
+		public String getReceiveToDateTotVar() {
+			return receiveToDateTotVar;
+		}
+		public void setReceiveToDateTotVar(String receiveToDateTotVar) {
+			this.receiveToDateTotVar = receiveToDateTotVar;
+		}
+		public String getExpiryFromDateTotVar() {
+			return expiryFromDateTotVar;
+		}
+		public void setExpiryFromDateTotVar(String expiryFromDateTotVar) {
+			this.expiryFromDateTotVar = expiryFromDateTotVar;
+		}
+		public String getExpiryToDateTotVar() {
+			return expiryToDateTotVar;
+		}
+		public void setExpiryToDateTotVar(String expiryToDateTotVar) {
+			this.expiryToDateTotVar = expiryToDateTotVar;
+		}
+		public String getPrintedFromDateTotVar() {
+			return printedFromDateTotVar;
+		}
+		public void setPrintedFromDateTotVar(String printedFromDateTotVar) {
+			this.printedFromDateTotVar = printedFromDateTotVar;
+		}
+		public String getPrintedToDateTotVar() {
+			return printedToDateTotVar;
+		}
+		public void setPrintedToDateTotVar(String printedToDateTotVar) {
+			this.printedToDateTotVar = printedToDateTotVar;
+		}
 		public boolean isMandatoryExpiryDateView() {
 			return mandatoryExpiryDateView;
 		}
