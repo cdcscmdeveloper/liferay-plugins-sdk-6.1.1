@@ -59,10 +59,10 @@ public class SchedulerManagerBackingBean extends
 						.getJobKeys(GroupMatcher.jobGroupEquals(groupName))) {
 
 					// get job's trigger
-					trigger = getTrigger(jobKey);
+					trigger = EpSchedulerHelper.getTriggerByJobKey(jobKey);
 
 					// get trigger state
-					jobState = getTriggerState(trigger);
+					jobState = EpSchedulerHelper.getTriggerState(trigger);
 
 					if (jobState.equals(TriggerState.PAUSED.toString())) {
 						jobAction = EPSchedulerConstants.JOB_RESUME;
@@ -107,47 +107,13 @@ public class SchedulerManagerBackingBean extends
 
 	}
 
-	private boolean jobRun(JobKey jobKey) {
-		boolean retVal = false;
-
-		try {
-			for (JobExecutionContext jobExecute : getManagedBean()
-					.getScheduler().getCurrentlyExecutingJobs()) {
-				if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
-					retVal = true;
-					break;
-				}
-			}
-		} catch (SchedulerException e) {
-			log.error(e.getMessage());
-		}
-
-		return retVal;
-	}
-
 	private String getJobStatus(JobKey jobKey) {
 		String retVal = EPSchedulerConstants.JOB_WAIT;
-		if (jobRun(jobKey)) {
+		if (EpSchedulerHelper.isJobRunningNow(jobKey)) {
 			retVal = EPSchedulerConstants.JOB_RUN;
 		}
 		return retVal;
 	}
 
-	private Trigger getTrigger(JobKey jobKey) throws SchedulerException {
-		return (Trigger) getManagedBean().getScheduler()
-				.getTriggersOfJob(jobKey).get(0);
-	}
-
-	private String getTriggerState(Trigger trigger) {
-		String state = TriggerState.NONE.toString();
-		try {
-			state = getManagedBean().getScheduler()
-					.getTriggerState(trigger.getKey()).toString();
-		} catch (SchedulerException e) {
-			log.error(e.getMessage());
-		}
-
-		return state;
-	}
 
 }
