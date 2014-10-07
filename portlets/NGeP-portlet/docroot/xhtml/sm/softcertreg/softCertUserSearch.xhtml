@@ -18,7 +18,7 @@
 			<table style="width: 100%;">
 				<tr>
 					<td>
-						<p:commandButton value="Proceed" oncomplete="confirmDialog.show();"
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" oncomplete="confirmDialog.show();"
 						style="float:right;" icon="ui-icon-next">
 					</p:commandButton>
 					</td>
@@ -28,7 +28,7 @@
 
 		<h:panelGrid id="search" style="width:100%;">
 
-			<p:panel header="Results" toggleable="true">
+			<p:panel header="#{lbl['lbl.sm.results']}" toggleable="true">
 				<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
 					rowIndexVar="index" lazy="true"
 					value="#{softCertBackingBean.managedBean.softCertPagingDataModel}"
@@ -83,15 +83,15 @@
 			<p:panel id="dPanel" style="width:100%">
 				<table>
 					<tr>
-						<td><p:outputLabel value="Do you wish to continue?" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.soft.cert.wishcont.qmark']}" /></td>
 					</tr>
 					<tr>
 						<td>
 							<div align="center">
-								<p:commandButton value="Yes" onclick="confirmDialog.hide();"
+								<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
 									ajax="false"
 									action="#{softCertBackingBean.navigateToPaymentPage}" />
-								<p:commandButton value="No" onclick="confirmDialog.hide();" />
+								<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 							</div>
 						</td>
 					</tr>

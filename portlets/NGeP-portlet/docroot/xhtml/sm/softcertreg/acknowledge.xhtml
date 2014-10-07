@@ -5,11 +5,8 @@
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
-		<p:panel id="acknowledge" header="Record Acknowledgement" toggleable="true" toggleSpeed="500">
-		
-			<p:outputLabel
-								value="Request processed successfully. To submit request for approval please pay the processing fee.To pay the processing select the item from your task list." />
-								
+		<p:panel id="acknowledge" header="#{lbl['lbl.sm.soft.cert.record.ack']}" toggleable="true" toggleSpeed="500">
+		  <p:outputLabel value="#{lbl['lbl.sm.soft.cert.record.ack.note']}" />
 		</p:panel>
 	</ui:define>
 		    
