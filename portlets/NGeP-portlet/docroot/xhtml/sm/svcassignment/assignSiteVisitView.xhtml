@@ -9,11 +9,11 @@
 
 	<ui:define name="contentSection">
 		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" width="500">
-   			 Do you want to proceed ?	
+   			 #{lbl['lbl.sm.sitevisit.want.proceed.qmark']}	
    			<div align="right">
-				<p:commandButton value="Yes"
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
 					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(SupplierManagementConst.BPM_SUBMIT)}"></p:commandButton>
-				<p:commandButton value="No" onclick="submissionConfirmDlg.hide();"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="submissionConfirmDlg.hide();"></p:commandButton>
 			</div>
 		</p:dialog>
 		
