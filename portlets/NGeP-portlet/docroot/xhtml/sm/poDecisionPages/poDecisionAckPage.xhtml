@@ -12,11 +12,11 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="PO Decision Acknowlegment">
+		<p:panel header="#{lbl['lbl.sm.poDecision.ack']}">
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The application for :
+						#{lbl['lbl.sm.application.for']} :
 						<h:outputText
 							value="#{backingBean.managedBean.smSupplier.companyName}"
 							style="color: blue; font-weight: bold;" />
@@ -26,7 +26,7 @@
 				</p:outputPanel>
 			</div>
 			<div align="center">
-				<p:commandButton value="OK"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
 			</div>
 		</p:panel>
