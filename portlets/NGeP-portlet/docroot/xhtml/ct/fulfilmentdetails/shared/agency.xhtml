@@ -14,15 +14,18 @@
 	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
 	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address']}" escape="false"/><br/><br/>
      <div style="overflow-x:auto">
-       <p:dataTable id="tableAgencyDetails" var="agencyData" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
+       <p:dataTable id="tableAgencyDetails" var="agencyData" 
+            value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
-             <ac:paginator for="tableAgencyDetails"/>
-             <p:ajax event="rowSelect" update=":form:agencyId" />
-             <p:column selectionMode="multiple" style="width:2%;" />
-             <p:column headerText="#{lbl['lbl.ct.ministry']}">
+               <ac:paginator for="tableAgencyDetails"/>
+               <p:ajax event="rowSelect" update=":form:agencyId" />
+               <p:column selectionMode="multiple" style="width:2%;" />
+            
+             <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
 				<h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
 			 </p:column>
-			  <p:column headerText="#{lbl['lbl.ct.ptj']}">
+			
+			  <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:30%;white-space:normal;">
 				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
 				<p:spacer width="5"/>
 				<p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
@@ -32,25 +35,29 @@
 						title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
 				</p:commandLink>
 			 </p:column>
-			 <p:column style="width:130px;">
+			
+			 <p:column style="width:10%;white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	</f:facet>
            		<p:inputText value="#{agencyData.ceilingAmount}"  required="true"
-			     	maxlength="23"  styleClass="ppRightBtn" style="width:110px;" label="#{lbl['lbl.ct.ceiling.amount']}">
+			     	maxlength="23"  styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.amount']}">
 			 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:80px;">
+		   
+		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
 				<h:outputText value="#{agencyData.effDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
-		   	 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:80px;">
+		   	
+		   	 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;">
 				<h:outputText value="#{agencyData.expDate}">
 				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
 		   	 </p:column>
-		   	 <p:column style="width:50px;">
+		   	
+		   	 <p:column style="width:15%;white-space:normal;">
 		   	 	<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
@@ -62,7 +69,8 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" 
+       		     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />

@@ -359,6 +359,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		 } if (this.getManagedBean().getContractVer().getCtSchedules().size() > 0) {
 		        this.getManagedBean().setChkSchedule(true);
+		        Collections.sort(this.getManagedBean().getContractVer().getCtSchedules(), new CtSchedule());
 		        SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
 			    Calendar cal = Calendar.getInstance();
 			    for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()) {
@@ -372,6 +373,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		 } if (this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
 			     SimpleDateFormat dateFormatYear = new SimpleDateFormat("yyyy");
+			     Collections.sort(this.getManagedBean().getContractVer().getCtProgressivePayments(), new CtProgressivePayment());
 		         Calendar cal = Calendar.getInstance();
 			     for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
 			            cal.setTime(ctProgressivePayment.getFromDate());
@@ -1279,6 +1281,7 @@ public void ConstructSideTabMenu(){
 			 reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
 			 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			 ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
+			 ctAgency.setAp178(true);
 		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
