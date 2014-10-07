@@ -5,11 +5,11 @@
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
-		<p:panel id="acknowledge" header="Record Acknowledgement" toggleable="true" toggleSpeed="500">
-			User profile update successfully.
+		<p:panel id="acknowledge" header="#{lbl['lbl.sm.ack.record.acknowledgmnt']}" toggleable="true" toggleSpeed="500">
+			#{lbl['lbl.sm.ack.userprofile.update.success']}
 		</p:panel>
 		
-		<p:commandButton value="Back to User Profile Maintenance" action="#{smPersonnelBackingBean.cancel}" ></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sm.button.back.userprofile.maintnce']}" action="#{smPersonnelBackingBean.cancel}" ></p:commandButton>
 	</ui:define>
 		    
 </ui:composition>				
