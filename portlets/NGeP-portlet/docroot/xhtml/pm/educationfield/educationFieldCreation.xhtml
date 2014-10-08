@@ -14,7 +14,7 @@
     }
 </style>	
 		
-   <p:panel header="EDUCATION FIELD" toggleable="true" styleClass="noBorders tr,noBorders td" >
+   <p:panel header="Education Field" toggleable="true" >
 	<p:spacer height="10"></p:spacer>
 		
 	<table style="width:100%;">
@@ -45,7 +45,7 @@
 	<p:spacer height="50"></p:spacer>	
    </p:panel>
    
-	<p:panel header="EDUCATION FIELD RESTRICTION" toggleable="true">
+	<p:panel header="Education Field Restriction" toggleable="true">
 	<ac:lovPopup />
 	<p:dataTable id="educationfieldres" 
 		selection="#{educationBackingBean.managedBean.eduRestrDeleteList}" rowKey="#{eduFieldRes}"
@@ -81,12 +81,12 @@
 				    <tr>
 				    <td class="TableFieldLeft">
 				      <ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
-            		     headerText="Category Lov" buttonLabel="Add"
+            		     headerText="Category Lov" buttonLabel="#{lbl['lbl.btn.add']}"
 	       				 buttonIcon="ui-icon-add" selectionMode="multiple"
 	        			 saveObject="educationBackingBean.managedBean.eduRestrSelectList"
 	        			 postUpdateListener="educationBackingBean.addEducationList(educationBackingBean.managedBean.eduRestrSelectList)"
 	        			 update="@form" /></td>
-					<td><p:commandButton value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" 
+					<td><p:commandButton value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" 
 						 action="#{educationBackingBean.deleteEducationList}"
 						 update="@form"/></td>
 					</tr>
