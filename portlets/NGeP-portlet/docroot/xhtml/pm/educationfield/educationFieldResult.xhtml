@@ -12,7 +12,7 @@
 		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
     </p:panel>
 	
-	<p:panel id="educationSearch" header="SEARCH" toggleable="true">
+	<p:panel id="educationSearch" header="#{lbl['lbl.pm.sa.search']}" toggleable="true">
 		
 	<h:panelGrid style="width:100%;">
 	</h:panelGrid>
@@ -29,7 +29,7 @@
 	<br/>
 	</p:panel>
 	
-	<p:panel id="educationResult" header="RESULT" toggleable="true">
+	<p:panel id="educationResult" header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
 	<p:dataTable id="educationSR" value="#{educationBackingBean.educationFieldDataModel}"
 				var="educationList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="educationSR" />
