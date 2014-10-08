@@ -40,7 +40,6 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.division.IDivisionSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -83,8 +82,6 @@ import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.division.DivisionReqDTO;
 import my.ep.dto.pm.common.division.DivisionResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
-import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
 import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -185,12 +182,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private String queryDesc;
 	
 	private static Map<Long, PmVotFund> votFundCodeMap = new HashMap<Long, PmVotFund>();
-	private static Map<Long, PmGlAccount> glAccountCodeMap = new HashMap<Long, PmGlAccount>();
-	private static Map<Long, PmPrgActivity> progmActivityCodeMap = new HashMap<Long, PmPrgActivity>();
-	private static Map<Long, PmProject> projectCodeMap = new HashMap<Long, PmProject>();
-	private static Map<Long, PmSetia> setiaCodeMap = new HashMap<Long, PmSetia>();
-	private static Map<Long, PmSubSetia> subSetiaCodeMap = new HashMap<Long, PmSubSetia>();
-	
 	
 	// bulk charge popup
 	private Long pmPrjSetia;
@@ -473,6 +464,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void closeListener() {
 		log.info("closeListener");
+		getManagedBean().setEmailValidate(true);
 		RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
@@ -507,7 +499,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void flManualDeliveryAddr() {
-		
+		getManagedBean().setEmailValidate(false);
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
 		getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
@@ -611,8 +603,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
 	}
 	public void updateManualDeliveryAddrDt() {
+		getManagedBean().setEmailValidate(true);
 		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
 		if(null== getManagedBean().getFlManulaAddress().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
+			// add to cart validation
+			RequestContext.getCurrentInstance().execute("addManualDeliveryAddr.hide()");
+			getManagedBean().setRequired(Boolean.FALSE);
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
@@ -707,8 +703,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
 			flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 			flItemAddr.setItemType(contractedItem.getItemType());
-			//lazy.............
-			//getManagedBean().setPmPriceType(contractedItem.getPriceType());;
 			
 			if(getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr() == null){
 				getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
@@ -1271,7 +1265,56 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
-		getManagedBean().setFlManualAddress(flDelAddress);
+		getManagedBean().setEmailValidate(false);
+		getManagedBean().setFlManulaAddress(flDelAddress);
+		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision()==null) {
+			getManagedBean().getFlManulaAddress().getPmAddress().setPmDivision(new PmDivision());
+		}
+		retrieveCountryList();
+		
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setCountryId(flDelAddress.getPmAddress().getPmCountry().getCountryId());
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+		getManagedBean().setStateList(resDTO.getStateList());
+		
+		DistrictReqDTO districtReqDTO = new DistrictReqDTO();
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+		
+		if(getManagedBean().getFlManulaAddress().getPmAddress().getPmDivision().getDivisionId()!=null) {
+			DivisionReqDTO divReqDTO= new DivisionReqDTO();
+			divReqDTO.setStateId(flDelAddress.getPmAddress().getPmState().getStateId());
+			IDivisionSO divisionSO = (IDivisionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDivisionSO.class);
+			DivisionResDTO divResDTO = divisionSO.retriveDivisionListByState(divReqDTO);
+			getManagedBean().setDivisionList(divResDTO.getDivisionList());
+			
+			districtReqDTO.setDivisionId(flDelAddress.getPmAddress().getPmDivision().getDivisionId());
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByDivision(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());		
+		} else {
+			districtReqDTO.setStateId(flDelAddress.getPmAddress().getPmState().getStateId());
+			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);
+			getManagedBean().setDistrictList(districtResDTO.getDistrictList());			
+		}
+		
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		cityReqDTO.setDistrictId(flDelAddress.getPmAddress().getPmDistrict().getDistrictId());
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityResDTO cityResDTO = citySO.retriveCityListByDistrictId(cityReqDTO);
+		this.getManagedBean().setCityList(cityResDTO.getCityList());
+		
+		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
+			setManualAddressList();
+		}
+		getManagedBean().setManualAddressList(getManagedBean().getManualAddressMap().get(flDelAddress.getPmAddress().getPmDistrict().getDistrictId()));
+		List<SelectItem> manualAddrList = new ArrayList<SelectItem>();
+		if(getManagedBean().getManualAddressList()!=null) {
+			for (PmAddressType obj : getManagedBean().getManualAddressList()) {
+				manualAddrList.add(new SelectItem(obj.getAddressTypeId(), obj.getPmAddress().getAddressName()));
+			}
+		}
+		getManagedBean().setManualAddrList(manualAddrList);
+		
 		flDelAddress.setEditable(true);
 		
 	}
@@ -1395,6 +1438,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(getManagedBean().getSelectedDelAddr()==null) { 
 				retrieveCountryList();
 			}
+			getManagedBean().setEmailValidate(true);
 		}
 		if(selectedTabIndex==4){
 			initializeApproverGroup();
@@ -1480,7 +1524,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			for(TreeNode children:selectedNode.getChildren()){
 				FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
 				if(null !=childData.getPmVotFund()){
-					if("A".equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
+					if(VotFundType.AMANAH.value().equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
 						getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
 						getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
 					}else{
@@ -1499,33 +1543,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				
 				if(childData.getPmPrgActivity()!=null) {
-					if(progmActivityCodeMap.size()==0) {
-						IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProgramActivitySO.class);
-						ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-						reqDTO.setVotFundId(childData.getPmVotFund().getVotFundId());
-						ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
-						
-						for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
-							progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
-						}
-					}
-					PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(childData.getPmPrgActivity().getPrgActivityId());
-					//getManagedBean().setPmPrgActivity(pmPrgActivity);
 					getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
 				}
 				
 				if(childData.getPmSubSetia()!=null) {
-					if(subSetiaCodeMap.size()==0) {
-						IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
-						ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-						reqDTO.setSetiaId(childData.getPmSubSetia().getPmSetia().getSetiaId());
-						ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
-						for (PmSubSetia pmSubSetia : resDTO.getSubSetiaList()) {
-							subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
-						}						
-					}
-					PmSubSetia pmSubSetia = subSetiaCodeMap.get(childData.getPmSubSetia().getSubSetiaId());
-					getManagedBean().setPmSubSetia(pmSubSetia);
+					getManagedBean().setPmSubSetia(childData.getPmSubSetia());
 				}
 			}
 		}
@@ -1637,16 +1659,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
 			PmGlAccount pmGlAccount = getManagedBean().getGosodo();
-			PmPrgActivity pmPrgActivity = progmActivityCodeMap.get(getManagedBean().getPrgActivityId());
-			PmProject pmProject = projectCodeMap.get(getManagedBean().getProjectId());
-			PmSetia pmSetia = setiaCodeMap.get(getManagedBean().getSetiaId());
-			PmSubSetia pmSubSetia = subSetiaCodeMap.get(getManagedBean().getSubSetiaId());
+			PmPrgActivity pmPrgActivity = getManagedBean().getPmPrgActivity();
+			PmSubSetia pmSubSetia = getManagedBean().getPmSubSetia();
 			if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.AMANAH.value())) {
 				pmPrgActivity = null;
-				pmProject = null;
-				pmSetia = null;
 				pmSubSetia = null;
-			}
+			} else if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				pmSubSetia = null;
+			} else if(VotFundType.PEMBANGUNAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.SETIA.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
+				pmPrgActivity = null;
+			}			
 			
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 			paramReqDTO.setParameterId(getManagedBean().getAssetIndId());
@@ -1668,12 +1690,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					childItemAddress.setPmGlAccount(pmGlAccount);
 					childItemAddress.setPmPrgActivity(pmPrgActivity);
 					childItemAddress.setPmSubSetia(pmSubSetia);
-					
-					childItemAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
-					childItemAddress.getFlFulfilmentItem().setAssetInd(assetInd);
-					childItemAddress.getFlFulfilmentItem().setPmGlAccount(pmGlAccount);
-					childItemAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
-					childItemAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 					childItemAddress.setVotFundDisplay(getManagedBean().isVotFundDisplay());
 				}
 				childItemAddress = (FlFulfilmentItemAddr)selectedNode.getData();
@@ -1687,25 +1703,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 							itemDelAddress.setPmGlAccount(pmGlAccount);
 							itemDelAddress.setPmPrgActivity(pmPrgActivity);
 							itemDelAddress.setPmSubSetia(pmSubSetia);
-							
-							itemDelAddress.getFlFulfilmentItem().setPmVotFund(pmVotFund);
-							itemDelAddress.getFlFulfilmentItem().setAssetInd(assetInd);
-							itemDelAddress.getFlFulfilmentItem().setPmGlAccount(pmGlAccount);
-							itemDelAddress.getFlFulfilmentItem().setPmPrgActivity(pmPrgActivity);
-							itemDelAddress.getFlFulfilmentItem().setPmSubSetia(pmSubSetia);
 						}
-					}
-				}
-				
-				for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
-					if(item.getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().longValue()==childItemAddress.getScRequestItem().getRequestNoteItemId().longValue()
-							&& item.getUnitPrice().doubleValue()==childItemAddress.getUnitPrice().doubleValue()) {
-						item.setPmVotFund(pmVotFund);
-						item.setAssetInd(assetInd);
-						item.setPmGlAccount(pmGlAccount);
-						item.setPmPrgActivity(pmPrgActivity);
-						item.setPmSubSetia(pmSubSetia);
-						break;
 					}
 				}
 			}
@@ -1832,6 +1830,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void getVotFundList(Long profileId){
+
 		IFulfilmentSO fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setOrgProfileId(profileId);
@@ -1841,109 +1840,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			votFundCodeMap.put(pmVotFund.getVotFundId(), pmVotFund);
 		}
 		
-		FulfilmentResDTO glAccountRes = fulfilmentSO.retrieveGlAccounts(reqDTO);
-		getManagedBean().setGlAccountList(glAccountRes.getGlAccountList());
-		for(PmGlAccount pmGlAcount : glAccountRes.getGlAccountList()) {
-			glAccountCodeMap.put(pmGlAcount.getGlAccountId(), pmGlAcount);
-		}
 		getManagedBean().setSetiaId(0L);
 		getManagedBean().setSubSetiaId(0L);	
 		getManagedBean().setVotFundList(votFundRes.getVotFundList());
-		
-	}
 	
-	public void getProjectList(AjaxBehaviorEvent e) {
-		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
-		if(votFundId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setVotFundId(votFundId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectList(reqDTO);
-			
-			for (PmProject pmProject : resDTO.getProjectList()) {
-				projectCodeMap.put(pmProject.getProjectId(), pmProject);
-			}
-			PmVotFund votFund = votFundCodeMap.get(votFundId);
-			getManagedBean().setVotFundType(votFund.getVotFundType());
-			getManagedBean().setProjectId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setProjectList(resDTO.getProjectList());
-		} else {
-			getManagedBean().setVotFundType(null);
-			getManagedBean().setProjectId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setProjectList(new ArrayList<PmProject>());
-		}
-	}
-	
-	public void getProgramList(AjaxBehaviorEvent e) {
-		Long votFundId = (Long) e.getComponent().getAttributes().get("value");
-		if(votFundId!=null) {
-			IProgramActivitySO programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance().getServiceObject("pm",IProgramActivitySO.class);
-			ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-			reqDTO.setVotFundId(votFundId);
-			ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityList(reqDTO);
-			
-			for (PmPrgActivity pmPrgActivity : resDTO.getPrgActivityList()) {
-				progmActivityCodeMap.put(pmPrgActivity.getPrgActivityId(), pmPrgActivity);
-			}
-			getManagedBean().setPrgActivityId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setPrgActivityList(resDTO.getPrgActivityList());
-		} else {
-			getManagedBean().setPrgActivityId(0L);	
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSubSetiaId(0L);	
-			getManagedBean().setPrgActivityList(new ArrayList<PmPrgActivity>());
-		}
-	}
-	
-	
-	public void getSetiaList(AjaxBehaviorEvent e) {
-		Long projectId = (Long) e.getComponent().getAttributes().get("value");
-		if(projectId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setProjectId(projectId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSetiaList(reqDTO);
-			for (PmSetia pmSetia : resDTO.getSetiaList()) {
-				setiaCodeMap.put(pmSetia.getSetiaId(), pmSetia);
-			}
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSetiaList(resDTO.getSetiaList());
-		} else {
-			getManagedBean().setSetiaId(0L);
-			getManagedBean().setSetiaList(new ArrayList<PmSetia>());
-		}
-	}
-	
-	public void getSubSetiaList(AjaxBehaviorEvent e) {
-		Long setiaId = (Long) e.getComponent().getAttributes().get("value");
-		if(setiaId!=null) {
-			IProjectSetiaSO projectSetiaSO = (IProjectSetiaSO) BusinessDelegate.getInstance().getServiceObject("pm",IProjectSetiaSO.class);
-			ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
-			reqDTO.setSetiaId(setiaId);
-			ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveSubSetiaList(reqDTO);
-			for (PmSubSetia pmSubSetia : resDTO.getSubSetiaList()) {
-				subSetiaCodeMap.put(pmSubSetia.getSubSetiaId(), pmSubSetia);
-			}
-			getManagedBean().setSubSetiaId(0L);
-			getManagedBean().setSubSetiaList(resDTO.getSubSetiaList());
-		} else {
-			getManagedBean().setSubSetiaId(0L);
-			getManagedBean().setSubSetiaList(new ArrayList<PmSubSetia>());
-		}
 	}
 
 	// display itemCode,itemName,QueryDesc in popup
 	public void showItemQuery(FlFulfilmentItemAddr flItemAddress){
-		
+		getManagedBean().setQueryDisplay(false);
 		flItemAddress.getScRequestItem().getItemName();
-		setQueryItemCode(flItemAddress.getCmItem().getItemId().toString());
+		setQueryItemCode(flItemAddress.getScRequestItem().getRequestNoteItemId().toString());
 		setQueryItemName(flItemAddress.getScRequestItem().getItemName());
+		if(null != flItemAddress.getFlFulfilmentItem().getFlQuery()){
+			getManagedBean().setQueryDisplay(true);
+			setQueryDesc(flItemAddress.getFlFulfilmentItem().getFlQuery().getQueryDesc());
+		}
 	}
 	
 
@@ -2058,19 +1970,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		this.disPmPrgActivity = disPmPrgActivity;
 	}
 
-	/**
-	 * @return the glAccountCodeMap
-	 */
-	public static Map<Long, PmGlAccount> getGlAccountCodeMap() {
-		return glAccountCodeMap;
-	}
-
-	/**
-	 * @param glAccountCodeMap the glAccountCodeMap to set
-	 */
-	public static void setGlAccountCodeMap(Map<Long, PmGlAccount> glAccountCodeMap) {
-		ContractRequestBackingBean.glAccountCodeMap = glAccountCodeMap;
-	}
+	
 
 	/**
 	 * @return the votFundCodeMap
@@ -2086,62 +1986,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractRequestBackingBean.votFundCodeMap = votFundCodeMap;
 	}
 
-	/**
-	 * @return the progmActivityCodeMap
-	 */
-	public static Map<Long, PmPrgActivity> getProgmActivityCodeMap() {
-		return progmActivityCodeMap;
-	}
-
-	/**
-	 * @param progmActivityCodeMap the progmActivityCodeMap to set
-	 */
-	public static void setProgmActivityCodeMap(
-			Map<Long, PmPrgActivity> progmActivityCodeMap) {
-		ContractRequestBackingBean.progmActivityCodeMap = progmActivityCodeMap;
-	}
-
-	/**
-	 * @return the projectCodeMap
-	 */
-	public static Map<Long, PmProject> getProjectCodeMap() {
-		return projectCodeMap;
-	}
-
-	/**
-	 * @param projectCodeMap the projectCodeMap to set
-	 */
-	public static void setProjectCodeMap(Map<Long, PmProject> projectCodeMap) {
-		ContractRequestBackingBean.projectCodeMap = projectCodeMap;
-	}
-
-	/**
-	 * @return the setiaCodeMap
-	 */
-	public static Map<Long, PmSetia> getSetiaCodeMap() {
-		return setiaCodeMap;
-	}
-
-	/**
-	 * @param setiaCodeMap the setiaCodeMap to set
-	 */
-	public static void setSetiaCodeMap(Map<Long, PmSetia> setiaCodeMap) {
-		ContractRequestBackingBean.setiaCodeMap = setiaCodeMap;
-	}
-
-	/**
-	 * @return the subSetiaCodeMap
-	 */
-	public static Map<Long, PmSubSetia> getSubSetiaCodeMap() {
-		return subSetiaCodeMap;
-	}
-
-	/**
-	 * @param subSetiaCodeMap the subSetiaCodeMap to set
-	 */
-	public static void setSubSetiaCodeMap(Map<Long, PmSubSetia> subSetiaCodeMap) {
-		ContractRequestBackingBean.subSetiaCodeMap = subSetiaCodeMap;
-	}
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
 		if((boolean) e.getComponent().getAttributes().get("value")){
@@ -2408,27 +2252,31 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().setChargeLinePanel(false);
 			}
 		}
+		
 		public void checkVotFundLov(){
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
 			getManagedBean().setVotFundCode("");
 			getManagedBean().setVotFundId(0L);
-			getManagedBean().getPmSubSetia().setSubSetiaCode("");
-			getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
-			getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
-			getManagedBean().getPmSubSetia().setFinancingType(null);
+			if(getManagedBean().getPmSubSetia()!=null) {
+				getManagedBean().getPmSubSetia().setSubSetiaCode("");
+				getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
+				getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
+				getManagedBean().getPmSubSetia().setFinancingType(null);
+			}
 			getManagedBean().setPmPrgActivity(null);
 			
 			if(null != getManagedBean().getPmVoteFund()){
 				votFundCodeMap.put(getManagedBean().getPmVoteFund().getVotFundId(), getManagedBean().getPmVoteFund());
 			}
-			
 		}
+		
 		public void checkVotFundDropdown(){
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(true);
+			
 			if(null != getManagedBean().getPmVoteFund()){
 				if(!"".equalsIgnoreCase(getManagedBean().getPmVoteFund().getVotFundCode())){
 					getManagedBean().getPmVoteFund().setVotFundCode("");
@@ -2436,38 +2284,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			PmVotFund pmVotFund = votFundCodeMap.get(getManagedBean().getVotFundId());
-			if(null != getManagedBean().getPmSubSetia()){
-				getManagedBean().getPmSubSetia().setSubSetiaCode("");
-				getManagedBean().getPmSubSetia().getPmSetia().setSetiaCode("");
-				getManagedBean().getPmSubSetia().getPmSetia().getPmProject().setProjectCode("");
-				getManagedBean().getPmSubSetia().setFinancingType(null);
-			}			
+			getManagedBean().setPmPrgActivity(null);
+			getManagedBean().setPmSubSetia(null);
+
 			if(pmVotFund!=null && !"".equalsIgnoreCase(pmVotFund.getVotFundType())){
-				if("B".equalsIgnoreCase(pmVotFund.getVotFundType()) || "T".equalsIgnoreCase(pmVotFund.getVotFundType())){
+				if(VotFundType.BEKALAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.TANGGUNGAN.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
 					getManagedBean().setProgramLov(true);
-				} else if("P".equalsIgnoreCase(pmVotFund.getVotFundType()) || "S".equalsIgnoreCase(pmVotFund.getVotFundType())){
+				} else if(VotFundType.PEMBANGUNAN.value().equalsIgnoreCase(pmVotFund.getVotFundType()) || VotFundType.SETIA.value().equalsIgnoreCase(pmVotFund.getVotFundType())){
 					getManagedBean().setProjectLov(true);
-					if(null != getManagedBean().getPmPrgActivity()){
-						getManagedBean().getPmPrgActivity().setPrgActivityCode("");
-					}
 				}
 			}
 		}
-		public void checkProjectLov(){
-			if(null != getManagedBean().getPmSubSetia()){
-				projectCodeMap.put(getManagedBean().getPmSubSetia().getPmSetia().getPmProject().getProjectId(), getManagedBean().getPmSubSetia().getPmSetia().getPmProject());
-				subSetiaCodeMap.put(getManagedBean().getPmSubSetia().getSubSetiaId(), getManagedBean().getPmSubSetia());
-				setiaCodeMap.put(getManagedBean().getPmSubSetia().getPmSetia().getSetiaId(), getManagedBean().getPmSubSetia().getPmSetia());
-			}
-			
-		}
-
-		public void checkProgramLov(){
-			if(null != getManagedBean().getPmPrgActivity()){
-				progmActivityCodeMap.put(getManagedBean().getPmPrgActivity().getPrgActivityId(),getManagedBean().getPmPrgActivity());
-			}
-		}
-		
 	
 	/**
 	 * Page navigation to FLDoc search page in CR
@@ -2501,14 +2328,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setStandardPrice(false);
 			getManagedBean().setZonalPrice(false);
 			getManagedBean().setZonalTierPrice(false);
-			/*if(FulfilmentStatusConst.STANDARD_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.STANDARD_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
+			if(FulfilmentStatusConst.STANDARD_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.STANDARD_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setStandardPrice(true);
 			}else if(FulfilmentStatusConst.ZONAL_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.ZONAL_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setZonalPrice(true);
 			}else if(FulfilmentStatusConst.ZONAL_TIER_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.ZONAL_TIER_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setZonalTierPrice(true);
-			}*/
-			
+			}
 			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());

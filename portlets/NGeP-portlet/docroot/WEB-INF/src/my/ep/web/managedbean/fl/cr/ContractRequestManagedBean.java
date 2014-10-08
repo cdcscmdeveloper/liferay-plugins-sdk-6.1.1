@@ -222,6 +222,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean zonalTierPrice = false;
 	private PmParameter pmPriceType;
 	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
+	
+	private boolean emailValidate = false;
+	private boolean queryDisplay=false;
 
 	
 	/**
@@ -2093,6 +2096,34 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSupplierItemPriceList(
 			List<FLCtSupplierItemVO> supplierItemPriceList) {
 		this.supplierItemPriceList = supplierItemPriceList;
+	}
+
+	/**
+	 * @return the emailValidate
+	 */
+	public boolean isEmailValidate() {
+		return emailValidate;
+	}
+
+	/**
+	 * @param emailValidate the emailValidate to set
+	 */
+	public void setEmailValidate(boolean emailValidate) {
+		this.emailValidate = emailValidate;
+	}
+
+	/**
+	 * @return the queryDisplay
+	 */
+	public boolean isQueryDisplay() {
+		return queryDisplay;
+	}
+
+	/**
+	 * @param queryDisplay the queryDisplay to set
+	 */
+	public void setQueryDisplay(boolean queryDisplay) {
+		this.queryDisplay = queryDisplay;
 	}
 
 
