@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
+			rendered="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'}"
+			id="scheduleBidPackageNonZonePanel">
+			<div align="left">
+				<table style="align: left">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
+
+						<td><p:calendar showOn="button"
+								id="scheduleBidPackageStartDate"
+								value="#{scheduleBiddingBB.managedBean.bidStart}"
+								mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+								<p:ajax event="dateSelect" process="scheduleBidPackageStartDate"
+									partialSubmit="true"
+									listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
+									update="scheduleBidPackageEndDate" />
+
+							</p:calendar></td>
+
+						<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
+
+						<td><p:calendar showOn="button"
+								id="scheduleBidPackageEndDate"
+								mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
+								maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
+								value="#{scheduleBiddingBB.managedBean.bidEnd}"
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
+								<p:ajax event="dateSelect" process="scheduleBidPackageEndDate"
+									partialSubmit="true"
+									listener="#{scheduleBiddingBB.bidEndDateSelectListener}"
+									update="bidSchedulePackageDuration" />
+							</p:calendar></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.duration.hours']}" /></td>
+
+						<TD><p:inputText id="bidSchedulePackageDuration"
+								disabled="true"
+								value="#{scheduleBiddingBB.managedBean.duration}" /></TD>
+					</tr>
+				</table>
+			</div>
+			
+			<p:dataTable id="bidScheduleByPackage" var="bidItem"
+				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules[0].scBidItems}">
+
+				<ac:paginator for="bidScheduleByPackage"></ac:paginator>
+
+				<p:column headerText="#{lbl['lbl.sc.item.name']}">
+					<p:commandLink value="#{bidItem.scRequestItem.itemName}"
+						oncomplete="participants.show();"
+						action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
+						size="30" />
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.item.description']}">
+					<h:outputText value="#{bidItem.scRequestItem.itemDesc}" size="30" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.uom']}">
+					<h:outputText value="#{bidItem.scRequestItem.uom.uomName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.quantity']}">
+					<h:outputText style="float : right" value="#{bidItem.scRequestItem.quantity}" >
+					<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+					
+					</h:outputText>
+					
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
+					<h:outputText style="float : right" value="#{bidItem.decrementAmt }" >
+					<f:convertNumber for="decrementAmt"
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</h:outputText>
+				</p:column>
+
+			</p:dataTable>
+		</p:panel>
+		
+</ui:composition>
