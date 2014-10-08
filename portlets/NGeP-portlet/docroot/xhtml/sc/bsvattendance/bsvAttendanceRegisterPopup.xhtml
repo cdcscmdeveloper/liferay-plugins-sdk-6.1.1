@@ -27,7 +27,8 @@
 							style="float:left;" />
 					</p:column>
 					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save" process="@form"
+						<p:commandButton value="#{lbl['lbl.ss.save']}" icon="ui-icon-save"
+							process="@form"
 							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('null')}" />
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
 							icon="ui-icon-check" process="@form"
@@ -59,7 +60,8 @@
 				rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
 				<p:ajax event="rowSelect"
 					listener="#{bsvAttendanceBackingBean.onRowSelect}"
-					update=":form:attendanceDetailstbl" process="@this :form:attendanceDetailstbl" />
+					update=":form:attendanceDetailstbl"
+					process1="@this :form:attendanceDetailstbl" />
 
 
 
@@ -103,8 +105,7 @@
 		</p:panel>
 
 
-		<p:panel header="Supplier Attendence List" toggleable="true"
-			>
+		<p:panel header="Supplier Attendence List" toggleable="true">
 			<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
 				value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
 				rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"
@@ -140,51 +141,57 @@
 						</p:column>
 					</p:row>
 				</p:columnGroup>
-				<c:if test="#{scQtBriefAttendace.authorized}">
-					<p:column>
-						<h:outputText value="#{scQtBriefAttendace.name}" />
-					</p:column>
-					<p:column>
-						<h:outputLabel
-							value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
-					</p:column>
-					<p:column>
-						<h:outputText value="#{scQtBriefAttendace.icPassPort}" />
-					</p:column>
-					<p:column>
-						<h:outputText value="#{scQtBriefAttendace.contactNo}" />
-					</p:column>
-					<p:column>
-						<h:outputText value="#{scQtBriefAttendace.email}" />
-					</p:column>
-					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}">
-							<p:ajax process="@this" partialSubmit="true"></p:ajax>
-						</p:selectBooleanCheckbox>
-					</p:column>
-				</c:if>
-				<c:if test="#{!scQtBriefAttendace.authorized}">
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.name}"
+						rendered="#{scQtBriefAttendace.authorized}" />
+					<p:inputText value="#{scQtBriefAttendace.name}"
+						rendered="#{!scQtBriefAttendace.authorized}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							update="@this"></p:ajax>
+					</p:inputText>
+				</p:column>
+				<p:column>
+					<h:outputLabel
+						value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
 
-					<p:column>
-						<h:inputText value="#{scQtBriefAttendace.name}" />
-					</p:column>
-					<p:column>
-						<h:outputLabel
-							value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
-					</p:column>
-					<p:column>
-						<h:inputText value="#{scQtBriefAttendace.icPassPort}" />
-					</p:column>
-					<p:column>
-						<h:inputText value="#{scQtBriefAttendace.contactNo}" />
-					</p:column>
-					<p:column>
-						<h:inputText value="#{scQtBriefAttendace.email}" />
-					</p:column>
-					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}" />
-					</p:column>
-				</c:if>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.icPassPort}"
+						rendered="#{scQtBriefAttendace.authorized}" />
+					<p:inputText value="#{scQtBriefAttendace.icPassPort}"
+						rendered="#{!scQtBriefAttendace.authorized}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							update="@this"></p:ajax>
+					</p:inputText>
+
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.contactNo}"
+						rendered="#{scQtBriefAttendace.authorized}" />
+					<p:inputText value="#{scQtBriefAttendace.contactNo}"
+						rendered="#{!scQtBriefAttendace.authorized}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							update="@this"></p:ajax>
+					</p:inputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{scQtBriefAttendace.email}"
+						rendered="#{scQtBriefAttendace.authorized}" />
+					<p:inputText value="#{scQtBriefAttendace.email}"
+						rendered="#{!scQtBriefAttendace.authorized}">
+						<p:ajax event="blur" process="@this" partialSubmit="true"
+							update="@this"></p:ajax>
+					</p:inputText>
+				</p:column>
+				<p:column>
+					<p:selectBooleanCheckbox value="#{scQtBriefAttendace.attended}"
+						disabled="#{!scQtBriefAttendace.authorized}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@this"></p:ajax>
+					</p:selectBooleanCheckbox>
+
+
+				</p:column>
 			</p:dataTable>
 
 			<div align="right">
