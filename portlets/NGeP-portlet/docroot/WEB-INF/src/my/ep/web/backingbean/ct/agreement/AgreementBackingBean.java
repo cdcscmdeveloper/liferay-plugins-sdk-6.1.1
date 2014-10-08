@@ -212,6 +212,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				  if(dataType.getAgreementId().intValue() == 0) {  
 					     ContractReqDTO conReqDTO = new ContractReqDTO();
 					     conReqDTO.setContractVerId(new Long(dataType.getDocId()));
+					     conReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
 					     contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 					     ContractResDTO conResDTO = contractSO.retrieveContractVerDtls(conReqDTO);
 					     ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
