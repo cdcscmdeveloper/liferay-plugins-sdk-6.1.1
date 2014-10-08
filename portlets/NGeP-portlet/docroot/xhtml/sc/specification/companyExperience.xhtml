@@ -123,14 +123,16 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu id="techGovNoOfContractsAutoScore"
+							required="true" label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
-							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change" update="companyContract"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="techGovNoOfContractsAutoScoreId"
+							for="techGovNoOfContractsAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
 
@@ -193,14 +195,16 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu id="techGovNoOfYearsAutoScore"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.companyScoreType}">
-							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change" update="companyGovScore"
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="techGovNoOfYearsAutoScoreId"
+							for="techGovNoOfYearsAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
 

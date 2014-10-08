@@ -21,9 +21,11 @@
 			<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
 
-			<p:column style="text-align:left;" selectionMode="multiple" disabledSelection="true"
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
 				rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }" />
-			<p:column style="text-align:left;" selectionMode="multiple" disabledSelection="true"
+			<p:column style="text-align:left;" selectionMode="multiple"
+				disabledSelection="true"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" />
 			<p:column style="width:30%;white-space: normal;">
 
@@ -76,7 +78,7 @@
 						rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist}">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 				</ui:fragment>

@@ -114,14 +114,17 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true"
+							id="financialGovAutoScore"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
-							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change" update="financialGovernment"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="financialGovAutoScoreMsg"
+							for="financialGovAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
 

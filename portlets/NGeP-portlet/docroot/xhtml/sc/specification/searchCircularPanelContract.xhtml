@@ -13,6 +13,10 @@
 			<tr>
 				<td width="100%"><p:messages id="speccreatemessages"
 						showDetail="true" autoUpdate="true" closable="true" /> 
+						<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
+							style="float:left;" icon="ui-icon-back"
+							update="@form"
+							action="#{specificationBackingBean.businessOwnerBackAction}" />
 						<div align="right">
 						<p:commandButton
 						value="#{lbl['lbl.btn.submit']}"
