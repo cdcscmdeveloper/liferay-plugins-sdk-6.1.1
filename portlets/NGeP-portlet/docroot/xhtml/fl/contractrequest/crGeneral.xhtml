@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
+	<p:panel header="#{lbl['lbl.fl.agency.details']}"  toggleable="true" id="flDetails">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table style="width: 100%">
 			<tr>
@@ -16,7 +16,7 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="5" id="preparedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
@@ -28,6 +28,9 @@
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}|orgProfileId^#{contractRequestBackingBean.managedBean.orgProfileIds}^9">
 					</ac:lov></td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/>
+				</td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
@@ -35,7 +38,9 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" id="issuedOrgName"
 						readonly="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"/> </td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /> <p:outputLabel
@@ -49,17 +54,22 @@
 						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}"
 						update=":form:chargeOrgProfileId" size="39">
 					</ac:lov></td>
+				<td>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
+				</td>		
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
 				<td><p:inputText size="5" disabled="true" id="agOffice"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode}" />
 					<p:spacer width="5" /> <p:inputText size="39" disabled="true" id="agOfficeName"
-						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" /></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.acct.off']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="REQUEST DETAIL" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
@@ -69,7 +79,8 @@
 						maxlength="500" style=" margin-bottom:5px;" label="Title"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}"
 						required="true" /> </td>
-						<td><p:message for="title" display="icon" /></td>
+						<td><p:message for="title" display="icon" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.title']}"/></td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.fl.contract.type']}" /></td>
 				<td><p:inputText size="20"
@@ -87,7 +98,8 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
@@ -103,19 +115,20 @@
 						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" />
 					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"/>
 					<p:spacer width="5" /> <h:outputText
-						value="#{lbl['lbl.fl.zonal']}" /> <p:selectBooleanCheckbox
+						value="#{lbl['lbl.fl.zonal.price']}" /> <p:selectBooleanCheckbox
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
-						disabled="true" /></td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}"/></td>
 
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="20" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.submission.date']}"/>
 					</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.start.delivery.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar mode="popup" showOn="button" disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" readonlyInput="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
@@ -124,13 +137,13 @@
 							listener="#{contractRequestBackingBean.updateDeliveryDate}"
 							update="delEndDate" />
 					</p:calendar></td>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.mto}"
-						disabled="true" /></td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
 				<td><p:calendar mode="popup" showOn="button" id="delEndDate" 
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
 						readonlyInput="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
@@ -141,26 +154,29 @@
 						<p:ajax event="dateSelect"
 							listener="#{contractRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
-				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>
+				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" /></td>
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="SUPPLIER DETAIL" toggleable="true" id="supplierPnl">
+	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true" id="supplierPnl">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
+						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.regNo}" /></td>
+									value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.regNo}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{contractRequestBackingBean.retrieveMofNo(contractRequestBackingBean.managedBean.flRequest.smSupplier)}" /></td>
+									value="#{contractRequestBackingBean.retrieveMofNo(contractRequestBackingBean.managedBean.flRequest.smSupplier)}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>	</td>
 						</tr>
 					</table></td>
 			</tr>
@@ -182,7 +198,8 @@
 						<p:ajax event="change"
 							listener="#{contractRequestBackingBean.getSelectedSupplierBranchDtl}"
 							update="supplierPnl" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
@@ -194,14 +211,14 @@
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.telno']}" /></td>
+						value="#{lbl['lbl.fl.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.phoneNo}"
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
-									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
+									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="20" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.faxNo}"
 									/></td>
 						</tr>
@@ -209,28 +226,28 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
+						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="50" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactPerson}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
+						value="#{lbl['lbl.fl.mobile']}" /></td>
 				<td><p:inputText disabled="true" size="50" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactEmail}"
 						 /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
 				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactPhoneNo}"
 						 /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
+	<p:panel header="#{lbl['lbl.fl.factoring.details']}"  toggleable="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.fact.com']}" /></td>
+						value="#{lbl['lbl.fl.factoring.company']}" /></td>
 				<td><p:inputText disabled="true" size="50" /></td>
 			</tr>
 			<tr>
@@ -242,29 +259,29 @@
 			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.telno']}" /></td>
+						value="#{lbl['lbl.fl.telno']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true" value="" /></td>
 							<td style="width: 65px;"><p:outputLabel
-									value="#{lbl['lbl.fl.supp.faxno']}" /></td>
+									value="#{lbl['lbl.fl.faxno']}" /></td>
 							<td><p:inputText size="19" disabled="true" value="" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
+						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
 				<td><p:inputText disabled="true" size="50" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
+						value="#{lbl['lbl.fl.email']}" /></td>
 				<td><p:inputText disabled="true" size="50" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 				<td><p:inputText disabled="true" size="25" /></td>
 			</tr>
 		</table>

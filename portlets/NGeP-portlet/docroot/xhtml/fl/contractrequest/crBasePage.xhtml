@@ -87,12 +87,12 @@
 						<ui:include src="crChargeline.xhtml" />
 					</p:outputPanel> <p:outputPanel
 						rendered="#{contractRequestBackingBean.managedBean.selectedTabIndex == 4}">
-						<p:panel id="settingId" header="Approver Setting"
+						<p:panel id="settingId" header="#{lbl['lbl.fl.ptj.approver.details']}"
 							toggleable="true" toggleSpeed="500">
 
 							<h:panelGrid columns="1">
 								<h:panelGrid columns="2">
-									<h:outputLabel value="Approver Group" />
+									<h:outputLabel value="#{lbl['lbl.fl.ptj.approver.group']}" />
 									<p:selectOneMenu
 										value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}"
 										style="width:340px;">
@@ -109,8 +109,8 @@
 										value="#{contractRequestBackingBean.managedBean.approverModel}"
 										var="data" itemValue="#{data}" itemLabel="#{data}"
 										showTargetControls="true" filterMatchMode="contains">
-										<f:facet name="sourceCaption">Available</f:facet>
-										<f:facet name="targetCaption">Selected</f:facet>
+										<f:facet name="sourceCaption">#{lbl['lbl.fl.ptj.available']}</f:facet>
+										<f:facet name="targetCaption">#{lbl['lbl.fl.ptj.selected']}</f:facet>
 										<p:column style="width:75%;">
 											<h:outputText value="#{data}" />
 										</p:column>

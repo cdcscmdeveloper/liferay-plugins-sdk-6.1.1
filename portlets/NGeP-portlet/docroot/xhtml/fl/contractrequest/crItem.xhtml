@@ -5,8 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="delAddrPanel" header="DELIVERY ITEM DETAILS"
+	<p:panel id="delAddrPanel" header="#{lbl['lbl.fl.delivery.address']}"
 		toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.add.address']}" escape="false"/>
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			rowIndexVar="index"
@@ -24,7 +25,7 @@
 						listener="#{contractRequestBackingBean.selectOneCheckboxSelect}"></p:ajax>
 				</p:selectBooleanCheckbox>
 			</p:column>	
-			<p:column headerText="Delivery Address" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
 				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
 					action="#{contractRequestBackingBean.editManualAddress(address)}"
 					update=":form:addManualDelAddrDialog,@(.orderSummaryChange)"
@@ -37,12 +38,12 @@
 				<h:outputText rendered="#{address.addressType eq null}"
 					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
-			<p:column headerText="Delivery Term" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="text-align:right">
 				<h:outputText
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 
-			<p:column headerText="Exp. Delivery (Start)">
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}">
 				<p:calendar value="#{address.startDate}" id="calStartDate"  disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
@@ -51,14 +52,17 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="Exp. Delivery (End)">
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}">
 				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
 					mindate="#{address.startDate}" 
 					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
-			<p:column headerText=" Recv. Officer" style="text-align:center">
-				<h:outputText style="text-align:right" />
+			<p:column>
+				<f:facet name="header" style="width:8%;">
+					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
+				</f:facet>
 				<p:commandLink oncomplete="addOfficer.show();"
 					action="#{contractRequestBackingBean.receivingOfficerList(address)}"
 					update=":form:addReceivingOfficerDialog">
@@ -70,26 +74,29 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="PTJ Address" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.fl.btn.ptj.address']}" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr,@(.orderSummaryChange) " process="@this,delAddr"
+				title="#{lbl['lbl.fl.tooltip.ptj.address']}"
 				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="Manual Address" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.fl.btn.other.address']}" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.flManualDeliveryAddr}"
 				update="addManualDelAddrPnl,delAddr,@(.orderSummaryChange) " process="@this,delAddr"
+				title="#{lbl['lbl.fl.tooltip.other.address']}"
 				oncomplete="addManualDeliveryAddr.show();" >
 				<f:setPropertyActionListener
 					target="#{contractRequestBackingBean.managedBean.required}"
 					value="true" />
 					</p:commandButton>
-			<p:commandButton id="deleteAddrBtn" value="Delete"
+			<p:commandButton id="deleteAddrBtn" value="#{lbl['lbl.fl.btn.delete']}"
 				icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
 				update=":form:deleteAddrBtn,addressDataTable,@(.orderSummaryChange)"
+				title="#{lbl['lbl.fl.tooltip.delete']}"
 				disabled="#{contractRequestBackingBean.managedBean.deleteButtonHide}">
 			</p:commandButton>
 
 		</div>
-		<p:confirmDialog message="Do you want to delete the record?"
+		<p:confirmDialog message="Are you sure you want to delete this record?"
 			severity="alert" widgetVar="delAddrDlg" closable="true"
 			appendToBody="true" header="Delete Confirmation">
 			<h:panelGrid columns="2">
@@ -104,6 +111,7 @@
 		</p:confirmDialog>
 		<p:spacer height="20" />
 		<h:panelGroup id="itemDetPanelGroup">
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false" rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}" />
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
@@ -111,14 +119,14 @@
 				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
 				<ac:paginator for="itemDataTable" />
 				<p:column selectionMode="multiple" width="5%" />
-				<p:column headerText="Item Name">
+				<p:column headerText="#{lbl['lbl.fl.item.name']}">
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
-				<p:column headerText="Unit Price (MYR)" style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
 					<p:inputText value="#{item.unitPrice}" disabled="true"
 						style="text-align:right"></p:inputText>
 				</p:column>
-				<p:column headerText="Ord. Qty." style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{item.orderedQty}" style="text-align:right"
 						required="true" requiredMessage="Please input the quantity.">
 						<p:ajax update="subTotalTxt"
@@ -132,7 +140,7 @@
 					</p:commandLink>
 					</p:inputText>
 				</p:column>
-				<p:column headerText="Sub Total" style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 					<p:inputText id="subTotalTxt" style="text-align:right"
 						value="#{item.orderedAmt}" disabled="true">
 						<f:convertNumber pattern="#,#00.00" />
@@ -141,12 +149,12 @@
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
 			<div style="width: 100%; text-align: right">
-				<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
+				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
 					update="contractedItemDt" process="@this,contractedItemDt"
 					oncomplete="addItems.show();" />
-				<p:commandButton value="Delete" icon="ui-icon-delete"
+				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" icon="ui-icon-delete"
 					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="itemDataTable" partialSubmit="true" />
@@ -163,7 +171,7 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedAddrTypeList}">
 			<ac:paginator for="delAddr" />
 			<p:column selectionMode="multiple" style="width:2%;text-align:center" />
-			<p:column headerText="Address" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.fl.supp.address']}" style="white-space:normal;">
 				<h:outputText
 					value="#{contractRequestBackingBean.getFullAddress(delAddr.pmAddress)}"
 					escape="false" />
@@ -172,13 +180,13 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="ADD" icon="ui-icon-add"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" update="addressDataTable,itemDetPanelGroup">
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:dialog id="addContractedItemDialog" header="Add Contract Items"
+	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
 		<p:dataTable id="contractedItemDt" var="contractedItem"
@@ -191,8 +199,8 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="Item"></p:column>
-					<p:column rowspan="1" headerText="Item Type"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.name']}"></p:column>
+					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.type']}"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
@@ -207,18 +215,18 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="ADD"
+			<p:commandButton  value="#{lbl['lbl.btn.add']}"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
 				oncomplete="addItems.hide();" update="itemDataTable"
 				process="@this,contractedItemDt">
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	
-	<p:dialog id="addManualDelAddrDialog" header="Delivery Address"
+	<p:dialog id="addManualDelAddrDialog" header="#{lbl['lbl.fl.delivery.address']}"
 		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
 		visible="#{facesContext.validationFailed}" modal="true" width="900px"
-		resizable="false">
+		 resizable="false">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}" escape="false"/>
 		<p:ajax event="close"
 			listener="#{contractRequestBackingBean.closeListener}"
 			update="addManualDelAddrDialog" />
@@ -227,7 +235,7 @@
 				autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
-					<td width="120"><p:outputLabel value="Country" /> <h:outputLabel
+					<td width="120"><p:outputLabel value="#{lbl['lbl.fl.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manCountry"
 							required="#{contractRequestBackingBean.managedBean.required}"
@@ -244,7 +252,7 @@
 								update="manState" />
 						</p:selectOneMenu></td>
 					<td><p:message for="manCountry" display="icon" /></td>
-					<td width="150"><p:outputLabel value="State" /> <p:outputLabel
+					<td width="150"><p:outputLabel value="#{lbl['lbl.fl.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="manState"
 							required="#{contractRequestBackingBean.managedBean.required}"
@@ -260,10 +268,10 @@
 								listener="#{contractRequestBackingBean.retrieveDivisionList}"
 								update="manDivison,manDistrict" />
 						</p:selectOneMenu></td>
-					<td><p:message for="manState" display="icon" /></td>
+					<td colspan="2"><p:message for="manState" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Address Line 1" /> <p:outputLabel
+					<td width="126"><p:outputLabel value="#{lbl['lbl.fl.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="address1" label="Address Line 1"
 							maxlength="255"
@@ -271,7 +279,7 @@
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address1}"
 							size="35" /></td>
 					<td><p:message for="address1" display="icon" /></td>
-					<td><p:outputLabel value="Divison" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
 					<td><p:selectOneMenu id="manDivison"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.pmDivision.divisionId}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -287,12 +295,12 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 2" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address2}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="District" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.district']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manDistrict"
 							required="#{contractRequestBackingBean.managedBean.required}"
@@ -314,12 +322,12 @@
 					<td><p:message for="manDistrict" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 3" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address3}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="City/Town" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:selectOneMenu id="manCity"
 							required="#{contractRequestBackingBean.managedBean.required}"
@@ -334,106 +342,123 @@
 					<td><p:message for="manCity" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Line 4" /></td>
+					<td><p:outputLabel value="" /></td>
 					<td><p:inputText maxlength="255"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.address4}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="Postal Code" /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.postcode']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="postCode"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Post Code" maxlength="10"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.postcode}"
+							 validatorMessage="#{lbl['lbl.fl.postal.code.msg']}"
 							size="34" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-							<td><p:message for="postCode" display="icon" /></td>
+					<td><p:message for="postCode" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Email" /> <p:outputLabel value="*"
+					<td><p:outputLabel value="#{lbl['lbl.fl.email']}" /> <p:outputLabel value="*"
 							styleClass="mandatory" /></td>
 					<td><p:inputText id="email"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Email" maxlength="80"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.email}"
-							size="35" /></td>
-					<td><p:message for="email" display="icon" /></td>
-					<td><p:outputLabel value="Delivery Address" /> <p:outputLabel
+							validatorMessage="#{lbl['lbl.fl.email.msg']}"
+							size="35" ><f:validateRegex disabled="#{contractRequestBackingBean.managedBean.emailValidate}"
+       						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+       					</p:inputText>	
+       					
+       				</td>
+       				<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.email']}"/>
+       				<p:message for="email" display="icon" /></td>
+       				
+					<td><p:outputLabel value="#{lbl['lbl.fl.delivery.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-							<!-- required="#{contractRequestBackingBean.managedBean.required}" -->
 					<td><p:selectOneMenu id="manAddress" label="Manual Address"
+							required="#{contractRequestBackingBean.managedBean.required}"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.receivingGrp.addressTypeId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
 							<f:selectItems var="delAddByDistrict"
 								value="#{contractRequestBackingBean.managedBean.manualAddrList}" />
-						</p:selectOneMenu></td>
-					<td><p:message for="manAddress" display="icon" /></td>
+						</p:selectOneMenu>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.delivery.address']}"/>
+						<p:message for="manAddress" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Tel.No." /> <p:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.fl.telno']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="telNo"
 							required="#{contractRequestBackingBean.managedBean.required}"
 							label="Tel No" maxlength="20"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.phoneNo}"
-							size="35" > <f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							validatorMessage="#{lbl['lbl.fl.tel.no.msg']}"
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
 							</td>
-					<td><p:message for="telNo" display="icon" /></td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.tel.no']}"/>
+							<p:message for="telNo" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Fax.No." /></td>
-					<td><p:inputText maxlength="20" id="faxNo"
+					<td><p:outputLabel value="#{lbl['lbl.fl.faxno']}" /></td>
+					<td><p:inputText maxlength="20"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.faxNo}"
-							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-							<td><p:message for="faxNo" display="icon" /></td>
+							 validatorMessage="#{lbl['lbl.fl.fax.no.msg']}"
+							size="35" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.fax.no']}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Mobile.No." /></td>
-					<td><p:inputText maxlength="20" id="mobileNo"
+					<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
+					<td><p:inputText maxlength="20"
 							value="#{contractRequestBackingBean.managedBean.flManulaAddress.pmAddress.mobileNo}"
-							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
-							<td><p:message for="mobileNo" display="icon" /></td>
+							 validatorMessage="#{lbl['lbl.fl.mobile.no.msg']}"
+							size="35" required="false" ><f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText>
+							</td>
+							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mobile.no']}"/></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Ok" icon="ui-icon-accept"
+			<p:commandButton value="#{lbl['lbl.btn.ok']}" icon="ui-icon-accept"
 				process="@this addManualDelAddrDialog"
 				action="#{contractRequestBackingBean.updateManualDeliveryAddrDt}"
-				update="addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange),itemDetPanelGroup">
+				update="itemDetPanelGroup,addManualDelAddrPnl,addressDataTable,@(.orderSummaryChange)">
 			</p:commandButton>
-			<p:commandButton value="Cancel" icon="ui-icon-cancel" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" process="@this"
 				action="#{contractRequestBackingBean.closeListener}"
 				partialSubmit="true">
 			</p:commandButton>
 		</div>
 	</p:dialog>
-	<p:dialog id="addReceivingOfficerDialog" header="RECEIVING OFFICER"
+	
+	<p:dialog id="addReceivingOfficerDialog" header="#{lbl['lbl.fl.receiving.officer']}"
 		widgetVar="addOfficer" showEffect="fade" hideEffect="fade"
 		modal="true" width="600" resizable="false">
 		<p:dataTable id="receivingOfficerDt" var="receivingOfficer"
 			value="#{contractRequestBackingBean.managedBean.receivingOffList}"
 			rowKey="#{purchasedItem}">
 			<ac:paginator for="receivingOfficerDt" />
-			<p:column headerText="Receiving Officer Name">
+			<p:column headerText="#{lbl['lbl.fl.receiving.officer.name']}">
 				<h:outputText value="#{receivingOfficer.pmUser.userName}" />
 			</p:column>
-			<p:column headerText="Tel. No.">
+			<p:column headerText="#{lbl['lbl.fl.telno']}">
 				<h:outputText value="#{receivingOfficer.pmUser.phoneNo}" />
 			</p:column>
-			<p:column headerText="Email">
+			<p:column headerText="#{lbl['lbl.fl.email']}">
 				<h:outputText value="#{receivingOfficer.pmUser.email}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Close" icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.fl.cancel']}" icon="ui-icon-cancel"
 				oncomplete="addOfficer.hide();" update="addressDataTable"
 				process="@this,receivingOfficerDt">
 			</p:commandButton>
 		</div>
 	</p:dialog>
+	
 	<p:dialog id="reqItemInfoDialog" header="#{lbl['lbl.fl.requested.item']}"
 		widgetVar="reqItemInfo" showEffect="fade" hideEffect="fade"
 		modal="true" width="900" resizable="false">
@@ -467,14 +492,14 @@
 							</p:inputText></td>					
 			</tr>
 		</table> 
-		<h:panelGroup >
+		<h:panelGroup rendered="#{!contractRequestBackingBean.managedBean.standardPrice}">
 			<p:panel id="reqItemInfoPanel" header="#{lbl['lbl.fl.zone.tier.price.detail']}" toggleable="false" >
 				<p:dataTable id="reqItemInfoDt" var="reqItemInfoList" liveScroll="true"
 					value="#{contractRequestBackingBean.managedBean.supplierItemPriceList}"
 					rowKey="#{purchasedItem}">
 					<ac:paginator for="reqItemInfoDt" />
-					<p:column headerText="Zone" >
-						<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" >
+					<p:column headerText="Zone" rendered="#{contractRequestBackingBean.managedBean.zonalPrice || contractRequestBackingBean.managedBean.zonalTierPrice}">
+						<p:tree value="#{reqItemInfoList.itemZoneTree}" var="location" rendered="#{contractRequestBackingBean.managedBean.zonalPrice || contractRequestBackingBean.managedBean.zonalTierPrice}">
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
 							</p:treeNode>
@@ -489,14 +514,14 @@
 							</p:treeNode>
 						</p:tree>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.from.qty']}" style="text-align:right" >
-						<h:outputText value="#{reqItemInfoList.supplierItemPrice.fromQty}" styleClass="colFloatRight" >
+					<p:column headerText="#{lbl['lbl.fl.from.qty']}" style="text-align:right" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice }">
+						<h:outputText value="#{reqItemInfoList.supplierItemPrice.fromQty}" styleClass="colFloatRight" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>			
 					</p:column>
-					<p:column headerText="#{lbl['lbl.fl.to.qty']}" style="text-align:right" >
-						<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" >
+					<p:column headerText="#{lbl['lbl.fl.to.qty']}" style="text-align:right" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
+						<h:outputText value="#{reqItemInfoList.supplierItemPrice.toQty}" styleClass="colFloatRight" rendered="#{!contractRequestBackingBean.managedBean.zonalPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, flItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>			
