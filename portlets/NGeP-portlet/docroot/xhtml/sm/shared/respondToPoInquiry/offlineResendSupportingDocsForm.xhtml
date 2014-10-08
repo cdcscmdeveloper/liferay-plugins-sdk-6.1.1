@@ -21,7 +21,7 @@
 				<td></td>
 				<td>
 					<div align="right" style="width: 99%" class="button-wrapper">
-						<p:commandButton value="Re Submit"
+						<p:commandButton value="#{lbl['lbl.sm.button.resubmit']}"
 							action="#{backingBean.resubmitSmApplInquiryToBpm(backingBean.managedBean.smAppl.applType)}"
 							style="margin-bottom:5px;" />
 					</div>
@@ -29,7 +29,7 @@
 			</tr>
 		</table>
 		<p:panel
-			header=" Supporting Document Offline Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
+			header="#{lbl['lbl.sm.suppDoc.offline.checklist.application.no']} - #{backingBean.managedBean.smAppl.applNo}">
 			<br />
 			<table style="width: 100%;">
 				<tr>
@@ -94,13 +94,13 @@
 				value="#{backingBean.managedBean.missinDocs}">
 				<ac:paginator for="offSdList" />
 
-				<p:column headerText="Document Description" style="width : 70%;">
+				<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}" style="width : 70%;">
 					<p:outputLabel value="#{table.pmDocument.docName}"
 						rendered="#{table.verifiedFlg != 1}"
 						style="float: left;white-space: normal;" />
 				</p:column>
 
-				<p:column headerText="PO Remarks" style="width : 30%;">
+				<p:column headerText="#{lbl['lbl.sm.sectionPoRmrk']}" style="width : 30%;">
 					<p:inputTextarea value="#{table.poRemarks}" readonly="true"
 						disabled="true" rendered="#{table.verifiedFlg != 1}" />
 				</p:column>
