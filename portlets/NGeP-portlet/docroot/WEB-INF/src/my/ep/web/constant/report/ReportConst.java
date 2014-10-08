@@ -99,7 +99,7 @@ public class ReportConst {
 	public static final String SC_SPPPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_shlist_1a.jsp";
 	public static final String SC_KPPP1_PEMATUHAN_OC_RPT_JSP = "sc_oc_method_of_asses_1b.jsp";
 	public static final String SC_PDDW_OC_RPT_JSP = "sc_oc_compliance_docs_1c.jsp";
-	public static final String AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
+	public static final String SC_AKPP_PEMATUHAN_OC_RPT_JSP = "sc_oc_first_stage_1d.jsp";
 	public static final String SC_SPPSAP2_TEC_RPT_JSP = "sc_tec_shlisttech_eval_2a.jsp";
 	public static final String SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP = "sc_tec_techasses_2b.jsp";
 	public static final String SC_AKPT_TEC_RPT_JSP = "sc_tec_eval_tech_2c.jsp";
