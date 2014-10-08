@@ -4,38 +4,38 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel header="Complainant Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complainant.details']}" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Name" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.complainant.name']}" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{complaintBackingBean.managedBean.smComplainant.name}"
 						size="40" /></td>
-				<td class="tdTitle"><p:outputLabel value="* Nationality" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.nationality']}" /></td>
 				<td class="tdContent"><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplainant.nationalityId}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysian" itemValue="1" />
-						<f:selectItem itemLabel="Non Malaysian" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.nationality.malaysian']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.nationality.nonmalaysian']}" itemValue="0" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
 				<td class="tdTitle"><p:outputLabel
-						value="* Identification Type" /></td>
+						value="* #{lbl['lbl.sm.identificationtype']}" /></td>
 				<td class="tdContent"><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplainant.identificationTypeId}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItem itemLabel="I/C" itemValue="I" />
-						<f:selectItem itemLabel="Passport" itemValue="P" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.identificationtype.ic']}" itemValue="I" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.identificationtype.passport']}" itemValue="P" />
 					</p:selectOneMenu></td>
-				<td class="tdTitle"><p:outputLabel value="* Identification No." /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.person.composition.idenNum']}" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{complaintBackingBean.managedBean.smComplainant.identificationNo}" /></td>
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Country" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="countryId"
 						style="width: 150px !important;"
 						value="#{complaintBackingBean.managedBean.smComplainant.pmCountry.countryId}">
@@ -49,7 +49,7 @@
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Address" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 				<td class="tdContent"><p:inputText size="50" colspan="3"
 						value="#{complaintBackingBean.managedBean.smComplainant.address1}" /></td>
 			</tr>
@@ -70,14 +70,14 @@
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Postcode" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.postcode']}" /></td>
 				<td class="tdContent"><p:inputText
 						value="#{complaintBackingBean.managedBean.smComplainant.postcode}"
 						size="40" /></td>
-				<td class="tdTitle"><p:outputLabel value="* State" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.state']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="stateId"
 						value="#{complaintBackingBean.managedBean.smComplainant.pmState.stateId}">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="state"
 							value="#{complaintBackingBean.managedBean.stateLs}"
 							itemLabel="#{state.stateName}" itemValue="#{state.stateId}" />
@@ -88,18 +88,18 @@
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* District" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.district']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="districtId">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="district"
 							value="#{complaintBackingBean.managedBean.districtLs}"
 							itemValue="#{district.districtId}"
 							itemLabel="#{district.districtName}"></f:selectItems>
 					</p:selectOneMenu></td>
 
-				<td class="tdTitle"><p:outputLabel value="* City" /></td>
+				<td class="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.towncity']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cityId">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="city"
 							value="#{complaintBackingBean.managedBean.cityLs}"
 							itemLabel="#{city.cityName}" itemValue="#{city.cityId}" />
@@ -109,8 +109,8 @@
 			<c:if
 				test="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
 				<tr>
-					<td class="tdTitle">MyIdentity Status</td>
-					<td class="tdContent"><p:commandLink value="click here"
+					<td class="tdTitle">#{lbl['lbl.sm.complainant.myidentity.status']}</td>
+					<td class="tdContent"><p:commandLink value="#{lbl['lbl.sm.sitevist.link.click.here']}"
 							onclick="myIdentDlg.show()" /></td>
 					<td class="tdTitle">&#160;</td>
 					<td class="tdContent">&#160;</td>
@@ -118,7 +118,7 @@
 			</c:if>
 		</table>
 
-		<p:dialog id="myIdentityDlg" header="MyIdentity Status"
+		<p:dialog id="myIdentityDlg" header="#{lbl['lbl.sm.complainant.myidentity.status']}"
 			widgetVar="myIdentDlg" modal="true" height="300" width="400">
 			<table class="customTbl">
 				<tr>

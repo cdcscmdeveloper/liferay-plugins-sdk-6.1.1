@@ -7,18 +7,18 @@
 <!-- 	<p:panel header="Investigation Report" toggleable="true"> -->
 	
 <!-- 	</p:panel> -->
-	<p:panel header="Complaint Tracking" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.complaint.tracking']}" toggleable="true">
 	      <p:dataTable var="table" value="#{mofRegistrationBackingBean.dataList}">
-			<p:column headerText="No.">  
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">  
                    #{table.no}  
       		    </p:column>
-			<p:column headerText="Action Perofmed">
+			<p:column headerText="#{lbl['lbl.sm.complaint.action.performed']}">
 				#{table.actionPerformed} 
 			</p:column>
-			<p:column headerText="Date Action Performed">
+			<p:column headerText="#{lbl['lbl.sm.complaint.date.action.performed']}">
 				#{table.dateActionPerformed} 
 			</p:column>
-			<p:column headerText="Remarks if any">
+			<p:column headerText="#{lbl['lbl.sm.complaint.remarks.any']}">
 				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
