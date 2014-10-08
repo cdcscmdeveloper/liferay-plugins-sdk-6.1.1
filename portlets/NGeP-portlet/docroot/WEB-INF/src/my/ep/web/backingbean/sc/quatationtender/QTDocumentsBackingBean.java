@@ -574,6 +574,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		ScQtDocReportAttachment scQtDocReportAttachment = scQtDocReport.getScQtDocReportAttachment();
 		if (scQtDocReportAttachment == null) {
 			scQtDocReportAttachment = generateDocumentAttachment(scQtDocReport);
+			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 		downloadFile(scQtDocReportAttachment);
 	}
@@ -586,6 +587,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
 			if(attachment == null) {
 				attachment = generateDocumentAttachment(scQtDocReport);
+				scQtDocReport.setScQtDocReportAttachment(attachment);
 			}
 			scAttachments.add(attachment);
 		}

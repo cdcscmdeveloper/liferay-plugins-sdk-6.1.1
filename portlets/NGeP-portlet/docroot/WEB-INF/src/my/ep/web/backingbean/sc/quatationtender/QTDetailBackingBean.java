@@ -1779,8 +1779,12 @@ public class QTDetailBackingBean extends
 								.getScQtSupplierCriteria().isAllState())) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 					if (null != tenderResDTO.getLocationDetails()) {
-						for (TplSpecLoc localLoc : tenderResDTO
-								.getLocationDetails()) {
+						if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+							this.getManagedBean().setTotalSuppliersSpecLoc(new ArrayList<TplSpecLoc>());
+						}
+						this.getManagedBean().getTotalSuppliersSpecLoc().addAll(tenderResDTO.getLocationDetails());
+						for (TplSpecLoc localLoc : tenderResDTO.getLocationDetails()) {
+							getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 							ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
 							locCriteria.add(criteria);
 						}
