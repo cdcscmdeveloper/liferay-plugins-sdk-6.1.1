@@ -201,8 +201,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public String deliveyzoneName;
 	private int technicalChecklistScoring;
-	private String checklistScoreType = "1";
-	private String companyScoreType = "1";
+	private String checklistScoreType;
+	private String companyScoreType;
 	private ScQtCheckListScore scQtCheckListScore;
 	private ScQtCheckListScore scQtContractScore;
 
@@ -227,7 +227,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private BigDecimal recommendfinancialScore;
 	private int tabActiveIndex;
 	private List<ScQtRemark> scQtRemarksList;
-	
+
 	private Long stateId;
 	private Long districtId;
 	private Long ministryId;
@@ -293,7 +293,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String LocalLevelCode;
 	private List<ScQtDeliveryLoc> deliveryLocRemoveList;
 	private List<ScQtCheckList> checklistRemoveList;
-	//Added by vidyasagarReddy.. for making readonly based on userrole.
+	// Added by vidyasagarReddy.. for making readonly based on userrole.
 	private boolean readOnly;
 	private int technicalTableRow;
 	private int financialTableRow;
@@ -301,7 +301,33 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<PmState> stateList;
 	private List<PmDistrict> districtList;
 	private List<PmDivision> divisionList;
-	
+	private List<SelectItem> ScoreTypeList;
+	private boolean isTechStandaraChecklist;
+	private boolean isFinStandaraChecklist;
+
+	public boolean isTechStandaraChecklist() {
+		return isTechStandaraChecklist;
+	}
+
+	public void setTechStandaraChecklist(boolean isTechStandaraChecklist) {
+		this.isTechStandaraChecklist = isTechStandaraChecklist;
+	}
+
+	public boolean isFinStandaraChecklist() {
+		return isFinStandaraChecklist;
+	}
+
+	public void setFinStandaraChecklist(boolean isFinStandaraChecklist) {
+		this.isFinStandaraChecklist = isFinStandaraChecklist;
+	}
+
+	public List<SelectItem> getScoreTypeList() {
+		return ScoreTypeList;
+	}
+
+	public void setScoreTypeList(List<SelectItem> scoreTypeList) {
+		ScoreTypeList = scoreTypeList;
+	}
 
 	public List<PmDivision> getDivisionList() {
 		return divisionList;
@@ -339,7 +365,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		return deliveryLocRemoveList;
 	}
 
-	public void setDeliveryLocRemoveList(List<ScQtDeliveryLoc> deliveryLocRemoveList) {
+	public void setDeliveryLocRemoveList(
+			List<ScQtDeliveryLoc> deliveryLocRemoveList) {
 		this.deliveryLocRemoveList = deliveryLocRemoveList;
 	}
 
