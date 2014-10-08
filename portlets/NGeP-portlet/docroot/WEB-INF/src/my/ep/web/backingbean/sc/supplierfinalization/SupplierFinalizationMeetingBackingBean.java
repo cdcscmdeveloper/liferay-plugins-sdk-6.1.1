@@ -69,7 +69,6 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
-import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchCondition;
@@ -114,7 +113,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	}
 	
 	//Temporary
-	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
+	
 	
 	public SupplierFinalizationMeetingBackingBean() {		
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
@@ -122,8 +121,6 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		}
 		if (this.getManagedBean().getCommitteMember() == null) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
-			
-			preRenderView();
 		}
 	}
 	
@@ -133,6 +130,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			Long qtId = Long.valueOf(dataType.getQtId());
+			String committeeType = String.valueOf(dataType.getCommitteeType());
+			getManagedBean().setCommitteeType(committeeType);
 
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
@@ -173,6 +172,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
+			String committeeType = getManagedBean().getCommitteeType();
 			reqDTO.setCommitteType(committeeType);
 			MeetingResDTO resDTO = qtMeetingSO.retrieveMeetingDls(reqDTO);
 
@@ -321,7 +321,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	
 	public SelectItem[] getRepresentativeTypeDropdownValues(){
 		SelectItem[] items = null;
-		
+		String committeeType = getManagedBean().getCommitteeType();
 		if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equalsIgnoreCase(committeeType) 
 				|| ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(committeeType) ) {
 			items = getDropdownCodeValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
@@ -343,6 +343,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	
 	public void representativeTypeEvent(ScCommitteeMember scCommitteeMember, String code) {
 		List<ScCommitteeMember> committeeMemberList = getManagedBean().getCommitteeMembersList();
+		String committeeType = getManagedBean().getCommitteeType();
+		
 		for(ScCommitteeMember member : committeeMemberList){
 			if(scCommitteeMember.getPmUser().equals(member.getPmUser())){
 				String parameterType = "";
@@ -938,14 +940,18 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
+		String committeeType = this.getManagedBean().getCommitteeType();
 		
 		renewSesionObject();
 		
 		this.getManagedBean().setScQt(scQt);
+		this.getManagedBean().setCommitteeType(committeeType);
+		
 		retriveMeetingDetails(scQt.getQtId());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
+		
 	}
 
 	public void submitAction(String outCome) {
@@ -1062,6 +1068,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
 			SuppFinalizationReqDTO suppFinalReqDTO = new SuppFinalizationReqDTO();
+			String committeeType = getManagedBean().getCommitteeType();
 			suppFinalReqDTO.setCommitteeType(committeeType);
 			suppFinalReqDTO.setScQtCommittee(reqDTO.getScQtCommitte());
 			qtSuppFinalizationSO.validateCoordinateMeeting(suppFinalReqDTO);

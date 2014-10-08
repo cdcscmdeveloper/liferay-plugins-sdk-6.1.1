@@ -29,6 +29,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private String processName;
 	private Object payLoad;
+	private String committeeType;
 		
 	private List<ScQtMeeting> scQtMeetings;
 	private List<ScQtMeeting> meetingMultiSelect;
@@ -388,6 +389,18 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setDeletedMeetingList(List<ScQtMeeting> deletedMeetingList) {
 		this.deletedMeetingList = deletedMeetingList;
+	}
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
 	}
 	
 }
