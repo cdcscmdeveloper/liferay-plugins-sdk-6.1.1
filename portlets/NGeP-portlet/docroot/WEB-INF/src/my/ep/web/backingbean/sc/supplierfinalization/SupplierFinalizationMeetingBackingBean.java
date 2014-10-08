@@ -112,9 +112,6 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		log.info(message);
 	}
 	
-	//Temporary
-	
-	
 	public SupplierFinalizationMeetingBackingBean() {		
 		if (this.getManagedBean().getCloneQtnTenderSearchBean() == null) {
 			this.getManagedBean().setCloneQtnTenderSearchBean(new QtnTenderSearchBean());
