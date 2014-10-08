@@ -18,6 +18,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +30,10 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -78,6 +86,7 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
+import my.ep.web.util.BouncyCastleProvider_AES_CBC;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -271,19 +280,82 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public File downloadFile(String filePath, String fileName)
 			throws IOException {
+		log.info("Inside downloadFile(...)");
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+//		response.setContentType("application/vnd.ms-excel");
+//		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
+		
+		OutputStream out = response.getOutputStream();
 
 		if (filePath != null) {
 			InputStream input = null;
 			try {
+				log.info("Inside filePath(...)");
 				URLConnection uc = new URL(filePath).openConnection();
 				input = new BufferedInputStream(uc.getInputStream());
 
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
+				log.info("Inside filePaths(...)");
 				input = new FileInputStream(filePath);
 			}
-			downloadFileByInputStream(input, fileName);
+//			byte[] buffer = new byte[4096];
+//			int bytesRead;
+//			while ((bytesRead = input.read(buffer)) != -1) {
+//				out.write(buffer, 0, bytesRead);
+//				buffer = new byte[4096];
+			
+	            BouncyCastleProvider_AES_CBC bc =
+	                    new BouncyCastleProvider_AES_CBC();
+	            try {
+					bc.InitCiphers();
+				} catch (InvalidKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchProviderException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidAlgorithmParameterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+	            //decryption
+	            try {
+					bc.CBCDecrypt(input, out);
+				} catch (ShortBufferException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalBlockSizeException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (BadPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}			
+			
+			
+			input.close();
 		}
+		
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
 
 		// use to upload back to database
 		File file = new File(filePath);
@@ -308,12 +380,53 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		
 		OutputStream out = response.getOutputStream();
 
-		byte[] buffer = new byte[4096];
-		int bytesRead;
-		while ((bytesRead = input.read(buffer)) != -1) {
-			out.write(buffer, 0, bytesRead);
-			buffer = new byte[4096];
+        BouncyCastleProvider_AES_CBC bc =
+                new BouncyCastleProvider_AES_CBC();
+        try {
+			bc.InitCiphers();
+		} catch (InvalidKeyException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NoSuchAlgorithmException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NoSuchProviderException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NoSuchPaddingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InvalidAlgorithmParameterException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+        System.out.println("Test 1 !"+bc.generateKey());
+        //encryption
+    //    bc.CBCEncrypt(fis, fos);
+
+        FileOutputStream fos = new FileOutputStream(new File("C:\\Windows\\Temp\\PV.pdf"));
+
+
+        //decryption
+        try {
+			bc.CBCDecrypt(input, out);
+		} catch (ShortBufferException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalBlockSizeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		byte[] buffer = new byte[4096];
+//		int bytesRead;
+//		while ((bytesRead = input.read(buffer)) != -1) {
+//			out.write(buffer, 0, bytesRead);
+//			buffer = new byte[4096];
+//		}
+	
 		input.close();
 		out.flush();
 		out.close();
@@ -635,8 +748,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			this.renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(resDTO.getAction());
-			this.getManagedBean().setCurrentStatusId(
-					Long.valueOf(resDTO.getDocStatus()));
 
 			return (BPM_DATA_TYPE) resDTO.getPojo();
 
