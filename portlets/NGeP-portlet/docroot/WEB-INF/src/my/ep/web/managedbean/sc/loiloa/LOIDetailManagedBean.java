@@ -15,10 +15,11 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
-import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
@@ -98,10 +99,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String docType;
 	private Object payLoadData;
 	
-	private List<ScCommitteeMember> ecMemberList;
-	private List<ScCommitteeMember> tecMemberList;
-	private List<ScCommitteeMember> fecMemberList;
-	private List<ScCommitteeMember> fcMemberList;
+	private List<ScQtCommitteeActivity> ecActivityList;
+	private List<ScQtCommitteeActivity> tecActivityList;
+	private List<ScQtCommitteeActivity> fecActivityList;
+	private List<ScQtCommitteeActivity> fcActivityList;
+	private List<ScQtMeetingAttendance> meetingAttendanceList;
+	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -768,59 +771,89 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the ecMemberList
+	 * @return the ecActivityList
 	 */
-	public List<ScCommitteeMember> getEcMemberList() {
-		return ecMemberList;
+	public List<ScQtCommitteeActivity> getEcActivityList() {
+		return ecActivityList;
 	}
 
 	/**
-	 * @param ecMemberList the ecMemberList to set
+	 * @param ecActivityList the ecActivityList to set
 	 */
-	public void setEcMemberList(List<ScCommitteeMember> ecMemberList) {
-		this.ecMemberList = ecMemberList;
+	public void setEcActivityList(List<ScQtCommitteeActivity> ecActivityList) {
+		this.ecActivityList = ecActivityList;
 	}
 
 	/**
-	 * @return the tecMemberList
+	 * @return the tecActivityList
 	 */
-	public List<ScCommitteeMember> getTecMemberList() {
-		return tecMemberList;
+	public List<ScQtCommitteeActivity> getTecActivityList() {
+		return tecActivityList;
 	}
 
 	/**
-	 * @param tecMemberList the tecMemberList to set
+	 * @param tecActivityList the tecActivityList to set
 	 */
-	public void setTecMemberList(List<ScCommitteeMember> tecMemberList) {
-		this.tecMemberList = tecMemberList;
+	public void setTecActivityList(List<ScQtCommitteeActivity> tecActivityList) {
+		this.tecActivityList = tecActivityList;
 	}
 
 	/**
-	 * @return the fecMemberList
+	 * @return the fecActivityList
 	 */
-	public List<ScCommitteeMember> getFecMemberList() {
-		return fecMemberList;
+	public List<ScQtCommitteeActivity> getFecActivityList() {
+		return fecActivityList;
 	}
 
 	/**
-	 * @param fecMemberList the fecMemberList to set
+	 * @param fecActivityList the fecActivityList to set
 	 */
-	public void setFecMemberList(List<ScCommitteeMember> fecMemberList) {
-		this.fecMemberList = fecMemberList;
+	public void setFecActivityList(List<ScQtCommitteeActivity> fecActivityList) {
+		this.fecActivityList = fecActivityList;
 	}
 
 	/**
-	 * @return the fcMemberList
+	 * @return the fcActivityList
 	 */
-	public List<ScCommitteeMember> getFcMemberList() {
-		return fcMemberList;
+	public List<ScQtCommitteeActivity> getFcActivityList() {
+		return fcActivityList;
 	}
 
 	/**
-	 * @param fcMemberList the fcMemberList to set
+	 * @param fcActivityList the fcActivityList to set
 	 */
-	public void setFcMemberList(List<ScCommitteeMember> fcMemberList) {
-		this.fcMemberList = fcMemberList;
+	public void setFcActivityList(List<ScQtCommitteeActivity> fcActivityList) {
+		this.fcActivityList = fcActivityList;
+	}
+
+	/**
+	 * @return the meetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getMeetingAttendanceList() {
+		return meetingAttendanceList;
+	}
+
+	/**
+	 * @param meetingAttendanceList the meetingAttendanceList to set
+	 */
+	public void setMeetingAttendanceList(
+			List<ScQtMeetingAttendance> meetingAttendanceList) {
+		this.meetingAttendanceList = meetingAttendanceList;
+	}
+
+	/**
+	 * @return the selectedMeetingAttList
+	 */
+	public List<ScQtMeetingAttendance> getSelectedMeetingAttList() {
+		return selectedMeetingAttList;
+	}
+
+	/**
+	 * @param selectedMeetingAttList the selectedMeetingAttList to set
+	 */
+	public void setSelectedMeetingAttList(
+			List<ScQtMeetingAttendance> selectedMeetingAttList) {
+		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
 	
 }

@@ -10,7 +10,7 @@
 	<c:if test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '1'}">
 		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeEvaluationCommittee)}" toggleable="true">
 			<p:dataTable id="ecMemberTbl" var="committeeDtl"
-				value="#{lOIDetailBackingBean.managedBean.ecMemberList}"
+				value="#{lOIDetailBackingBean.managedBean.ecActivityList}"
 				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 			
 				<ac:paginator for="ecMemberTbl" />
@@ -44,7 +44,7 @@
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.selection']}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -53,7 +53,7 @@
 	<c:if test="#{lOIDetailBackingBean.managedBean.scQtFinalization.scQt.evaluationType == '2'}">
 		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeTechnicalEvaluationCommittee)}" toggleable="true">
 			<p:dataTable id="tecMemberTbl" var="committeeDtl"
-				value="#{lOIDetailBackingBean.managedBean.tecMemberList}"
+				value="#{lOIDetailBackingBean.managedBean.tecActivityList}"
 				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 			
 				<ac:paginator for="tecMemberTbl" />
@@ -87,14 +87,14 @@
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.selection']}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		
 		<p:panel header="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, ParameterConst.committeeTypeFinancialEvaluationCommittee)}" toggleable="true">
 			<p:dataTable id="fecMemberTbl" var="committeeDtl"
-				value="#{lOIDetailBackingBean.managedBean.fecMemberList}"
+				value="#{lOIDetailBackingBean.managedBean.fecActivityList}"
 				rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 			
 				<ac:paginator for="fecMemberTbl" />
@@ -128,7 +128,7 @@
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.selection']}">
-					<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+					<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -136,7 +136,7 @@
 
 	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="true">
 		<p:dataTable id="fcMemberTbl" var="committeeDtl"
-			value="#{lOIDetailBackingBean.managedBean.fcMemberList}"
+			value="#{lOIDetailBackingBean.managedBean.fcActivityList}"
 			rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 		
 			<ac:paginator for="fcMemberTbl" />
@@ -174,8 +174,46 @@
 			</p:column>
 						
 			<p:column headerText="#{lbl['lbl.sc.selection']}">
-				<p:selectBooleanCheckbox value="#{committeeDtl.selected}" />
+				<p:selectBooleanCheckbox value="#{committeeDtl.multiLoiAttended}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
+			value="#{lOIDetailBackingBean.managedBean.meetingAttendanceList}" rows="10"
+			rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
+			selection="#{lOIDetailBackingBean.managedBean.selectedMeetingAttList}">
+		
+			<ac:paginator for="meetingAttDtlTbl" />
+
+			<p:column selectionMode="multiple" style="width:2%"></p:column>
+					
+			<p:column headerText="#{lbl['lbl.sc.name']}">
+				<h:inputText value="#{meetingAttDtl.name}" maxlength="50" size="50"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.id.no']}">
+				<h:inputText value="#{meetingAttDtl.icPassport}" maxlength="15" size="15"/>
+			</p:column>
+						
+		</p:dataTable>
+					
+		<p:spacer height="10px"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this,meetingAttDtlTbl" 
+				partialSubmit="true"
+				action="#{lOIDetailBackingBean.addMeetingAttendance}"
+				update="meetingAttDtlTbl" 
+				icon="ui-icon-add" />
+							
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, meetingAttDtlTbl" partialSubmit="true"
+				icon="ui-icon-delete"
+				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.meetingAttendanceList, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
+				update="meetingAttDtlTbl" />
+	
+		</div>
+	</p:panel> 
 </ui:composition>
