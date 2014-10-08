@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.URL;
@@ -33,7 +34,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
@@ -852,77 +855,102 @@ public class SPDetailBackingBean extends
 				.getScQtCheckListAttachment());
 	}
 
-	public void downloadEncryptedFile(String filePath, String fileName)
+	public <ATTACHMENT extends ScAttachment> File downloadEncryptedFile(
+			ATTACHMENT scAttachment) throws IOException {
+		if (scAttachment != null
+				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
+			
+			return downloadEncryptedFile(getActualFilePath(scAttachment),
+					scAttachment.getFileName());
+		} else {
+			throw new EpException("Attachment not found.");
+		}
+	}
+
+	public File downloadEncryptedFile(String filePath, String fileName)
 			throws IOException {
 
-		if (filePath != null) {
-			InputStream input = null;
-			try {
-				URLConnection uc = new URL(filePath).openConnection();
-				input = new BufferedInputStream(uc.getInputStream());
+			log.info("Inside downloadFile(...)");
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse response = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
 
-			} catch (Exception e) {
-				// Cannot open connection, maybe local file
-				input = new FileInputStream(filePath);
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+//			response.setContentType("application/vnd.ms-excel");
+//			response.setHeader("Content-Transfer-Encoding", "binary");
+			response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+			response.setContentType("application/octet-stream");
+			response.flushBuffer();
+			
+			OutputStream out = response.getOutputStream();
+
+			if (filePath != null) {
+				InputStream input = null;
+				try {
+					log.info("Inside filePath(...)");
+					URLConnection uc = new URL(filePath).openConnection();
+					input = new BufferedInputStream(uc.getInputStream());
+
+				} catch (Exception e) {
+					// Cannot open connection, maybe local file
+					log.info("Inside filePaths(...)");
+					input = new FileInputStream(filePath);
+				}
+//				byte[] buffer = new byte[4096];
+//				int bytesRead;
+//				while ((bytesRead = input.read(buffer)) != -1) {
+//					out.write(buffer, 0, bytesRead);
+//					buffer = new byte[4096];
+				
+		            BouncyCastleProvider_AES_CBC bc =
+		                    new BouncyCastleProvider_AES_CBC();
+		            try {
+						bc.InitCiphers();
+					} catch (InvalidKeyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchProviderException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InvalidAlgorithmParameterException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+		            //decryption
+		            try {
+						bc.CBCDecrypt(input, out);
+					} catch (ShortBufferException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalBlockSizeException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (BadPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}			
+				
+				
+				input.close();
 			}
-			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
-			try {
-				bc.InitCiphers();
-			} catch (InvalidKeyException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NoSuchAlgorithmException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NoSuchProviderException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (NoSuchPaddingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InvalidAlgorithmParameterException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			System.out.println("Test 1 !" + bc.generateKey());
-			// encryption
-			// bc.CBCEncrypt(fis, fos);
+			
+			out.flush();
+			out.close();
+			FacesContext.getCurrentInstance().responseComplete();
 
-			FileOutputStream fos = new FileOutputStream(new File(
-					"C:\\Windows\\Temp\\PV.pdf"));
-
-			// decryption
-			try {
-				bc.CBCDecrypt(input, fos);
-			} catch (ShortBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalBlockSizeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (BadPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			// byte[] buffer = new byte[4096];
-			// int bytesRead;
-			// while ((bytesRead = input.read(buffer)) != -1) {
-			// out.write(buffer, 0,ytesRead);
-			// buffer = new byte[4096];
-			// }
-			input.close();
-			fos.flush();
-			fos.close();
-			FileInputStream input1 = new FileInputStream(new File(
-					"C:\\Windows\\Temp\\PV.pdf"));
-			downloadFileByInputStream(input1, fileName);
+			// use to upload back to database
+			File file = new File(filePath);
+			return file;
 		}
-		//
-		// // use to upload back to database
-		// File file = new File(filePath);
-		// return file;
-	}
 
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
