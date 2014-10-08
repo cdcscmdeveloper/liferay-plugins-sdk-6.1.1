@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:menu>
-        <p:submenu label="Online Registration">
-            <p:menuitem value="Sign Up New Account" outcome="/xhtml/sm/onlinereg/portletViewMode.xhtml" />
-            <p:menuitem value="Corparate Information" outcome="/xhtml/sm/onlinereg/corporateAccount.xhtml" />
-            <p:menuitem value="First User Registration" outcome="/xhtml/sm/onlinereg/firstUserRegistration.xhtml" />
+        <p:submenu label="#{lbl['lbl.sm.online.registration']}">
+            <p:menuitem value="#{lbl['lbl.sm.online.signup.new.acc']}" outcome="/xhtml/sm/onlinereg/portletViewMode.xhtml" />
+            <p:menuitem value="#{lbl['lbl.sm.online.corporate.info']}" outcome="/xhtml/sm/onlinereg/corporateAccount.xhtml" />
+            <p:menuitem value="#{lbl['lbl.sm.online.first.user.reg']}" outcome="/xhtml/sm/onlinereg/firstUserRegistration.xhtml" />
         </p:submenu>
     </p:menu>
 </ui:composition>

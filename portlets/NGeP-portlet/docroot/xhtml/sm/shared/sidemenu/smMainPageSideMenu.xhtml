@@ -6,55 +6,55 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:menu>
-		<p:submenu label="MOF Account Maintenance">
-			<p:menuitem value="Apply Bumiputera Status"
+		<p:submenu label="#{lbl['lbl.sm.mof.account.maintenance.headerLbl']}">
+			<p:menuitem value="#{lbl['lbl.sm.bumi.headerLbl']}"
 				outcome="/xhtml/sm/bumiPuteraApplication/defaultBumiApplicationPage.xhtml" />
-			<p:menuitem value="Add Additional Category Codes"
+			<p:menuitem value="#{lbl['lbl.sm.addnlCat.headerLbl']}"
 				outcome="/xhtml/sm/addAdditionalCategoryCodes/defaultAdditionalCategoryCodePage.xhtml" />
-			<p:menuitem value="Update MOF Account Details"
+			<p:menuitem value="#{lbl['lbl.sm.updateMof.headerLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/defaultUpdateMofDetailsPage.xhtml" />/>
-			<p:menuitem value="Delete Pending MOF Application" />
-			<p:menuitem value="Cancel Registered Category Code"
+			<p:menuitem value="#{lbl['lbl.sm.pending.mof.delete']}" />
+			<p:menuitem value="#{lbl['lbl.sm.catcode.delete.cancel.header']}"
 				outcome="/xhtml/sm/deleteRegCatCodes/delRegCatCodes.xhtml" />
-			<p:menuitem value="Cancel Registration With MOF"
+			<p:menuitem value="#{lbl['lbl.sm.mof.reg.cancel']}"
 				outcome="/xhtml/sm/cancelRegWithMof/cancelRegistrationWithMof.xhtml" />
 		</p:submenu>
-		<p:submenu label="User Profile Maintenance">
-			<p:menuitem value="Manage User(s)" />
-			<p:menuitem value="Update Profile"
+		<p:submenu label="#{lbl['lbl.sm.userprofile.maintenance.header']}">
+			<p:menuitem value="#{lbl['lbl.sm.userprofile.manage.users']}" />
+			<p:menuitem value="#{lbl['lbl.sm.userprofile.update.profile']}"
 				outcome="/xhtml/sm/userProfileMaintenance/updateOwnProfilePage.xhtml" />
-			<p:menuitem value="Change Password"
+			<p:menuitem value="#{lbl['lbl.sm.userprofile.change.pwd']}"
 				outcome="/xhtml/sm/userProfileMaintenance/changePassword.xhtml" />
 		</p:submenu>
-		<p:submenu label="Disciplinary Action">
-			<p:menuitem value="Lodge Complaint"
+		<p:submenu label="#{lbl['lbl.sm.disciplinary.action.headerLbl']}">
+			<p:menuitem value="#{lbl['lbl.sm.complaint.lodge.complaint']}"
 				outcome="/xhtml/sm/disciplinaryAction/lodgeComplaint.xhtml" />
-			<p:menuitem value="Send PTPK Review1"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.send.ptpk.review.one']}"
 				outcome="/xhtml/sm/disciplinaryAction/step1UrusTo_PtpkFirstReview.xhtml" />
-			<p:menuitem value="Update PTPK Resposne1"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.update.ptpk.resp.one']}"
 				outcome="/xhtml/sm/disciplinaryAction/step2UrusUpdate_PtpkFirstResponse.xhtml" />
-			<p:menuitem value="Send PTPK Review2"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.send.ptpk.review.two']}"
 				outcome="/xhtml/sm/disciplinaryAction/step3UrusTo_PtpkSecondReview.xhtml" />
-			<p:menuitem value="Update PTPK Resposne2"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.update.ptpk.resp.two']}"
 				outcome="/xhtml/sm/disciplinaryAction/step4UrusUpdate_PtpkSendResponse.xhtml" />
-			<p:menuitem value="Send JTKK-Final Review"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.send.jtkk.review.final']}"
 				outcome="/xhtml/sm/disciplinaryAction/step5UrusTo_JkttFinalReview.xhtml" />
-			<p:menuitem value="Impose Final Decision"
+			<p:menuitem value="#{lbl['lbl.sm.disciplinary.impose.final.decision']}"
 				outcome="/xhtml/sm/disciplinaryAction/step6UrusImpose_JkttFinalDecision.xhtml" />
 		</p:submenu>
-		<p:submenu label="Decision Pages">
-			<p:menuitem value="SDO Review"
+		<p:submenu label="#{lbl['lbl.sm.sdo.decision.page']}">
+			<p:menuitem value="#{lbl['lbl.sm.sdo.review']}"
 				outcome="/xhtml/sm/mofSdoReview/reviewSupportingDocuments.xhtml" />
-			<p:menuitem value="PO Default Decision"
+			<p:menuitem value="#{lbl['lbl.sm.sdo.po.default.decision']}"
 				outcome="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 		</p:submenu>
-		<p:submenu label="General">
-			<p:menuitem value="Answer Questionnaire"
+		<p:submenu label="#{lbl['lbl.sm.questionaire.general.header']}">
+			<p:menuitem value="#{lbl['lbl.sm.questionaire.answer.header']}"
 				outcome="/xhtml/sm/questionnaire/answerQuestionnaire.xhtml" />
 		</p:submenu>
-		<p:submenu label="Monitoring">
-			<p:menuitem value="Transaction Monitoring" />
-			<p:menuitem value="Supplier Performance" />
+		<p:submenu label="#{lbl['lbl.sm.monitoring.header']}">
+			<p:menuitem value="#{lbl['lbl.sm.monitoring.transaction']}" />
+			<p:menuitem value="#{lbl['lbl.sm.monitoring.supp.performance']}" />
 		</p:submenu>
 	</p:menu>
 </ui:composition>
