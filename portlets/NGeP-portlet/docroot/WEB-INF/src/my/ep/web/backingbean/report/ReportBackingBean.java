@@ -4061,7 +4061,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			urlSCReportJsps.put(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.PDDW_OC_RPT_VAL, ReportConst.SC_PDDW_OC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL, ReportConst.AKPP_PEMATUHAN_OC_RPT_JSP);			
+			urlSCReportJsps.put(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_AKPP_PEMATUHAN_OC_RPT_JSP);			
 			urlSCReportJsps.put(ReportConst.SPPSAP2_TEC_RPT_VAL, ReportConst.SC_SPPSAP2_TEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP);
 			urlSCReportJsps.put(ReportConst.AKPT_TEC_RPT_VAL, ReportConst.SC_AKPT_TEC_RPT_JSP);
