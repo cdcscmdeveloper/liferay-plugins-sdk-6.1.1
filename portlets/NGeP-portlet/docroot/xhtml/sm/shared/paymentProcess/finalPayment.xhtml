@@ -9,11 +9,11 @@
 
 	<ui:define name="contentSection">
 			<div align="right">
-				<p:commandButton value="Make Payment" action="#{commApplBackingBean.makePayment}" />
-				<p:commandButton value="Cancel" />
+				<p:commandButton value="#{lbl['lbl.sm.makePayment']}" action="#{commApplBackingBean.makePayment}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" />
 			</div>
 	
-			<p:panel header="Payment Summary :">
+			<p:panel header="#{lbl['lbl.sm.payment.summary']} :">
 				<p:dataTable id="paymentList" rowKey="#{pay}" rowIndexVar="index" 
 				value="#{commApplBackingBean.managedBean.personnelList}" var="pay" 
 				editable="true" style="word-wrap: break-word;table-layout: fixed;" 
@@ -21,8 +21,8 @@
 					<p:columnGroup type="header">
 						<p:row>
 							<p:column selectionMode="multiple" style="width:2%"/>
-							<p:column headerText="Process / Description" />
-							<p:column headerText="Amount (RM.)" />
+							<p:column headerText="#{lbl['lbl.sm.payment.process.description']}" />
+							<p:column headerText="#{lbl['lbl.sm.person.shrAmt']}" />
 
 						</p:row>
 					</p:columnGroup>
@@ -37,11 +37,11 @@
 					<p:column style="width:2%" rendered="#{commApplBackingBean.managedBean.pListSize == index}"/>
 
 					<p:column rendered="#{commApplBackingBean.managedBean.pListSize != index}">
-						<h:outputText value="Soft Cert Payment for #{pay.name}" rendered="#{commApplBackingBean.managedBean.pListSize != index}"/>
+						<h:outputText value="#{lbl['lbl.sm.soft.cert.payment.for']} #{pay.name}" rendered="#{commApplBackingBean.managedBean.pListSize != index}"/>
 					</p:column>
 					<p:column rendered="#{commApplBackingBean.managedBean.pListSize == index}" disabledSelection="true">	
-						<h:outputText value="New MoF Fee" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'N'}"/>
-						<h:outputText value="Renew MoF Fee" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'R'}"/>
+						<h:outputText value="#{lbl['lbl.sm.payment.new.mof.fee']}" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'N'}"/>
+						<h:outputText value="#{lbl['lbl.sm.payment.renew.mof.fee']}" rendered="#{commApplBackingBean.managedBean.pListSize == index and commApplBackingBean.managedBean.applType eq 'R'}"/>
 					</p:column>
 					<p:column rendered="#{commApplBackingBean.managedBean.pListSize != index}">
 						<h:outputText value="150.00" rendered="#{commApplBackingBean.managedBean.pListSize != index}"/>
@@ -53,7 +53,7 @@
 					<p:columnGroup type="footer">
 						<p:row>
 							<p:column footerText=""></p:column>
-							<p:column footerText="Total"
+							<p:column footerText="#{lbl['lbl.sm.total']}"
 								style="text-align:left" />
 							<p:column id="payTotalAmt" footerText="#{commApplBackingBean.managedBean.totalAmount}" style="text-align:left"/>
 
