@@ -106,6 +106,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
+	private List<Long> recommendDtlIds;
+	
 	/**
 	 * @return the scQtEvaluationResult
 	 */
@@ -854,6 +856,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSelectedMeetingAttList(
 			List<ScQtMeetingAttendance> selectedMeetingAttList) {
 		this.selectedMeetingAttList = selectedMeetingAttList;
+	}
+
+	public List<Long> getRecommendDtlIds() {
+		return recommendDtlIds;
+	}
+
+	public void setRecommendDtlIds(List<Long> recommendDtlIds) {
+		this.recommendDtlIds = recommendDtlIds;
 	}
 	
 }
