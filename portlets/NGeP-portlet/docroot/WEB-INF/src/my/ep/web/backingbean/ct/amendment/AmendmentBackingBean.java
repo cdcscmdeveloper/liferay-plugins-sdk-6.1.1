@@ -2252,6 +2252,22 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().remove(this.getManagedBean().getSelectedScLoaReports());
 	}
 	
+	public boolean getAmendValue(int value){
+		
+		if(value ==1 && (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
+				|| getManagedBean().getContractVer().getCtAmendment().isQuantityChange() ||getManagedBean().getContractVer().getCtAmendment().isValueChange())){
+			return true;
+		}
+		
+		if(value ==2  && !getManagedBean().getContractVer().getCtAmendment().isContractExtend() &&
+				 (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() || getManagedBean().getContractVer().getCtAmendment().isQuantityChange() 
+				 ||getManagedBean().getContractVer().getCtAmendment().isValueChange()  ||getManagedBean().getContractVer().getCtAmendment().isClauseChange())){
+			return true;
+		}
+		return false;
+	}
+	
+	
 	public PmParameter retrieveParameterByCodeType(String parameterType, String parameterCode) throws NamingException {
 		
 		 IParameterSO parameterSO = null;
