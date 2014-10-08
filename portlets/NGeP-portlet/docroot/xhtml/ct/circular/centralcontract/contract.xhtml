@@ -15,32 +15,33 @@
 				update=":form:contractListPnl"
 				process="@this"
 				listener="#{centralContractBackingBean.setContractListner()}" />
-			<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}">
+		    <p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:32%;white-space:normal;">
+				   <h:outputText value="#{circularContractsVar.ctContract.contractName}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.loa.physical.no']}" style="width:12%;white-space:normal;">
 				<h:outputText value="#{circularContractsVar.ctContract.loaPhysicalNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.physical.no']}">
+			<p:column headerText="#{lbl['lbl.ct.physical.no']}" style="width:10%;white-space:normal;">
 				<h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.contract.title']}">
-				<h:outputText value="#{circularContractsVar.ctContract.contractName}" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.supplier.name']}">
+			
+			<p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.contract.start']}">
+			<p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.contract.end']}">
+			<p:column headerText="#{lbl['lbl.ct.contract.end']}" style="width:8%;">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.ct.status']}">
+			<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
 				<p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}"
 					disabled="#{!centralContractBackingBean.managedBean.updateAction}"
 					style="width:70px;">
