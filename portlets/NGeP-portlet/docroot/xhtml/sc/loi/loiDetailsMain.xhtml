@@ -11,9 +11,20 @@
 		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
+		<ui:param name="isPendingSubmissionStatus"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION}" />
+		<ui:param name="isEditableStatus"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUBMISSION || lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_APPROVAL || lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_REVISION}" />
+		<ui:param name="isSupplierAckStatus"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isAfterSupplierResponseStatus"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId > QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+
 		<ui:include src="loiButtons.xhtml" />
 
 		<ui:include src="loiDetailsHeader.xhtml" />
+
+	
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -40,14 +51,14 @@
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
-							</p:menuitem>
+						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.approve.details']}"
-							update="@form" >
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
-							</p:menuitem>
+						</p:menuitem>
 					</p:tabMenu></td>
 				<td width="80%"><h:panelGroup>
 						<c:if

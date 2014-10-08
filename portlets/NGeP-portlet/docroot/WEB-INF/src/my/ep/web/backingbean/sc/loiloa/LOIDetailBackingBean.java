@@ -121,6 +121,13 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoadData(awardDataType);
+			//TODO - temp hardcode due to groupkeyList not deployed yet
+			List<Long> recommendDtlIdList = new ArrayList<>();
+			recommendDtlIdList.add(154L);
+			recommendDtlIdList.add(155L);
+			
+			getManagedBean().setRecommendDtlIds(recommendDtlIdList);
+			
 			Long currentStatusId = getManagedBean().getCurrentStatusId();
 			
 			statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
@@ -820,6 +827,7 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 			ScLoi loi = new ScLoi();
 			loi.setScLoiLoa(scLoiLoa);
 			reqDTO.setScLoi(loi);
+			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
 			
 			populateLOIDetails(resDTO);			
@@ -829,6 +837,32 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "loiDetailsMain");
+	}
+	
+	public String editLOIAction(ScLoi scLoi) {
+		debugLogger("editLOIAction");
+
+		IQTAwardSO qtAwardSO = null;
+
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			String language = new FacesScopes().getUserLocale().getLanguage();
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoi(scLoi);
+			reqDTO.setLanguageCode(language);
+
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+
+			populateLOIDetails(resDTO);	
+
+		} finally {
+			qtAwardSO = null;
+		}
+
+		return QTConstants.LOI_PAGE;
 	}
 	
 	
@@ -848,9 +882,9 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 		getManagedBean()
 				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
 		
-		if (scLoi.isBrandNew()) {
-			handleBranchDetailsChanged();
-		}
+//		if (scLoi.isBrandNew()) {
+//			handleBranchDetailsChanged();
+//		}
 		
 		// Issue & Acknowledge Date
 		scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
