@@ -171,7 +171,7 @@
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
 						style="width:250px">
-						<f:selectItem itemValue="" itemLabel="---Select---" />
+						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
@@ -195,7 +195,7 @@
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
 						style="width:250px">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
@@ -219,7 +219,7 @@
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
 						style="width:250px">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
