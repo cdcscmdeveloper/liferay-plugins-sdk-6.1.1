@@ -9,8 +9,8 @@ public class EPSchedulerConstants {
 	public static final String EP_JOB_GROUP = "EP JOB GROUP";
 
 	// EP Job Key Id
-	public static final String EP_CONTINOUS_JOB = "EP CONTINOUS JOB";
-	public static final String EP_DAILY_JOB = "EP DAILY JOB";
+	public static final String EP_CONTINOUS_JOB = "CONTINUOUS STATUS CHECK";
+	public static final String EP_DAILY_JOB = "BIDS FETCH ";
 
 	// status constants for Scheduler Manager 
 	public static final String JOB_RUN = "RUN";
