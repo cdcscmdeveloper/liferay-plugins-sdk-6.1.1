@@ -195,7 +195,7 @@
 							     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 							     <p:outputLabel value="*" styleClass="mandatory" />
 							 </td>
-							 <td> <p:selectOneMenu style="width: 185px; margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.justification']}"
+							 <td> <p:selectOneMenu style="width: 185px; margin-bottom: 5px;" id="justificationId" label="#{lbl['lbl.sc.reason']}"
 							         required="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'A' or 
 						              purchaseInquiryBackingBean.managedBean.requestNoteDtl.procurementType.parameterCode eq 'E'}"
 									  value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">

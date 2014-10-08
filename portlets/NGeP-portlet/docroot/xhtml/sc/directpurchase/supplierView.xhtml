@@ -32,8 +32,6 @@
 		</table>
 	</div>
 	
-	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.submit.instruction']}">
-	</h:outputText>
 	
 	<p:panel id="suppViewDtl" header="#{lbl['lbl.sc.supplier.details']}"
 		toggleable="true">
@@ -57,6 +55,10 @@
 	</p:panel>
 
 	<p:panel id="tplSpecId" header="#{lbl['lbl.ss.simple.quote.details']}" toggleable="true">
+	
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.submit.instruction']}">
+		</h:outputText>
+		
 		<p:spacer height="5px" />
 			<table style="width: 100%;">
 				<tr>
