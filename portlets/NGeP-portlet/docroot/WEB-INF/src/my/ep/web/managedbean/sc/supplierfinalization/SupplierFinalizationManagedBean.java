@@ -45,6 +45,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	//Header
 	private ScQt scQt;
+	private String committeeType;
 	private List<TplSpecZoneDtl> zoneDetails;
 	private List<TabBean> tabList;
 	public TabBean selectedTabBean;
@@ -947,6 +948,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setCancel(boolean isCancel) {
 		this.isCancel = isCancel;
+	}
+
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
 	}
 
 }
