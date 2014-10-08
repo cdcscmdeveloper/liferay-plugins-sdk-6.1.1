@@ -6,17 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Permenant Address" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.person.permAddr']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td valign="top" width="50%">
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="Permenant Addr : " /></b></u></td>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.permAddr']} : " /></b></u></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Address" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
 									size="35" /></td>
@@ -41,11 +41,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrPermCountry"
 										value="#{backingBean.managedBean.countryLs}"
 										itemValue="#{prsShrPermCountry.countryId}"
@@ -66,7 +66,7 @@
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
 									id="prsShrPermState">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrPermState"
 										value="#{backingBean.managedBean.shrHldrPermStates}"
 										itemValue="#{prsShrPermState.stateId}"
@@ -86,7 +86,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrPermDist"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrPermDist"
 										value="#{backingBean.managedBean.shrHldrPermDistricts}"
 										itemValue="#{prsShrPermDist.districtId}"
@@ -103,7 +103,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrPermCity"
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrPermCity"
 										value="#{backingBean.managedBean.shrHldrPermCities}"
 										itemValue="#{prsShrPermCity.cityId}"
@@ -117,11 +117,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>
@@ -130,17 +130,17 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="Mailing Address : " /></b></u>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.mailAddr']} : " /></b></u>
 							</td>
 							<td><table style="width: 100%">
 									<tr>
 										<td width="10px"><p:selectBooleanCheckbox /></td>
-										<td><h:outputText value=" Same as permenant: " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
 									</tr>
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Address" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
 									size="35" /></td>
@@ -169,7 +169,7 @@
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrMailContry"
 										value="#{backingBean.managedBean.countryLs}"
 										itemValue="#{prsShrMailContry.countryId}"
@@ -190,7 +190,7 @@
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
 									id="prsShrMailState">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrMailState"
 										value="#{backingBean.managedBean.shrHldrMailStates}"
 										itemValue="#{prsShrMailState.stateId}"
@@ -210,7 +210,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrMailDist"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrMailDist"
 										value="#{backingBean.managedBean.shrHldrMailDistricts}"
 										itemValue="#{prsShrMailDist.districtId}"
@@ -227,7 +227,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrMailCity"
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrMailCity"
 										value="#{backingBean.managedBean.shrHldrMailCities}"
 										itemValue="#{prsShrMailCity.cityId}"
@@ -241,11 +241,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>
@@ -254,23 +254,23 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="Correspondence Address" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.correspondenceadd']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td valign="top" width="50%">
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="Residential Addr : " /></b></u></td>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.resiAddr']} : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
 										<td width="10px"><p:selectBooleanCheckbox /></td>
-										<td><h:outputText value=" Same as permenant: " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
 									</tr>
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Address" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.address1}"
 									size="35" /></td>
@@ -295,11 +295,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="*#{lbl['lbl.sm.country']}" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrResCountry"
 										value="#{backingBean.managedBean.countryLs}"
 										itemValue="#{prsShrResCountry.countryId}"
@@ -320,7 +320,7 @@
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId}"
 									id="prsShrResState">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrResState"
 										value="#{backingBean.managedBean.shrHldrResdStates}"
 										itemValue="#{prsShrResState.stateId}"
@@ -340,7 +340,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrResDist"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrResDist"
 										value="#{backingBean.managedBean.shrHldrResdDistricts}"
 										itemValue="#{prsShrResDist.districtId}"
@@ -357,7 +357,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrResCity"
 									value="#{backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity.cityId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrResCity"
 										value="#{backingBean.managedBean.shrHldrResdCities}"
 										itemValue="#{prsShrResCity.cityId}"
@@ -371,11 +371,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>
@@ -384,16 +384,16 @@
 				<td valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><h:outputText value="Office Addr : " /></b></u></td>
+							<td><u><b><h:outputText value="#{lbl['lbl.sm.person.offAddr']} : " /></b></u></td>
 							<td><table style="width: 100%">
 									<tr>
 										<td width="10px"><p:selectBooleanCheckbox /></td>
-										<td><h:outputText value=" Same as permenant: " /></td>
+										<td><h:outputText value="#{lbl['lbl.sm.person.duplicateAddr']} : " /></td>
 									</tr>
 								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="* Address" /></td>
+							<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.address1}"
 									size="35" /></td>
@@ -422,7 +422,7 @@
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrOffCountry"
 										value="#{backingBean.managedBean.countryLs}"
 										itemValue="#{prsShrOffCountry.countryId}"
@@ -443,7 +443,7 @@
 									style="width: 207px;margin-bottom: 5px;"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId}"
 									id="prsShrOffState">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrOffState"
 										value="#{backingBean.managedBean.shrHldrOffStates}"
 										itemValue="#{prsShrOffState.stateId}"
@@ -463,7 +463,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrOffDist"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrOffDist"
 										value="#{backingBean.managedBean.shrHldrOffDistricts}"
 										itemValue="#{prsShrOffDist.districtId}"
@@ -480,7 +480,7 @@
 							<td><p:selectOneMenu
 									style="width: 207px;margin-bottom: 5px;" id="prsShrOffCity"
 									value="#{backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity.cityId}">
-									<f:selectItem itemLabel="---Select---" itemValue="" />
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="prsShrOffCity"
 										value="#{backingBean.managedBean.shrHldrOffCities}"
 										itemValue="#{prsShrOffCity.cityId}"
@@ -494,11 +494,11 @@
 									size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax NO." /></td>
+							<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 							<td><p:inputText size="35" /></td>
 						</tr>
 					</table>

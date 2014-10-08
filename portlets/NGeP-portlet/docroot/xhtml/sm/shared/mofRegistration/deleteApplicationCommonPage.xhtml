@@ -14,10 +14,10 @@
 		header="#{lbl['lbl.sm.deleteDraft.cnfmHdr']}" severity="alert"
 		widgetVar="mofApplDelConfirm">
 
-		<p:commandButton id="confApplDel" value="Yes"
+		<p:commandButton id="confApplDel" value="#{lbl['lbl.btn.yes']}"
 			oncomplete="mofApplDelConfirm.hide()" partialSubmit="true"
 			process="@this" action="#{backingBean.deleteDraftApplication}" />
-		<p:commandButton id="declineApplnDelete" value="No"
+		<p:commandButton id="declineApplnDelete" value="#{lbl['lbl.btn.no']}"
 			onclick="mofApplDelConfirm.hide()" type="button" />
 
 	</p:confirmDialog>

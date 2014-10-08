@@ -366,7 +366,7 @@
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
-								value=" Section Verified By PO: "
+								value="#{lbl['lbl.sm.sectionPoVerf']}"
 								title="For PO to highlight the verified section " /></td>
 
 					</tr>
@@ -381,7 +381,7 @@
 									listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.personnelVerified)}" />
 							</p:selectBooleanCheckbox></td>
 						<td valign="top"><h:outputText
-								value=" Section Verified By Approver: "
+								value="#{lbl['lbl.sm.sectionApprVerf']}"
 								title="For Approver to highlight the verified section " /></td>
 					</tr>
 				</p:outputPanel>

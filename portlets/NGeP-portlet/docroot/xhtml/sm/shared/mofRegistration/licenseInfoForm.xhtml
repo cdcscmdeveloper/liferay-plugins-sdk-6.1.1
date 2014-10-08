@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="License Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.license.details']}" toggleable="true">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
@@ -53,27 +53,27 @@
 				<p:column selectionMode="multiple" width="5%" />
 
 
-				<p:column headerText="License Name">
+				<p:column headerText="#{lbl['lbl.sm.license.name']}">
 					<h:outputText value="" />
 				</p:column>
 
-				<p:column headerText="License Body">
+				<p:column headerText="#{lbl['lbl.sm.license.body']}">
 					<h:outputText value="-- TBC --" />
 				</p:column>
 
-				<p:column headerText="Start Date">
+				<p:column headerText="#{lbl['lbl.sm.license.startdate']}">
 					<h:outputText value="#{licBean.certStartDate}">
 						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 					</h:outputText>
 				</p:column>
 
-				<p:column headerText="End Date">
+				<p:column headerText="#{lbl['lbl.sm.license.enddate']}">
 					<h:outputText value="#{licBean.certEndDate}">
 						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 					</h:outputText>
 
 				</p:column>
-				<p:column headerText="Action">
+				<p:column headerText="#{lbl['lbl.sm.action']}">
 					<p:commandLink oncomplete="licDialog.show();"
 						update=":form:tt:licPop">
 						<p:graphicImage library="ep/images/design" name="edit.png"
@@ -84,16 +84,16 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add " oncomplete="licDialog.show();"
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" oncomplete="licDialog.show();"
 					update=":form:tt:licPop" />
-				<p:commandButton value="Delete " />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" />
 
 			</div>
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.licenseRemarks}" /></td>
 					</tr>
@@ -102,11 +102,11 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" readonly="true"
 								disabled="true" cols="41"
 								value="#{backingBean.managedBean.poSecReview.licenseRemarks}" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 						<td><p:inputTextarea autoResize="true" cols="41"
 								value="#{backingBean.managedBean.apprvrSecReview.licenseRemarks}" /></td>
 
@@ -115,30 +115,30 @@
 			</p:outputPanel>
 		</p:panel>
 	</p:panel>
-	<p:dialog width="500px" header="License Information"
+	<p:dialog width="500px" header="#{lbl['lbl.sm.license.information']}"
 		widgetVar="licDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="licPop">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* License Name" size="35" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.name']}" size="35" /></td>
 				<td><p:inputText /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*License Body" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.body']}" /></td>
 				<td><p:inputTextarea /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Start Date" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.startdate']}" /></td>
 				<td><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Expiry Date" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.enddate']}" /></td>
 				<td><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="*Associated Equipment" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.assc.equipmnt']}" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true">
 						<f:selectItems
@@ -149,7 +149,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="*Associated Facility" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.license.assc.facility']}" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true">
 						<f:selectItems
@@ -163,9 +163,9 @@
 		<!-- </p:panel> -->
 		<br />
 		<div align="right">
-			<p:commandButton value="Save" oncomplete="licDialog.hide();"
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" oncomplete="licDialog.hide();"
 				update=":form:tt:licDt" />
-			<p:commandButton value="Cancel" onclick="licDialog.hide();" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="licDialog.hide();" />
 		</div>
 
 	</p:dialog>

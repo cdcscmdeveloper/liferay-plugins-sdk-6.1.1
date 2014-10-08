@@ -58,7 +58,7 @@
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.poSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
-						value=" Application Verified By PO"
+						value="#{lbl['lbl.sm.po.verified.application']}"
 						title="For PO to highlight the verified section " /></td>
 
 			</tr>
@@ -72,7 +72,7 @@
 							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.apprvrSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
-						value=" Application Verified By Approver"
+						value="#{lbl['lbl.sm.approver.verified.application']}"
 						title="For PO to highlight the verified section " /></td>
 
 			</tr>
@@ -84,7 +84,7 @@
 			<tr>
 				<td></td>
 				<td style="padding-right: 2px; text-align: center;">
-					<h:commandLink value="View Previous Approved Application" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revAppUrl}');return false;" target="_blank">
+					<h:commandLink value="#{lbl['lbl.sm.view.previous.appr.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revAppUrl}');return false;" target="_blank">
 					</h:commandLink>
 				</td>
 			</tr>
@@ -95,7 +95,7 @@
 		<table style="width: 100%;">
 			<tr>
 				<td style="padding-right: 2px; text-align: center;">				      
-					<h:commandLink value="View Original Application" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revSupUrl}');return false;" target="_blank">
+					<h:commandLink value="#{lbl['lbl.sm.view.original.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revSupUrl}');return false;" target="_blank">
 					</h:commandLink>
 				</td>
 			</tr>

@@ -7,44 +7,44 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="Manufacturing / Assembly Information">
+	<p:panel header="#{lbl['lbl.sm.manufacture.diaHdr']}">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Product Type" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.manufacture.prdType']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
 						size="35" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Brand" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.manufacture.brand']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedManufacturer.brand}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Production Capacity" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.manufacture.prodCap']}" /></td>
 				<td>
 					<table>
 						<tr>
 							<td style="padding-right: 5px;"><p:inputText
 									value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}"
 									size="15" /></td>
-							<td valign="top"><h:outputText value=" per Month" /></td>
+							<td valign="top"><h:outputText value="#{lbl['lbl.sm.manufacture.month']}" /></td>
 						</tr>
 					</table>
 				</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Measurement" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.manufacture.mesUnit']}" /></td>
 				<td valign="top"><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedManufacturer.pmUom.uomCode}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Unit " itemValue="Unit" />
-						<f:selectItem itemLabel="Volume" itemValue="Volume" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.manufacture.mesUnit.unit']} " itemValue="Unit" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.manufacture.mesUnit.volume']}" itemValue="Volume" />
 					</p:selectOneMenu></td>
 				<!-- <td>
 						<table>
@@ -60,10 +60,10 @@
 	</p:panel>
 	<br />
 	<div align="right">
-		<p:commandButton value="Save"
+		<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 			action="#{backingBean.saveSelectedCategory}"
 			oncomplete="regCatDialog.hide();" type="submit" partialSubmit="true"
 			process="regCatDialog" update=":form:tt:catDt" />
-		<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="regCatDialog.hide();" />
 	</div>
 </ui:composition>

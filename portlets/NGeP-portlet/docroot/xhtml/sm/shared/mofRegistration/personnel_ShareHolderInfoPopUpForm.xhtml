@@ -11,15 +11,15 @@
 	<p:panel header="Personnel Info" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Name" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.name']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.name}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Nationality" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.nationality']}" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedShareHolder.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrOffCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{shrOffCountry.countryId}"

@@ -8,28 +8,28 @@
 
 
 
-	<p:panel header="Factory / Workshop / Store / Shipyard Details">
+	<p:panel header="#{lbl['lbl.sm.facility.workshop.dockyard.factory.store.details']}">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Facility Type" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.facility.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedFactoryFacility.facilityType}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Factory" itemValue="FA" />
-						<f:selectItem itemLabel="Workshop" itemValue="WO" />
-						<f:selectItem itemLabel="Store" itemValue="ST" />
-						<f:selectItem itemLabel="Shipyard" itemValue="SH" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.type.factory']}" itemValue="FA" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.type.workshop']}" itemValue="WO" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.type.store']}" itemValue="ST" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.type.dockyard']}" itemValue="SH" />
 					</p:selectOneMenu></td>
 
-				<td><p:outputLabel value="* Name" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.facility.name']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Address" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.address']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
 						size="50" /></td>
@@ -48,11 +48,11 @@
 						size="50" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Country" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
@@ -78,24 +78,24 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
 						size="35" /></td>
-				<td><p:outputLabel value="Phone NO." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.phoneno']}" /></td>
 				<td><p:inputText size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.faxno']}" /></td>
 				<td><p:inputText size="35" /></td>
 
-				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sc.spec.area.feat']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Ownership Type" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.facility.ownerType']}" /></td>
 				<td colspan="3"><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
-						<f:selectItem itemLabel="Rent " itemValue="R" />
-						<f:selectItem itemLabel="Own" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.rent']}" itemValue="R" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.facility.own']}" itemValue="O" />
 						<p:ajax event="change"
 							listener="#{backingBean.factoryOwnerTypeSel}"
 							update="facPan,facPanLbl" />
@@ -103,10 +103,10 @@
 			</tr>
 			<tr>
 				<td><p:outputPanel id="facPanLbl">
-						<p:outputLabel value="*Price (RM.)"
+						<p:outputLabel value="* #{lbl['lbl.sm.price']}"
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
 							id="oid" />
-						<p:outputLabel value="*Rent (RM.)"
+						<p:outputLabel value="* #{lbl['lbl.sm.facility.rent.rm']}"
 							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
 							id="rid" />
 					</p:outputPanel></td>
@@ -132,8 +132,7 @@
 							</table>
 						</ui:fragment>
 					</p:outputPanel></td>
-				<td><p:outputLabel value="
-								Owner Name *" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.ownername']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
 						size="35" /></td>
@@ -145,11 +144,11 @@
 	</p:panel>
 	<br />
 	<div align="right">
-		<p:commandButton value="Save"
+		<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 			action="#{backingBean.saveSelectedCategory}"
 			oncomplete="regCatDialog.hide();" type="submit" partialSubmit="true"
 			process="regCatDialog" update=":form:tt:catDt" />
-		<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="regCatDialog.hide();" />
 	</div>
 
 </ui:composition>
