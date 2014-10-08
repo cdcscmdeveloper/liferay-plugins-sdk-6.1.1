@@ -58,7 +58,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -1352,6 +1354,30 @@ public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManag
 
 		return pbStreamContent;
 
+	}
+	
+	public void addMeetingAttendance() {
+		debugLogger("..In addMeetingAttendance()..");
+		
+		try {
+			List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean().getMeetingAttendanceList();
+			List<ScQtCommitteeActivity> fcActivityList = getManagedBean().getFcActivityList();
+			
+			if (null == meetingAttendanceList) {
+				meetingAttendanceList = new ArrayList<ScQtMeetingAttendance>();
+			}
+             
+			ScQtMeetingAttendance meeting = new ScQtMeetingAttendance();
+			if (fcActivityList != null && fcActivityList.size() > 0) {
+				meeting.setQtCommittee(fcActivityList.get(0).getScQtCommittee());
+			}
+			setUserDetails(meeting);
+			meetingAttendanceList.add(meeting);
+
+			this.getManagedBean().setMeetingAttendanceList(meetingAttendanceList);
+		} finally {
+		
+		}
 	}
 
 	private void generateLoiLetterFromVelocityToPdf(ScAttachment attachment)
