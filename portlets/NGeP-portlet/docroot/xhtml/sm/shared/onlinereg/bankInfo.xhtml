@@ -19,7 +19,7 @@
 				</f:facet>
 			
 				<p:selectOneMenu id="bankNameId" value="#{bankInfo.pmFinancialOrg.financialOrgId}">
-					<f:selectItem itemLabel="---Select---" itemValue="" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{registrationBackingBean.managedBean.financialOrgLs}"
 						var="finOrg" itemValue="#{finOrg.financialOrgId}"

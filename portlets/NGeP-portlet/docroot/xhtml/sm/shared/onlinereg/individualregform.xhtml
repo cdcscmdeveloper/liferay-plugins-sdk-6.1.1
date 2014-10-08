@@ -16,7 +16,7 @@
 						label="#{lbl['lbl.sm.individual.service']}"
 						value="#{registrationBackingBean.managedBean.smSupp.serviceType}"
 						id="serviceTypeId">
-						<f:selectItem itemLabel="---Select" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems
 							value="#{registrationBackingBean.managedBean.serviceLs}"
 							var="servType" itemLabel="#{servType.codeName}"
@@ -92,7 +92,7 @@
 				<td class="tdContent"><p:selectOneMenu id="cmbPermState"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.permenantStateLs}"
 							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
@@ -115,7 +115,7 @@
 				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
 							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
@@ -139,7 +139,7 @@
 				<td class="tdContent"><p:selectOneMenu id="cmbPermCity"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.permenantCityLs}"
 							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
