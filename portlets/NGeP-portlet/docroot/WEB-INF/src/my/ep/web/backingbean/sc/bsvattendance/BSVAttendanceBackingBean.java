@@ -158,8 +158,8 @@ public class BSVAttendanceBackingBean extends
 	 * To add the attandance user click add button
 	 */
 	public void addAttendanceForBSV() {
-		List<ScQtBsvAttendance> attandances = this.getManagedBean().getSelectedbriefRegistration().getBsvAttendance()
-				;
+		List<ScQtBsvAttendance> attandances = this.getManagedBean()
+				.getSelectedbriefRegistration().getBsvAttendance();
 		ScQtBsvAttendance briefingAttendance = new ScQtBsvAttendance();
 		briefingAttendance.setBsvRegistration(this.getManagedBean()
 				.getSelectedbriefRegistration());
@@ -171,7 +171,7 @@ public class BSVAttendanceBackingBean extends
 		} else {
 			attandances.add(briefingAttendance);
 		}
-		//this.getManagedBean().setBriefingAttendanceList(attandances);
+		// this.getManagedBean().setBriefingAttendanceList(attandances);
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attandances);
 
@@ -354,26 +354,8 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
-		log.info("taskId : " + taskId);
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		// TODO
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		// String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
-		SCQuotationTenderDataType siteVisitDatatype = (SCQuotationTenderDataType) obj;
+
+		SCQuotationTenderDataType siteVisitDatatype = getBpmTaskDetails(SCQuotationTenderDataType.class);
 		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 
 		// populateParentOrgProfile(tenderResDTO.getQtDetail());
@@ -502,7 +484,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().getSelectedbriefRegistration()
 				.setBsvAttendance(attanedList);
 
-		//this.getManagedBean().setBriefingAttendanceList(attanedList);
+		// this.getManagedBean().setBriefingAttendanceList(attanedList);
 
 	}
 
@@ -591,10 +573,10 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void deleteBsvAttandances() {
 		List<ScQtBsvAttendance> attandances = this.getManagedBean()
-				.getBriefingAttendanceList();
+				.getSelectedbriefRegistration().getBsvAttendance();
 		ScQtBsvAttendance selectedBsvAttandance = this.getManagedBean()
 				.getScQtBriefingAttendance();
-		if (null != attandances) {
+		if (null != attandances && !selectedBsvAttandance.isAuthorized()) {
 			for (int i = 0; i < attandances.size(); i++) {
 
 				if (attandances
@@ -605,6 +587,8 @@ public class BSVAttendanceBackingBean extends
 					break;
 				}
 			}
+		} else {
+			throw new EpException(MessageConst.ERROR_760126);
 		}
 	}
 
