@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -43,6 +44,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -63,10 +66,12 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.managedbean.sc.quationtender.Node;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -626,13 +631,28 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 	public void updateZoneLocation() {
 		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
+		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+			this.getManagedBean().setTotalSuppliersSpecLoc(
+					new ArrayList<TplSpecLoc>());
+		}
+		List<TplSpecLoc> specLoc = new ArrayList<TplSpecLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
 				if (!treeNode.getParent().isSelected()) {
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					for (ScQtLocCriteria locCritera : locationDTO) {
+						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
+						specLoc.add(localSpecLoc);
+					}
+					this.getManagedBean().getTotalSuppliersSpecLoc().addAll(specLoc);
 					locationDTOs.addAll(locationDTO);
 				} else {
 					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					for (ScQtLocCriteria locCritera : locationDTO) {
+						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
+						specLoc.add(localSpecLoc);
+					}
+					this.getManagedBean().getTotalSuppliersSpecLoc().addAll(specLoc);
 					locationDTOs.addAll(locationDTO);
 				}
 			}
@@ -742,6 +762,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	public void updateZoneGeneralLocation() {
+		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+			this.getManagedBean().setTotalSuppliersSpecLoc(
+					new ArrayList<TplSpecLoc>());
+		}
 		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedGeneralTreeNodes()) {
@@ -808,13 +832,76 @@ public class QTSupplierQulCriteriaBackingBean extends
 	/**
 	 * To delete the selected TreeNode from list..
 	 */
-	public void deleteSupplierQualificationTreeNode() {
+/*	public void deleteSupplierQualificationTreeNode() {
 		debugLogger("deleteSupplierQualificationTreeNode");
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 		deleteTreeNodes(rootTrees);
 		this.getManagedBean().setIndex(-1);
 	}
 	
+*/	public void deleteSupplierQualificationTreeNode() {
+		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
+		deleteTreeNodes(rootTrees);
+		this.getManagedBean().setTotalSuppliersSpecLoc(new ArrayList<TplSpecLoc>());
+		if (!rootTrees.isEmpty()) {
+			ScQtSupplierCriteria supplierCriteria = null;
+			// this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+			List<TplSpecLoc> localLoc = new ArrayList<TplSpecLoc>();
+			this.getManagedBean().getQt().getScQtSupplierCriteria().setScQtLocCriteria(getQuoteZones(rootTrees, supplierCriteria));
+			for (ScQtLocCriteria locCriteria : this.getManagedBean().getQt().getScQtSupplierCriteria().getScQtLocCriteria()) {
+				TplSpecLoc specLoc = (TplSpecLoc) locCriteria;
+				localLoc.add(specLoc);
+			}
+			this.getManagedBean().setTotalSuppliersSpecLoc(localLoc);
+		}
+		this.getManagedBean().setIndex(-1);
+	}
+	
+	/**
+	 * @param rootTrees
+	 * @param supplierCriteria
+	 * @return
+	 */
+	private List<ScQtLocCriteria> getQuoteZones(List<TreeNode> treeNodes, ScQtSupplierCriteria supplierCriteria) {
+		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
+		if (null != treeNodes && !treeNodes.isEmpty()) {
+			for (TreeNode treeNode : treeNodes) {
+				List<TreeNode> stateNodes = treeNode.getChildren();
+				for (TreeNode treeNode2 : stateNodes) {
+					List<TreeNode> district = treeNode2.getChildren();
+					if (null != district && !district.isEmpty()) {
+						for (TreeNode devision : district) {
+							if (devision.getChildCount() > 0) {
+								for (TreeNode districtNode : devision.getChildren()) {
+									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode.getData());
+									criteria.setPmDistrict(((ScQtLocCriteria) districtNode.getData()).getPmDistrict());
+									criteria.setPmDivision(((ScQtLocCriteria) districtNode.getParent().getData()).getPmDivision());
+									criteria.setPmState(((ScQtLocCriteria) treeNode2.getData()).getPmState());
+									criteria.setScQtSupplierCriteria(supplierCriteria);
+									setUserDetails(criteria);
+									results.add(criteria);
+								}
+							} else {
+								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision.getData());
+								criteria.setPmDistrict(((ScQtLocCriteria) devision.getData()).getPmDistrict());
+								criteria.setPmState(((ScQtLocCriteria) treeNode2.getData()).getPmState());
+								criteria.setScQtSupplierCriteria(supplierCriteria);
+								setUserDetails(criteria);
+								results.add(criteria);
+							}
+						}
+					} else {
+						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2.getData();
+						criteria.setScQtSupplierCriteria(supplierCriteria);
+						setUserDetails(criteria);
+						results.add(criteria);
+					}
+				}
+			}
+		}
+		return results;
+	}
+
 	public void deleteTreeNodes(List<TreeNode> rootTrees) {
 		debugLogger("deleteTreeNodes");
 		if (rootTrees != null) {
@@ -979,5 +1066,102 @@ public class QTSupplierQulCriteriaBackingBean extends
 		} finally {
 
 		}
+	}
+	
+	public void searchForSupplierCount() {
+		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+		List<PmState> states = null;
+		List<PmDistrict> districts = null;
+		List<PmDivision> divisions = null;
+		supplierSearchReqDTO.setCategoryCodes(constructL3Codes(this.getManagedBean().getQtCategoryList()));
+		supplierSearchReqDTO.setPaidUpCapital(this.getManagedBean().getQt().getScQtSupplierCriteria().getMinPaidUpCapital());
+		String locLevel = "";
+		if (null != this.getManagedBean().getQt().getScQtSupplierCriteria() && null != this.getManagedBean().getQt().getScQtSupplierCriteria().getLocationLevel()) {
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+			if (null != this.getManagedBean().getQt().getScQtSupplierCriteria().getLocationLevel().getParameterId()) {
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterId().equals(this.getManagedBean().getQt().getScQtSupplierCriteria().getLocationLevel().getParameterId())) {
+						locLevel = paramDesc.getPmParameter().getParameterCode();
+					}
+				}
+			}
+		}
+		getStatesNDistrict(this.getManagedBean().getTotalSuppliersSpecLoc(), states, districts, divisions, locLevel);
+
+		supplierSearchReqDTO.setStateCodes(this.getManagedBean().getStateList());
+		supplierSearchReqDTO.setDistrictCodes(this.getManagedBean().getDistrictList());
+		supplierSearchReqDTO.setDivisionCodes(this.getManagedBean().getDivisionList());
+		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		SupplierSearchResDTO searchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+		this.getManagedBean().setTotalSuppliers(searchResDTO.getResultBean().getTotalRecord());
+	}
+
+	/**
+	 * @param totalSuppliersSpecLoc
+	 * @param states
+	 * @param districts
+	 * @param divisions
+	 * @param locLevel
+	 */
+	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,
+			List<PmState> states, List<PmDistrict> districts,
+			List<PmDivision> divisions, String locLevel) {
+		states = new ArrayList<PmState>();
+		districts = new ArrayList<PmDistrict>();
+		divisions = new ArrayList<PmDivision>();
+		if (null != locations) {
+			if (null == this.getManagedBean().getStateList()) {
+				this.getManagedBean().setStateList(new ArrayList<PmState>());
+			}
+			if (null == this.getManagedBean().getDistrictList()) {
+				this.getManagedBean().setDistrictList(new ArrayList<PmDistrict>());
+			}
+			if (null == this.getManagedBean().getDivisionList()) {
+				this.getManagedBean().setDivisionList(new ArrayList<PmDivision>());
+			}
+			for (TplSpecLoc specLoc : locations) {
+				if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(locLevel)) {
+					PmState state = specLoc.getPmState();
+					if (null != state) {
+						if (!states.contains(state)) {
+							states.add(state);
+						}
+					}
+					this.getManagedBean().setStateList(states);
+				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(locLevel)) {
+					PmDistrict district = specLoc.getPmDistrict();
+					if (null != district) {
+						if (!districts.contains(district)) {
+							districts.add(district);
+						}
+					}
+					this.getManagedBean().setDistrictList(districts);
+				} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(locLevel)) {
+					PmDivision divison = specLoc.getPmDivision();
+					if (null != divison) {
+						if (!divisions.contains(divison)) {
+							divisions.add(divison);
+						}
+					}
+					this.getManagedBean().setDivisionList(divisions);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @param qtCategoryList
+	 * @return
+	 */
+	private List<String> constructL3Codes(List<ScQtCategory> categories) {
+		List<String> categoryCodes = null;
+		if (null != categories) {
+			categoryCodes = new ArrayList<String>();
+			for (ScQtCategory category : categories) {
+				String code = category.getPmCategoryL3().getCategoryL3Code();
+				categoryCodes.add(code);
+			}
+		}
+		return categoryCodes;
 	}
 }
