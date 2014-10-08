@@ -25,6 +25,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
+import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
@@ -37,6 +38,7 @@ import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -48,37 +50,47 @@ import org.primefaces.event.SelectEvent;
 @ViewScoped
 public class ScheduleBiddingBackingBean extends
 		SourcingBaseBackingBean<ScheduleBiddingManagedBean> {
+	public static Logger log = EpLogger
+			.getLogger(ScheduleBiddingBackingBean.class);
 
-	public ScheduleBiddingBackingBean() {
-		System.out.println("******retriveItemsToBid() called********");
-
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
 	}
-	
+
 	public void preRenderView() {
-		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-
-			Long qtId = Long.valueOf(dpDataType.getSourceId());
-			// Long qtId = 146L;
-			
-			retriveItemsToBid(qtId);
-
+		
+		log.info("preRenderView");
+		
+		try{
+			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			Long qtId = Long.valueOf(dpDataType.getSourceId());*/
+			retriveItemsToBid(4L);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
-		} catch (Exception e) {
-			handleException(e);
 		}
+		finally{}
+		
+		
+	}
+	
+	public void rowSelectListener(){}
+
+	public ScheduleBiddingBackingBean() {
+		log.info("ScheduleBiddingBackingBean constructor");
 	}
 
 	public void applyBidDates() {
+		log.info(" **** Selected start date *** "
+				+ getManagedBean().getBidStart());
 
-		System.out.println(" **** Selected start date ***"
-				+ this.getManagedBean().getBidStart());
-		System.out.println(" ---- Selected end date ----"
-				+ this.getManagedBean().getBidEnd());
-		System.out.println(" ---- Selected list values ----"
-				+ this.getManagedBean().getSelectedBidItemList().size());
+		log.info(" ****  Selected end date *** " + getManagedBean().getBidEnd());
+
+		log.info(" ****  Selected list values *** "
+				+ getManagedBean().getSelectedBidItemList().size());
 
 		if (getManagedBean().getSelectedBidItemList().size() > 0)
 
@@ -98,8 +110,7 @@ public class ScheduleBiddingBackingBean extends
 				}
 			}
 		} else {
-
-			System.out.println("---- Please select at-least one item ---- ");
+			log.info(" **** Please select at-least one item *** ");
 		}
 
 	}
@@ -107,8 +118,7 @@ public class ScheduleBiddingBackingBean extends
 	public void addContactAction() {
 
 		try {
-
-			System.out.println("enter addContactAction==");
+			log.info(" **** enter addContactAction *** ");
 
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
@@ -120,12 +130,12 @@ public class ScheduleBiddingBackingBean extends
 			ScBidContactPerson scBidContactPerson = new ScBidContactPerson();
 			contactList.add(scBidContactPerson);
 			this.getManagedBean().setScBidContactPersonList(contactList);
-			System.out.println(this.getManagedBean()
-					.getScBidContactPersonList().size());
+			log.info(" **** ScBidContactPersonList Size *** "
+					+ getManagedBean().getScBidContactPersonList().size());
 		}
 
-		catch (Exception e) { // e.printStackTrace();
-			throw new IllegalArgumentException();
+		catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -135,21 +145,21 @@ public class ScheduleBiddingBackingBean extends
 		try {
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
-			System.out.println("contact list==" + contactList.size());
+			log.info(" **** contact list *** " + contactList.size());
 			List<ScBidContactPerson> multiSelectContacts = getManagedBean()
 					.getMultiSelectContact();
-			System.out.println("====multiSelectContacts===="
+
+			log.info(" **** multiSelectContacts *** "
 					+ multiSelectContacts.size());
+
 			if (contactList.size() == multiSelectContacts.size())
 
 			{
-				System.out.println("==if===");
 				contactList.clear();
 			} else {
 				for (ScBidContactPerson contact : multiSelectContacts)
 
 				{
-					System.out.println("else for==");
 					contactList.remove(contact);
 				}
 			}
@@ -175,19 +185,29 @@ public class ScheduleBiddingBackingBean extends
 					.getRequestNoteItemId());
 			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
 					.getFinalizationId());
-
-			SuppFinalizationResDTO resDTO = suppFinalizationSO
-					.retrieveRecommendDtlList(reqDTO);
 			
-			if (resDTO.isSuccessful()){
-				getManagedBean().setBidParticipants(resDTO.getScQtRecommendDtlList());
-			}
+			//SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
+
+//			if (resDTO.isSuccessful()) {
+//				getManagedBean().setBidParticipants(
+//						resDTO.getScQtRecommendDtlList());
+//			}
 		} finally {
 			suppFinalizationSO = null;
 		}
 	}
 
 	public void retriveItemsToBid(Long qtId) {
+		// TODO temporary hard coded
+		
+		List<Long> recommandIds = new ArrayList<Long>(); 
+		recommandIds.add(141L);
+		recommandIds.add(142L);
+		recommandIds.add(143L);
+		recommandIds.add(144L);
+		recommandIds.add(145L);
+		recommandIds.add(147L);
+		recommandIds.add(148L);
 		IScheduleBiddingSO scheduleBiddingSO = null;
 
 		try {
@@ -196,44 +216,21 @@ public class ScheduleBiddingBackingBean extends
 							IScheduleBiddingSO.class);
 			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
 			reqDTO.setQtID(qtId);
+			reqDTO.setRecommandIds(recommandIds);
 			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-					.retriveBidScheduleDtls(reqDTO);
+					.retrieveBidScduleDetials(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-
-				if (resDTO.getScQT() != null) {
-					getManagedBean().setScQt(resDTO.getScQT());
-				}
-				if (resDTO.getScQtFinalization() != null) {
-
-					getManagedBean().setScQtFinalization(
-							resDTO.getScQtFinalization());
-				}
-
-				if (resDTO.getBidItemsList() != null) {
-					getManagedBean().setBidItemList(resDTO.getBidItemsList());
-				}
-				if (resDTO.getScBid() != null) {
-					getManagedBean().setScBid(resDTO.getScBid());
-				}
+				getManagedBean().setScQt(resDTO.getScQT());
+				getManagedBean().setScQtFinalization(
+						resDTO.getScQtFinalization());
+				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
 			}
 		}
 
 		finally {
 			scheduleBiddingSO = null;
 		}
-
-		if (getManagedBean().getScQt().isZonal()) {
-
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "scheduleBidByZone.xhtml");
-		} else {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "scheduleBidNormal.xhtml");
-		}
-
 	}
 
 	public String saveNonZoneBidsScheduledAction() {
