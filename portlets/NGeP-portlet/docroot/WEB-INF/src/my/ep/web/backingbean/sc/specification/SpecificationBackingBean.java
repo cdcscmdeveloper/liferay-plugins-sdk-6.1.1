@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -4384,11 +4387,9 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
-						this.getManagedBean().setCompanyScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setCompanyScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4467,11 +4468,9 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
-						this.getManagedBean().setCompanyScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setCompanyScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4602,12 +4601,8 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (resDTO.getCheckListScores() == null
 							|| resDTO.getScQtCheckListValue() == null) {
-						if (QTConstants.USER_SCORE.equalsIgnoreCase(this
-								.getManagedBean().getChecklistScoreType())) {
-							this.getManagedBean().setChecklistScoreType(
-									QTConstants.AUTO_SCORE);
 
-						}
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4661,12 +4656,8 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (resDTO.getCheckListScores() == null
 							|| resDTO.getScQtCheckListValue() == null) {
-						if (QTConstants.USER_SCORE.equalsIgnoreCase(this
-								.getManagedBean().getChecklistScoreType())) {
-							this.getManagedBean().setChecklistScoreType(
-									QTConstants.AUTO_SCORE);
 
-						}
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4773,8 +4764,7 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4829,8 +4819,7 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4886,8 +4875,7 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -4943,8 +4931,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						this.getManagedBean().setCheckListScore(
 								new ArrayList<ScQtCheckListScore>());
@@ -5001,8 +4988,7 @@ public class SpecificationBackingBean extends
 								.setStartYear(String.valueOf(year));
 						this.getManagedBean().setEndYear(String.valueOf(year));
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -5062,8 +5048,7 @@ public class SpecificationBackingBean extends
 					if (null == resDTO.getCheckListScores()
 							|| null == resDTO.getScQtCheckListValue()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
 						setUserDetails(checkListValue);
@@ -5117,8 +5102,10 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()
 							|| resDTO.getCheckListScores().isEmpty()) {
+
 						this.getManagedBean().setChecklistScoreType(
 								QTConstants.USER_SCORE);
+
 						ScQtCheckListScore checklistScore = new ScQtCheckListScore();
 						checklistScore.setCriteriaType(new Integer("30"));
 						checklistScore.setScoreType(new BigDecimal(this
@@ -5171,8 +5158,7 @@ public class SpecificationBackingBean extends
 					resDTO = specSo.retrieveCheckListScoreNValue(reqDTO);
 					if (null == resDTO.getCheckListScores()) {
 
-						this.getManagedBean().setChecklistScoreType(
-								QTConstants.AUTO_SCORE);
+						this.getManagedBean().setChecklistScoreType(null);
 
 						this.getManagedBean().setCheckListScore(
 								new ArrayList<ScQtCheckListScore>());
@@ -5507,6 +5493,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				if (!isRequired) {
+					this.getManagedBean().setTechStandaraChecklist(true);
 					ScQtCheckList scqtlist = createSpecList("2");
 
 					scqtlist.setTitle(document.getDocName());
@@ -5618,6 +5605,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				if (!isRequired) {
+					this.getManagedBean().setFinStandaraChecklist(true);
 					ScQtCheckList scqtlist = createSpecList("2");
 					scqtlist.setTitle(document.getDocName());
 					scqtlist.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
@@ -6385,9 +6373,21 @@ public class SpecificationBackingBean extends
 				noContract.setCheckList(checkList);
 				setUserDetails(noContract);
 				noOfContractScore.add(noContract);
-			} else {
+			} else if (QTConstants.AUTO_SCORE
+					.equalsIgnoreCase(contractScoreType)) {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
+				Collections.sort(checkListScore,
+						new Comparator<ScQtCheckListScore>() {
+							@Override
+							public int compare(ScQtCheckListScore p1,
+									ScQtCheckListScore p2) {
+								return Long.compare(
+										p1.getRangeTo().longValue(), p2
+												.getRangeTo().longValue());
+							}
+						});
+
 				if (null == checkListScore) {
 					checkListScore = new ArrayList<ScQtCheckListScore>();
 				}
@@ -6416,10 +6416,20 @@ public class SpecificationBackingBean extends
 					scoreOfYears.setCheckList(checkList);
 					setUserDetails(scoreOfYears);
 					noOfYearsScore.add(scoreOfYears);
-				} else {
+				} else if (QTConstants.AUTO_SCORE
+						.equalsIgnoreCase(totalNoOfYearsType)) {
 					List<ScQtCheckListScore> scoreYears = this.getManagedBean()
 							.getScoringForYears();
-
+					Collections.sort(scoreYears,
+							new Comparator<ScQtCheckListScore>() {
+								@Override
+								public int compare(ScQtCheckListScore p1,
+										ScQtCheckListScore p2) {
+									return Long.compare(p1.getRangeTo()
+											.longValue(), p2.getRangeTo()
+											.longValue());
+								}
+							});
 					if (null == scoreYears) {
 						scoreYears = new ArrayList<ScQtCheckListScore>();
 					}
@@ -6500,9 +6510,20 @@ public class SpecificationBackingBean extends
 				noContract.setCheckList(checkList);
 				setUserDetails(noContract);
 				noOfContractScore.add(noContract);
-			} else {
+			} else if (QTConstants.AUTO_SCORE
+					.equalsIgnoreCase(contractScoreType)) {
 				List<ScQtCheckListScore> checkListScore = this.getManagedBean()
 						.getCheckListScore();
+				Collections.sort(checkListScore,
+						new Comparator<ScQtCheckListScore>() {
+							@Override
+							public int compare(ScQtCheckListScore p1,
+									ScQtCheckListScore p2) {
+								return Long.compare(
+										p1.getRangeTo().longValue(), p2
+												.getRangeTo().longValue());
+							}
+						});
 				if (null == checkListScore) {
 					checkListScore = new ArrayList<ScQtCheckListScore>();
 				}
@@ -6690,6 +6711,22 @@ public class SpecificationBackingBean extends
 
 		}
 		return getManagedBean().getYearsDisplayList();
+	}
+
+	public List<SelectItem> getScoreDetails() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+
+			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(1, "Auto Score"));
+			selectItems.add(new SelectItem(2, "User Score"));
+
+			this.getManagedBean().setScoreTypeList(selectItems);
+		} finally {
+
+		}
+		return this.getManagedBean().getScoreTypeList();
 	}
 
 	public void handleFileUpload(FileUploadEvent event)
@@ -7868,6 +7905,7 @@ public class SpecificationBackingBean extends
 			}
 			if (null != finSpecs && finSpecs.size() > 0) {
 				financialScoring.remove(0);
+
 				localChecklist.addAll(finSpecs);
 			}
 			localChecklist.addAll(financialScoring);
@@ -8672,7 +8710,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTotalSuppliersSpecLoc(
 				new ArrayList<TplSpecLoc>());
 		if (!rootTrees.isEmpty()) {
-		
+
 			ScQtSupplierCriteria supplierCriteria = null;
 			// this.getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 			List<TplSpecLoc> localLoc = new ArrayList<TplSpecLoc>();
