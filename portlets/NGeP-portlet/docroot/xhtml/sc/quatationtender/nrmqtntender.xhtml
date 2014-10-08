@@ -298,7 +298,7 @@
 			</p:dialog>
 		</h:panelGroup>
 	</p:panel>
-	<p:panel
+	<p:panel id="totalSuppliersId"
 		header="#{lbl['lbl.sc.spec.supplier.criteria.qual.suppliers']}"
 		toggleable="true">
 		<table>
@@ -306,9 +306,10 @@
 				<td style="width: 125px"><p:outputLabel
 						value="#{lbl['lbl.so.totalsup']}" /></td>
 				<td style="width: 150px"><p:inputText style="margin-right:5px;"
-						disabled="true" /></td>
+						disabled="true" value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}"/></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
-						icon="ui-icon-search" partialSubmit="true" /></td>
+						update="totalSuppliersId" action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
+						icon="ui-icon-search" partialSubmit="true" process="@this" /></td>
 				<td />
 			</tr>
 		</table>
