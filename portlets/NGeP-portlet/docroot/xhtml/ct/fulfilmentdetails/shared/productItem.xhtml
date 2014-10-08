@@ -108,6 +108,10 @@
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                 </p:column>
+			                 
+			                <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                        <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                    </p:column>  
 			            </c:if>  
 			     
 			            <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTier}">
@@ -147,7 +151,11 @@
 			                      <h:outputText value="#{data.expDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
-			                  </p:column>     
+			                  </p:column>  
+			             
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                      </p:column>     
 			              </c:if>   
 			        
 			              <c:if  test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode 
@@ -173,7 +181,11 @@
 			                        <h:outputText value="#{data.expDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
-			                   </p:column>     
+			                   </p:column>
+			                   
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                      </p:column>       
 			             </c:if>
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -218,7 +230,11 @@
 			                      <h:outputText value="#{data.expDate}" style="float:left;">
                                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
-			                 </p:column>     
+			                 </p:column>  
+			               
+			                 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                     </p:column>     
 			              </c:if> 
                     
                           <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -270,7 +286,11 @@
 			                        <h:outputText value="#{data.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
-			                   </p:column>           
+			                   </p:column>  
+			                   
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                      </p:column>           
 			             </c:if> 
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
@@ -326,11 +346,12 @@
 			                       <h:outputText value="#{data.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                    </h:outputText>
-			                   </p:column>     
+			                   </p:column> 
+			                 
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		                         <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		                      </p:column>      
 			           </c:if>
-			           <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
-		               <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		           </p:column>  
 			    </p:dataTable>
 		  </h:panelGroup>
 		  
