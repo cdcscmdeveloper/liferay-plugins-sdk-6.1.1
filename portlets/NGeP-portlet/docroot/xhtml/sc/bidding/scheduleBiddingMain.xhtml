@@ -7,13 +7,115 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
+	<ui:define name="resourceSection">
+	</ui:define>
 	<ui:define name="contentSection">
-	
-		<h:panelGroup id="scScheduleBiddingPreRenderViewId">
-			<f:event listener="#{scheduleBiddingBB.retriveItemsToBid}" 
-				type="preRenderView" />	
-		</h:panelGroup>
+		<p:messages id="ScheduleBiddingNormalMessage" showDetail="true"
+			autoUpdate="true" closable="true" />
 
+		<ui:param name="isRecommendByPackage"
+			value="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P' and !scheduleBiddingBB.managedBean.scQt.isZonal}"  />
+		<ui:param name="isRecommendByItem"
+			value="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'I' and !scheduleBiddingBB.managedBean.scQt.isZonal}" />
+		<ui:param name="isQtZonalAndRecommendTypeAny"
+			value="#{scheduleBiddingBB.managedBean.scQt.isZonal}" />
+
+		<div align="right" style="width: 100%">
+			<p:commandButton value="
+			#{lbl['lbl.btn.submit']}"
+				icon="ui-icon-submit"
+				action="#{scheduleBiddingBB.saveNonZoneBidsScheduledAction}" />
+		</div>
+
+		<div align="left" class="header-info" style="width: 100%">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td class="header-info-text">
+						#{scheduleBiddingBB.managedBean.scQt.qtNo}</td>
+
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
+
+					<td class="header-info-text">
+						#{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
+
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+
+					<td class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.scQt.qtStatus.statusId)}
+					</td>
+				</tr>
+
+			</table>
+
+		</div>
+
+		<p:panel id="bidRecommendTypePanel">
+			<c:if test="#{isRecommendByPackage}">
+				<ui:include src="scheduleBiddingByPackage.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{isRecommendByItem}">
+				<ui:include src="scheduleBidByItem.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{isQtZonalAndRecommendTypeAny}">
+				<ui:include src="scheduleBidByZone.xhtml"></ui:include>
+			</c:if>
+		</p:panel>
+		<p:spacer height="10"></p:spacer>
+
+		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+			id="contactDetailsPanel" toggleable="true">
+
+
+			<p:dataTable var="contact" id="contactPersonDetails"
+				widgetVar="contactDtls"
+				value="#{scheduleBiddingBB.managedBean.scBidContactPersonList}"
+				selection="#{scheduleBiddingBB.managedBean.multiSelectContact}"
+				editable="true" rowIndexVar="index" style="width:100%"
+				rowKey="#{contact}">
+				<ac:paginator for="contactPersonDetails" />
+				<p:column selectionMode="multiple" style="width:2%"></p:column>
+				<p:column id="contactName" headerText="#{lbl['lbl.sc.name']}"
+					style="width:68%">
+					<p:inputText value="#{contact.contactName}" size="40">
+
+						<p:message id="contactNameMsg" for="contactName" display="icon" />
+
+					</p:inputText>
+
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.telephone.no']}"
+					style="width:30%">
+					<p:inputText id="phoneNo" value="#{contact.phoneNo}" size="40">
+						<p:message id="contactPhoneNoMsg" for="phoneNo" display="icon" />
+					</p:inputText>
+				</p:column>
+
+			</p:dataTable>
+
+			<p:spacer height="10"></p:spacer>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this,contactPersonDetails" partialSubmit="true"
+					action="#{scheduleBiddingBB.addContactAction}" icon="ui-icon-add"
+					oncomplete="contactDtls.paginator.endLink.click();"
+					update="contactPersonDetails" />
+
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					icon="ui-icon-delete"
+					action="#{scheduleBiddingBB.deleteContactDetails}"
+					update="contactPersonDetails" />
+			</div>
+		</p:panel>
+
+
+		<p:dialog closeOnEscape="true"
+			header="#{lbl['lbl.sc.participant.list']}" widgetVar="participants"
+			resizable="true" showEffect="fade" hideEffect="fade" modal="true"
+			id="participants">
+
+			<ui:include src="/xhtml/sc/bidding/scheduleBidParticipantList.xhtml"></ui:include>
+
+		</p:dialog>
 	</ui:define>
 </ui:composition>
