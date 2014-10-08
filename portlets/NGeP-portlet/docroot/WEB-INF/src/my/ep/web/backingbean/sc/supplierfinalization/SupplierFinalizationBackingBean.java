@@ -123,8 +123,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ENDORSEMENT = 1;
 	
-	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
-	
 	public SupplierFinalizationBackingBean() {
 		
 	}
@@ -135,12 +133,16 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		try {
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			Long qtId = Long.valueOf(dataType.getQtId());
+			String committeeType = String.valueOf(dataType.getCommitteeType());
+			getManagedBean().setCommitteeType(committeeType);
+			
 			//Long qtId = 2923L;
+			//String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
 
 			//renewSesionObject();
 			retrieveQTDetails(qtId);
 			retrieveSupplierFinalizationDtls(getManagedBean().getScQt());
-			retrievePreparationDtls(qtId);
+			retrievePreparationDtls(qtId, committeeType);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -199,7 +201,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		this.getManagedBean().setPrepareActiveIndex(PREPARE_ACTIVE_INDEX_MEETING);
 		
 		Long qtId = getManagedBean().getScQt().getQtId();
-		retrievePreparationDtls(qtId);
+		String committeeType = getManagedBean().getCommitteeType();
+		retrievePreparationDtls(qtId,committeeType);
 	}
 	
 	private void biefingPaperRetrival(){
@@ -252,7 +255,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		}
 	}*/
 	
-	public void retrievePreparationDtls(Long qtId) {
+	public void retrievePreparationDtls(Long qtId, String committeeType) {
 		debugLogger("..In retrievePreparationDtls()..");
 		IQTMeetingSO meetingSO = null;
 		try {
@@ -447,6 +450,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		int prepareActiveIndex = this.getManagedBean().getPrepareActiveIndex();
+		
 		String taskId = this.getManagedBean().getTaskId();
 		String[] outComes = this.getManagedBean().getOutComes();
 		String processName = this.getManagedBean().getProcessName();
@@ -531,9 +535,11 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	private void renewSessionAndRetrieve(int activeIndex){
 		Long qtId = getManagedBean().getScQt().getQtId();
+		String committeeType = getManagedBean().getCommitteeType();
 		
 		renewSesionObject();
 		
+		getManagedBean().setCommitteeType(committeeType);
 		retrieveQTDetails(qtId);
 		
 		switch (activeIndex) {
@@ -1366,6 +1372,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 
 			Long qtId = getManagedBean().getScQt().getQtId();
+			String committeeType = getManagedBean().getCommitteeType();
 			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
@@ -1606,6 +1613,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 	
 	public SelectItem[] getFinalizationCommitteeDropDown(){
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		String committeeType = getManagedBean().getCommitteeType();
 		if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)){
 			//defaulted QCA 
 			searchBean.getDataFilterBeans().add(
@@ -2013,7 +2021,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		
 		//if (fwdHigherAuthority.equalsIgnoreCase("true")) {
 			//forward = true;
-		if (fwdHigherAuthority){	
+		if (fwdHigherAuthority){
+			String committeeType = getManagedBean().getCommitteeType();
 			if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A) 
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)
 				|| committeeType.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)
