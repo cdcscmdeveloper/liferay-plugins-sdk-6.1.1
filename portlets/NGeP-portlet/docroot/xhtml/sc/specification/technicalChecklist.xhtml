@@ -74,7 +74,7 @@
 				</ui:fragment>
 
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist }">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 				</ui:fragment>
@@ -117,7 +117,7 @@
 
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null}">
+					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist}">
 					<h:outputText
 						value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
 				</ui:fragment>

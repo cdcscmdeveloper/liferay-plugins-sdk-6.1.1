@@ -81,14 +81,17 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
-					<td><p:selectOneMenu
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true"
+							label="#{lbl['lbl.sc.spec.asset.score.type']}"
+							id="cashOnHandAutoScore"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
-							<f:selectItem itemLabel="Auto" itemValue="1"></f:selectItem>
-							<f:selectItem itemLabel="User" itemValue="2"></f:selectItem>
+							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change" update="totalcashOnhand"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu></td>
+						</p:selectOneMenu> <p:message id="cashOnHandAutoScoreId" for="cashOnHandAutoScore"
+							display="icon"></p:message></td>
 				</tr>
 			</table>
 
