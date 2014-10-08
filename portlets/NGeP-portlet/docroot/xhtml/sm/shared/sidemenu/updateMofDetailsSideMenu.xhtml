@@ -6,23 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:menu>
-		<p:submenu label="Update MOF Account Details">
-			<p:menuitem value="Company Information"
+		<p:submenu label="#{lbl['lbl.sm.updateMof.headerLbl']}">
+			<p:menuitem value="#{lbl['lbl.sm.companyStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step1UpdateMof_CompanyInfo.xhtml" />
-			<p:menuitem value="Branch /Assoc Company"
+			<p:menuitem value="#{lbl['lbl.sm.branchStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step2UpdateMof_BranchCompanyInfo.xhtml" />
-			<p:menuitem value="Capital / Equity Status"
+			<p:menuitem value="#{lbl['lbl.sm.capitalStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step3UpdateMof_CaptialAndEquityStatusInfo.xhtml" />
-			<p:menuitem value="Personnel Info"
+			<p:menuitem value="#{lbl['lbl.sm.personStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step4UpdateMof_PersonnelInfo.xhtml" />
-			<p:menuitem value="Bank Info"
+			<p:menuitem value="#{lbl['lbl.sm.bankStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step5UpdateMof_BankInfo.xhtml" />
-			<p:menuitem value="Support Document(s)"
+			<p:menuitem value="#{lbl['lbl.sm.supDocStepLbl']}"
 				outcome="/xhtml/sm/updateMofDetails/step6UpdateMof_SupportingDocumentsInfo.xhtml" />
 		</p:submenu>
 	</p:menu>
 	<p:menu>
-		<p:menuitem value="Main/Home Page"
+		<p:menuitem value="#{lbl['lbl.sm.mainHomeStepLbl']}"
 			outcome="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
 	</p:menu>
 </ui:composition>

@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:tabMenu  styleClass="sidemenu" style="display : table-caption;" activeIndex="#{svoSiteVisitBackingBean.managedBean.activeIndex}" id="tabIndex">
-		<p:menuitem value="Site Visit Info" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
-		<p:menuitem value="Financial Information" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
-		<p:menuitem value="Category Applicable" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
-		<p:menuitem value="Office Location"  update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.svo.sitevisit.info']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(0,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.svo.financial.info']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(1,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.sitevist.svo.category.applicable']}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(2,'')}" />
+		<p:menuitem value="#{lbl['lbl.sm.officeloc']}"  update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(3,'')}" />
 		
 		<c:forEach items="#{svoSiteVisitBackingBean.managedBean.indexPageMap}" var="entry">
 			<ui:param name="lblCategory" value="lbl.sm.sitevisit.category.categorycode_#{entry.value}" />
@@ -17,7 +17,7 @@
 					actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(entry.key,entry.value)}" />
 		</c:forEach>
 
-		<p:menuitem value="Report Submission" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />.
+		<p:menuitem value="#{lbl[lbl.sm.sitevist.report.submission]}" update="pnlDisplay,tabIndex" actionListener="#{svoSiteVisitBackingBean.changeActiveIndex(svoSiteVisitBackingBean.managedBean.lastIndex,'')}" />.
 	</p:tabMenu>
 	
 </ui:composition>
