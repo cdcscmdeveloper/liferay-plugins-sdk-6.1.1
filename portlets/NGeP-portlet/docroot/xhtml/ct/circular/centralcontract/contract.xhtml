@@ -25,10 +25,6 @@
 				<h:outputText value="#{circularContractsVar.ctContract.contractPhysicalNo}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
-				<h:outputText
-					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
-			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.contract.start']}" style="width:8%;">
 				<h:outputText
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.effDate}">
@@ -40,6 +36,10 @@
 					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.expDate}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.ct.supplier.name']}" style="width:20%;white-space:normal;">
+				<h:outputText
+					value="#{circularContractsVar.ctContract.latestContractVer.ctContractValue.supplierName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
 				<p:selectOneMenu value="#{circularContractsVar.recordStatusFlg}"
