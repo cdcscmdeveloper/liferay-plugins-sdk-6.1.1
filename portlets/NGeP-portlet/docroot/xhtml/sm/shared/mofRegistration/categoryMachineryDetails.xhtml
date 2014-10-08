@@ -7,36 +7,36 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="Machinery / Equipment Information">
+	<p:panel header="#{lbl['lbl.sm.machine.diaHdr']}">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Machinery Type" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.machine.equiType']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedMachine.machineType}"
 						size="35" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Brand" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.brand']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedMachine.brandName}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Funtion" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.machine.function']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedMachine.machineFunction}"
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Quantity" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.machine.quantity']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedMachine.qty}" size="35" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="* Value (RM.)" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.machine.value']}" /></td>
 				<td>
 					<table>
 						<tr>
@@ -48,17 +48,17 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Purchase Method" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.machine.purMthd']}" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="" />
-						<f:selectItem itemLabel="Cash" itemValue="1" />
-						<f:selectItem itemLabel="Credit Card" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.cash']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.machine.credit.card']}" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Guarantor Name" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.machine.guarnName']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedMachine.guarantorName}"
 						size="35" /></td>
@@ -68,11 +68,11 @@
 	</p:panel>
 	<br />
 	<div align="right">
-		<p:commandButton value="Save"
+		<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 			action="#{backingBean.saveSelectedCategory}"
 			oncomplete="regCatDialog.hide();" type="submit" partialSubmit="true"
 			process="regCatDialog" update=":form:tt:catDt" />
-		<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+		<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="regCatDialog.hide();" />
 	</div>
 
 </ui:composition>

@@ -266,8 +266,8 @@
 								required="true" id="ownedFacTypeId"
 								label="#{lbl['lbl.sm.facility.facilityType']}"
 								value="#{backingBean.managedBean.basicCompanyFacility.facilityType}">
-								<f:selectItem itemLabel="Home Office" itemValue="H" />
-								<f:selectItem itemLabel="Business Office" itemValue="B" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.home.office']}" itemValue="H" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.facility.facilityType.business.office']}" itemValue="B" />
 
 							</p:selectOneRadio> <p:message id="ownedFacTypeIdMsg" for="ownedFacTypeId"
 								showSummary="true" showDetail="false" display="icon" /></td>

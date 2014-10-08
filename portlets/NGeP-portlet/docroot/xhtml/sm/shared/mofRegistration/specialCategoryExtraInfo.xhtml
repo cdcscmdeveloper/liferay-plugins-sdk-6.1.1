@@ -22,16 +22,16 @@
 			<table style="width: 100%">
 				<tr>
 					<td align="left"><p:outputLabel
-							value="Note : No extra information required for the selected category"
+							value="#{lbl['lbl.sm.specialcat.note']}"
 							style="color: blue; font-weight: bold;" /></td>
 				</tr>
 			</table>
 			<div align="right">
-				<p:commandButton value="Save"
+				<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 					action="#{backingBean.saveSelectedCategory}"
 					oncomplete="regCatDialog.hide();" type="submit"
 					partialSubmit="true" process="regCatDialog" update=":form:tt:catDt" />
-				<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="regCatDialog.hide();" />
 			</div>
 		</c:otherwise>
 	</c:choose>

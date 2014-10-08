@@ -149,7 +149,7 @@
 						id="certBody" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.cert.certBody']}"
 						value="#{backingBean.managedBean.selectedCert.pmCertBody.certBodyId}">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="certBody"
 							value="#{backingBean.managedBean.certBodyLs}"
 							itemValue="#{certBody.certBodyId}"

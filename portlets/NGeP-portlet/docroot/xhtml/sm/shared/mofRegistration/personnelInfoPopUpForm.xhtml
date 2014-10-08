@@ -6,19 +6,19 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="Personnel Info" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.person.panHdr']}" toggleable="true">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Name" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.name']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.name}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Nationality" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.nationality']}" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedPersonnel.pmCountry.countryId}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="---Select---" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="shrOffCountry"
 							value="#{backingBean.managedBean.countryLs}"
 							itemValue="#{shrOffCountry.countryId}"
@@ -27,11 +27,11 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* IC/Pspt No." /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.userprofile.detailsicno']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.identificationNo}"
 						size="35" /></td>
-				<td><p:outputLabel value="Race*" title="For Malaysian Only" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.race']}" title="For Malaysian Only" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Others--" itemValue="1" />
 						<f:selectItem itemLabel="Melayu" itemValue="M" />
@@ -41,24 +41,24 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* DOB" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.person.dob']}" /></td>
 				<td><p:calendar showOn="button"
 						value="#{backingBean.managedBean.selectedPersonnel.birthDate}" /></td>
-				<td><p:outputLabel value="* Personnel Type" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.personnel.type']}" /></td>
 				<td><p:selectOneRadio>
-						<f:selectItem itemLabel="Management Personnel" itemValue="1" />
-						<f:selectItem itemLabel="Staff" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.personnel.management']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.person.stf']}" itemValue="0" />
 					</p:selectOneRadio></td>
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Designation" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.designation']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.designation}"
 						size="35" /></td>
-				<td><p:outputLabel value="* Branch Associated" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.sm.bankDtls.assocBran']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select " itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="1" />
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 							var="supBean" itemLabel="#{supBean.branchName}"
@@ -68,11 +68,11 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" EPF NO." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.epfNo']}" /></td>
 				<td><p:inputText title="For Malaysian Only"
 						value="#{backingBean.managedBean.selectedPersonnel.epfNo}"
 						size="35" /></td>
-				<td><p:outputLabel value=" Experience" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.exp']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.workExperienceYear}"
 						size="35" /></td>
@@ -80,7 +80,7 @@
 
 
 			<tr>
-				<td><p:outputLabel value="Email" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.email']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedPersonnel.email}"
 						size="35" /></td>
@@ -88,63 +88,63 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.bumi']}" title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedPersonnel.bumiFlg}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
-				<td><p:outputLabel value=" Religion" title="For Malaysian Only" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.religion']}" title="For Malaysian Only" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedPersonnel.muslimFlg}">
-						<f:selectItem itemLabel="Islam" itemValue="1" />
-						<f:selectItem itemLabel="Non-Islam" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.muslim']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.person.religion.non.muslim']}" itemValue="0" />
 					</p:selectOneRadio></td>
 
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="Personnel Priviliges" toggleable="true"
+	<p:panel header="#{lbl['lbl.sm.personnel.privilige']}" toggleable="true"
 		id="perPrivPanel">
 		<table>
 			<tr>
-				<td><p:outputLabel value="Is this an authorized personnel ? " /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.isAuth']}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedPersonnel.authorizedFlg}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" update="perPrivPanel"
 							listener="#{backingBean.assignPersonnelPrivilege}" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Issue soft cert to this personnel ? "
+				<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}"
 						rendered="#{backingBean.managedBean.selectedPersonnel.authorizedFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedPersonnel.softcertFlg}"
 						rendered="#{backingBean.managedBean.selectedPersonnel.authorizedFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" update="perPrivPanel"
 							listener="#{backingBean.assignPersonnelPrivilege}" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="Is this personnel a contract signer ? "
+						value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.selectedPersonnel.softcertFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedPersonnel.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.selectedPersonnel.softcertFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 						<p:ajax event="change" update="perPrivPanel" />
 					</p:selectOneRadio></td>
 			</tr>
 		</table>
 
 	</p:panel>
-	<p:panel header="Job Function" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.job.function.details']}" toggleable="true">
 		<p:dataTable id="perStfJfdt"
 			value="#{backingBean.managedBean.selectedPersonnel.smStaffExperiences}"
 			var="jf"
@@ -154,40 +154,40 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Company" />
+					<h:outputText value="#{lbl['lbl.sm.equiComp.compName']}" />
 				</f:facet>
 				<p:inputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Designation" />
+					<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
 				</f:facet>
 				<p:inputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year From" />
+					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<p:inputText value="#{jf.fromYear}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year To" />
+					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<p:inputText value="#{jf.toYear}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrJobFunction(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfJfdt" />
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedShrHldrJobFunction(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfJfdt" />
 		</div>
 	</p:panel>
-	<p:panel header="Related Companies" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.related.company.details']}" toggleable="true">
 
 		<p:dataTable id="perStfRelCom"
 			value="#{backingBean.managedBean.selectedPersonnel.smRelatedCompanies}"
@@ -198,52 +198,52 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Company Name" />
+					<h:outputText value="#{lbl['lbl.sm.assocCmpny.companyName']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="ROC/ROB/ROS NO." />
+					<h:outputText value="#{lbl['lbl.sc.spec.roc.no']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.regNo}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Designation" />
+					<h:outputText value="#{lbl['lbl.sm.userprofile.designation']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Shareholding Total(RM.)" />
+					<h:outputText value="#{lbl['lbl.sm.shareholding.total.rm']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.shareAmt}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Shareholding (%)" />
+					<h:outputText value="#{lbl['lbl.sm.shrHldrInfo.shrPerc']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.sharePercentage}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="MOF Reg NO." />
+					<h:outputText value="#{lbl['lbl.sm.mof.reg.no']}" />
 				</f:facet>
 				<p:inputText value="#{relCom.mofNo}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrRelatedCompany(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfRelCom" />
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedShrHldrRelatedCompanies(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfRelCom" />
 		</div>
 	</p:panel>
-	<p:panel header="Professional Body" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.profBody.panHdr']}" toggleable="true">
 		<p:dataTable var="profBean"
 			value="#{backingBean.managedBean.selectedPersonnel.smAssociationBodies}"
 			selection="#{backingBean.managedBean.selectedShrHldrProfBodies}"
@@ -252,34 +252,34 @@
 			<p:column selectionMode="multiple" width="5%" />
 
 
-			<p:column headerText="Professionl Body">
+			<p:column headerText="#{lbl['lbl.sm.profBody.profBody']}">
 				<p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
 					value="#{profBean.pmCertBody.certBodyId}">
-					<f:selectItem itemLabel="-- Select  -- " itemValue="0" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems var="shrProfBody"
 						value="#{backingBean.managedBean.profBodyLs}"
 						itemValue="#{shrProfBody.certBodyId}"
 						itemLabel="#{shrProfBody.bodyName}" />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column headerText="Registration NO.">
+			<p:column headerText="#{lbl['lbl.sm.regno']}">
 				<p:inputText size="35" value="#{profBean.regNo}" />
 			</p:column>
-			<p:column headerText="End Date.">
+			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<p:calendar showOn="button" value="#{profBean.expDate}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrProfBody(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfProfDt" />
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedShrHldrProfBodies(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfProfDt" />
 		</div>
 	</p:panel>
-	<p:panel header="Academic Qualification" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.academic.qualification']}" toggleable="true">
 
 		<p:dataTable id="perStfAqdt"
 			value="#{backingBean.managedBean.selectedPersonnel.smStaffAcademics}"
@@ -290,10 +290,10 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Year" />
+					<h:outputText value="#{lbl['lbl.sm.year']}" />
 				</f:facet>
 				<p:selectOneMenu style="margin-bottom: 5px;" value="#{aq.year}">
-					<f:selectItem itemLabel="Select One" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="1" />
 					<f:selectItem itemLabel="2013" itemValue="2013" />
 					<f:selectItem itemLabel="2012" itemValue="2012" />
 					<f:selectItem itemLabel="2011" itemValue="2011" />
@@ -301,13 +301,13 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Institute" />
+					<h:outputText value="#{lbl['lbl.sm.institute']}" />
 				</f:facet>
 				<p:inputText value="#{aq.instituteName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Qualification Level" />
+					<h:outputText value="#{lbl['lbl.sm.qualification.level']}" />
 				</f:facet>
 				<p:selectOneMenu style="margin-bottom: 5px;"
 					value="#{aq.qualificationLevelId}">
@@ -316,11 +316,11 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Education Field" />
+					<h:outputText value="#{lbl['lbl.sm.education.field']}" />
 				</f:facet>
 				<p:selectOneMenu style="margin-bottom: 5px;"
 					value="#{aq.eduFieldId}">
-					<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="1" />
 					<f:selectItem itemLabel="Computers" itemValue="2" />
 					<f:selectItem itemLabel="Mechanical" itemValue="3" />
 					<f:selectItem itemLabel="Civil" itemValue="4" />
@@ -328,17 +328,17 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="Major In" />
+					<h:outputText value="#{lbl['lbl.sm.major.in']}" />
 				</f:facet>
 				<p:inputText value="#{aq.fieldMajor}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
 		<div align="right">
-			<p:commandButton value="Add"
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
 				action="#{backingBean.addShrHldrAcademicQualification(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfAqdt" />
-			<p:commandButton value="Delete"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
 				action="#{backingBean.deleteSelectedShrHldrAcademics(backingBean.managedBean.selectedPersonnel.equityOwner)}"
 				update="perStfAqdt" />
 		</div>

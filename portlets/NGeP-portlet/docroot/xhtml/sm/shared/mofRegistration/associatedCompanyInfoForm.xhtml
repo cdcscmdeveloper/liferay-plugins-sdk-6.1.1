@@ -158,8 +158,8 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label=" #{lbl['lbl.sm.assocCmpny.shrHolding']}"
 						value="#{backingBean.managedBean.selectedAssocCompany.isShareholding}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="0" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio> <p:message id="asocCmpShrHdrMsg" for="shopt" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
