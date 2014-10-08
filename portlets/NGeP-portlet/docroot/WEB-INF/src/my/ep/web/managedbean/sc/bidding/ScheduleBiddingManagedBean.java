@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
@@ -42,6 +43,8 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private ScBid scBid;
 	private List<ScQtRecommendDtl> bidParticipants;
 	
+	private List<ScBidSchedule> bidScheduleList;
+	private List<ScBidSchedule> selectedBidBidScheduleList;
 	
 	
 	private Date minStartDate;
@@ -59,6 +62,45 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	
+	/**
+	 * @return the bidScheduleList
+	 */
+	public List<ScBidSchedule> getBidScheduleList() {
+		return bidScheduleList;
+	}
+
+
+	/**
+	 * @param bidScheduleList the bidScheduleList to set
+	 */
+	public void setBidScheduleList(List<ScBidSchedule> bidScheduleList) {
+		this.bidScheduleList = bidScheduleList;
+	}
+
+
+
+
+	/**
+	 * @return the selectedBidBidScheduleList
+	 */
+	public List<ScBidSchedule> getSelectedBidBidScheduleList() {
+		return selectedBidBidScheduleList;
+	}
+
+
+
+
+	/**
+	 * @param selectedBidBidScheduleList the selectedBidBidScheduleList to set
+	 */
+	public void setSelectedBidBidScheduleList(
+			List<ScBidSchedule> selectedBidBidScheduleList) {
+		this.selectedBidBidScheduleList = selectedBidBidScheduleList;
+	}
+
+
+
+
 	/**
 	 * @return the bidParticipants
 	 */
