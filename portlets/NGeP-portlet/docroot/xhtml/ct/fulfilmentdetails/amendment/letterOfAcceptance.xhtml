@@ -67,14 +67,13 @@
 				  invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}" update=":form:loaContentDt">
 			 </p:fileUpload>
 		 </p:dialog>
-		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="350"
-		     styleClass="screen-title" resizable="false"  height="95">
+		 <p:dialog id="dlgDocumentDel" widgetVar="dlgDocumentDel"  modal="true" width="330"
+		     styleClass="screen-title" resizable="false">
 			 <h:panelGrid columns="3">
 				 <p:graphicImage library="ep/images/design" name="exclamation.png"
 					 value="/css/images/design/exclamation.png" styleClass="ui-icon-complain" />
 				<p:spacer width="10" />
-				<p:inputTextarea rows="2" cols="48" 
-				     styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?" />
+				<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 			 </h:panelGrid>
 			 <div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"  update=":form:loaContentDt" 

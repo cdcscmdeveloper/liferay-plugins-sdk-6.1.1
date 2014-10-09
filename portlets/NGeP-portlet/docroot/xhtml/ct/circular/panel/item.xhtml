@@ -119,11 +119,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		   </div>
         </p:dialog>  	
 		<p:dialog id="delItemDlg" resizable="false"
-		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="350" height="95">  
+		    styleClass="screen-title" widgetVar="delItemDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
-              <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
+              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=itemId])"
@@ -228,11 +228,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   </p:dialog>
 	   
 	   <p:dialog id="delZoneDlg" resizable="false"
-		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="350" height="95">  
+		    styleClass="screen-title" widgetVar="delZoneDlg"  modal="true" width="330">  
             <h:panelGrid columns="3">
               <p:graphicImage library="ep/images/design" name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			  <p:spacer width="10"/>
-              <p:inputTextarea styleClass="ui-inputtextarea" rows="2" cols="48" value="Are you sure you want to delete this record?"/>
+              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=zoneGeneralDataTable],[id$=itemSupplier])"
@@ -304,13 +304,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			</table>
 	      </div>
 	      <p:dialog id="delSupplierDlg" widgetVar="delSupplierDlg"
-		   styleClass="screen-title" resizable="false" modal="true" width="350" height="95">  
+		   styleClass="screen-title" resizable="false" modal="true" width="330">  
            <h:panelGrid columns="3">
              <p:graphicImage library="ep/images/design" name="exclamation.png"
 			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			   <p:spacer width="10"/>
-              <p:inputTextarea value="Are you sure you want to delete this record?" 
-                rows="2" cols="48" styleClass="ui-inputtextarea"/>
+              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="@([id$=itemSupplierDt])" process="@all"
