@@ -111,7 +111,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 				 reqDTO.setCtDelAssociation(ctAssociation);
 				 ContractAssociationResDTO resDTO= contractAssociationSO.deleteAssociation(reqDTO);
 				 if(resDTO.isSuccessful()){
-					 searchAssociation();
+					 associationDataModel.reloadData();
 				 }
 			 }
 	 	 } catch (Exception ex) {
