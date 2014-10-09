@@ -22,14 +22,15 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
-import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -78,9 +79,9 @@ public class ScheduleBiddingBackingBean extends
 			}
 			// Need to call the backing bean method the with the params qtId and
 			// supplierdtls..
-
+			
 			retriveItemsToBid(qtId, supplierDtls);
-
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -96,26 +97,27 @@ public class ScheduleBiddingBackingBean extends
 
 	public void applyBidDates() {
 
-		log.info(" ****  Selected end date *** " + getManagedBean().getBidEnd());
-
 		log.info(" ****  Selected list values *** "
-				+ getManagedBean().getSelectedBidItemList().size());
+				+ getManagedBean().getSelectedBidBidScheduleList().size());
+		if(getManagedBean().getRowSelectedBid().getStartDate() == null || getManagedBean().getRowSelectedBid().getEndDate() == null){
+			throw new EpException("Please Select Both Dates");
+		}
 
-		if (getManagedBean().getSelectedBidItemList().size() > 0)
+		if (getManagedBean().getSelectedBidBidScheduleList().size() > 0)
 
 		{
-			for (ScBidItem bidItem : getManagedBean().getSelectedBidItemList()) {
+			for (ScBidSchedule bidSchedule : getManagedBean()
+					.getSelectedBidBidScheduleList()) {
 
-				if (getManagedBean().getBidItemList().contains(bidItem)) {
+				if (getManagedBean().getBidScheduleList().contains(bidSchedule)) {
 
-					bidItem.getScBidSchedule().setStartDate(
-							getManagedBean().getBidStart());
-					bidItem.getScBidSchedule().setEndDate(
-							getManagedBean().getBidEnd());
+					bidSchedule.setStartDate(getManagedBean().getRowSelectedBid().getStartDate());
+					bidSchedule.setEndDate(getManagedBean().getRowSelectedBid().getEndDate());
+					bidSchedule.setDuration(getManagedBean().getRowSelectedBid().getDuration());
 
-					getManagedBean().getSelectedBidItemList().set(
-							getManagedBean().getBidItemList().indexOf(bidItem),
-							bidItem);
+					getManagedBean().getSelectedBidBidScheduleList().set(
+							getManagedBean().getBidScheduleList().indexOf(
+									bidSchedule), bidSchedule);
 				}
 			}
 		} else {
@@ -249,10 +251,10 @@ public class ScheduleBiddingBackingBean extends
 				.getParameterCode())) {
 			System.out.println("******RECOMMEND_TYPE_PACKAGE******");
 
-			getManagedBean().getScBid().getScBidSchedules().get(0)
-					.setStartDate(getManagedBean().getBidStart());
-			getManagedBean().getScBid().getScBidSchedules().get(0)
-					.setEndDate(getManagedBean().getBidEnd());
+			//getManagedBean().getScBid().getScBidSchedules().get(0)
+			//		.setStartDate(getManagedBean().getBidStart());
+			//getManagedBean().getScBid().getScBidSchedules().get(0)
+			//		.setEndDate(getManagedBean().getBidEnd());
 			PmStatus status = new PmStatus();
 			status.setStatusId(63350L);
 			// TODO BidStatusConst.BID_PENDING_BIDDING
@@ -341,8 +343,8 @@ public class ScheduleBiddingBackingBean extends
 		return null;
 	}
 
-	public void bidStartDateSelectListener(SelectEvent event) {
-		Date date = (Date) event.getObject();
+	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
+		Date date = scBidSchedule.getStartDate();
 		getManagedBean().setMinEndDate(date);
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
@@ -350,25 +352,41 @@ public class ScheduleBiddingBackingBean extends
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
 	}
 
-	public void bidEndDateSelectListener(SelectEvent event) {
+	public void bidEndDateSelectListener(ScBidSchedule bidSchedule) {
 
-		Date date = (Date) event.getObject();
-
-		String duration = durationCalculator(getManagedBean().getMinEndDate(),
-				date);
-		getManagedBean().setDuration(duration);
-
+		ScBidSchedule scBidSchedule = bidSchedule;
+		if(scBidSchedule.getStartDate() == null){
+			throw new EpException("Please Select Start Date");
+		}
+		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
+		if(durationInMills == 0){
+			throw new EpException("Please Select Proper End Date");
+		}
+		scBidSchedule.setDuration(durationFormatter(durationInMills));
+		int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+		getManagedBean().getBidScheduleList().set(index, scBidSchedule);
+	}
+	
+	public void multiSelectEndDateSelectListener(ScBidSchedule bidSchedule){
+		ScBidSchedule scBidSchedule = bidSchedule;
+		if(scBidSchedule.getStartDate() == null){
+			throw new EpException("Please Select Start Date");
+		}
+		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
+		if(durationInMills == 0){
+			throw new EpException("Please Select Proper End Date");
+		}
+		bidSchedule.setDuration(durationFormatter(durationInMills));
+		getManagedBean().setRowSelectedBid(scBidSchedule);
 	}
 
-	private String durationCalculator(Date startTime, Date endDate) {
-
-		long durationInMills = endDate.getTime() - startTime.getTime();
+	private String durationFormatter(long durationInMills) {
+		
 		long diffMinutes = durationInMills / (60 * 1000) % 60;
 		long diffHours = durationInMills / (60 * 60 * 1000) % 24;
 		DecimalFormat durationFormat = new DecimalFormat("#00");
 		String duration = durationFormat.format(diffHours) + ":"
 				+ durationFormat.format(diffMinutes);
-		System.out.println("**** Value from duration calc *******" + duration);
 		return duration;
 	}
 

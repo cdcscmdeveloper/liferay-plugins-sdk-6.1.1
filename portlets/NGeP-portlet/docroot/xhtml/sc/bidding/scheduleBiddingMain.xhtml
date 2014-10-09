@@ -36,8 +36,28 @@
 										action="#{scheduleBiddingBB.submitBiddingDetails(bpmAction)}" />
 								</ui:repeat>
 		</div>
-
 		
+		<div align="left" class="header-info" style="width: 100%">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.document.no']}" /></td>
+					<td class="header-info-text">
+						#{scheduleBiddingBB.managedBean.scQt.qtNo}</td>
+
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.name']}" /></td>
+
+					<td class="header-info-text">
+						 #{scheduleBiddingBB.managedBean.scQt.pmOrgProfile.orgName}</td>
+
+					<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
+
+					<td class="header-info-text">#{scheduleBiddingBB.getStatusDescById(scheduleBiddingBB.managedBean.scQt.qtStatus.statusId)}
+					</td>
+				</tr>
+
+			</table>
+
+		</div>
 
 		<p:panel id="bidRecommendTypePanel">
 			<c:if test="#{isRecommendByPackage}">

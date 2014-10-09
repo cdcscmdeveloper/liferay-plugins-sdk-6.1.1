@@ -37,8 +37,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private ScQtFinalization scQtFinalization;
 	private List<ScBidContactPerson> scBidContactPersonList;
 	private List<ScBidContactPerson> multiSelectContact;
-	private Date bidStart;
-	private Date bidEnd;
 	private List<ScBidItem> bidItemList;
 	private List<ScBidItem> selectedBidItemList;
 	private ScBid scBid;
@@ -46,15 +44,19 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	
 	private List<ScBidSchedule> bidScheduleList;
 	private List<ScBidSchedule> selectedBidBidScheduleList;
-	
+	private ScBidSchedule rowSelectedBid;
 	
 	private Date minStartDate;
 	private Date minEndDate;
 	private Date maxEndDate;
-	private String duration;
+	
 	private SCEvaluationDataType payLoad;
 	
 	public ScheduleBiddingManagedBean() {
+		
+		if (rowSelectedBid == null){
+			rowSelectedBid = new ScBidSchedule();
+		}
 		
 		Calendar c = Calendar.getInstance(); 
 		c.setTime(DateUtils.getCurrentDateWithoutTime()); 
@@ -63,6 +65,24 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	}
 	
 	
+	/**
+	 * @return the rowSelectedBid
+	 */
+	public ScBidSchedule getRowSelectedBid() {
+		return rowSelectedBid;
+	}
+
+
+
+	/**
+	 * @param rowSelectedBid the rowSelectedBid to set
+	 */
+	public void setRowSelectedBid(ScBidSchedule rowSelectedBid) {
+		this.rowSelectedBid = rowSelectedBid;
+	}
+
+
+
 	/**
 	 * @return the bidScheduleList
 	 */
@@ -180,19 +200,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.maxEndDate = maxEndDate;
 	}
 
-	/**
-	 * @return the duration
-	 */
-	public String getDuration() {
-		return duration;
-	}
-
-	/**
-	 * @param duration the duration to set
-	 */
-	public void setDuration(String duration) {
-		this.duration = duration;
-	}
 
 	/**
 	 * @return the minStartDate
@@ -236,33 +243,6 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.bidItemList = bidItemList;
 	}
 
-	/**
-	 * @return the bidStart
-	 */
-	public Date getBidStart() {
-		return bidStart;
-	}
-
-	/**
-	 * @param bidStart the bidStart to set
-	 */
-	public void setBidStart(Date bidStart) {
-		this.bidStart = bidStart;
-	}
-
-	/**
-	 * @return the bidEnd
-	 */
-	public Date getBidEnd() {
-		return bidEnd;
-	}
-
-	/**
-	 * @param bidEnd the bidEnd to set
-	 */
-	public void setBidEnd(Date bidEnd) {
-		this.bidEnd = bidEnd;
-	}
 
 	/**
 	 * @return the scQt
