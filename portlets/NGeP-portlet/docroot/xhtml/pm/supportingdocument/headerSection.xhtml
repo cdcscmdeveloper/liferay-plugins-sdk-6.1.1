@@ -15,7 +15,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    	<div class="rowBtnRight">
 			 	<p:commandButton value="#{supportDocBackingBean.managedBean.selectedDocument.brandNew? lbl['lbl.btn.save'] : lbl['lbl.btn.update']}" 
 			 		action="#{supportDocBackingBean.saveSupportDoc()}"
-   					update="@([id$=Msg])"/>
+   					update="@([id$=Msg])">
+   					<f:param name="disableValidation" value="true" />     
+				</p:commandButton>
 	    	</div>
 	  	</div>
 	</p:outputPanel>
