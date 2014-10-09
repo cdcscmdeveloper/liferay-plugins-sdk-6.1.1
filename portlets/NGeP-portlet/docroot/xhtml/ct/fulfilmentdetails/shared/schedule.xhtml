@@ -89,14 +89,14 @@
 		 	        </p:commandButton>  
 	           </div>
 	         
-	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="350"
-	            	styleClass="screen-title" resizable="false" height="95">  
+	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="330"
+	            	styleClass="screen-title" resizable="false">  
                 
                    <h:panelGrid columns="3">
                      <p:graphicImage library="ep/images/design" name="exclamation.png"
 			            value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			          <p:spacer width="10"/>
-                      <p:inputTextarea  rows="2"  styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?" cols="48" />
+                      <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                   </h:panelGrid>
                  
                   <div class="ppRightBtn">
@@ -174,13 +174,13 @@
 		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
 		        </div>
 		       
-		       <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" width="350" height="95"
+		       <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" width="330"
 		            styleClass="screen-title"  resizable="false" modal="true">  
                     <h:panelGrid columns="3">
                       <p:graphicImage library="ep/images/design" name="exclamation.png"
 			             value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			           <p:spacer width="10"/>
-                       <p:inputTextarea rows="2" styleClass="ui-inputtextarea"  cols="48" value="Are you sure you want to delete this record?" />
+                       <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>
                    
                     <div class="ppRightBtn">

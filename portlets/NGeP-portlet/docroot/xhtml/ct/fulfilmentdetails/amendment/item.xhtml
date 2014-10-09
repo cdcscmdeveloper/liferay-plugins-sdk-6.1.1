@@ -127,12 +127,12 @@
 		   	     </p:dialog>	
 				
 			     <p:dialog id="dlgDelItemMaxQty" widgetVar="dlgDelItemMaxQty" 
-			         modal="true" styleClass="screen-title" resizable="false"  width="350" height="95">
+			         modal="true" styleClass="screen-title" resizable="false"  width="330">
 				      <h:panelGrid columns="3">
 					     <p:graphicImage library="ep/images/design" name="exclamation.png"
 					     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 					     <p:spacer width="10" />
-					     <p:inputTextarea cols="48" styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?" rows="2" />
+					     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				     </h:panelGrid>
 				     <div class="ppRightBtn">
 					     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:ctItemMaxQtyTable" 
@@ -252,12 +252,12 @@
 				        
 				        </p:dataTable>
 			          	<p:dialog id="dlgItemPrices" widgetVar="dlgItemPrices"  modal="true"
-			          	    styleClass="screen-title" resizable="false" width="350" height="95">
+			          	    styleClass="screen-title" resizable="false" width="330">
 					        <h:panelGrid columns="3">
 						         <p:graphicImage library="ep/images/design" name="exclamation.png"
 						          	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 						         <p:spacer width="10" />
-						         <p:inputTextarea cols="48" styleClass="ui-inputtextarea" value="Are you sure you want to delete this record?" rows="2" />
+						         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 					        </h:panelGrid>
 				
 				  	        <div class="ppRightBtn">
@@ -320,15 +320,13 @@
 				</p:dataTable>
 			</h:panelGrid>
 			<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
-				resizable="false" modal="true" width="350" height="95">
+				resizable="false" modal="true" width="330">
 				<h:panelGrid columns="3">
 					<p:graphicImage library="ep/images/design" name="exclamation.png"
 						value="/css/images/design/exclamation.png"
 						styleClass="ui-icon-complain"></p:graphicImage>
 					<p:spacer width="10" />
-					<p:inputTextarea
-						value="Are you sure you want to delete this record?" rows="2"
-						cols="48" styleClass="ui-inputtextarea"></p:inputTextarea>
+					<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 				</h:panelGrid>
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:ceilingTable" process="@form"
@@ -410,14 +408,13 @@
 					</p:column>
 				</p:dataTable>
 				<p:dialog id="dlgSvcItemPrices" widgetVar="dlgSvcItemPrices" styleClass="screen-title"
-					resizable="false" modal="true" width="350" height="95">
+					resizable="false" modal="true" width="330">
 					<h:panelGrid columns="3">
 						<p:graphicImage library="ep/images/design" name="exclamation.png"
 							value="/css/images/design/exclamation.png"
 							styleClass="ui-icon-complain"></p:graphicImage>
 						<p:spacer width="10" />
-						<p:inputTextarea cols="48" styleClass="ui-inputtextarea"
-							value="Are you sure you want to delete this record?" rows="2" />
+						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
 					</h:panelGrid>
 					<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"	update=":form:servicePriceTable" process="@form"

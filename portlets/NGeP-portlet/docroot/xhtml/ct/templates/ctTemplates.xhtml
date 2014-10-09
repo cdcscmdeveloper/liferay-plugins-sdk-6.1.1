@@ -11,6 +11,13 @@
 	<ui:define name="contentSection">
     <style>
       .column-align-center { text-align: center !important;}
+      .confirmation-message-box {
+         	border: 1px solid #cecece;
+			font-family: Arial;
+			font-size: 12px;
+			cursor: default;
+			padding: 10px;
+         }
     </style> 
   	<p:panel id="templateId" header="#{lbl['lbl.ct.tpl.name']}" toggleable="true" toggleSpeed="500">
   	<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
@@ -55,13 +62,12 @@
              <p:commandButton value="#{lbl['lbl.btn.delete']}"" partialSubmit="true" process="@form" onsuccess="dlgDel.show()" icon="ui-icon-delete" />
 		 </div>
 		  <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
-               resizable="false" modal="true" width="350" height="95">  
+               resizable="false" modal="true" width="330">  
            <h:panelGrid columns="3">
             <p:graphicImage library="ep/images/design" name="exclamation.png"
 			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
 			   <p:spacer width="10"/>
-             <p:inputTextarea value="Are you sure you want to delete this record?"  rows="2" cols="48" 
-                 styleClass="ui-inputtextarea"></p:inputTextarea>
+             <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
            </h:panelGrid>
            <div class="ppRightBtn">
 		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:dataTable" process="@form" 
