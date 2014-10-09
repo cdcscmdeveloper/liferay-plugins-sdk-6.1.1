@@ -461,12 +461,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
 		
 		BigDecimal serviceFee = new BigDecimal(0);
-		if(!resDTO.isFeeExemption()){
-			if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
-				serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
-			} else {
-				serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
-			}
+		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+		} else {
+			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
 		}
 		
 		BigDecimal nonExemptedItem = new BigDecimal(0);
