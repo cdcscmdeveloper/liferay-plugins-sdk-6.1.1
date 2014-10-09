@@ -67,11 +67,12 @@ public class ScheduleBiddingBackingBean extends
 	public void preRenderView() {
 		try {
 			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class);
-
+			this.getManagedBean().setPayLoad(dpDataType);
 			Long qtId = Long.valueOf(dpDataType.getQtId());
 			// Long qtId = 146L;
-			List<String> supplierIds = dpDataType.getGroupkeyMa();
+			List<String> supplierIds = dpDataType.getGroupkeyBa();
 			List<Long> supplierDtls = new ArrayList<Long>();
+			
 			for (String str : supplierIds) {
 				supplierDtls.add(Long.parseLong(str));
 			}
@@ -229,6 +230,7 @@ public class ScheduleBiddingBackingBean extends
 				getManagedBean().setScQtFinalization(
 						resDTO.getScQtFinalization());
 				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
+				this.getManagedBean().setScBid(resDTO.getScBid());
 			}
 		}
 
@@ -460,8 +462,11 @@ public class ScheduleBiddingBackingBean extends
 			biddingReqDTO.setOutcome(outCome);
 			biddingReqDTO.setToken(token);
 			biddingReqDTO.setTaskId(taskId);
-
+			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			// Need to call prepare save details method..
+			biddingReqDTO.setScBid(this.getManagedBean().getScBid());
+			biddingReqDTO.setBidSchedules(this.getManagedBean()
+					.getBidScheduleList());
 
 			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
 					.updateBPMAction(biddingReqDTO);
