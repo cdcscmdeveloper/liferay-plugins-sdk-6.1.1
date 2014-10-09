@@ -27,20 +27,19 @@
 		                    <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
 		                </p:column>
         
-                        <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}" 
-                           rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}">
+                        <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}" >
+                        <h:panelGroup  rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}">
                           <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}"  
 						      saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
 						      value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="50" update=":form:AgSignerTable"
 						      conditionField="recordStatusFlg^1|parentOrgProfile.orgProfileId^#{agreementBackingBean.getPtjParentId()}">
 					      </ac:lov>
+					      </h:panelGroup>
+					      <h:panelGroup  rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null}">
+					         <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" style="float:left;"/>
+					     </h:panelGroup>
 					   </p:column>
-				
-				       <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ptj']}" 
-                          rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null}">
-				            <p:outputLabel value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" style="float:left;"/>
-                       </p:column>
-        
+			
                        <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="companyHeaderGrid">
                         <p:selectOneMenu id="contractSigner" style="width:180px;"
                              value="#{agSignerVar.officer.userId}"   label="#{lbl['lbl.ct.contract.signer']}">
