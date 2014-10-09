@@ -586,8 +586,7 @@ public class SmApplicationUtil {
 							.getSmCompanyBasic().getIncomeTaxNo().trim() == "")) {
 				validSave = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
-				throw new EpException(
-						"Income Tax is mandatory of comapnies located in Kuching");
+				throw new EpException(MessageConst.ERROR_722561);
 			}
 
 		}
@@ -1335,6 +1334,33 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static void validateCategoryAndDocsDecision(
+			SmApplicationManagedBean managedBean) {
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				if (managedBean.isPoUser() && cat.getPoDecFlg() == null) {
+					throw new EpException(MessageConst.ERROR_722558,
+							new String[] { "Processing Officer Action" });
+				} else if (managedBean.isApproverUser()
+						&& cat.getApprvrDecFlg() == null) {
+					throw new EpException(MessageConst.ERROR_722558,
+							new String[] { "Approver Action" });
+				}
+
+			}
+		}
+
+		for (SmApplSupportDoc doc : managedBean.getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getVerifiedFlg() == null) {
+				throw new EpException(MessageConst.ERROR_722559);
+			}
+		}
+
+	}
+
 	private static SmStaffTotal setDefaultStaffValues(SmStaffTotal stf,
 			SmAppl app, String category) {
 		stf.setRevNo(new BigDecimal(1));
@@ -1705,7 +1731,7 @@ public class SmApplicationUtil {
 		docu.setPmDocument(doc);
 		docu.setSmAppl(appl);
 		docu.setVerified(true);
-		//docu.setVerifiedFlg(1);
+		// docu.setVerifiedFlg(1);
 		docu.setReceived(false);
 
 		List<SmApplDocFile> files = new ArrayList<SmApplDocFile>();
@@ -1890,8 +1916,7 @@ public class SmApplicationUtil {
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
 				managedBean.getSelectedShareHolder().setShareAmt(
 						new BigDecimal(0).setScale(2, RoundingMode.HALF_UP));
-				throw new EpException(
-						"Please select the nationality to add the shareholding amount");
+				throw new EpException(MessageConst.ERROR_722560);
 			} else {
 				PmCountry cntry = new PmCountry();
 				cntry = retrievePmCountryById(managedBean
