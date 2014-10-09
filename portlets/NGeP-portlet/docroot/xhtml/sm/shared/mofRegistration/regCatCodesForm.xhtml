@@ -142,7 +142,7 @@
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.approverUser}">
 					<p:selectOneRadio layout="pageDirection" id="catApprvrAppr"
-						value="#{catBean.apprvrDecFlg}"
+						value="#{catBean.apprvrDecFlg}" required="true"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}">
 						<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.apprv']}"
 							itemValue="1" />
@@ -151,6 +151,8 @@
 						<p:ajax event="change" process="@this"
 							update="apprvrCatDecisionRmrk" />
 					</p:selectOneRadio>
+					<p:message id="catApprvrApprMsg" for="catApprvrAppr"
+						showSummary="true" showDetail="false" display="icon" />
 					<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}"
 						rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS}" />
 				</p:column>
