@@ -10,7 +10,7 @@
 		<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
 
 			<p:dataTable id="bidScheduleByZonal"
-				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules}"
+				value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
 				var="scheduleZoneBid">
 				<ac:paginator for="bidScheduleByZonal"></ac:paginator>
 				<p:ajax event="rowSelect" listener="#{scheduleBiddingBB.rowSelectListener}"
@@ -19,18 +19,18 @@
 				<p:column headerText="#{lbl['lbl.sc.zone.name']}">
 					<p:commandLink value="#{scheduleZoneBid.tplSpecZoneDtl.zoneName}"
 						onclick="participants.show();"
-						action="#{scheduleBiddingBB.getParticipantsListAction}" />
+						action="#{scheduleBiddingBB.getParticipantsListAction(scheduleZoneBid)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
-					<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"
+					<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"  readonlyInput="true"
 						id="zoneBidStartDate"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 						mindate="#{scheduleBiddingBB.managedBean.minStartDate}">
 						<p:ajax event="dateSelect" process="zoneBidStartDate"
 							partialSubmit="true"
-							listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
-							update=":form:bidScheduleByZonal:zoneBidEndDate" />
+							listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleZoneBid)}"
+							update="@([id$=zoneBidEndDate])" />
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
@@ -42,20 +42,20 @@
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 						<p:ajax event="dateSelect" process="zoneBidEndDate"
 							partialSubmit="true"
-							listener="#{scheduleBiddingBB.bidEndDateSelectListener}"
-							update=":form:bidScheduleByZonal:bidDuration" />
+							listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleZoneBid)}"
+							update="@([id$=bidDuration])" />
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
 					<p:outputLabel id="bidDuration"
-						value="#{scheduleBiddingBB.managedBean.duration}" />
+						value="#{scheduleZoneBid.duration}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 
 			<p:dataTable id="bidScheduleByZoneBidItems"
-				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules[0].scBidItems}"
+				value="#{scheduleBiddingBB.managedBean.rowSelectedBid.scBidItems}"
 				var="item">
 
 				<ac:paginator for="bidScheduleByZoneBidItems"></ac:paginator>
@@ -84,6 +84,8 @@
 				</p:column>
 
 			</p:dataTable>
+			
+		
 
 		</p:panel>
 		

@@ -16,12 +16,12 @@
 
 						<td><p:calendar showOn="button"
 								id="scheduleBidPackageStartDate"
-								value="#{scheduleBiddingBB.managedBean.bidStart}"
+								value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 								mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 								<p:ajax event="dateSelect" process="scheduleBidPackageStartDate"
 									partialSubmit="true"
-									listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
+									listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 									update="scheduleBidPackageEndDate" />
 
 							</p:calendar></td>
@@ -32,24 +32,24 @@
 								id="scheduleBidPackageEndDate"
 								mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 								maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
-								value="#{scheduleBiddingBB.managedBean.bidEnd}"
+								value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 								<p:ajax event="dateSelect" process="scheduleBidPackageEndDate"
 									partialSubmit="true"
-									listener="#{scheduleBiddingBB.bidEndDateSelectListener}"
+									listener="#{scheduleBiddingBB.bidEndDateSelectListener(scheduleBiddingBB.managedBean.bidScheduleList[0])}"
 									update="bidSchedulePackageDuration" />
 							</p:calendar></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.duration.hours']}" /></td>
 
 						<TD><p:inputText id="bidSchedulePackageDuration"
 								disabled="true"
-								value="#{scheduleBiddingBB.managedBean.duration}" /></TD>
+								value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].duration}" /></TD>
 					</tr>
 				</table>
 			</div>
 			
 			<p:dataTable id="bidScheduleByPackage" var="bidItem"
-				value="#{scheduleBiddingBB.managedBean.scBid.scBidSchedules[0].scBidItems}">
+				value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
 
 				<ac:paginator for="bidScheduleByPackage"></ac:paginator>
 
@@ -69,7 +69,7 @@
 				<p:column headerText="#{lbl['lbl.sc.quantity']}">
 					<h:outputText style="float : right" value="#{bidItem.scRequestItem.quantity}" >
 					<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" />
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidItem.scRequestItem.uom.uomCode)}" />
 					
 					</h:outputText>
 					

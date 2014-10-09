@@ -46,13 +46,13 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
 					<p:calendar value="#{bidSchedule.startDate}"
-						showOn="button" id="bidStartDate"
+						showOn="button" id="bidStartDate" readonlyInput="true"
 						mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
 						<p:ajax event="dateSelect" process="bidStartDate"
 							partialSubmit="true"
-							listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
+							listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
 							update="@([id$=bidEndDate])" />
 
 					</p:calendar>
@@ -61,20 +61,20 @@
 
 					<p:calendar value="#{bidSchedule.endDate}"
 						mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
-						showOn="button" id="bidEndDate"
+						showOn="button" id="bidEndDate" readonlyInput="true"
 						maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
 						<p:ajax event="dateSelect" process="bidEndDate"
 							partialSubmit="true"
-							listener="#{scheduleBiddingBB.bidEndDateSelectListener}"
+							listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
 							update="@([id$=bidDuration])" />
 
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
 					<p:outputLabel id="bidDuration"
-						value="#{scheduleBiddingBB.managedBean.duration}" />
+						value="#{bidSchedule.duration}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
 					<h:outputText style="float : right"
@@ -95,12 +95,12 @@
 						<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
 						<td><p:calendar showOn="button" id="multiSelectStartDate"
-								value="#{scheduleBiddingBB.managedBean.bidStart}"
+								value="#{scheduleBiddingBB.managedBean.rowSelectedBid.startDate}"
 								mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 								<p:ajax event="dateSelect" process="multiSelectStartDate"
 									partialSubmit="true"
-									listener="#{scheduleBiddingBB.bidStartDateSelectListener}"
+									listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
 									update="@([id$=multiSelectEndDate])" />
 
 							</p:calendar></td>
@@ -112,11 +112,11 @@
 						<td><p:calendar showOn="button" id="multiSelectEndDate"
 								mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 								maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
-								value="#{scheduleBiddingBB.managedBean.bidEnd}"
+								value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}"
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 								<p:ajax event="dateSelect" process="multiSelectEndDate"
 									partialSubmit="true"
-									listener="#{scheduleBiddingBB.bidEndDateSelectListener}" />
+									listener="#{scheduleBiddingBB.multiSelectEndDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
 
 							</p:calendar></td>
 
