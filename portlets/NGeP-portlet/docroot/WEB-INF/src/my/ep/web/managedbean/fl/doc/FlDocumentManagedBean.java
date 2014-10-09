@@ -152,7 +152,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_IN.value(),flDocTypeList));
 					}
 				}
-				if(getSearchDocNo()!=null) {
+				if(getSearchDocNo()!=null && getSearchDocNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo()));
 				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
