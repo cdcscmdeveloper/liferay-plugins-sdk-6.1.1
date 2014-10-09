@@ -440,20 +440,21 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
-		if(!resDTO.isFeeExemption()){
-			for (TreeNode childNode : root.getChildren()) {
-				FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
-				//check item whther is exempted for this supplier.
+		
+		for (TreeNode childNode : root.getChildren()) {
+			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+			//check item whther is exempted for this supplier.
+			if(!resDTO.isFeeExemption()){
 				reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
 				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
 				reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
 				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
-				if(!resDTO.isFeeExemption()){
-					nonExemptedItemList.add(data.getInvAmt());
-				}
-				invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
-				orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
 			}
+			if(!resDTO.isFeeExemption()){
+				nonExemptedItemList.add(data.getInvAmt());
+			}
+			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
+			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
 		}
 		
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
