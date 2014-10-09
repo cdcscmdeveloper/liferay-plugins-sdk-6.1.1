@@ -132,6 +132,8 @@ public class SupportDocumentManagedBean extends BaseManagedBean {
 	 * @return the supportDocSearchBean
 	 */
 	public SupportDocumentSearchBean getSupportDocSearchBean() {
+		if(supportDocSearchBean==null)
+			supportDocSearchBean = new SupportDocumentSearchBean();
 		return supportDocSearchBean;
 	}
 

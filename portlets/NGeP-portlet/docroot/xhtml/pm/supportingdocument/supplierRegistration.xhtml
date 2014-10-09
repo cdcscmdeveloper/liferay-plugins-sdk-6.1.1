@@ -20,7 +20,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:inputTextarea id="itaDocName" value="#{supportDocBackingBean.managedBean.selectedDocument.docName}" 
 							label="#{lbl['lbl.pm.document.name']}" autoResize="false"
-					 		cols="50" rows="5" maxlength="1000" required="true"/>
+					 		cols="50" rows="5" maxlength="1000" required="#{!empty param['disableValidation']}"/>
 				 		<p:message id="itaDocNameMsg" for="itaDocName" display="icon" />	
 					</td>
 					<th>
@@ -63,7 +63,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</th>
 					<td>
 						<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" required="true">
+							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" required="#{!empty param['disableValidation']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> 		
 							<f:selectItems  value="#{supportDocBackingBean.supplierZoneOptions()}" 
 								var="zone" itemLabel="#{zone.zoneName}" itemValue="#{zone.zoneId}"/>
