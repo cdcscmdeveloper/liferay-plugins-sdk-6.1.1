@@ -26,7 +26,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
@@ -53,6 +53,10 @@ public class ScheduleBiddingBackingBean extends
 	public static Logger log = EpLogger
 			.getLogger(ScheduleBiddingBackingBean.class);
 
+	public ScheduleBiddingBackingBean() {
+
+	}
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -61,31 +65,35 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	public void preRenderView() {
-		
-		log.info("preRenderView");
-		
-		try{
-			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			Long qtId = Long.valueOf(dpDataType.getSourceId());*/
-			retriveItemsToBid(4L);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
-		}
-		finally{}
-		
-		
-	}
-	
-	public void rowSelectListener(){}
+		try {
+			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class);
 
-	public ScheduleBiddingBackingBean() {
-		log.info("ScheduleBiddingBackingBean constructor");
+			Long qtId = Long.valueOf(dpDataType.getQtId());
+			// Long qtId = 146L;
+			List<String> supplierIds = dpDataType.getGroupkeyMa();
+			List<Long> supplierDtls = new ArrayList<Long>();
+			for (String str : supplierIds) {
+				supplierDtls.add(Long.parseLong(str));
+			}
+			// Need to call the backing bean method the with the params qtId and
+			// supplierdtls..
+
+			retriveItemsToBid(qtId, supplierDtls);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SCHEDULE_BIDDING_MAIN_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+
+	public void rowSelectListener() {
 	}
 
 	public void applyBidDates() {
-		log.info(" **** Selected start date *** "
-				+ getManagedBean().getBidStart());
 
 		log.info(" ****  Selected end date *** " + getManagedBean().getBidEnd());
 
@@ -145,6 +153,7 @@ public class ScheduleBiddingBackingBean extends
 		try {
 			List<ScBidContactPerson> contactList = getManagedBean()
 					.getScBidContactPersonList();
+
 			log.info(" **** contact list *** " + contactList.size());
 			List<ScBidContactPerson> multiSelectContacts = getManagedBean()
 					.getMultiSelectContact();
@@ -155,11 +164,13 @@ public class ScheduleBiddingBackingBean extends
 			if (contactList.size() == multiSelectContacts.size())
 
 			{
+
 				contactList.clear();
 			} else {
 				for (ScBidContactPerson contact : multiSelectContacts)
 
 				{
+
 					contactList.remove(contact);
 				}
 			}
@@ -185,29 +196,22 @@ public class ScheduleBiddingBackingBean extends
 					.getRequestNoteItemId());
 			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
 					.getFinalizationId());
-			
-			//SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
 
-//			if (resDTO.isSuccessful()) {
-//				getManagedBean().setBidParticipants(
-//						resDTO.getScQtRecommendDtlList());
-//			}
+			// SuppFinalizationResDTO resDTO =
+			// suppFinalizationSO.retrieveRecommendDtlList(reqDTO);
+
+			// if (resDTO.isSuccessful()) {
+			// getManagedBean().setBidParticipants(
+			// resDTO.getScQtRecommendDtlList());
+			// }
 		} finally {
 			suppFinalizationSO = null;
 		}
 	}
 
-	public void retriveItemsToBid(Long qtId) {
+	public void retriveItemsToBid(Long qtId, List<Long> recommandIds) {
 		// TODO temporary hard coded
-		
-		List<Long> recommandIds = new ArrayList<Long>(); 
-		recommandIds.add(141L);
-		recommandIds.add(142L);
-		recommandIds.add(143L);
-		recommandIds.add(144L);
-		recommandIds.add(145L);
-		recommandIds.add(147L);
-		recommandIds.add(148L);
+
 		IScheduleBiddingSO scheduleBiddingSO = null;
 
 		try {
@@ -440,6 +444,35 @@ public class ScheduleBiddingBackingBean extends
 
 		return null;
 
+	}
+
+	public void submitBiddingDetails(String outCome) {
+
+		String taskId = this.getManagedBean().getTaskId();
+		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		ScheduleBiddingReqDTO biddingReqDTO = new ScheduleBiddingReqDTO();
+		try {
+			scheduleBiddingSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IScheduleBiddingSO.class);
+
+			biddingReqDTO.setOutcome(outCome);
+			biddingReqDTO.setToken(token);
+			biddingReqDTO.setTaskId(taskId);
+
+			// Need to call prepare save details method..
+
+			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
+					.updateBPMAction(biddingReqDTO);
+
+			if (resDTO.isSuccessful()) {
+
+			}
+
+		} finally {
+			scheduleBiddingSO = null;
+		}
 	}
 
 }
