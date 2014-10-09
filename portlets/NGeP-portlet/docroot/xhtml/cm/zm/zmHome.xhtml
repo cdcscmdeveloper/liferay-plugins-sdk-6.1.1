@@ -15,27 +15,26 @@
 
 		<p:messages id="zmMsgs" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false"></p:messages>
-	
+
 		<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.cm.zm.save']}"
-					process="@this, zoneDetailsDataTable" partialSubmit="true" update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
-		     action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
+						process="@this, zoneDetailsDataTable" partialSubmit="true"
+						update="@([id$=zmMsgs]), @([id$=zoneDetailsDataTable]), @([id$=zonePopupPanel])"
+						action="#{zoneMaintenanceBackingBean.saveCmSupplierZones}"
 						style="float:right;" icon="ui-icon-save" />
-	
+
 				</p:column>
 			</p:row>
-		</p:panelGrid>	
+		</p:panelGrid>
 		<h:panelGrid id="zoneTable" width="100%" style="margin-top:20px">
-			<p:dataTable id="zoneDetailsDataTable" 
-				        value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}" var="zoneTree"
-				        rowIndexVar="index">
-					<p:column headerText="#{lbl['lbl.cm.zm.details']}">
-					<p:tree id="treeZoneDetails"
-						value="#{zoneTree}"
-						var="zN" >
-						 <p:treeNode type="cmSupplierZone">
+			<p:dataTable id="zoneDetailsDataTable"
+				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
+				var="zoneTree" rowIndexVar="index">
+				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
+					<p:tree id="treeZoneDetails" value="#{zoneTree}" var="zN">
+						<p:treeNode type="cmSupplierZone">
 							<h:outputText value="#{zN.locationName}" />
 						</p:treeNode>
 						<p:treeNode type="state">
@@ -48,62 +47,66 @@
 							<h:outputText value="#{zN.locationName}" />
 						</p:treeNode>
 					</p:tree>
-				</p:column>	
+				</p:column>
 				<p:column headerText="#{lbl['lbl.cm.action']}">
-				
-				<p:commandLink 
-					     actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
-					     process="@this" update=":form:ZL" oncomplete="ZL.show();">
+
+					<p:commandLink
+						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
+						process="@this" update=":form:ZL" oncomplete="ZL.show();">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
-					<p:commandLink process="@this" update="zoneDetailsDataTable, @([id$=zmMsgs])"
-					     actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
+					<p:commandLink process="@this"
+						update="zoneDetailsDataTable, @([id$=zmMsgs])"
+						actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
 						<p:graphicImage library="ep/images/design" name="trash.png"
 							value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
-			</p:dataTable>	
+			</p:dataTable>
 		</h:panelGrid>
 				&#160;&#160;
 				
 		<div align="right" style="width: 100%">
-			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this" 
-			     update=":form:ZL" partialSubmit="true" 
-				 oncomplete="ZL.show();" 
-				 actionListener="#{zoneMaintenanceBackingBean.addNewZone}" icon="ui-icon-add"/>
-		</div>	
-		
-		<p:dialog id="ZL" widgetVar="ZL" header="#{zoneMaintenanceBackingBean.managedBean.editMode}" modal="true"
-		width="45%" height="70%">
+			<p:commandButton value="#{lbl['lbl.cm.zm.btn.add']}" process="@this"
+				update=":form:ZL" partialSubmit="true" oncomplete="ZL.show();"
+				actionListener="#{zoneMaintenanceBackingBean.addNewZone}"
+				icon="ui-icon-add" />
+		</div>
+
+		<p:dialog id="ZL" widgetVar="ZL"
+			header="#{zoneMaintenanceBackingBean.managedBean.editMode}"
+			modal="true" width="45%" height="70%"
+			style="position: absolute !important;">
 			<f:facet name="header">
-				<h:outputText value="#{lbl['lbl.cm.zm.header.add']}" rendered="#{!zoneMaintenanceBackingBean.managedBean.editMode}"/>
-				<h:outputText value="#{lbl['lbl.cm.zm.header.edit']}" rendered="#{zoneMaintenanceBackingBean.managedBean.editMode}"/>
+				<h:outputText value="#{lbl['lbl.cm.zm.header.add']}"
+					rendered="#{!zoneMaintenanceBackingBean.managedBean.editMode}" />
+				<h:outputText value="#{lbl['lbl.cm.zm.header.edit']}"
+					rendered="#{zoneMaintenanceBackingBean.managedBean.editMode}" />
 			</f:facet>
 			<h:panelGroup id="zonePopupPanel">
-				<table styleClass="noBorders tr,noBorders td" >
+				<table styleClass="noBorders tr,noBorders td">
 					<TR>
-						<TD width="25%" valign="top"><p:outputLabel value="#{lbl['lbl.cm.zm.name']}"></p:outputLabel>
-						 <p:outputLabel	value="*" styleClass="mandatory" />
-						</TD>
+						<TD width="25%" valign="top"><p:outputLabel
+								value="#{lbl['lbl.cm.zm.name']}"></p:outputLabel> <p:outputLabel
+								value="*" styleClass="mandatory" /></TD>
 						<TD width="75%"><p:inputText id="zoneNameId"
-								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}" >
+								value="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName}">
 								<p:ajax event="keyup" update=":form:zoneAddButton"></p:ajax>
 								<p:ajax event="change" update=":form:zoneAddButton"></p:ajax>
-								</p:inputText>
-						</TD>
+							</p:inputText></TD>
 					</TR>
 					<TR>
-						<TD width="20%" valign="top"><p:outputLabel value="#{lbl['lbl.cm.zm.details']}"></p:outputLabel>
-						</TD>
+						<TD width="20%" valign="top"><p:outputLabel
+								value="#{lbl['lbl.cm.zm.details']}"></p:outputLabel></TD>
 						<TD width="80%">
 							<div style="height: 340px; overflow-y: scroll;">
 								<p:tree id="treeZoneLocationPopup"
 									value="#{zoneMaintenanceBackingBean.managedBean.rootZoneTree}"
 									var="location"
 									selection="#{zoneMaintenanceBackingBean.managedBean.selectedNodes}"
-									selectionMode="checkbox" >
-									 <p:treeNode type="state">
+									selectionMode="checkbox">
+									<p:treeNode type="state">
 										<h:outputText value="#{location.locationName}" />
 									</p:treeNode>
 									<p:treeNode type="division">
@@ -111,27 +114,33 @@
 									</p:treeNode>
 									<p:treeNode type="district">
 										<h:outputText value="#{location.locationName}" />
-									</p:treeNode> 
+									</p:treeNode>
 								</p:tree>
 							</div>
 						</TD>
 					</TR>
 				</table>
 			</h:panelGroup>
-			
-		<div align="right">		
-			<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}" style="float:right;" icon="ui-icon-cancel" immediate="true"
-				oncomplete="ZL.hide();"></p:commandButton>
-					&#160;&#160;
 
-			<p:commandButton id="zoneAddButton"
-					value="#{lbl['lbl.cm.zm.btn.ok']}" disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
-					style="float:right;" oncomplete="ZL.hide();" process="@all ,zoneNameId"
-					update="@this, zonePopupPanel" partialSubmit="true" icon="ui-icon-accept"
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.cm.zm.btn.cancel']}"
+					style="float:right;" icon="ui-icon-cancel" immediate="true"
+					oncomplete="ZL.hide();"></p:commandButton>
+				&#160;&#160;
+
+				<p:commandButton id="zoneAddButton" onstart="blockWidget.show();"
+					value="#{lbl['lbl.cm.zm.btn.ok']}"
+					disabled="#{zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName eq null or zoneMaintenanceBackingBean.managedBean.selectedSupplierZone.suppZoneName.length() eq 0}"
+					style="float:right;" oncomplete="ZL.hide(); blockWidget.hide();"
+					process="@all ,zoneNameId" update="@this, zonePopupPanel"
+					partialSubmit="true" icon="ui-icon-accept"
 					actionListener="#{zoneMaintenanceBackingBean.updateZoneListOnPopUpClose}">
-		   </p:commandButton>
-		</div>
-			
-		</p:dialog>	 			
-	</ui:define>	
+				</p:commandButton>
+			</div>
+
+			<p:blockUI block="ZL" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		</p:dialog>
+	</ui:define>
 </ui:composition>
