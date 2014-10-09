@@ -20,7 +20,6 @@ import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
-import my.ep.persistence.entity.sc.bidding.ScBidPackage;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -45,7 +44,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private List<ScBidContactPerson> bidContactPersons;
 	private SmSupplier smSupplier;
 	private ScBidAction scBidAction;
-	private ScBidPackage scBidPackage;
+	private BigDecimal packageRanking;
 	private ScBidPrice scBidPrice;
 	private ScBidPrice newScBidPrice;
 	private BigDecimal selectedDecrementAmt;
@@ -176,7 +175,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setBidContactPersons(resDTO.getBidContactPersons());
 				setBidPrices(resDTO.getBidPrices());
 				setScBidSchedule(resDTO.getScBidSchedule());
-				setScBidPackage(resDTO.getScBidPackage());
+				setPackageRanking(resDTO.getPackageRanking());
 				setScBidAction(resDTO.getScBidAction());
 			}
 		} finally {
@@ -542,18 +541,17 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the scBidPackage
+	 * @return the packageRanking
 	 */
-	public ScBidPackage getScBidPackage() {
-		return scBidPackage;
+	public BigDecimal getPackageRanking() {
+		return packageRanking;
 	}
 
 	/**
-	 * @param scBidPackage
-	 *            the scBidPackage to set
+	 * @param packageRanking the packageRanking to set
 	 */
-	public void setScBidPackage(ScBidPackage scBidPackage) {
-		this.scBidPackage = scBidPackage;
+	public void setPackageRanking(BigDecimal packageRanking) {
+		this.packageRanking = packageRanking;
 	}
 
 	/**
