@@ -109,7 +109,8 @@
 
 		<p:dataTable id="biddingList"
 			value="#{biddingBB.managedBean.searchDataModel}" var="bid"
-			lazy="true">
+			lazy="true"
+			rows="10">
 
 			<ac:paginator for="biddingList"></ac:paginator>
 

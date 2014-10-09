@@ -113,16 +113,8 @@
 					<tr>
 						<td style="width: 15%"><p:outputLabel
 								value="#{lbl['lbl.sc.view.by']}" /></td>
-						<td style="width: 15%"><p:selectOneMenu id="viewBy"
-								rendered="#{biddingBB.managedBean.bidManagementInitialViewBy eq 'P'}"
-								value="#{biddingBB.managedBean.bidManagementViewBy}"
-								style="width : 138px">
-								<f:selectItem itemLabel="Package" itemValue="P"></f:selectItem>
-								<f:selectItem itemLabel="Item" itemValue="I"></f:selectItem>
-								<p:ajax process="@this" partialSubmit="true" event="change"
-									listener="#{biddingBB.viewByChangeListener}" update="@form"></p:ajax>
-							</p:selectOneMenu> <p:inputText disabled="true" size="15"
-								rendered="#{biddingBB.managedBean.bidManagementInitialViewBy eq 'I'}" value="Item" />
+						<td style="width: 15%">
+							<p:inputText disabled="true" size="15" value="#{biddingBB.getParameterDesc(biddingBB.managedBean.scheduledBid.scBid.recommendedTypeId)}" />
 						</td>
 						<td style="width: 15%"></td>
 						<td style="width: 15%"></td>
