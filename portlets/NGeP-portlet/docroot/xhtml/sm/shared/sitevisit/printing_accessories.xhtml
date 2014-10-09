@@ -15,42 +15,42 @@
 
 				<p:column>
 					<f:facet name="header">
-						Apparatus/ Machine
+						#{lbl[lbl.sm.sitevisit.printing.apparatus.mchne]}
 					</f:facet>
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.printingParamMap[acc.pmParameter.parameterId].codeName}"></h:outputText>
 				</p:column>
 
 				<p:column>
 					<f:facet name="header">
-						Brand
+						#{lbl[lbl.sm.sitevisit.printing.brand]}
 					</f:facet>
 					<p:inputText value="#{acc.brand}" disabled="#{viewFlag}" />
 				</p:column>
 
 				<p:column>
 					<f:facet name="header">
-						Qty/ Set
+						#{lbl[lbl.sm.sitevisit.printing.qty.set]}
 					</f:facet>
 					<p:inputText value="#{acc.qty}" disabled="#{viewFlag}" />
 				</p:column>
 
 				<p:column>
 					<f:facet name="header">
-						Req. Method
+						#{lbl[lbl.sm.sitevisit.printing.req.method]}
 					</f:facet>
 					<p:inputText value="#{acc.requisiteMethod}" disabled="#{viewFlag}" />
 				</p:column>
 
 				<p:column>
 					<f:facet name="header">
-						Reg. Year
+						#{lbl[lbl.sm.sitevisit.printing.reg.year]}
 					</f:facet>
 					<p:inputText value="#{acc.requisiteYear}" disabled="#{viewFlag}" />
 				</p:column>
 
 				<p:column>
 					<f:facet name="header">
-						Guarantor Name
+						#{lbl[lbl.sm.sitevisit.printing.guarantorname]}
 					</f:facet>
 					<p:inputText value="#{acc.guarantor}" disabled="#{viewFlag}" />
 				</p:column>

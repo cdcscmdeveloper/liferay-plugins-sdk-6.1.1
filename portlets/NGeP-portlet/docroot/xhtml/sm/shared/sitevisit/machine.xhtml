@@ -5,13 +5,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Machine/ Equipment List">
+	<p:panel header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smMachineDtls}" var="machineDtl"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.selectedSmMachine}"
 		rowKey="#{machineDtl}">
 			<p:column>
 					<f:facet name="header">
-						Type of Machine/ Equipment
+						#{lbl['lbl.sm.manufacturing.type.machine']}
 					</f:facet>
 				
 					<h:outputText value="#{machineDtl.machineType}"></h:outputText>
@@ -19,42 +19,42 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Brand
+						#{lbl['lbl.sm.machine.brand']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.brandName}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Function
+						#{lbl['lbl.sm.machine.function']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.machineFunction}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Qty
+						#{lbl['lbl.sm.machine.quantity']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.qty}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Value(RM)
+						#{lbl['lbl.sm.machine.value']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.value}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Purchasing Method
+						#{lbl['lbl.sm.machine.purMthd']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.purchaseMethod}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Guarantor Name
+						#{lbl['lbl.sm.machine.guarnName']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.guarantorName}"></h:outputText>			
 			</p:column>

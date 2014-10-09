@@ -6,34 +6,34 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel header="Employee" id="pnlSvWorkerId">
+	<p:panel header="#{lbl['lbl.sm.worker.employee']}" id="pnlSvWorkerId">
 	<p:dataTable id="dtWorkerId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvWorkers}" var="svWorker"
 		selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkers}" rowKey="#{svWorker}">
 		<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}" />
 		<p:ajax event="rowSelectCheckbox" disabled="#{viewFlag}" />
 			<p:column>
 					<f:facet name="header">
-						Specialization
+						#{lbl['lbl.sm.worker.specialization']}
 					</f:facet>
 					<p:inputText id="workerSpecializationId" value="#{svWorker.expertise}" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-						Name
+						#{lbl['lbl.sm.worker.name']}
 					</f:facet>
 				<p:inputText id="workerNameId" value="#{svWorker.name}" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-						IC No.
+						#{lbl['lbl.sm.worker.icno']}
 					</f:facet>
 				<p:inputText id="identificationNoId" value="#{svWorker.identificationNo}" disabled="#{viewFlag}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-						Experience
+						#{lbl['lbl.sm.worker.experience']}
 				</f:facet>
 				<p:inputText id="workExpYearId" value="#{svWorker.workExpYear}" disabled="#{viewFlag}" />
 			</p:column>

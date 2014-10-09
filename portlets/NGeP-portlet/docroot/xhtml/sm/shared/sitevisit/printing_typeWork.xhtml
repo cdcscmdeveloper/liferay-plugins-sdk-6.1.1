@@ -6,35 +6,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Printing Type/ Work Done/ In Progress">
+	<p:panel header="#{lbl['lbl.sm.sitevisit.printing.type.wrkdone.inprgrss']}">
 		<p:dataTable id="dtPrintWorkId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvPrintworks}" 
 		var="pWork" selection="#{svoSiteVisitBackingBean.managedBean.selectedPrintWorks}" rowKey="#{pWork}">
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
-					Type
+					#{lbl['lbl.sm.sitevisit.printing.type']}
 				</f:facet>
 				<p:inputText value="#{pWork.printType}" id="txtPrintTypeId" disabled="#{viewFlag}" />
 			</p:column>
 			
 			<p:column>
 				<f:facet name="header">
-					User Name
+					#{lbl['lbl.sm.sitevisit.printing.uname']}
 				</f:facet>
 				<p:inputText value="#{pWork.clientName}" id="txtUsernameId" disabled="#{viewFlag}"/>
 			</p:column>
 			
 			<p:column>	
 				<f:facet name="header">
-					Work Value(RM)
+					#{lbl['lbl.sm.sitevisit.printing.workval.rm']}
 				</f:facet>
 				<p:inputText value="#{pWork.printAmt}" id="txtWorkValueId" disabled="#{viewFlag}"/>
 			</p:column>
 		</p:dataTable>
 		
 		<div align="right">
-		<p:commandButton value="Add"  update="dtPrintWorkId" action="#{svoSiteVisitBackingBean.addPrintWork}" rendered="#{!viewFlag}"/>
-			<p:commandButton value="Delete"  update="dtPrintWorkId" action="#{svoSiteVisitBackingBean.removePrintWork}"  rendered="#{!viewFlag}" />
+		<p:commandButton value="#{lbl['lbl.sm.button.add']}"  update="dtPrintWorkId" action="#{svoSiteVisitBackingBean.addPrintWork}" rendered="#{!viewFlag}"/>
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"  update="dtPrintWorkId" action="#{svoSiteVisitBackingBean.removePrintWork}"  rendered="#{!viewFlag}" />
 		</div>
 	</p:panel>
 

@@ -7,11 +7,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	
-	<p:panel header="Tool/Equipment for Maintenance and Overhaul">
+	<p:panel header="#{lbl['lbl.sm.equipment.maintnce.ovrhl']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.workshopEquipMain}" var="equipMaint">
 			<p:column>
 					<f:facet name="header">
-						Equipment Type
+						#{lbl['lbl.sm.machine.equiType']}
 					</f:facet>
 				
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.workshopEquipmentMap[equipMaint.pmParameter.parameterId].codeName}"></h:outputText>
@@ -19,7 +19,7 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Available
+						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
 					
 					<p:selectBooleanCheckbox value="#{equipMaint.equipmentAvailable}"></p:selectBooleanCheckbox>
@@ -28,18 +28,18 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Quantity/ Set
+						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
 					<p:inputText value="#{equipMaint.equipmentQty}"></p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 	
-	<p:panel header="Equipment for Panel Beating and Spray Painting">
+	<p:panel header="#{lbl['lbl.sm.equipment.pnl.beat.spray.paint']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.workshopEquipBeating}" var="equipBinding">
 			<p:column>
 					<f:facet name="header">
-						Equipment Type
+						#{lbl['lbl.sm.machine.equiType']}
 					</f:facet>
 				
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.workshopEquipmentMap[equipBinding.pmParameter.parameterId].codeName}"></h:outputText>
@@ -47,7 +47,7 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Available
+						#{lbl['lbl.sm.availableLbl']}
 					</f:facet>
 					
 					<p:selectBooleanCheckbox value="#{equipBinding.equipmentAvailable}"></p:selectBooleanCheckbox>
@@ -56,20 +56,20 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Quantity/ Set
+						#{lbl['lbl.sm.equipment.qtty.set']}
 					</f:facet>
 					<p:inputText value="#{equipBinding.equipmentQty}"></p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 
-	<p:panel header="Machine/ Equipment List">
+	<p:panel header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}">
 		<p:dataTable value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smMachineDtls}" var="machineDtl"
 				selection="#{svoSiteVisitBackingBean.managedBean.selectedWorkshopMachine}"
 				rowKey="#{machineDtl}">
 			<p:column>
 					<f:facet name="header">
-						Type of Machine/ Equipment
+						#{lbl['lbl.sm.manufacturing.type.machine']}
 					</f:facet>
 				
 					<h:outputText value="#{machineDtl.machineType}"></h:outputText>
@@ -77,42 +77,42 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Brand
+						#{lbl['lbl.sm.machine.brand']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.brandName}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Function
+						#{lbl['lbl.sm.machine.function']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.machineFunction}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Qty
+						#{lbl['lbl.sm.machine.quantity']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.qty}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Value(RM)
+						#{lbl['lbl.sm.machine.value']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.value}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Purchasing Method
+						#{lbl['lbl.sm.machine.purMthd']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.purchaseMethod}"></h:outputText>			
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Guarantor Name
+						#{lbl['lbl.sm.machine.guarnName']}
 					</f:facet>
 					<h:outputText value="#{machineDtl.guarantorName}"></h:outputText>			
 			</p:column>

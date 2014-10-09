@@ -10,28 +10,28 @@
 
 	<table class="customTbl">
 		<tr>
-			<td class="tdTitle"><p:outputLabel value="Ownership" /></td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.ownership']}" /></td>
 			<td class="tdContent">
 			<p:selectOneMenu style="width:100px" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.ownershipType}" disabled="#{viewFlag}">
-					<f:selectItem itemLabel = "---Select one---" itemValue="" />
-					<f:selectItem itemLabel = "Private" itemValue="P" />
-					<f:selectItem itemLabel = "Rent" itemValue="R" />
+					<f:selectItem itemLabel = "#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.prvt']}" itemValue="P" />
+					<f:selectItem itemLabel = "#{lbl['lbl.sm.officeloc.ownership.rent']}" itemValue="R" />
 				</p:selectOneMenu>
 			</td>
 			
-			<td class="tdTitle"><p:outputLabel value="Purchasing Price/ Monthly Rate(RM)" /></td>
+			<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}" /></td>
 			<td class="tdContent">
 				<p:inputText  id="pmPriceRate" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.purchaseRentPrice}" />
 			</td>
 		</tr>
 		
 		<tr>
-			<td class="tdTitle" valign="top"><p:outputLabel value="Documents" /></td>
+			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.docs']}" /></td>
 			<td class="tdContent">
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.document}" />
 			</td>
 			
-			<td class="tdTitle" valign="top"><p:outputLabel value="Agreement letter" /></td>
+			<td class="tdTitle" valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevisit.printing.premiseloc.aggrmnt.lttr']}" /></td>
 			<td class="tdContent">
 			<p:selectBooleanCheckbox disabled="#{viewFlag}" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.agreementLetter}" />
 			</td>
