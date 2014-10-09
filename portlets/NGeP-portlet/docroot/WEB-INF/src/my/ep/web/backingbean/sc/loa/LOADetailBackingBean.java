@@ -901,8 +901,11 @@ public class LOADetailBackingBean extends
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
-
-			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			
+			//TODO
+			if(scLoaReportAttachment.getFileName()!=null && scLoaReportAttachment.getFilePath()!=null){
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			}
 		}
 
 		return scLoaReportAttachment;
