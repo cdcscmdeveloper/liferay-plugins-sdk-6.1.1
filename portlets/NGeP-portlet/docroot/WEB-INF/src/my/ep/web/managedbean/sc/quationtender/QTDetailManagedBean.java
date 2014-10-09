@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -67,6 +68,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.sc.quatationtender.CloneAllDataModel;
@@ -268,6 +270,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private int allStateCode;
 	private String LocalLevelCode;
+	
+	private List<TplSpecLoc> totalSuppliersSpecLoc;
+	private List<PmState> stateList;
+	private List<PmDistrict> districtList;
+	private List<PmDivision> divisionList;
+	
+	private int totalSuppliers;
 
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
@@ -2642,6 +2651,46 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPmUsersSecretaryList(List<PmUser> pmUsersSecretaryList) {
 		this.pmUsersSecretaryList = pmUsersSecretaryList;
+	}
+
+	public List<TplSpecLoc> getTotalSuppliersSpecLoc() {
+		return totalSuppliersSpecLoc;
+	}
+
+	public void setTotalSuppliersSpecLoc(List<TplSpecLoc> totalSuppliersSpecLoc) {
+		this.totalSuppliersSpecLoc = totalSuppliersSpecLoc;
+	}
+
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<PmDistrict> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+	public List<PmDivision> getDivisionList() {
+		return divisionList;
+	}
+
+	public void setDivisionList(List<PmDivision> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+	public int getTotalSuppliers() {
+		return totalSuppliers;
+	}
+
+	public void setTotalSuppliers(int totalSuppliers) {
+		this.totalSuppliers = totalSuppliers;
 	}
 
 }
