@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -50,6 +51,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.ProposalReqDTO;
 import my.ep.dto.sc.quationtender.ProposalResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -83,6 +86,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -1412,18 +1416,35 @@ public class SPDetailBackingBean extends
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 		this.getManagedBean().setScQtDoc(scQtDoc);
 		try {
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
-			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-			templateSpecBean.setSpecMaster(specMaster);
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			templateSpecBean.setSupplier(this.getManagedBean()
+			/*
+			 * TemplateSpecBackingBean templateSpecBackingBean = new
+			 * TemplateSpecBackingBean(); TemplateSpecBean templateSpecBean =
+			 * getManagedBean() .getTemplateSpecBean(); TplSpecMaster specMaster
+			 * = scQtDoc.getTplSpecMaster();
+			 * templateSpecBean.setSpecMaster(specMaster); templateSpecBean
+			 * .setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			 * templateSpecBean.setSupplier(this.getManagedBean()
+			 * .getQtProposalChecklist().getScQtProposal()
+			 * .getScQtSupplier().getSmSupplier()); templateSpecBackingBean
+			 * .retrieveTemplateSpecMaster(templateSpecBean);
+			 */
+
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setSpecMaster(scQtDoc.getTplSpecMaster());
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			specReqDTO.setSupplier(this.getManagedBean()
 					.getQtProposalChecklist().getScQtProposal()
 					.getScQtSupplier().getSmSupplier());
-			templateSpecBackingBean
-					.retrieveTemplateSpecMaster(templateSpecBean);
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+			templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1559,6 +1580,8 @@ public class SPDetailBackingBean extends
 
 					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
 
+				} else {
+					redirectPage = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE;
 				}
 			}
 			return redirectPage;
@@ -2313,14 +2336,33 @@ public class SPDetailBackingBean extends
 	public void displayProposalDtls() {
 		debugLogger("displayProposalDtls");
 		List<ScQtProposal> list = this.getManagedBean().getQtProposalsList();
-		if (list == null) {
-			list = new ArrayList<ScQtProposal>();
+
+		list = new ArrayList<ScQtProposal>();
+		if (this.getManagedBean().getPrepareProposal() > 3) {
+			throw new EpException("You Should Not Enter More than three");
+		} else {
+			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
+				ScQtProposal proposal = new ScQtProposal();
+				list.add(proposal);
+			}
 		}
-		for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
-			ScQtProposal proposal = new ScQtProposal();
-			list.add(proposal);
-		}
+
 		this.getManagedBean().setQtProposalsList(list);
+	}
+
+	public void deleteMultipleProposal() {
+		try {
+			List<ScQtProposal> multipleProposalScore = this.getManagedBean()
+					.getQtProposalsList();
+			List<ScQtProposal> selectProposalScore = this.getManagedBean()
+					.getSelectMultipleProposalList();
+			for (ScQtProposal proposalScore : selectProposalScore) {
+				proposalScore.setDeleted(true);
+				multipleProposalScore.remove(proposalScore);
+			}
+		} finally {
+
+		}
 	}
 
 	// TODO supplier proposal pre-render
