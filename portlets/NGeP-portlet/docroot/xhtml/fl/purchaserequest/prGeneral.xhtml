@@ -56,7 +56,8 @@
 						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" 
-						update=":form:chargeOrgProfileId" size="50">
+						update=":form:chargeOrgProfileId" size="50"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
 					</ac:lov></td>
 				<td>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
