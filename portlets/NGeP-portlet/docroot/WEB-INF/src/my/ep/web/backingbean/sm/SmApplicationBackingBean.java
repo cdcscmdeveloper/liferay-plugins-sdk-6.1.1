@@ -3957,6 +3957,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignMissingDocsList() {
 		log.info("*** Send Inquiry **** ");
+		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
@@ -3976,6 +3977,7 @@ public class SmApplicationBackingBean extends
 	//
 	// }
 	public void submitPOEscalationToApprover(String recommendation) {
+		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		getManagedBean().getPoSecReview().setRecommendation(recommendation);
 		RequestContext.getCurrentInstance()
 				.execute("submitApprvrDialog.show()");
@@ -3989,6 +3991,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignFinalApproveOrReject(String dialog) {
 		log.info("**** assignFinalApproveOrReject *** ");
+		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
