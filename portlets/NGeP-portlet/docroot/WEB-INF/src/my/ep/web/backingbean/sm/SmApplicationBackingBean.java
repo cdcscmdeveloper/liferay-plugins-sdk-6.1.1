@@ -1066,7 +1066,8 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRemoveEpRole(true);
 		} else {
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(false);
-			assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
+			assignSelShareHolderAddress(getManagedBean()
+					.getSelectedShareHolder());
 			getManagedBean().setRemoveEpRole(false);
 		}
 		buildRoleList();
@@ -1867,8 +1868,8 @@ public class SmApplicationBackingBean extends
 		if (validCatCode) {
 			SmSupplierCategory categ = new SmSupplierCategory();
 			categ.setRevNo(1);
-//			categ.setApprvrDecFlg(1);
-//			categ.setPoDecFlg(1);
+			// categ.setApprvrDecFlg(1);
+			// categ.setPoDecFlg(1);
 			categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
 			if (getManagedBean().getSmAppl().getApplCategoryType()
 					.equalsIgnoreCase("S")) {
@@ -2698,9 +2699,10 @@ public class SmApplicationBackingBean extends
 		if (shareHolderBean.getAuthorizedFlg() == 0) {
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
 		}
-		
-		if(shareHolderBean.isDirector() || shareHolderBean.isDirector() || shareHolderBean.isHigherManagement()){
-			//do nothing
+
+		if (shareHolderBean.isDirector() || shareHolderBean.isDirector()
+				|| shareHolderBean.isHigherManagement()) {
+			// do nothing
 		} else {
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
@@ -2830,7 +2832,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
 		// getManagedBean().setSelectedPersonnel(null);
-		
+
 		assignSelShareHolderAddress(shr);
 		getManagedBean().setSelectedShareHolder(shr);
 		manageEquityLimit(shr);
@@ -3958,7 +3960,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setMissinDocs(new ArrayList<SmApplSupportDoc>());
 		for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 				.getSmApplSupportDocs()) {
-			if (doc.getVerifiedFlg() != 1) {
+			if (doc.getVerifiedFlg() == null || doc.getVerifiedFlg() != 1) {
 				getManagedBean().getMissinDocs().add(doc);
 			}
 		}
@@ -4125,9 +4127,13 @@ public class SmApplicationBackingBean extends
 						.getSmSupplierCategories()) {
 					if (cat.getRecordStatusFlg().compareTo(
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
-						if ((getManagedBean().isPoUser() && cat.getPoDecFlg().compareTo(new Integer(1)) == 0)
-								|| (getManagedBean().isApproverUser() && cat
-										.getApprvrDecFlg().compareTo(new Integer(1)) == 0)) {
+						if ((getManagedBean().isPoUser()
+								&& cat.getPoDecFlg() != null && cat
+								.getPoDecFlg().compareTo(new Integer(1)) == 0)
+								|| (getManagedBean().isApproverUser()
+										&& cat.getApprvrDecFlg() != null && cat
+										.getApprvrDecFlg().compareTo(
+												new Integer(1)) == 0)) {
 							cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
 						} else {
 							cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -5341,10 +5347,11 @@ public class SmApplicationBackingBean extends
 		if (getManagedBean().getSelectedShareHolder().isEquityOwner()
 				|| getManagedBean().getSelectedShareHolder().isDirector()
 				|| getManagedBean().getSelectedShareHolder()
-						.isHigherManagement()){
+						.isHigherManagement()) {
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(false);
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(false);
-			assignSelShareHolderAddress(getManagedBean().getSelectedShareHolder());
+			assignSelShareHolderAddress(getManagedBean()
+					.getSelectedShareHolder());
 		} else {
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
@@ -5388,13 +5395,12 @@ public class SmApplicationBackingBean extends
 		String revSupUrl = portalUrl + currentUrl
 				+ "/view-revision-application?applicationNo="
 				+ getManagedBean().getSmAppl().getApplNo() + "_SUP";
-		
+
 		String rA = getManagedBean().getSmAppl().getApprovedSerFile();
-		String revApp = rA.substring(rA.lastIndexOf('/') + 1, rA.indexOf("_APP"));
+		String revApp = rA.substring(rA.lastIndexOf('/') + 1,
+				rA.indexOf("_APP"));
 		String revAppUrl = portalUrl + currentUrl
-				+ "/view-revision-application?applicationNo="
-				+ revApp + "_APP";
-		
+				+ "/view-revision-application?applicationNo=" + revApp + "_APP";
 
 		getManagedBean().setRevSupUrl(revSupUrl);
 		getManagedBean().setRevAppUrl(revAppUrl);
