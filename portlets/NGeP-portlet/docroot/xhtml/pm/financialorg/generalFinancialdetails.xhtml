@@ -14,12 +14,12 @@
 						value="#{lbl['lbl.pm.financialorg.regType']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="regType"
-						label="#{lbl['lbl.pm.financialorg.regType']}" required="true"
+						
 						value="#{financialOrgBackingBean.managedBean.regTypeId}"
 						style="width: 276px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.financialOrgRegType)}" />
-					</p:selectOneMenu> <p:message id="regTypeMsg" for="regType" display="icon" /></td>
+					</p:selectOneMenu> </td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.regNo']}" />
@@ -27,7 +27,7 @@
 				<td><p:inputText id="bizRegNo"
 						label="#{lbl['lbl.pm.financialorg.regNo']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.bizRegNumber}"
-						required="true" size="40" maxlength="20" /> <p:message
+						required="true" size="40" maxlength="20" /></td> <td><p:message
 						id="bizRegNoMsg" for="bizRegNo" display="icon" /></td>
 			</tr>
 			<tr>
@@ -36,7 +36,7 @@
 				<td><p:inputText id="finOrgName"
 						label="#{lbl['lbl.pm.financialorg.name']}"
 						value="#{financialOrgBackingBean.managedBean.financialOrg.finOrgName}"
-						required="true" size="40" maxlength="100" /> <p:message
+						required="true" size="40" maxlength="100" /></td><td> <p:message
 						id="finOrgNameMsg" for="finOrgName" display="icon" /></td>
 			</tr>
 			<tr>
@@ -51,7 +51,7 @@
 							value="#{financialOrgBackingBean.managedBean.countryList}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 
-					</p:selectOneMenu> <p:message id="countryMsg" for="country" display="icon" /></td>
+					</p:selectOneMenu></td><td> <p:message id="countryMsg" for="country" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.financialorg.status']}" />
@@ -63,7 +63,7 @@
 						style="width: 135px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
-					</p:selectOneMenu> <p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
+					</p:selectOneMenu></td><td> <p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
 
 			</tr>
 		</table>

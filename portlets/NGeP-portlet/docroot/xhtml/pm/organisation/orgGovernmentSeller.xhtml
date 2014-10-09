@@ -4,7 +4,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:panel>
+	<p:panel header="#{lbl['lbl.pm.header.general.org.paymentBank']}"
+		toggleable="true">
 		<p:dataTable id="govorgid" var="financialacc"
 			value="#{organisationBackingBean.managedBean.pmFinancialAcc}"
 			rowKey="#{financialacc}" rowIndexVar="rowIndex"
@@ -14,26 +15,25 @@
 
 			<ac:paginator for="financialacc" />
 			<p:column headerText="#{lbl['lbl.pm.financialorg.paymentbankname']}">
-				<p:selectOneMenu
-							value="#{financialacc.financialAccId}" id="finorgn"
-							label="#{lbl['lbl.pm.financialorg.paymentbankname']}" required="true"
-							style="margin-bottom: 5px;">
-							<f:selectItem itemValue=" " itemLabel="---Select---" />
-							<f:selectItems var="finorgLs"
-								value="#{organisationBackingBean.managedBean.pmFinancialOrg}"
-								itemLabel="#{finorgLs.finOrgName}"
-								itemValue="#{finorgLs.financialOrgId}" />
+				<p:selectOneMenu value="#{financialacc.financialAccId}" id="finorgn"
+					label="#{lbl['lbl.pm.financialorg.paymentbankname']}"
+					required="true" style="margin-bottom: 5px;">
+					<f:selectItem itemValue=" " itemLabel="---Select---" />
+					<f:selectItems var="finorgLs"
+						value="#{organisationBackingBean.managedBean.pmFinancialOrg}"
+						itemLabel="#{finorgLs.finOrgName}"
+						itemValue="#{finorgLs.financialOrgId}" />
 
-						</p:selectOneMenu> <p:message id="finorgnMsg" for="finorgn" display="icon" />
+				</p:selectOneMenu>
+				<p:message id="finorgnMsg" for="finorgn" display="icon" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.financialorg.acnumber']}">
 
 				<p:inputText value="#{financialacc.accountNo}" size="15" />
-			</p:column>			
-			
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
-				<p:selectOneMenu
-					value="#{financialacc.recordStatusFlg}"
+				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
 					required="true" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
@@ -49,13 +49,31 @@
 				update="govorgid" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="govorgid"
-				process="@this,govorgid" partialSubmit="true"
+				icon="ui-icon-delete" update="govorgid" process="@this,govorgid"
+				partialSubmit="true"
 				action="#{organisationBackingBean.deleteFinancialAcc}" />
 
 		</div>
 
 
 	</p:panel>
-	
+
+	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
+		toggleable="true">
+		<p:pickList id="approverpickList" var="data" itemValue="#{data}"
+			itemLabel="#{data}"
+			value="#{organisationBackingBean.managedBean.supplierUsers}"
+			showTargetControls="true" filterMatchMode="contains">
+			<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}
+										
+			</f:facet>
+			<f:facet name="targetCaption">#{lbl['lbl.pm.org.selectedUsers']}
+										
+			</f:facet>
+			<p:column style="width:75%;">
+				<h:outputText value="#{data}" />
+			</p:column>
+		</p:pickList>
+	</p:panel>
+
 </ui:composition>

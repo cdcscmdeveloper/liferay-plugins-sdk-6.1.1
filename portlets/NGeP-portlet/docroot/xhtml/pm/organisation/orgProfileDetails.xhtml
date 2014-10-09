@@ -179,10 +179,10 @@
 			</tr>
 		</table>
 	</p:panel>
-	<!-- <ui:fragment
+	<ui:fragment
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
-	</ui:fragment> -->
+	</ui:fragment> 
 
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
@@ -194,13 +194,10 @@
 			</p:tab>
 
 
-			<!-- <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+			 <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab>  -->
-
-
-
+			</p:tab>  
 		</p:tabView>
 	</p:panel>
 

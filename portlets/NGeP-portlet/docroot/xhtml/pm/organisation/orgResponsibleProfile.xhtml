@@ -4,40 +4,48 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
-		toggleable="true">
-		
-		<p:dataTable id="orgRespId" var="org"
-			value="#{organisationBackingBean.managedBean.orgProfileList}"
-			rowKey="#{org}" rowIndexVar="rowIndex"
-			selection="#{organisationBackingBean.managedBean.selectedPmOrgProfile}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
-			<ac:paginator for="org" />
-
-			<p:column headerText="#{lbl['lbl.pm.financialbranch.branchname']}">
-
-				<p:inputText value="#{org.orgCode}" size="40" maxlength="100"/>
-			</p:column>
-
+	<p:panel id="pResponsibleOrg" header="#{lbl['lbl.pm.profiles.authorisation.responsible.org']}" toggleable="true">
+		<br/>
+	   	<p:dataTable id="dtOrgUnit" var="orgUnit" styleClass="dtOrgUnit"
+		     value="#{organisationBackingBean.managedBean.ptjGroups}"
+		     selection="#{organisationBackingBean.managedBean.selectedPtjGroup}" 
+		     selectionMode="single"
+		     rowIndexVar="index" rowKey="#{orgUnit}">   
 			
-
+			<ac:paginator for="dtOrgUnit"/>
+		    
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    	<h:outputText value="#{lbl['lbl.pm.profiles.resorg.table.code']}" />
+			    </f:facet>
+			    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="20" 
+			    	
+	            	update=":form:dtOrgUnit" 
+					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+					value="#{orgUnit.pmOrgProfile.pmOrgValidity.orgCode}" 					
+					saveObject="organisationBackingBean.managedBean.ptjGroups[#{index}].pmOrgProfile">
+				</ac:lov> 
+				  
+		    </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.profiles.resorg.table.name']}" > 
+       			#{orgUnit.pmOrgProfile.pmOrgValidity.orgName}
+	        </p:column>
+	        
+	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+      		    <p:commandLink action="#{organisationBackingBean.deleteOrgUnit(orgUnit)}" 
+      		    	immediate="true" update="dtOrgUnit">
+					<p:graphicImage value="/css/images/design/delete.png"/>
+				</p:commandLink>
+	        </p:column>  
 		</p:dataTable>
+       	<br/>
+       	<br/>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-				process="@this,orgRespId" partialSubmit="true"
-				action="#{organisationBackingBean.addNewPtjAction}"
-				update="orgRespId" icon="ui-icon-add" />
-
-			<p:commandButton value="#{lbl['lbl.so.delete']}"
-				icon="ui-icon-delete" update="orgRespId"
-				process="@this,orgRespId" partialSubmit="true"
-				action="#{organisationBackingBean.deletePtjAction}" />
-
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" partialSubmit="true" immediate="true" 
+		   	 	update="dtOrgUnit" action="#{organisationBackingBean.addOrgUnit()}" />
 		</div>
-		
-
+    	<ac:lovPopup /> 		
 	</p:panel>
 	<p:spacer height="1" />
 

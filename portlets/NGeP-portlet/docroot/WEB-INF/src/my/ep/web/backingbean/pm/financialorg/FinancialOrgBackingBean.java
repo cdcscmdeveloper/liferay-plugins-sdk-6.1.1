@@ -146,6 +146,7 @@ public class FinancialOrgBackingBean extends
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
 						IFinancialOrgSO.class);
+		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
 
 		IParameterSO parameterSO = (IParameterSO) BusinessDelegate
 				.getInstance().getServiceObject(
@@ -156,8 +157,9 @@ public class FinancialOrgBackingBean extends
 		parameterReqDTO.setParameterCode(getManagedBean().getRegTypeId());
 		ParameterResDTO parameterResDTO = parameterSO
 				.retrieveParameterByTypeAndCode(parameterReqDTO);
-		PmFinancialOrg financialOrg = this.getManagedBean().getFinancialOrg();
+		if(!getManagedBean().getRegTypeId().isEmpty()){
 		financialOrg.setCompanyTypeCode(parameterResDTO.getPmParameter());
+}
 		if (financialOrg.isBrandNew()) {
 
 			for (PmFinancialSvc financialSvc : this.getManagedBean()
@@ -269,6 +271,7 @@ public class FinancialOrgBackingBean extends
 			contact.setPmAddressType(addressType);
 			List<PmContact> contactLst = this.getManagedBean().getPmContact();
 			contactLst.add(contact);
+			System.out.println("ContactList"+contactLst.size());
 			addressType.setPmContacts(contactLst);
 			addressType.setPmAddress(address);
 			addressType.setPmFinancialOrg(financialOrg);
@@ -304,11 +307,16 @@ public class FinancialOrgBackingBean extends
 		FinancialOrgResDTO resDTO = finSO
 				.retrieveFinancialOrgDetailsById(reqDTO);
 		financialOrg = resDTO.getPmFinancialOrg();
+		/*if(financialOrg.getCompanyTypeCode().getParameterCode().isEmpty() || financialOrg.getCompanyTypeCode().getParameterCode()!=null){
+		this.getManagedBean().setRegTypeId(null);
+		}
+		else{
 		getManagedBean().setRegTypeId(
 				financialOrg.getCompanyTypeCode().getParameterCode());
+		}*/
 		getManagedBean().setFinancialOrg(financialOrg);
 		getManagedBean().setPmFinancialSvc(financialOrg.getPmFinancialSvcs());
-		// financial org Address
+	
 		// financial org Address
 		List<PmAddressType> finAddressTypes = resDTO.getPmFinancialOrg()
 				.getPmAddressTypes();

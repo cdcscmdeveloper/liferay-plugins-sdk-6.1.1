@@ -261,6 +261,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		}
 		if (locationType
 				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
+			retrievePmStateList();
 			DivisionReqDTO divisionReqDTO = new DivisionReqDTO();
 			divisionReqDTO.setDivisionId(locationId);
 			IDivisionSO divisionSO = BusinessDelegate.getInstance()
@@ -268,6 +269,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							IDivisionSO.class);
 			DivisionResDTO resDTO = divisionSO
 					.retrieveDivisionDtlById(divisionReqDTO);
+			System.out.println("StateID:::"+resDTO.getPmDivision().getPmState().getStateId());
+			this.getManagedBean().getDivision().getPmState().setStateId(resDTO.getPmDivision().getPmState().getStateId());
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
 		}
 		if (locationType

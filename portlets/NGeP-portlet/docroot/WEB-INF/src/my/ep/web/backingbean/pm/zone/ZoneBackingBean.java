@@ -81,18 +81,18 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IZoneSO.class);
-		if (getManagedBean().getSelectedZones().isEmpty()) {
+		if (getManagedBean().getZoneStateList().isEmpty()) {
 			throw new EpException(MessageConst.ERROR_770051);
 		}
-		List<PmZoneState> zones = getManagedBean().getSelectedZones();
+		List<PmZoneState> zones = getManagedBean().getZoneStateList();
 
 		PmZone zone = this.getManagedBean().getPmZone();
 		if (zone.isBrandNew()) {
 
-			List<PmZoneState> stateZones = getManagedBean().getSelectedZones();
+			List<PmZoneState> stateZones = getManagedBean().getZoneStateList();
 
 			for (PmZoneState zoneSta : stateZones) {
-				getManagedBean().setSelectedZones(stateZones);
+				getManagedBean().setZoneStateList(stateZones);
 
 				zoneSta.setPmZone(zone);
 
@@ -123,7 +123,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 		ZoneResDTO resDTO = zoneSO.retrieveZoneStateByZoneId(zoneReqDTO);
 		getManagedBean().setPmZone(resDTO.getPmZone());
-		getManagedBean().setSelectedZones(resDTO.getPmZone().getPmZoneStates());
+		getManagedBean().setZoneStateList(resDTO.getPmZone().getPmZoneStates());
 
 		this.getManagedBean().setZoneStateList(
 				resDTO.getPmZone().getPmZoneStates());
