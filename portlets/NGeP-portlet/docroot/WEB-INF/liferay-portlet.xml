@@ -1752,6 +1752,16 @@
 		<css-class-wrapper>pm-UOM-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>RuleConfigue</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>ruleconfig-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>pmBusinessNature</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>

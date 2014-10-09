@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+			<h:panelGroup>
+		
+          <p:tabMenu id="feeSettingId"
+			activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
+			
+				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.org.item']}"
+					action="#{ruleCatalogueBackingBean.onFeeTabChange('byOrg')}"
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.comodity']}"
+					action="#{ruleCatalogueBackingBean.onFeeTabChange('byComodity')}"
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.contract']}"
+					action="#{ruleCatalogueBackingBean.onFeeTabChange('byContract')}"
+					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				
+			</p:tabMenu>
+
+
+			<c:choose>
+				<c:when
+					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 0}">
+					<ui:include src="feeSettingByOrg.xhtml"></ui:include>
+				</c:when>
+				<c:when
+					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 1}">
+					<ui:include src="feeSettingByCommodity.xhtml" />
+				</c:when>
+				<c:when
+					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 2}">
+					<ui:include src="feeSettingByContract.xhtml"></ui:include>
+				</c:when>
+
+			</c:choose>
+
+		</h:panelGroup>
+
+</ui:composition>

@@ -5183,7 +5183,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>RuleConfigue</portlet-name>
-		<display-name>Rule Configue</display-name>
+		<display-name>System Parameter</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>

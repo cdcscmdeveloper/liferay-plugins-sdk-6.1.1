@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:outputPanel id="generalSeting">
+
+		<div style="text-align: right; min-height: 40px;">
+
+			<h:panelGroup>
+				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
+					icon="ui-icon-save"
+					action="#{ruleCatalogueBackingBean.saveGeneralSetting}"
+					update="@form"></p:commandButton>
+
+			</h:panelGroup>
+
+		</div>
+		<p:panel header="#{lbl['lbl.pm.settings.general.setting']}"
+			toggleable="true" style="width: 100%;">
+
+			<table style="width: 100%; margin-top: 10px;">
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.settings.date.format']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatdate}"
+							style="width:128px;">
+							<f:selectItem itemLabel="dd/MM/yyyy" itemValue="dd/MM/yyyy" />
+							<f:selectItem itemLabel="dd/MM/yy" itemValue="dd/MM/yy" />
+							<f:selectItem itemLabel="dd/MMM/yy" itemValue="dd/MMM/yy" />
+							<f:selectItem itemLabel="dd-MM-yyyy" itemValue="dd-MM-yyyy" />
+							<f:selectItem itemLabel="dd-MM-yy" itemValue="dd-MM-yy" />
+							<f:selectItem itemLabel="dd-MMM-yyyy" itemValue="dd-MMM-yyyy" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.financial.year']}" /></td>
+					<td><p:inputText
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.financialYear}"
+							disabled="true" size="8" /></td>
+
+				</tr>
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.settings.time.format']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatTime}"
+							style="width:128px;">
+							<f:selectItem itemLabel="12H" itemValue="12H" />
+							<f:selectItem itemLabel="24H" itemValue="24H" />
+							<f:selectItem itemLabel="HH:mm" itemValue="HH:mm" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.gl.account']}" /></td>
+					<td><ac:lov id="lovGLAccount" lovId="PM_GL_ACCOUNT"
+							update="@form" size="15" headerText="GL Account Lov"
+							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount"
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount.glAccCode}">
+						</ac:lov> <ac:lovPopup /></td>
+				</tr>
+				<tr style="height: 30px;">
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.profiles.preferences.noformat']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.formatNumber}"
+							style="width:128px;">
+							<f:selectItem itemLabel="#,##0" itemValue="#,##0" />
+							<f:selectItem itemLabel="###0" itemValue="###0" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.pm.vot.fund.code']}" /></td>
+					<td><ac:lov id="lovVotFund" lovId="PM_VOT_FUND"
+							update="@form" size="15" headerText="Vot Fund Lov"
+							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund"
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund.votFundCode}">
+						</ac:lov> <ac:lovPopup /></td>
+				</tr>
+				<tr style="height: 30px;">
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.settings.notification.language']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.preferredLanguage}"
+							style="width:128px;">
+							<f:selectItem itemLabel="en" itemValue="en" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+
+			</table>
+		</p:panel>
+
+	</p:outputPanel>
+
+</ui:composition>
