@@ -10,7 +10,9 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
@@ -98,6 +100,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private PmUser contractSignerUser;
 	private String docType;
 	private Object payLoadData;
+	private PmUser approverUser;
+	private ScLoiApproval scLoiApproval;
 	
 	private List<ScQtCommitteeActivity> ecActivityList;
 	private List<ScQtCommitteeActivity> tecActivityList;
@@ -106,7 +110,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> meetingAttendanceList;
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
-	private List<Long> recommendDtlIds;
+	private List<String> recommendDtlIds;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -858,11 +862,29 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.selectedMeetingAttList = selectedMeetingAttList;
 	}
 
-	public List<Long> getRecommendDtlIds() {
+
+
+	public ScLoiApproval getScLoiApproval() {
+		return scLoiApproval;
+	}
+
+	public void setScLoiApproval(ScLoiApproval scLoiApproval) {
+		this.scLoiApproval = scLoiApproval;
+	}
+
+	public PmUser getApproverUser() {
+		return approverUser;
+	}
+
+	public void setApproverUser(PmUser approverUser) {
+		this.approverUser = approverUser;
+	}
+
+	public List<String> getRecommendDtlIds() {
 		return recommendDtlIds;
 	}
 
-	public void setRecommendDtlIds(List<Long> recommendDtlIds) {
+	public void setRecommendDtlIds(List<String> recommendDtlIds) {
 		this.recommendDtlIds = recommendDtlIds;
 	}
 	
