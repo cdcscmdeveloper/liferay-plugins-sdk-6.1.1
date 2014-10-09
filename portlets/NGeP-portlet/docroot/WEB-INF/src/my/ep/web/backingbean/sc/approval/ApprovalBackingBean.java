@@ -337,6 +337,13 @@ public class ApprovalBackingBean extends
 			// QTCommitteBackingBean backingBean= new QTCommitteBackingBean();
 			this.getManagedBean().setApprovalType(
 					ApprovalCategory.COMMITTEE_APPROVAL.dispalyName());
+			
+			scQtApproval = getApproval(qtId,
+					ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+			scQtApproval.setScQtApprovalRemarks(initializeRemarks(scQtApproval, null,
+					scQtApproval.getScQtApprovalRemarks(),
+					ScQtApprovalRemark.class));
+			
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							ICommitteSO.class);
@@ -356,7 +363,7 @@ public class ApprovalBackingBean extends
 			this.getManagedBean().setQtCommittes(qtcomSearchBean);
 			List<TabBean> tabBeans = constructCommitteTabBean(qtcomSearchBean
 					.getResultList());
-			initializeRemark(qtcomSearchBean.getResultList());
+			//initializeRemark(qtcomSearchBean.getResultList());
 			this.getManagedBean().getQt()
 					.setScQtCommittees(qtcomSearchBean.getResultList());
 			this.getManagedBean().setScCommitteeMemberTabList(tabBeans);
@@ -421,6 +428,14 @@ public class ApprovalBackingBean extends
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
 					|| SCProcessNameConst.REVISE_COMMITTEE
 							.equalsIgnoreCase(taskName)) {
+				// setting the remarks to ScQtApprovalRemarks
+				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				if (null != approval && null != approval.getQtApprovalId()) {
+					finalizeRemarks(approval.getScQtApprovalRemarks());
+					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
+					qtApproval.add(approval);
+					qt.setScQtApprovals(qtApproval);
+				}
 
 				List<TabBean> qtCommittes = this.getManagedBean()
 						.getScCommitteeMemberTabList();
@@ -631,7 +646,17 @@ public class ApprovalBackingBean extends
 	 * @param qt
 	 */
 	private void removeEmptyRemarks(ScQt qt) {
-		List<ScQtCommittee> qtcommittees = qt.getScQtCommittees();
+		List<ScQtApproval> qtApprovals = qt.getScQtApprovals();
+		for (ScQtApproval approval : qtApprovals) {
+			List<ScQtApprovalRemark> remarks = approval.getScQtApprovalRemarks();
+			for (int i = 0; i < remarks.size(); i++) {
+				if (remarks.get(i).getRemark() == null
+						|| "".equals(remarks.get(i).getRemark())) {
+					remarks.remove(i);
+				}
+			}
+		}
+		/*List<ScQtCommittee> qtcommittees = qt.getScQtCommittees();
 		for (ScQtCommittee qtCommittee : qtcommittees) {
 			List<ScQtCommitteRemarks> remarks = qtCommittee
 					.getQtCommitteRemarks();
@@ -641,7 +666,7 @@ public class ApprovalBackingBean extends
 					remarks.remove(i);
 				}
 			}
-		}
+		}*/
 	}
 
 	public void roleChangeListner(ScCommitteeMember member) {
