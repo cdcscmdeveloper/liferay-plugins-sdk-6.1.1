@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
@@ -20,7 +21,6 @@ import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
-import my.ep.persistence.entity.sc.bidding.ScBidPackage;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -79,7 +79,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private List<ScBidPrice> lastBidPricesList;
 	private List<ScBidItem> scBidItemsList;
 
-	private ScBidItem selectedtem;
+	private ScBidItem selectedBidItem;
 
 	
 	
@@ -91,7 +91,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	private Long supplierCode;
 	
-	private List<ScBidPackage> bidPackages;
+	private List<BidPackageBean> bidPackages;
 	private BigDecimal lowestNonBumiOfferedPrice;
 	
 	private List<TplSpecZoneDtl> zoneDetailsList;
@@ -506,7 +506,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the bidPackages
 	 */
-	public List<ScBidPackage> getBidPackages() {
+	public List<BidPackageBean> getBidPackages() {
 		return bidPackages;
 	}
 
@@ -515,7 +515,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @param bidPackages the bidPackages to set
 	 */
-	public void setBidPackages(List<ScBidPackage> bidPackages) {
+	public void setBidPackages(List<BidPackageBean> bidPackages) {
 		this.bidPackages = bidPackages;
 	}
 
@@ -710,38 +710,34 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.rendered = rendered;
 	}
 
-
-
-	/**
-	 * @return the selectedtem
-	 */
-	public ScBidItem getSelectedtem() {
-		return selectedtem;
-	}
-
 	/**
 	 * @return the historyPrice
 	 */
 	public ScBidPrice getHistoryPrice() {
 		return historyPrice;
 	}
-
-
+	
 	/**
 	 * @param historyPrice the historyPrice to set
 	 */
 	public void setHistoryPrice(ScBidPrice historyPrice) {
 		this.historyPrice = historyPrice;
 	}
-
+	
 	/**
-	 * @param selectedtem the selectedtem to set
+	 * @return the selectedBidItem
 	 */
-	public void setSelectedtem(ScBidItem selectedtem) {
-		this.selectedtem = selectedtem;
+	public ScBidItem getSelectedBidItem() {
+		return selectedBidItem;
 	}
 
-	
+	/**
+	 * @param selectedBidItem the selectedBidItem to set
+	 */
+	public void setSelectedBidItem(ScBidItem selectedBidItem) {
+		this.selectedBidItem = selectedBidItem;
+	}
+
 	/**
 	 * @return the bidHistoryPriceList
 	 */

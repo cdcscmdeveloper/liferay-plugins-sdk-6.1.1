@@ -11,7 +11,8 @@
 		<p:dataTable id="biddingListBMBI" selectionMode="single"
 			value="#{biddingBB.managedBean.scheduledBid.scBidItems}"
 			var="bidItem" 
-			rowKey="#{bidItem.bidItemId}">
+			rowKey="#{bidItem.bidItemId}"
+			selection="#{biddingBB.managedBean.selectedBidItem}">
 
 			<p:ajax event="rowSelect" listener="#{biddingBB.rowSelectListener}"
 				update="@([id$=itemPriceLineChartPanel])" />
@@ -48,8 +49,10 @@
 
 	<p:spacer height="10"></p:spacer>
 
+	<h:panelGroup id="itemPriceLineChartPanel">
 	<p:panel header="#{lbl['lbl.sc.bid.summary']}" toggleable="true"
-		id="itemPriceLineChartPanel">
+		rendered="#{!empty biddingBB.managedBean.selectedBidItem}">
+		
 		<p:spacer height="5"></p:spacer>
 
 		<div align="center">
@@ -129,8 +132,8 @@
 			</p:column>
 
 		</p:dataTable>
-
 	</p:panel>
+	</h:panelGroup>
 
 	<p:panel id="historyPricePopupPanel">
 		<p:dialog rendered="#{biddingBB.managedBean.rendered}"
