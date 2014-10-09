@@ -7,86 +7,88 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<p:panel header="Financial"  toggleable="true">
+		<p:panel header="#{lbl['lbl.sm.manufacturing.financial']}"  toggleable="true">
 			<p:dataTable var="manuList"
 				value="#{svoSiteVisitBackingBean.managedBean.manuFactList}">
-				<p:column headerText="No.">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 					<p:outputLabel value="#{manuList.manuNo}" />
 				</p:column>
-				<p:column headerText="Documents">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.documents']}">
 					<p:outputLabel value="#{manuList.manuDoc}" />
 				</p:column>
-				<p:column headerText="Referee">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.referee']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Date Issued">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.dateissued']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Notes">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.notes']}">
 					<p:outputLabel />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Additional Documents"  toggleable="true">
+		<p:panel header="#{lbl['lbl.sm.manufacturing.additional.docs']}"  toggleable="true">
 			<p:dataTable>
-				<p:column headerText="No.">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Documents">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.documents']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Referee">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.referee']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Date Issued">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.dateissued']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Notes">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.notes']}">
 					<p:outputLabel />
 				</p:column>
 			</p:dataTable>
 
 			<div align="right">
-				<p:commandButton value="Add" />
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" />
 
-				<p:commandButton value="Edit" />
+				<p:commandButton value="#{lbl['lbl.sm.button.edit']}" />
 
-				<p:commandButton value="Delete" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" />
 			</div>
 		</p:panel>
 
-		<p:panel header="Machine/Equipment List"  toggleable="true">
+		<p:panel header="#{lbl['lbl.sm.manufacturing.equipmnt.mchne']}"  toggleable="true">
 			<p:dataTable>
-				<p:column headerText="No.">
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Type of Machine/ Equipment">
+				<p:column headerText="#{lbl['lbl.sm.manufacturing.type.machine']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Brand">
+				<p:column headerText="#{lbl['lbl.sm.manufacture.brand']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Function">
+				<p:column headerText="#{lbl['lbl.sm.machine.function']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Qty">
+				<p:column headerText="#{lbl['lbl.sm.machine.quantity']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Value(RM)">
+				<p:column headerText="#{lbl['lbl.sm.equiStatus.valTabHdr']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Purchasing Method">
+				<p:column headerText="#{lbl['lbl.sm.machine.purMthd']}">
 					<p:outputLabel />
 				</p:column>
-				<p:column headerText="Guarantor Name">
+				<p:column headerText="#{lbl['lbl.sm.machine.guarnName']}">
 					<p:outputLabel />
 				</p:column>
 			</p:dataTable>
 			<div align="right">
-				<p:commandButton value="Add" />
-				<p:commandButton value="Edit" />
-				<p:commandButton value="Delete" />
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" />
+
+				<p:commandButton value="#{lbl['lbl.sm.button.edit']}" />
+
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" />
 			</div>
 		</p:panel>
 

@@ -5,10 +5,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Site Visit Details" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.sitevist.details']}" toggleable="true">
 		<table class="rptTbl">
 			<tr>
-				<td><p:outputLabel value="Area" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.area']}" /></td>
 				<td colspan="3"><p:selectOneRadio id="idArea">
 						<f:selectItem itemLabel="Lembah Klang" itemValue="lk" />
 						<f:selectItem itemLabel="Luar Lembah Klang" itemValue="llk" />
@@ -71,15 +71,15 @@
 		<!-- 		</table> -->
 	</p:panel>
 
-	<p:panel header="Site Visit Check List" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.svo.sitevisit.chcklist']}" toggleable="true">
 		<p:dataTable>
-			<p:column headerText="Description">
+			<p:column headerText="#{lbl['lbl.sm.sitevist.description']}">
 			</p:column>
 
-			<p:column headerText="Date(if applicable)">
+			<p:column headerText="#{lbl['lbl.sm.sitevist.date.ifappl']}">
 			</p:column>
 
-			<p:column headerText="Remarks">
+			<p:column headerText="#{lbl['lbl.sm.sitevist.remarks']}">
 			</p:column>
 		</p:dataTable>
 	</p:panel>
