@@ -1,0 +1,94 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+
+	<p:panel header="#{lbl['lbl.sc.item.details']}" toggleable="true">
+		<p:dataTable id="itemListTbl" var="item"
+			value="#{suppFinalBiddingBackingBean.managedBean.biddingItemList}"
+			rows="10"
+			selection="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem}"
+			rowKey="#{item.bidItemId}" rowIndexVar="rowIndex" style="width:100%"
+			selectionMode="single">
+			<ac:paginator for="itemListTbl" />
+
+			<p:ajax event="rowSelect" listener="#{suppFinalBiddingBackingBean.selectBiddingItem}" update="@([id$=supplierItemTbl])" />
+
+			<p:column headerText="#{lbl['lbl.sc.item.name']}">
+				<h:outputText value="#{item.scRequestItem.itemName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.uom']}">
+				<h:outputText value="#{item.scRequestItem.uom.uomName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+				<h:outputText value="#{item.qty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	
+	<p:spacer height="10"></p:spacer>
+	
+	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
+		
+		<p:dataTable id="supplierItemTbl" var="price"
+			value="#{suppFinalBiddingBackingBean.managedBean.biddingItemPriceList}"
+			rows="10"
+			rowKey="#{price.bidPriceId}" rowIndexVar="rowIndex">
+			<ac:paginator for="supplierItemTbl" />
+			
+			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+				<h:outputText value="#{price.ranking}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				<p:commandLink update="@([id$=suppDtlPopUp])"
+					action="#{suppFinalBiddingBackingBean.showSupplierDetails}"
+					oncomplete="suppDtlWidgetVar.show();">
+					<f:setPropertyActionListener value="#{price}" target="#{suppFinalBiddingBackingBean.managedBean.shortlistedSupplier}" />
+					<h:outputText value="#{price.scBidSupplierItem.scBidSupplier.smSupplier.companyName}" />
+				</p:commandLink>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.bumiputera.status']}">
+				<h:outputText value="#{(price.scBidSupplierItem.scBidSupplier.smSupplier.bumi) ? 'Yes' : 'No'}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.starting.price']}">
+				<h:outputText style="float : right" value="#{price.scBidSupplierItem.itemStartPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}">
+				<div style="align: right">
+					<h:outputText style="float : right" value="#{price.bidPrice}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</div>
+
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
+				<h:outputText style="float : right" value="#{price.scBidSupplierItem.itemStartPrice - price.bidPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
+				<h:outputText style="float : right" value="#{1000}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

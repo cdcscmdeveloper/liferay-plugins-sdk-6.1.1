@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -22,8 +23,12 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
+import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sc.bidding.ScBidItem;
+import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -31,18 +36,16 @@ import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBiddingManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 
 /**
  * @author Faradiana
- * Supplier Finalization Backing Bean
- */
-/**
- * @author User
- *
+ * Supplier Finalization online Bidding Backing Bean
  */
 @ManagedBean(name = "suppFinalBiddingBackingBean")
 @RequestScoped
@@ -52,20 +55,36 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 	private int currentTab;
 	
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY = 0;
-	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ENDORSEMENT = 1;
-	
-	//temporary
-	Long qtId = 146L;
-	String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
+	public static final int ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT = 1;
+	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
 	
 	public SupplierFinalizationBiddingBackingBean() {
-		if(getManagedBean().getScQt() == null){
-			retriveQTDetails();
-		}
-		retrieveSuppFinalization();
+		//preRenderView();
 	}
 	
-	public void retriveQTDetails() {
+	public void preRenderView() {
+		debugLogger("preRenderView");
+
+		try {
+			//SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			//Long qtId = Long.valueOf(dataType.getQtId());
+			String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
+			Long qtId = 2923L;
+
+			renewSesionObject();
+			getManagedBean().setCommitteeType(committeeType);
+			retriveQTDetails(qtId);
+			retrieveSupplierFinalization(qtId);
+			retrieveBiddingSummary();
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		}
+	}
+	
+	public void retriveQTDetails(Long qtId) {
 		IQTDetailSO qtDetailSO;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -82,46 +101,80 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 			qtDetailSO = null;
 		}
 	}
-
-	private void retrieveSuppFinalization() {
+	
+	public void retrieveSupplierFinalization(Long qtId) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(qtId);//FIXME
+			reqDTO.setQtId(qtId);
 			
-			//SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSuppFinalizationDtls(reqDTO);
-			//getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.retrieveSupplierFinalization(reqDTO);
+			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+			getManagedBean().setScQtFinalization(scQtFinalization);
+
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
 	
+
 	/**
 	 * To retrieve the details of Online Bidding Summary
 	 */
 	public void retrieveBiddingSummary() {
 		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY);
-		//TODO
-		/*IQTMeetingSO meetingSO;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+		Long qtId = getManagedBean().getScQt().getQtId();	
+		String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);
-			reqDTO.setCommitteType(committeeType);
-			reqDTO.setIsAttended(null);
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		try {
+			scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
+			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+			reqDTO.setQtID(qtId);
 			
-			MeetingResDTO resDTO = meetingSO.retrieveSignOffCommitteeListByCommType(reqDTO);
-			if (resDTO.getCommitteMembers() != null) {
-				this.getManagedBean().setCommitteeEndorsementList(resDTO.getCommitteMembers());
+			ScheduleBiddingResDTO resDTO = new ScheduleBiddingResDTO();
+			
+			if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)){
+				resDTO = scheduleBiddingSO.retrieveBiddingPackagePrice(reqDTO);
+				if (resDTO.isSuccessful()) {
+					List<ScBidPrice> biddingPackagePriceList = resDTO.getBiddingPackagePriceList();
+					getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+				}
+			}else if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)){
+				resDTO = scheduleBiddingSO.retrieveBiddingItem(reqDTO);
+				if (resDTO.isSuccessful()) {
+					List<ScBidItem> biddingItemList = resDTO.getBiddingItemList();
+					getManagedBean().setBiddingItemList(biddingItemList);
+				}
 			}
-		} finally {
-			meetingSO = null;
-		}*/
+		}finally {
+			scheduleBiddingSO = null;
+		}
 	}
 	
+	public void selectBiddingItem(SelectEvent event) {
+		ScBidItem bidItem = (ScBidItem) event.getObject();
+
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		try {
+			scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
+			
+			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+			reqDTO.setBidItemId(bidItem.getBidItemId());
+
+			ScheduleBiddingResDTO resDTO = scheduleBiddingSO.retrieveBiddingItemPrice(reqDTO);
+			if (resDTO.isSuccessful()) {
+				List<ScBidPrice> biddingItemPriceList = resDTO.getBiddingItemPriceList();
+				getManagedBean().setBiddingItemPriceList(biddingItemPriceList);
+			}
+		}finally {
+			scheduleBiddingSO = null;
+		}
+	}
+	
+	/*
 	public void retrieveEndorsement() {
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		if(scQtFinalization.getOnlineBiddingEndorse().equals(ParameterConst.ONLINE_BIDDING_MEETING)){
@@ -129,18 +182,21 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 		}else{
 			retrieveOfflineEndorsement();
 		}
-	}
+	}*/
 	
 	/**
 	 * To retrieve the list of Committee for Endorsement (online endorsement)
 	 */
-	private void retrieveOnlineEndorsement() {
+	public void retrieveOnlineEndorsement() {
+		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT);
+		
 		IQTMeetingSO meetingSO;
 		try {
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-
+			String committeeType = getManagedBean().getCommitteeType();
+			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);
+			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setCommitteType(committeeType);
 			reqDTO.setIsAttended(null);
 			
@@ -156,25 +212,10 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 	/**
 	 * To retrieve the offline Endorsement (escalation)
 	 */
-	private void retrieveOfflineEndorsement() {
-		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_ENDORSEMENT);
+	public void retrieveOfflineEndorsement() {
+		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT);
 		//TODO
-		/*IQTMeetingSO meetingSO;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(qtId);
-			reqDTO.setCommitteType(committeeType);
-			reqDTO.setIsAttended(null);
-			
-			MeetingResDTO resDTO = meetingSO.retrieveSignOffCommitteeListByCommType(reqDTO);
-			if (resDTO.getCommitteMembers() != null) {
-				this.getManagedBean().setCommitteeEndorsementList(resDTO.getCommitteMembers());
-			}
-		} finally {
-			meetingSO = null;
-		}*/
+		
 	}
 	
 	/**
