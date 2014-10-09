@@ -112,7 +112,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Long currentPtjGroupId;
 	private Long currentPreparedOrgId;
 	
-	
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
 	private DualListModel<String> approverModel;

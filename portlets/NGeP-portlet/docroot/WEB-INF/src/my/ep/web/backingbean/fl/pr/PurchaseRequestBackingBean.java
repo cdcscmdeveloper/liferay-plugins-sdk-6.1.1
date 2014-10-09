@@ -438,7 +438,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 		//initialize all the COA map
-		getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+		getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
 		
 		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
 		int deliveryTerm = 0;
@@ -816,6 +816,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
 						|| purchaseItem.getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER)){
 					getManagedBean().setPmPriceType(purchaseItem.getPriceType());
+					flItemAddr.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					reqDTO.setRequestSupplierItemId(purchaseItem.getScRequestSupplierItem().getRequestSupplierItemId());
 					reqDTO.setPriceType(purchaseItem.getPriceType());
 					reqDTO.setOrderQuantity(new BigDecimal(1));
@@ -880,8 +881,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		// Tier only
-		if(flItemAddr.getScSupplierItemPrice() != null 
-				&& getManagedBean().getPmPriceType() != null 
+		if(getManagedBean().getPmPriceType() != null 
 				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER)
 						|| getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_PROMOTION_TIER))){
 			List<FlFulfilmentItemAddr> itemAddrList = null;
@@ -935,7 +935,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					sumOrderQty = sumOrderQty.add(itemAddr.getOrderedQty());	
 				}
 			}
-			reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
+			reqDTO.setRequestSupplierItemId(flItemAddr.getRequestSupplierItemId());
 			reqDTO.setPriceType(getManagedBean().getPmPriceType());
 			reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
 			reqDTO.setOrderQuantity(sumOrderQty);
@@ -956,7 +956,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					reCalSumOrderQty = reCalSumOrderQty.add(itemAddr.getOrderedQty());	
 				}
-				reqDTO.setRequestSupplierItemId(flItemAddr.getScSupplierItemPrice().getScRequestSupplierItem().getRequestSupplierItemId());
+				reqDTO.setRequestSupplierItemId(flItemAddr.getRequestSupplierItemId());
 				reqDTO.setPriceType(getManagedBean().getPmPriceType());
 				reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
 				reqDTO.setOrderQuantity(reCalSumOrderQty);
@@ -2221,7 +2221,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			validateOrderQty();
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
-			getVotFundList(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+			getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
