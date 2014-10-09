@@ -55,8 +55,7 @@
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
 						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
-						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" 
 						update=":form:chargeOrgProfileId" size="50">
 					</ac:lov></td>
 				<td>
