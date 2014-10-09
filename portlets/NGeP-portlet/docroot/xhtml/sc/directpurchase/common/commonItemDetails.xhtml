@@ -113,7 +113,7 @@
 					</f:facet>
 				
 				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierId}" 
-				        id="recSupplier" label="#{lbl['lbl.sc.request.note.rec.suppier']}" disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}"
+				        id="recSupplier" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.rec.suppier']}" disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}"
 				        style="width:125px;" required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					
@@ -145,7 +145,7 @@
 					</f:facet>
 				
 					<p:selectOneMenu id="priceType" style="width:100px;"
-						required="#{!requestNoteDtl.selected}" label="#{lbl['lbl.sc.request.note.price.type']}"
+						required="#{!requestNoteDtl.selected}" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
 						value="#{requestNoteDtl.priceType.parameterId}">
 						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
@@ -189,7 +189,7 @@
 				<p:column>
 					<f:facet name="header" style="width:8%;">
 						<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"/>
-						<ac:iconTooltip value="#{lbl['lbl.sc.deliveryterm.tooltip']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
 					</f:facet>
 					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
 					   disabled="true" size="6" style="margin-top: 8px;"  />
@@ -201,7 +201,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}" />
 					</f:facet>
 					<p:selectOneMenu value="#{requestNoteDtl.assignedUser.userId}" style="width:115px;" 
-					   id="prepareBy" label="#{lbl['lbl.sc.request.note.loa.prepare.by']}" 
+					   id="prepareBy" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.loa.prepare.by']}" 
 					   required="#{!requestNoteDtl.selected}">  
 					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					   <f:selectItems
@@ -219,17 +219,21 @@
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
+						<h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
+							<ac:iconTooltip value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+						</h:panelGroup>
+						
 					</f:facet>
 					<p:inputText style="width:25px;text-align:right;margin-top: 8px;margin-right: 1px;" 
-					   label="#{lbl['lbl.sc.request.note.delivery.term']}"
+					   label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
 					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
 					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
-					    label="Delivery Term Type"
-					    disabled="#{requestNoteDtl.requestItem.quote ne null}"
+					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
+					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
 						value="#{requestNoteDtl.deliverTermType.parameterId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
 						

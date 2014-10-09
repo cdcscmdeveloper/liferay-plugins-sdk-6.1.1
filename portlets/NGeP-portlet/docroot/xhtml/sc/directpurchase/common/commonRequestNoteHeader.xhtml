@@ -31,9 +31,12 @@
 				  
 				    <h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
 				         #{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.sourceMethod, ParameterConst.reqNoteSQMethodCode)}
-				      <p:commandLink  partialSubmit="true" process="@this" action="#{requestNoteBackingBean.showSimpleQuote}">
+				      <p:commandLink  id="viewSimpleQuote" partialSubmit="true" process="@this" action="#{requestNoteBackingBean.showSimpleQuote}">
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
 					 		style="vertical-align:middle" />
+					 	<p:tooltip for="viewSimpleQuote">
+							<h:outputText value="#{lbl['lbl.sc.rn.simple.quote.tooltip']}" escape="false" />
+						</p:tooltip>
 					 </p:commandLink>
 				  </h:panelGroup>
 					
