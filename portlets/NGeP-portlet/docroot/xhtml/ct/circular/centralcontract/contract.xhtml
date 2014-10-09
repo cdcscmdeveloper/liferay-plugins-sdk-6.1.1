@@ -11,10 +11,8 @@
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCircularContracts}" selectionMode="single" 
 			selection="#{centralContractBackingBean.managedBean.selectedCircularContract}" rowKey="#{circularContractsVar}">
 			<ac:paginator for="centralContractDt" />
-			<p:ajax event="rowSelect"
-				update=":form:contractListPnl"
-				process="@this"
-				listener="#{centralContractBackingBean.setContractListner()}" />
+			<p:ajax event="rowSelect" update=":form:contractListPnl"
+				process="@this" listener="#{centralContractBackingBean.setContractListner()}" />
 		    <p:column headerText="#{lbl['lbl.ct.contract.title']}" style="width:32%;white-space:normal;">
 				   <h:outputText value="#{circularContractsVar.ctContract.contractName}" />
 			</p:column>

@@ -8,6 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
     <p:panel id="centralItemId" header="#{lbl['lbl.ct.panel.product']}"   toggleable="true"  toggleSpeed="500">
        <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls']}"/> -->
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.item']}" escape="false"/><br/><br/>
        <h:panelGrid  style="width:100%;">
            <p:dataTable id="centralitemTable" var="data" widgetVar="centralProductObj"
               value="#{contractDetailsBackingBean.managedBean.ctItemList}" rowKey="#{data}"  
