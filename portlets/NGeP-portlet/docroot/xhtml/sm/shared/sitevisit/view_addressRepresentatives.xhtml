@@ -6,45 +6,45 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Site Visit Address" id="pnlSvSelectSvAdd" align="left">
+	<p:panel header="#{lbl['lbl.sm.sitevist.address']}" id="pnlSvSelectSvAdd" align="left">
 		<p:dataTable var="svAdd" id="dtblSelectedSvAdd"
 			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvTemplateAddresses}" >
-			<p:column headerText="Address">
+			<p:column headerText="#{lbl['lbl.sm.address']}">
 					#{svAdd.smSvAddress.smAddress.address1}<br />
 					#{svAdd.smSvAddress.smAddress.address2}<br />
 					#{svAdd.smSvAddress.smAddress.address3}<br />
 					#{svAdd.smSvAddress.smAddress.address4}
 				</p:column>
 
-			<p:column headerText="Post Code">
+			<p:column headerText="#{lbl['lbl.sm.postcode']}">
 				#{svAdd.smSvAddress.smAddress.postcode}
 				</p:column>
 
-			<p:column headerText="City">
+			<p:column headerText="#{lbl['lbl.sm.towncity']}">
 				#{svAdd.smSvAddress.smAddress.pmCity.cityName}
 				</p:column>
 				
-			<p:column headerText="District">
+			<p:column headerText="#{lbl['lbl.sm.district']}">
 				#{svAdd.smSvAddress.smAddress.pmDistrict.districtName}
 				</p:column>
 
-			<p:column headerText="State">
+			<p:column headerText="#{lbl['lbl.sm.state']}">
 				#{svAdd.smSvAddress.smAddress.pmState.stateName}
 				</p:column>
 
-			<p:column headerText="Country">
+			<p:column headerText="#{lbl['lbl.sm.country']}">
 				#{svAdd.smSvAddress.smAddress.pmCountry.countryName}
 			</p:column>
 		</p:dataTable>
 	</p:panel>
 		
-	<p:panel header="Interviewed Representatives" id="pnlIntRep">
+	<p:panel header="#{lbl['lbl.sm.companyinfo.intvw.represent']}" id="pnlIntRep">
 		<p:dataTable id="dtIntRepTbl" var="interviewee" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvInterviewees}">
-			<p:column headerText="Name">
+			<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 				<p:inputText value="#{interviewee.name}" id="intName"  disabled="#{viewFlag}"/>
 			</p:column>
 
-			<p:column headerText="Designation">
+			<p:column headerText="#{lbl['lbl.sm.userprofile.designation']}">
 				<p:inputText value="#{interviewee.designation}" id="intDesignation" disabled="#{viewFlag}" />
 			</p:column>
 		</p:dataTable>

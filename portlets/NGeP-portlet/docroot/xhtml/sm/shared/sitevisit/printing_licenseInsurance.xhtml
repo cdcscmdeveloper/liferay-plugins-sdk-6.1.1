@@ -6,12 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="License/ Insurance">
+	<p:panel header="#{lbl['lbl.sm.sitevisit.printing.license.insurance']}">
 		<p:dataTable var="printingLicenseIns"
 			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvLicenseInsurances}">
 			<p:column>
 				<f:facet name="header">
-				License/ Insurance
+					#{lbl['lbl.sm.sitevisit.printing.license.insurance']}
 				</f:facet>
 
 				<h:outputText
@@ -20,7 +20,7 @@
 
 			<p:column>
 				<f:facet name="header">
-					Closing Date
+					#{lbl['lbl.sm.sitevisit.printing.closing.date']}
 				</f:facet>
 				<p:calendar id="closingDateCalId" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode == 'C'}"
 						navigator="true"  label="Closing Date"
@@ -29,7 +29,7 @@
 						readonlyInput="true" size="30" showOn="button" />
 			</p:column>
 			
-			<p:column headerText="No.">
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
 				<p:inputText value="#{printingLicenseIns.pppmmNo}" disabled="#{viewFlag || printingLicenseIns.pmParameter.parameterCode != 'C'}" />
 			</p:column>
 		</p:dataTable>

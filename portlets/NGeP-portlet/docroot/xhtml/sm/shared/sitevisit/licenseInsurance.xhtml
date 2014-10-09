@@ -6,12 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="License/ Insurance">
+	<p:panel header="#{lbl['lbl.sm.license.insurance']}">
 		<p:dataTable var="dockWorkLicenseIns"
 			value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvLicenseInsurances}">
 			<p:column>
 				<f:facet name="header">
-				License/ Insurance
+					#{lbl['lbl.sm.license.insurance']}
 				</f:facet>
 
 				<h:outputText
@@ -20,10 +20,10 @@
 
 			<p:column>
 				<f:facet name="header">
-					Closing Date
+					#{lbl['lbl.sm.license.closing.date']}
 				</f:facet>
 				<p:calendar id="closingDateCalId"
-						navigator="true"  label="Closing Date"
+						navigator="true"  label="#{lbl['lbl.sm.license.closing.date']}"
 						value="#{dockWorkLicenseIns.expDate}" disabled="#{viewFlag}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						readonlyInput="true" size="30" showOn="button" />

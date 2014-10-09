@@ -5,18 +5,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<p:panel header="Financial"> 
+	<p:panel header="#{lbl['lbl.sm.financial']}"> 
 		<p:dataTable id="dtFinanceDoc" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocLs}" var="finDoc">
 			<p:column>
 					<f:facet name="header">
-						Documents
+						#{lbl['lbl.sm.financial.doc']}
 					</f:facet>
 					<h:outputText value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.financialDocParamMap[finDoc.pmParameter.parameterId].codeName}"></h:outputText>
 			</p:column>
 			
 			<p:column>
 					<f:facet name="header">
-						Reference
+						#{lbl['lbl.sm.financial.reference']}
 					</f:facet>
 					
 					<p:inputText value="#{finDoc.docRef}" disabled="#{viewFlag}" />
@@ -25,10 +25,10 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Data Issued
+						#{lbl['lbl.sm.financial.date.issued']}
 					</f:facet>
 					<p:calendar id="dateIssuedCalId" disabled="#{viewFlag}"
-						navigator="true" label="Date Issued"
+						navigator="true" label="#{lbl['lbl.sm.financial.date.issued']}"
 						value="#{finDoc.docDate}"
 						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 						readonlyInput="true" size="30" showOn="button" />
@@ -36,45 +36,45 @@
 			
 			<p:column>
 					<f:facet name="header">
-						Note
+						#{lbl['lbl.sm.financial.note']}
 					</f:facet>
 					<p:inputText value="#{finDoc.remark}" disabled="#{viewFlag}"></p:inputText>
 			</p:column>
 			</p:dataTable>
 	</p:panel>
 	
-	<p:panel header="Additional Documents" id="pnlAddFinancialDoc">
+	<p:panel header="#{lbl['lbl.sm.financial.add.docs']}" id="pnlAddFinancialDoc">
 		<p:dataTable id="dtAddFinDocId" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.additionalDocLs}"
 			var="addFinDoc" selection="#{svoSiteVisitBackingBean.managedBean.selectedAddFinancialDoc}" rowKey="#{addFinDoc}">
 
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{!viewFlag}"/>
 			<p:column>
 				<f:facet name="header">
-						Documents
+						#{lbl['lbl.sm.financial.doc']}
 					</f:facet>
 				<p:inputText value="#{addFinDoc.docName}" disabled="#{viewFlag}"></p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-						Reference
+						#{lbl['lbl.sm.financial.reference']}
 					</f:facet>
 				<p:inputText value="#{addFinDoc.docRef}" disabled="#{viewFlag}" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-						Data Issued
+						#{lbl['lbl.sm.financial.date.issued']}
 					</f:facet>
 				<p:calendar id="dateIssuedCalId" navigator="true" disabled="#{viewFlag}"
-					label="Date Issued" value="#{addFinDoc.docDate}"
+					label="#{lbl['lbl.sm.financial.date.issued']}" value="#{addFinDoc.docDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 					readonlyInput="true" size="15" showOn="button" />
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-						Note
+						#{lbl['lbl.sm.financial.note']}
 					</f:facet>
 				<p:inputTextarea rows="3" cols="35" autoResize="false" disabled="#{viewFlag}"
 					value="#{addFinDoc.remark}"></p:inputTextarea>
