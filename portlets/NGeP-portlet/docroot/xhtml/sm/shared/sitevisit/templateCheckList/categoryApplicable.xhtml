@@ -6,28 +6,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<p:panel header="Category Applicable"  toggleable="true">
+		<p:panel header="#{lbl['lbl.sm.sitevist.svo.category.applicable']}"  toggleable="true">
 			<p:dataTable>
-				<p:column headerText="No">
-					<f:facet name="header">No</f:facet>
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}">
+					<f:facet name="header">#{lbl['lbl.sm.userprofile.num']}</f:facet>
 				</p:column>
 
-				<p:column headerText="Category Code">
-					<f:facet name="header">Category Code</f:facet>
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catcode']}">
+					<f:facet name="header">#{lbl['lbl.sm.catCodes.catcode']}</f:facet>
 				</p:column>
 
-				<p:column headerText="Category Description">
-					<f:facet name="header">Category Description</f:facet>
+				<p:column headerText="#{lbl['lbl.sm.category.description']}">
+					<f:facet name="header">#{lbl['lbl.sm.category.description']}</f:facet>
 				</p:column>
 
-				<p:column headerText="First Recommendation">
+				<p:column headerText="#{lbl['lbl.sm.sitevist.svo.first.recommendation']}">
 					<f:facet name="header"></f:facet>
 				</p:column>
 			</p:dataTable>
 
 			<div align="right">
-				<p:commandButton value="Add" />
-				<p:commandButton value="Remove" />
+				<p:commandButton value="#{lbl['lbl.sm.button.add']}" />
+				<p:commandButton value="#{lbl['lbl.sm.button.delete']}" />
 			</div>
 		</p:panel>
 

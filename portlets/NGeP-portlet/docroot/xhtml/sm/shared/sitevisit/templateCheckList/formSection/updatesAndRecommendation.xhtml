@@ -5,47 +5,47 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Office Location" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.officeloc']}" toggleable="true">
 		<table class="rptTbl">
 			<tr>
-				<td><p:outputLabel value="Office Ownership" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.ownership']}" /></td>
 				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="Select" itemValue="" />
-						<f:selectItem itemLabel="Private" itemValue="private"></f:selectItem>
-						<f:selectItem itemLabel="Rent" itemValue="rent"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.officeloc.ownership.prvt']}" itemValue="private"></f:selectItem>
+						<f:selectItem itemLabel="#{lbl['lbl.sm.officeloc.ownership.rent']}" itemValue="rent"></f:selectItem>
 					</p:selectOneMenu></td>
 
-				<td><p:outputLabel value="Purchase Price/ Monthly Rate (RM)" />
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.purchase.monthly.price']}" />
 				</td>
 				<td><p:inputText /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Share With" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.share.with']}" /></td>
 				<td><p:inputText /></td>
 
-				<td><p:outputLabel value="Sign Board" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.sign.board']}" /></td>
 				<td><p:inputText /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="Office Arrangement" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
 				<td><p:inputText /></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel header="Comment" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.manufacturing.comment.and.recommndtn']}" toggleable="true">
 		<table style="width: 80%;">
 			<tr>
-				<td><b>Operation Stage</b></td>
+				<td><b>#{lbl['lbl.sm.officeloc.operation.stage']}</b></td>
 			</tr>
 			<tr>
 				<td><p:inputTextarea rows="5" cols="100" /></td>
 			</tr>
 
 			<tr>
-				<td><b>Production Capability</b></td>
+				<td><b>#{lbl['lbl.sm.officeloc.prod.capability']}</b></td>
 			</tr>
 			<tr>
 				<td><p:inputTextarea rows="5" cols="100" /></td>
@@ -53,11 +53,11 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="Company Information Update (If any changes)"
+	<p:panel header="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
 		toggleable="true">
 		<p:inputTextarea rows="5" cols="100" />
 	</p:panel>
-	<p:panel header="Recommendation" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.recommend']}" toggleable="true">
 		<p:inputTextarea rows="5" cols="100" />
 	</p:panel>
 
