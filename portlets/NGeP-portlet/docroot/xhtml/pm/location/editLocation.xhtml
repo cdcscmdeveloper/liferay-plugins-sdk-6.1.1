@@ -22,21 +22,22 @@
 
 						<tr>
 							<td class="TableFieldLeft"><p:outputLabel
-									value="#{lbl['lbl.pm.state.code']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td class="TableFieldRight"><p:inputText id="statecode"
-									maxlength="10" label="#{lbl['lbl.pm.state.code']}" size="50"
+									value="#{lbl['lbl.pm.state.code']}" /> </td>
+							<td class="TableFieldRight"><p:inputText 
+									maxlength="10"  size="50" disabled="true" 
 									value="#{locationBackingBean.managedBean.state.stateCode}"
-									required="true" /></td>
-							<td><p:message id="statecodeMsg" for="statecode"
-									display="icon" /></td>
+									 /></td>
+							
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><h:outputLabel
-									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText
-									value="#{locationBackingBean.managedBean.state.stateName}"
-									size="50" disabled="true" /></td>
+									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel><p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="statename"
+									value="#{locationBackingBean.managedBean.state.stateName}" required="true"
+									size="50" label="#{lbl['lbl.pm.state.name']}" maxlength="50" /></td>
+									<td><p:message id="statenameMsg" for="statename"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
@@ -69,36 +70,47 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft"><p:outputLabel
-									value="#{lbl['lbl.pm.division.code']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td class="TableFieldRight"><p:inputText id="divisioncode"
-									maxlength="10" label="#{lbl['lbl.pm.division.code']}" size="50"
+									value="#{lbl['lbl.pm.division.code']}" /> </td>
+							<td class="TableFieldRight"><p:inputText 
+									maxlength="10"  size="50"
 									value="#{locationBackingBean.managedBean.division.divisionCode}"
-									required="true" /></td>
-							<td><p:message id="divisioncodeMsg" for="divisioncode"
+									required="true" disabled="true"/></td>
+							
+						</tr>
+						<tr>
+							<td class="TableFieldLeft"><h:outputLabel
+									value="#{lbl['lbl.pm.division.name']}"></h:outputLabel><p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="divisionname" label="#{lbl['lbl.pm.division.name']}"
+								required="true" maxlength="50"	value="#{locationBackingBean.managedBean.division.divisionName}"
+									 size="50" /></td>
+									 <td><p:message id="divisionnameMsg" for="divisionname"
 									display="icon" /></td>
 						</tr>
 						<tr>
-							<td class="TableFieldLeft"><h:outputLabel
-									value="#{lbl['lbl.pm.division.name']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText
-									value="#{locationBackingBean.managedBean.division.divisionName}"
-									disabled="true" size="50" /></td>
-						</tr>
-						<tr>
-							<td class="TableFieldLeft"><h:outputLabel
-									value="#{lbl['lbl.pm.state.name']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText
-									value="#{locationBackingBean.managedBean.division.pmState.stateName}"
-									size="50" disabled="true" /></td>
-						</tr>
-						<tr>
-							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
-									value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText disabled="true"
-									value="#{locationBackingBean.managedBean.division.pmState.pmCountry.countryName}"
-									size="50" /></td>
-						</tr>
+					<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
+							value=" #{lbl['lbl.pm.state']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></td>
+					<td><p:selectOneMenu
+							value="#{locationBackingBean.managedBean.division.pmState.stateId}"
+							id="statereq" label=" #{lbl['lbl.pm.state']}" required="true"
+							style="width: 275px;margin-bottom: 5px;" >
+							<f:selectItem itemValue="" itemLabel="---Select---" />
+							<f:selectItems var="stateLs"
+								value="#{locationBackingBean.managedBean.states}"
+								itemLabel="#{stateLs.stateName}" itemValue="#{stateLs.stateId}" />
+							<p:ajax event="change" update="countryname"  listener="#{locationBackingBean.retriveDivisionValues}" />
+							
+						</p:selectOneMenu></td><td> <p:message id="statereqMsg" for="statereq" display="icon" /></td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
+							value="#{lbl['lbl.pm.country']}"></h:outputLabel></td>
+					<td class="TableFieldRight"><p:inputText id="countryname"
+							disabled="true" size="40"
+							value="#{locationBackingBean.managedBean.state.pmCountry.countryName}"
+							 /></td>
+				</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
 									value="#{lbl['lbl.pm.location.status']}" /> <p:outputLabel
@@ -123,22 +135,23 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
-									value="#{lbl['lbl.pm.district.code']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.district.code']}" /> </td>
 
-							<td class="TableFieldRight"><p:inputText id="districtcode"
-									label="#{lbl['lbl.pm.district.code']}" maxlength="10"
+							<td class="TableFieldRight"><p:inputText  maxlength="10"
 									value="#{locationBackingBean.managedBean.district.districtCode}"
-									required="true" size="50" /></td>
-							<td><p:message id="districtcodeMsg" for="districtcode"
-									display="icon" /></td>
+									required="true" size="50" disabled="true" /></td>
+							
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
-									value="#{lbl['lbl.pm.district.name']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText
+									value="#{lbl['lbl.pm.district.name']}"/><p:outputLabel
+									value="*" styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="districtname"
+									label="#{lbl['lbl.pm.district.name']}" required="true" maxlength="50"
 									value="#{locationBackingBean.managedBean.district.districtName}"
 									size="50" /></td>
+										<td><p:message id="districtnameMsg" for="districtname"
+									display="icon" /></td>
 						</tr>
 
 						<tr>
@@ -181,23 +194,24 @@
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel
-									value="#{lbl['lbl.pm.city.code']}" /> <p:outputLabel value="*"
-									styleClass="mandatory" /></td>
+									value="#{lbl['lbl.pm.city.code']}" /> </td>
 
-							<td class="TableFieldRight"><p:inputText id="citycode"
-									label="#{lbl['lbl.pm.city.code']}" maxlength="10"
+							<td class="TableFieldRight"><p:inputText 
+									 maxlength="10" disabled="true"
 									value="#{locationBackingBean.managedBean.city.cityCode}"
 									size="50" required="true" /></td>
-							<td><p:message id="citycodeMsg" for="citycode"
-									display="icon" /></td>
+							
 						</tr>
 
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><h:outputLabel
-									value="#{lbl['lbl.pm.city.name']}"></h:outputLabel></td>
-							<td class="TableFieldRight"><p:inputText
-									value="#{locationBackingBean.managedBean.city.cityName}"
-									size="50" disabled="true" /></td>
+									value="#{lbl['lbl.pm.city.name']}"/><p:outputLabel value="*"
+									styleClass="mandatory" /></td>
+							<td class="TableFieldRight"><p:inputText id="cityname" label="#{lbl['lbl.pm.city.name']}"
+									value="#{locationBackingBean.managedBean.city.cityName}" required="true" maxlength="50"
+									size="50"  /></td>
+									<td><p:message id="citynameMsg" for="cityname"
+									display="icon" /></td>
 						</tr>
 						<tr>
 							<td class="TableFieldLeft" style="width: 30%"><p:outputLabel

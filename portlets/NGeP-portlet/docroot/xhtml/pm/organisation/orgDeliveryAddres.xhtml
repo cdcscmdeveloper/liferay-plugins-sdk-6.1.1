@@ -35,7 +35,7 @@
 			<p:column headerText="Delivery Address" style="white-space:normal;">
 				<p:commandLink oncomplete="addressPopup.show();"
 					action="#{organisationBackingBean.editAddress(address)}"
-					update=":form:deliveryAddress"
+					update="deliveryAddressId"
 					style="padding-right:5px" >
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />

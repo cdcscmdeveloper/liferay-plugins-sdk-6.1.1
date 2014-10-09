@@ -8,8 +8,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.DualListModel;
+
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
@@ -76,6 +79,13 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	
 	private List<PmOrgProfile> selectedPmOrgProfile;
 	
+	private List<PmPtjGroup> ptjGroups;
+	private List<PmPtjGroup> selectedPtjGroup;
+	
+	private	DualListModel<PmUser> supplierUsers;
+	private List<PmUser> sourceUsers;
+	private List<PmUser> selectedUsers;
+	
 	public OrganisationManagedBean() {
 
 		pmAddressType = new PmAddressType();
@@ -86,6 +96,9 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		contactList= new ArrayList<PmContact>();
 		ptjGroup= new ArrayList<PmPtjGroup>();
 		agOffice= new ArrayList<PmAgOffice>();
+		orgProfile.setPmAgOffice(new PmAgOffice());
+		orgProfile.setPmPtjGroup(new PmPtjGroup());
+		orgProfile.setParentOrgProfile(new PmOrgProfile());
 
 	}
 
@@ -635,6 +648,77 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	public void setSelectedPmOrgProfile(List<PmOrgProfile> selectedPmOrgProfile) {
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
+
+	/**
+	 * @return the ptjGroups
+	 */
+	public List<PmPtjGroup> getPtjGroups() {
+		return ptjGroups;
+	}
+
+	/**
+	 * @param ptjGroups the ptjGroups to set
+	 */
+	public void setPtjGroups(List<PmPtjGroup> ptjGroups) {
+		this.ptjGroups = ptjGroups;
+	}
+
+	/**
+	 * @return the selectedPtjGroup
+	 */
+	public List<PmPtjGroup> getSelectedPtjGroup() {
+		return selectedPtjGroup;
+	}
+
+	/**
+	 * @param selectedPtjGroup the selectedPtjGroup to set
+	 */
+	public void setSelectedPtjGroup(List<PmPtjGroup> selectedPtjGroup) {
+		this.selectedPtjGroup = selectedPtjGroup;
+	}
+
+	/**
+	 * @return the supplierUsers
+	 */
+	public DualListModel<PmUser> getSupplierUsers() {
+		return supplierUsers;
+	}
+
+	/**
+	 * @param supplierUsers the supplierUsers to set
+	 */
+	public void setSupplierUsers(DualListModel<PmUser> supplierUsers) {
+		this.supplierUsers = supplierUsers;
+	}
+
+	/**
+	 * @return the sourceUsers
+	 */
+	public List<PmUser> getSourceUsers() {
+		return sourceUsers;
+	}
+
+	/**
+	 * @param sourceUsers the sourceUsers to set
+	 */
+	public void setSourceUsers(List<PmUser> sourceUsers) {
+		this.sourceUsers = sourceUsers;
+	}
+
+	/**
+	 * @return the selectedUsers
+	 */
+	public List<PmUser> getSelectedUsers() {
+		return selectedUsers;
+	}
+
+	/**
+	 * @param selectedUsers the selectedUsers to set
+	 */
+	public void setSelectedUsers(List<PmUser> selectedUsers) {
+		this.selectedUsers = selectedUsers;
+	}
+
 	
 
 }
