@@ -55,6 +55,7 @@
 		    <portlet id="pmUOM"></portlet>	
 			<portlet id="pmBusinessNature"></portlet>	
 			<portlet id="pmCategory"></portlet>	
+			<portlet id="RuleConfigue"></portlet>	
 		</category>
 		<!-- Profile Management - END -->		
 

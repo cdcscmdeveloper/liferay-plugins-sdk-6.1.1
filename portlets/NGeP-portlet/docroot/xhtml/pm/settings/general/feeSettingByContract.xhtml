@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	      <p:panel>
+				<div style="text-align: right; min-height: 40px;">
+
+					<h:panelGroup>
+						<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
+							icon="ui-icon-save"
+							action="#{ruleCatalogueBackingBean.saveFeeExemptionForContract}"
+							update="@form"></p:commandButton>
+
+					</h:panelGroup>
+
+				</div>
+
+				<p:panel>
+					<p:dataTable id="feeByContractTableID" var="feeObj" row="10"
+						value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForContract}"
+						selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
+						rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
+
+						<p:column>
+							<f:facet name="header">
+					               #{lbl['lbl.pm.contract.no']}
+			                   	</f:facet>
+				               <ac:lov id="lovContract" lovId="CT_CONTRACT"
+								update="@form" size="15" headerText="Contract Lov"
+								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId" 
+								value="#{feeObj.contractId.contractNo}">
+							   </ac:lov>
+							<ac:lovPopup />
+
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+				                	#{lbl['lbl.so.itemname']}
+				                </f:facet>
+				                 <ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM"
+				                	update="@form" size="15" headerText="Contract Item Lov"
+				                	postUpdateListener="ruleCatalogueBackingBean.scRequestItemCodeUpdate(#{rowIndex},ruleCatalogueBackingBean.managedBean.feeExemptionsForContract)"
+								    saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem" 
+								    value="#{feeObj.requestItemId.itemName}">
+							   </ac:lov>
+							<ac:lovPopup />
+                                
+						       
+			            </p:column>
+						<p:column>
+							<f:facet name="header">
+								#{lbl['lbl.pm.as.effdate']}
+		                		</f:facet>
+
+							<p:calendar showOn="button" id="effDate"
+								mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+								label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+								value="#{feeObj.effDate}">
+							</p:calendar>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+						#{lbl['lbl.pm.as.expdate']}
+			                	</f:facet>
+
+							<p:calendar showOn="button" id="expDate"
+								mindate="#{ruleCatalogueBackingBean.managedBean.today}"
+								label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
+								value="#{feeObj.expDate}">
+							</p:calendar>
+						</p:column>
+
+						<p:column width="10%">
+							<f:facet name="header">
+					                #{lbl['lbl.pm.status']}
+				                </f:facet>
+							<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
+								style="width:128px;">
+								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
+									itemValue="0" />
+								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column width="10%">
+							<f:facet name="header">
+
+							</f:facet>
+							<p:commandLink id="deleteFee"
+								action="#{ruleCatalogueBackingBean.deleteContractFee(rowIndex)}"
+								update="@form">
+								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+							</p:commandLink>
+							<p:tooltip for="deleteFee">
+								<h:outputText
+									value="#{lbl['lbl.Pm.settings.fee.remove.tooltip']}"
+									escape="false" />
+							</p:tooltip>
+						</p:column>
+					</p:dataTable>
+
+					<h:panelGroup id="feeContAddBtnId">
+						<div style="text-align: right;">
+							<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+								ajax="true"
+								action="#{ruleCatalogueBackingBean.addMoreContractFee()}"
+								update="@form"></p:commandButton>
+
+						</div>
+					</h:panelGroup>
+				</p:panel>
+
+			</p:panel>
+
+</ui:composition>
