@@ -11,6 +11,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
@@ -51,7 +52,7 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private Date minEndDate;
 	private Date maxEndDate;
 	private String duration;
-	
+	private SCEvaluationDataType payLoad;
 	
 	public ScheduleBiddingManagedBean() {
 		
@@ -305,6 +306,16 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	public void setScBidContactPersonList(
 			List<ScBidContactPerson> scBidContactPersonList) {
 		this.scBidContactPersonList = scBidContactPersonList;
+	}
+
+
+	public SCEvaluationDataType getPayLoad() {
+		return payLoad;
+	}
+
+
+	public void setPayLoad(SCEvaluationDataType payLoad) {
+		this.payLoad = payLoad;
 	}
 
 }
