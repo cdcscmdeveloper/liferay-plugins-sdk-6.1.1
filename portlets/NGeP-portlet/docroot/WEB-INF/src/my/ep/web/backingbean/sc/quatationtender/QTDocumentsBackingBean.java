@@ -1,10 +1,12 @@
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,12 +52,14 @@ import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
@@ -66,7 +70,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
@@ -80,9 +86,14 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentDefaultFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
@@ -599,7 +610,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	 * @return
 	 * @throws Exception 
 	 */
-	private ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) throws Exception {
+	public ScQtDocReportAttachment generateDocumentAttachment(ScQtDocReport scQtDocReport) throws Exception {
 		String definitionType = scQtDocReport.getDefinationType().getParameterCode();
 		ScQtDocReportAttachment scQtDocReportAttachment = null;
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
@@ -607,6 +618,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				String docDefinitionKey = scQtDocReport.getPmDocument().getDocDefinitionKey();
 				scQtDocReportAttachment = new ScQtDocReportAttachment();
 				scQtDocReportAttachment.setScQtDocReport(scQtDocReport);
+				scQtDocReportAttachment.setDocNo(scQtDocReport.getScQt().getQtNo());
 				
 				if (SourcingConstants.DOC_DEF_KEY_SUPP_OFFER_STATEMENT.equals(docDefinitionKey)) {
 					generateKenyataanTawaranPembekalPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
@@ -619,14 +631,15 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 				} else if (SourcingConstants.DOC_DEF_KEY_TECH_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_SAMPLE_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
-					
+					// TODO - 
+					generateSampleComplianceChecklistPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_FIN_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_LOA_SAMPLE.equals(docDefinitionKey)) {
 					generateSampleSuratSetujuTerimaPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE.equals(docDefinitionKey)) {
 					// TODO put attachment in repository folder
-					//generateSamplesamplesalinankontrakPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
+					generateSamplesamplesalinankontrakPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DECLARION_SAMPLE.equals(docDefinitionKey)) {
 					generateSampleSuratPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE.equals(docDefinitionKey)) {
@@ -637,6 +650,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					generateProgressivePaymentPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DELIVERY_SERVICE_ADDRESS.equals(docDefinitionKey)) {
 					generateDeliveryAddressPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
+				} else if ("KP".equals(docDefinitionKey)) {
+					// TODO -
+					generateSkopPerkhidmatanPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				}
 			/*} catch (Exception e) {
 				e.printStackTrace();
@@ -645,6 +661,80 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			scQtDocReport.setScQtDocReportAttachment(scQtDocReportAttachment);
 		}
 		return scQtDocReportAttachment;
+	}
+
+	/**
+	 * @param scQtDocReportAttachment
+	 * @param qt
+	 */
+	private void generateSkopPerkhidmatanPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Skop_Perkhidmatan.pdf");
+		
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
+
+		attachment.setCreatedBy(createdUser.getUserId());
+		attachment.setCreatedDate(date);
+		attachment.setChangedBy(createdUser.getUserId());
+		attachment.setCreatedUser(createdUser);
+
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocNo());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocType());
+		attachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();
+		
+		AttachmentFormat scFormat =getAttachFormat(attachment);
+		String formatedFileName = scFormat.format(attachment.getFileName(),
+				attachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());
+	}
+
+	/**
+	 * @param scQtDocReportAttachment
+	 * @param qt
+	 */
+	private void generateSampleComplianceChecklistPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Sample_Compliance_Checklist.pdf");
+		
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
+
+		attachment.setCreatedBy(createdUser.getUserId());
+		attachment.setCreatedDate(date);
+		attachment.setChangedBy(createdUser.getUserId());
+		attachment.setCreatedUser(createdUser);
+
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocNo());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocType());
+		attachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();
+		
+		AttachmentFormat scFormat =getAttachFormat(attachment);
+		String formatedFileName = scFormat.format(attachment.getFileName(),
+				attachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());
 	}
 
 	/**
@@ -967,17 +1057,60 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_SPECIFICATION, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/*private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Sample_Surat_Setuju_Terima.pdf");
-		populateAttachmentDetails(attachment);
+	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+		attachment.setFileName("Sample_Contract.pdf");
 		
-		VelocityContext context = new VelocityContext();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		PmUser createdUser = new FacesScopes().getUserSessionBean();
+
+		attachment.setCreatedBy(createdUser.getUserId());
+		attachment.setCreatedDate(date);
+		attachment.setChangedBy(createdUser.getUserId());
+		attachment.setCreatedUser(createdUser);
+
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(DateUtils.getLast2DigitOfYear());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocNo());
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(attachment.getDocType());
+		attachment.setFilePath(filePath.toString());
+
+		File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();
 		
-		context.put("agency", "");
+		AttachmentFormat scFormat =getAttachFormat(attachment);
+		String formatedFileName = scFormat.format(attachment.getFileName(),
+				attachment.getPrefixFileName());
+
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());
 		
-		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
-    			context, new FileOutputStream(attachment.getFilePath()));
-	}*/
+		//populateAttachmentDetails(attachment);
+		
+		//VelocityContext context = new VelocityContext();
+		
+		//context.put("agency", "");
+		
+		/*DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
+    			context, new FileOutputStream(attachment.getFilePath()));*/
+	}
+
+	private AttachmentFormat getAttachFormat(ScAttachment scAttachment) {
+		if (scAttachment instanceof ScLoaReportAttachment
+				|| scAttachment instanceof ScQtCheckListAttachment
+				|| scAttachment instanceof ScQtProposalChecklistAttachment
+				|| scAttachment instanceof ScQtFinalizationAttachment) {
+
+			return new AttachmentDateFormat();
+		} else {
+
+			return new AttachmentDefaultFormat();
+		}
+	}
 
 	/**
 	 * @param scQtDocReportAttachment

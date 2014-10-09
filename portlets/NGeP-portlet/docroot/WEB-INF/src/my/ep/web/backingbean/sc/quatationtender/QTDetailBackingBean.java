@@ -98,6 +98,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
+import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplier;
@@ -1496,6 +1497,26 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
+			
+			if (null != qt.getScQtDocReports() && !qt.getScQtDocReports().isEmpty()) {
+				QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+				List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+				for (ScQtDocReport scQtDocReport : qt.getScQtDocReports()) {
+					ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
+					if(attachment == null) {
+						try {
+							attachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					} else {
+						attachment.setScQtDocReport(scQtDocReport);
+						scQtDocReport.setScQtDocReportAttachment(attachment);
+					}
+					scAttachments.add(attachment);
+				}
+			}
+			
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
@@ -1782,8 +1803,12 @@ public class QTDetailBackingBean extends
 								.getScQtSupplierCriteria().isAllState())) {
 					List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
 					if (null != tenderResDTO.getLocationDetails()) {
-						for (TplSpecLoc localLoc : tenderResDTO
-								.getLocationDetails()) {
+						if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+							this.getManagedBean().setTotalSuppliersSpecLoc(new ArrayList<TplSpecLoc>());
+						}
+						this.getManagedBean().getTotalSuppliersSpecLoc().addAll(tenderResDTO.getLocationDetails());
+						for (TplSpecLoc localLoc : tenderResDTO.getLocationDetails()) {
+							getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
 							ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
 							locCriteria.add(criteria);
 						}
