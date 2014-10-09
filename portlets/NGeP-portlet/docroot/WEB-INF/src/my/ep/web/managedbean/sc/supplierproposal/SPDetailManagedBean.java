@@ -161,6 +161,22 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private String pageUrl;
 	private String docDefinitionKey;
 	private String checkListDefintionKey;
+	private List<ScQtProposal> selectMultipleProposalList;
+
+	public List<ScQtProposal> getSelectMultipleProposalList() {
+		return selectMultipleProposalList;
+	}
+
+
+
+
+	public void setSelectMultipleProposalList(
+			List<ScQtProposal> selectMultipleProposalList) {
+		this.selectMultipleProposalList = selectMultipleProposalList;
+	}
+
+
+
 
 	public SPDetailManagedBean() {
 		log.info("inside ");

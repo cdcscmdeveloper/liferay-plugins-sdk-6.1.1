@@ -863,7 +863,7 @@ public class SPDetailBackingBean extends
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-			
+
 			return downloadEncryptedFile(getActualFilePath(scAttachment),
 					scAttachment.getFileName());
 		} else {
@@ -874,87 +874,86 @@ public class SPDetailBackingBean extends
 	public File downloadEncryptedFile(String filePath, String fileName)
 			throws IOException {
 
-			log.info("Inside downloadFile(...)");
-			PortletResponse portletResponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			HttpServletResponse response = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
+		log.info("Inside downloadFile(...)");
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
 
-			response.setHeader("Pragma", "no-cache");
-			response.setDateHeader("Expires", 0);
-//			response.setContentType("application/vnd.ms-excel");
-//			response.setHeader("Content-Transfer-Encoding", "binary");
-			response.setHeader("Content-Disposition", "attachment; filename="+fileName);
-			response.setContentType("application/octet-stream");
-			response.flushBuffer();
-			
-			OutputStream out = response.getOutputStream();
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="
+				+ fileName);
+		response.setContentType("application/octet-stream");
+		response.flushBuffer();
 
-			if (filePath != null) {
-				InputStream input = null;
-				try {
-					log.info("Inside filePath(...)");
-					URLConnection uc = new URL(filePath).openConnection();
-					input = new BufferedInputStream(uc.getInputStream());
+		OutputStream out = response.getOutputStream();
 
-				} catch (Exception e) {
-					// Cannot open connection, maybe local file
-					log.info("Inside filePaths(...)");
-					input = new FileInputStream(filePath);
-				}
-//				byte[] buffer = new byte[4096];
-//				int bytesRead;
-//				while ((bytesRead = input.read(buffer)) != -1) {
-//					out.write(buffer, 0, bytesRead);
-//					buffer = new byte[4096];
-				
-		            BouncyCastleProvider_AES_CBC bc =
-		                    new BouncyCastleProvider_AES_CBC();
-		            try {
-						bc.InitCiphers();
-					} catch (InvalidKeyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchProviderException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchPaddingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvalidAlgorithmParameterException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		if (filePath != null) {
+			InputStream input = null;
+			try {
+				log.info("Inside filePath(...)");
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
 
-		            //decryption
-		            try {
-						bc.CBCDecrypt(input, out);
-					} catch (ShortBufferException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalBlockSizeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (BadPaddingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}			
-				
-				
-				input.close();
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				log.info("Inside filePaths(...)");
+				input = new FileInputStream(filePath);
 			}
-			
-			out.flush();
-			out.close();
-			FacesContext.getCurrentInstance().responseComplete();
+			// byte[] buffer = new byte[4096];
+			// int bytesRead;
+			// while ((bytesRead = input.read(buffer)) != -1) {
+			// out.write(buffer, 0, bytesRead);
+			// buffer = new byte[4096];
 
-			// use to upload back to database
-			File file = new File(filePath);
-			return file;
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			try {
+				bc.InitCiphers();
+			} catch (InvalidKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchProviderException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// decryption
+			try {
+				bc.CBCDecrypt(input, out);
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			input.close();
 		}
+
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
+
+		// use to upload back to database
+		File file = new File(filePath);
+		return file;
+	}
 
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
@@ -1576,12 +1575,10 @@ public class SPDetailBackingBean extends
 
 				}
 			} else {
-				if (scQt.getMaxProposal() == 1) {
+				if (scQt.getMaxProposal() == 1 || scQt.getMaxProposal() > 1) {
 
 					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
 
-				} else {
-					redirectPage = NAV_TO_ZONE_MORE_THAN_PROPOSAL_PAGE;
 				}
 			}
 			return redirectPage;
