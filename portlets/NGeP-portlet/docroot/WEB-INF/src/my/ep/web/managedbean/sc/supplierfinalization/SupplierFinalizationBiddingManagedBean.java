@@ -5,6 +5,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sc.bidding.ScBid;
+import my.ep.persistence.entity.sc.bidding.ScBidItem;
+import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
@@ -24,6 +27,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//Header
 	private ScQt scQt;
 	private ScQtFinalization scQtFinalization;
+	private String committeeType;
+	
+	//Summary
+	private ScBid scBidding;
+	private List<ScBidItem> biddingItemList;
+	private ScBidItem selectedBiddingItem;
+	private List<ScBidPrice> biddingItemPriceList;
+	private List<ScBidPrice> biddingPackagePriceList;
 		
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
@@ -129,6 +140,78 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setPinNo(String pinNo) {
 		this.pinNo = pinNo;
+	}
+	/**
+	 * @return the biddingItemList
+	 */
+	public List<ScBidItem> getBiddingItemList() {
+		return biddingItemList;
+	}
+	/**
+	 * @param biddingItemList the biddingItemList to set
+	 */
+	public void setBiddingItemList(List<ScBidItem> biddingItemList) {
+		this.biddingItemList = biddingItemList;
+	}
+	/**
+	 * @return the scBidding
+	 */
+	public ScBid getScBidding() {
+		return scBidding;
+	}
+	/**
+	 * @param scBidding the scBidding to set
+	 */
+	public void setScBidding(ScBid scBidding) {
+		this.scBidding = scBidding;
+	}
+	/**
+	 * @return the biddingItemPriceList
+	 */
+	public List<ScBidPrice> getBiddingItemPriceList() {
+		return biddingItemPriceList;
+	}
+	/**
+	 * @param biddingItemPriceList the biddingItemPriceList to set
+	 */
+	public void setBiddingItemPriceList(List<ScBidPrice> biddingItemPriceList) {
+		this.biddingItemPriceList = biddingItemPriceList;
+	}
+	/**
+	 * @return the biddingPackagePriceList
+	 */
+	public List<ScBidPrice> getBiddingPackagePriceList() {
+		return biddingPackagePriceList;
+	}
+	/**
+	 * @param biddingPackagePriceList the biddingPackagePriceList to set
+	 */
+	public void setBiddingPackagePriceList(List<ScBidPrice> biddingPackagePriceList) {
+		this.biddingPackagePriceList = biddingPackagePriceList;
+	}
+	/**
+	 * @return the committeeType
+	 */
+	public String getCommitteeType() {
+		return committeeType;
+	}
+	/**
+	 * @param committeeType the committeeType to set
+	 */
+	public void setCommitteeType(String committeeType) {
+		this.committeeType = committeeType;
+	}
+	/**
+	 * @return the selectedBiddingItem
+	 */
+	public ScBidItem getSelectedBiddingItem() {
+		return selectedBiddingItem;
+	}
+	/**
+	 * @param selectedBiddingItem the selectedBiddingItem to set
+	 */
+	public void setSelectedBiddingItem(ScBidItem selectedBiddingItem) {
+		this.selectedBiddingItem = selectedBiddingItem;
 	}
 	
 	

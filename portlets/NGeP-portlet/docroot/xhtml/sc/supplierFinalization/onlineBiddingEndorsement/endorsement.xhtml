@@ -30,8 +30,13 @@
 						<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
 							action="#{suppFinalBiddingBackingBean.retrieveBiddingSummary}"
 							update="@form" />
-						<p:menuitem value="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse eq ParameterConst.onlineBiddingMeeting ? lbl['lbl.sc.endorsement'] : lbl['lbl.sc.escalation']}"
-							action="#{suppFinalBiddingBackingBean.retrieveEndorsement}"
+						<p:menuitem rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+							value="#{lbl['lbl.sc.endorsement']}"
+							action="#{suppFinalBiddingBackingBean.retrieveOnlineEndorsement}"
+							update="@form" />
+						<p:menuitem rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+							value="#{lbl['lbl.sc.escalation']}"
+							action="#{suppFinalBiddingBackingBean.retrieveOfflineEndorsement}"
 							update="@form" />
 					</p:tabMenu>
 				</td>
@@ -41,14 +46,18 @@
 						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/biddingSummary.xhtml"></ui:include>
 					</c:if> 
 					<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '1'}">
-						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineOfflineEndorsement.xhtml"></ui:include>
+						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml"></ui:include>
 					</c:if> 
+					<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '2'}">
+						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml"></ui:include>
+					</c:if>
 				</td>
 			</tr>
 		</table>
 		
 		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/reminder.xhtml" />
 		<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/signOff.xhtml" />
+		<ui:include src="/xhtml/sc/supplierFinalization/supplierFinalization/supplierDetailsPopUp.xhtml" />
 	</ui:define>
 
 </ui:composition>
