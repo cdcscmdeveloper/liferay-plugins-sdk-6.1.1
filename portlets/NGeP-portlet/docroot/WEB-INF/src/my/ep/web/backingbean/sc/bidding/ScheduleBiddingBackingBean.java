@@ -466,7 +466,7 @@ public class ScheduleBiddingBackingBean extends
 
 	}
 
-	public void submitBiddingDetails(String outCome) {
+	public String submitBiddingDetails(String outCome) {
 
 		String taskId = this.getManagedBean().getTaskId();
 		String token = new FacesScopes().getBPMAuthenticationCtxToken();
@@ -490,12 +490,32 @@ public class ScheduleBiddingBackingBean extends
 					.updateBPMAction(biddingReqDTO);
 
 			if (resDTO.isSuccessful()) {
-
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_BIDDING),
+																resDTO.getScBid()
+																		.getDocType() },// TODO
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 
 		} finally {
 			scheduleBiddingSO = null;
 		}
+		return null;
 	}
 
 }
