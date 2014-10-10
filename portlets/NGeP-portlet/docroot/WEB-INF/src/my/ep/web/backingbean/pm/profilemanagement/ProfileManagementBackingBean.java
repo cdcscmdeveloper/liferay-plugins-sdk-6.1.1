@@ -1430,26 +1430,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 	}
 	
-	/**
-	 * sync notification data
-	 * @param user
-	 */
-	private void loadUserNotification(PmUser user){
-		logger.info("loadUserNotification");
-		List <PmUserNotification> displayNotifications = this.getManagedBean().getNotifications();
-		if(displayNotifications!=null && !displayNotifications.isEmpty()){
-			for(PmUserNotification displayNotification: displayNotifications){
-				for(PmUserNotification pmUserNotification: user.getPmUserNotifications()){
-					if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(displayNotification.getNotifyMode())
-							&& !ParameterConst.NOTIFICATION_SMS.equals(displayNotification.getNotifyMode())){
-						if(displayNotification.getNotifyMode().equals(pmUserNotification.getNotifyMode())){
-							pmUserNotification.setPreferred(displayNotification.isPreferred());
-						}
-					}
-				}
-			}
-		}
-	}
 	
 	/**
 	 * Generate new role and deleted role to update Liferay and OIM
@@ -1696,28 +1676,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			}	
 		}
 	}
-	
-//	/**
-//	 * Validation for PmUserNotification
-//	 * @param PmUserNotification
-//	 */
-//	private void validateNotification(List <PmUserNotification> pmUserNotifications){
-//		logger.info("validateNotification");
-//		int selected = 0;
-//		if(pmUserNotifications!=null && !pmUserNotifications.isEmpty()){
-//			for(PmUserNotification pmUserNotification:pmUserNotifications){
-//				if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserNotification.getRecordStatusFlg()){
-//					if(pmUserNotification.isPreferred()){
-//						selected++;
-//						break;
-//					}
-//				}
-//			}
-//		}
-//		if(selected==0){
-//			throw new EpException(MessageConst.ERROR_770048);
-//		}
-//	}
 
 	/**
 	 * Method to update the user details
@@ -1760,9 +1718,6 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			loadUserAddress(user);
 			
 			loadUserOrgType(user);
-			
-			loadUserNotification(user);
-			
 			
 			
 			if(!user.isBrandNew()){
