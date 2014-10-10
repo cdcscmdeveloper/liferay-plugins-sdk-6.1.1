@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.role.IRoleSO;
@@ -50,9 +51,7 @@ import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserAttachment;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -690,18 +689,76 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		return roleDesc;
 	}
 	
-
+	/**
+	 * check unique role from the ui list or from DB
+	 * @param orgTypeCode
+	 * @param roleCode
+	 * @param searchDB
+	 * @return boolean
+	 */
+	private boolean checkUniqueRole(String orgTypeCode, String roleCode, boolean searchDB){
+		boolean isExist = false;
+		if(searchDB){
+			SearchBean<PmUser> userSearchBean = new SearchBean<PmUser>();
+			
+			userSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmUserOrgs.pmUserRoles.pmRole.roleCode", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					roleCode,
+					true));
+			
+			userSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmUserOrgs.pmUserRoles.recordStatusFlg", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					DbValueConst.RECORD_STATUS_ACTIVE));
+			
+			userSearchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					orgTypeCode,
+					true));
+			
+			List <PmUser> users = PmCommonUtil.searchUsersBySearchBean(userSearchBean);
+			if(users!=null && !users.isEmpty()){
+				isExist = true;
+			}
+		}else{
+			if(this.getManagedBean().getSelectedUser().getPmUserOrgs()!=null){
+				for(PmUserOrg userOrg: this.getManagedBean().getSelectedUser().getPmUserOrgs()){
+					for(PmUserRole userRole:userOrg.getPmUserRoles()){
+						if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()){
+							//check if contains unique role
+							if(roleCode.equals(userRole.getPmRole().getRoleCode())){
+								if(orgTypeCode.equals(userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())){
+									isExist = true;
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return isExist;
+	}
 	/**
 	 * Add new selected role to user role list
 	 */
 	public void confirmRoles(){
 		logger.info("confirmRoles");
-
+		String orgType = this.getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode();
 		if(this.getManagedBean().getSelectedRoles()!=null && !this.getManagedBean().getSelectedRoles().isEmpty()){
 			if(this.getManagedBean().getSelectedUserOrg()!=null){
 				//Validation for unique roles added to list
 				if(isUniqueRoles()){
+					List <String> uniqueRoles = new ArrayList(Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
 					for(PmRoleDesc pmRoleDesc : this.getManagedBean().getSelectedRoles()){
+						if(uniqueRoles.contains(pmRoleDesc.getPmRole().getRoleCode())){
+							if(checkUniqueRole(orgType, pmRoleDesc.getPmRole().getRoleCode(), false)){
+								throw new EpException(MessageConst.ERROR_770106, new String[]{pmRoleDesc.getRoleName()});
+							}
+						}
 						PmUserRole pmUserRole = new PmUserRole();
 						pmUserRole.setPmRole(pmRoleDesc.getPmRole());
 						this.getManagedBean().getSelectedUserOrg().addPmUserRole(pmUserRole);
@@ -1587,6 +1644,30 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 	
 	/**
+	 * validate unique role for each org type
+	 * @param user
+	 */
+	private void validateRoles(PmUser user){
+		List <String> uniqueRoles = new ArrayList(Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
+
+		if(user.getPmUserOrgs()!=null){
+			for(PmUserOrg userOrg: user.getPmUserOrgs()){
+				for(PmUserRole userRole:userOrg.getPmUserRoles()){
+					//check if contains unique role
+					String roleCode = userRole.getPmRole().getRoleCode();
+					if(uniqueRoles.contains(userRole.getPmRole().getRoleCode())){
+						String orgType = userOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode();
+						if(checkUniqueRole(orgType, roleCode, true)){
+							throw new EpException(MessageConst.ERROR_770106, new String[]{getRoleDescByRoleCode(roleCode)});
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+	/**
 	 * Validation for PmUser's fields
 	 * @param user
 	 */
@@ -1613,12 +1694,12 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		if(StringUtils.isBlank(user.getEmail())){
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
+		if(StringUtils.isBlank(user.getPreferredLanguage())){
 			throw new EpException(MessageConst.ERROR_770037);
 		}
-		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
-				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
-				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
+		if(user.getNotifyRemovalDay()==null 
+				|| (user.getNotifyRemovalDay()!=null 
+				&& user.getNotifyRemovalDay()==0)){
 			throw new EpException(MessageConst.ERROR_770038);
 		}
 //		if(!StringUtils.isBlank(user.getConfirmPassword()) && !StringUtils.isBlank(user.getPassword()) && StringUtils.isBlank(user.getOldPassword())){
@@ -1698,6 +1779,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			validateResponsibleOrg(user);
 			oneActiveResponsibleOrg(user);
 			validatePreference(user);
+			validateRoles(user);
 			
 			reqDTO = new UserReqDTO();
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
