@@ -15,6 +15,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
+import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -51,6 +52,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
+import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
@@ -88,6 +90,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public static final String NAV_TO_COMPLAIN_CC_ITEM = "/xhtml/fl/complaincontractitem/complainCentralContractItem.xhtml";
 	public static final String NAV_TO_MAINTAIN_PA = "/xhtml/fl/paymentmatch/pmBasePage.xhtml";
 	public static final String NAV_TO_REMOVE_FACTORING_COMPANY = "/xhtml/fl/removefactoringcomp/rfcBasePage.xhtml";
+	public static final String NAV_TO_STOP_INSTRUCTION = "/xhtml/fl/stopInstruction/siBasePage.xhtml";
+	public static final String NAV_TO_ADJUSTMENT_NOTE = "/xhtml/fl/invoice/adjustment/danBasePage.xhtml";
 	
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
@@ -199,7 +203,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		System.out.println("buttonVal::: "+buttonVal);
 		System.out.println("statusId>>::: "+statusId);
 		
-		if(docType.equals(FulfilmentConst.DOC_TYPE_PR)){
+		if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_REQUEST)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
@@ -218,7 +222,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_PR;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_CR)){
+		}else if(docType.equals(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
@@ -280,7 +284,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				navgPage = "stopInstr";
 			}
-		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO) && buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
+		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER) && buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_FACTORING_COMPANY);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
@@ -309,7 +313,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setOutComes(outcome);
 			flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
-		} else if(docType.equals(FulfilmentConst.DOC_TYPE_PO)){
+		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
@@ -357,7 +361,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
 			navgPage=NAV_TO_MAINTAIN_PO;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_CO)){
+		}else if(docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_ORDER);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
@@ -373,7 +377,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
 			navgPage=NAV_TO_MAINTAIN_CO;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_DO)){
+		}else if(docType.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			reqDTO.setDeliveryOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -397,7 +401,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_DO;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_IN)){
+		}else if(docType.equals(ParameterConst.DOCTYPE_INVOICE)){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IInvoiceSO.class);
 			reqDTO.setInvoiceId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
@@ -419,7 +423,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
-		else if(docType.equals(FulfilmentConst.DOC_TYPE_FN)){
+		else if(docType.equals(ParameterConst.DOCTYPE_FULFILMENT_NOTE)){
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
@@ -446,7 +450,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_FRN;
-		}else if(docType.equals(FulfilmentConst.DOC_TYPE_PA)){
+		}else if(docType.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE)){
 			paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
 			reqDTO.setPaymentAdviseId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);
@@ -465,6 +469,30 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_PA;
+		} else if(docType.equals(ParameterConst.DOCTYPE_STOP_DELIVERY)){
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			flReqDTO.setStopRequestId(Long.valueOf(flDocId));
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstruction(flReqDTO);
+			
+			StopInstrBackingBean siBB = new StopInstrBackingBean();
+			siBB.getManagedBean().setSelectedTabIndex(0);
+			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+			siBB.populateChargeLineData();
+			
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			navgPage=NAV_TO_STOP_INSTRUCTION;
+		} else if(docType.equals(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE) || docType.equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			flReqDTO.setDanId(Long.valueOf(flDocId));
+			flReqDTO.setDocType(docType);
+			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
+			
+			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
+			danBB.getManagedBean().setSelectedTabIndex(0);
+			danBB.setAdjustmentNote(resDTO);
+			navgPage=NAV_TO_ADJUSTMENT_NOTE;
 		}
 		return navgPage;
 	}
