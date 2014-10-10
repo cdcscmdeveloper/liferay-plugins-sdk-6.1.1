@@ -13,6 +13,7 @@
 	<cc:attribute name="disabled" default="false" />
 	<cc:attribute name="required" default="false" />
 	<cc:attribute name="readonly" default="false" />
+	<cc:attribute name="label" />
 	<cc:attribute name="saveObject" required="true" />
 	<cc:attribute name="headerText" />
 	<cc:attribute name="conditionField" default="" />
@@ -35,7 +36,8 @@
 			size="#{cc.attrs.size}"
 			readonly="#{cc.attrs.readonly}"
 			disabled="#{cc.attrs.disabled}"
-			required="#{cc.attrs.required}">
+			required="#{cc.attrs.required}"
+			label="#{cc.attrs.label}">
 			
 			<!-- <f:valueChangeListener type="my.ep.web.backingbean.components.lov.PopulateObjectListener" /> -->
 			
