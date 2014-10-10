@@ -47,7 +47,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" />
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
@@ -71,9 +71,11 @@
 		
 		<c:if test="#{!categoryBackingBean.managedBean.newCategory}">
 		<p:panel header="#{lbl['lbl.pm.detail.category']}" toggleable="true" id="catdetails">
-		<p:dataTable id="catdetailsId" rowIndexVar="rowIndex"
-			value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
-			width="100%" var="pmCategoryL2">
+		<p:dataTable id="catdetailsId" 
+		rowIndexVar="rowIndex" 
+		value="#{categoryBackingBean.managedBean.pmCategoryL1.pmCategoryL2s}"
+		width="100%" 
+		var="pmCategoryL2">
 
 			<ac:paginator for="catdetailsId"></ac:paginator>
 			<p:column>

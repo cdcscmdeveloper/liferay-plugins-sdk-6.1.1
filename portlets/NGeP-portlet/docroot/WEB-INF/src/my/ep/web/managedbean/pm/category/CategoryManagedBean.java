@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -33,7 +34,16 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private boolean newCategory = false;
 	private List<PmParameterDesc> supplierType;
 	private List<PmParameterDesc> specialCategory;
-	private PmBasicCategory[] selectedBasicCategory;
+	private List<PmBasicCategory> selectedBasicCategory;
+	private PmBasicCategory[] selectedBasicCategory2;
+	private List<SelectItem> searchField;
+	private List<SelectItem> searchOperator;
+	private String[] searchValue = new String[3];
+	private String[] searchFieldValue = new String[3];
+	private String[] searchOperatorValue = new String[3];
+	private List<PmCategoryL3> selectedLOV;
+	private List<PmBasicCategory> pmBasicCategoryList;
+	
 	
 	public String getCatLevel() {
 		return catLevel;
@@ -160,13 +170,79 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 		this.specialCategory = specialCategory;
 	}
 
-	public PmBasicCategory[] getSelectedBasicCategory() {
+	public List<PmBasicCategory> getSelectedBasicCategory() {
 		return selectedBasicCategory;
 	}
 
-	public void setSelectedBasicCategory(PmBasicCategory[] selectedBasicCategory) {
+	public void setSelectedBasicCategory(List<PmBasicCategory> selectedBasicCategory) {
 		this.selectedBasicCategory = selectedBasicCategory;
 	}
+
+	public List<SelectItem> getSearchField() {
+		return searchField;
+	}
+
+	public void setSearchField(List<SelectItem> searchField) {
+		this.searchField = searchField;
+	}
+
+	public List<SelectItem> getSearchOperator() {
+		return searchOperator;
+	}
+
+	public void setSearchOperator(List<SelectItem> searchOperator) {
+		this.searchOperator = searchOperator;
+	}
+
+	public String[] getSearchValue() {
+		return searchValue;
+	}
+
+	public void setSearchValue(String[] searchValue) {
+		this.searchValue = searchValue;
+	}
+
+	public String[] getSearchFieldValue() {
+		return searchFieldValue;
+	}
+
+	public void setSearchFieldValue(String[] searchFieldValue) {
+		this.searchFieldValue = searchFieldValue;
+	}
+
+	public String[] getSearchOperatorValue() {
+		return searchOperatorValue;
+	}
+
+	public void setSearchOperatorValue(String[] searchOperatorValue) {
+		this.searchOperatorValue = searchOperatorValue;
+	}
+
+	public List<PmCategoryL3> getSelectedLOV() {
+		return selectedLOV;
+	}
+
+	public void setSelectedLOV(List<PmCategoryL3> selectedLOV) {
+		this.selectedLOV = selectedLOV;
+	}
+
+	public List<PmBasicCategory> getPmBasicCategoryList() {
+		return pmBasicCategoryList;
+	}
+
+	public void setPmBasicCategoryList(List<PmBasicCategory> pmBasicCategoryList) {
+		this.pmBasicCategoryList = pmBasicCategoryList;
+	}
+
+	public PmBasicCategory[] getSelectedBasicCategory2() {
+		return selectedBasicCategory2;
+	}
+
+	public void setSelectedBasicCategory2(PmBasicCategory[] selectedBasicCategory2) {
+		this.selectedBasicCategory2 = selectedBasicCategory2;
+	}
+
+
 
 	
 
