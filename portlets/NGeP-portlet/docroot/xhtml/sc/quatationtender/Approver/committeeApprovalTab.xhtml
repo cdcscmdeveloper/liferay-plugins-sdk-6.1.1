@@ -65,6 +65,41 @@
 							</tr>
 						</table>
 					</p:dataGrid></td>
+				<td class="TableFieldLeft"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.supp.doc']}" /></td>
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td />
+							<td><p:dataGrid id="attaIds"
+									value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalAttachment}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
+													<f:convertDateTime
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{approvalBackingBean.downloadFile(attachFile)}" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
