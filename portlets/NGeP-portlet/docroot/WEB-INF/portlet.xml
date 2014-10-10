@@ -5182,7 +5182,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>RuleConfigue</portlet-name>
+		<portlet-name>pmRuleConfigure</portlet-name>
 		<display-name>System Parameter</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
@@ -5197,7 +5197,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Rule Configue</title>
+			<title>System Parameter</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
