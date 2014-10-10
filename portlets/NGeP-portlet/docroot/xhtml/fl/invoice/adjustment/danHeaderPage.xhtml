@@ -10,7 +10,10 @@
 				<td><h:outputLabel value="#{lbl['lbl.fl.do.poco.no']} " /></td>
 				<td class="header-info-text">
 					#{danBackingBean.managedBean.adjustment.flOrder.docNo}</td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.dan.no']} " /></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.fl.dan.no']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'DN'}" />
+					<p:outputLabel value="#{lbl['lbl.fl.can.no']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'CN'}" />
+				</td>
 				<td class="header-info-text">
 					#{danBackingBean.managedBean.adjustment.docNo}
 				</td>
