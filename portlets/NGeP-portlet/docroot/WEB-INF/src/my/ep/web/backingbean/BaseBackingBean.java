@@ -719,6 +719,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
       	      .getCurrentInstance().getExternalContext().getResponse();
 	    HttpServletResponse res = PortalUtil
 	      	      .getHttpServletResponse(portletResponse);
+	    int position = reportFile.lastIndexOf(".jsp");
+	    if(position != -1) {
+	    	reportFile = reportFile.substring(0, position);
+	    }
+	    
 	    res.setHeader("Content-Disposition", "attachment; filename=\""
     	          + reportFile + "_" + ReportConst.REPORT_DATE_TIME.format(new Date()) + "\"");//
 	    res.setHeader("Content-Transfer-Encoding", "binary");

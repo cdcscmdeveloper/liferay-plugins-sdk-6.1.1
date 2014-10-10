@@ -240,7 +240,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     		requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
     	}
 		
-		requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
+		
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(
 				requestNote,
