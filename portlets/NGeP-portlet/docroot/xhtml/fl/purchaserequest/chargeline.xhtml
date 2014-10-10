@@ -140,7 +140,7 @@
 						readonly="true"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="purchaseRequestBackingBean.checkVotFundLov()" 
-						conditionField="recordStatusFlg^1|votFundType^A"
+						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{purchaseRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						value="#{purchaseRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
 					</ac:lov></h:panelGroup></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.asset.ind']}" /></td>
