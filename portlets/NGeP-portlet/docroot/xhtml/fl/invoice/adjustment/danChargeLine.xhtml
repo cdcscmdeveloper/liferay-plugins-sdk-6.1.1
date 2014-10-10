@@ -28,7 +28,10 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.total.invoice.amt']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.dan.total.dan.amount']}" /></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.fl.dan.total.dan.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'DN'}" />
+					<p:outputLabel value="#{lbl['lbl.fl.dan.total.can.amount']}" rendered="#{danBackingBean.managedBean.adjustment.docType eq 'CN'}" />
+				</td>
 				<td><p:inputText size="15" disabled="true" style="text-align:right"
 						value="#{danBackingBean.managedBean.danAmtTotal}">
 						<f:convertNumber
@@ -69,7 +72,7 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 				<h:outputText value="#{danItem.flInvoiceItem.orderedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
