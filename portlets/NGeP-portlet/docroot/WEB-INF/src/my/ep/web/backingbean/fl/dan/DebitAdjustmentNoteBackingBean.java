@@ -146,7 +146,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		}
 	}
 	
-	private void setAdjustmentNote(FulfilmentResDTO resDTO) {
+	public void setAdjustmentNote(FulfilmentResDTO resDTO) {
 		FlAdjustment adjustment = resDTO.getAdjustment();
 		calInvSummary(adjustment);
 		getManagedBean().setAdjustment(adjustment);
@@ -235,29 +235,31 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	}
 	
 	public void selectDanItem() {
-		if(null !=getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund()){
-			getManagedBean().setVotFundCode(getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund().getVotFundCode());
-		}
-		if(null != getManagedBean().getSelectedDanItem().getFlItem().getAssetInd()) {
-			getManagedBean().setAssetIndCode(getManagedBean().getSelectedDanItem().getFlItem().getAssetInd().getParameterCode());
-		}
-		if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount()) {
-			getManagedBean().setGlAccountCode(getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount().getGlAccCode());
-		}
-		if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity()) {
-			getManagedBean().setPrgActivityCode( getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity().getPrgActivityCode());
-		}
-		if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()) {
-			getManagedBean().setSubSetiaCode((getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSubSetiaCode()));
-			
-			if( getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia()!=null) {
-				getManagedBean().setSetiaCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getSetiaCode());
-				
-				if(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject()!=null) {
-					getManagedBean().setProjectCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
-				}
+		if(getManagedBean().getSelectedDanItem()!=null) {
+			if(null !=getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund()){
+				getManagedBean().setVotFundCode(getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund().getVotFundCode());
 			}
-			getManagedBean().setFinancingTypeCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
+			if(null != getManagedBean().getSelectedDanItem().getFlItem().getAssetInd()) {
+				getManagedBean().setAssetIndCode(getManagedBean().getSelectedDanItem().getFlItem().getAssetInd().getParameterCode());
+			}
+			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount()) {
+				getManagedBean().setGlAccountCode(getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount().getGlAccCode());
+			}
+			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity()) {
+				getManagedBean().setPrgActivityCode( getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity().getPrgActivityCode());
+			}
+			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()) {
+				getManagedBean().setSubSetiaCode((getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSubSetiaCode()));
+				
+				if( getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia()!=null) {
+					getManagedBean().setSetiaCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getSetiaCode());
+					
+					if(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject()!=null) {
+						getManagedBean().setProjectCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getPmSetia().getPmProject().getProjectCode());
+					}
+				}
+				getManagedBean().setFinancingTypeCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
+			}
 		}
 	}
 	
