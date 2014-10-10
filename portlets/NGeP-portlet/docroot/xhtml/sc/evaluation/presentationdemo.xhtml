@@ -36,9 +36,12 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.comp.document']}"
 				style="width:15%">
-				<p:commandLink onclick="uploadDlg.show();return false;" update="demoSupplierId">
+				<p:commandLink onclick="uploadDlg.show();return false;"
+					update="demoSupplierId">
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
+
+
 					<f:setPropertyActionListener value="#{demoSupplier}"
 						target="#{evaluationBackingBean.managedBean.qtProposalChecklist}" />
 
@@ -65,51 +68,66 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.report.eva.report']}">
-		<h:panelGrid columns="2">
-
-			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
-
-			<h:panelGroup>
 
 
-				<p:commandButton onclick="presntDemoDlg.show();return false;"
-					ajax="false" process="@this" partialSubmit="true"
-					icon="iconAttachment" update="presentDemoFile"
-					value="Attach file(s)"
-					actionListener="#{evaluationBackingBean.reportUpload}" />
-
-			</h:panelGroup>
+	<p:panel header="#{lbl['lbl.sc.eva.present.demo.report']}"
+		toggleable="true" id="demoremarksupdtls">
+		<table id="demoremarksupDtlslist">
+			<tr>
 
 
-			<h:panelGrid columns="3" id="presentDemoRemove">
-
-				<p:spacer width="40"></p:spacer>
-				<p:outputLabel id="presefile"></p:outputLabel>
-				<p:commandLink process="@this,presentDemoRemove"
-					update="presentDemoRemove" partialSubmit="true" style="width:40%;">
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
-
-				</p:commandLink>
-
-			</h:panelGrid>
-		</h:panelGrid>
-
-		<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
-			dynamic="true" hideEffect="explode" resizable="false" width="700px"
-			height="200" styleClass="pop_up_top"
-			header="#{lbl['lbl.bpm.choose.file']}">
-			<p:ajax event="close" />
-			<p:fileUpload style="display:inline;"
-				fileUploadListener="#{evaluationBackingBean.preSentationDemoFileUpload}"
-				mode="advanced" id="upload"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="demoSupplierId" oncomplete="uploadDlg.hide()">
-			</p:fileUpload>
-		</p:dialog>
-
+				<td class="TableFieldLeft"><p:outputLabel
+						value="#{lbl['lbl.sc.eva.report.attachment']}" /></td>
+				<td class="TableFieldRight">
+					<table style="width: 150px;">
+						<tr>
+							<td colspan="2"><p:commandButton
+									oncomplete="demoAttachDlg.show();"
+									value="#{lbl['lbl.txt.attach.files']}" icon="iconAttachment"
+									partialSubmit="true" process="@this"
+									update="@([id$=demoremarksupdtls])">
+								</p:commandButton></td>
+						</tr>
+						<tr>
+							<td />
+							<td><p:dataGrid id="attachedIdsDemo"
+									value="#{evaluationBackingBean.managedBean.scQtChecklist.scQtCheckListAttachment}"
+									var="attachFile" rowIndexVar="attachFileIndex" columns="1"
+									style="width:100%">
+									<table>
+										<tr>
+											<td rowspan="2" style="vertical-align: top;" align="left">
+												<h:graphicImage library="ep/images/design"
+													name="#{evaluationBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
+											</td>
+											<td><h:outputText
+													value="#{attachFile.createdUser.userName}" />, <h:outputText
+													value="#{attachFile.createdDate}">
+													<f:convertDateTime
+														pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+												</h:outputText></td>
+										</tr>
+										<tr>
+											<td><h:commandLink value="#{attachFile.fileName}"
+													styleClass="blue_font" immediate="true"
+													action="#{evaluationBackingBean.downloadFile(attachFile)}" />
+												<p:commandLink
+													action="#{evaluationBackingBean.deleteDemoUploadFile}"
+													immediate="true" update="attachedIdsDemo">
+													<h:graphicImage library="ep/images/design" name="trash.png"
+														styleClass="tasklist_title1" />
+												</p:commandLink></td>
+										</tr>
+									</table>
+								</p:dataGrid></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 	</p:panel>
+
+
 
 </ui:composition>
