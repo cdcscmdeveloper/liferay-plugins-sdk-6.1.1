@@ -77,6 +77,7 @@ import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
@@ -1920,9 +1921,11 @@ public class EvaluationBackingBean extends
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
-					detailBackingBean.getManagedBean().setSmSupplier(
-							proposalCheckList.getScQtProposal()
-									.getScQtSupplier().getSmSupplier());
+					/*
+					 * detailBackingBean.getManagedBean().setSmSupplier(
+					 * proposalCheckList.getScQtProposal()
+					 * .getScQtSupplier().getSmSupplier());
+					 */
 					proposalPage = detailBackingBean
 							.retriveTechnicalStaffDtls(proposalCheckList);
 					evaluationPage = "senariTechnical.xhtml";
@@ -2642,9 +2645,11 @@ public class EvaluationBackingBean extends
 									.getScQtSupplier().getSmSupplier()
 									.getSupplierId());
 
-					detailBackingBean.getManagedBean().setSmSupplier(
-							proposalCheckList.getScQtProposal()
-									.getScQtSupplier().getSmSupplier());
+					/*
+					 * detailBackingBean.getManagedBean().setSmSupplier(
+					 * proposalCheckList.getScQtProposal()
+					 * .getScQtSupplier().getSmSupplier());
+					 */
 					proposalPage = detailBackingBean
 							.retrieveSupplierDtls(proposalCheckList);
 
@@ -3264,6 +3269,10 @@ public class EvaluationBackingBean extends
 			ScAttachment scAttachment = null;
 			ScQtEvaluationReport scQtEvaluationReport = this.getManagedBean()
 					.getScQtEvaluationReport();
+			if (null == scQtEvaluationReport) {
+				scQtEvaluationReport = new ScQtEvaluationReport();
+				setUserDetails(scQtEvaluationReport);
+			}
 			scQtEvaluationReport.setScQt(this.getManagedBean().getScQt());
 			ScQtEvaluationReportAttachment attachment = scQtEvaluationReport
 					.getScQtEvaluationReportAttachment();
@@ -3280,6 +3289,9 @@ public class EvaluationBackingBean extends
 			attachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
 			scAttachment = attachment;
 			uploadAttachment(event.getFile(), scAttachment);
+			scQtEvaluationReport.setScQtEvaluationReportAttachment(attachment);
+			this.getManagedBean().setScQtEvaluationReport(scQtEvaluationReport);
+
 		}
 	}
 
@@ -3313,8 +3325,32 @@ public class EvaluationBackingBean extends
 
 	}
 
-	public void reportUpload() {
-		System.out.println("yeye7348445459");
+	public void reportUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		try {
+			ScQtCheckList scQtChecklist = this.getManagedBean()
+					.getScQtChecklist();
+			if (null == scQtChecklist) {
+				scQtChecklist = new ScQtCheckList();
+				scQtChecklist.setScQt(this.getManagedBean().getScQt());
+				setUserDetails(scQtChecklist);
+			}
+
+			ScQtCheckListAttachment attachment = scQtChecklist
+					.getScQtCheckListAttachment();
+			if (null == attachment) {
+				attachment = new ScQtCheckListAttachment();
+				attachment.setScQtCheckList(scQtChecklist);
+			}
+			attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
+
+			uploadAttachment(event.getFile(), attachment);
+
+			scQtChecklist.setScQtCheckListAttachment(attachment);
+			this.getManagedBean().setScQtChecklist(scQtChecklist);
+		} finally {
+
+		}
 
 	}
 
@@ -3573,57 +3609,92 @@ public class EvaluationBackingBean extends
 	 * @param scQtEvaluationReport
 	 * @return
 	 */
-	private ScQtEvaluationReportAttachment generateDocumentAttachment(ScQtEvaluationReport scQtEvaluationReport) throws Exception {
+	private ScQtEvaluationReportAttachment generateDocumentAttachment(
+			ScQtEvaluationReport scQtEvaluationReport) throws Exception {
 		debugLogger("generateDocumentAttachment");
-		String definitionType = scQtEvaluationReport.getDefinationType().getParameterCode();
+		String definitionType = scQtEvaluationReport.getDefinationType()
+				.getParameterCode();
 		ScQtEvaluationReportAttachment scQtEvaluationReportAttachment = null;
-		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
-			String docDefinitionKey = scQtEvaluationReport.getPmDocument().getDocDefinitionKey();
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {
+			String docDefinitionKey = scQtEvaluationReport.getPmDocument()
+					.getDocDefinitionKey();
 			scQtEvaluationReportAttachment = new ScQtEvaluationReportAttachment();
-			scQtEvaluationReportAttachment.setScQtEvaluationReport(scQtEvaluationReport);
-			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport.getScQt().getQtNo());
-			
+			scQtEvaluationReportAttachment
+					.setScQtEvaluationReport(scQtEvaluationReport);
+			scQtEvaluationReportAttachment.setDocNo(scQtEvaluationReport
+					.getScQt().getQtNo());
+
 			if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
-				generateCoverPdfFromVelocity((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS.equals(docDefinitionKey)) {
-				generateMeetingDetailsPdfFromVelocity((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS.equals(docDefinitionKey)) {
-				generateCommitteeDetailsPdfFromVelocity((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED.equals(docDefinitionKey)) {
-				generatePematuhan1Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_ASSESSMENT_METHOD.equals(docDefinitionKey)) {
-				generateKaedah1Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_SHORTLISTED.equals(docDefinitionKey)) {
-				generatePematuhan2Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD.equals(docDefinitionKey)) {
-				generateKaedah2Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
-			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION.equals(docDefinitionKey)) {
-				generateAnalisisKeputusanPenilaianTeknikalPdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
+				generateCoverPdfFromVelocity(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_MEETING_DTLS
+					.equals(docDefinitionKey)) {
+				generateMeetingDetailsPdfFromVelocity(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_COMMITTEE_DTLS
+					.equals(docDefinitionKey)) {
+				generateCommitteeDetailsPdfFromVelocity(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_SHORTLISTED
+					.equals(docDefinitionKey)) {
+				generatePematuhan1Pdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_COMPLIANCE_ASSESSMENT_METHOD
+					.equals(docDefinitionKey)) {
+				generateKaedah1Pdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_SHORTLISTED
+					.equals(docDefinitionKey)) {
+				generatePematuhan2Pdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD
+					.equals(docDefinitionKey)) {
+				generateKaedah2Pdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
+			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION
+					.equals(docDefinitionKey)) {
+				generateAnalisisKeputusanPenilaianTeknikalPdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
 			}
-			scQtEvaluationReport.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
+			scQtEvaluationReport
+					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
 		}
 		return scQtEvaluationReportAttachment;
 	}
 
-	private void generateAnalisisKeputusanPenilaianTeknikalPdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generateAnalisisKeputusanPenilaianTeknikalPdf(
+			ScAttachment attachment, ScQt qt) throws Exception {
 		debugLogger("generateAnalisisKeputusanPenilaianTeknikalPdf");
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_ANALYSIS_TECH_FIN_EVALUATION);
+		attachment
+				.setFileName(SourcingConstants.DOCNAME_EV_ANALYSIS_TECH_FIN_EVALUATION);
 		populateAttachmentDetails(attachment);
 
 		long qtId = qt.getQtId();
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPTPH_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_FEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_AKPT_TEC_RPT_JSP;
 		}
 
@@ -3633,18 +3704,23 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	private void generateKaedah2Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generateKaedah2Pdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
 		debugLogger("generateKaedah2Pdf");
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_ASSESSMENT_METHOD);
+		attachment
+				.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_ASSESSMENT_METHOD);
 		populateAttachmentDetails(attachment);
 
 		long qtId = qt.getQtId();
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP;
 		}
 
@@ -3654,18 +3730,23 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	private void generatePematuhan2Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generatePematuhan2Pdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
 		debugLogger("generatePematuhan2Pdf");
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_SHORTLISTED);
+		attachment
+				.setFileName(SourcingConstants.DOCNAME_EV_EVALUATION_SHORTLISTED);
 		populateAttachmentDetails(attachment);
 
 		long qtId = qt.getQtId();
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_TEC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPSAP2_FEC_RPT_JSP;
 		}
 
@@ -3675,16 +3756,20 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	private void generateKaedah1Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generateKaedah1Pdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
 		debugLogger("generateKaedah1Pdf");
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_ASSESSMENT_METHOD);
+		attachment
+				.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_ASSESSMENT_METHOD);
 		populateAttachmentDetails(attachment);
 
 		long qtId = qt.getQtId();
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP;
 		}
 
@@ -3694,16 +3779,20 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	private void generatePematuhan1Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generatePematuhan1Pdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
 		debugLogger("generatePematuhan1Pdf");
-		attachment.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_SHORTLISTED);
+		attachment
+				.setFileName(SourcingConstants.DOCNAME_EV_COMPLIANCE_SHORTLISTED);
 		populateAttachmentDetails(attachment);
 
 		long qtId = qt.getQtId();
 		String reportName = "";
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPP1_PEMATUHAN_EC_RPT_JSP;
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP;
 		}
 
@@ -3713,7 +3802,8 @@ public class EvaluationBackingBean extends
 		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
 
-	private void generateCommitteeDetailsPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generateCommitteeDetailsPdfFromVelocity(
+			ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_EV_COMMITTEE_DTLS);
 		populateAttachmentDetails(attachment);
 
@@ -3977,6 +4067,12 @@ public class EvaluationBackingBean extends
 		debugLogger("deleteUploadFile");
 		getManagedBean().getScQtEvaluationReport()
 				.setScQtEvaluationReportAttachment(null);
+	}
+
+	public void deleteDemoUploadFile() {
+		debugLogger("deleteUploadFile");
+		getManagedBean().getScQtChecklist().setScQtCheckListAttachment(null);
+
 	}
 
 	public String showTemplateAction(ScQtEvaluationReport scQtEvaluationReport)
