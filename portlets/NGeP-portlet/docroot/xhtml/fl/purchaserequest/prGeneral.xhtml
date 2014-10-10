@@ -49,7 +49,8 @@
 				</td>
 			</tr>										
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="8" id="chargeOrgProfileId" readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
