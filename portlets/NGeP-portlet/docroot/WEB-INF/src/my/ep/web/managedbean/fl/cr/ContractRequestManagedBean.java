@@ -226,6 +226,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean emailValidate = false;
 	private boolean queryDisplay=false;
 
+	private PmVotFund feeVoteFund;
 	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
@@ -2124,6 +2125,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setQueryDisplay(boolean queryDisplay) {
 		this.queryDisplay = queryDisplay;
+	}
+
+	public PmVotFund getFeeVoteFund() {
+		return feeVoteFund;
+	}
+
+	public void setFeeVoteFund(PmVotFund feeVoteFund) {
+		this.feeVoteFund = feeVoteFund;
 	}
 
 
