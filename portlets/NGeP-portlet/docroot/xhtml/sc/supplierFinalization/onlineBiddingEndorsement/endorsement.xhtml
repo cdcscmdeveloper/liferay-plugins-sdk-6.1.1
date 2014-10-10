@@ -38,7 +38,7 @@
 						<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
 							action="#{suppFinalBiddingBackingBean.retrieveBiddingSummary}"
 							update="@form" />
-						<p:menuitem rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+						<p:menuitem rendered="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
 							value="#{lbl['lbl.sc.endorsement']}"
 							action="#{suppFinalBiddingBackingBean.retrieveOnlineEndorsement}"
 							update="@form" />
