@@ -470,6 +470,21 @@ a:hover.linkButton {
 	font-family: Arial;
 }
 
+.outputLabel-view-label {
+	display: inline-block;
+	text-align: left !important;
+	font-size: 12px;
+	font-weight: bold;
+	vertical-align: middle;
+	float: right;
+	padding: 0 10px 0 0;
+	font-family: inherit;
+}
+
+.outputLabel-view-label:AFTER{
+	content:" :";
+}
+
 .columnWidthCatatan {
 	width: 50%;
 	vertical-align: top;
