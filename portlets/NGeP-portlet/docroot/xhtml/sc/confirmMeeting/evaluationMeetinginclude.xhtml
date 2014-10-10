@@ -135,7 +135,7 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="*" styleClass="mandatory"></h:outputText>
+					<!-- <h:outputText value="*" styleClass="mandatory"></h:outputText> -->
 					<h:outputText value="#{lbl['lbl.sc.eva.committee.role']}"></h:outputText>
 				</f:facet>
 				<ui:fragment rendered="#{committeeMember.scCommitteeMember.PNP}">
@@ -143,14 +143,14 @@
 						value="#{evaluationMeetingBackingBean.getParameterDesc(committeeMember.scCommitteeMember.memberRole)}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeMember.scCommitteeMember.PNP}">
-					<p:selectOneMenu id="meetingRoleId" required="true"
+					<p:selectOneMenu id="meetingRoleId" 
 						label="#{lbl['lbl.sc.eva.committee.role']}"
 						value="#{committeeMember.scCommitteeMember.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{evaluationMeetingBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.committeeRole)}" />
 					</p:selectOneMenu>
-					<p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message>
+					<!-- <p:message id="meetingRoleMsg" for="meetingRoleId" display="icon"></p:message> -->
 				</ui:fragment>
 
 			</p:column>
