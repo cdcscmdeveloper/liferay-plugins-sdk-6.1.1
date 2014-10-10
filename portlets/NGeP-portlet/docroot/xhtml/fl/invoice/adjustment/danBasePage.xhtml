@@ -22,9 +22,12 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
-						rendered="#{danBackingBean.managedBean.taskId==null}"
-						icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" icon="ui-icon-back" 
+						action="/xhtml/fl/docsearch/flDocSearch.xhtml"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+						rendered="#{danBackingBean.managedBean.taskId==null}" />
+				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{danBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" update="@form"
