@@ -60,17 +60,17 @@
 	
 						<table style="width: 100%">
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.contrVal']}" /></td>
 								<td>
 									<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" />
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.procMode']}" /></td>
 								<td><p:selectOneMenu value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementModeId}"
 										style="width: 207px;margin-bottom: 5px;" disabled="true">
 										<f:selectItems value="#{viewSmApplBackingBean.getDropdownValues('PM')}" />
@@ -78,7 +78,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 								<td><p:selectOneRadio disabled="true"
 										value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
@@ -86,11 +86,11 @@
 									</p:selectOneRadio></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.statBody']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
 								<td><p:selectOneRadio disabled="true" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
@@ -99,13 +99,13 @@
 							</tr>
 							<tr>
 							
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
 								<td>
 									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
@@ -119,7 +119,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
@@ -133,7 +133,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
