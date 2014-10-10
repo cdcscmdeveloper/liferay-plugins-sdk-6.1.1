@@ -2218,7 +2218,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(selectedTabIndex==3){
 			populateChargeLineData(false);	
-			validateOrderQty();
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
 			getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
@@ -2229,47 +2228,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(selectedTabIndex==4){
 			initializeApproverGroup();
-		}
-	}
-	
-	private void validateOrderQty() {
-		BigDecimal requestedQty = null;
-		BigDecimal sumorderedQty = null;
-		BigDecimal newQty = null;
-		Map<Long, BigDecimal> sumOrderedQtyMap = new HashMap<Long,BigDecimal>(); 
-		List<FlFulfilmentItemAddr> itemAddrList = new ArrayList<FlFulfilmentItemAddr>();
-		for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()) {
-			for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-				if(sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()) != null ){
-					if(itemAddr.getOrderedQty() == null){
-						itemAddr.setOrderedQty(new BigDecimal(0));
-					}
-					newQty = sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId()).add(itemAddr.getOrderedQty());
-					sumOrderedQtyMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(), newQty);
-				}else{
-					sumOrderedQtyMap.put(itemAddr.getScRequestItem().getRequestNoteItemId(), itemAddr.getOrderedQty());
-					itemAddrList.add(itemAddr);
-				}
-			}
-		}
-		
-//		for(Map.Entry<Long,BigDecimal> entry : sumOrderedQtyMap.entrySet()){//TODO tbd by gustia from lilian
-//			requestReqDTO.setRequestItemId(entry.getKey());
-//			requestReqDTO.setOrderQuantity(entry.getValue());
-//			purchaseRequestSO.checkIsOrderQuantityMet(requestReqDTO);
-//			
-//		}
-		
-		for(FlFulfilmentItemAddr itemAddr : itemAddrList){
-			requestedQty = itemAddr.getScRequestItem().getQuantity();
-			sumorderedQty = sumOrderedQtyMap.get(itemAddr.getScRequestItem().getRequestNoteItemId());
-			if(requestedQty!=null && requestedQty.intValue() != 0){
-				if(requestedQty.intValue() > sumorderedQty.intValue()){
-					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),itemAddr.getScRequestItem().getItemName()});
-				}else if(requestedQty.intValue() < sumorderedQty.intValue()){
-					throw new EpException(MessageConst.ERROR_740007,new String[]{sumorderedQty.toString() ,requestedQty.toString(),itemAddr.getScRequestItem().getItemName()});
-				}
-			}
 		}
 	}
 	
