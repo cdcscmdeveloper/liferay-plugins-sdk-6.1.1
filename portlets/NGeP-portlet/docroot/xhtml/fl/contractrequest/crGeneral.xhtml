@@ -51,7 +51,7 @@
 						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
-						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
 						update=":form:chargeOrgProfileId" size="39">
 					</ac:lov></td>
 				<td>
