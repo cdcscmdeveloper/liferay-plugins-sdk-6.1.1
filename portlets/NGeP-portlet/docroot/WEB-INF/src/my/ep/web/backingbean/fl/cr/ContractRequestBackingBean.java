@@ -222,7 +222,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
-		if(getManagedBean().getActiveContractList()==null) {
+		if(getManagedBean().getActiveContractList()==null && isRequisitioner()) {
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 
