@@ -159,6 +159,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			Long qtId = Long.valueOf(dataType.getQtId());
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			getManagedBean().setCommitteeType(committeeType);
+			getManagedBean().setPayLoad(dataType);
 			
 			//Long qtId = 2923L;
 			//String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
@@ -877,6 +878,7 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			
 			ScQtCommittee scQtCommittee = preparationDtlsInfo();
 			reqDTO.setScQtCommittee(scQtCommittee);
