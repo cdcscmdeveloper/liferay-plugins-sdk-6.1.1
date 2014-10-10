@@ -9,10 +9,13 @@
 	<h:panelGroup id="shrHolderPanGroup">
 		<p:panel id="shareHolderDialog">
 			<div align="left">
-				<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
-					icon="ui-icon-back" update=":form" process="@this"
-					actionListener="#{viewSmApplBackingBean.backFromPersonnelPage}" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				<p:commandLink
+					action="#{viewSmApplBackingBean.backFromPersonnelPage}"
+					process="@this" partialSubmit="true" update=":form"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					style="padding-right:5px;">
+					<p:commandButton type="button" value="#{lbl['lbl.sm.button.back']}" icon="ui-icon-prev"/>
+				</p:commandLink>
 			</div>
 			<ui:include
 				src="/xhtml/sm/shared/applViewOnlyPages/shareHolderInfoPopUpFormViewOnly.xhtml" />
