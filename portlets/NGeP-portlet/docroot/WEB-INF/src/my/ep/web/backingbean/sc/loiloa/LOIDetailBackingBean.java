@@ -49,7 +49,6 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -1224,6 +1223,55 @@ public class LOIDetailBackingBean extends
 			// userSO = null;
 			qtAwardSO = null;
 		}
+	}
+	
+	public String submitLoiListAction() {
+		debugLogger("submitLoiListAction");
+
+		IQTAwardSO iqtAwardSO = null;
+
+		try {
+			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			ScQt scQt = getManagedBean().getScQtFinalization().getScQt();
+			
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setDocType(getManagedBean().getDocType());
+
+			AwardSupplierResDTO resDTO = iqtAwardSO.completeLoiListBPMTask(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				renewSesionObject();
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_QUOTATION),
+																scQt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
+
+		} finally {
+			iqtAwardSO = null;
+		}
+
+		return null;
 	}
 
 	public String submitAction() {
