@@ -124,7 +124,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<p:inputText size="9" value="#{chargeLineNode.invAmt}" maxlength="15" id="chargeInvAmt" label = "InvoiceAmount" required="true" style="text-align:right;color: red;"  
-					rendered="#{chargeLineNode.parent == 'false'}" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='Update' || invoiceBackingBean.managedBean.buttonVal=='ACK'}">
+					rendered="#{chargeLineNode.parent == 'false'}" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='Update' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}">
 					<p:ajax event="blur"  process="@this" partialSubmit="true" update="chargeLineTbl"
 								listener="#{invoiceBackingBean.retrieveInvTotalAmount(chargeLineNode)}">
 					</p:ajax>
