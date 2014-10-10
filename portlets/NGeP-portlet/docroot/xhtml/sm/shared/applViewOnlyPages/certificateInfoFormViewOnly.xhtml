@@ -52,32 +52,32 @@
 			<p:outputPanel id="certificateDetailsPanel">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certType']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.certType']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCertType}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certBody']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.certBody']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.pmCertBody.bodyName}" /></td>
 					</tr>
 		
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.certName']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.certName']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certName}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.strtDate']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.strtDate']}" /></td>
 						<td>
 							<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certStartDate}" />
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.expDate']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.expDate']}" /></td>
 						<td>
 							<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certEndDate}" />
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.cert.rating']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.cert.rating']}" /></td>
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCert.certScore}"/>
 						</td>

@@ -10,7 +10,7 @@
 		<p:panel id="catCodeInfPan">
 			<table>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']} :" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 					<td>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.catCodes.norm']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'N'}"/>
 						<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.catCodes.spl']}" rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}"/>

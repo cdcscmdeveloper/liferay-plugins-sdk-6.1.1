@@ -28,22 +28,22 @@
 				<p:panel header="#{lbl['lbl.sm.aprvrDecisionLbl']}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.suppname']} :" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.suppname']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
 
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']} :" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 							<td>
 								<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.smAppl.applSubmitDate}" />
 							</td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.status']} :" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.status']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.currentStatus}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.po.recommend']} :" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.po.recommend']}" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.poSecReview.remarkToApprover}" /></td>
 						</tr>
 					</table>

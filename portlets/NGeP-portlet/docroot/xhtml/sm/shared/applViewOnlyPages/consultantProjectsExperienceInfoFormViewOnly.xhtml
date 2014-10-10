@@ -62,40 +62,40 @@
 	
 						<table style="width: 100%">
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.projTitle']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.title}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.clientName']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.clientName']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientName}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projCost']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.projCost']}" /></td>
 								<td>
 									<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.contractValue}" />
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.doneFor']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 								<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.clientType}" disabled="true">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.others']}" itemValue="O" />
 									</p:selectOneRadio></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.projDtls.refNo']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.refNo}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.projLoc']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.projDtls.projLoc']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.projectLocation}"/></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.serviceProvide']} " /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.projDtls.serviceProvide']}" /></td>
 								<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.workServiceDesc}" cols="36" style="margin-bottom:5px;" /></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.workProgress']}" /></td>
 								<td><p:selectOneRadio value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.progressStatus}" disabled="true">
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
 										<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
@@ -103,19 +103,19 @@
 									</p:selectOneRadio></td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value=" #{lbl['lbl.sm.projDtls.consultFee']}" /></td>
 								<td>
 									<ac:labelAmount styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.consultantFee}" />
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.apptDate']}" /></td>
 								<td>
 									<ac:labelDate styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedCompanyExperience.procurementDate}" />
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.mainCat']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
@@ -129,7 +129,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCat']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
@@ -143,8 +143,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td><p:outputLabel
-										value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
+								<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.projDtls.subCatDiv']}" /></td>
 								<td>
 									<c:if test="#{not empty viewSmApplBackingBean.managedBean.selectedCompanyExperience.smCompanyExperienceCats}">
 										<table width="100%">
