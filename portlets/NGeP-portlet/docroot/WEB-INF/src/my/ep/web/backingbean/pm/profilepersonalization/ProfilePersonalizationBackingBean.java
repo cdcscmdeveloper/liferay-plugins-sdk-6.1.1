@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -22,11 +21,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -38,7 +34,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -52,11 +47,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserServiceUtil;
 
 /**
  * @author DK, RAIN POH
@@ -391,12 +381,12 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		if(StringUtils.isBlank(user.getEmail())){
 			throw new EpException(MessageConst.ERROR_770036);
 		}
-		if(StringUtils.isBlank(user.getPmUserPreference().getPreferredLanguage())){
+		if(StringUtils.isBlank(user.getPreferredLanguage())){
 			throw new EpException(MessageConst.ERROR_770037);
 		}
-		if(user.getPmUserPreference().getNotifyRemovalDay()==null 
-				|| (user.getPmUserPreference().getNotifyRemovalDay()!=null 
-				&& user.getPmUserPreference().getNotifyRemovalDay()==0)){
+		if(user.getNotifyRemovalDay()==null 
+				|| (user.getNotifyRemovalDay()!=null 
+				&& user.getNotifyRemovalDay()==0)){
 			throw new EpException(MessageConst.ERROR_770038);
 		}
 
