@@ -17,7 +17,7 @@
 				<td>	        
           			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
           				label="#{lbl['lbl.pm.profiles.preferences.language']}"
-          				value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.preferredLanguage}">
+          				value="#{profileManagementBackingBean.managedBean.selectedUser.preferredLanguage}">
           				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />  
 	            		<f:selectItems value="#{profileManagementBackingBean.getLanguageList()}" 
 	            			var="language" itemLabel="#{language.languageName}" itemValue="#{language.languageCode}" />    
@@ -36,7 +36,7 @@
 				<td>
 					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}" maxlength="2"
 						label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"
-						value="#{profileManagementBackingBean.managedBean.selectedUser.pmUserPreference.notifyRemovalDay}" size="5" 
+						value="#{profileManagementBackingBean.managedBean.selectedUser.notifyRemovalDay}" size="5" 
 						validatorMessage="#{lbl['lbl.pm.profiles.invalidNo']}">
 						 <f:validateLongRange minimum="1"  disabled="#{empty param['disableValidation']}"/>
 					</p:inputText>
@@ -48,18 +48,19 @@
 					<p:message id="itPreNotifyDayMsg" for="itPreNotifyDay" display="icon" />
 				</td>
 			</tr>
+			<tr>
+				<th width="40%">
+					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</th>
+				<td>
+					<p:selectBooleanCheckbox id="itPreEmail" value="#{profileManagementBackingBean.managedBean.selectedUser.notifyByEmail}" />
+					<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
+					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
+					<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
+				</td>
+			</tr>
 		</table>
 	</p:panel>
-	<!-- Notification List -->
-	<p:panel>
-		<br/>
-    	<p:dataTable value="#{profileManagementBackingBean.managedBean.notifications}" var="preference" >
- 			<p:column headerText="#{lbl['lbl.pm.profiles.preferences.preferred']}" > 
-   				<p:selectBooleanCheckbox value="#{preference.preferred}" /> 
-    		</p:column> 		
-	    	<p:column headerText="#{lbl['lbl.pm.profiles.preferences.notificationmode']}" > 
-          		#{profileManagementBackingBean.getParameterDesc(ParameterTypeConst.notificationType, preference.notifyMode)}
-        	</p:column>            
-		</p:dataTable>
-	</p:panel>
+	
 </ui:composition>

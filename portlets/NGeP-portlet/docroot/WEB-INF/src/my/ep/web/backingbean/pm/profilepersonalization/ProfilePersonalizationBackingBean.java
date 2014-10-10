@@ -148,12 +148,11 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		pmUser.setPMP(false);
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 		pmUser.setOrgTypeCode(new PmParameter());
+	
+		pmUser.setNotifyByEmail(true);
 		
-		//initial preference - notification
-		this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
-
 		//initial preference
-		PmCommonUtil.loadPmUserPreference(pmUser, pmUser.getPmUserPreference());
+		PmCommonUtil.loadPmUserPreference(pmUser);
 		
 		//initial address
 		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
@@ -189,15 +188,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 			//load address
 			populateUserAddress(pmUser);
 			
-			//load preference - notification
-			this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
-			
-			//load preference 
-			if(pmUser.getPmUserPreference()==null){
-				PmUserPreference pmUserPreference = new PmUserPreference();
-				pmUserPreference.setPmUser(pmUser);
-				pmUser.setPmUserPreference(pmUserPreference);
-			}
+			//initial preference
+			PmCommonUtil.loadPmUserPreference(pmUser);
 			
 			//load password
 			pmUser.setPassword(null);

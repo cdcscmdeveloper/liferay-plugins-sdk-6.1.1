@@ -252,16 +252,8 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 			
 			populateUserAddress(pmUser);
 			
-			//load preference - notification
-			this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
-			
-			
 			//load preference
-			if(pmUser.getPmUserPreference()==null){
-				PmUserPreference pmUserPreference = new PmUserPreference();
-				pmUserPreference.setPmUser(pmUser);
-				pmUser.setPmUserPreference(pmUserPreference);
-			}
+			PmCommonUtil.loadPmUserPreference(pmUser);
 			
 			//load attachment
 			if(pmUser.getPmUserAttachments()==null){
@@ -313,11 +305,10 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
 		pmUser.setOrgTypeCode(new PmParameter());
 		
-		//initial preference - notification
-		this.getManagedBean().setNotifications(PmCommonUtil.generateDefaultPmUserNotifications(pmUser, getFacesScopes().getUserLocale().getLanguage()));
-
+		pmUser.setNotifyByEmail(true);
+		
 		//initial preference
-		PmCommonUtil.loadPmUserPreference(pmUser, pmUser.getPmUserPreference());
+		PmCommonUtil.loadPmUserPreference(pmUser);
 		
 		//initial address
 		this.getManagedBean().setUserAddress(PmCommonUtil.getNewPmAddress());
@@ -1877,8 +1868,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 		}
 		logger.info("deleteAttachment - END");
 	}
-
-
+	
 	/*
 	private boolean checkOldPassword(PmUser pmUser) throws PortalException, SystemException{
 		logger.info("checkOldPassword");
