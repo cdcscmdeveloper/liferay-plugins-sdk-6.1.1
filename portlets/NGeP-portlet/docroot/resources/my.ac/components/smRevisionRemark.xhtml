@@ -17,12 +17,11 @@
 			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.approverUser or cc.attrs.backingBean.managedBean.poUser}">
 				<br />
 				
-				<table style="width:50%">
+				<table style="width:70%">
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.remark']}" style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;text-decoration: underline;float:right;font-style:italic;"/>
 						</td>
-						<td></td>
 					</tr>
 					<tr>
 						<td height="5"></td>
@@ -34,25 +33,11 @@
 					<c:if test="#{cc.attrs.backingBean.managedBean.approverUser}">
 						<tr>
 							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-							<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}"/></td>
+								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}"/></td>
 						</tr>
 					</c:if>
 				</table>
 				
-				<!-- <p:panelGrid styleClass="tablePanel" id="remarkTableId" style="table-layout: fixed; width: 60%">
-					<p:row id="remarkHeaderId">
-						<p:column style="background-color: #F0EFEF;font-weight: bold;word-wrap: break-word">#{lbl['lbl.sm.remarks.officer']}</p:column>
-						<p:column style="background-color: #F0EFEF;font-weight: bold;word-wrap: break-word">#{lbl['lbl.sm.remarks']}</p:column>
-					</p:row>
-					<p:row id="remarkDataPoId">
-						<p:column style="word-wrap: break-word">#{lbl['lbl.sm.sectionPoRmrk']}</p:column>
-						<p:column style="word-wrap: break-word">#{cc.attrs.poRemark}</p:column>
-					</p:row>
-					<p:row id="remarkDataApprvId" rendered="#{cc.attrs.backingBean.managedBean.approverUser}">
-						<p:column style="word-wrap: break-word">#{lbl['lbl.sm.sectionApprRmrk']}</p:column>
-						<p:column style="word-wrap: break-word">#{cc.attrs.approverRemark}</p:column>
-					</p:row>
-				</p:panelGrid> -->
 				<br />
 			</p:outputPanel>
 	</cc:implementation>
