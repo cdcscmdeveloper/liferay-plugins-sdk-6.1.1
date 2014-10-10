@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sc.supplierfinalization;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.bean.sc.BidPackageBean;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -16,7 +21,12 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.bidding.BiddingReqDTO;
+import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -27,20 +37,29 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
+import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBiddingManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
 /**
@@ -73,15 +92,19 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 
 			renewSesionObject();
 			getManagedBean().setCommitteeType(committeeType);
-			retriveQTDetails(qtId);
-			retrieveSupplierFinalization(qtId);
-			retrieveBiddingSummary();
+			retrieveOnlineBiddingEndorsement(qtId);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.FC_ONLINE_BIDDING_ENDORSEMENT_PAGE);
 		} catch (Exception e) {
 			handleException(e);
 		}
+	}
+	
+	private void retrieveOnlineBiddingEndorsement(Long qtId){
+		retriveQTDetails(qtId);
+		retrieveSupplierFinalization(qtId);
+		retrieveBiddingSummary();
 	}
 	
 	public void retriveQTDetails(Long qtId) {
@@ -125,27 +148,48 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 	 */
 	public void retrieveBiddingSummary() {
 		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY);
-		Long qtId = getManagedBean().getScQt().getQtId();	
+		ScQt scQt = getManagedBean().getScQt();	
 		String recommendType = getManagedBean().getScQtFinalization().getRecommendedTypeId().getParameterCode();
 
 		IScheduleBiddingSO scheduleBiddingSO = null;
+		IBiddingSO biddingSO = null;
 		try {
 			scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
-			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-			reqDTO.setQtID(qtId);
-			
-			ScheduleBiddingResDTO resDTO = new ScheduleBiddingResDTO();
 			
 			if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)){
-				resDTO = scheduleBiddingSO.retrieveBiddingPackagePrice(reqDTO);
-				if (resDTO.isSuccessful()) {
-					List<ScBidPrice> biddingPackagePriceList = resDTO.getBiddingPackagePriceList();
-					getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
+				
+				ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+				Long qtId = scQt.getQtId();
+				reqDTO.setQtID(qtId);
+				reqDTO.setDocType(QTConstants.DOCTYPE_QT);
+				
+				ScheduleBiddingResDTO resDTO = scheduleBiddingSO.retrieveBiddingScheduleByDocId(reqDTO);
+				if(resDTO.isSuccessful()){
+					List<ScBidSchedule> bidScheduleList = resDTO.getBidSchedules();
+					if(scQt.isZonal()){
+						//TODO
+					}else{
+						BiddingReqDTO bidReqDTO = new BiddingReqDTO();
+						Long bidScheduleId = bidScheduleList.get(0).getBidScheduleId();
+						bidReqDTO.setBidScheduleId(bidScheduleId);
+						
+						BiddingResDTO bidResDTO = biddingSO.retrieveBidScheduleDtl(bidReqDTO);
+						if (bidResDTO.isSuccessful()) {
+							List<BidPackageBean> biddingPackagePriceList = bidResDTO.getBidPackages();
+							getManagedBean().setBiddingPackagePriceList(biddingPackagePriceList);
+						}
+					}
 				}
 			}else if(recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)){
-				resDTO = scheduleBiddingSO.retrieveBiddingItem(reqDTO);
+				
+				ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+				Long qtId = scQt.getQtId();
+				reqDTO.setQtID(qtId);
+				
+				ScheduleBiddingResDTO resDTO = scheduleBiddingSO.retrieveBiddingItem(reqDTO);
 				if (resDTO.isSuccessful()) {
-					List<ScBidItem> biddingItemList = resDTO.getBiddingItemList();
+					List<ScBidItem> biddingItemList = resDTO.getBidItemsList();
 					getManagedBean().setBiddingItemList(biddingItemList);
 				}
 			}
@@ -157,20 +201,20 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 	public void selectBiddingItem(SelectEvent event) {
 		ScBidItem bidItem = (ScBidItem) event.getObject();
 
-		IScheduleBiddingSO scheduleBiddingSO = null;
+		IBiddingSO biddingSO = null;
 		try {
-			scheduleBiddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IScheduleBiddingSO.class);
+			biddingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 			
-			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+			BiddingReqDTO reqDTO = new BiddingReqDTO();
 			reqDTO.setBidItemId(bidItem.getBidItemId());
 
-			ScheduleBiddingResDTO resDTO = scheduleBiddingSO.retrieveBiddingItemPrice(reqDTO);
+			BiddingResDTO resDTO = biddingSO.retrieveLastBidPricesByItem(reqDTO);
 			if (resDTO.isSuccessful()) {
-				List<ScBidPrice> biddingItemPriceList = resDTO.getBiddingItemPriceList();
+				List<ScBidPrice> biddingItemPriceList = resDTO.getBidPrices();
 				getManagedBean().setBiddingItemPriceList(biddingItemPriceList);
 			}
 		}finally {
-			scheduleBiddingSO = null;
+			biddingSO = null;
 		}
 	}
 	
@@ -207,15 +251,6 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 		} finally {
 			meetingSO = null;
 		}
-	}
-	
-	/**
-	 * To retrieve the offline Endorsement (escalation)
-	 */
-	public void retrieveOfflineEndorsement() {
-		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT);
-		//TODO
-		
 	}
 	
 	/**
@@ -313,6 +348,182 @@ public class SupplierFinalizationBiddingBackingBean extends SourcingBaseBackingB
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
+	}
+	
+	/**
+	 * To retrieve the offline Endorsement (escalation)
+	 */
+	public void retrieveOfflineEndorsement() {
+		this.getManagedBean().setOnlineBiddingActiveIndex(ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT);
+
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		List<ScQtFinalizationEndorsementRemarks> remarks = scQtFinalization.getScQtFinalizationEndorsementRemarks();
+		if(remarks != null){
+			if(getManagedBean().getRemarks() == null){
+				getManagedBean().setRemarks(new ArrayList<ScQtFinalizationEndorsementRemarks>());
+			}
+			getManagedBean().getRemarks().addAll(remarks);
+		}
+		initializeNewRemarks();
+	}
+	
+	private void initializeNewRemarks() {
+		FacesScopes facesScopes = new FacesScopes();
+		
+		ScQtFinalizationEndorsementRemarks remark = new ScQtFinalizationEndorsementRemarks();
+		setUserDetails(remark);
+		remark.setCreatedUser(facesScopes.getUserSessionBean());
+		remark.setScQtFinalization(getManagedBean().getScQtFinalization());
+		
+		PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
+		remark.setPmStatus(status);
+		
+		if(getManagedBean().getRemarks() == null){
+			getManagedBean().setRemarks(new ArrayList<ScQtFinalizationEndorsementRemarks>());
+		}
+		getManagedBean().getRemarks().add(remark);
+	}
+	
+	private PmStatus getStatusById(Long statusId){
+		IStatusSO statusSO = null;
+		try{
+			statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(statusId);
+			
+			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
+			PmStatus status = resDTO.getPmStatus();
+		
+			return status;
+		} finally {
+			statusSO = null;
+		}
+	}
+	
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		if (event.getFile() != null) {
+			ScAttachment scAttachment = null;
+			ScQtFinalization scQtFinalization = this.getManagedBean().getScQtFinalization();
+			ScQtFinalizationEndorsementAttachment attachment = scQtFinalization.getScQtFinalizationEndorsementAttachment();
+			if (null == attachment) {
+				attachment = new ScQtFinalizationEndorsementAttachment();
+				attachment.setScQtFinalization(scQtFinalization);
+				scQtFinalization.setScQtFinalizationEndorsementAttachment(attachment);
+			} else {
+				attachment.setScQtFinalization(scQtFinalization);
+				scQtFinalization.setScQtFinalizationEndorsementAttachment(attachment);
+			}
+			attachment.setDocNo(String.valueOf(scQtFinalization.getFinalizationId()));
+			scAttachment = attachment;
+			uploadAttachment(event.getFile(), scAttachment);
+			getManagedBean().setScQtFinalization(scQtFinalization);
+		}
+	}
+
+	/**
+	 * determineIcon for displaying image icon in pid
+	 */
+	public String determineIcon(ScQtApprovalAttachment attachment) {
+		String imageFileName = "icon_file_default.png";
+		String ext = "";
+		if (attachment != null) {
+			String fileName = attachment.getFileName();
+			if (fileName != null) {
+				int mid = fileName.lastIndexOf(".");
+				ext = fileName.substring(mid + 1, fileName.length());
+			}
+			if ("doc".equals(ext) || "docx".equals(ext)) {
+				imageFileName = "icon_doc.png";
+			} else if ("pdf".equals(ext)) {
+				imageFileName = "icon_pdf.png";
+			} else if ("xls".equals(ext) || "xlsx".equals(ext)
+					|| "csv".equals(ext)) {
+				imageFileName = "icon_exel.png";
+			} else if ("jpg".equals(ext) || "bmp".equals(ext)
+					|| "png".equals(ext) || "gif".equals(ext)) {
+				imageFileName = "icon_image.png";
+			} else if ("txt".equals(ext)) {
+				imageFileName = "icon_txt.png";
+			}
+		}
+		return imageFileName;
+	}
+	
+	public void saveOfflineEndorsement(){
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			
+			int activeIndex = this.getManagedBean().getOnlineBiddingActiveIndex();
+			String taskId = this.getManagedBean().getTaskId();
+			String[] outComes = this.getManagedBean().getOutComes();
+			String processName = this.getManagedBean().getProcessName();
+			ScQt scQt = getManagedBean().getScQt();
+			
+			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
+			
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setScQtFinalization(scQtFinalization);
+			qtSuppFinalizationSO.saveFinalizationOfflineEndorsement(reqDTO);
+			
+			renewSesionObject();
+			setTaskDetails(activeIndex, taskId, outComes, processName);
+			
+			Long qtId = scQt.getQtId();
+			retrieveOnlineBiddingEndorsement(qtId);
+			
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + scQt.getQtNo();
+			String variable2 = CommonMethod.getMessageCommon("lbl.sc.online.bidding.endorsement");
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
+						MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+	
+	private ScQtFinalization prepareFinalizationInfo(){
+		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+		
+		List<ScQtFinalizationEndorsementRemarks> remarks = getManagedBean().getRemarks();
+		if(remarks != null && remarks.size() > 0){
+			scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
+		}
+		setUserDetails(scQtFinalization);
+		
+		return scQtFinalization;
+	}
+	
+	public void submitBiddingEndorsement(){
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			String qtNo = getManagedBean().getScQt().getQtNo();
+			
+			if(getManagedBean().getScQtFinalization().getOnlineBiddingEndorse().equals(ParameterConst.ONLINE_BIDDING_MEETING)){
+				//TODO - for endorse n sign off by committee member 
+				//status should be pending Endorsement
+			}else{
+				//TODO - for escalation, upload doc and submit
+				//status should be pending Escalation
+			}
+			
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
+			String variable2 = CommonMethod.getMessageCommon("lbl.sc.online.bidding.endorsement");
+			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);				  
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+	}
+
+	private void setTaskDetails(Integer activeIndex, String taskId, String[] outComes, String processName){
+		if(activeIndex != null){
+			this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
+		}
+		this.getManagedBean().setTaskId(taskId);
+		this.getManagedBean().setOutComes(outComes);
+		this.getManagedBean().setProcessName(processName);
 	}
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
