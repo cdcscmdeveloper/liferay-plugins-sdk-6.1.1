@@ -80,7 +80,7 @@
 				                </f:facet>
 
 					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" update="@form"
-						size="15" headerText="Category Lov"
+						size="15" headerText="Category"
 						postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
 						saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
 						value="#{typeValueObj.ruleValue}">

@@ -29,10 +29,10 @@
 						<p:column>
 							<f:facet name="header">
 							
-					               #{lbl['lbl.cm.unspsc.code']}
+					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.cm.unspsc.code']}
 			                   	</f:facet>
-				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC"
-								update="@form" size="15" headerText="unspsc commodity Lov"
+				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true"
+								update="@form" size="15" headerText="unspsc commodity"
 								postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
 								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity[#{rowIndex}].unspscId" 
 								conditionField="recordStatus^1|unspscLevel^3"
@@ -49,9 +49,9 @@
 			            </p:column>
 			            <p:column width="10%">
 							<f:facet name="header">
-					                #{lbl['lbl.pm.unspsc.type']}
+					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.pm.unspsc.type']}
 				                </f:facet>
-							<p:selectOneMenu value="#{feeObj.typeId.typeId}"
+							<p:selectOneMenu value="#{feeObj.typeId.typeId}" required="true"
 								style="width:128px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{feeObj.types}" 

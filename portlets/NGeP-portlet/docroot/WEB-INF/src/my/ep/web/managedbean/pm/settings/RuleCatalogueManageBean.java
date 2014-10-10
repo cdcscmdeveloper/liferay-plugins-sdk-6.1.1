@@ -61,7 +61,9 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private CmUnspsc selectedComodity;
 	private CmItem selectedCmItem;
 	private String cmItemName;
-	
+	private List<PmFeeExemption> deletedOrgAndItemFeeExemptions;
+	private List<PmFeeExemption> deletedComodityFeeExemptions;
+	private List<PmFeeExemption> deletedContractFeeExemptions;
 	
 	public RuleCatalogueManageBean() {
 		
@@ -254,43 +256,42 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedCmItem(CmItem selectedCmItem) {
 		this.selectedCmItem = selectedCmItem;
 	}
+
+	public List<PmFeeExemption> getDeletedOrgAndItemFeeExemptions() {
+		if(deletedOrgAndItemFeeExemptions == null){
+			deletedOrgAndItemFeeExemptions = new ArrayList<PmFeeExemption>();
+		}
+		return deletedOrgAndItemFeeExemptions;
+	}
+
+	public void setDeletedOrgAndItemFeeExemptions(
+			List<PmFeeExemption> deletedOrgAndItemFeeExemptions) {
+		this.deletedOrgAndItemFeeExemptions = deletedOrgAndItemFeeExemptions;
+	}
+
+	public List<PmFeeExemption> getDeletedComodityFeeExemptions() {
+		if(deletedComodityFeeExemptions == null){
+			deletedComodityFeeExemptions = new ArrayList<PmFeeExemption>();
+		}
+		return deletedComodityFeeExemptions;
+	}
+
+	public void setDeletedComodityFeeExemptions(
+			List<PmFeeExemption> deletedComodityFeeExemptions) {
+		this.deletedComodityFeeExemptions = deletedComodityFeeExemptions;
+	}
+
+	public List<PmFeeExemption> getDeletedContractFeeExemptions() {
+		if(deletedContractFeeExemptions == null){
+			deletedContractFeeExemptions = new ArrayList<PmFeeExemption>();
+		}
+		return deletedContractFeeExemptions;
+	}
+
+	public void setDeletedContractFeeExemptions(
+			List<PmFeeExemption> deletedContractFeeExemptions) {
+		this.deletedContractFeeExemptions = deletedContractFeeExemptions;
+	}
 	
-//	private class kpiPagingDataModel extends PagingDataModel<PmKpiStatus> {
-//
-//		private static final long serialVersionUID = 1L;
-//
-//		public kpiPagingDataModel() {
-//			super("kpiValueTableID");
-//			// TODO Auto-generated constructor stub
-//		}
-//
-//		@Override
-//		protected ISearchResultBean<PmKpiStatus> pageChangeListener(
-//				ISearchBean<PmKpiStatus> searchBean) {
-//			System.out
-//					.println(">>>>>>>>>>>>>>>>>>>pageChangeListener<<<<<<<<<<<<<<<<<<<");
-//			IKPIStatusSO kpiSO = null;
-//			try {
-//
-//				kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
-//						.getServiceObject("pm", IKPIStatusSO.class);
-//
-//				KPIReqDTO reqDTO = new KPIReqDTO();
-//				FacesScopes fs = new FacesScopes();
-//				reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-//				reqDTO.setDocType(getSelectedDocumentType());
-//
-//				KPIResDTO resDTO = kpiSO.getKpiValuesDocyType(reqDTO);
-//
-//				System.out.println("*********after***********");
-//
-//				return resDTO.getResultBean();
-//
-//			} finally {
-//				kpiSO = null;
-//			}
-//		}
-//
-//	}
 
 }

@@ -28,10 +28,10 @@
 
 						<p:column>
 							<f:facet name="header">
-					               #{lbl['lbl.pm.contract.no']}
+					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.pm.contract.no']}
 			                   	</f:facet>
-				               <ac:lov id="lovContract" lovId="CT_CONTRACT"
-								update="@form" size="15" headerText="Contract Lov"
+				               <ac:lov id="lovContract" lovId="CT_CONTRACT" required="true" label="Contract NO."
+								update="@form" size="15" headerText="Contract"
 								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId" 
 								value="#{feeObj.contractId.contractNo}">
 							   </ac:lov>
@@ -43,7 +43,7 @@
 				                	#{lbl['lbl.so.itemname']}
 				                </f:facet>
 				                 <ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM"
-				                	update="@form" size="15" headerText="Contract Item Lov"
+				                	update="@form" size="15" headerText="Contract Item"
 				                	postUpdateListener="ruleCatalogueBackingBean.scRequestItemCodeUpdate(#{rowIndex},ruleCatalogueBackingBean.managedBean.feeExemptionsForContract)"
 								    saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem" 
 								    value="#{feeObj.requestItemId.itemName}">
