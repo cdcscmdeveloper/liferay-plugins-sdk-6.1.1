@@ -18,7 +18,7 @@
 				<ui:include src="/xhtml/sc/supplierproposal/supplierDetails.xhtml" />
 			</p:tab>
 
-		 	<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
+			<p:tab id="tab2" title="#{lbl['lbl.sc.sp.branch']}"
 				styleClass="noBorders tr,noBorders td">
 				<ui:include src="/xhtml/sc/supplierproposal/branchInfo.xhtml" />
 			</p:tab>
@@ -41,15 +41,15 @@
 			<p:tab id="tab6" title="#{lbl['lbl.sc.sp.categories.code']}"
 				styleClass="noBorders tr,noBorders td">
 				<ui:include src="/xhtml/sc/supplierproposal/category.xhtml" />
-			</p:tab> 
-			<ui:fragment rendered="#{statusHide}">
-				<p:tab id="tab7" title="Scores"
-					styleClass="noBorders tr,noBorders td">
+			</p:tab>
 
-					<ui:include
-						src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
-				</p:tab>
-			</ui:fragment>
+			<p:tab id="tab7" title="Scores" rendered="#{statusHide}"
+				styleClass="noBorders tr,noBorders td">
+
+				<ui:include
+					src="#{evaluationBackingBean.managedBean.evaluationPage}"></ui:include>
+			</p:tab>
+
 		</p:tabView>
 
 	</p:panel>

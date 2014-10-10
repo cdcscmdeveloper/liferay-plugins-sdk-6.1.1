@@ -6,19 +6,49 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<h:panelGroup id="reportMangaFile">
 
-		<p:dialog widgetVar="uploadDlg" position="top" resizable="false"
-			width="700px" height="200" styleClass="pop_up_top"
-			header="#{lbl['lbl.bpm.choose.file']}">
 
-			<p:fileUpload mode="advanced" style="display:inline;"
-				id="evaReportUpld" process="@this"
-				fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
-				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-				update="evauploadfile"
-				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				oncomplete="uploadDlg.hide()"></p:fileUpload>
-		</p:dialog>
-	</h:panelGroup>
+
+	<p:dialog id="supportAttachDlgids" widgetVar="supportAttachDlg"
+		modal="true" dynamic="true" hideEffect="explode" resizable="false"
+		width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
+			mode="advanced" id="dlgsuploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="bpkremarksupDtls" oncomplete="supportAttachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{evaluationBackingBean.preSentationDemoFileUpload}"
+			mode="advanced" id="upload"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="demoSupplierId" oncomplete="uploadDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
+	<p:dialog id="demotAttachDlgids" widgetVar="demoAttachDlg" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{evaluationBackingBean.reportUpload}"
+			mode="advanced" id="demodlgsuploadids"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="demoremarksupdtls" oncomplete="demoAttachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
 </ui:composition>
