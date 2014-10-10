@@ -135,7 +135,7 @@
 						saveObject="contractRequestBackingBean.managedBean.pmVoteFund"
 						update=":form:votCode1,:form:pmActiveLov,:form:projectLov,:form:setiaCode,:form:subSetiaCode,:form:cpCode"
 						readonly="true"
-						conditionField="recordStatusFlg^1|votFundType^A"
+						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{contractRequestBackingBean.managedBean.feeVoteFund.votFundCode}^2"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}" 
 						postUpdateListener="contractRequestBackingBean.checkVotFundLov()" 
 						value="#{contractRequestBackingBean.managedBean.pmVoteFund.votFundCode}"	>
