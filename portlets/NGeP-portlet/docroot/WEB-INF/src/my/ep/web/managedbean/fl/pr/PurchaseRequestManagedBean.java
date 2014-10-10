@@ -257,7 +257,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private boolean queryDisplay=false;
 	
-	
+	private PmVotFund feeVoteFund;
 /**
 	 * @return the chargeLineItemRoot
 	 */
@@ -2194,6 +2194,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setQueryDisplay(boolean queryDisplay) {
 		this.queryDisplay = queryDisplay;
+	}
+
+	public PmVotFund getFeeVoteFund() {
+		return feeVoteFund;
+	}
+
+	public void setFeeVoteFund(PmVotFund feeVoteFund) {
+		this.feeVoteFund = feeVoteFund;
 	}
 
 }
