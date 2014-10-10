@@ -8,6 +8,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -150,6 +152,7 @@ import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.CtActiveContractVO;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
@@ -287,6 +290,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
+				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
+					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
+				}				
+				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_750017);
+				}
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
+				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+				}
+			}
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -410,7 +425,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		
 		//initialize all the COA map
-		getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+		getVotFundList(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
 	}
 	private void getSumOrderedQty(FlFulfilmentRequest flRequest) {
 		if(flRequest.getFlFulfilmentItems() != null && !flRequest.getFlFulfilmentItems().isEmpty()){
@@ -493,13 +508,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ctReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		System.out.println("address List::: "+resDTO.getAddressTypeList().size());
-		
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
+		sortAddressType(getManagedBean().getAddressTypesList());
 	}
 	
 	public void flManualDeliveryAddr() {
 		getManagedBean().setEmailValidate(false);
+		retrieveCountryList();
 		getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 		getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
 		getManagedBean().getFlManulaAddress().setPmAddress(new PmAddress());
@@ -598,6 +613,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				
 				getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
+				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			}else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+						MessageUtils.getMessage(MessageConst.INFO_745053, new String[]{getFullAddress(addrType.getPmAddress())}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}	
 		}
 		getManagedBean().setAddressTypesList(new ArrayList<PmAddressType>());
@@ -1428,17 +1448,23 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			getVotFundList(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			getVotFundList(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
 		}
 		if(selectedTabIndex==1){
-			if(getManagedBean().getSelectedDelAddr()==null) { 
+			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			/*if(getManagedBean().getSelectedDelAddr()==null) { 
 				retrieveCountryList();
-			}
+			}*/
 			getManagedBean().setEmailValidate(true);
+		}
+		if(selectedTabIndex==2){
+			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
+				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			}
 		}
 		if(selectedTabIndex==4){
 			initializeApproverGroup();
@@ -2362,4 +2388,67 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}	
 			
 		}
+		
+		private void sortAddressType(List<PmAddressType> addressTypeList) {
+		// Creating Comparator
+			if (null == addressTypeList || addressTypeList.isEmpty()) {
+				return;
+			}
+			Comparator<PmAddressType> comparator = new Comparator<PmAddressType>() {
+				@Override
+				public int compare(PmAddressType o1, PmAddressType o2) {
+					return new CompareToBuilder()
+				     .append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
+				     .append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
+				     .append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3()).toComparison();
+				}
+			};
+			  Collections.sort(addressTypeList, comparator);
+		}
+		
+		public void sortAddress(List<FlDeliveryAddress> flDelAddressList) {
+		//Creating Comparator
+			if(null==flDelAddressList || flDelAddressList.isEmpty()){
+				return;
+			}
+			Comparator<FlDeliveryAddress> comparator = new Comparator<FlDeliveryAddress>() {
+			    @Override
+			    public int compare(FlDeliveryAddress o1, FlDeliveryAddress o2) {
+			    return new CompareToBuilder()
+				.append(o1.getPmAddress().getAddress1(), o2.getPmAddress().getAddress1())
+				.append(o1.getPmAddress().getAddress2(), o2.getPmAddress().getAddress2())
+				.append(o1.getPmAddress().getAddress3(), o2.getPmAddress().getAddress3())
+				.toComparison();
+			    }
+			};
+			Collections.sort(flDelAddressList, comparator);
+	    }
+		// sorting Item for OrderSummary Tab
+		public void sortOrderSummaryList(List<FlDeliveryAddress> deliveryAddressList) {
+			//Creating Comparator
+			if(null==deliveryAddressList || deliveryAddressList.isEmpty()){
+				return;
+			}
+			for(FlDeliveryAddress flDeliveryAddress : deliveryAddressList) {
+				sortItems(flDeliveryAddress.getFlFulfilmentItemAddr());
+			}
+	    }
+		// sorting all the items showing in DelAddress and Item Tab
+		public void sortItems(List<FlFulfilmentItemAddr> flItemAddressList) {
+			//Creating Comparator
+			if(null==flItemAddressList || flItemAddressList.isEmpty()){
+				return;
+			}
+			  Comparator<FlFulfilmentItemAddr> comparator = new Comparator<FlFulfilmentItemAddr>() {
+		            @Override
+		            public int compare(FlFulfilmentItemAddr o1, FlFulfilmentItemAddr o2) {
+		            	String object1Code = o1.getScRequestItem().getCmItem()!=null?o1.getScRequestItem().getCmItem().getExtensionCode():o1.getScRequestItem().getTempUnspscCode();
+		            	String object2Code = o2.getScRequestItem().getCmItem()!=null?o2.getScRequestItem().getCmItem().getExtensionCode():o2.getScRequestItem().getTempUnspscCode();
+		                return new CompareToBuilder()
+			                .append(object1Code, object2Code)
+			                .toComparison();
+		            }
+		        };
+				Collections.sort(flItemAddressList, comparator);
+	    }
 }
