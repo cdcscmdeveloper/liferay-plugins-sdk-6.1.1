@@ -55,7 +55,7 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
 					</h:panelGroup>
-					<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}" size="15" />
+					<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL3.categoryL3Code}" size="15" maxlength="2" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -110,13 +110,13 @@
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.special.group']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReq==0}" />
+					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.pm.operate.from.home']}" />
 					</h:panelGroup>
-					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperated==1}" />
+					<h:selectBooleanCheckbox value="#{categoryBackingBean.managedBean.pmCategoryL3.homeOperatedValue}" />
 					
 					<h:panelGroup style="float: right">
 					<h:outputText value="* " styleClass="mandatory" />
@@ -160,63 +160,66 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" id="groupdetails">
-		<p:dataTable id="groupdetailsId" rowIndexVar="rowIndex"
+		<p:dataTable id="groupdetailsId" rowIndexVar="rowIndex" rowKey="#{pmBasicCategory.basicCategoryId}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
-			selection="#{categoryBackingBean.managedBean.selectedBasicCategory}"
+			
 			width="100%" var="pmBasicCategory">
 			<ac:paginator for="groupdetailsId"></ac:paginator>
 			
+			<ui:remove>
+			selection="#{categoryBackingBean.managedBean.selectedBasicCategory2}" selectionMode="multiple"
 			<p:column selectionMode="multiple" style="width:2%" />
+			</ui:remove>
 			
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.category.code']}
 				</f:facet>
-				<h:outputText value="#{pmBasicCategory.pmCategoryL1.categoryL1Code}" />
+				<h:outputText value="#{pmBasicCategory.codeConcatenate}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.main.category.desc']}
 				</f:facet>
-				<h:outputText value="#{pmBasicCategory.pmCategoryL1.categoryName}" />
+				<h:outputText value="#{pmBasicCategory.basicCategoryL1desc}" />
             </p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.sub.category.desc']}
 				</f:facet>
-				<h:outputText value="#{pmBasicCategory.pmCategoryL2.categoryName}" />
+				<h:outputText value="#{pmBasicCategory.basicCategoryL2desc}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.pm.sub.div.desc']}
 				</f:facet>
-				<h:outputText value="" />
+				<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
 			</p:column>
 
 		</p:dataTable>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
-			<p:commandButton
+			<p:commandButton 
 				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-				action="#{categoryBackingBean.addBasicCategory()}" />
-			<p:commandButton
+				action="#{categoryBackingBean.addBasicCategory()}" oncomplete="lovPopupCategory.show();" update="lovPopupCategory"/>
+			<p:commandButton 
 				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
 				action="#{categoryBackingBean.addSubCategory()}" />
 		</div>
-		
-		
-		
+
 		</p:panel>
 		
-		<ui:remove>
-		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true" id="specialdetails">
-		<p:dataTable id="specialdetailsId" rowIndexVar="rowIndex"
-			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmCategoryL3s}"
-			width="100%" var="pmCategoryL3">
+		
+		<p:panel header="#{lbl['lbl.pm.special.equipment']}" toggleable="true" id="machineDetails">
+		<p:dataTable id="machineDetailsId" rowIndexVar="rowIndex"
+			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmMachineCategory}"
+			width="100%" var="pmMachineCategory">
 
 			<ac:paginator for="specialdetailsId"></ac:paginator>
 			
+			<ui:remove>
 			<p:column selectionMode="multiple" style="width:2%" />
+			</ui:remove>
 			
 			<p:column>
 				<f:facet name="header">
@@ -235,15 +238,139 @@
 		</p:dataTable>
 		<p>&nbsp;</p>
 		<div class="ppRightBtn">
-			<p:commandButton
-				value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
-				action="#{categoryBackingBean.addSubCategory()}" />
+			<ui:remove>
+			<ac:lov id="uomLovId" lovId="PM_UOM" size="26"
+				headerText="UOM Lov" readonly="true"
+				saveObject="categoryBackingBean.managedBean.selectedMaintainItem.pmUom"
+				value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
+				conditionField="recordStatus^1">
+			</ac:lov> 
+			</ui:remove>
+			
+			<ac:lov 
+			selectionMode="multiple"
+			id="pmMachineLovId" lovId="PM_MACHINE" size="26"
+				headerText="Machine Lov" readonly="true"
+				buttonLabel="#{lbl['lbl.btn.add']}" buttonIcon="ui-icon-add"
+				saveObject="catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine"
+				value="#{catalogueBackingBean.managedBean.pmCategoryL3.pmMachineCategory.pmMachine.machineId}"
+				conditionField="recordStatus^1">
+			</ac:lov>
+			<ac:lovPopup />
 			<p:commandButton
 				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
 				action="#{categoryBackingBean.addSubCategory()}" />
 		</div>
 		</p:panel>
-		</ui:remove>
+		
+		
+		<p:remoteCommand name="updateCategory" update="groupdetails"  action="#{categoryBackingBean.populateToSaveLOV}" />
+		<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory" modal="true" width="700" position="top" >
+			<f:facet name="header">
+				<h:panelGroup id="lovTitle">#{lbl['lbl.pm.select.category']}</h:panelGroup>
+			</f:facet>
+			
+			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+				<h:panelGroup id="searchPanel" style="width:100%;">
+					<h:panelGrid columns="3" id="lovCriteria" cellpadding="0" cellspacing="0">
+					
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[0]}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchOperator}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{categoryBackingBean.managedBean.searchValue[0]}" style="margin-top:6px;" />
+						
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[1]}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchOperatorValue[1]}">
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchOperator}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{categoryBackingBean.managedBean.searchValue[1]}" style="margin-top:6px;" />
+						
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchFieldValue[2]}">
+							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchField}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{categoryBackingBean.managedBean.searchOperatorValue[2]}">
+							<f:selectItems value="#{categoryBackingBean.managedBean.searchOperator}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{categoryBackingBean.managedBean.searchValue[2]}" style="margin-top:6px;" />
+						
+					</h:panelGrid>
+					
+					<table style="width:100%;"><tr><td style="text-align:right;">
+						<p:commandButton 
+							icon="ui-icon-search"
+							value="#{lbl['lbl.btn.search']}"
+							action="#{categoryBackingBean.searchLOV}"
+							update="lovTb2">
+						</p:commandButton>		
+						<p:commandButton
+							icon="ui-icon-reset"
+							value="#{lbl['lbl.btn.reset']}"
+							action="#{categoryBackingBean.resetLOV}"
+							update="searchPanel,resultPanel">
+						</p:commandButton>
+					</td></tr></table>
+				</h:panelGroup>
+			</p:panel>
+			
+			<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+				<h:panelGroup id="resultPanel" style="width:100%;">
+				
+				<p:dataTable id="lovTb2"
+				var="categoryL3" 
+				selection="#{categoryBackingBean.managedBean.selectedLOV}"
+				rowIndexVar="rowIndex"
+				rows="10"
+				lazy="true"
+				rowKey="#{categoryL3.categoryL3Id}"
+				value="#{categoryBackingBean.searchLOVPagingDataModel}" >
+				<ac:paginator for="lovTb2" />
+				
+					<p:column selectionMode="multiple" style="width:2%" /> 
+					
+					<p:column headerText="#{lbl['lbl.pm.category.code']}">
+						<h:outputText value="#{categoryL3.categoryL3Code}" />
+					</p:column>
+					
+					<p:column headerText="#{lbl['lbl.pm.category.name']}">
+						<h:outputText value="#{categoryL3.categoryName}" />
+					</p:column>
+				
+				</p:dataTable>
+				
+				</h:panelGroup>
+				
+				<table style="width:100%;"><tr><td style="text-align:right;">
+				<p:commandButton 
+					id="slbtn"
+					value="Select"
+					
+					update="searchPanel"
+					oncomplete="updateCategory();lovPopupCategory.hide();"
+					 />	
+					
+				<p:commandButton
+					icon="ui-icon-cancel"
+					value="#{lbl['lbl.btn.cancel']}"
+					action="#{categoryBackingBean.resetLOV}"
+					
+					oncomplete="lovPopupCategory.hide();"
+					update="searchPanel,resultPanel">
+				</p:commandButton>
+				</td></tr></table>
+			</p:panel>
+		</p:dialog>
+		
+		
+		
+		
 		
 	</ui:define>
 </ui:composition>
