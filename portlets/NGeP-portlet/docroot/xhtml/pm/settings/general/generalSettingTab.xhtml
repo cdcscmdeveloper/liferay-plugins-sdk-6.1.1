@@ -76,10 +76,11 @@
 							<f:selectItem itemLabel="###0" itemValue="###0" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel
-							value="#{lbl['lbl.fl.pm.vot.fund.code']}" /></td>
+							value="#{lbl['lbl.pm.vot.fund.code']}" /></td>
 					<td><ac:lov id="lovVotFund" lovId="PM_VOT_FUND"
 							update="@form" size="15" headerText="Vot Fund Lov"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund"
+							conditionField="recordStatus^1|votFundType^A"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund.votFundCode}">
 						</ac:lov> <ac:lovPopup /></td>
 				</tr>
