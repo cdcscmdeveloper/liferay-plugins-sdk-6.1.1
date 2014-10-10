@@ -35,7 +35,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
@@ -358,6 +357,12 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOI,
 				SourcingConstants.LOI_LIST_PAGE);
+		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.PREPARE_LOI,
+				SourcingConstants.LOI_LIST_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.PREPARE_LOA,
+				SourcingConstants.LOA_LIST_QT_PAGE);
 
 		this.getManagedBean().setBpmMap(temp);
 
