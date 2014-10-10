@@ -7,16 +7,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div class="ppRightBtn">
-		<ui:repeat var="bpmAction"
-			value="#{lOADetailBackingBean.managedBean.outComes}">
-			<ui:param name="buttonLabel"
-				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-				
-			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-				icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-				action="#{lOIDetailBackingBean.updateLOIListBpmTaskAction(bpmAction)}"
-				partialSubmit="true" process="@form"
-				update="@form" />
-		</ui:repeat>
+		<p:commandButton value="#{lbl['lbl.so.submit']}" icon="ui-icon-submit" 
+			action="#{lOIDetailBackingBean.submitLoiListAction}" 
+			process="@form" update="@form"  />
 	</div>
 </ui:composition>
