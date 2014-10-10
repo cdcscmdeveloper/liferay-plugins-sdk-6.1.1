@@ -435,49 +435,45 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	
 	}	
-	
+
 	/**
-	 * Validation for PmUserPreference
-	 * @param PmUserPreference
+	 * Validation for PmUser
+	 * @param PmUser
 	 */
-	private void validatePreference(PmUserPreference pmUserPreference){
+	private void validatePreference(PmUser pmUser){
 		logger.info("validatePreferences");
-		if(pmUserPreference!=null){
-			if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserPreference.getRecordStatusFlg()){
-				if(StringUtils.isBlank(pmUserPreference.getPreferredLanguage())){
-					throw new EpException(MessageConst.ERROR_770046);
-
-				}
-				
-				if(pmUserPreference.getNotifyRemovalDay()==null || pmUserPreference.getNotifyRemovalDay()<=0){
-					throw new EpException(MessageConst.ERROR_770047);
-
-				}
+		if(pmUser!=null){
+			if(StringUtils.isBlank(pmUser.getPreferredLanguage())){
+				throw new EpException(MessageConst.ERROR_770046);
 			}
+			
+			if(pmUser.getNotifyRemovalDay()==null || pmUser.getNotifyRemovalDay()<=0){
+				throw new EpException(MessageConst.ERROR_770047);
+			}	
 		}
 	}
-	
-	/**
-	 * Validation for PmUserNotification
-	 * @param PmUserNotification
-	 */
-	private void validateNotification(List <PmUserNotification> pmUserNotifications){
-		logger.info("validateNotification");
-		int selected = 0;
-		if(pmUserNotifications!=null && !pmUserNotifications.isEmpty()){
-			for(PmUserNotification pmUserNotification:pmUserNotifications){
-				if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserNotification.getRecordStatusFlg()){
-					if(pmUserNotification.isPreferred()){
-						selected++;
-						break;
-					}
-				}
-			}
-		}
-		if(selected==0){
-			throw new EpException(MessageConst.ERROR_770048);
-		}
-	}
+//	
+//	/**
+//	 * Validation for PmUserNotification
+//	 * @param PmUserNotification
+//	 */
+//	private void validateNotification(List <PmUserNotification> pmUserNotifications){
+//		logger.info("validateNotification");
+//		int selected = 0;
+//		if(pmUserNotifications!=null && !pmUserNotifications.isEmpty()){
+//			for(PmUserNotification pmUserNotification:pmUserNotifications){
+//				if(DbValueConst.RECORD_STATUS_ACTIVE==pmUserNotification.getRecordStatusFlg()){
+//					if(pmUserNotification.isPreferred()){
+//						selected++;
+//						break;
+//					}
+//				}
+//			}
+//		}
+//		if(selected==0){
+//			throw new EpException(MessageConst.ERROR_770048);
+//		}
+//	}
 	
 	/**
 	 * sync notification data
@@ -510,8 +506,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		//validation
 		validateUser(user);	
 		validateUserAddress(this.getManagedBean().getUserAddress());		
-		validatePreference(user.getPmUserPreference());
-		validateNotification(user.getPmUserNotifications());
+		validatePreference(user);
+
 		
 		//update contact address
 		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
