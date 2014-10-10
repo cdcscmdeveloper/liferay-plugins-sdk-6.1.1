@@ -863,7 +863,7 @@ public class SPDetailBackingBean extends
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-			
+
 			return downloadEncryptedFile(getActualFilePath(scAttachment),
 					scAttachment.getFileName());
 		} else {
@@ -899,63 +899,61 @@ public class SPDetailBackingBean extends
 				input = new BufferedInputStream(uc.getInputStream());
 
 			} catch (Exception e) {
-					// Cannot open connection, maybe local file
-					log.info("Inside filePaths(...)");
-					input = new FileInputStream(filePath);
-				}
-//				byte[] buffer = new byte[4096];
-//				int bytesRead;
-//				while ((bytesRead = input.read(buffer)) != -1) {
-//					out.write(buffer, 0, bytesRead);
-//					buffer = new byte[4096];
-				
-		            BouncyCastleProvider_AES_CBC bc =
-		                    new BouncyCastleProvider_AES_CBC();
-		            try {
-						bc.InitCiphers();
-					} catch (InvalidKeyException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchAlgorithmException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchProviderException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (NoSuchPaddingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (InvalidAlgorithmParameterException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-
-		            //decryption
-		            try {
-						bc.CBCDecrypt(input, out);
-					} catch (ShortBufferException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (IllegalBlockSizeException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					} catch (BadPaddingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}			
-				
-				
-				input.close();
+				// Cannot open connection, maybe local file
+				log.info("Inside filePaths(...)");
+				input = new FileInputStream(filePath);
 			}
-			
-			out.flush();
-			out.close();
-			FacesContext.getCurrentInstance().responseComplete();
+			// byte[] buffer = new byte[4096];
+			// int bytesRead;
+			// while ((bytesRead = input.read(buffer)) != -1) {
+			// out.write(buffer, 0, bytesRead);
+			// buffer = new byte[4096];
 
-			// use to upload back to database
-			File file = new File(filePath);
-			return file;
+			BouncyCastleProvider_AES_CBC bc = new BouncyCastleProvider_AES_CBC();
+			try {
+				bc.InitCiphers();
+			} catch (InvalidKeyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchAlgorithmException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchProviderException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidAlgorithmParameterException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			// decryption
+			try {
+				bc.CBCDecrypt(input, out);
+			} catch (ShortBufferException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			input.close();
 		}
+
+		out.flush();
+		out.close();
+		FacesContext.getCurrentInstance().responseComplete();
+
+		// use to upload back to database
+		File file = new File(filePath);
+		return file;
+	}
 
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
@@ -1417,18 +1415,35 @@ public class SPDetailBackingBean extends
 		ScQtDoc scQtDoc = scQtCheckList.getScQtDoc();
 		this.getManagedBean().setScQtDoc(scQtDoc);
 		try {
-			TemplateSpecBackingBean templateSpecBackingBean = new TemplateSpecBackingBean();
-			TemplateSpecBean templateSpecBean = getManagedBean()
-					.getTemplateSpecBean();
-			TplSpecMaster specMaster = scQtDoc.getTplSpecMaster();
-			templateSpecBean.setSpecMaster(specMaster);
-			templateSpecBean
-					.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
-			templateSpecBean.setSupplier(this.getManagedBean()
+			/*
+			 * TemplateSpecBackingBean templateSpecBackingBean = new
+			 * TemplateSpecBackingBean(); TemplateSpecBean templateSpecBean =
+			 * getManagedBean() .getTemplateSpecBean(); TplSpecMaster specMaster
+			 * = scQtDoc.getTplSpecMaster();
+			 * templateSpecBean.setSpecMaster(specMaster); templateSpecBean
+			 * .setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			 * templateSpecBean.setSupplier(this.getManagedBean()
+			 * .getQtProposalChecklist().getScQtProposal()
+			 * .getScQtSupplier().getSmSupplier()); templateSpecBackingBean
+			 * .retrieveTemplateSpecMaster(templateSpecBean);
+			 */
+
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setSpecMaster(scQtDoc.getTplSpecMaster());
+			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+			specReqDTO.setSupplier(this.getManagedBean()
 					.getQtProposalChecklist().getScQtProposal()
 					.getScQtSupplier().getSmSupplier());
-			templateSpecBackingBean
-					.retrieveTemplateSpecMaster(templateSpecBean);
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.getTemplateMaster(specReqDTO);
+
+			TemplateSpecBean templateSpecBean = getManagedBean()
+					.getTemplateSpecBean();
+			templateSpecBean.setSpecMaster(resDTO.getSpecMaster());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1560,7 +1575,7 @@ public class SPDetailBackingBean extends
 
 				}
 			} else {
-				if (scQt.getMaxProposal() == 1) {
+				if (scQt.getMaxProposal() == 1 || scQt.getMaxProposal() > 1) {
 
 					redirectPage = NAV_TO_MORE_THAN_PROPOSAL_PAGE;
 
@@ -2318,14 +2333,33 @@ public class SPDetailBackingBean extends
 	public void displayProposalDtls() {
 		debugLogger("displayProposalDtls");
 		List<ScQtProposal> list = this.getManagedBean().getQtProposalsList();
-		if (list == null) {
-			list = new ArrayList<ScQtProposal>();
+
+		list = new ArrayList<ScQtProposal>();
+		if (this.getManagedBean().getPrepareProposal() > 3) {
+			throw new EpException("You Should Not Enter More than three");
+		} else {
+			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
+				ScQtProposal proposal = new ScQtProposal();
+				list.add(proposal);
+			}
 		}
-		for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
-			ScQtProposal proposal = new ScQtProposal();
-			list.add(proposal);
-		}
+
 		this.getManagedBean().setQtProposalsList(list);
+	}
+
+	public void deleteMultipleProposal() {
+		try {
+			List<ScQtProposal> multipleProposalScore = this.getManagedBean()
+					.getQtProposalsList();
+			List<ScQtProposal> selectProposalScore = this.getManagedBean()
+					.getSelectMultipleProposalList();
+			for (ScQtProposal proposalScore : selectProposalScore) {
+				proposalScore.setDeleted(true);
+				multipleProposalScore.remove(proposalScore);
+			}
+		} finally {
+
+		}
 	}
 
 	// TODO supplier proposal pre-render
