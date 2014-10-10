@@ -4524,8 +4524,8 @@
 		</security-role-ref>
 	</portlet>
 		<portlet>
-		<portlet-name>Coordinate - Meeting</portlet-name>
-		<display-name>Coordinate Meeting</display-name>
+		<portlet-name>Evaluation Meeting</portlet-name>
+		<display-name>Evaluation Meeting</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -4540,8 +4540,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Coordinate Meeting</title>
-			<short-title>Coordinate Meeting</short-title>
+			<title>Evaluation Meeting</title>
+			<short-title>Evaluation Meeting</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
