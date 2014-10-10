@@ -6,10 +6,8 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -20,7 +18,6 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.pm.general.settings.kpi.IKPIStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
@@ -39,22 +36,14 @@ import my.ep.dto.pm.general.settings.kpi.KPIReqDTO;
 import my.ep.dto.pm.general.settings.kpi.KPIResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
-
 import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile_;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
-import my.ep.persistence.entity.pm.general.settings.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
@@ -63,7 +52,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.component.calendar.Calendar;
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -467,7 +455,7 @@ public class RuleCatalogueBackingBean extends
 	public void addMoreOrgAndItemFee() {
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("1");
+//		newFeeExemption.setFeeExemptionType("1");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setItemId(new CmItem());
 
@@ -506,7 +494,7 @@ public class RuleCatalogueBackingBean extends
 	public void addMoreContractFee() {
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		newFeeExemption.setFeeExemptionType("2");
+//		newFeeExemption.setFeeExemptionType("2");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 
@@ -550,8 +538,9 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveFeeExemptionForOrgItem() {
-		for (PmFeeExemption exemption : this.getManagedBean()
-				.getFeeExemptionsForOrgAndItem()) {
+		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
+		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForOrgAndItem());
+		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getItemId().getItemId() == null) {// clear empty
 															// objects
 				exemption.setItemId(null);
@@ -570,8 +559,7 @@ public class RuleCatalogueBackingBean extends
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-			reqDTO.setFeeExemptionList(this.getManagedBean()
-					.getFeeExemptionsForOrgAndItem());
+			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -593,8 +581,9 @@ public class RuleCatalogueBackingBean extends
 
 	public void saveFeeExemptionForContract() {
 		log.info("...........saveFeeExemptionForContract..................");
-		for (PmFeeExemption exemption : this.getManagedBean()
-				.getFeeExemptionsForContract()) {
+		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
+		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForContract());
+		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
 																				// empty
 																				// //
@@ -616,8 +605,7 @@ public class RuleCatalogueBackingBean extends
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-			reqDTO.setFeeExemptionList(this.getManagedBean()
-					.getFeeExemptionsForContract());
+			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -638,8 +626,9 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveFeeExemptionForComodity() {
-		for (PmFeeExemption exemption : this.getManagedBean()
-				.getFeeExemptionsForComodity()) {
+		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
+		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForComodity());
+		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
 				exemption.setFeeExemptionType("3");
@@ -650,8 +639,7 @@ public class RuleCatalogueBackingBean extends
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
 			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-			reqDTO.setFeeExemptionList(this.getManagedBean()
-					.getFeeExemptionsForComodity());
+			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
 			if (resDTO.isSuccessful()) {
