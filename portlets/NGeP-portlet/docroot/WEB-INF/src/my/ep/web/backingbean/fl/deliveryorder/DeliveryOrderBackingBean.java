@@ -484,7 +484,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
-			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) {
+			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null && getManagedBean().getButtonVal()==null) {
 				sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 				sortOrderSummaryList(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			}
