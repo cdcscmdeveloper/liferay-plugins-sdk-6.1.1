@@ -127,6 +127,8 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private String subject;
 	private String message;
 	private String pinNo;
+	
+	private Object payLoad;
 
 	/**
 	 * @return the activeIndex
@@ -962,6 +964,20 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
+	}
+
+	/**
+	 * @return the payLoad
+	 */
+	public Object getPayLoad() {
+		return payLoad;
+	}
+
+	/**
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
 	}
 
 }
