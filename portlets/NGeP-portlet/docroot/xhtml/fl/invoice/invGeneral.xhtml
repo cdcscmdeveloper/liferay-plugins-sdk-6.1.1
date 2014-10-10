@@ -66,7 +66,7 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
 				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
-						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='Update' || invoiceBackingBean.managedBean.buttonVal=='ACK'}"
+						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='Update' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}"
 						style="width:300px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
@@ -130,7 +130,7 @@
 				<td style="width: 72px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.invoice.no']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="45" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK'}" 
+				<td><p:inputText size="45" maxlength="30" disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}" 
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" required="true" label="Supplier Invoice No"/><p:message for="supplierInvoiceRef" display="icon" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/></td>
 			</tr>
 		</table>
