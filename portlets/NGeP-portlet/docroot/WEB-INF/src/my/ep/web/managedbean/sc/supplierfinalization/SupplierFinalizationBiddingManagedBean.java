@@ -5,12 +5,14 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.BidPackageBean;
 import my.ep.persistence.entity.sc.bidding.ScBid;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
+import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -28,13 +30,14 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private ScQtFinalization scQtFinalization;
 	private String committeeType;
+	private String processName;
 	
 	//Summary
 	private ScBid scBidding;
 	private List<ScBidItem> biddingItemList;
 	private ScBidItem selectedBiddingItem;
 	private List<ScBidPrice> biddingItemPriceList;
-	private List<ScBidPrice> biddingPackagePriceList;
+	private List<BidPackageBean> biddingPackagePriceList;
 		
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
@@ -43,6 +46,10 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private String subject;
 	private String message;
 	private String pinNo;
+	
+	//Offline Bidding Endorsement
+	private List<ScQtFinalizationEndorsementRemarks> remarks;
+	private String attachmentDocType;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -180,13 +187,13 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the biddingPackagePriceList
 	 */
-	public List<ScBidPrice> getBiddingPackagePriceList() {
+	public List<BidPackageBean> getBiddingPackagePriceList() {
 		return biddingPackagePriceList;
 	}
 	/**
 	 * @param biddingPackagePriceList the biddingPackagePriceList to set
 	 */
-	public void setBiddingPackagePriceList(List<ScBidPrice> biddingPackagePriceList) {
+	public void setBiddingPackagePriceList(List<BidPackageBean> biddingPackagePriceList) {
 		this.biddingPackagePriceList = biddingPackagePriceList;
 	}
 	/**
@@ -212,6 +219,42 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedBiddingItem(ScBidItem selectedBiddingItem) {
 		this.selectedBiddingItem = selectedBiddingItem;
+	}
+	/**
+	 * @return the remarks
+	 */
+	public List<ScQtFinalizationEndorsementRemarks> getRemarks() {
+		return remarks;
+	}
+	/**
+	 * @param remarks the remarks to set
+	 */
+	public void setRemarks(List<ScQtFinalizationEndorsementRemarks> remarks) {
+		this.remarks = remarks;
+	}
+	/**
+	 * @return the attachmentDocType
+	 */
+	public String getAttachmentDocType() {
+		return attachmentDocType;
+	}
+	/**
+	 * @param attachmentDocType the attachmentDocType to set
+	 */
+	public void setAttachmentDocType(String attachmentDocType) {
+		this.attachmentDocType = attachmentDocType;
+	}
+	/**
+	 * @return the processName
+	 */
+	public String getProcessName() {
+		return processName;
+	}
+	/**
+	 * @param processName the processName to set
+	 */
+	public void setProcessName(String processName) {
+		this.processName = processName;
 	}
 	
 	

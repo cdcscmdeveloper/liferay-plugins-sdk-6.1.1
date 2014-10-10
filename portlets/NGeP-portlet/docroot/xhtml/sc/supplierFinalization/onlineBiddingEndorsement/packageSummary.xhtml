@@ -10,7 +10,7 @@
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		
-		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.bidPackages}" var="price">
+		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" var="price">
 			<ac:paginator for="supplierItemTbl"></ac:paginator>
 			
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">

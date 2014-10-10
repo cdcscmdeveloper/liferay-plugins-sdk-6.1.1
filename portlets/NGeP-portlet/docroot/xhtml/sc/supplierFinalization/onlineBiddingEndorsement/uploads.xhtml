@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
+			dynamic="true" hideEffect="explode" resizable="false" width="700px"
+			height="200" styleClass="pop_up_top"
+			header="#{lbl['lbl.bpm.choose.file']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{suppFinalBiddingBackingBean.handleFileUpload}"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update="testId" oncomplete="uploadDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
+
+</ui:composition>
