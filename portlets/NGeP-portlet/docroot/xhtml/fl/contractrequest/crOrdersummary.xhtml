@@ -9,6 +9,7 @@
 		<p:dataTable id="delAddressSummary" var="delAddressSummary"
 			styleClass="orderSummaryChange hide-column-names"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
+			<p:ajax event="rowToggle" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>

@@ -130,6 +130,7 @@
 					<p:inputText value="#{item.orderedQty}" style="text-align:right"
 						required="true" requiredMessage="Please input the quantity.">
 						<p:ajax update="subTotalTxt"
+							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
 							<p:commandLink oncomplete="reqItemInfo.show();"
 					action="#{contractRequestBackingBean.reqItemInfoList(item)}"

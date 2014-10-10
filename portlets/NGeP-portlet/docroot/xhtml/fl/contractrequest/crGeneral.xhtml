@@ -11,20 +11,20 @@
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td><p:inputText size="66" id="ministry"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId" readonly="true"
+				<td><p:inputText size="8" id="preparedOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
 						lovId="PM_ORG_PROFILE" headerText="Prepared PTJ Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
-						size="39" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:preparedOrgProfileId" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:preparedOrgProfileId" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="parentOrgProfile.orgProfileId^#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}|orgProfileId^#{contractRequestBackingBean.managedBean.orgProfileIds}^9">
 					</ac:lov></td>
@@ -34,25 +34,25 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
-				<td><p:inputText size="5" id="issuedOrgCode" readonly="true"
+				<td><p:inputText size="8" id="issuedOrgCode" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" id="issuedOrgName"
+					<p:spacer width="5" /> <p:inputText size="50" id="issuedOrgName"
 						readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /> <p:outputLabel
+				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="5" id="chargeOrgProfileId" readonly="true"
+				<td><p:inputText size="8" id="chargeOrgProfileId" readonly="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="chargePtj"
-						lovId="PM_ORG_PROFILE" headerText="Charge PTJ Lov" readonly="true"
+						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile"
-						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
-						update=":form:chargeOrgProfileId" size="39">
+						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
+						update=":form:chargeOrgProfileId" size="50"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
 					</ac:lov></td>
 				<td>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
@@ -60,9 +60,9 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
-				<td><p:inputText size="5" disabled="true" id="agOffice"
+				<td><p:inputText size="8" disabled="true" id="agOffice"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true" id="agOfficeName"
+					<p:spacer width="5" /> <p:inputText size="50" disabled="true" id="agOfficeName"
 						value="#{contractRequestBackingBean.managedBean.flRequest.agOffice.officeName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.acct.off']}"/></td>
 			</tr>
@@ -73,28 +73,26 @@
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
-						value="#{lbl['lbl.fl.title']}" /> <p:outputLabel value="*"
-						styleClass="mandatory" /></td>
+						value="#{lbl['lbl.fl.title']}" /> </td>
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
-						maxlength="500" style=" margin-bottom:5px;" label="Title"
-						value="#{contractRequestBackingBean.managedBean.flRequest.title}"
-						required="true" /> </td>
+						maxlength="500" style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /> </td>
 						<td><p:message for="title" display="icon" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.title']}"/></td>
 				<td style="width: 120px;"><p:outputLabel
 						value="#{lbl['lbl.fl.contract.type']}" /></td>
-				<td><p:inputText size="20"
+				<td><p:inputText size="25"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.contractType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="25" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}" /></td>
 			</tr>
 			<tr>
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td><p:inputText size="25" disabled="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -120,7 +118,7 @@
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}"/></td>
 
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
-				<td><p:inputText size="20" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
+				<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
@@ -182,7 +180,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="51"
 						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
@@ -219,7 +217,7 @@
 									/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="20" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.faxNo}"
+							<td><p:inputText size="15" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.faxNo}"
 									/></td>
 						</tr>
 					</table></td>
@@ -227,13 +225,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactPerson}"
+				<td><p:inputText disabled="true" size="51" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactPerson}"
 						 /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.mobile']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactEmail}"
+				<td><p:inputText disabled="true" size="15" value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.contactEmail}"
 						 /></td>
 			</tr>
 			<tr>
@@ -248,7 +246,7 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
 						value="#{lbl['lbl.fl.factoring.company']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="51" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
@@ -266,23 +264,23 @@
 									disabled="true" value="" /></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.faxno']}" /></td>
-							<td><p:inputText size="19" disabled="true" value="" /></td>
+							<td><p:inputText size="15" disabled="true" value="" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="51" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="50" /></td>
+				<td><p:inputText disabled="true" size="51" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
-				<td><p:inputText disabled="true" size="25" /></td>
+				<td><p:inputText disabled="true" size="15" /></td>
 			</tr>
 		</table>
 	</p:panel>
