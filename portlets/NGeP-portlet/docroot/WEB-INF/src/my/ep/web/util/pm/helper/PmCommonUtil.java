@@ -110,82 +110,12 @@ public class PmCommonUtil {
 		return pmAddress;
 	}
 	
-	/**
-	 * initialize a default notifications
-	 * @param pmUser
-	 * @return List <PmUserNotification>
-	 */
-	
-	public static List<PmUserNotification> generateDefaultPmUserNotifications(PmUser pmUser, String languageCode){
-		IParameterSO parameterSO = null;
-		List <PmUserNotification> displayNotifications = new ArrayList<PmUserNotification>();
-		try{
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-			searchBean.getDataFilterBeans().add(new SearchFilterBean(
-					"pmParameter.parameterCode",
-					SearchOperator.OPERATOR_NOT_EQUALS.value(),
-					ParameterConst.NOTIFICATION_SMS));
-			
-			ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-			parameterReqDTO.setParameterType(ParameterTypeConst.NOTIFICATION_TYPE);
-			parameterReqDTO.setLanguageCode(languageCode);
-			
-			parameterReqDTO.setParameterDescSearchBean(searchBean);
-			
-			ParameterResDTO parameterResDTO = parameterSO.retrieveParameterDescListByType(parameterReqDTO);
-			List <PmParameterDesc> pmParameterDescs = parameterResDTO.getParameterDescList();
-			
-			
-			//add into pmUser.getPmUserNotifications()
-			//this is to sync back the notification list
-			if(pmUser.getPmUserNotifications()!=null && !pmUser.getPmUserNotifications().isEmpty()){
-				if(pmParameterDescs!=null && (pmParameterDescs.size() != pmUser.getPmUserNotifications().size())){
-					for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-						boolean isRequired = true;
-						for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-							if(pmUserNotification.getNotifyMode().equals(pmParameterDesc.getPmParameter().getParameterCode())){
-								isRequired = false;
-								break;
-							}
-						}
-						if(isRequired){
-							PmUserNotification notification = new PmUserNotification();
-							notification.setPreferred(true);
-							notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-							pmUser.addPmUserNotifications(notification);
-						}
-					}
-				}
-			}else{
-				pmUser.setPmUserNotifications(new ArrayList<PmUserNotification>());
-				for(PmParameterDesc pmParameterDesc: pmParameterDescs){
-					PmUserNotification notification = new PmUserNotification();
-					notification.setPreferred(true);
-					notification.setNotifyMode(pmParameterDesc.getPmParameter().getParameterCode());	
-					pmUser.addPmUserNotifications(notification);
-				}
-			}
-			
-			//generate displayNotification
-			
-			for(PmUserNotification pmUserNotification:pmUser.getPmUserNotifications()){
-				if(!ParameterConst.NOTIFICATION_DASHBOARD.equals(pmUserNotification.getNotifyMode())
-						&& !ParameterConst.NOTIFICATION_SMS.equals(pmUserNotification.getNotifyMode())){
-					displayNotifications.add(pmUserNotification);
-				}
-			}
-		}finally{
-			parameterSO = null;
-		}
-		return displayNotifications;
-	}
 	
 	/**
 	 * set default notification mode and preferences
 	 * @param pmUser
 	 */
-	public static void loadPmUserPreference(PmUser pmUser, PmUserPreference pmUserPreference) {
+	public static void loadPmUserPreference(PmUser pmUser) {
 		IConfigGeneralSO configGeneralSO =  null;
 		try{
 			configGeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IConfigGeneralSO.class);
@@ -198,20 +128,11 @@ public class PmCommonUtil {
 			if(configGeneral==null){
 				throw new EpException(MessageConst.ERROR_770052);
 			}
-			if(pmUserPreference == null){
-				pmUserPreference= new PmUserPreference();
-				pmUserPreference.setPreferredLanguage(configGeneral.getPreferredLanguage());
-				pmUserPreference.setNotifyRemovalDay(configGeneral.getNotifyFreq());
-				pmUserPreference.setFormatDate(configGeneral.getFormatdate());
-				pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
-				pmUserPreference.setFormatTime(configGeneral.getFormatTime());
-				pmUserPreference.setPmUser(pmUser);
-				pmUser.setPmUserPreference(pmUserPreference);
-			}else{
-				pmUserPreference.setFormatDate(configGeneral.getFormatdate());
-				pmUserPreference.setFormatNumber(configGeneral.getFormatNumber());
-				pmUserPreference.setFormatTime(configGeneral.getFormatTime());
-				pmUserPreference.setPmUser(pmUser);
+			if(pmUser.getPreferredLanguage()==null){
+				pmUser.setPreferredLanguage(configGeneral.getPreferredLanguage());
+			}
+			if(pmUser.getNotifyRemovalDay()==null){
+				pmUser.setNotifyRemovalDay(configGeneral.getNotifyFreq());
 			}
 		}finally{
 			configGeneralSO = null;
