@@ -102,7 +102,7 @@
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
-			<portlet id="scOnLineBidding" />
+			<portlet id="scOnlineBidding" />
 			
 			
 			<portlet id="scQTMaintenance"/>
