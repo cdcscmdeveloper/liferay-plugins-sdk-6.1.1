@@ -1079,8 +1079,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
 			
 			int i = 1;
-		    //IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			StatusReqDTO reqDTO = new StatusReqDTO();
+		 	StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");
 			reqDTO.setDocType(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 			reqDTO.setLanguageCode(languageCode);

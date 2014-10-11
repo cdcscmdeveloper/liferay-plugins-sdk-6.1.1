@@ -486,7 +486,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		     for( String str : this.getManagedBean().getFinalListOfSideMenu()){
 	 	    	    MenuItem menuItem = new MenuItem();
 	 	    	    menuItem.setValue(str);
-	 	    	    menuItem.setUpdate("@form");
+	 	    	    menuItem.setUpdate("@all");
 	 	    	    menuItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
 								"#{amendmentBackingBean.amendTabChangeAction("

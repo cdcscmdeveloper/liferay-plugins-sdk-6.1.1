@@ -8,14 +8,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="uploadDocument" header="#{lbl['lbl.ct.menu.signed']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
-		<h:panelGrid style="width:400px;" columns="2"	columnClasses="columnWidth150,columnWidth200">
+		<h:panelGrid style="width:100%;" columns="4"  columnClasses="columnWidth150">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="4">
+			<h:panelGrid columns="4" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.ctAgreement.signedDate}" id="popupButtonCal4" 
-					showOn="button" size="25" required="true" label="Signed Date" readonlyInput="true"
+					showOn="button" size="17" required="true" label="Signed Date" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.dated']}" />
@@ -42,6 +42,8 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.page']}" />
 				</h:panelGroup>
 			</h:panelGrid>
+			</h:panelGrid>
+		   <h:panelGrid style="width:100%;" columns="2"  columnClasses="columnWidth150">
 			<h:panelGrid columns="2" style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
 				<p:outputLabel value="#{lbl['lbl.ct.stamped.page']}" />
