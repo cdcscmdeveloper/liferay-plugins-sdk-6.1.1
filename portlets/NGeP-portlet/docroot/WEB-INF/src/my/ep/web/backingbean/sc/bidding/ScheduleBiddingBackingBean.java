@@ -27,7 +27,6 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -40,7 +39,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.SelectEvent;
 
 /**
  * @author Venkat Chanumolu
@@ -68,6 +66,7 @@ public class ScheduleBiddingBackingBean extends
 	public void preRenderView() {
 		try {
 			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class);
+			dpDataType.setBidEscalate(true);
 			this.getManagedBean().setPayLoad(dpDataType);
 			Long qtId = Long.valueOf(dpDataType.getQtId());
 			List<String> supplierIds = dpDataType.getGroupkeyBa();

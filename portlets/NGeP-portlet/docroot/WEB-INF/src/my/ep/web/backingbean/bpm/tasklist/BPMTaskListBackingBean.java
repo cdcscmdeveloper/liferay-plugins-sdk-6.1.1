@@ -367,6 +367,11 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+		
+		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.ESCALATE_BIDDING,
+				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+		
 
 		this.getManagedBean().setBpmMap(temp);
 

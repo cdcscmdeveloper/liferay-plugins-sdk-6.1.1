@@ -50,6 +50,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	//Offline Bidding Endorsement
 	private List<ScQtFinalizationEndorsementRemarks> remarks;
 	private String attachmentDocType;
+	private Object payLoad;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -255,6 +256,12 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setProcessName(String processName) {
 		this.processName = processName;
+	}
+	public Object getPayLoad() {
+		return payLoad;
+	}
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
 	}
 	
 	
