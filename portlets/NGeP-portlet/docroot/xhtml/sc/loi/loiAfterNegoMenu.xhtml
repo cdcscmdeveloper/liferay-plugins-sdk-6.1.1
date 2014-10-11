@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" id="awardTypeId"
+		toggleable="true">
+			<table>
+				<tr>
+					<td style="width: 250px;"><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.award.type']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode)}" /></td>
+				</tr>
+
+				<tr>
+					<td style="width: 250px;"><p:outputLabel
+							value="#{lbl['lbl.sc.loiloa.loi.rec.by']}" /></td>
+					<td><p:inputText disabled="true"
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.recommendType,
+					lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendTypeCode.parameterCode)}" /></td>
+				</tr>
+			</table>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.loiloa.item.list']}" toggleable="false">
+		<p:dataTable id="itemtbl" var="loiLoaItem"  rows="10"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}">
+
+			<ac:paginator for="itemtbl" />
+			
+			<c:if test="#{loiLoaItem.tplSpecZoneDtl ne null}">
+				<p:column headerText="Zone/Location" style="width:25%">
+					<h:outputText value="#{loiLoaItem.tplSpecZoneDtl.zoneName}" />
+				</p:column>
+			</c:if>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.item.name']}" style="width:25%">
+				<h:outputText value="#{loiLoaItem.scRequestItem.itemName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.qty']}"
+				style="width:10%;text-align:right;">
+				<h:outputText value="#{loiLoaItem.qty}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+					
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.uom']}" style="width:10%">
+			  <h:outputText value="#{loiLoaItem.scRequestItem.uom.uomName}"
+				/>
+			
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.unit.price']}"
+				style="width:10%;text-align:right;">
+				<h:outputText value="#{loiLoaItem.unitPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				<f:facet name="footer">
+					<h:outputText value="#{lbl['lbl.sc.loiloa.loi.total']}" />
+				</f:facet>	
+				
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.sub.total']}"
+				style="width:15%;text-align:right;">
+				<h:outputText value="#{loiLoaItem.qty * loiLoaItem.unitPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+				
+				<f:facet name="footer">
+					<h:outputText value="#{lOIDetailBackingBean.managedBean.scLoi.loiAmt}">
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</f:facet>
+			</p:column>
+
+		</p:dataTable>
+
+	</p:panel>
+	
+
+</ui:composition>

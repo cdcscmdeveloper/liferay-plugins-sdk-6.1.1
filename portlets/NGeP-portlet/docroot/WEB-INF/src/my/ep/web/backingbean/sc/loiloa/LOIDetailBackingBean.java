@@ -6,10 +6,16 @@ package my.ep.web.backingbean.sc.loiloa;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -17,10 +23,16 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
@@ -39,6 +51,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.clause.ClauseReqDTO;
+import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -51,6 +65,9 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmClause;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
@@ -68,13 +85,18 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -92,6 +114,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.event.FileUploadEvent;
@@ -126,7 +149,7 @@ public class LOIDetailBackingBean extends
 
 		IStatusSO statusSO;
 		try {
-			this.renewSesionObject();
+
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
@@ -163,32 +186,60 @@ public class LOIDetailBackingBean extends
 
 	public void preRenderView() {
 		debugLogger("preRenderView");
-
+		IStatusSO statusSO;
+		IQTAwardSO qtAwardSO = null;
 		try {
-			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
-			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			Long loiId = Long.valueOf(dpDataType.getAwardId());
+			Long sourceId = Long.valueOf(awardDataType.getSourceId());
+			getManagedBean().setPayLoadData(awardDataType);
+
+			getManagedBean()
+					.setRecommendDtlIds(awardDataType.getGroupkeyList());
+
+			Long currentStatusId = getManagedBean().getCurrentStatusId();
+
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(currentStatusId);
+			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
+			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
+
+			Long loiId = Long.valueOf(awardDataType.getAwardId());
 
 			getManagedBean().setSourceId(sourceId);
 
 			// Long loiId = 299L;
 
 			ScLoi scLoi = new ScLoi();
-			scLoi.setLoiId(loiId);
-			// editLOIAction(scLoi);
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setLoiId(loiId);
+			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO
+					.retrieveLOIDtlByLoiId(awardSupplierReqDTO);
+			if (awardSupplierResDTO.getScLoi() != null) {
+				scLoi = awardSupplierResDTO.getScLoi();
+			}
+			editLOI(scLoi);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 		} catch (Exception e) {
 			handleException(e);
+		} finally {
+			statusSO = null;
+			qtAwardSO = null;
 		}
 	}
 
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
-
+		IQTAwardSO qtAwardSO = null;
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
@@ -198,6 +249,20 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSourceId(sourceId);
 
 			// editSupplierLOIAction(loiId);
+			
+			ScLoi scLoi = new ScLoi();
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setLoiId(loiId);
+			AwardSupplierResDTO awardSupplierResDTO = qtAwardSO
+					.retrieveSupplierLOIDtl(awardSupplierReqDTO);
+			if (awardSupplierResDTO.getScLoi() != null) {
+				scLoi = awardSupplierResDTO.getScLoi();
+			}
+			
+			getManagedBean().setScLoi(scLoi);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -459,9 +524,11 @@ public class LOIDetailBackingBean extends
 	 */
 	public void backToPervious() {
 		log.info("backToPervious");
+		retrieveLOIList(getManagedBean().getSourceId());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_LIST_PAGE);
+
 	}
 
 	/*
@@ -861,8 +928,8 @@ public class LOIDetailBackingBean extends
 
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		IQTAwardSO qtAwardSO = null;
-
 		try {
+			renewSessionWithPreviousValues();
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -886,6 +953,7 @@ public class LOIDetailBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 
 		try {
+			renewSessionWithPreviousValues();
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -933,7 +1001,6 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = resDTO.getScLoi();
 		// loi details
 		getManagedBean().setScLoi(scLoi);
-
 		// branch list
 		if (resDTO.getSmSupplierBranchs() != null
 				&& resDTO.getSmSupplierBranchs().size() > 0) {
@@ -1000,6 +1067,238 @@ public class LOIDetailBackingBean extends
 
 		// TODO
 		scLoi.setFileExtnNo("001");
+
+		// Fulfilment Schedule
+
+		List<ScQtSchedule> scheduleList = scLoi.getScQtSchedules();
+
+		if (null != scheduleList && !scheduleList.isEmpty()) {
+
+			this.getManagedBean().setTotalFrequency(scheduleList.size());
+			String startMonth = "";
+			String endMonth = "";
+			for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
+				String todate = dateFormat.format(scQtSchedule.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
+
+				if (startdate.equalsIgnoreCase("01")) {
+					startMonth = "0";
+				}
+				if (startdate.equalsIgnoreCase("02")) {
+					startMonth = "1";
+				}
+				if (startdate.equalsIgnoreCase("03")) {
+					startMonth = "2";
+				}
+				if (startdate.equalsIgnoreCase("04")) {
+					startMonth = "3";
+				}
+				if (startdate.equalsIgnoreCase("05")) {
+					startMonth = "4";
+				}
+				if (startdate.equalsIgnoreCase("06")) {
+					startMonth = "5";
+				}
+
+				if (startdate.equalsIgnoreCase("07")) {
+					startMonth = "6";
+				}
+				if (startdate.equalsIgnoreCase("08")) {
+					startMonth = "7";
+				}
+				if (startdate.equalsIgnoreCase("09")) {
+					startMonth = "8";
+				}
+				if (startdate.equalsIgnoreCase("10")) {
+					startMonth = "9";
+				}
+				if (startdate.equalsIgnoreCase("11")) {
+					startMonth = "10";
+				}
+				if (startdate.equalsIgnoreCase("12")) {
+					startMonth = "11";
+				}
+
+				if (enddate.equalsIgnoreCase("01")) {
+					endMonth = "0";
+				}
+				if (enddate.equalsIgnoreCase("02")) {
+					endMonth = "1";
+				}
+				if (enddate.equalsIgnoreCase("03")) {
+					endMonth = "2";
+				}
+				if (enddate.equalsIgnoreCase("04")) {
+					endMonth = "3";
+				}
+				if (enddate.equalsIgnoreCase("05")) {
+					endMonth = "4";
+				}
+				if (enddate.equalsIgnoreCase("06")) {
+					endMonth = "5";
+				}
+
+				if (enddate.equalsIgnoreCase("07")) {
+					endMonth = "6";
+				}
+				if (enddate.equalsIgnoreCase("08")) {
+					endMonth = "7";
+				}
+				if (enddate.equalsIgnoreCase("09")) {
+					endMonth = "8";
+				}
+				if (enddate.equalsIgnoreCase("11")) {
+					endMonth = "10";
+				}
+				if (enddate.equalsIgnoreCase("12")) {
+					endMonth = "11";
+				}
+				int start = Integer.parseInt(startMonth);
+				int end = Integer.parseInt(endMonth);
+				int sYear = Integer.parseInt(startYear);
+				int eYear = Integer.parseInt(endYear);
+				int diffYear = 0;
+				int count = 0;
+
+				if (eYear >= sYear) {
+					if (!endYear.equals(startYear)) {
+						diffYear = eYear - sYear;
+					}
+					for (int i = start + 1; i <= end + 1; i++) {
+						count++;
+					}
+					count = count + (diffYear * 12);
+					scQtSchedule.setTotalMonths(new BigDecimal(count));
+				} else {
+					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+				}
+				scQtSchedule.setStartMonth(startMonth);
+				scQtSchedule.setEndMonth(endMonth);
+				scQtSchedule.setStartYear(startYear);
+				scQtSchedule.setEndYear(endYear);
+			}
+			this.sortFrequentScheduleList(scLoi.getScQtSchedules());
+
+			// this.getManagedBean().setScheduleList(scheduleList);
+		}
+
+			List<ScQtProgressivePayment> progressivePayment = this
+					.getManagedBean().getProgressivePaymentList();
+			if (progressivePayment == null) {
+				progressivePayment = new ArrayList<ScQtProgressivePayment>();
+
+				if (null != scLoi.getScQtProgPayments()
+						&& !scLoi.getScQtProgPayments().isEmpty()) {
+					this.getManagedBean().setTotalProgressivePayment(
+							scLoi.getScQtProgPayments().size());
+					String startMonth = "";
+					String endMonth = "";
+					for (ScQtProgressivePayment scQtProgressivePayment : scLoi
+							.getScQtProgPayments()) {
+						SimpleDateFormat dateFormat = new SimpleDateFormat(
+								"dd/MM/yyyy");
+
+						String fromdate = dateFormat
+								.format(scQtProgressivePayment.getFromDate());
+						String todate = dateFormat
+								.format(scQtProgressivePayment.getToDate());
+						String startdate = fromdate.substring(3, 5);
+						String startYear = fromdate.substring(6,
+								fromdate.length());
+						String enddate = todate.substring(3, 5);
+						String endYear = todate.substring(6, todate.length());
+
+						if (startdate.equalsIgnoreCase("01")) {
+							startMonth = "0";
+						}
+						if (startdate.equalsIgnoreCase("02")) {
+							startMonth = "1";
+						}
+						if (startdate.equalsIgnoreCase("03")) {
+							startMonth = "2";
+						}
+						if (startdate.equalsIgnoreCase("04")) {
+							startMonth = "3";
+						}
+						if (startdate.equalsIgnoreCase("05")) {
+							startMonth = "4";
+						}
+						if (startdate.equalsIgnoreCase("06")) {
+							startMonth = "5";
+						}
+
+						if (startdate.equalsIgnoreCase("07")) {
+							startMonth = "6";
+						}
+						if (startdate.equalsIgnoreCase("08")) {
+							startMonth = "7";
+						}
+						if (startdate.equalsIgnoreCase("09")) {
+							startMonth = "8";
+						}
+						if (startdate.equalsIgnoreCase("10")) {
+							startMonth = "9";
+						}
+						if (startdate.equalsIgnoreCase("11")) {
+							startMonth = "10";
+						}
+						if (startdate.equalsIgnoreCase("12")) {
+							startMonth = "11";
+						}
+
+						if (enddate.equalsIgnoreCase("01")) {
+							endMonth = "0";
+						}
+						if (enddate.equalsIgnoreCase("02")) {
+							endMonth = "1";
+						}
+						if (enddate.equalsIgnoreCase("03")) {
+							endMonth = "2";
+						}
+						if (enddate.equalsIgnoreCase("04")) {
+							endMonth = "3";
+						}
+						if (enddate.equalsIgnoreCase("05")) {
+							endMonth = "4";
+						}
+						if (enddate.equalsIgnoreCase("06")) {
+							endMonth = "5";
+						}
+
+						if (enddate.equalsIgnoreCase("07")) {
+							endMonth = "6";
+						}
+						if (enddate.equalsIgnoreCase("08")) {
+							endMonth = "7";
+						}
+						if (enddate.equalsIgnoreCase("09")) {
+							endMonth = "8";
+						}
+						if (enddate.equalsIgnoreCase("11")) {
+							endMonth = "10";
+						}
+						if (enddate.equalsIgnoreCase("12")) {
+							endMonth = "11";
+						}
+						scQtProgressivePayment.setStartMonth(startMonth);
+						scQtProgressivePayment.setEndMonth(endMonth);
+						scQtProgressivePayment.setStartYear(startYear);
+						scQtProgressivePayment.setEndYear(endYear);
+						progressivePayment.add(scQtProgressivePayment);
+
+					}
+					this.sortProgressivePaymentList(progressivePayment);
+					this.getManagedBean().setProgressivePaymentList(
+							progressivePayment);
+				}
+			}
+		
 
 	}
 
@@ -1285,77 +1584,29 @@ public class LOIDetailBackingBean extends
 	public String submitAction() {
 		debugLogger("submitAction");
 
-		IStatusSO statusSO = null;
-		IUserSO userSO = null;
-		IQTAwardSO iqtAwardSO = null;
+		IQTAwardSO qtAwardSO = null;
 
 		try {
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
-			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
-			awardSupplierReqDTO
-					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			scLoi.setIssueDate(new Date());
+			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+			String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			parseLOIDetails(scLoi, outcome);
 
-			// Date date = new Date();
-			System.out.println("Date : " + scLoi.getIssueDate());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(scLoi.getIssueDate());
-			cal.add(Calendar.DATE, 14);
-			System.out.println("Date : " + cal.getTime());
-			scLoi.setAckDueDate(cal.getTime());
-			System.out.println("LOI Response Due Date : "
-					+ scLoi.getAckDueDate());
+			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
+			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), 14));
 
-			// Setting the pm user id for LOI details
-			UserReqDTO userReqDTO = new UserReqDTO();
-			/*
-			 * userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
-			 * .getUserId());
-			 */
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setScLoi(scLoi);
+			reqDTO.setOutcome(outcome);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
 
-			PmUser user = userResDTO.getPmUser();
-			System.out.println("User id and Name" + user.getUserId() + "|"
-					+ user.getUserName());
-			// scLoi.setApproverUser(user);
+			AwardSupplierResDTO resDTO = qtAwardSO.saveLOIDtl(reqDTO);
 
-			// Setting the pm status for LOI details
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(60000l);
-			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
-			PmStatus status = pmStatus.getPmStatus();
-
-			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
-					.getNegoLocationList();
-			scLoi.setScNegoLocations(negoLocations);
-
-			List<ScLoiTerm> negoTerms = this.getManagedBean()
-					.getNegoTermsList();
-			for (ScLoiTerm scNegoTerm : negoTerms) {
-				// scNegoTerm.getScTerm().setTermType("I");
-				// scNegoTerm.getScTerm().getScTermDescs().get(0).setScTerm(scNegoTerm.getScTerm());
-			}
-			scLoi.setScNegoTerms(negoTerms);
-
-			awardSupplierReqDTO.setScLoi(scLoi);
-			awardSupplierReqDTO.setOutcome(outcome);
-			awardSupplierReqDTO.setSourceId(getManagedBean().getSourceId());
-
-			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
-					.saveLOIDtl(awardSupplierReqDTO);
-
-			if (awardSupplierResDTO.isSuccessful()) {
-				scLoi = awardSupplierResDTO.getScLoi();
+			if (resDTO.isSuccessful()) {
+				scLoi = resDTO.getScLoi();
 
 				renewSesionObject();
 
@@ -1382,9 +1633,8 @@ public class LOIDetailBackingBean extends
 			}
 
 		} finally {
-			statusSO = null;
-			userSO = null;
-			iqtAwardSO = null;
+
+			qtAwardSO = null;
 		}
 
 		return null;
@@ -1427,70 +1677,20 @@ public class LOIDetailBackingBean extends
 	 */
 	public void updateBpmTaskAction(String outcome) {
 		debugLogger("updateBpmTaskAction");
-		IStatusSO statusSO = null;
-		IUserSO userSO;
 		IQTAwardSO iqtAwardSO = null;
 		try {
-
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+		
 
+			ScLoi scLoi = this.getManagedBean().getScLoi();
+			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
+			
+			parseLOIDetails(scLoi, outcome);
+		
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-			ScLoi scLoi = this.getManagedBean().getScLoi();
-			// Long statusId = scLoi.getPmStatus().getStatusId().longValue();
-			Long statusId = null;
-
-			scLoi.setIssueDate(new Date());
-
-			// Date date = new Date();
-			System.out.println("Date : " + scLoi.getIssueDate());
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(scLoi.getIssueDate());
-			cal.add(Calendar.DATE, 14);
-			System.out.println("Date : " + cal.getTime());
-			scLoi.setAckDueDate(cal.getTime());
-			System.out.println("LOI Response Due Date : "
-					+ scLoi.getAckDueDate());
-
-			// Setting the pm user id for LOI details
-			UserReqDTO userReqDTO = new UserReqDTO();
-			/*
-			 * userReqDTO.setUserId(getManagedBean().getScLoi().getApproverUser()
-			 * .getUserId());
-			 */
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-
-			PmUser user = userResDTO.getPmUser();
-			System.out.println("User id and Name" + user.getUserId() + "|"
-					+ user.getUserName());
-			// scLoi.setApproverUser(user);
-
-			// Setting the pm status for LOI details
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(60000l);
-			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
-			PmStatus status = pmStatus.getPmStatus();
-
-			List<ScLoiNegoLocation> negoLocations = this.getManagedBean()
-					.getNegoLocationList();
-			scLoi.setScNegoLocations(negoLocations);
-
-			List<ScLoiTerm> negoTerms = this.getManagedBean()
-					.getNegoTermsList();
-			for (ScLoiTerm scNegoTerm : negoTerms) {
-				// scNegoTerm.getScTerm().setTermType("I");
-				// scNegoTerm.getScTerm().getScTermDescs().get(0).setScTerm(scNegoTerm.getScTerm());
-			}
-			scLoi.setScNegoTerms(negoTerms);
-
 			awardSupplierReqDTO.setScLoi(scLoi);
 			awardSupplierReqDTO.setSourceId(getManagedBean().getSourceId());
 			awardSupplierReqDTO.setOutcome(outcome);
@@ -1535,8 +1735,6 @@ public class LOIDetailBackingBean extends
 						scLoi.getLoiNo());
 			}
 		} finally {
-			statusSO = null;
-			userSO = null;
 			iqtAwardSO = null;
 		}
 	}
@@ -1614,7 +1812,7 @@ public class LOIDetailBackingBean extends
 		Long statusId = scLoi.getPmStatus().getStatusId().longValue();
 
 		if (scLoi.isApprovalReq()
-				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+				&& QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)) {
 			PmUser approverUser = getManagedBean().getApproverUser();
 
 			if (approverUser.getUserId() != null) {
@@ -1631,7 +1829,7 @@ public class LOIDetailBackingBean extends
 				}
 			}
 		} else if (scLoi.isApprovalReq()
-				&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+				&& QTStatusConst.LOI_PENDING_APPROVAL.equals(statusId)) {
 			ScLoiApproval scLoiApproval = scLoi.getScLoiApproval();
 			String action = null;
 			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
@@ -1648,7 +1846,7 @@ public class LOIDetailBackingBean extends
 			scLoi.setScLoiApproval(scLoiApproval);
 		}
 
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
 			scLoi.setAckDate(new Date());
 			scLoi.setAckByUser(new FacesScopes().getUserSessionBean());
 		}
@@ -1664,9 +1862,518 @@ public class LOIDetailBackingBean extends
 		for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
 			loiTerm.setTermDesc(loiTerm.getPmTerm().getTermDesc());
 		}
+		
 
 	}
+
+	private void renewSessionWithPreviousValues() {
+		SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+				.getPayLoadData();
+		Long sourceId = getManagedBean().getSourceId();
+		String taskId = getManagedBean().getTaskId();
+		String[] outcomes = getManagedBean().getOutComes();
+		Long currentStatusId = getManagedBean().getCurrentStatusId();
+		String docType = getManagedBean().getDocType();
+
+		this.renewSesionObject();
+
+		getManagedBean().setSourceId(sourceId);
+		getManagedBean().setPayLoadData(awardDataType);
+		getManagedBean().setTaskId(taskId);
+		getManagedBean().setOutComes(outcomes);
+		getManagedBean().setCurrentStatusId(currentStatusId);
+		getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+		getManagedBean().setDocType(docType);
+	}
+
+	public SelectItem[] getDeductionItemTypeDropdownList() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(),
+						ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT));
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_EQUALS.value(),
+						ParameterConst.DEDUCTION_TYPE_TRANSACTION_FEE));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.DEDUCTION_TYPE, searchBean);
+	}
+
+	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
+		debugLogger("deductionTypeChange");
+
+		IParameterSO parameterSO = null;
+		IClauseSO clauseSO = null;
+		try {
+			Long parameterId = scQtDeduction.getDeductionType()
+					.getParameterId();
+
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			clauseSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			ScQtDeductionClause deductionClause = null;
+			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
+			if (!ParameterConst.DEDUCTION_TYPE_OTHERS
+					.equalsIgnoreCase(scQtDeduction.getDeductionType()
+							.getParameterCode())) {
+				ClauseReqDTO clauseReqDTO = new ClauseReqDTO();
+				clauseReqDTO.setDeductionType(scQtDeduction.getDeductionType()
+						.getParameterCode());
+				ClauseResDTO clauseResDTO = clauseSO
+						.retrieveClausesByDeductionType(clauseReqDTO);
+				if (clauseResDTO.getResultBean() != null) {
+					List<PmClause> pmClauseList = clauseResDTO.getResultBean()
+							.getResultList();
+					for (PmClause pmClause : pmClauseList) {
+						deductionClause = new ScQtDeductionClause();
+						deductionClause.setClauseDesc(pmClause.getClauseDesc());
+						deductionClause.setScQtDeduction(scQtDeduction);
+						deductionClauseList.add(deductionClause);
+					}
+					scQtDeduction.setScQtDeductionClauses(deductionClauseList);
+				} else {
+					scQtDeduction.setScQtDeductionClauses(null);
+				}
+			} else {
+				scQtDeduction.setScQtDeductionClauses(null);
+			}
+
+			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+		} finally {
+			parameterSO = null;
+		}
+	}
+
+	public void addDeductionPaymentAction() {
+		debugLogger("addDeductionPaymentAction");
+
+		ScLoi scLoi = this.getManagedBean().getScLoi();
+		List<ScQtDeduction> scQtDeductions = scLoi.getScQtDeductions();
+
+		if (scQtDeductions == null) {
+			scQtDeductions = new ArrayList<ScQtDeduction>();
+
+			scLoi.setScQtDeductions(scQtDeductions);
+		}
+
+		ScQtDeduction scQtDeduction = new ScQtDeduction();
+		scQtDeduction.setScLoi(scLoi);
+		scQtDeduction.setDeductionType(new PmParameter());
+
+		scQtDeductions.add(scQtDeduction);
+	}
+
+	public void addDeductionClauseAction() {
+		debugLogger("addDeductionClauseAction");
+
+		ScQtDeduction selectedScQtDeduction = this.getManagedBean()
+				.getSelectedScQtDeduction();
+		List<ScQtDeductionClause> scQtDeductionClauses = selectedScQtDeduction
+				.getScQtDeductionClauses();
+
+		if (scQtDeductionClauses == null) {
+			scQtDeductionClauses = new ArrayList<ScQtDeductionClause>();
+
+			selectedScQtDeduction.setScQtDeductionClauses(scQtDeductionClauses);
+		}
+
+		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
+		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
+		scQtDeductionClauses.add(scQtDeductionClause);
+	}
+
+	public void addScheduleDetails() {
+
+		try {
+
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+			List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
+					.getScQtSchedules();
+			if (null == freqSchedule) {
+				freqSchedule = new ArrayList<ScQtSchedule>();
+			}
+
+			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
+
+				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
+				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
+					localSchedule.add(freqSchedule.get(j));
+
+				}
+				this.getManagedBean().getScLoi()
+						.setScQtSchedules(localSchedule);
+			} else {
+				for (int i = freqSchedule.size(); i < this.getManagedBean()
+						.getTotalFrequency(); i++) {
+					ScQtSchedule schedule = new ScQtSchedule();
+					schedule.setStartYear(String.valueOf(year));
+					schedule.setEndYear(String.valueOf(year));
+					schedule.setScheduleNo(BigDecimal.valueOf(i + 1));
+					PmParameter parameter = new PmParameter();
+					schedule.setScheduleType(parameter);
+					setUserDetails(schedule);
+					freqSchedule.add(schedule);
+				}
+				this.getManagedBean().getScLoi().setScQtSchedules(freqSchedule);
+			}
+
+		} finally {
+
+		}
+	}
+
+	public List<SelectItem> getYearDetails() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+
+			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(0, "January"));
+			selectItems.add(new SelectItem(1, "February"));
+			selectItems.add(new SelectItem(2, "March"));
+			selectItems.add(new SelectItem(3, "April"));
+			selectItems.add(new SelectItem(4, "May"));
+			selectItems.add(new SelectItem(5, "June"));
+			selectItems.add(new SelectItem(6, "July"));
+			selectItems.add(new SelectItem(7, "August"));
+			selectItems.add(new SelectItem(8, "September"));
+			selectItems.add(new SelectItem(9, "October"));
+			selectItems.add(new SelectItem(10, "November"));
+			selectItems.add(new SelectItem(11, "December"));
+
+			this.getManagedBean().setYearList(selectItems);
+		} finally {
+
+		}
+		return getManagedBean().getYearList();
+	}
+
+	public void calculateStartMonth(AjaxBehaviorEvent event) {
+		event.getComponent().getAttributes().get("value");
+
+	}
+
+	public List<SelectItem> getYearsDisplayDtls() {
+
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+			int year = Calendar.getInstance().get(Calendar.YEAR);
+
+			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(year, String.valueOf(year)));
+			for (int i = 0; i < 20; i++) {
+				year = year + 1;
+				selectItems.add(new SelectItem(year, String.valueOf(year)));
+			}
+
+			this.getManagedBean().setYearsDisplayList(selectItems);
+		} finally {
+
+		}
+		return getManagedBean().getYearsDisplayList();
+	}
+
+	public void calculateScheduleMonths(ScQtSchedule schedule) {
+
+		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoi()
+				.getScQtSchedules();
+		if (null == freqSchedule) {
+			freqSchedule = new ArrayList<ScQtSchedule>();
+
+		}
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
+		startMonth = schedule.getStartMonth() != null ? Integer
+				.parseInt(schedule.getStartMonth()) : null;
+		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
+				.getEndMonth()) : null;
+		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
+				.getStartYear()) : null;
+		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
+				.getEndYear()) : null;
+
+		if (startMonth != null && endMonth != null && startYear != null
+				&& endYear != null && endYear >= startYear) {
+			if (endYear != startYear) {
+				diffYear = endYear - startYear;
+			}
+			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
+				count++;
+			}
+			schedule.setTotalMonths(new BigDecimal(count));
+		} else {
+			schedule.setTotalMonths(BigDecimal.ZERO);
+		}
+
+		int index = freqSchedule.indexOf(schedule);
+		freqSchedule.set(index, schedule);
+
+		this.getManagedBean().setScheduleList(freqSchedule);
+	}
+
+	private void saveScheduleList() {
+		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoi()
+				.getScQtSchedules();
+		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
+		if (freqschedule != null && !freqschedule.isEmpty()) {
+			String startMonth = "";
+			String endmonth = "";
+			for (ScQtSchedule schedule : freqschedule) {
+				if (schedule.getStartMonth().equalsIgnoreCase("0")) {
+					startMonth = "01";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
+					startMonth = "02";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
+					startMonth = "03";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
+					startMonth = "04";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
+					startMonth = "05";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
+					startMonth = "06";
+				}
+
+				else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
+					startMonth = "07";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
+					startMonth = "08";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
+					startMonth = "09";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
+					startMonth = "10";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
+					startMonth = "11";
+				} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
+					startMonth = "12";
+				}
+				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
+					endmonth = "01";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
+					endmonth = "02";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
+					endmonth = "03";
+				}
+
+				else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
+					endmonth = "04";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
+					endmonth = "05";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
+					endmonth = "06";
+				}
+
+				else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
+					endmonth = "07";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
+					endmonth = "08";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
+					endmonth = "09";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
+					endmonth = "10";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
+					endmonth = "11";
+				} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
+					endmonth = "12";
+				}
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/" + startMonth + "/"
+						+ schedule.getStartYear();
+				String toDate = date + "/" + endmonth + "/"
+						+ schedule.getEndYear();
+
+				schedule.setScheduleNo(schedule.getScheduleNo());
+
+				try {
+					if (df.parse(fromdate).after(df.parse(toDate))) {
+						throw new EpException(MessageConst.ERROR_715011);
+					} else {
+						schedule.setFromDate(df.parse(fromdate));
+						schedule.setToDate(df.parse(toDate));
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					throw new EpException(e.toString());
+				}
+				if (schedule.getScLoi() == null) {
+					schedule.setScLoi(this.getManagedBean().getScLoi());
+				}
+				localScheduleList.add(schedule);
+			}
+			getManagedBean().getScLoi().setScQtSchedules(localScheduleList);
+		} else {
+			getManagedBean().getScLoi().setScQtSchedules(null);
+		}
+	}
+
+	public void addProgressiveDetails() {
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		List<ScQtProgressivePayment> progressive = this.getManagedBean()
+				.getProgressivePaymentList();
+		if (null == progressive) {
+			progressive = new ArrayList<ScQtProgressivePayment>();
+
+		}
+
+		if (progressive.size() > this.getManagedBean()
+				.getTotalProgressivePayment()) {
+
+			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
+			for (int j = 0; j < this.getManagedBean()
+					.getTotalProgressivePayment(); j++) {
+				progressiveList.add(progressive.get(j));
+
+			}
+			this.getManagedBean().setProgressivePaymentList(progressiveList);
+		} else {
+			for (int i = progressive.size(); i < this.getManagedBean()
+					.getTotalProgressivePayment(); i++) {
+
+				ScQtProgressivePayment payment = new ScQtProgressivePayment();
+				payment.setStartYear(String.valueOf(year));
+				payment.setEndYear(String.valueOf(year));
+				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+				// payment.setScheduleType(new BigDecimal(1));
+
+				setUserDetails(payment);
+				progressive.add(payment);
+			}
+			this.getManagedBean().setProgressivePaymentList(progressive);
+		}
+	}
+
+	private void saveProgressivePaymntList() {
+		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
+				.getProgressivePaymentList();
+		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
+		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
+			String startMonth = "";
+			String endmonth = "";
+			for (ScQtProgressivePayment payment : progressivePayemnt) {
+				if (payment.getStartMonth().equalsIgnoreCase("0")) {
+					startMonth = "01";
+				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
+					startMonth = "02";
+				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
+					startMonth = "03";
+				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
+					startMonth = "04";
+				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
+					startMonth = "05";
+				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
+					startMonth = "06";
+				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
+					startMonth = "07";
+				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
+					startMonth = "08";
+				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
+					startMonth = "09";
+				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
+					startMonth = "10";
+				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
+					startMonth = "11";
+				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
+					startMonth = "12";
+				}
+				if (payment.getEndMonth().equalsIgnoreCase("0")) {
+					endmonth = "01";
+				} else if (payment.getEndMonth().equalsIgnoreCase("1")) {
+					endmonth = "02";
+				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
+					endmonth = "03";
+				}
+
+				else if (payment.getEndMonth().equalsIgnoreCase("3")) {
+					endmonth = "04";
+				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
+					endmonth = "05";
+				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
+					endmonth = "06";
+				}
+
+				else if (payment.getEndMonth().equalsIgnoreCase("6")) {
+					endmonth = "07";
+				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
+					endmonth = "08";
+				} else if (payment.getEndMonth().equalsIgnoreCase("8")) {
+					endmonth = "09";
+				} else if (payment.getEndMonth().equalsIgnoreCase("9")) {
+					endmonth = "10";
+				} else if (payment.getEndMonth().equalsIgnoreCase("10")) {
+					endmonth = "11";
+				} else if (payment.getEndMonth().equalsIgnoreCase("11")) {
+					endmonth = "12";
+				}
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/" + startMonth + "/"
+						+ payment.getStartYear();
+				String toDate = date + "/" + endmonth + "/"
+						+ payment.getEndYear();
+				try {
+					if (df.parse(fromdate).after(df.parse(toDate))) {
+						throw new EpException(MessageConst.ERROR_715011);
+					} else {
+						payment.setFromDate(df.parse(fromdate));
+						payment.setToDate(df.parse(toDate));
+					}
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				getManagedBean().getScLoi().getScQtProgPayments();
+				payment.setScLoi(getManagedBean().getScLoi());
+				paymentList.add(payment);
+			}
+			getManagedBean().getScLoi().setScQtProgPayments(paymentList);
+
+		} else {
+			getManagedBean().getScLoi().setScQtProgPayments(null);
+		}
+	}
 	
+	private void sortFrequentScheduleList(List<ScQtSchedule> scQtScheduleList) {
+		Comparator<ScQtSchedule> comparator = new Comparator<ScQtSchedule>() {
+			@Override
+			public int compare(ScQtSchedule o1, ScQtSchedule o2) {
+				return new CompareToBuilder().append(o1.getScheduleNo(),
+						o2.getScheduleNo()).toComparison();
+			}
+		};
+		Collections.sort(scQtScheduleList, comparator);
+	}
+	
+	private void sortProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		Comparator<ScQtProgressivePayment> comparator = new Comparator<ScQtProgressivePayment>() {
+			@Override
+			public int compare(ScQtProgressivePayment o1,
+					ScQtProgressivePayment o2) {
+				return new CompareToBuilder().append(o1.getPhaseNo(),
+						o2.getPhaseNo()).toComparison();
+			}
+		};
+		Collections.sort(progressivePaymentList, comparator);
+	}
+
+
 	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
 		debugLogger("handleFileUpload");
 		if (event.getFile() != null) {
@@ -1844,5 +2551,6 @@ public class LOIDetailBackingBean extends
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-cover.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
+
 
 }

@@ -24,7 +24,7 @@
 
 		<ui:include src="loiDetailsHeader.xhtml" />
 
-	
+
 
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
@@ -40,14 +40,14 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@form">
+							rendered="#{!isSupplierAckStatus}" update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.nego.details']}"
-							update="@form">
+							rendered="#{!isSupplierAckStatus}" update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="2" />
@@ -57,7 +57,21 @@
 							update="@form">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="3" />
+								value="#{!isSupplierAckStatus ? 3 : 1}" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							update="@form" 	rendered="#{isSupplierAckStatus}" >
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+							update="@form" 	rendered="#{isSupplierAckStatus}">
+							<f:setPropertyActionListener
+								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
+								value="3"  />
 						</p:menuitem>
 					</p:tabMenu></td>
 				<td width="80%"><h:panelGroup>
@@ -79,6 +93,14 @@
 						<c:if
 							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
 							<ui:include src="loiApprovalMenu.xhtml" />
+						</c:if>
+						
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 2 and isSupplierAckStatus}">
+							<ui:include src="loiDeductionPaymentMenu.xhtml" />
+						</c:if>
+						
+						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isSupplierAckStatus}">
+							<ui:include src="loiFulfilmentSchedule.xhtml" />
 						</c:if>
 					</h:panelGroup></td>
 			</tr>

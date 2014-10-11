@@ -7,18 +7,18 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div class="ppRightBtn">
-		<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}"
+		<p:commandButton immediate="true" value="#{lbl['lbl.sc.common.back']}" rendered="#{isPendingSubmissionStatus}"
 			icon="ui-icon-back" style="float:left;"
 			action="#{lOIDetailBackingBean.backToPervious}" />
 
-		<p:commandButton value="Preview Letter" icon="ui-icon-search"
+		<p:commandButton value="Preview Letter" icon="ui-icon-search" rendered="#{isPendingSubmissionStatus}"
 			process="@this"
 			action="#{lOIDetailBackingBean.getLoiLetterStreamContent}"
 			oncomplete="loiLetterDlg.show();" />
 			
 					
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
-			action="#{lOIDetailBackingBean.saveAction}" 
+			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus}"
 			process="@form" update="@form" />
 			
 		<c:choose>
