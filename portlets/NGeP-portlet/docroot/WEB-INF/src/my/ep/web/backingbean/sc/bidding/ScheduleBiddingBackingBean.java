@@ -70,7 +70,6 @@ public class ScheduleBiddingBackingBean extends
 			SCEvaluationDataType dpDataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			this.getManagedBean().setPayLoad(dpDataType);
 			Long qtId = Long.valueOf(dpDataType.getQtId());
-			// Long qtId = 146L;
 			List<String> supplierIds = dpDataType.getGroupkeyBa();
 			List<Long> supplierDtls = new ArrayList<Long>();
 			
@@ -92,8 +91,6 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-	public void rowSelectListener() {
-	}
 
 	public void applyBidDates() {
 
@@ -104,7 +101,6 @@ public class ScheduleBiddingBackingBean extends
 		}
 
 		if (getManagedBean().getSelectedBidBidScheduleList().size() > 0)
-
 		{
 			for (ScBidSchedule bidSchedule : getManagedBean()
 					.getSelectedBidBidScheduleList()) {
@@ -120,6 +116,8 @@ public class ScheduleBiddingBackingBean extends
 									bidSchedule), bidSchedule);
 				}
 			}
+			getManagedBean().getRowSelectedBid().setStartDate(null);
+			getManagedBean().getRowSelectedBid().setEndDate(null);
 		} else {
 			log.info(" **** Please select at-least one item *** ");
 		}
@@ -232,7 +230,16 @@ public class ScheduleBiddingBackingBean extends
 				getManagedBean().setScQtFinalization(
 						resDTO.getScQtFinalization());
 				getManagedBean().setBidScheduleList(resDTO.getBidSchedules());
-				this.getManagedBean().setScBid(resDTO.getScBid());
+				getManagedBean().setScBid(resDTO.getScBid());
+				if(resDTO.getScQT().isZonal()){
+					getManagedBean().setRowSelectedBid(resDTO.getBidSchedules().get(0));
+				}
+				if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
+						.getScQtFinalization().getRecommendedTypeId()
+						.getParameterCode())){
+					getManagedBean().setRowSelectedBid(new ScBidSchedule());
+				}
+				
 			}
 		}
 
@@ -241,121 +248,30 @@ public class ScheduleBiddingBackingBean extends
 		}
 	}
 
-	public String saveNonZoneBidsScheduledAction() {
-		System.out.println("*****inside saveNonZoneBidsScheduledAction()*****");
-		ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-
-		// check schedule by package or item and save accordingly
-		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(getManagedBean()
-				.getScQtFinalization().getRecommendedTypeId()
-				.getParameterCode())) {
-			System.out.println("******RECOMMEND_TYPE_PACKAGE******");
-
-			//getManagedBean().getScBid().getScBidSchedules().get(0)
-			//		.setStartDate(getManagedBean().getBidStart());
-			//getManagedBean().getScBid().getScBidSchedules().get(0)
-			//		.setEndDate(getManagedBean().getBidEnd());
-			PmStatus status = new PmStatus();
-			status.setStatusId(63350L);
-			// TODO BidStatusConst.BID_PENDING_BIDDING
-			getManagedBean().getScBid().getScBidSchedules().get(0)
-					.setPmStatus(status);
-			getManagedBean().getScBid().setDocType(
-					ParameterConst.DOCTYPE_BIDDING);
-			getManagedBean().getScBid().setDocId(
-					getManagedBean().getScQt().getQtId());
-			getManagedBean().getScBid().setDocNo(
-					getManagedBean().getScQt().getQtNo());
-			getManagedBean().getScBid().setDocTitle(
-					getManagedBean().getScQt().getQtTitle());
-			getManagedBean().getScBid().setPmOrgProfile(
-					getManagedBean().getScQt().getPmOrgProfile());
-			// TODO - temporary hard coded
-			getManagedBean().getScBid().setEstimatedCost(
-					getManagedBean().getScQt().getEstimatedAmount());
-			getManagedBean().getScBid().setRecommendedTypeId(
-					getManagedBean().getScQtFinalization()
-							.getRecommendedTypeId());
-
-			for (ScBidContactPerson contact : getManagedBean()
-					.getScBidContactPersonList()) {
-				contact.setScBid(getManagedBean().getScBid());
-			}
-			getManagedBean().getScBid().setScBidContactPersons(
-					getManagedBean().getScBidContactPersonList());
-			reqDTO.setScBid(getManagedBean().getScBid());
-			reqDTO.setScQtFinalization(getManagedBean().getScQtFinalization());
-
-		} else if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(getManagedBean()
-				.getScQtFinalization().getRecommendedTypeId()
-				.getParameterCode())) {
-			System.out.println("******RECOMMEND_TYPE_ITEM******");
-
-			reqDTO.setScQt(getManagedBean().getScQt());
-			reqDTO.setScQtFinalization(getManagedBean().getScQtFinalization());
-			reqDTO.setScBidContactPersonList(getManagedBean()
-					.getScBidContactPersonList());
-			reqDTO.setScBidItemList(getManagedBean().getBidItemList());
-		}
-
-		IScheduleBiddingSO scheduleSO = null;
-
-		try {
-			scheduleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					IScheduleBiddingSO.class);
-			System.out.println("submitNonZoneScheduledBidDetails() called");
-			ScheduleBiddingResDTO resDTO = scheduleSO
-					.submitNonZoneScheduledBidDetails(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-
-				System.out.println("Scheduled Bids saved Successfully");
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_BIDDING),
-																resDTO.getScBid()
-																		.getDocType() },// TODO
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-
-			} else {
-				System.out.println("Scheduled Bids save failed");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			scheduleSO = null;
-		}
-		return null;
-	}
+	
 
 	public void bidStartDateSelectListener(ScBidSchedule scBidSchedule) {
 		Date date = scBidSchedule.getStartDate();
+		System.out.println("*****start date on each event*****"+date);
 		getManagedBean().setMinEndDate(date);
 		Calendar maxEndDate = Calendar.getInstance();
 		maxEndDate.setTime(date);
 		maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
 		getManagedBean().setMaxEndDate(maxEndDate.getTime());
+		if(scBidSchedule.getEndDate() != null){
+			scBidSchedule.setEndDate(null);
+			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
+		}
 	}
 
 	public void bidEndDateSelectListener(ScBidSchedule bidSchedule) {
 
 		ScBidSchedule scBidSchedule = bidSchedule;
 		if(scBidSchedule.getStartDate() == null){
+			scBidSchedule.setEndDate(null);
+			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 			throw new EpException("Please Select Start Date");
 		}
 		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
@@ -370,6 +286,9 @@ public class ScheduleBiddingBackingBean extends
 	public void multiSelectEndDateSelectListener(ScBidSchedule bidSchedule){
 		ScBidSchedule scBidSchedule = bidSchedule;
 		if(scBidSchedule.getStartDate() == null){
+			scBidSchedule.setEndDate(null);
+			int index = getManagedBean().getBidScheduleList().indexOf(scBidSchedule);
+			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
 			throw new EpException("Please Select Start Date");
 		}
 		long durationInMills = scBidSchedule.getEndDate().getTime() - scBidSchedule.getStartDate().getTime();
@@ -390,81 +309,7 @@ public class ScheduleBiddingBackingBean extends
 		return duration;
 	}
 
-	public String saveZoneWiseScheduledBidAction() {
-
-		getManagedBean().getScBid().setDocType(ParameterConst.DOCTYPE_BIDDING);
-		getManagedBean().getScBid().setDocId(
-				getManagedBean().getScQt().getQtId());
-		getManagedBean().getScBid().setDocNo(
-				getManagedBean().getScQt().getQtNo());
-		getManagedBean().getScBid().setDocTitle(
-				getManagedBean().getScQt().getQtTitle());
-		getManagedBean().getScBid().setPmOrgProfile(
-				getManagedBean().getScQt().getPmOrgProfile());
-		// TODO - temporary hard coded
-		getManagedBean().getScBid().setEstimatedCost(
-				getManagedBean().getScQt().getEstimatedAmount());
-		getManagedBean().getScBid().setRecommendedTypeId(
-				getManagedBean().getScQtFinalization().getRecommendedTypeId());
-
-		for (ScBidContactPerson contact : getManagedBean()
-				.getScBidContactPersonList()) {
-			contact.setScBid(getManagedBean().getScBid());
-		}
-		getManagedBean().getScBid().setScBidContactPersons(
-				getManagedBean().getScBidContactPersonList());
-
-		IScheduleBiddingSO scheduleSO = null;
-
-		try {
-			scheduleSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION,
-					IScheduleBiddingSO.class);
-			ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-			reqDTO.setScBid(getManagedBean().getScBid());
-			reqDTO.setScQtFinalization(getManagedBean().getScQtFinalization());
-
-			System.out.println("submitZoneWiseScheduledBidDetails() called");
-			ScheduleBiddingResDTO resDTO = scheduleSO
-					.submitZoneWiseScheduledBidDetails(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-
-				System.out
-						.println("Scheduled ZoneWise Bids saved Successfully");
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_BIDDING),
-																resDTO.getScBid()
-																		.getDocType() },// TODO
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
-
-			} else {
-				System.out.println("Scheduled Zone Wise Bids save failed");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			scheduleSO = null;
-		}
-
-		return null;
-
-	}
+	
 
 	public String submitBiddingDetails(String outCome) {
 
@@ -482,10 +327,10 @@ public class ScheduleBiddingBackingBean extends
 			biddingReqDTO.setTaskId(taskId);
 			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			// Need to call prepare save details method..
+			getManagedBean().getScBid().setScBidContactPersons(getManagedBean().getScBidContactPersonList());
 			biddingReqDTO.setScBid(this.getManagedBean().getScBid());
 			biddingReqDTO.setBidSchedules(this.getManagedBean()
 					.getBidScheduleList());
-
 			ScheduleBiddingResDTO resDTO = scheduleBiddingSO
 					.updateBPMAction(biddingReqDTO);
 

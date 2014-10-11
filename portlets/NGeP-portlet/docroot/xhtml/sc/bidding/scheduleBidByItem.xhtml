@@ -12,7 +12,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		
+
 		<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 			id="schedulePanel">
 
@@ -26,16 +26,20 @@
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.sc.item.name']}">
-					<p:commandLink value="#{bidSchedule.scBidItems[0].scRequestItem.itemName}"
+					<p:commandLink
+						value="#{bidSchedule.scBidItems[0].scRequestItem.itemName}"
 						oncomplete="participants.show();"
 						action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidSchedule)}"
 						size="30" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.item.description']}">
-					<h:outputText value="#{bidSchedule.scBidItems[0].scRequestItem.itemDesc}" size="30" />
+					<h:outputText
+						value="#{bidSchedule.scBidItems[0].scRequestItem.itemDesc}"
+						size="30" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.uom']}">
-					<h:outputText value="#{bidSchedule.scBidItems[0].scRequestItem.uom.uomName}" />
+					<h:outputText
+						value="#{bidSchedule.scBidItems[0].scRequestItem.uom.uomName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.quantity']}">
 					<h:outputText style="float : right"
@@ -45,8 +49,8 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
-					<p:calendar value="#{bidSchedule.startDate}"
-						showOn="button" id="bidStartDate" readonlyInput="true"
+					<p:calendar value="#{bidSchedule.startDate}" showOn="button" required="true"
+						id="bidStartDate" readonlyInput="true"
 						mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
@@ -54,14 +58,17 @@
 							partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
 							update="@([id$=bidEndDate])" />
+						<p:ajax event="change" process="bidStartDate" partialSubmit="true"
+							listener="#{scheduleBiddingBB.bidStartDateSelectListener(bidSchedule)}"
+							update="@([id$=bidEndDate])" />
 
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
 
-					<p:calendar value="#{bidSchedule.endDate}"
+					<p:calendar id="bidEndDate" value="#{bidSchedule.endDate}"
 						mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
-						showOn="button" id="bidEndDate" readonlyInput="true"
+						showOn="button" readonlyInput="true" required="true"
 						maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
@@ -69,12 +76,14 @@
 							partialSubmit="true"
 							listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
 							update="@([id$=bidDuration])" />
+						<p:ajax event="change" process="bidEndDate" partialSubmit="true"
+							listener="#{scheduleBiddingBB.bidEndDateSelectListener(bidSchedule)}"
+							update="@([id$=bidDuration])" />
 
 					</p:calendar>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.duration.hours']}">
-					<p:outputLabel id="bidDuration"
-						value="#{bidSchedule.duration}" />
+					<p:outputLabel id="bidDuration" value="#{bidSchedule.duration}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
 					<h:outputText style="float : right"
@@ -102,6 +111,10 @@
 									partialSubmit="true"
 									listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
 									update="@([id$=multiSelectEndDate])" />
+								<p:ajax event="change" process="multiSelectStartDate"
+									partialSubmit="true"
+									listener="#{scheduleBiddingBB.bidStartDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}"
+									update="@([id$=multiSelectEndDate])" />
 
 							</p:calendar></td>
 
@@ -117,6 +130,10 @@
 								<p:ajax event="dateSelect" process="multiSelectEndDate"
 									partialSubmit="true"
 									listener="#{scheduleBiddingBB.multiSelectEndDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
+								<p:ajax event="change" process="multiSelectEndDate"
+									partialSubmit="true"
+									listener="#{scheduleBiddingBB.multiSelectEndDateSelectListener(scheduleBiddingBB.managedBean.rowSelectedBid)}" />
+
 
 							</p:calendar></td>
 

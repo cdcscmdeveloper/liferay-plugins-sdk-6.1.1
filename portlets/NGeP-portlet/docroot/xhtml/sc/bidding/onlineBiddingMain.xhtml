@@ -18,7 +18,7 @@
 		<ui:param name="isInProgress"
 			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 		
-		<p:poll interval="#{onlineBiddingBB.interval}" listener="#{onlineBiddingBB.pollListener}"	update="@form" rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding' or onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress' }"/>
+		
 		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
