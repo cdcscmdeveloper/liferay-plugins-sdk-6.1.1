@@ -61,6 +61,18 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
 
+	public OnlineBiddingBackingBean() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String docId = originalServletRequest.getParameter("docId");
+		String encodedSupplierId = originalServletRequest
+				.getParameter("supplierId");
+		retrieveOnlineBiddingDtls(Long.parseLong(docId), encodedSupplierId,
+				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+	}
+
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -77,24 +89,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 * To redirect to Supplier online Bidding Screen..
 	 */
 	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String docId = originalServletRequest
-				.getParameter("docId");
-		String encodedSupplierId = originalServletRequest
-				.getParameter("supplierId");
-		retrieveOnlineBiddingDtls(Long.parseLong(docId),
-				encodedSupplierId,
-				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
+
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, QTConstants.ONLINE_BIDDING_MAIN_PAGE);
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						QTConstants.ONLINE_BIDDING_MAIN_PAGE);
 	}
 
-	private void retrieveOnlineBiddingDtls(Long docId,
-			String supplierId, Long userId) {
+	private void retrieveOnlineBiddingDtls(Long docId, String supplierId,
+			Long userId) {
 
 		log.info("retrieveOnlineBiddingDtls");
 
@@ -117,12 +121,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setScBidSchedule(resDTO.getScBidSchedule());
 				setBidContactPersons(resDTO.getBidContactPersons());
 				setSmSupplier(resDTO.getSmSupplier());
-				
-				if(resDTO.getPackageRanking() != null){
+
+				if (resDTO.getPackageRanking() != null) {
 					setScBidAction(resDTO.getScBidAction());
 				}
 
-				if(resDTO.getScBidAction() != null){
+				if (resDTO.getScBidAction() != null) {
 					setPackageRanking(resDTO.getPackageRanking());
 				}
 
@@ -148,7 +152,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.equals(BidStatusConst.BID_CANCELLED)
 				|| getScBidSchedule().getPmStatus().getStatusId()
 						.equals(BidStatusConst.BID_PAUSED)) {
-			RequestContext.getCurrentInstance().execute("onlineBiddingNotification.show()");
+			RequestContext.getCurrentInstance().execute(
+					"onlineBiddingNotification.show()");
 		}
 	}
 
@@ -156,12 +161,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		log.info("pollListener");
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
-		
+
 		if (getScBidSchedule().getPmStatus().getStatusId()
 				.equals(BidStatusConst.BID_CANCELLED)
 				|| getScBidSchedule().getPmStatus().getStatusId()
 						.equals(BidStatusConst.BID_PAUSED)) {
-			RequestContext.getCurrentInstance().execute("onlineBiddingNotification.show()");
+			RequestContext.getCurrentInstance().execute(
+					"onlineBiddingNotification.show()");
 		}
 	}
 
@@ -287,25 +293,22 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public String getItemNewBidPriceTotal() {
 
-		System.out
-				.println("******!!!$$$$ inside getItemNewBidPriceTotal method ***** ");
-
 		Double newBidPriceTotal = 0D;
 		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
 
 				if (bidPrice.getNewBidPrice() != null
 						&& bidPrice.getNewBidPrice().getBidPrice() != null) {
-
 					newBidPriceTotal += (bidPrice.getNewBidPrice()
 							.getBidPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
-				} else {
-
+				} else if (bidPrice.getBidPrice() != null) {
 					newBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
+				} else {
+					newBidPriceTotal += (bidPrice.getScBidSupplierItem().getItemStartPrice().doubleValue() * bidPrice
+							.getScBidSupplierItem().getScBidItem().getQty());
 				}
-
 			}
 		}
 		this.setItemNewBidPriceTotal(nf.format(newBidPriceTotal));
@@ -373,8 +376,16 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		if (this.getBidPrices() != null && this.getBidPrices().size() != 0) {
 
 			for (ScBidPrice bidPrice : this.getBidPrices()) {
-				lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
-						.getScBidSupplierItem().getScBidItem().getQty());
+
+				if (bidPrice.getBidPrice() == null) {
+					lastBidPriceTotal += bidPrice.getScBidSupplierItem()
+							.getItemStartPrice().doubleValue()
+							* bidPrice.getScBidSupplierItem().getScBidItem()
+									.getQty();
+				} else {
+					lastBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
+							.getScBidSupplierItem().getScBidItem().getQty());
+				}
 			}
 		}
 		this.setItemLastBidPriceTotal(nf.format(lastBidPriceTotal));
@@ -556,7 +567,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param packageRanking the packageRanking to set
+	 * @param packageRanking
+	 *            the packageRanking to set
 	 */
 	public void setPackageRanking(BigDecimal packageRanking) {
 		this.packageRanking = packageRanking;
@@ -570,7 +582,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param scBidAction the scBidAction to set
+	 * @param scBidAction
+	 *            the scBidAction to set
 	 */
 	public void setScBidAction(ScBidAction scBidAction) {
 		this.scBidAction = scBidAction;
