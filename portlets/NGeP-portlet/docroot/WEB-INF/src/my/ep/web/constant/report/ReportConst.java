@@ -131,7 +131,9 @@ public class ReportConst {
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP = "sc_tecec_exp_non_govt_5b.jsp";
 	public static final String SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_govt_6a.jsp";
 	public static final String SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP = "sc_fecec_exp_non_govt_6b.jsp";
-	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";	
+	public static final String SC_FINANCE_POSITION_RPT_JSP = "sc_fecec_fin_position_6c.jsp";
+	
+	public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "sc_fc_analysis_eval_rep_8a.jsp";
 	//S1 Report
 	public static final String SC_RECENT_PRICE_RPT_JSP = "SC_S1_RCNT_PRICE.jsp";
 	//SC Module reports start

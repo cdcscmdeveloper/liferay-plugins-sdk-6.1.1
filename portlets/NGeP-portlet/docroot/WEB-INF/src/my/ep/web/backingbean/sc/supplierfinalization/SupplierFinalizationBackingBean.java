@@ -102,6 +102,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
@@ -1019,10 +1020,28 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport.getScQtFinalizationReportAttachment();
 		if (reportAttachment == null) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
+			scQtFinalizationReport.setScQtFinalizationReportAttachment(reportAttachment);
 		}
 		downloadFile(reportAttachment);	
 	}
-	
+
+	public void downloadAllReports() throws Exception {
+		debugLogger("downloadAllReports");
+
+		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getScQtFinalization().getScQtFinalizationReports();
+		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
+		
+		for (ScQtFinalizationReport report : scQtFinalizationReports) {
+			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
+			if (attachment == null) {
+				attachment = generateDocumentAttachment(report);
+				report.setScQtFinalizationReportAttachment(attachment);
+			}
+			scAttachments.add(attachment);
+		}
+		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+	}
+
 	private ScQtFinalizationReportAttachment generateDocumentAttachment(ScQtFinalizationReport scQtFinalizationReport) throws Exception {
 		String definitionType = scQtFinalizationReport.getDefinationType().getParameterCode();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
@@ -1045,7 +1064,8 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_EVALUATION_REPORT.equals(docDefinitionKey)) {
 				//FIXME - get from evaluation report
-
+				generateAnalysisEvaluationReportPdf(attachment, getManagedBean().getScQt());
+				
 			} else if (SourcingConstants.DOC_DEF_KEY_NOTICE_BOARD.equals(docDefinitionKey)) {
 				generateNoticeBoardPdf(attachment, getManagedBean().getScQt());
 
@@ -1069,23 +1089,18 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 		return reportAttachment;
 	}
 	
-	public void downloadAllReports() throws Exception {
-		debugLogger("downloadAllReports");
+	private void generateAnalysisEvaluationReportPdf(ScAttachment attachment, ScQt scQt) throws Exception {
+		attachment.setFileName("AnalysisOfEvaluation.pdf");
+		populateAttachmentDetails(attachment);
 
-		List<ScQtFinalizationReport> scQtFinalizationReports = getManagedBean().getScQtFinalization().getScQtFinalizationReports();
-		List<ScQtFinalizationReportAttachment> scAttachments = new ArrayList<ScQtFinalizationReportAttachment>();
-		
-		for (ScQtFinalizationReport report : scQtFinalizationReports) {
-			ScQtFinalizationReportAttachment attachment = report.getScQtFinalizationReportAttachment();
-			if (attachment == null) {
-				attachment = generateDocumentAttachment(report);
-			}
-			scAttachments.add(attachment);
-		}
-		
-		downloadAllFiles("NGeP-Finalization-Report", scAttachments);
+		long qtId = scQt.getQtId();
+		String reportName = ReportConst.SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP;
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.AMP_QUOTE_ID_EQ, qtId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment);
 	}
-	
+
 	public void generateCoverPdf(ScAttachment attachment, ScQt scQt) throws Exception {
 		debugLogger("generateCoverPdf");
 		populateAttachmentDetails(attachment);
