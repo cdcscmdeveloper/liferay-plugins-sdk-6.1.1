@@ -443,7 +443,7 @@
 		<property name="pk" value="mofAccountId" />
 
 		<property name="daoClass" value="my.ep.persistence.dao.sm.SmMofAccountDAO" />
-
+	    <property name="searchMethod" value="retrieveMofAccountDtls" /> 
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
