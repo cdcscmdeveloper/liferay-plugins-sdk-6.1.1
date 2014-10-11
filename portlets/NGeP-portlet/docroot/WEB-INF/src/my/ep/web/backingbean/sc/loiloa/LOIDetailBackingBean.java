@@ -153,6 +153,14 @@ public class LOIDetailBackingBean extends
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
+			
+			
+			if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
+				RoleCode.DESK_OFFICER.value();
+			}
+			else if (new FacesScopes().hasRoleUser(RoleCode.SC_SECRETARY.value())){
+				RoleCode.SC_SECRETARY.value();
+			}
 
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoadData(awardDataType);
@@ -247,6 +255,7 @@ public class LOIDetailBackingBean extends
 			Long loiId = Long.valueOf(dpDataType.getAwardId());
 
 			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setPayLoadData(dpDataType);
 
 			// editSupplierLOIAction(loiId);
 			
@@ -1587,9 +1596,12 @@ public class LOIDetailBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 
 		try {
-
+			
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+					.getPayLoadData();
+
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
@@ -1602,6 +1614,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setPayLoad(awardDataType);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.saveLOIDtl(reqDTO);
 
@@ -1681,7 +1694,8 @@ public class LOIDetailBackingBean extends
 		try {
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-		
+			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+					.getPayLoadData();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			Long statusId = scLoi.getPmStatus().getStatusId().longValue();
@@ -1697,6 +1711,7 @@ public class LOIDetailBackingBean extends
 			awardSupplierReqDTO.setToken(new FacesScopes()
 					.getBPMAuthenticationCtxToken());
 			awardSupplierReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			awardSupplierReqDTO.setPayLoad(awardDataType);
 
 			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
 					.saveLOIDtl(awardSupplierReqDTO);
