@@ -1,0 +1,42 @@
+<html>
+<head>
+<style>
+@page {
+	size: A4 portrait;
+}
+
+@page { @bottom-center { content:element(footer)
+	
+}
+
+}
+.table2 {
+    border-collapse: collapse;
+	width:100%;
+}
+		.table2 th, .table2 td {
+			border: 1px solid black;
+		}
+		 th{
+			background-color: #BCE18A;
+		 }
+.footer {
+	display: block;
+	text-align: center;
+	position: running(footer);
+}
+</style>
+</head>
+<body>
+<table>
+	<tr>
+		<td>
+			<p>4. Hasil Rundingan</p>
+			<ol type="4">4.1 Senarai Pembekal Untuk Hasil Rundingan</ol>
+			
+			<ol type="4">4.2 Hasil Rundingan Untuk Harga Tawaran</ol>
+		</td>
+	</tr>
+</table>
+</body>
+</html>

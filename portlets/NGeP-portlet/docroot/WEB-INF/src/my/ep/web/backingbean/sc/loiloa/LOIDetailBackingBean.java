@@ -4,7 +4,9 @@
 
 package my.ep.web.backingbean.sc.loiloa;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +21,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -36,6 +39,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
@@ -55,6 +60,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiRemark;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoiWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -87,6 +94,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 
@@ -1658,4 +1666,183 @@ public class LOIDetailBackingBean extends
 		}
 
 	}
+	
+	public void handleFileUpload(FileUploadEvent event) throws FileNotFoundException, IOException {
+		debugLogger("handleFileUpload");
+		if (event.getFile() != null) {
+			//String attachmentDocType = getManagedBean().getAttachmentDocType(); 
+			ScAttachment scAttachment = null;
+			ScLoiReport selectedScLoiReport = this.getManagedBean().getSelectedScLoiReport();
+			ScLoiReportAttachment scLoiReportAttachment = selectedScLoiReport.getScLoiReportAttachment();
+			if (null == scLoiReportAttachment) {
+				scLoiReportAttachment = new ScLoiReportAttachment();
+				scLoiReportAttachment.setScLoiReport(selectedScLoiReport);
+				selectedScLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
+			}
+			scLoiReportAttachment.setDocNo(selectedScLoiReport.getScLoi().getLoiNo());
+			scAttachment = scLoiReportAttachment;
+			
+			uploadAttachment(event.getFile(), scAttachment);
+		}
+	}
+	
+	public void addLoiReportAction() {
+		debugLogger("addLoiReportAction");
+		
+		ScLoi scLoi = this.getManagedBean().getScLoi();
+		List<ScLoiReport> scLoiReports = scLoi.getScLoiReports();
+		
+		if (scLoiReports == null) {
+			scLoiReports = new ArrayList<ScLoiReport>();
+			scLoi.setScLoiReports(scLoiReports);
+		}
+		
+		ScLoiReport scLoiReport = new ScLoiReport();
+		scLoiReport.setScLoi(scLoi);
+		scLoiReport.setScLoiReportAttachment(new ScLoiReportAttachment());
+
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			scLoiReport.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+
+		scLoiReports.add(scLoiReport);
+	}
+	
+	public void downloadReport(ScLoiReport scLoiReport) throws IOException {
+		debugLogger("downloadReport");
+		ScLoiReportAttachment scLoiReportAttachment = scLoiReport.getScLoiReportAttachment();
+		if (scLoiReportAttachment == null) {
+			scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
+			scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
+		}
+		downloadFile(scLoiReportAttachment);
+	}
+	
+	public void downloadAllReports() throws IOException {
+		debugLogger("downloadAllReports");
+		List<ScLoiReport> scLoiReports = getManagedBean().getScLoi().getScLoiReports();
+		List<ScLoiReportAttachment> scAttachments = new ArrayList<ScLoiReportAttachment>();
+		for (ScLoiReport scLoiReport : scLoiReports) {
+			ScLoiReportAttachment scLoiReportAttachment = scLoiReport.getScLoiReportAttachment();
+			if (scLoiReportAttachment == null) {
+				scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
+				scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
+			}
+			scAttachments.add(scLoiReportAttachment);
+		}
+		downloadAllFiles("NGeP-LOI-Report", scAttachments);
+	}
+	
+	private ScLoiReportAttachment generateDocumentAttachment(ScLoiReport scLoiReport) {
+		String definitionType = scLoiReport.getDefinationType().getParameterCode();
+		ScLoiReportAttachment scLoiReportAttachment = null;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED.equals(definitionType)) {
+			try {
+				String docDefinitionKey = scLoiReport.getPmDocument().getDocDefinitionKey();
+				scLoiReportAttachment = new ScLoiReportAttachment();
+				scLoiReportAttachment.setScLoiReport(scLoiReport);
+				scLoiReportAttachment.setDocNo(scLoiReport.getScLoi().getLoiNo());
+				
+				if (SourcingConstants.DOC_DEF_KEY_COVER.equals(docDefinitionKey)) {
+					generateCoverPdfFromVelocity((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				} else if (SourcingConstants.DOC_DEF_KEY_OFFERED_QT_DTLS.equals(docDefinitionKey)) {
+					generateOfferedAndQTDtlsPdf((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				} else if (SourcingConstants.DOC_DEF_KEY_NEGOTIATION_LOCATION.equals(docDefinitionKey)) {
+					generateNegotiationLocationPdf((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				} else if (SourcingConstants.DOC_DEF_KEY_NEGOTIATION_COMMITTEE.equals(docDefinitionKey)) {
+					generateNegotiationCommitteePdf((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				} else if (SourcingConstants.DOC_DEF_KEY_NEGOTIATION_RESULT.equals(docDefinitionKey)) {
+					generateNegotiationResultPdf((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				} else if (SourcingConstants.DOC_DEF_KEY_NEGOTIATION_RECOMMENDATION.equals(docDefinitionKey)) {
+					generateNegotiationRecommendationPdf((ScAttachment) scLoiReportAttachment, getManagedBean().getScLoi());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			}
+			scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
+		}
+		return scLoiReportAttachment;
+	}
+
+	private void generateNegotiationRecommendationPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("Negotiation_Recommendation.pdf");
+		populateAttachmentDetails(attachment);
+		
+		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationRecommendation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateNegotiationResultPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("Negotiation_Result.pdf");
+		populateAttachmentDetails(attachment);
+		
+		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationResult.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateNegotiationCommitteePdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("Negotiation_Committee.pdf");
+		populateAttachmentDetails(attachment);
+		
+		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationCommittee.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateNegotiationLocationPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("Negotiation_Location.pdf");
+		populateAttachmentDetails(attachment);
+		
+		//ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		VelocityContext context = new VelocityContext();
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-negotiationLocation.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateOfferedAndQTDtlsPdf(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("OfferedAndQTDetails.pdf");
+		populateAttachmentDetails(attachment);
+		
+		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		VelocityContext context = new VelocityContext();
+		
+		context.put("title", scLoiLoa.getTitle());
+		context.put("fulfilmentType", getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));
+		context.put("ptj", pmOrgProfile.getOrgName());
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-offeredAndQTDetails.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void generateCoverPdfFromVelocity(ScAttachment attachment, ScLoi scLoi) throws Exception {
+		attachment.setFileName("Cover.pdf");
+		populateAttachmentDetails(attachment);
+		
+		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		VelocityContext context = new VelocityContext();
+		
+		//context.put("ministry", pmOrgProfile.getParentOrgProfile().getOrgName());
+    	context.put("agency", pmOrgProfile.getOrgName());
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-cover.vm", context, new FileOutputStream(getActualFilePath(attachment)));
+	}
+
 }

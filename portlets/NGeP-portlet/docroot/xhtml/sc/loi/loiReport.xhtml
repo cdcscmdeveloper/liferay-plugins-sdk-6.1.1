@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.report.content']}"
+		toggleable="true">
+		<p:dataTable id="reportContentsTbl"
+			widgetVar="reportContentsTblWidget" var="scLoiReport"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiReports}"
+			rows="10" rowKey="#{scLoiReport}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiReports}">
+
+			<ac:paginator for="reportContentsTbl" />
+
+			<p:column selectionMode="multiple" style="width:2%"
+				disabledSelection="#{!empty scLoiReport.pmDocument}" />
+
+			<p:column headerText="#{lbl['lbl.sc.content']}">
+				<h:inputText style="width:96%" value="#{scLoiReport.title}"
+					rendered="#{empty scLoiReport.pmDocument}" />
+				<h:outputText value="#{scLoiReport.title}"
+					rendered="#{!empty scLoiReport.pmDocument}" />
+			</p:column>
+
+			<p:column style="width:20%;" headerText="#{lbl['lbl.sc.type']}">
+				#{lOIDetailBackingBean.getParameterDesc(scLoiReport.definationType)}
+			</p:column>
+
+			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+				<ui:fragment
+					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<h:outputText value="#{scLoiReport.scLoiReportAttachment.fileName}" />
+					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
+						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
+						partialSubmit="true" process="@this"
+						update="@([id$=loiAttachmentPopup])">
+						<f:setPropertyActionListener
+							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}"
+							value="#{scLoiReport}" />
+						<f:setPropertyActionListener
+							target="#{lOIDetailBackingBean.managedBean.attachmentDocType}"
+							value="LIR" />
+					</p:commandButton>
+				</ui:fragment>
+			</p:column>
+
+			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
+				<p:commandButton id="download" icon="ui-icon-download"
+					style="background-color:transparent !important; border:0px none;"
+					ajax="false"
+					action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}"
+					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoiReport.scLoiReportAttachment.fileName : true}" />
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="2" />
+		<div class="ppRightBtn">
+			<p:commandButton icon="ui-icon-download"
+				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+				action="#{lOIDetailBackingBean.downloadAllReports}" />
+
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, reportContentsTbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addLoiReportAction}"
+				oncomplete="reportContentsTblWidget.paginator.endLink.click();"
+				update="reportContentsTbl" icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, reportContentsTbl" partialSubmit="true"
+				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiReports, lOIDetailBackingBean.managedBean.selectedScLoiReports)}"
+				icon="ui-icon-delete" update="reportContentsTbl" />
+
+		</div>
+	</p:panel>
+</ui:composition>

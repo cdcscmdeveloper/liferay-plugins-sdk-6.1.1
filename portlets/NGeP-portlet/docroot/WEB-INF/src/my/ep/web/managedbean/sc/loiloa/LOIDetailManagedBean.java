@@ -10,12 +10,12 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
+import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -111,6 +111,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
 	private List<String> recommendDtlIds;
+	
+	private List<ScLoiReport> selectedScLoiReports;
+	private ScLoiReport selectedScLoiReport;
+	private String attachmentDocType;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -886,6 +890,48 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setRecommendDtlIds(List<String> recommendDtlIds) {
 		this.recommendDtlIds = recommendDtlIds;
+	}
+
+	/**
+	 * @return the selectedScLoiReports
+	 */
+	public List<ScLoiReport> getSelectedScLoiReports() {
+		return selectedScLoiReports;
+	}
+
+	/**
+	 * @param selectedScLoiReports the selectedScLoiReports to set
+	 */
+	public void setSelectedScLoiReports(List<ScLoiReport> selectedScLoiReports) {
+		this.selectedScLoiReports = selectedScLoiReports;
+	}
+
+	/**
+	 * @return the selectedScLoiReport
+	 */
+	public ScLoiReport getSelectedScLoiReport() {
+		return selectedScLoiReport;
+	}
+
+	/**
+	 * @param selectedScLoiReport the selectedScLoiReport to set
+	 */
+	public void setSelectedScLoiReport(ScLoiReport selectedScLoiReport) {
+		this.selectedScLoiReport = selectedScLoiReport;
+	}
+
+	/**
+	 * @return the attachmentDocType
+	 */
+	public String getAttachmentDocType() {
+		return attachmentDocType;
+	}
+
+	/**
+	 * @param attachmentDocType the attachmentDocType to set
+	 */
+	public void setAttachmentDocType(String attachmentDocType) {
+		this.attachmentDocType = attachmentDocType;
 	}
 	
 }
