@@ -19,16 +19,21 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
+import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -111,6 +116,15 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScQtMeetingAttendance> selectedMeetingAttList;
 	
 	private List<String> recommendDtlIds;
+	private ScQtDeduction selectedScQtDeduction;
+	private List<ScQtDeductionClause> selectedDeductionClauses;
+	private int totalFrequency;
+	private List<ScQtSchedule> scheduleList;
+	private List<SelectItem> yearList;
+	private List<SelectItem> yearsDisplayList;
+	
+	private int totalProgressivePayment;
+	private List<ScQtProgressivePayment> progressivePaymentList;
 	
 	private List<ScLoiReport> selectedScLoiReports;
 	private ScLoiReport selectedScLoiReport;
@@ -892,6 +906,109 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.recommendDtlIds = recommendDtlIds;
 	}
 
+
+	public ScQtDeduction getSelectedScQtDeduction() {
+		return selectedScQtDeduction;
+	}
+
+	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
+		this.selectedScQtDeduction = selectedScQtDeduction;
+	}
+
+	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
+		return selectedDeductionClauses;
+	}
+
+	public void setSelectedDeductionClauses(List<ScQtDeductionClause> selectedDeductionClauses) {
+		this.selectedDeductionClauses = selectedDeductionClauses;
+	}
+
+	/**
+	 * @return the totalFrequency
+	 */
+	public int getTotalFrequency() {
+		return totalFrequency;
+	}
+
+	/**
+	 * @param totalFrequency the totalFrequency to set
+	 */
+	public void setTotalFrequency(int totalFrequency) {
+		this.totalFrequency = totalFrequency;
+	}
+
+	/**
+	 * @return the scheduleList
+	 */
+	public List<ScQtSchedule> getScheduleList() {
+		return scheduleList;
+	}
+
+	/**
+	 * @param scheduleList the scheduleList to set
+	 */
+	public void setScheduleList(List<ScQtSchedule> scheduleList) {
+		this.scheduleList = scheduleList;
+	}
+
+	/**
+	 * @return the yearList
+	 */
+	public List<SelectItem> getYearList() {
+		return yearList;
+	}
+
+	/**
+	 * @param yearList the yearList to set
+	 */
+	public void setYearList(List<SelectItem> yearList) {
+		this.yearList = yearList;
+	}
+
+	/**
+	 * @return the yearsDisplayList
+	 */
+	public List<SelectItem> getYearsDisplayList() {
+		return yearsDisplayList;
+	}
+
+	/**
+	 * @param yearsDisplayList the yearsDisplayList to set
+	 */
+	public void setYearsDisplayList(List<SelectItem> yearsDisplayList) {
+		this.yearsDisplayList = yearsDisplayList;
+	}
+
+	/**
+	 * @return the totalProgressivePayment
+	 */
+	public int getTotalProgressivePayment() {
+		return totalProgressivePayment;
+	}
+
+	/**
+	 * @param totalProgressivePayment the totalProgressivePayment to set
+	 */
+	public void setTotalProgressivePayment(int totalProgressivePayment) {
+		this.totalProgressivePayment = totalProgressivePayment;
+	}
+
+	/**
+	 * @return the progressivePaymentList
+	 */
+	public List<ScQtProgressivePayment> getProgressivePaymentList() {
+		return progressivePaymentList;
+	}
+
+	/**
+	 * @param progressivePaymentList the progressivePaymentList to set
+	 */
+	public void setProgressivePaymentList(
+			List<ScQtProgressivePayment> progressivePaymentList) {
+		this.progressivePaymentList = progressivePaymentList;
+	}
+
+
 	/**
 	 * @return the selectedScLoiReports
 	 */
@@ -933,5 +1050,6 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
 	}
+
 	
 }

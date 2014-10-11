@@ -1,0 +1,21 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:define name="contentSection">
+		<p:messages id="loiMaintMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
+		<ui:include src="/xhtml/sc/loi/loiButtons.xhtml" />
+
+		<ui:include src="loiSupplierHeader.xhtml" />
+		<p:media value="#{lOIDetailBackingBean.loiLetterStreamContent}"
+			width="100%" height="450px" player="pdf" />
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" toggleable="true">
+
+		<p:dataTable id="deductTbl" widgetVar="deductTblWidget"
+			var="scQtDeduction"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scQtDeductions}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedScQtDeduction}"
+			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex"
+			selectionMode="single">
+
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update=":form:clausePnl" />
+
+			<ac:paginator for="deductTbl" />
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory"
+						rendered="#{isEditableStatus}" />
+					<h:outputText value="#{lbl['lbl.sc.deduction.type']}" />
+				</f:facet>
+
+				<c:if test="#{isEditableStatus}">
+					<p:selectOneMenu id="deductionType"
+						value="#{scQtDeduction.deductionType.parameterId}" required="true">
+						<f:selectItems
+							value="#{lOIDetailBackingBean.getDeductionItemTypeDropdownList()}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update=":form:clausePnl"
+							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
+							listener="#{lOIDetailBackingBean.deductionTypeChange(scQtDeduction)}" />
+					</p:selectOneMenu>
+					<p:message id="deductionTypeMsg" for="deductionType" display="icon" />
+				</c:if>
+				<c:if test="#{!isEditableStatus}">
+					#{lOIDetailBackingBean.getParameterDesc(scQtDeduction.deductionType)}
+				</c:if>
+			</p:column>
+
+		</p:dataTable>
+
+		<c:if test="#{isEditableStatus}">
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.add']}"
+					process="@this, deductTbl" partialSubmit="true"
+					action="#{lOIDetailBackingBean.addDeductionPaymentAction}"
+					oncomplete="deductTblWidget.paginator.endLink.click();"
+					update="deductTbl" icon="ui-icon-add" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					process="@this, deductTbl" partialSubmit="true"
+					icon="ui-icon-delete"
+					action="#{lOIDetailBackingBean.deleteRowAction(lOIDetailBackingBean.managedBean.scLoi.scQtDeductions, lOIDetailBackingBean.managedBean.selectedScQtDeduction)}"
+					update="deductTbl" />
+			</div>
+		</c:if>
+
+		<c:if test="#{!isEditableStatus}">
+			<br />
+		</c:if>
+
+		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
+			toggleable="true">
+
+			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
+				var="scQtDeductionClause"
+				value="#{lOIDetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
+				selection="#{lOIDetailBackingBean.managedBean.selectedDeductionClauses}"
+				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
+
+				<ac:paginator for="deductClauseTbl" />
+
+				<p:column selectionMode="multiple" style="width:2%" />
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory"
+							rendered="#{isEditableStatus}" />
+						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
+					</f:facet>
+					<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+						cols="150" rows="8" maxlength="500" style=" margin-bottom:5px;"
+						disabled="#{!isEditableStatus}" />
+
+				</p:column>
+
+			</p:dataTable>
+
+			<div class="ppRightBtn">
+				<h:panelGroup
+					rendered="#{!empty lOIDetailBackingBean.managedBean.selectedScQtDeduction and lOIDetailBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers and isEditableStatus}">
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
+						process="@this, deductClauseTbl" partialSubmit="true"
+						action="#{lOIDetailBackingBean.addDeductionClauseAction}"
+						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
+						update="deductClauseTbl" icon="ui-icon-add" />
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						process="@this, deductClauseTbl" partialSubmit="true"
+						icon="ui-icon-delete"
+						action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses, lOIDetailBackingBean.managedBean.selectedDeductionClauses)}"
+						update="deductClauseTbl" />
+				</h:panelGroup>
+			</div>
+		</p:panel>
+	</p:panel>
+</ui:composition>
