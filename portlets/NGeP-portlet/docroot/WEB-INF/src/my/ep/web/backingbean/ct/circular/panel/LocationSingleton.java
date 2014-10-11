@@ -155,7 +155,7 @@ public class LocationSingleton {
 			
 			for (PmState state : allStates) {
 				//LocationDTO stateLocation = new LocationDTO(state);
-				System.out.println("======display state name==="+state.getStateName());
+			//	System.out.println("======display state name==="+state.getStateName());
 				CtPanelZoneDtl locCriteria = locClass.newInstance();
 				locCriteria.setStateId(state);
 				TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);
@@ -351,7 +351,7 @@ public class LocationSingleton {
 			
 			for (PmState state : allStates) {
 				//LocationDTO stateLocation = new LocationDTO(state);
-				System.out.println("======display state name==="+state.getStateName());
+				//System.out.println("======display state name==="+state.getStateName());
 				CtPanelZoneDtl locCriteria = locClass.newInstance();
 				locCriteria.setStateId(state);
 				TreeNode stateNode = new DefaultTreeNode("state",locCriteria, rootLocationTree);

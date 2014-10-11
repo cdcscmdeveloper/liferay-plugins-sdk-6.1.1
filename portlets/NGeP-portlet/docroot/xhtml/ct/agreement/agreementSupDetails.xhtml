@@ -84,7 +84,9 @@
 		   </div>
 		 </h:panelGroup>
 		 <h:panelGrid>
-		    <p:inputTextarea id="amendmentD" value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  disabled="true" rows="3" cols="31"  autoResize="false" />
+		    <p:inputTextarea id="amendmentD" 
+		    value="#{agreementBackingBean.managedBean.ctAgreement.ctAmendment.description}"  
+		    disabled="true" rows="3" style="width:170px;"  autoResize="false" />
 		 </h:panelGrid>
 
          <p:outputLabel value="#{lbl['lbl.ct.amend.effective.date']}" />  

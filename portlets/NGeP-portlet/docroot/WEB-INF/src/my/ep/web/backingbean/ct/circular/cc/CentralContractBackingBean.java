@@ -276,7 +276,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			String languageCode = getFacesScopes().getUserLocale().getLanguage();
 			
 			int i = 1;
-		    //IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setModuleCode("CT");
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
