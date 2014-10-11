@@ -6884,19 +6884,16 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setTotalSuppliers(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
-					if (null != panelSupplierResDTO.getCtPanelItem()
-							&& null != panelSupplierResDTO.getCtPanelItem()
-									.getCtPanelSuppliers()
-							&& !panelSupplierResDTO.getCtPanelItem()
-									.getCtPanelSuppliers().isEmpty()) {
-						this.getManagedBean().setTotalSuppliers(
-								panelSupplierResDTO.getCtPanelItem()
-										.getCtPanelSuppliers().size());
-						this.getManagedBean().setCtZoneSupplierList(
-								new ArrayList<CtPanelSupplier>());
-						this.getManagedBean().setCtZoneSupplierList(
-								panelSupplierResDTO.getCtPanelItem()
-										.getCtPanelSuppliers());
+					if (null != panelSupplierResDTO.getCtPanelItem()) {
+						CtPanelItem panelItem = panelSupplierResDTO
+								.getCtPanelItem();
+						if (null != panelItem.getCtPanelSuppliers()) {
+							this.getManagedBean().setTotalSuppliers(
+									panelItem.getCtPanelSuppliers().size());
+
+							this.getManagedBean().setCtZoneSupplierList(
+									panelItem.getCtPanelSuppliers());
+						}
 
 					}
 				}
