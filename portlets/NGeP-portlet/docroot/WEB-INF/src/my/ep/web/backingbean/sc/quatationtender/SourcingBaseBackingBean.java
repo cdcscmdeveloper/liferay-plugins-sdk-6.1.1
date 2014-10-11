@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -56,7 +57,9 @@ import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
@@ -67,8 +70,10 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.approval.ApprovalBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
@@ -213,14 +218,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			return new AttachmentDefaultFormat();
 		}
 	}
-	
+
 	protected String getActualFilePath(ScAttachment attachment) {
 		String docRepoBaseDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		StringBuilder actualFilePath = new StringBuilder(docRepoBaseDir);
 		actualFilePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		actualFilePath.append(attachment.getFilePath());
-		
+
 		return actualFilePath.toString();
 	}
 
@@ -261,7 +266,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			ATTACHMENT scAttachment) throws IOException {
 		if (scAttachment != null
 				&& StringUtils.isNotBlank(scAttachment.getFileName())) {
-			
+
 			return downloadFile(getActualFilePath(scAttachment),
 					scAttachment.getFileName());
 		} else {
@@ -289,7 +294,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		File file = new File(filePath);
 		return file;
 	}
-	
+
 	protected void downloadFileByInputStream(InputStream input, String fileName)
 			throws IOException {
 		log.info("Inside downloadFile(..)");
@@ -300,12 +305,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		response.setHeader("Pragma", "no-cache");
 		response.setDateHeader("Expires", 0);
-//		response.setContentType("application/vnd.ms-excel");
-//		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+		// response.setContentType("application/vnd.ms-excel");
+		// response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; filename="
+				+ fileName);
 		response.setContentType("application/octet-stream");
 		response.flushBuffer();
-		
+
 		OutputStream out = response.getOutputStream();
 
 		byte[] buffer = new byte[4096];
@@ -513,10 +519,11 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	public void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
-		
+
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(user.getUserId());
-			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			baseObject
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(user.getUserId());
 	}
@@ -558,14 +565,14 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
-			PARENT_ENTITY parent, PmStatus pmStatus, List<REMARK_CLASS> scRemarks,
-			Class<REMARK_CLASS> clazz) {
+			PARENT_ENTITY parent, PmStatus pmStatus,
+			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
 
 		try {
 			if (scRemarks == null) {
 				scRemarks = new ArrayList<REMARK_CLASS>();
 			}
-			
+
 			REMARK_CLASS prevRemark = null;
 			if (scRemarks.size() > 0) {
 				prevRemark = scRemarks.get(0);
@@ -689,8 +696,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	
 	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment) throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		String excPrevUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils
+				.getProperty(EpPropertiesConst.EXC_NEXT_URL);
 		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
 		reportUrl.append(ReportConst.AMP_REPORT_NAME);
 		reportUrl.append(reportName);
@@ -699,20 +708,23 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			reportUrl.append(params.getValue());
 		}
 		reportUrl.append(excNextUrl);
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug("reportUrl: " + reportUrl);
 		}
-		
-		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
-		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename="+attachment.getFileName());
-		res.setHeader( "Content-Transfer-Encoding", "binary" );
+
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename="
+				+ attachment.getFileName());
+		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		File localFile = new File(getActualFilePath(attachment));
-		
+
 		if (reportUrl.toString() != null) {
 			InputStream input = null;
 			try {
@@ -741,6 +753,45 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		out.flush();
 		out.close(); 		
 		return localFile;
+	}
+
+	/**
+	 * To update digisign data
+	 * 
+	 * @param pmDigiSign
+	 * @param docType
+	 * @param docId
+	 * @param docNumber
+	 */
+	protected void updatePmDigiSignData(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber) {
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+	}
+
+	protected boolean isDigiSigningRequired(String roleCode) {
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode("en");
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+
+		if (null != roleDesc) {
+			for (PmRoleDesc pmRoleDesc : roleDesc) {
+				if (roleCode.equalsIgnoreCase(pmRoleDesc.getPmRole()
+						.getRoleCode())) {
+					return true;
+				}
+
+			}
+		} else {
+			throw new EpException("User does not exist with the role"
+					+ roleCode);
+		}
+		return false;
 	}
 
 }

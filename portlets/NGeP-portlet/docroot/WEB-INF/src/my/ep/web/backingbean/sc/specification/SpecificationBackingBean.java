@@ -8616,14 +8616,7 @@ public class SpecificationBackingBean extends
 
 	public String specCommitteBpmTask(String action) {
 
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-		reqDTO.setLanguageCode("en");
-		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
-		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
-		if (isSpecChairPerson(roleDesc)) {
+		if (isDigiSigningRequired(RoleCode.SC_CHAIRPERSON.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
@@ -9029,6 +9022,9 @@ public class SpecificationBackingBean extends
 			PmDigiSign digiSign) {
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
+		ScQt scQt = this.getManagedBean().getScQt();
+		updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_QUOTATION,
+				scQt.getQtId(), scQt.getQtNo());
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
@@ -9044,19 +9040,6 @@ public class SpecificationBackingBean extends
 			specSO = null;
 		}
 		return resDTO;
-	}
-
-	private boolean isSpecChairPerson(List<PmRoleDesc> roleDesc) {
-		if (null != roleDesc) {
-			for (PmRoleDesc pmRoleDesc : roleDesc) {
-				if (RoleCode.SC_CHAIRPERSON.toString().equalsIgnoreCase(
-						pmRoleDesc.getPmRole().getRoleCode())) {
-					return true;
-
-				}
-			}
-		}
-		return false;
 	}
 
 	public String cancelQt() {
