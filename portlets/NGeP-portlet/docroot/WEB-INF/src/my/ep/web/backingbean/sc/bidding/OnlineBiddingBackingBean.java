@@ -24,6 +24,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -80,19 +81,19 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
-		String bidScheduleId = originalServletRequest
-				.getParameter("bidScheduleId");
+		String docId = originalServletRequest
+				.getParameter("docId");
 		String encodedSupplierId = originalServletRequest
 				.getParameter("supplierId");
-		retrieveOnlineBiddingDtls(Long.parseLong(bidScheduleId),
+		retrieveOnlineBiddingDtls(Long.parseLong(docId),
 				encodedSupplierId,
 				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "onlineBiddingMain.xhtml");
+				.handleNavigation(fc, null, QTConstants.ONLINE_BIDDING_MAIN_PAGE);
 	}
 
-	private void retrieveOnlineBiddingDtls(Long bidScheduleId,
+	private void retrieveOnlineBiddingDtls(Long docId,
 			String supplierId, Long userId) {
 
 		log.info("retrieveOnlineBiddingDtls");
@@ -107,8 +108,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 			reqDTO.setUserID(userId);
 			reqDTO.setHashSupplierId(supplierId);
-			reqDTO.setBidScheduleId(bidScheduleId);
-
+			reqDTO.setDocId(docId);
 			BiddingResDTO resDTO = biddingSO
 					.retrieveSupplierBidScheduleDtl(reqDTO);
 
@@ -117,6 +117,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setScBidSchedule(resDTO.getScBidSchedule());
 				setBidContactPersons(resDTO.getBidContactPersons());
 				setSmSupplier(resDTO.getSmSupplier());
+				
+				if(resDTO.getPackageRanking() != null){
+					setScBidAction(resDTO.getScBidAction());
+				}
+
+				if(resDTO.getScBidAction() != null){
+					setPackageRanking(resDTO.getPackageRanking());
+				}
 
 				if (resDTO.getBidPrices() != null) {
 					setBidPrices(resDTO.getBidPrices());

@@ -53,15 +53,11 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private SCEvaluationDataType payLoad;
 	
 	public ScheduleBiddingManagedBean() {
-		
-		if (rowSelectedBid == null){
-			rowSelectedBid = new ScBidSchedule();
-		}
-		
 		Calendar c = Calendar.getInstance(); 
 		c.setTime(DateUtils.getCurrentDateWithoutTime()); 
 		c.add(Calendar.DATE, 1);
 		minStartDate = c.getTime();
+		minEndDate = c.getTime();
 	}
 	
 	
