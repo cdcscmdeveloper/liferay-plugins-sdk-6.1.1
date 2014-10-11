@@ -76,22 +76,8 @@
         </p:panel>
       
          <p:dialog id="modelDialog" header="#{lbl['lbl.ct.new.committee.member']}" widgetVar="dlg2" modal="true" width="875" height="525">
-		    
-		       <h:panelGrid columns="2" style="width:100%;" columnClasses="columnWidth20">
-		            <p:outputLabel value="#{lbl['lbl.ct.selection']}"/>
-		             <p:selectOneRadio id="radiOptions1" value="#{amendmentBackingBean.managedBean.selectedRadioButton}"  required="true">  
-                          <f:selectItem itemLabel="#{lbl['lbl.ct.existing.list']}" itemValue="1"/>  
-                          <f:selectItem itemLabel="#{lbl['lbl.ct.new']}" itemValue="2" /> 
-                          <p:ajax event="change"  process="@this" 
-                             listener="#{amendmentBackingBean.radioButtonForMeeting}"  update=":form:changeCommitteMember"/> 
-                     </p:selectOneRadio> 
-	           </h:panelGrid>
-		     
-		       <p:spacer height="2"/>
-		       <p:outputPanel id="changeCommitteMember">
 		         
-		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"  
-		               toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.existingUsers}">
+		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"   toggleSpeed="500">
 		              
 		                <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
 		                  
@@ -114,8 +100,7 @@
 		               </div> 
 		         </p:panel>
 		         
-		         <p:panel id="searchResult" header="#{lbl['lbl.ct.search.result']}" toggleable="true" 
-		             toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.existingUsers}">
+		         <p:panel id="searchResult" header="#{lbl['lbl.ct.search.result']}" toggleable="true" toggleSpeed="500">
 		         
 		             <p:dataTable id="newCommitteTable" var="data" value="#{amendmentBackingBean.committeDataModel}"  
 		                   lazy="true"  rowKey="#{data}" selection="#{amendmentBackingBean.selectedPmUser}" rowIndexVar="index">
@@ -156,93 +141,5 @@
 		        </f:facet>
 		  
 		    </p:panel>
-	      
-	        <p:panel id="newUser" header="#{lbl['lbl.ct.new.user']}" toggleable="true"  toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.newUsers}">
-		        <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
-		             
-		                <h:panelGrid columns="2">
-		                    <p:outputLabel value="*" styleClass="mandatory" />
-		                    <p:outputLabel for="newNameId" value="#{lbl['lbl.ct.name']}" />
-		                </h:panelGrid>
-	                         <p:inputText id="newNameId" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberName}"/>
-	                         
-	                     <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="loginId" value="#{lbl['lbl.ct.login.id']}" />
-	                     </h:panelGrid>
-	                     <p:inputText id="loginId" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.loginId}"/>
-                     
-                         <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-                             <p:outputLabel for="newIdenType" value="#{lbl['lbl.ct.identification.type']}" />
-                         </h:panelGrid>
-	                      <p:selectOneMenu id="newIdenType" style="width:180px;margin-bottom: 5px;"
-	                         value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.identificationCode.parameterId}">
-	                        <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.identificationTypes)}"/>
-	                      </p:selectOneMenu>
-	                      
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newIdenNo" value="#{lbl['lbl.ct.identification.no']}" />
-	                      </h:panelGrid>
-	                      <p:inputText id="newIdenNo" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.icPassport}"/>
-	                     
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newGrade" value="#{lbl['lbl.ct.grade']}" />
-	                      </h:panelGrid>
-	                      <p:inputText id="newGrade" style="width:170px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.grade}"/>
-	                     
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newRole" value="#{lbl['lbl.ct.role']}" />
-	                      </h:panelGrid>
-	                      <p:selectOneMenu id="newRole" style="width:180px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.memberRole.parameterId}">
-	                           <f:selectItems value="#{amendmentBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}"/>
-	                      </p:selectOneMenu>
-	                   
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel value="#{lbl['lbl.ct.pnp']}"/>
-	                      </h:panelGrid>
-		                  <h:panelGrid columns="4">
-		                      <p:selectOneRadio id="pandp" required="true" value="#{amendmentBackingBean.managedBean.newCommitteMembers.pnp}">  
-                                    <f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="true"/>  
-                                    <f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="false" /> 
-                              </p:selectOneRadio> 
-	                      </h:panelGrid>
-	                   
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="countryId" value="#{lbl['lbl.ct.country']}"/> 
-	                      </h:panelGrid>
-	                       <p:selectOneMenu id="countryId" style="width:180px;margin-bottom: 5px;"
-	                           value="#{amendmentBackingBean.managedBean.newCommitteMembers.pmUser.pmCountry.countryId}">
-                                      <f:selectItems value="#{amendmentBackingBean.getAllCountryList()}"/>
-                           </p:selectOneMenu>
-                         
-                           <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newDesignation" value="#{lbl['lbl.ct.designation']}" />
-	                       </h:panelGrid>
-	                      <p:inputText id="newDesignation" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.designation}"/>
-	                      
-	                      <h:panelGrid columns="2">
-		                     <p:outputLabel value="*" styleClass="mandatory" />
-	                         <p:outputLabel for="newEmail" value="#{lbl['lbl.ct.email']}" />
-	                      </h:panelGrid>
-	                      <p:inputText id="newEmail" style="width:260px;" value="#{amendmentBackingBean.managedBean.newCommitteMembers.email}"/>
-              
-                </h:panelGrid>
-                
-                <f:facet name="footer">
-			       <h:panelGrid columns="2" style="float:right;height:50px;vertical-align: middle;">
-			        <p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this,modelDialog" action="#{amendmentBackingBean.addNewUserMemberCommitte}" 
-				     update="committeTable,modelDialog" icon="ui-icon-accept" onclick="dlg2.hide();"/>
-			        <p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" onclick="dlg2.hide();" type="button" />
-		           </h:panelGrid>
-		         </f:facet>
-		    </p:panel>
-		</p:outputPanel>    
     </p:dialog>
 </ui:composition>
