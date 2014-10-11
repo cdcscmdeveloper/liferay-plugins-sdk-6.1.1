@@ -480,7 +480,7 @@ public void ConstructSideTabMenu(){
 	 	    for( String str : this.getManagedBean().getFinalListOfSideMenu()){
 	 	    	MenuItem zoneItem = new MenuItem();
 				zoneItem.setValue(str);
-				zoneItem.setUpdate("@form");
+				zoneItem.setUpdate("@all");
 				zoneItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
 								"#{contractDetailsBackingBean.fulfilmentTabChangeAction("
