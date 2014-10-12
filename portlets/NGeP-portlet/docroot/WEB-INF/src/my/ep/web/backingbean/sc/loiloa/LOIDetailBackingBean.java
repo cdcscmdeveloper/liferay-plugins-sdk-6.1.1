@@ -156,10 +156,12 @@ public class LOIDetailBackingBean extends
 			
 			
 			if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
-				RoleCode.DESK_OFFICER.value();
+				awardDataType.setLetterCreator("D");
+				awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
 			}
 			else if (new FacesScopes().hasRoleUser(RoleCode.SC_SECRETARY.value())){
-				RoleCode.SC_SECRETARY.value();
+				awardDataType.setLetterCreator("S");
+				awardDataType.setSecretary(new FacesScopes().getUserSessionBean().getLoginId());
 			}
 
 			getManagedBean().setSourceId(sourceId);
