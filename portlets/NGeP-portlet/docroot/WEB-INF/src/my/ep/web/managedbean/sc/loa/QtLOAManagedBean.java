@@ -6,10 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
@@ -17,6 +13,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposal;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -35,17 +32,17 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmMofAccount smMofAccount;
 
-	private ScLoi scLoi;
-	private ScLoa scLoa;
 	private PmUser pmUser;
 
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<ScQtProposalRanking> scQtProposalRankingList;
 	private ScQtEvaluationResult scQtEvaluationResult;
 	private List<ScQtEvaluationResult> scQtEvaluationResultList;
-
+	
+	private ScLoiLoa selectedLoiLoa;
+	private SuppLoiLoaBean selectedSuppLoiLoaBean;
 	private List<ScLoiLoa> scLoiLoaList;
-
+	private List<SuppLoiLoaBean> suppLoiLoaList;
 
 
 	/**
@@ -202,13 +199,61 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	public void setQt(ScQt qt) {
 		this.qt = qt;
 	}
-	
+
+	/**
+	 * @return the selectedLoiLoa
+	 */
+	public ScLoiLoa getSelectedLoiLoa() {
+		return selectedLoiLoa;
+	}
+
+	/**
+	 * @param selectedLoiLoa the selectedLoiLoa to set
+	 */
+	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
+		this.selectedLoiLoa = selectedLoiLoa;
+	}
+
+	/**
+	 * @return the selectedSuppLoiLoaBean
+	 */
+	public SuppLoiLoaBean getSelectedSuppLoiLoaBean() {
+		return selectedSuppLoiLoaBean;
+	}
+
+	/**
+	 * @param selectedSuppLoiLoaBean the selectedSuppLoiLoaBean to set
+	 */
+	public void setSelectedSuppLoiLoaBean(SuppLoiLoaBean selectedSuppLoiLoaBean) {
+		this.selectedSuppLoiLoaBean = selectedSuppLoiLoaBean;
+	}
+
+	/**
+	 * @return the scLoiLoaList
+	 */
 	public List<ScLoiLoa> getScLoiLoaList() {
 		return scLoiLoaList;
 	}
 
+	/**
+	 * @param scLoiLoaList the scLoiLoaList to set
+	 */
 	public void setScLoiLoaList(List<ScLoiLoa> scLoiLoaList) {
 		this.scLoiLoaList = scLoiLoaList;
+	}
+
+	/**
+	 * @return the suppLoiLoaList
+	 */
+	public List<SuppLoiLoaBean> getSuppLoiLoaList() {
+		return suppLoiLoaList;
+	}
+
+	/**
+	 * @param suppLoiLoaList the suppLoiLoaList to set
+	 */
+	public void setSuppLoiLoaList(List<SuppLoiLoaBean> suppLoiLoaList) {
+		this.suppLoiLoaList = suppLoiLoaList;
 	}
 
 }

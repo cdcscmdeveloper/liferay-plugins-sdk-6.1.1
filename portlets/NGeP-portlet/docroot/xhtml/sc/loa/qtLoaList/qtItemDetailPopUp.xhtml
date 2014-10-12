@@ -6,13 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:param name="isZonal"
-		value="#{lOADetailBackingBean.managedBean.selectedSuppLoiLoaBean.scLoa.scLoiLoa.zonal}" />
+		value="#{qtLOABackingBean.managedBean.selectedSuppLoiLoaBean.scLoa.scLoiLoa.zonal}" />
 	<p:dialog id="qtItemDtlDialog" widgetVar="qtItemDtlDlg"
 		header="#{lbl['lbl.sc.item.details']}" modal="true" dynamic="true"
 		resizable="false" styleClass="pop_up_top" width="570">
 
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
-			value="#{lOADetailBackingBean.managedBean.selectedSuppLoiLoaBean.scLoiLoaItems}"
+			value="#{qtLOABackingBean.managedBean.selectedSuppLoiLoaBean.scLoiLoaItems}"
 			rows="10">
 
 			<ac:paginator for="itemtbl" />

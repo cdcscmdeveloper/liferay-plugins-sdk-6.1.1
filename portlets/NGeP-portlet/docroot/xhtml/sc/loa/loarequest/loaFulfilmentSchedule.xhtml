@@ -14,12 +14,13 @@
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
+				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeScheduled)}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					<p:inputText disabled="#{!isEditableStatus}"
-						value="#{lOADetailBackingBean.managedBean.totalFrequency}">
+						value="#{lOADetailBackingBean.managedBean.totalFrequency}"
+						styleClass="ppNumericAlign">
 						<p:ajax event="blur" update="frequencySchedule"
 							partialSubmit="true" process="@this"
 							listener="#{lOADetailBackingBean.addScheduleDetails}" />
@@ -30,12 +31,11 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
-					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}" style="width:25%">
-						<h:outputText value="#{frequency.scheduleNo}"  id="scheduleNum">
-						</h:outputText>
+					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}" style="width:10%; text-align: right;">
+						#{frequency.scheduleNo}
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
-						style="width:10%">
+						style="width:15%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -55,7 +55,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
-						style="width:25%">
+						style="width:15%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.endMonth}">
 
@@ -78,14 +78,13 @@
 					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.total.months']}"
-						style="width:10%">
+						style="width:15%; text-align: right;">
 						<h:panelGroup id="scheduleDetails">
-							<h:outputText style="text-align:right"
-								value="#{frequency.totalMonths}"></h:outputText>
+							<h:outputText value="#{frequency.totalMonths}" />
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:15%">
+					<p:column style="width:30%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.ct.fulfilment.type']}" />
@@ -110,11 +109,11 @@
 	<h:panelGroup id="progressive">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true"
-				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'P'}">
+				rendered="#{isDocTypeQuotation}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
-					<p:inputText
+					<p:inputText styleClass="ppNumericAlign"
 						value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}">
 						<p:ajax event="blur" update="progressivePayment"
 							partialSubmit="true" process="@this"
@@ -126,17 +125,16 @@
 					value="#{lOADetailBackingBean.managedBean.progressivePaymentList}">
 					<ac:paginator for="progressivePayment" />
 
-					<p:column style="width:10%" headerText="#{lbl['lbl.sc.spec.phase']}">		
-						<h:outputText value="#{payment.phaseNo}"  id="progressivePhase">
-						</h:outputText>
+					<p:column style="width:6%; text-align: right;" headerText="#{lbl['lbl.sc.spec.phase']}">		
+						#{payment.phaseNo}
 					</p:column>
-					<p:column style="width:10%">
+					<p:column>
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
-							required="true" id="progressivePhasedesc" style="width:100px;">
+							required="true" id="progressivePhasedesc" size="50">
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
 						</p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
@@ -144,7 +142,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
-						style="width:15%">
+						style="width:12%">
 						<p:selectOneMenu style="width:100px;"
 							value="#{payment.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -154,7 +152,7 @@
 					</p:column>
 					<p:column
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
-						style="width:15%">
+						style="width:12%">
 
 						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
 							<f:selectItems
@@ -165,7 +163,7 @@
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
-						style="width:15%">
+						style="width:12%">
 						<p:selectOneMenu style="width:100px;" value="#{payment.endMonth}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}">
@@ -175,7 +173,7 @@
 
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
-						style="width:15%">
+						style="width:12%">
 						<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
@@ -189,7 +187,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
-							id="progressivePercentage" style="width:100px;"
+							id="progressivePercentage" styleClass="ppNumericAlign"
 							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 							<p:ajax event="blur" partialSubmit="true" process="@this" />

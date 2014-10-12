@@ -75,7 +75,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
@@ -256,6 +255,7 @@ public class LOADetailBackingBean extends
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
 
 			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setPayLoad(dpDataType);
 
 			// Long loaId = 299L;
 
@@ -289,7 +289,9 @@ public class LOADetailBackingBean extends
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
+			
 			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setPayLoad(dpDataType);
 
 			/*
 			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
@@ -708,7 +710,7 @@ public class LOADetailBackingBean extends
 							.getResultList();
 					for (PmClause pmClause : pmClauseList) {
 						deductionClause = new ScQtDeductionClause();
-						deductionClause.setClauseDesc(pmClause.getClauseDesc());
+						deductionClause.setPmClause(pmClause);
 						deductionClause.setScQtDeduction(scQtDeduction);
 						deductionClauseList.add(deductionClause);
 					}
@@ -1202,7 +1204,7 @@ public class LOADetailBackingBean extends
 		if (bankName == null) {
 			bankName = "";
 		}
-		context.put("bankName", bankName);
+		context.put("bankName", bankName.replaceAll("&", "&#38;"));
 		String bankBranch = scLoa.getBankBranch();
 		if (bankBranch == null) {
 			bankBranch = "";
@@ -1653,6 +1655,7 @@ public class LOADetailBackingBean extends
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 
@@ -1725,6 +1728,7 @@ public class LOADetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1847,6 +1851,8 @@ public class LOADetailBackingBean extends
 		} else {
 			saveScheduleList();
 			saveProgressivePaymntList();
+			
+			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 		}
 
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
@@ -1854,8 +1860,6 @@ public class LOADetailBackingBean extends
 				&& contractSignerUser.getUserId() != null) {
 			scLoa.setContractSigner(contractSignerUser);
 		}
-
-		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 
 	}
 
@@ -2505,91 +2509,6 @@ public class LOADetailBackingBean extends
 		}
 	}
 
-	public void generateSuppLoiLoaList() {
-		IQTAwardSO qtAwardSO = null;
-		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			SuppLoiLoaBean suppLoaLoi = null;
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			AwardSupplierResDTO resDTO = null;
-			List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
-			if (getManagedBean().getSelectedLoiLoa() != null) {
-				for (ScLoi scLoi : getManagedBean().getSelectedLoiLoa()
-						.getScLois()) {
-					suppLoaLoi = new SuppLoiLoaBean();
-					suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
-					suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
-					// suppLoaLoi.setStatus(getStatusDescById(scLoi.get()
-					// .getStatusId()));
-					suppLoaLoi.setScLoi(scLoi);
-					suppLoiLoaList.add(suppLoaLoi);
-				}
-
-				for (ScLoa scLoa : getManagedBean().getSelectedLoiLoa()
-						.getScloas()) {
-					suppLoaLoi = new SuppLoiLoaBean();
-					suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
-					suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
-					// suppLoaLoi.setStatus(getStatusDescById(scLoa.getPmStatus()
-					// .getStatusId()));
-					reqDTO.setLoaId(scLoa.getLoaId());
-					resDTO = qtAwardSO.retrieveLOADtlByLoaId(reqDTO);
-					suppLoaLoi.setScLoa(resDTO.getScLoa());
-					suppLoiLoaList.add(suppLoaLoi);
-
-				}
-
-				getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
-			}
-		} catch (Exception e) {
-			throw new EpException(e.toString());
-		} finally {
-			qtAwardSO = null;
-		}
-	}
-
-	public void showItemDetailsPopUps(SuppLoiLoaBean suppLoiLoaBean) {
-		IQTAwardSO qtAwardSO = null;
-		try {
-			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-
-			String language = new FacesScopes().getUserLocale().getLanguage();
-
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			AwardSupplierResDTO resDTO = null;
-			reqDTO.setLanguageCode(language);
-
-			if (suppLoiLoaBean.getScLoa() != null) {
-				reqDTO.setScLoa(suppLoiLoaBean.getScLoa());
-				resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
-			} else if (suppLoiLoaBean.getScLoi() != null) {
-				reqDTO.setScLoi(suppLoiLoaBean.getScLoi());
-				resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
-			}
-
-			if (resDTO != null) {
-				if (resDTO.getScLoa() != null) {
-					suppLoiLoaBean.setScLoa(resDTO.getScLoa());
-					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoa()
-							.getScLoiLoaItems());
-				} else if (resDTO.getScLoi() != null) {
-					suppLoiLoaBean.setScLoi(resDTO.getScLoi());
-					suppLoiLoaBean.setScLoiLoaItems(resDTO.getScLoi()
-							.getScLoiLoaItems());
-				}
-			}
-
-			getManagedBean().setSelectedSuppLoiLoaBean(suppLoiLoaBean);
-
-		} catch (Exception e) {
-			throw new EpException(e.toString());
-		} finally {
-			qtAwardSO = null;
-		}
-	}
-
 	public String createQtLOAAction(ScLoiLoa scLoiLoa) {
 		IStatusSO statusSO = null;
 		ScLoa scLoa = new ScLoa();
@@ -2652,8 +2571,10 @@ public class LOADetailBackingBean extends
 
 	public void addProgressiveDetails() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
+		ScLoa scLoa = getManagedBean().getScLoa();
 		List<ScQtProgressivePayment> progressive = this.getManagedBean()
 				.getProgressivePaymentList();
+		
 		if (null == progressive) {
 			progressive = new ArrayList<ScQtProgressivePayment>();
 
@@ -2677,6 +2598,7 @@ public class LOADetailBackingBean extends
 				payment.setStartYear(String.valueOf(year));
 				payment.setEndYear(String.valueOf(year));
 				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
+				payment.setScLoa(scLoa);
 				// payment.setScheduleType(new BigDecimal(1));
 
 				setUserDetails(payment);
@@ -2770,7 +2692,7 @@ public class LOADetailBackingBean extends
 					e.printStackTrace();
 				}
 				getManagedBean().getScLoa().getScQtProgPayments();
-				payment.setScLoa(getManagedBean().getScLoa());
+				
 				paymentList.add(payment);
 			}
 			getManagedBean().getScLoa().setScQtProgPayments(paymentList);

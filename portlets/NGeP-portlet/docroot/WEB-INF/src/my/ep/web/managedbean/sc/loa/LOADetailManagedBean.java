@@ -6,8 +6,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import org.primefaces.model.StreamedContent;
-
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
@@ -16,7 +14,6 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -27,8 +24,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.StreamedContent;
 
 /**
  * @author Viswanath
@@ -60,8 +58,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private StreamedContent loaStreamContent;
 	private List<ScLoaReport> selectedScLoaReports;
 	private List<ScQtDeductionClause> selectedDeductionClauses;
-	private ScLoiLoa selectedLoiLoa;
-	private SuppLoiLoaBean selectedSuppLoiLoaBean;
 	
 	// Selection list - LOA Details.
 	private List<PmParameterDesc> agencyList;
@@ -92,11 +88,10 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<SelectItem> yearList;
 	private List<SelectItem> yearsDisplayList;
 	
-	private List<SuppLoiLoaBean> suppLoiLoaList;
-	
 	private int totalProgressivePayment;
 	private List<ScQtProgressivePayment> progressivePaymentList;
 	private String bondAmountWord;
+	private Object payLoad;
 	
 	public LOADetailManagedBean() {
 	}
@@ -694,30 +689,6 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.yearsDisplayList = yearsDisplayList;
 	}
 
-	public List<SuppLoiLoaBean> getSuppLoiLoaList() {
-		return suppLoiLoaList;
-	}
-
-	public void setSuppLoiLoaList(List<SuppLoiLoaBean> suppLoiLoaList) {
-		this.suppLoiLoaList = suppLoiLoaList;
-	}
-
-	public SuppLoiLoaBean getSelectedSuppLoiLoaBean() {
-		return selectedSuppLoiLoaBean;
-	}
-
-	public void setSelectedSuppLoiLoaBean(SuppLoiLoaBean selectedSuppLoiLoaBean) {
-		this.selectedSuppLoiLoaBean = selectedSuppLoiLoaBean;
-	}
-
-	public ScLoiLoa getSelectedLoiLoa() {
-		return selectedLoiLoa;
-	}
-
-	public void setSelectedLoiLoa(ScLoiLoa selectedLoiLoa) {
-		this.selectedLoiLoa = selectedLoiLoa;
-	}
-
 	public ScQt getScQt() {
 		return scQt;
 	}
@@ -748,6 +719,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 
 	public void setBondAmountWord(String bondAmountWord) {
 		this.bondAmountWord = bondAmountWord;
+	}
+
+	/**
+	 * @return the payLoad
+	 */
+	public Object getPayLoad() {
+		return payLoad;
+	}
+
+	/**
+	 * @param payLoad the payLoad to set
+	 */
+	public void setPayLoad(Object payLoad) {
+		this.payLoad = payLoad;
 	}
 
 }
