@@ -71,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -139,9 +140,9 @@ public class LOIDetailBackingBean extends
 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
-		populateUserMinistryList();
-		initializeRemarks(new ScLoi());
-		getApproverNames();
+//		populateUserMinistryList();
+//		initializeRemarks(new ScLoi());
+//		getApproverNames();
 	}
 
 	public void preRenderLoiListView() {
@@ -294,8 +295,8 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(qtId);
-			reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove
-											// this.
+//			reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove
+//											// this.
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 
 			AwardSupplierResDTO resDTO = qtAwardSO
@@ -316,9 +317,9 @@ public class LOIDetailBackingBean extends
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
 
-			populateUserMinistryList();
-			initializeRemarks(new ScLoi());
-			getApproverNames();
+//			populateUserMinistryList();
+//			initializeRemarks(new ScLoi());
+//			getApproverNames();
 
 		} catch (Exception ex) {
 			handleException(ex);
@@ -1058,14 +1059,15 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getLois().add(resDTO.getScLoi());
 
 		// remarks
-		getManagedBean().getScLoi().setScLoiRemarks(
-				initializeRemarks(resDTO.getScLoi()));
+	
+		getManagedBean().getScLoi().setScLoiRemarks(initializeRemarks(getManagedBean().getScLoi(), null,
+				getManagedBean().getScLoi().getScLoiRemarks(), ScLoiRemark.class));
 
 		// status
 		getCurrentStatus(DPStatusConstants.LOI_PENDING_SUBMISSION);
 
 		populateUserMinistryList();
-		initializeRemarks(new ScLoi());
+//		initializeRemarks(new ScLoi());
 		// getApproverNames();
 
 		// Contract Signer
