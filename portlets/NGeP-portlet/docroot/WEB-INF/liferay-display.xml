@@ -91,6 +91,7 @@
 			<portlet id="scLoiList" />
 			<portlet id="scLoiReview" />
 			<portlet id="scLoiSupplierResponse" />
+			<portlet id="scMultipleLoi" />
 			<portlet id="scDpLoaList" />
 			<portlet id="scQtLoaList" />
 			<portlet id="scLoaReview" />
