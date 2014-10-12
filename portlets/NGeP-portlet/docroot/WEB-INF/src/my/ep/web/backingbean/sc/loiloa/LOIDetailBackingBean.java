@@ -289,12 +289,12 @@ public class LOIDetailBackingBean extends
 		debugLogger("preRenderMultipleLoiView");
 		IQTAwardSO qtAwardSO = null;
 		try {
-			SCAwardSupplierDataType multiLoiDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			//SCAwardSupplierDataType multiLoiDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			//TODO
 
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOI_PAGE);
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.MULTI_LOI_PAGE);
 		} catch (Exception e) {
 			handleException(e);
 		} finally {

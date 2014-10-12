@@ -38,7 +38,7 @@
 			<tr>
 				<td width="20%" style="vertical-align: baseline;">
 					<p:tabMenu styleClass="sidemenu"
-						activeIndex="#{lOIDetailBackingBean.managedBean.activeIndex}"
+						activeIndex="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
 						
 						<p:menuitem value="#{lbl['lbl.sc.result.of.negotation']}"
@@ -60,17 +60,17 @@
 				</td>
 				
 				<td width="80%">
-					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '0'}">
-						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationResult.xhtml"></ui:include>
+					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
+						<ui:include src="loiNegotiationResult.xhtml"></ui:include>
 					</c:if> 
-					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '1'}">
-						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationCommittee.xhtml"></ui:include>
+					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
+						<ui:include src="loiNegotiationCommittee.xhtml"></ui:include>
 					</c:if> 
-					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '2'}">
-						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationRecommendation.xhtml"></ui:include>
+					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
+						<ui:include src="loiNegotiationRecommendation.xhtml"></ui:include>
 					</c:if> 
-					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '3'}">
-						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationReport.xhtml"></ui:include>
+					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
+						<ui:include src="loiNegotiationReport.xhtml"></ui:include>
 					</c:if> 
 				</td>
 			</tr>

@@ -1,11 +1,85 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<ui:composition
-	xmlns:f="http://java.sun.com/jsf/core"
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.supplier.list']}" />
+		</f:facet>
+		<p:dataTable id="negoSuppList" var="scLoi"
+			value="#{lOIDetailBackingBean.managedBean.lois}">
+
+			<ac:paginator for="negoSuppList" />
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loi.no']}">
+				#{scLoi.loiNo}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
+				#{scLoi.scLoiLoa.supplierName}
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.item']}">
+				<p:commandLink
+					actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
+					oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
+					process="@this">
+					<p:graphicImage library="ep/images/design" name="document.png"
+						title="Item Detail"
+						value="/resources/ep/images/design/document.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.status']}">
+				#{lOIDetailBackingBean.getStatusDescById(scLoi.pmStatus.statusId)}
+			</p:column>
+		</p:dataTable>
+	</p:panel>
 	
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.loiloa.loi.result.of.negotiation']}" />
+		</f:facet>
+		<p:dataTable id="negoTermList" var="scLoiTerm"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
+		    rowKey="#{negoTerm}"
+			widgetVar="negoTermListWidget">
+
+			<ac:paginator for="negoTermList" />
+
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}">
+				<p:inputTextarea value="#{scLoiTerm.termDesc}" cols="170" rows="2"
+					maxlength="500" 
+					style=" margin-bottom:5px;"
+					rendered="#{empty scLoiTerm.pmTerm}" />
+					
+				<h:outputText value="#{scLoiTerm.pmTerm.termDesc}" rendered="#{!empty scLoiTerm.pmTerm}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}">
+				<p:inputTextarea value="#{scLoiTerm.negoResult}" cols="170" rows="2"
+					maxlength="500" 
+					style=" margin-bottom:5px;" />
+			</p:column>
+		</p:dataTable>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, negoTermList" partialSubmit="true"
+				action="#{lOIDetailBackingBean.addNegotiationTerm}"
+				oncomplete="negoTermListWidget.paginator.endLink.click();"
+				update="negoTermList" icon="ui-icon-add" />
+			
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, negoTermList" partialSubmit="true"
+				icon="ui-icon-delete"
+				action="#{lOADetailBackingBean.deleteRowAction(lOIDetailBackingBean.managedBean.scLoi.scNegoTerms, lOIDetailBackingBean.managedBean.selectedNegoTermsList)}"
+				update="negoTermList" />
+		</div>
+	</p:panel>
 	
+	<ui:include src="/xhtml/sc/loa/qtLoaList/qtItemDetailPopUp.xhtml" /> 
 </ui:composition>
