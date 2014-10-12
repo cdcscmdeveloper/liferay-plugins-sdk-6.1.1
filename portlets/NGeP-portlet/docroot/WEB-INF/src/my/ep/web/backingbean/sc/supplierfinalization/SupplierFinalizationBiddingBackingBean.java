@@ -80,7 +80,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public static final int ONLINE_BIDDING_ACTIVE_INDEX_OFFLINE_ENDORSEMENT = 2;
 
 	public SupplierFinalizationBiddingBackingBean() {
-		// preRenderView();
+
 	}
 
 	public void preRenderView() {
@@ -90,11 +90,10 @@ public class SupplierFinalizationBiddingBackingBean extends
 			SCEvaluationDataType dataType = getBpmTaskDetails(SCEvaluationDataType.class);
 			this.getManagedBean().setPayLoad(dataType);
 			Long qtId = Long.valueOf(dataType.getQtId());
-			String committeeType = ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A;
-			// Long qtId = 2923L;
-
-			// renewSesionObject();
+			String committeeType = String.valueOf(dataType.getCommitteeType());
 			getManagedBean().setCommitteeType(committeeType);
+			getManagedBean().setPayLoad(dataType);
+			
 			retrieveOnlineBiddingEndorsement(qtId);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
