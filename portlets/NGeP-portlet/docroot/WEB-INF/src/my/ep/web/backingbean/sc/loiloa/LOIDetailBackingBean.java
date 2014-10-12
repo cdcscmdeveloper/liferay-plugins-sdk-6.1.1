@@ -284,6 +284,23 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		}
 	}
+	
+	public void preRenderMultipleLoiView() {
+		debugLogger("preRenderMultipleLoiView");
+		IQTAwardSO qtAwardSO = null;
+		try {
+			SCAwardSupplierDataType multiLoiDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+
+			//TODO
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, QTConstants.LOI_PAGE);
+		} catch (Exception e) {
+			handleException(e);
+		} finally {
+			qtAwardSO = null;
+		}
+	}
 
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
