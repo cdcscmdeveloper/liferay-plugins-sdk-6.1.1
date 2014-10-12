@@ -17,31 +17,30 @@
 			<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 				<h:outputLabel value="#{lbl['lbl.sc.loiloa.award.type']}"></h:outputLabel>
 				<p:inputText id="awardType"
-					value="#{qtLOABackingBean.getParameterDesc(lOADetailBackingBean.managedBean.selectedLoiLoa.recommendTypeCode)}"
+					value="#{qtLOABackingBean.getParameterDesc(qtLOABackingBean.managedBean.selectedLoiLoa.recommendTypeCode)}"
 					disabled="true" size="30" readonly="true" />
 			</h:panelGrid>
 			<p:dataTable id="qtLoaTbl" var="scLoiLoa"
 				value="#{qtLOABackingBean.managedBean.scLoiLoaList}"
 				rows="10"
-				selection="#{lOADetailBackingBean.managedBean.selectedLoiLoa}"
+				selection="#{qtLOABackingBean.managedBean.selectedLoiLoa}"
 				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex"
 				selectionMode="single">
 				<ac:paginator for="qtLoaTbl" />
 				<p:ajax event="rowSelect"
-					listener="#{lOADetailBackingBean.generateSuppLoiLoaList}"
+					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
 					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
 				<p:ajax event="rowUnselect"
-					listener="#{lOADetailBackingBean.generateSuppLoiLoaList}"
+					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
 					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}">
 					#{scLoiLoa.supplierName}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-					<p:commandButton icon="ui-icon-add" value="Create LOA"
-						style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}"
-						rendered="#{empty scLoiLoa.scloas}" />
+					<p:commandButton icon="ui-icon-add" value="Create LOA" 
+						rendered="#{empty scLoiLoa.scloas}"
+						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
@@ -51,7 +50,7 @@
 				<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']}" />
 			</f:facet>
 			<p:dataTable id="qtLoiLoaList" var="loiloa" rows="10"
-				value="#{lOADetailBackingBean.managedBean.suppLoiLoaList}"
+				value="#{qtLOABackingBean.managedBean.suppLoiLoaList}"
 				rowIndexVar="rowIndex">
 				<ac:paginator for="qtLoiLoaList" />
 				<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
@@ -62,7 +61,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.item']}">
 					<p:commandLink
-						actionListener="#{lOADetailBackingBean.showItemDetailsPopUps(loiloa)}"
+						actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
 						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
 						process="@this">
 						<p:graphicImage library="ep/images/design" name="document.png" title="Item Detail" 
@@ -71,7 +70,7 @@
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.status']}">
-					#{loiloa.status}
+					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
 						<p:commandButton icon="ui-icon-edit" title="edit" rendered="#{loiloa.type eq 'LOI'}"

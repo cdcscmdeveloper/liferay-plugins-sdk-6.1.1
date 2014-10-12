@@ -24,7 +24,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%" valign="top">
-				<p:tabMenu styleClass="sidemenu"
+				<p:tabMenu id="menuTab" styleClass="sidemenu"
 					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}"
 					style="display : table-caption;">
 
@@ -40,10 +40,10 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" >	
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">

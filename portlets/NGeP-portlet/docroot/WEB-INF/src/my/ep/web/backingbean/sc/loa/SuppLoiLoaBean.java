@@ -6,6 +6,7 @@ package my.ep.web.backingbean.sc.loa;
 import java.io.Serializable;
 import java.util.List;
 
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
@@ -18,7 +19,7 @@ public class SuppLoiLoaBean implements Serializable{
 	
 	private String loiLoaNo;
 	private String type;
-	private String status;
+	private PmStatus status;
 	private ScLoa scLoa;
 	private ScLoi scLoi;
 	private List<ScLoiLoaItem> scLoiLoaItems;
@@ -35,10 +36,16 @@ public class SuppLoiLoaBean implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
-	public String getStatus() {
+	/**
+	 * @return the status
+	 */
+	public PmStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(PmStatus status) {
 		this.status = status;
 	}
 	public ScLoa getScLoa() {

@@ -363,6 +363,14 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.PREPARE_LOA,
 				SourcingConstants.LOA_LIST_QT_PAGE);
+		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.APPROVE_LOA,
+				SourcingConstants.LOA_PTJ_PAGE);
+		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.REVISE_LOA,
+				SourcingConstants.LOA_PTJ_PAGE);
+		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.ACCEPT_LOA,
+				SourcingConstants.LOA_SUPPLIER_PAGE);
+		temp.put(SCProcessNameConst.LOA_ACCEPTANCE_PROCESS_NAME + SCProcessNameConst.VERIFY_LOA,
+				SourcingConstants.LOA_PTJ_PAGE);
 		
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
