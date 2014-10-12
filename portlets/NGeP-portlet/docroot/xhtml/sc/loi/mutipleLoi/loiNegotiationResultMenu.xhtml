@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="contentSection">
+	
+		<p:messages id="supplierFinalization" showDetail="true" autoUpdate="true" closable="true" severity="error,info"/>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.save']}" 
+				process="@all"
+				partialSubmit="true"
+				update="@form"
+				action="#{suppFinalizationBackingBean.saveSupplierFinalization}"
+				icon="ui-icon-save" />
+					
+			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
+				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+								
+				<p:commandButton value="#{lbl[buttonLabel]}"  
+					styleClass="ui-button"
+					icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
+					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
+					partialSubmit="true"
+					process="@form"
+					update="@form" />
+			</ui:repeat>
+		</div>	
+		
+		<ui:include src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml"></ui:include>
+	
+		<table style="border: 0px;width:100%;">
+			<tr>
+				<td width="20%" style="vertical-align: baseline;">
+					<p:tabMenu styleClass="sidemenu"
+						activeIndex="#{lOIDetailBackingBean.managedBean.activeIndex}"
+						style="display : table-caption;">
+						
+						<p:menuitem value="#{lbl['lbl.sc.result.of.negotation']}"
+							action="#{lOIDetailBackingBean.retrieveResultNegotiation}"
+							process="@form" update="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.negotation.committee']}"
+							action="#{lOIDetailBackingBean.retrieveNegotiationCommitteeDtls}"
+							process="@form" update="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.recommendation']}"
+							action="#{lOIDetailBackingBean.retrieveRecommenddation}"
+							process="@form" update="@form" />
+							
+						<p:menuitem value="#{lbl['lbl.sc.report']}"
+							action="#{lOIDetailBackingBean.retrieveReport}"
+							process="@form" update="@form" />
+					</p:tabMenu>
+				</td>
+				
+				<td width="80%">
+					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '0'}">
+						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationResult.xhtml"></ui:include>
+					</c:if> 
+					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '1'}">
+						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationCommittee.xhtml"></ui:include>
+					</c:if> 
+					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '2'}">
+						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationRecommendation.xhtml"></ui:include>
+					</c:if> 
+					<c:if test="#{lOIDetailBackingBean.managedBean.activeIndex eq '3'}">
+						<ui:include src="/xhtml/sc/loi/multipleLoi/loiNegotiationReport.xhtml"></ui:include>
+					</c:if> 
+				</td>
+			</tr>
+		</table>
+		
+	</ui:define>
+</ui:composition>
