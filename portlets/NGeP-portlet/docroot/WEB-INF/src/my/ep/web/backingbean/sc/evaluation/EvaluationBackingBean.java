@@ -3572,8 +3572,10 @@ public class EvaluationBackingBean extends
 		EvaluationReqDTO reqDtO = evaluationPreparation();
 		ScQt scQt = this.getManagedBean().getScQt();
 		reqDtO.setOutcome(action);
-		updatePmDigiSignData(pmDigiSign, this.getManagedBean()
-				.getCommitteeType(), scQt.getQtId(), scQt.getQtNo());
+		if (null != digiSign) {
+			updatePmDigiSignData(pmDigiSign, this.getManagedBean()
+					.getCommitteeType(), scQt.getQtId(), scQt.getQtNo());
+		}
 		reqDtO.setDigiSignData(digiSign);
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
 		reqDtO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
@@ -3590,8 +3592,6 @@ public class EvaluationBackingBean extends
 		}
 		return resDTO;
 	}
-
-
 
 	public String gpkiSignAction(PmDigiSign digiSign) {
 		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
