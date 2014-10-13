@@ -29,9 +29,9 @@
 						<p:column>
 							<f:facet name="header">
 							
-					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.cm.unspsc.code']}
+					              <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.cm.unspsc.code']}" />
 			                   	</f:facet>
-				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true"
+				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true" label="UNSPSC code"
 								update="@form" size="15" headerText="unspsc commodity"
 								postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
 								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity[#{rowIndex}].unspscId" 
@@ -49,9 +49,9 @@
 			            </p:column>
 			            <p:column width="10%">
 							<f:facet name="header">
-					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.pm.unspsc.type']}
+					               <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
 				                </f:facet>
-							<p:selectOneMenu value="#{feeObj.typeId.typeId}" required="true"
+							<p:selectOneMenu value="#{feeObj.typeId.typeId}" required="true" label="UNSPSC Type"
 								style="width:128px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems value="#{feeObj.types}" 
@@ -99,7 +99,7 @@
 							<f:facet name="header">
 
 							</f:facet>
-							<p:commandLink id="deleteFee"
+							<p:commandLink id="deleteFee" immediate="true"
 								action="#{ruleCatalogueBackingBean.deleteComodityFee(rowIndex)}"
 								update="@form">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>

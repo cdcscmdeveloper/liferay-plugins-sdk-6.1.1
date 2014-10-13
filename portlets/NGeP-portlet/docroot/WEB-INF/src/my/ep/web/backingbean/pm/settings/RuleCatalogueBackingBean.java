@@ -184,8 +184,7 @@ public class RuleCatalogueBackingBean extends
 				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
 				this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
 				resDTO = feeSO.getFeeExemptionsForOrgAndItem(reqDTO);
-				this.getManagedBean().setFeeExemptionsForOrgAndItem(
-						resDTO.getFeeExemptions());
+				
 				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 					if (exemption.getItemId() == null) {// TODO: clear it before
 														// updating the fee list
@@ -571,6 +570,9 @@ public class RuleCatalogueBackingBean extends
 				} else {
 					exemption.setFeeExemptionType("4");
 				}
+			}else if(exemption.getFeeExemptionType().equals("1") && exemption.getItemId() != null){
+				//update exemptionType if Item is selected
+				exemption.setFeeExemptionType("4");
 			}
 		}
 		IFeeExemptionSO exemptionSO = null;

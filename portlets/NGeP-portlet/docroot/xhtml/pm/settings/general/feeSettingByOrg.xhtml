@@ -28,9 +28,9 @@
 
 				<p:column>
 					<f:facet name="header">
-					         <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.pm.settings.fee.org.suplier.name']}
+					         <h:outputText value="*" styleClass="mandatory" /> <h:outputText value=" #{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			                   	</f:facet>
-					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER"
+					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER" label="Organization / supplier Name"
 						update="@form" size="15" required="true"
 						headerText="Supplier"
 						postUpdateListener="ruleCatalogueBackingBean.updateOrgProfileForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem)"
@@ -48,7 +48,7 @@
 					<ac:lov id="lovItem" lovId="CM_ITEM"
 						update="@form" size="15"
 						headerText="Item" 
-						saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}]"
+						saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 						value="#{feeObj.itemId.itemName}">
 					</ac:lov>
 					<ac:lovPopup />
