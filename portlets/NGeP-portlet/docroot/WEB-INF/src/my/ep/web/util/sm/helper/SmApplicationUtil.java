@@ -267,6 +267,32 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
+	
+	public static String getReviewApplicationSupplierBasePage(String applicationType) {
+		String basePage = "";
+		if (applicationType != null) {
+			switch (applicationType) {
+			case ParameterConst.NEW_SM_APPLN_FOR_MOF:
+				basePage = "/xhtml/sm/revisionSmApplView/newMofApplicationView/smViewMofRegSideMenu_SuppBasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES:
+				basePage = "/xhtml/sm/revisionSmApplView/addAdditionalCategoryCodesView/smViewAddtnlCatApplnSideMenu_SuppBasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_BUMI:
+				basePage = "/xhtml/sm/revisionSmApplView/bumiputeraApplicationView/smViewBumiSideMenu_SuppBasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_UPDATE:
+				basePage = "/xhtml/sm/revisionSmApplView/updateMofDetailsView/smViewUpdateMofSideMenu_SuppBasePage.xhtml";
+				break;
+			case ParameterConst.NEW_SM_APPLN_FOR_RENEW:
+				basePage = "/xhtml/sm/revisionSmApplView/renewMofApplicationView/smViewRenewRegSideMenu_SuppBasePage.xhtml";
+				break;
+			default:
+				break;
+			}
+		}
+		return basePage;
+	}
 
 	public static StatusResDTO setApplPmStatus(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();

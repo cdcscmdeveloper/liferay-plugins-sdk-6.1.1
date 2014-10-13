@@ -152,7 +152,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
 			String redirectToAppl = SmApplicationUtil
-					.getReviewApplicationBasePage(applType);
+					.getReviewApplicationSupplierBasePage(applType);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, redirectToAppl);
