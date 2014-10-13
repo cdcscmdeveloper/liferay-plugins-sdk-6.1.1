@@ -363,7 +363,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 						MessageUtils.getMessage(messageId, 
-								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), flRequest.getDocNo()}, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_CONTRACT_REQUEST), resDTO.getFlFulfilmentRequest().getDocNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
