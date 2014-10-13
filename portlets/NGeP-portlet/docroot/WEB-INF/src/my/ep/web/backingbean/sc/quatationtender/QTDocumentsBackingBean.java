@@ -316,6 +316,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			resDTO = detailSO.retriveQTDocDetails(reqDTO);
 			List<ScQtDocReport> scQtDocReports = resDTO.getReports();
 			this.getManagedBean().setCloneScQtDocReports(scQtDocReports);
