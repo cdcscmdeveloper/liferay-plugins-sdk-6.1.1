@@ -28,7 +28,7 @@
 
 						<p:column>
 							<f:facet name="header">
-					               <p:outputLabel value="*" styleClass="mandatory" />#{lbl['lbl.pm.contract.no']}
+					               <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.pm.contract.no']}" />
 			                   	</f:facet>
 				               <ac:lov id="lovContract" lovId="CT_CONTRACT" required="true" label="Contract NO."
 								update="@form" size="15" headerText="Contract"
