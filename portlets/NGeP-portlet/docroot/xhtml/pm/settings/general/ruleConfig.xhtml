@@ -29,9 +29,9 @@
 				selectionMode="single">
 
 				<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-					update=":form:ruleTypeValueTableID" />
+					update=":form:settingTabId:ruleTypeValueTableID" />
 				<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-					update=":form:ruleTypeValueTableID" />
+					update=":form:settingTabId:ruleTypeValueTableID" />
 
 
 
@@ -158,11 +158,11 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 						ajax="true"
 						action="#{ruleCatalogueBackingBean.addMoreRuleValue()}"
-						update=":form:ruleTypeValueTableID"></p:commandButton>
+						update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						icon="ui-icon-delete" ajax="true"
 						action="#{ruleCatalogueBackingBean.deleteMoreRuleValue()}"
-						update=":form:ruleTypeValueTableID"></p:commandButton>
+						update=":form:settingTabId:ruleTypeValueTableID"></p:commandButton>
 				</div>
 			</h:panelGroup>
 		</p:panel>

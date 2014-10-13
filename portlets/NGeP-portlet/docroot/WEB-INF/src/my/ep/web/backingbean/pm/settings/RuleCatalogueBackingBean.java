@@ -88,178 +88,274 @@ public class RuleCatalogueBackingBean extends
 			System.out
 					.println("resDTO.getPmConfigGeneral().getFinancialYear()="
 							+ resDTO.getPmConfigGeneral().getFinancialYear());
-			this.getManagedBean().setTabActiveIndex(0);
+			// this.getManagedBean().setTabActiveIndex(0);
+
+			// /////////////////////////////////////////////////////////
+			// /getting general Rule///////////////////////
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IRuleSO.class);
+			RuleReqDTO reqRDTO = new RuleReqDTO();
+			FacesScopes fs = new FacesScopes();
+			reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
+
+			RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
+
+			this.getManagedBean().setConfigRuleList(resRDTO.getRuleTypeList());
+			this.getManagedBean().setSelectedRuleType(
+					this.getManagedBean().getConfigRuleList().get(0));
+			// this.getManagedBean().setTabActiveIndex(1);
+
+			// ////////////getitng FeeExemption////////////////////////////
+			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("pm", IFeeExemptionSO.class);
+
+			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
+			FeeExemptionResDTO resFDTO = null;
+
+			this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
+			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
+			resFDTO = feeSO.getFeeExemptionsForOrgAndItem(reqFDTO);
+
+			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
+				if (exemption.getItemId() == null) {// TODO: clear it before
+													// updating the fee list
+					exemption.setItemId(new CmItem());
+				}
+				this.getManagedBean().getFeeExemptionsForOrgAndItem()
+						.add(exemption);
+			}
+
+			// this.getManagedBean().setFeeExemptionIndex(0);
+
+			this.getManagedBean().getFeeExemptionsForComodity().clear();
+			this.getManagedBean().getDeletedComodityFeeExemptions().clear();
+			resFDTO = feeSO.getFeeExemptionsForComodity(reqFDTO);
+			this.getManagedBean().setFeeExemptionsForComodity(
+					resFDTO.getFeeExemptions());
+
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("cm", ICodificationSO.class);
+			CodificationReqDTO cReqDTO = new CodificationReqDTO();
+			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
+				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
+				CodificationResDTO cResDTO = unspscSO
+						.retrieveUNSPSCByCommodityCode(cReqDTO);
+
+				if (cResDTO.isSuccessful()) {
+
+					CmUnspsc commodity = cResDTO.getCommodityObj();
+
+					exemption.setTypes(new ArrayList<CmType>());
+					for (CmType type : commodity.getCmType()) {
+						if (!StringUtils.isBlank(type.getTypeName())) {
+							exemption.getTypes().add(type);
+						}
+					}
+				}
+			}
+
+			// this.getManagedBean().setFeeExemptionIndex(1);
+
+			this.getManagedBean().getFeeExemptionsForContract().clear();
+			this.getManagedBean().getDeletedContractFeeExemptions().clear();
+			resFDTO = feeSO.getFeeExemptionsForContractAndReqItem(reqFDTO);
+
+			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
+				if (exemption.getRequestItemId() == null) {
+					exemption.setRequestItemId(new ScRequestItem());// TODO:
+																	// clear
+																	// it
+																	// before
+																	// updating
+																	// the
+																	// fee
+																	// list
+				}
+				this.getManagedBean().getFeeExemptionsForContract()
+						.add(exemption);
+			}
+
+			// this.getManagedBean().setFeeExemptionIndex(2);
+			System.out
+					.println("...................resFDTO.getFeeExemptions().size()="
+							+ resFDTO.getFeeExemptions().size());
+
+			// ///////////////////////////////
+			// ///////////////////////////////
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "settingConfig");
-			// return "ruleConfig.xhtml";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "";
 	}
 
-	public String onTabChange(String status) {
-		System.out.println("******status*******" + status);
-		IConfigGeneralSO cgeneralSO = null;
-		IRuleSO ruleSO = null;
-		// IKPIStatusSO kpiSO = null;
-		IFeeExemptionSO feeSO = null;
-		try {
-			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IConfigGeneralSO.class);
-			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					"pm", IRuleSO.class);
-			// kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
-			// .getServiceObject("pm", IKPIStatusSO.class);
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFeeExemptionSO.class);
-
-			if (status.equalsIgnoreCase("general")) {
-				
-				ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
-				ConfigGeneralResDTO resDTO = cgeneralSO
-						.getConfigGeneral(reqDTO);
-				this.getManagedBean().setSelectedConfigGeneral(
-						resDTO.getPmConfigGeneral());
-				
-				this.getManagedBean().setTabActiveIndex(0);
-			} else if (status.equalsIgnoreCase("rule")) {
-
-				RuleReqDTO reqRDTO = new RuleReqDTO();
-				FacesScopes fs = new FacesScopes();
-				reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-
-				RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
-
-				this.getManagedBean().setConfigRuleList(
-						resRDTO.getRuleTypeList());
-				this.getManagedBean().setSelectedRuleType(
-						this.getManagedBean().getConfigRuleList().get(0));
-				this.getManagedBean().setTabActiveIndex(1);
-				// return "ruleConfig.xhtml";
-				// FacesContext fc = FacesContext.getCurrentInstance();
-				// fc.getApplication().getNavigationHandler()
-				// .handleNavigation(fc, null, "ruleConfig");
-			} else if (status.equalsIgnoreCase("fee")) {
-				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
-				this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
-				FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-
-				FeeExemptionResDTO resDTO = feeSO
-						.getFeeExemptionsForOrgAndItem(reqDTO);
-				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-					if (exemption.getItemId() == null) {// TODO: clear it before
-														// updating the fee list
-						exemption.setItemId(new CmItem());
-					}
-					this.getManagedBean().getFeeExemptionsForOrgAndItem()
-							.add(exemption);
-				}
-
-				this.getManagedBean().setTabActiveIndex(2);
-				this.getManagedBean().setFeeExemptionIndex(0);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			cgeneralSO = null;
-			ruleSO = null;
-		}
-		return "settingConfig.xhtml";
-
-	}
-
-	public void onFeeTabChange(String status) {
-		System.out.println("******status*******" + status);
-		IFeeExemptionSO feeSO = null;
-		try {
-			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IFeeExemptionSO.class);
-
-			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-			FeeExemptionResDTO resDTO = null;
-			if (status.equalsIgnoreCase("byOrg")) {
-				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
-				this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
-				resDTO = feeSO.getFeeExemptionsForOrgAndItem(reqDTO);
-				
-				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-					if (exemption.getItemId() == null) {// TODO: clear it before
-														// updating the fee list
-						exemption.setItemId(new CmItem());
-					}
-					this.getManagedBean().getFeeExemptionsForOrgAndItem()
-							.add(exemption);
-				}
-
-				this.getManagedBean().setFeeExemptionIndex(0);
-			} else if (status.equalsIgnoreCase("byComodity")) {
-				this.getManagedBean().getFeeExemptionsForComodity().clear();
-				this.getManagedBean().getDeletedComodityFeeExemptions().clear();
-				resDTO = feeSO.getFeeExemptionsForComodity(reqDTO);
-				this.getManagedBean().setFeeExemptionsForComodity(
-						resDTO.getFeeExemptions());
-				
-				ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-						.getInstance().getServiceObject("cm",
-								ICodificationSO.class);
-				CodificationReqDTO cReqDTO = new CodificationReqDTO();
-				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-					cReqDTO.setUnspscCode(exemption.getUnspscId()
-							.getUnspscCode());
-					CodificationResDTO cResDTO = unspscSO
-							.retrieveUNSPSCByCommodityCode(cReqDTO);
-
-					if (cResDTO.isSuccessful()) {
-
-						CmUnspsc commodity = cResDTO.getCommodityObj();
-						
-						exemption.setTypes(new ArrayList<CmType>());
-						for (CmType type : commodity.getCmType()) {
-							if (!StringUtils.isBlank(type.getTypeName())) {
-								exemption.getTypes().add(type);
-							}
-						}
-					}
-				}
-
-				this.getManagedBean().setFeeExemptionIndex(1);
-			} else if (status.equalsIgnoreCase("byContract")) {
-				this.getManagedBean().getFeeExemptionsForContract().clear();
-				this.getManagedBean().getDeletedContractFeeExemptions().clear();
-				resDTO = feeSO.getFeeExemptionsForContractAndReqItem(reqDTO);
-				
-				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-					if (exemption.getRequestItemId() == null) {
-						exemption.setRequestItemId(new ScRequestItem());// TODO:
-																		// clear
-																		// it
-																		// before
-																		// updating
-																		// the
-																		// fee
-																		// list
-					}
-					this.getManagedBean().getFeeExemptionsForContract()
-							.add(exemption);
-				}
-
-				this.getManagedBean().setFeeExemptionIndex(2);
-				System.out
-						.println("...................resDTO.getFeeExemptions().size()="
-								+ resDTO.getFeeExemptions().size());
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			feeSO = null;
-		}
-		// return "settingConfig.xhtml";
-
-	}
+//	public String onTabChange(String status) {
+//		System.out.println("******status*******" + status);
+//		IConfigGeneralSO cgeneralSO = null;
+//		IRuleSO ruleSO = null;
+//		// IKPIStatusSO kpiSO = null;
+//		IFeeExemptionSO feeSO = null;
+//		try {
+//			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IConfigGeneralSO.class);
+//			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+//					"pm", IRuleSO.class);
+//			// kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
+//			// .getServiceObject("pm", IKPIStatusSO.class);
+//			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IFeeExemptionSO.class);
+//
+//			if (status.equalsIgnoreCase("general")) {
+//
+//				ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
+//				ConfigGeneralResDTO resDTO = cgeneralSO
+//						.getConfigGeneral(reqDTO);
+//				this.getManagedBean().setSelectedConfigGeneral(
+//						resDTO.getPmConfigGeneral());
+//
+//				this.getManagedBean().setTabActiveIndex(0);
+//			} else if (status.equalsIgnoreCase("rule")) {
+//
+//				RuleReqDTO reqRDTO = new RuleReqDTO();
+//				FacesScopes fs = new FacesScopes();
+//				reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
+//
+//				RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
+//
+//				this.getManagedBean().setConfigRuleList(
+//						resRDTO.getRuleTypeList());
+//				this.getManagedBean().setSelectedRuleType(
+//						this.getManagedBean().getConfigRuleList().get(0));
+//				this.getManagedBean().setTabActiveIndex(1);
+//				// return "ruleConfig.xhtml";
+//				// FacesContext fc = FacesContext.getCurrentInstance();
+//				// fc.getApplication().getNavigationHandler()
+//				// .handleNavigation(fc, null, "ruleConfig");
+//			} else if (status.equalsIgnoreCase("fee")) {
+//				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
+//				this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
+//						.clear();
+//				FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+//
+//				FeeExemptionResDTO resDTO = feeSO
+//						.getFeeExemptionsForOrgAndItem(reqDTO);
+//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
+//					if (exemption.getItemId() == null) {// TODO: clear it before
+//														// updating the fee list
+//						exemption.setItemId(new CmItem());
+//					}
+//					this.getManagedBean().getFeeExemptionsForOrgAndItem()
+//							.add(exemption);
+//				}
+//
+//				this.getManagedBean().setTabActiveIndex(2);
+//				this.getManagedBean().setFeeExemptionIndex(0);
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			cgeneralSO = null;
+//			ruleSO = null;
+//		}
+//		return "settingConfig.xhtml";
+//
+//	}
+//
+//	public void onFeeTabChange(String status) {
+//		System.out.println("******status*******" + status);
+//		IFeeExemptionSO feeSO = null;
+//		try {
+//			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", IFeeExemptionSO.class);
+//
+//			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+//			FeeExemptionResDTO resDTO = null;
+//			if (status.equalsIgnoreCase("byOrg")) {
+//				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
+//				this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
+//						.clear();
+//				resDTO = feeSO.getFeeExemptionsForOrgAndItem(reqDTO);
+//
+//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
+//					if (exemption.getItemId() == null) {// TODO: clear it before
+//														// updating the fee list
+//						exemption.setItemId(new CmItem());
+//					}
+//					this.getManagedBean().getFeeExemptionsForOrgAndItem()
+//							.add(exemption);
+//				}
+//
+//				this.getManagedBean().setFeeExemptionIndex(0);
+//			} else if (status.equalsIgnoreCase("byComodity")) {
+//				this.getManagedBean().getFeeExemptionsForComodity().clear();
+//				this.getManagedBean().getDeletedComodityFeeExemptions().clear();
+//				resDTO = feeSO.getFeeExemptionsForComodity(reqDTO);
+//				this.getManagedBean().setFeeExemptionsForComodity(
+//						resDTO.getFeeExemptions());
+//
+//				ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+//						.getInstance().getServiceObject("cm",
+//								ICodificationSO.class);
+//				CodificationReqDTO cReqDTO = new CodificationReqDTO();
+//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
+//					cReqDTO.setUnspscCode(exemption.getUnspscId()
+//							.getUnspscCode());
+//					CodificationResDTO cResDTO = unspscSO
+//							.retrieveUNSPSCByCommodityCode(cReqDTO);
+//
+//					if (cResDTO.isSuccessful()) {
+//
+//						CmUnspsc commodity = cResDTO.getCommodityObj();
+//
+//						exemption.setTypes(new ArrayList<CmType>());
+//						for (CmType type : commodity.getCmType()) {
+//							if (!StringUtils.isBlank(type.getTypeName())) {
+//								exemption.getTypes().add(type);
+//							}
+//						}
+//					}
+//				}
+//
+//				this.getManagedBean().setFeeExemptionIndex(1);
+//			} else if (status.equalsIgnoreCase("byContract")) {
+//				this.getManagedBean().getFeeExemptionsForContract().clear();
+//				this.getManagedBean().getDeletedContractFeeExemptions().clear();
+//				resDTO = feeSO.getFeeExemptionsForContractAndReqItem(reqDTO);
+//
+//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
+//					if (exemption.getRequestItemId() == null) {
+//						exemption.setRequestItemId(new ScRequestItem());// TODO:
+//																		// clear
+//																		// it
+//																		// before
+//																		// updating
+//																		// the
+//																		// fee
+//																		// list
+//					}
+//					this.getManagedBean().getFeeExemptionsForContract()
+//							.add(exemption);
+//				}
+//
+//				this.getManagedBean().setFeeExemptionIndex(2);
+//				System.out
+//						.println("...................resDTO.getFeeExemptions().size()="
+//								+ resDTO.getFeeExemptions().size());
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			feeSO = null;
+//		}
+//		// return "settingConfig.xhtml";
+//
+//	}
 
 	public void categoryCodesUpdate(int index,
 			List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
@@ -442,7 +538,7 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteMoreRuleValue() {
 		log.info(".................deleteMoreRuleValue...................");
-        
+
 		this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 				.remove(this.getManagedBean().getSelectedRuleValue());
 
@@ -451,7 +547,7 @@ public class RuleCatalogueBackingBean extends
 	public void addMoreOrgAndItemFee() {
 		log.info(".................addMoreOrgAndItemFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-//		newFeeExemption.setFeeExemptionType("1");
+		// newFeeExemption.setFeeExemptionType("1");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setItemId(new CmItem());
 
@@ -464,17 +560,21 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteOrgAndItemFee(int rowIndex) {
 		log.info(".................deleteOrgAndItemFee...................");
-		PmFeeExemption deletedExemption= this.getManagedBean().getFeeExemptionsForOrgAndItem().get(rowIndex);
+		PmFeeExemption deletedExemption = this.getManagedBean()
+				.getFeeExemptionsForOrgAndItem().get(rowIndex);
 		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedOrgAndItemFeeExemptions().add(deletedExemption);//should added to original list before save
-		this.getManagedBean().getFeeExemptionsForOrgAndItem().remove(deletedExemption);
+		this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
+				.add(deletedExemption);// should added to original list before
+										// save
+		this.getManagedBean().getFeeExemptionsForOrgAndItem()
+				.remove(deletedExemption);
 
 	}
 
 	public void addMoreComodityFee() {
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-		
+
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setTypeId(new CmType());
 		newFeeExemption.setUnspscId(new CmUnspsc());
@@ -487,18 +587,22 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteComodityFee(int rowIndex) {
 		log.info(".................deleteComodityFee...................");
-		
-		PmFeeExemption deletedExemption= this.getManagedBean().getFeeExemptionsForComodity().get(rowIndex);
+
+		PmFeeExemption deletedExemption = this.getManagedBean()
+				.getFeeExemptionsForComodity().get(rowIndex);
 		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedComodityFeeExemptions().add(deletedExemption);//should added to original list before save
-		this.getManagedBean().getFeeExemptionsForComodity().remove(deletedExemption);
+		this.getManagedBean().getDeletedComodityFeeExemptions()
+				.add(deletedExemption);// should added to original list before
+										// save
+		this.getManagedBean().getFeeExemptionsForComodity()
+				.remove(deletedExemption);
 
 	}
 
 	public void addMoreContractFee() {
 		log.info(".................addMoreContractFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
-//		newFeeExemption.setFeeExemptionType("2");
+		// newFeeExemption.setFeeExemptionType("2");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
 
@@ -510,11 +614,15 @@ public class RuleCatalogueBackingBean extends
 
 	public void deleteContractFee(int rowIndex) {
 		log.info(".................deleteContractFee...................");
-		
-		PmFeeExemption deletedExemption= this.getManagedBean().getFeeExemptionsForContract().get(rowIndex);
+
+		PmFeeExemption deletedExemption = this.getManagedBean()
+				.getFeeExemptionsForContract().get(rowIndex);
 		deletedExemption.setDeleted(true);
-		this.getManagedBean().getDeletedContractFeeExemptions().add(deletedExemption);//should added to original list before save
-		this.getManagedBean().getFeeExemptionsForContract().remove(deletedExemption);
+		this.getManagedBean().getDeletedContractFeeExemptions()
+				.add(deletedExemption);// should added to original list before
+										// save
+		this.getManagedBean().getFeeExemptionsForContract()
+				.remove(deletedExemption);
 
 	}
 
@@ -534,8 +642,7 @@ public class RuleCatalogueBackingBean extends
 
 			resDTO = ruleSO.getRuleTypes(reqDTO);
 
-			this.getManagedBean().setConfigRuleList(
-					resDTO.getRuleTypeList());
+			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
@@ -547,7 +654,7 @@ public class RuleCatalogueBackingBean extends
 										new FacesScopes().getUserLocale())));
 				System.out
 						.println("***************rule type values have been updated*****************");
-				
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -556,9 +663,12 @@ public class RuleCatalogueBackingBean extends
 
 	public void saveFeeExemptionForOrgItem() {
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
-		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForOrgAndItem());
-		exemptionList.addAll(this.getManagedBean().getDeletedOrgAndItemFeeExemptions());
-		System.out.print("............................exemptionList.size="+exemptionList.size());
+		exemptionList.addAll(this.getManagedBean()
+				.getFeeExemptionsForOrgAndItem());
+		exemptionList.addAll(this.getManagedBean()
+				.getDeletedOrgAndItemFeeExemptions());
+		System.out.print("............................exemptionList.size="
+				+ exemptionList.size());
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getItemId().getItemId() == null) {// clear empty
 															// objects
@@ -571,8 +681,9 @@ public class RuleCatalogueBackingBean extends
 				} else {
 					exemption.setFeeExemptionType("4");
 				}
-			}else if(exemption.getFeeExemptionType().equals("1") && exemption.getItemId() != null){
-				//update exemptionType if Item is selected
+			} else if (exemption.getFeeExemptionType().equals("1")
+					&& exemption.getItemId() != null) {
+				// update exemptionType if Item is selected
 				exemption.setFeeExemptionType("4");
 			}
 		}
@@ -584,11 +695,11 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
-			//retrieve
-		   this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
-		   this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
-		   reqDTO = new FeeExemptionReqDTO();
-		   resDTO = exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO);
+			// retrieve
+			this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
+			this.getManagedBean().getDeletedOrgAndItemFeeExemptions().clear();
+			reqDTO = new FeeExemptionReqDTO();
+			resDTO = exemptionSO.getFeeExemptionsForOrgAndItem(reqDTO);
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getItemId() == null) {// TODO: clear it before
 													// updating the fee list
@@ -617,8 +728,10 @@ public class RuleCatalogueBackingBean extends
 	public void saveFeeExemptionForContract() {
 		log.info("...........saveFeeExemptionForContract..................");
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
-		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForContract());
-		exemptionList.addAll(this.getManagedBean().getDeletedContractFeeExemptions());
+		exemptionList.addAll(this.getManagedBean()
+				.getFeeExemptionsForContract());
+		exemptionList.addAll(this.getManagedBean()
+				.getDeletedContractFeeExemptions());
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getRequestItemId().getRequestNoteItemId() == null) {// clear
 																				// empty
@@ -644,12 +757,12 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
-			//retrieve
+			// retrieve
 			this.getManagedBean().getFeeExemptionsForContract().clear();
 			this.getManagedBean().getDeletedContractFeeExemptions().clear();
-			reqDTO= new FeeExemptionReqDTO();
+			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForContractAndReqItem(reqDTO);
-			
+
 			for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
 				if (exemption.getRequestItemId() == null) {
 					exemption.setRequestItemId(new ScRequestItem());// TODO:
@@ -683,8 +796,10 @@ public class RuleCatalogueBackingBean extends
 
 	public void saveFeeExemptionForComodity() {
 		List<PmFeeExemption> exemptionList = new ArrayList<PmFeeExemption>();
-		exemptionList.addAll(this.getManagedBean().getFeeExemptionsForComodity());
-		exemptionList.addAll(this.getManagedBean().getDeletedComodityFeeExemptions());
+		exemptionList.addAll(this.getManagedBean()
+				.getFeeExemptionsForComodity());
+		exemptionList.addAll(this.getManagedBean()
+				.getDeletedComodityFeeExemptions());
 		for (PmFeeExemption exemption : exemptionList) {
 			if (exemption.getFeeExemptionId() == null) {// set ExemptionType for
 														// new FeeExemptions
@@ -699,28 +814,28 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
-			//retrive
+			// retrive
 			this.getManagedBean().getFeeExemptionsForComodity().clear();
 			this.getManagedBean().getDeletedComodityFeeExemptions().clear();
 			reqDTO = new FeeExemptionReqDTO();
 			resDTO = exemptionSO.getFeeExemptionsForComodity(reqDTO);
 			this.getManagedBean().setFeeExemptionsForComodity(
 					resDTO.getFeeExemptions());
-			
+
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-					.getInstance().getServiceObject("cm",
-							ICodificationSO.class);
+					.getInstance()
+					.getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
-			for (PmFeeExemption exemption : this.getManagedBean().getFeeExemptionsForComodity()) {
-				cReqDTO.setUnspscCode(exemption.getUnspscId()
-						.getUnspscCode());
+			for (PmFeeExemption exemption : this.getManagedBean()
+					.getFeeExemptionsForComodity()) {
+				cReqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
 				CodificationResDTO cResDTO = unspscSO
 						.retrieveUNSPSCByCommodityCode(cReqDTO);
 
 				if (cResDTO.isSuccessful()) {
 
 					CmUnspsc commodity = cResDTO.getCommodityObj();
-					
+
 					exemption.setTypes(new ArrayList<CmType>());
 					for (CmType type : commodity.getCmType()) {
 						if (!StringUtils.isBlank(type.getTypeName())) {
@@ -755,10 +870,9 @@ public class RuleCatalogueBackingBean extends
 			reqDTO.setPmConfigGeneral(this.getManagedBean()
 					.getSelectedConfigGeneral());
 			ConfigGeneralResDTO resDTO = cgeneralSO.updateConfigGeneral(reqDTO);
-			//retrieve
+			// retrieve
 			reqDTO = new ConfigGeneralReqDTO();
-			resDTO = cgeneralSO
-					.getConfigGeneral(reqDTO);
+			resDTO = cgeneralSO.getConfigGeneral(reqDTO);
 			this.getManagedBean().setSelectedConfigGeneral(
 					resDTO.getPmConfigGeneral());
 			if (resDTO.isSuccessful()) {
@@ -804,22 +918,22 @@ public class RuleCatalogueBackingBean extends
 	// }
 	//
 	// }
-//	public void filterKPITableByDataType() {
-//		System.out
-//				.println("..............filterKPITableByDataType...............");
-//		System.out
-//				.println(".....................this.getManagedBean().getSelectedDocumentType()="
-//						+ this.getManagedBean().getSelectedDocumentType());
-//		// this.getManagedBean().getKpiListDataModel().reloadData();
-//		IKPIStatusSO kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
-//				.getServiceObject("pm", IKPIStatusSO.class);
-//		KPIReqDTO reqDTO = new KPIReqDTO();
-//		FacesScopes fs = new FacesScopes();
-//		reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-//		reqDTO.setDocType(this.getManagedBean().getSelectedDocumentType());
-//
-//		KPIResDTO resDTO = kpiSO.getKpiValuesDocyType(reqDTO);
-//		this.getManagedBean().setKpiStatusList(resDTO.getKpiStatusList());
-//	}
+	// public void filterKPITableByDataType() {
+	// System.out
+	// .println("..............filterKPITableByDataType...............");
+	// System.out
+	// .println(".....................this.getManagedBean().getSelectedDocumentType()="
+	// + this.getManagedBean().getSelectedDocumentType());
+	// // this.getManagedBean().getKpiListDataModel().reloadData();
+	// IKPIStatusSO kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
+	// .getServiceObject("pm", IKPIStatusSO.class);
+	// KPIReqDTO reqDTO = new KPIReqDTO();
+	// FacesScopes fs = new FacesScopes();
+	// reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
+	// reqDTO.setDocType(this.getManagedBean().getSelectedDocumentType());
+	//
+	// KPIResDTO resDTO = kpiSO.getKpiValuesDocyType(reqDTO);
+	// this.getManagedBean().setKpiStatusList(resDTO.getKpiStatusList());
+	// }
 
 }

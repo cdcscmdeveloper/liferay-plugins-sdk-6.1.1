@@ -7,40 +7,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-			<h:panelGroup>
-		
-          <p:tabMenu id="feeSettingId"
-			activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
-			
-				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.org.item']}"
-					action="#{ruleCatalogueBackingBean.onFeeTabChange('byOrg')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.comodity']}"
-					action="#{ruleCatalogueBackingBean.onFeeTabChange('byComodity')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.pm.settings.fee.by.contract']}"
-					action="#{ruleCatalogueBackingBean.onFeeTabChange('byContract')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				
-			</p:tabMenu>
+	<h:panelGroup>
 
 
-			<c:choose>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 0}">
+			<p:tabView id="feeSettingId"
+				activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
+
+				<p:tab title="#{lbl['lbl.pm.settings.fee.by.org.item']}">
 					<ui:include src="feeSettingByOrg.xhtml"></ui:include>
-				</c:when>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 1}">
+				</p:tab>
+				<p:tab title="#{lbl['lbl.pm.settings.fee.by.comodity']}">
 					<ui:include src="feeSettingByCommodity.xhtml" />
-				</c:when>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex == 2}">
+				</p:tab>
+				<p:tab title="#{lbl['lbl.pm.settings.fee.by.contract']}">
 					<ui:include src="feeSettingByContract.xhtml"></ui:include>
-				</c:when>
+				</p:tab>
 
-			</c:choose>
+			</p:tabView>
 
-		</h:panelGroup>
+	</h:panelGroup>
 
 </ui:composition>
