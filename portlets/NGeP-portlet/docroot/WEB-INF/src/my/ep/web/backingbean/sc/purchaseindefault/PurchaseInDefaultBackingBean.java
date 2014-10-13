@@ -134,10 +134,10 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 			}else if(vCmSupplierItem.getCircularNo() !=null){
 				// panel item 
-				PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-				reqDTO.setPanelItemId(vCmSupplierItem.getDocId());
-				reqDTO.setFetchSubEntity(true);
-				PanelSupplierResDTO resDTO= panelSupplierSO.retrievePanelItem(reqDTO);
+				PurchaseInDefaultReqDTO pidReqDTO = new PurchaseInDefaultReqDTO();
+				pidReqDTO.setPanelItemId(vCmSupplierItem.getDocId());
+				pidReqDTO.setFetchSubEntity(true);
+				PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO.getPanelSupplierByPanelItem(pidReqDTO);
 				if(resDTO.getCtPanelItem()!=null) {
 					scPurchaseInDefault.setPanelItem(resDTO.getCtPanelItem());
 					getManagedBean().setCheckContractItem(Boolean.FALSE);
