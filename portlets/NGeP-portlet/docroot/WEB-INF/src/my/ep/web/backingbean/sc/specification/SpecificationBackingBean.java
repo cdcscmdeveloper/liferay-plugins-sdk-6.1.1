@@ -566,6 +566,11 @@ public class SpecificationBackingBean extends
 				new ArrayList<ScQtCheckList>());
 		this.getManagedBean().setScQtCheckSt2financeProposalList(
 				new ArrayList<ScQtCheckList>());
+		if (this.getManagedBean().isReadOnly()) {
+			throw new EpException(
+					"Business Owner (BO) with consolidate have to enter data for General and Supplier Qualification Criteria");
+
+		}
 
 		if (!this.getManagedBean().getScQt().isPanel()) {
 
@@ -3249,12 +3254,18 @@ public class SpecificationBackingBean extends
 
 						getManagedBean().getZoneTrees().remove(
 								getManagedBean().getIndex());
-						getManagedBean().getZoneTrees().add(
-								getManagedBean().getIndex(),
-								LocationSingleton.getInstance()
-										.buildLocationTree(null, localStaeList,
-												districts, divisions, cities,
-												ScQtLocCriteria.class));
+						localList.add(LocationSingleton.getInstance()
+								.buildLocationTree(null, localStaeList,
+										districts, divisions, cities,
+										ScQtLocCriteria.class));
+						getManagedBean().getZoneTrees().addAll(localList);
+						/*
+						 * getManagedBean().getZoneTrees().add(
+						 * getManagedBean().getIndex(),
+						 * LocationSingleton.getInstance()
+						 * .buildLocationTree(null, localStaeList, districts,
+						 * divisions, cities, ScQtLocCriteria.class));
+						 */
 
 					}
 				}
@@ -6767,22 +6778,22 @@ public class SpecificationBackingBean extends
 	}
 
 	public String updateBpmTask(String action) {
+
 		SpecificationReqDTO spReqDTO = null;
 		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
 				|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			spReqDTO = prepareSpecChirPersonRequest();
+			this.getManagedBean().setLocalOutCome(action);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			spReqDTO = prepareSpecReq();
-		}
-		spReqDTO.setOutcome(action);
-		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		spReqDTO.setToken(ctx);
-		IQTSpecSO specSO = getSpecSO();
-
-		try {
+			spReqDTO.setOutcome(action);
+			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			spReqDTO.setPayLoad(this.getManagedBean()
+					.getSpecificationDataType());
+			FacesScopes facesScopes = new FacesScopes();
+			String ctx = facesScopes.getBPMAuthenticationCtxToken();
+			spReqDTO.setToken(ctx);
+			IQTSpecSO specSO = getSpecSO();
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
 				ScQt qt = resDTO.getScQt();
@@ -6799,13 +6810,34 @@ public class SpecificationBackingBean extends
 										new FacesScopes().getUserLocale())));
 
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
-
 			}
-		} finally {
-			specSO = null;
-		}
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+			/*
+			 * spReqDTO.setOutcome(action);
+			 * spReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 * spReqDTO.setPayLoad
+			 * (this.getManagedBean().getSpecificationDataType()); FacesScopes
+			 * facesScopes = new FacesScopes(); String ctx =
+			 * facesScopes.getBPMAuthenticationCtxToken();
+			 * spReqDTO.setToken(ctx); IQTSpecSO specSO = getSpecSO();
+			 * 
+			 * try { SpecificationResDTO resDTO =
+			 * specSO.updateBPMAction(spReqDTO); if (resDTO.isSuccessful()) {
+			 * ScQt qt = resDTO.getScQt(); // Code to renew the session Object..
+			 * renewSesionObject();
+			 * FacesContext.getCurrentInstance().addMessage( null, new
+			 * FacesMessage(FacesMessage.SEVERITY_INFO, null,
+			 * MessageUtils.getMessage( getMessgeConstant(action), new String[]
+			 * { "Specification For ", qt.getQtNo() },
+			 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+			 * FacesScopes().getUserLocale())));
+			 * 
+			 * return CommonUIConst.ACKNOWLEDGE_PAGE;
+			 * 
+			 * } } finally { specSO = null; }
+			 */
 
+		}
+		return null;
 	}
 
 	private IQTSpecSO getSpecSO() {
@@ -8876,8 +8908,38 @@ public class SpecificationBackingBean extends
 	 */
 
 	// Ministry Spec Approval Method
-	private SpecificationReqDTO prepareSpecChirPersonRequest() {
+
+	public String ministrySpecgpkiSignAction(PmDigiSign digiSign) {
+		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
+				.getManagedBean().getLocalOutCome(), digiSign);
+		if (resDTO.isSuccessful()) {
+			ScQt qt = resDTO.getScQt();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+													new String[] {
+															"Specification For",
+															qt.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
+	}
+
+	private SpecificationResDTO prepareSpecChirPersonRequest(String action,
+			PmDigiSign pmDigiSign) {
 		SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+		SpecificationResDTO resDTO = new SpecificationResDTO();
 		List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
 		if (null != remarks) {
 			for (int i = 0; i < remarks.size(); i++) {
@@ -8895,7 +8957,26 @@ public class SpecificationBackingBean extends
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
 		specReqDTO.setScQt(scQt);
-		return specReqDTO;
+
+		specReqDTO.setOutcome(action);
+		updatePmDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_QUOTATION,
+				scQt.getQtId(), scQt.getQtNo());
+		specReqDTO.setDigiSignData(pmDigiSign);
+		specReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		specReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		specReqDTO.setToken(ctx);
+		IQTSpecSO specSO = getSpecSO();
+
+		try {
+			resDTO = specSO.updateBPMAction(specReqDTO);
+
+		} finally {
+			specSO = null;
+		}
+
+		return resDTO;
 	}
 
 	/**
@@ -9023,8 +9104,11 @@ public class SpecificationBackingBean extends
 		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
 		spReqDTO.setOutcome(action);
 		ScQt scQt = this.getManagedBean().getScQt();
-		updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_QUOTATION,
-				scQt.getQtId(), scQt.getQtNo());
+		if (null != digiSign) {
+			updatePmDigiSignData(digiSign,
+					ParameterConst.DOCTYPE_SPEC_COMMITTE, scQt.getQtId(),
+					scQt.getQtNo());
+		}
 		spReqDTO.setDigiSignData(digiSign);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());

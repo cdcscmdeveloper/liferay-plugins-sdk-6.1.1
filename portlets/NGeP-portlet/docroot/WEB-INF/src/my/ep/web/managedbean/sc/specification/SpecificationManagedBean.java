@@ -304,6 +304,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> ScoreTypeList;
 	private boolean isTechStandaraChecklist;
 	private boolean isFinStandaraChecklist;
+	private String localOutCome;
+
+	public String getLocalOutCome() {
+		return localOutCome;
+	}
+
+	public void setLocalOutCome(String localOutCome) {
+		this.localOutCome = localOutCome;
+	}
 
 	public boolean isTechStandaraChecklist() {
 		return isTechStandaraChecklist;
