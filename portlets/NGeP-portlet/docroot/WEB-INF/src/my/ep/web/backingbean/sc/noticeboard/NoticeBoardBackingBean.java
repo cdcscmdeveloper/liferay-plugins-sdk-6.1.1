@@ -831,7 +831,11 @@ public class NoticeBoardBackingBean extends
 				String selectedTab = getManagedBean().getSelectedTab();
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
 						.equals(selectedTab)) {
-					// TODO filter by changes flag.
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(
+									"isChanged",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									true));
 				} else {
 					if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
 							.equals(selectedTab)) {
