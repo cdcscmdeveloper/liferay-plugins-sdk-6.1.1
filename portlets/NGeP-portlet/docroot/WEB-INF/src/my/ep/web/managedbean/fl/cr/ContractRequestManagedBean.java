@@ -220,6 +220,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean standardPrice = false;
 	private boolean zonalPrice = false;
 	private boolean zonalTierPrice = false;
+	private boolean tariffPrice = false;
 	private PmParameter pmPriceType;
 	private List<FLCtSupplierItemVO>	supplierItemPriceList = new ArrayList<FLCtSupplierItemVO>();
 	
@@ -2133,6 +2134,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setFeeVoteFund(PmVotFund feeVoteFund) {
 		this.feeVoteFund = feeVoteFund;
+	}
+
+	public boolean isTariffPrice() {
+		return tariffPrice;
+	}
+
+	public void setTariffPrice(boolean tariffPrice) {
+		this.tariffPrice = tariffPrice;
 	}
 
 
