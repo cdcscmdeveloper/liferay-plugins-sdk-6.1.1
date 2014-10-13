@@ -123,12 +123,12 @@
 					max="#{bidPriceItem.bidPrice /10}"
 					stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 					<p:ajax event="change" process="@this" partialSubmit="true"
-						update="itemWiseBidList"
+						update="@([id$=itemWiseBidList])"
 						listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 				</p:spinner>
 				<p:spacer width="5"></p:spacer>
 				<p:commandLink action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}" process="@this" partialSubmit="true" 
-					update="itemWiseBidList">
+					update="@([id$=itemWiseBidList])">
 					<p:graphicImage library="ep/images/design" name="submit.png"
 						value="/css/images/design/submit.png" />
 				</p:commandLink>
