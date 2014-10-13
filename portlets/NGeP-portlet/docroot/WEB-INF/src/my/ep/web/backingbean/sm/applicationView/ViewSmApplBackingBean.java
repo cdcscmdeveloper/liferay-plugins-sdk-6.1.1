@@ -14,7 +14,7 @@ public class ViewSmApplBackingBean extends BaseReviewApplicationBackingBean<View
 	public static Logger log = Logger.getLogger(ViewSmApplBackingBean.class);
 
 	public ViewSmApplBackingBean() {
-		super.initMain();
+		
 	}
 
 	
