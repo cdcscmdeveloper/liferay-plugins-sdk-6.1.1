@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+		<table style="width: 100%">
+			<tr>
+				<td><p:panel style="width: 100%;" header="DOCUMENT DETAILss"
+						toggleable="true" id="searchTabId">
+
+						<table style="margin-top: 10px; width: 100%;">
+							<tr>
+								<td width="15%"><p:outputLabel
+										value="Item Code" /></td>
+								<td width="35%"><p:inputText size="50"
+										value="Item Code"></p:inputText></td>
+							</tr>
+
+							<tr>
+								<td width="35%"><p:outputLabel
+										value="Item Name" /></td>
+								<td width="65%"><p:inputText size="50"
+										value="Item Name"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel
+										value="Contracted Item?" /></td>
+								<td width="65%"><p:inputText size="50"
+										value="Yes"></p:inputText></td>
+							</tr>
+							<tr>
+								<td width="35%"><p:outputLabel
+										value="Status" /></td>
+								<td width="65%"><p:inputText size="50"
+										value="Status"></p:inputText></td>
+							</tr>
+							
+						</table>
+
+
+						<div style="text-align: right;">
+							<p:commandButton value="BACK" icon="ui-icon-reset"
+								action="#{cmBackingBean.backToSearch}">
+							</p:commandButton>
+						</div>
+					</p:panel></td>
+			</tr>
+		</table>
+			
+	<ui:include src="/xhtml/trackingdiary/trackingDiaryDetailResult.xhtml" />
+
+</ui:composition>
