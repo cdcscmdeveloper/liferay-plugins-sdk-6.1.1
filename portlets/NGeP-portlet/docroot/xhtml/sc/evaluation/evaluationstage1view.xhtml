@@ -10,7 +10,8 @@
 
 
 	<ui:define name="contentSection">
-
+		<ac:gpkiPopup textBeforeSign="#{evaluationBackingBean.textBeforeSign}"
+			postSignAction="#{evaluationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
 		<ui:fragment
 			rendered="#{ ((evaluationBackingBean.managedBean.committeeType eq 'EC' and evaluationBackingBean.managedBean.tabActiveIndex eq 1 and (evaluationBackingBean.managedBean.complianceActiveIndex eq '2' or evaluationBackingBean.managedBean.complianceActiveIndex eq '3')) or (evaluationBackingBean.managedBean.committeeType eq 'TEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 ) or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.tabActiveIndex eq 0 ))}">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"
