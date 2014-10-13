@@ -123,13 +123,13 @@
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
-					<p:inputText value="#{item.unitPrice}" disabled="true"
+					<p:inputText value="#{item.unitPrice}" disabled="true" id="unitPrice"
 						style="text-align:right"></p:inputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
-					<p:inputText value="#{item.orderedQty}" style="text-align:right"
+					<p:inputText value="#{item.orderedQty}" style="text-align:right" id="orderedQty"
 						required="true" requiredMessage="Please input the quantity.">
-						<p:ajax update="subTotalTxt"
+						<p:ajax update="subTotalTxt,unitPrice,orderedQty,itemDataTable"
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
 							<p:commandLink oncomplete="reqItemInfo.show();"
@@ -144,7 +144,8 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
 					<p:inputText id="subTotalTxt" style="text-align:right"
 						value="#{item.orderedAmt}" disabled="true">
-						<f:convertNumber pattern="#,#00.00" />
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 				</p:column>
 			</p:dataTable>
