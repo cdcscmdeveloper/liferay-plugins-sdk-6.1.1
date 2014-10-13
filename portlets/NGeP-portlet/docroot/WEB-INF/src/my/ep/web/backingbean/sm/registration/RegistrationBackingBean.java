@@ -1231,7 +1231,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] pmIdTypeDropdownValues() {
-		return getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		log.info("----------Items-------" + items.length);
+		for(SelectItem selectItem : items) {
+			log.info("----------selectItem-------" + selectItem.getValue());
+			if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
+				itemList.add(selectItem);
+			}
+			
+		}
+		
+		return itemList.toArray(new SelectItem[itemList.size()]);
 	}
 	
 	/**
