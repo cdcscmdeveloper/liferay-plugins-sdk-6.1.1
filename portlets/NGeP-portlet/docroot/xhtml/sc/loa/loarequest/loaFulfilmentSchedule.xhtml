@@ -109,7 +109,7 @@
 	<h:panelGroup id="progressive">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true"
-				rendered="#{isDocTypeQuotation}">
+				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeAsAndWhen}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
