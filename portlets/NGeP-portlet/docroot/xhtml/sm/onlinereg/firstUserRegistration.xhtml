@@ -68,7 +68,7 @@
 							navigator="true" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.userprofile.dob']}"
 							value="#{registrationBackingBean.managedBean.smPersonnel.birthDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline" 
-							readonlyInput="true" size="30" showOn="button" yearRange="-99:-16">
+							readonlyInput="true" size="30" showOn="button" yearRange="-99"  maxdate="#{CommonConstants.CURRENT_DATE}">
 						</p:calendar>
 					</td>
 				</tr>
