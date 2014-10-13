@@ -93,23 +93,23 @@
 			<p:panel id="bankDetailsPanel">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctNo']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.acctNo']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.accountNo}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankName']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankName']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.pmFinancialOrg.finOrgName}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.acctPurpose']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.acctPurpose']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBankAccountPurpose}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.bankBranch']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.bankBranch']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.bankBranch}"/></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.address']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.address']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address1}" /></td>
 					</tr>
 	
@@ -126,30 +126,30 @@
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.address4}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.country']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCountry.countryName}" /></td>
 					</tr>
 	
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.state']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmState.stateName}" /></td>
 					</tr>
 	
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.district']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.district']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmDistrict.districtName}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.towncity']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.pmCity.cityName}" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.postcode']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.smAddress.postcode}" /></td>
 					</tr>
 	
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.isDesBank']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.isDesBank']}" /></td>
 						<td>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.yes']}" rendered="#{viewSmApplBackingBean.managedBean.selectedBank.defaultAccount}"/>
 							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.txt.no']}" rendered="#{!viewSmApplBackingBean.managedBean.selectedBank.defaultAccount}"/>
@@ -157,12 +157,12 @@
 					</tr>
 					<c:if test="#{viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'P' or viewSmApplBackingBean.managedBean.selectedBank.accountPurpose eq 'B'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.assocBran']} :" id="banBranchLbl" /></td>
+							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.assocBran']}" id="banBranchLbl" /></td>
 							<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedBank.bankBranch}" /></td>
 						</tr>
 					</c:if>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.bankDtls.cheSigns']} :" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.bankDtls.cheSigns']}" /></td>
 						<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.chequeSignPersonnelName}" escape="false" /></td>
 					</tr>
 				</table>
