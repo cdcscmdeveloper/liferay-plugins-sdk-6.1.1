@@ -370,7 +370,7 @@
 
 			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 				widgetVar="ZoneGeneral" modal="true" width="600" position="top"
-				height="400">
+				height="500">
 				<p:panel id="zonePopupGeneral">
 					<table styleClass="noBorders tr,noBorders td" border="0">
 
@@ -387,7 +387,7 @@
 							<TD width="20%" valign="top"><p:outputLabel
 									value="#{lbl['lbl.sc.spec.zone.location']}" /></TD>
 							<TD width="80%"><p:panel></p:panel>
-								<div style="height: 300px; overflow-y: scroll;">
+								<div style="height: 500px; overflow-y: scroll;">
 									<p:tree id="treeZoneGeneralPopup"
 										value="#{specificationBackingBean.managedBean.rootZoanlTree}"
 										var="location"
