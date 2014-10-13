@@ -87,6 +87,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	private Map<Long, PmUserGroup> userGroupMap;
 	private List<Long> agenciesList; 
+	private HashMap<Long, List<FlFulfilmentItemAddr>> tierMap;
+	private HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap;
 	
 	private String requisitioner;
 	private String approver;
@@ -2143,6 +2145,42 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setTariffPrice(boolean tariffPrice) {
 		this.tariffPrice = tariffPrice;
 	}
+	
+	/**
+	 * @return the tierMap
+	 */
+	public HashMap<Long, List<FlFulfilmentItemAddr>> getTierMap() {
+		if(tierMap == null){
+			tierMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();
+		}
+		return tierMap;
+	}
+
+	/**
+	 * @param tierMap the tierMap to set
+	 */
+	public void setTierMap(HashMap<Long, List<FlFulfilmentItemAddr>> tierMap) {
+		this.tierMap = tierMap;
+	}
+
+	/**
+	 * @return the zonalTierMap
+	 */
+	public HashMap<String, List<FlFulfilmentItemAddr>> getZonalTierMap() {
+		if(zonalTierMap == null){
+			zonalTierMap = new HashMap<String,List<FlFulfilmentItemAddr>>();
+		}
+		return zonalTierMap;
+	}
+
+	/**
+	 * @param zonalTierMap the zonalTierMap to set
+	 */
+	public void setZonalTierMap(
+			HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap) {
+		this.zonalTierMap = zonalTierMap;
+	}
+
 
 
 }
