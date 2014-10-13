@@ -238,9 +238,7 @@ public class LocationSingleton {
 				// build state tree
 
 				if (ParameterConst.LOCATION_LEVEL_STATE
-						.equals(locationLevelCode)
-						|| ParameterConst.LOCATION_LEVEL_DISTRICT
-								.equals(locationLevelCode)) {
+						.equals(locationLevelCode)) {
 					if (stateIds.contains(state.getStateId())) {
 						stateNode.setSelected(Boolean.TRUE);
 					}
@@ -1980,42 +1978,43 @@ public class LocationSingleton {
 		return rootNode;
 	}
 
-	public TreeNode constuctPanelTreeNodes(CtPanelZone ctPanelZones,List<CtPanelZoneDtl> panelZoneDtls) {
+	public TreeNode constuctPanelTreeNodes(CtPanelZone ctPanelZones,
+			List<CtPanelZoneDtl> panelZoneDtls) {
 		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
 		if (null != ctPanelZones) {
-			//for (CtPanelZone ctPanelZone : ctPanelZones) {
-				TplSpecZoneDtl specZoneDtl = new TplSpecZoneDtl();
-				specZoneDtl.setZoneName(ctPanelZones.getName());
-				specZoneDtl.setPanelZone(ctPanelZones);
-				TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
-						specZoneDtl, root);
-				List<PmState> states = new ArrayList<PmState>();
+			// for (CtPanelZone ctPanelZone : ctPanelZones) {
+			TplSpecZoneDtl specZoneDtl = new TplSpecZoneDtl();
+			specZoneDtl.setZoneName(ctPanelZones.getName());
+			specZoneDtl.setPanelZone(ctPanelZones);
+			TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
+					specZoneDtl, root);
+			List<PmState> states = new ArrayList<PmState>();
 
-				TreeNode stateNode = null;
-				//List<CtPanelZoneDtl> panelZoneDtls = ctPanelZones
-						//.getPanelZoneDtls();
+			TreeNode stateNode = null;
+			// List<CtPanelZoneDtl> panelZoneDtls = ctPanelZones
+			// .getPanelZoneDtls();
 
-				for (CtPanelZoneDtl panelZoneDtl : panelZoneDtls) {
-					TplSpecZoneLoc zoneLoc = new TplSpecZoneLoc();
-					PmState pmState = panelZoneDtl.getStateId();
+			for (CtPanelZoneDtl panelZoneDtl : panelZoneDtls) {
+				TplSpecZoneLoc zoneLoc = new TplSpecZoneLoc();
+				PmState pmState = panelZoneDtl.getStateId();
 
-					if (null != pmState && !states.contains(pmState)) {
-						zoneLoc.setPmState(pmState);
-						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
-								zoneLoc, zoneNode);
+				if (null != pmState && !states.contains(pmState)) {
+					zoneLoc.setPmState(pmState);
+					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+							zoneLoc, zoneNode);
 
-					}
-					PmDistrict pmDistrict = panelZoneDtl.getDistrictId();
-					if (pmDistrict != null) {
-						zoneLoc.setPmDistrict(pmDistrict);
-						new DefaultTreeNode(QTConstants.NODE_DISTRICT, zoneLoc,
-								stateNode);
-
-					}
-					states.add(pmState);
 				}
+				PmDistrict pmDistrict = panelZoneDtl.getDistrictId();
+				if (pmDistrict != null) {
+					zoneLoc.setPmDistrict(pmDistrict);
+					new DefaultTreeNode(QTConstants.NODE_DISTRICT, zoneLoc,
+							stateNode);
 
-			//}
+				}
+				states.add(pmState);
+			}
+
+			// }
 		}
 		return root;
 	}

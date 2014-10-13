@@ -33,17 +33,20 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationReportSO;
 import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -52,6 +55,8 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
@@ -65,11 +70,15 @@ import my.ep.dto.sc.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.sc.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.specification.SpecificationReqDTO;
+import my.ep.dto.sc.specification.SpecificationResDTO;
 import my.ep.dto.tpl.doc.TemplateDocReqDTO;
 import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
@@ -96,7 +105,10 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.SPDetailBackingBean;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
@@ -114,6 +126,7 @@ import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
@@ -128,6 +141,28 @@ public class EvaluationBackingBean extends
 	private boolean skip;
 	private int currentTab;
 	private int outputTab;
+	private String textBeforeSign;
+
+	private PmDigiSign pmDigiSign;
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getScQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
 
 	private static final String DOCUMENT_PAGE = "/xhtml/sc/evaluation/evaluationstage1view.xhtml?faces-redirect=true";
 
@@ -3461,34 +3496,129 @@ public class EvaluationBackingBean extends
 	}
 
 	public String submitPrepareEvaluationDetails(String outCome) {
-		try {
-			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
-			IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IQTEvaluationSO.class);
-			EvaluationReqDTO reqDTO = evaluationPreparation();
+		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+		reqDTO.setLanguageCode("en");
+		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
+		List<PmRoleDesc> roleDesc = userResDTO.getRoleDescList();
+		if (isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())
+				|| isDigiSigningRequired(RoleCode.OC_CHAIRPERSON.value())
+				|| isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())
+				|| isDigiSigningRequired(RoleCode.EC_CHAIRPERSON.value())) {
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		} else {
 
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setToken(ctxToken);
-			reqDTO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
-			reqDTO.setOutcome(outCome);
-			EvaluationResDTO resDTO = evaluationso.updateBPMAction(reqDTO);
+			EvaluationResDTO resDTO = updateEvaluationCommitteDtls(outCome,
+					null);
+			if (resDTO.isSuccessful()) {
+				ScQtCommittee qtCommittee = resDTO.getQtCommittee();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(outCome),
+														new String[] {
+																"Prepare Evaluation Submitted Successfully",
+																qtCommittee
+																		.getScQt()
+																		.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 
-			// Code to renew the session Object..
-			renewSesionObject();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Prepare Evaluation Submitted Successfully",
-							"Prepare Evaluation Submitted Successfully"));
-		} finally {
-
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
 		}
 
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
+		/*
+		 * FacesScopes facesScopes = new FacesScopes(); String ctxToken =
+		 * facesScopes.getBPMAuthenticationCtxToken();
+		 * 
+		 * IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
+		 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+		 * IQTEvaluationSO.class); EvaluationReqDTO reqDTO =
+		 * evaluationPreparation();
+		 * 
+		 * reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		 * reqDTO.setToken(ctxToken);
+		 * reqDTO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
+		 * reqDTO.setOutcome(outCome); EvaluationResDTO resDTO =
+		 * evaluationso.updateBPMAction(reqDTO);
+		 * 
+		 * // Code to renew the session Object.. renewSesionObject();
+		 * FacesContext.getCurrentInstance().addMessage( null, new
+		 * FacesMessage(FacesMessage.SEVERITY_INFO,
+		 * "Prepare Evaluation Submitted Successfully",
+		 * "Prepare Evaluation Submitted Successfully"));
+		 */
 
+		return null;
+
+	}
+
+	private EvaluationResDTO updateEvaluationCommitteDtls(String action,
+			PmDigiSign digiSign) {
+		IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+		EvaluationReqDTO reqDtO = evaluationPreparation();
+		ScQt scQt = this.getManagedBean().getScQt();
+		reqDtO.setOutcome(action);
+		updatePmDigiSignData(pmDigiSign, this.getManagedBean()
+				.getCommitteeType(), scQt.getQtId(), scQt.getQtNo());
+		reqDtO.setDigiSignData(digiSign);
+		reqDtO.setTaskId(this.getManagedBean().getTaskId());
+		reqDtO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		reqDtO.setToken(ctx);
+
+		EvaluationResDTO resDTO = null;
+		try {
+			resDTO = evaluationso.updateBPMAction(reqDtO);
+
+		} finally {
+			evaluationso = null;
+		}
+		return resDTO;
+	}
+
+
+
+	public String gpkiSignAction(PmDigiSign digiSign) {
+		EvaluationResDTO resDTO = updateEvaluationCommitteDtls(
+				BpmOutcomeConst.BPM_SUBMIT, digiSign);
+		if (resDTO.isSuccessful()) {
+			ScQtCommittee qt = resDTO.getQtCommittee();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+													new String[] {
+															"Prepare Evaluation Submitted Successfully",
+															qt.getScQt()
+																	.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
 	}
 
 	public void preRenderView() {
@@ -3601,6 +3731,8 @@ public class EvaluationBackingBean extends
 				.getScQtEvaluationReportAttachment();
 		if (scQtEvaluationReportAttachment == null) {
 			scQtEvaluationReportAttachment = generateDocumentAttachment(scQtEvaluationReport);
+			scQtEvaluationReport
+					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
 		}
 		downloadFile(scQtEvaluationReportAttachment);
 	}
@@ -4027,6 +4159,8 @@ public class EvaluationBackingBean extends
 					.getScQtEvaluationReportAttachment();
 			if (reportAttachment == null) {
 				reportAttachment = generateDocumentAttachment(scQtEvaluationReport);
+				scQtEvaluationReport
+						.setScQtEvaluationReportAttachment(reportAttachment);
 			}
 			attachments.add(reportAttachment);
 		}
