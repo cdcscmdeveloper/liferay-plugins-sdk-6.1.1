@@ -23,15 +23,15 @@
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9">
 							<c:choose>
-								<c:when test="#{!profilePersonalizationBackingBean.managedBean.deletePortrait}">
+								<c:when test="#{profilePersonalizationBackingBean.managedBean.deletePortrait or (profilePersonalizationBackingBean.managedBean.selectedUser.brandNew and profilePersonalizationBackingBean.managedBean.selectedUser.portrait == null)}">
 									<h:graphicImage id="giUserImage"
-										value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
+										value="/css/images/design/user_male_portrait.png"
 										style="margin-left:25px;" width="140" height="160" />				
 								</c:when>
 								<c:otherwise>
 									<h:graphicImage id="giUserImage"
-										value="/css/images/design/user_male_portrait.png"
-										style="margin-left:25px;" width="140" height="160" />							
+										value="#{profilePersonalizationBackingBean.userImagePath(profilePersonalizationBackingBean.managedBean.selectedUser.loginId)}"
+										style="margin-left:25px;" width="140" height="160" />	
 								</c:otherwise>
 							</c:choose>	
 							<div align="left">
