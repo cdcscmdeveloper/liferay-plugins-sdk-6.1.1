@@ -114,7 +114,8 @@
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					<p:inputText styleClass="ppNumericAlign"
-						value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}">
+						value="#{lOADetailBackingBean.managedBean.totalProgressivePayment}"
+						disabled="#{!isEditableStatus}">
 						<p:ajax event="blur" update="progressivePayment"
 							partialSubmit="true" process="@this"
 							listener="#{lOADetailBackingBean.addProgressiveDetails}" />
