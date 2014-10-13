@@ -1973,6 +1973,7 @@ public class QTDetailBackingBean extends
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();
 				if (this.getManagedBean().getScQtDocReportList() == null) {
 					resDTO = detailSO.retriveQTDocDetails(reqDTO);
