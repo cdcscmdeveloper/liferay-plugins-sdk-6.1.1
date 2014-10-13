@@ -5517,6 +5517,8 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckList techStandard : compilance) {
 					if (techStandard.getTitle().equals(document.getDocName())) {
 						isRequired = true;
+						throw new EpException(document.getDocName()
+								+ "is all ready added");
 					}
 				}
 				if (!isRequired) {
@@ -5629,6 +5631,8 @@ public class SpecificationBackingBean extends
 				for (ScQtCheckList techStandard : compilance) {
 					if (techStandard.getTitle().equals(document.getDocName())) {
 						isRequired = true;
+						throw new EpException(document.getDocName()
+								+ "is all ready added");
 					}
 				}
 				if (!isRequired) {
