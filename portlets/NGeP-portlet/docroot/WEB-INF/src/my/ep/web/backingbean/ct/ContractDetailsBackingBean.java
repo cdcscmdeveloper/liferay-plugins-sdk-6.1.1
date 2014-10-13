@@ -812,7 +812,7 @@ public void ConstructSideTabMenu(){
 				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
 			}
 			
-		 if(contractVer.getCtPerformanceBonds().size()>0) {
+		 if(reqDTO.getCtContract().isBondReq() && contractVer.getCtPerformanceBonds().size()>0) {
 			 
 				Calendar cal = Calendar.getInstance();
 		        cal.setTime(contractVer.getCtContractValue().getExpDate());
