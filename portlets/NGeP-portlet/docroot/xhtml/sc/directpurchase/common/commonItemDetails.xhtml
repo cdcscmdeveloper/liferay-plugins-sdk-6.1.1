@@ -90,7 +90,10 @@
 				      	<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 						<p:tooltip for="marketSummaryIcon">
-							<h:outputText value="#{lbl['lbl.sc.summary.searchresult.tooltip']}" escape="false" />
+							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" 
+							value="#{lbl['lbl.sc.summary.searchresult.tooltip']}" escape="false" />
+							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}" 
+							value="#{lbl['lbl.sc.summary.simple.quote.tooltip']}" escape="false" />
 						</p:tooltip>
 				  </h:commandLink> 
 				    <p:spacer width="2px;"/>
