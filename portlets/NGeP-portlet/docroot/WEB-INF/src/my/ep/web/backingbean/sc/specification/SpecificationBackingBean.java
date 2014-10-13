@@ -8647,8 +8647,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setActiveIndex(activeIndex);
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
-		} catch (Exception e) {
-			// e.printStackTrace();
 		} finally {
 
 		}
