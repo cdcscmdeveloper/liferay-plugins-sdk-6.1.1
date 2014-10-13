@@ -125,7 +125,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	private String revTypeParam;
 	
-	public void initMain() {
+	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
 		personCalc = new SmPersonnleCalcVO();

@@ -9,6 +9,6 @@ public class ViewSmApplManagedBean extends BaseReviewApplicationManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	public ViewSmApplManagedBean() {
-		super.initMain();	
+		
 	}
 }

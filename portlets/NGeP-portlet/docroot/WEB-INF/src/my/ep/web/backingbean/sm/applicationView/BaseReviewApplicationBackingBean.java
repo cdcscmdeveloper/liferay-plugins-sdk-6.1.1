@@ -82,7 +82,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private static final String SER_FILE_DIR = "/TestHistRev/";
 	private static final String SER_FILE_TYPE = ".ser";
 	
-	public void initMain(){
+	public BaseReviewApplicationBackingBean(){
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
