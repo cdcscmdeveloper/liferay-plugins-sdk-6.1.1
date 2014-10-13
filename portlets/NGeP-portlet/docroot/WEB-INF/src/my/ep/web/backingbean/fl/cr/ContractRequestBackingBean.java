@@ -2351,23 +2351,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		public void reqItemInfoList(FlFulfilmentItemAddr flItemAddr){
 			getManagedBean().setItemName(flItemAddr.getScRequestItem().getItemName());
-			if(null == flItemAddr.getScRequestItem().getQuantity()){
-				getManagedBean().setQuantity(new Double(0));
-			}else{
-				getManagedBean().setQuantity(flItemAddr.getScRequestItem().getQuantity().doubleValue());
-			}
 			flItemAddr.setPriceType(getManagedBean().getPmPriceType());
 			getManagedBean().setPriceType(flItemAddr.getPriceType());
 			getManagedBean().setStandardUnitPrice(flItemAddr.getUnitPrice().doubleValue());
 			getManagedBean().setStandardPrice(false);
 			getManagedBean().setZonalPrice(false);
 			getManagedBean().setZonalTierPrice(false);
-			if(FulfilmentStatusConst.STANDARD_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.STANDARD_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
+			getManagedBean().setTariffPrice(false);
+			if(ParameterConst.PRICE_TYPE_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setStandardPrice(true);
-			}else if(FulfilmentStatusConst.ZONAL_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.ZONAL_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
+			}else if(ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setZonalPrice(true);
-			}else if(FulfilmentStatusConst.ZONAL_TIER_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode()) || FulfilmentStatusConst.ZONAL_TIER_PROMOTION_PRICE_TYPE.equals(flItemAddr.getPriceType().getParameterCode())){
+			}else if(ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())){
 				getManagedBean().setZonalTierPrice(true);
+			}
+			if(ParameterConst.PRICE_TYPE_TARIFF.equals(flItemAddr.getPriceType().getParameterCode()) || ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(flItemAddr.getPriceType().getParameterCode())) {
+				getManagedBean().setTariffPrice(true);
 			}
 			IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
