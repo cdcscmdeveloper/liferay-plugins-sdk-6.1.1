@@ -477,6 +477,7 @@ public class RuleCatalogueBackingBean extends
 		
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setTypeId(new CmType());
+		newFeeExemption.setUnspscId(new CmUnspsc());
 
 		int index = this.getManagedBean().getFeeExemptionsForComodity().size();
 		this.getManagedBean().getFeeExemptionsForComodity()
