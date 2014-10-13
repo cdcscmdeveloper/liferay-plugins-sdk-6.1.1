@@ -93,7 +93,7 @@
 							<f:facet name="header">
 
 							</f:facet>
-							<p:commandLink id="deleteFee"
+							<p:commandLink id="deleteFee" immediate="true"
 								action="#{ruleCatalogueBackingBean.deleteContractFee(rowIndex)}"
 								update="@form">
 								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
