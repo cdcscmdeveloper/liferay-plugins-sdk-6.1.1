@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.applicationView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,25 +75,24 @@ import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
 
+public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
+		extends BaseBackingBean<T> {
 
-public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean> extends BaseBackingBean<T>{
-	
 	private StreamedContent file;
 	private String redirect = "REVIEW APPLICATION TESTING PAGE";
-	private static final String SER_FILE_DIR = "/TestHistRev/";
 	private static final String SER_FILE_TYPE = ".ser";
-	
-	public BaseReviewApplicationBackingBean(){
+
+	public BaseReviewApplicationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		if (reloadPreviousApplication()) {
-//			initPreviousApplication();
-//		}
-//		constructMessage();
+		if (reloadPreviousApplication()) {
+			initPreviousApplication();
+		}
+		constructMessage();
 	}
-	
+
 	private void initPreviousApplication() {
 		ISmApplRevisionSO applRevisionSO = null;
 
@@ -102,8 +102,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							ISmApplRevisionSO.class);
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setDeSerFileName(SER_FILE_DIR
-					+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE);
+			reqDTO.setDeSerFileName(getDeSerFileNameAndPath());
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
@@ -170,17 +169,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 
-			String appNo = getManagedBean().getApplicationNoParam().substring(
-					0, getManagedBean().getApplicationNoParam().length() - 4);
-
-			String filePath = Calendar.getInstance().get(Calendar.YEAR)
-					+ "/SM/" + appNo + "/Revision/";
-			String tempDir = EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-			tempDir += "/" + filePath;
-
-			reqDTO.setDeSerFileName(tempDir
-					+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE);
+			reqDTO.setDeSerFileName(getDeSerFileNameAndPath());
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
@@ -208,22 +197,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
-	private String getDropDownViewOnlyValueByCode(String parameterType,
-			String parameterCode) {
-		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(parameterType, null);
-		String retVal = "";
-		for (PmParameterDesc parameterDesc : parameterDescs) {
-
-			if (parameterCode.equals(parameterDesc.getPmParameter()
-					.getParameterCode())) {
-				retVal = parameterDesc.getCodeName();
-			}
-		}
-
-		return retVal;
-	}
-
 	private boolean reloadPreviousApplication() {
 		boolean reload = false;
 		String applicationNo = new FacesScopes().getParameter("applicationNo");
@@ -243,6 +216,36 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		return reload;
+	}
+
+	private String getDeSerFileNameAndPath() {
+		String appNo = getManagedBean().getApplicationNoParam().substring(0,
+				getManagedBean().getApplicationNoParam().length() - 4);
+
+		String filePath = Calendar.getInstance().get(Calendar.YEAR) + File.separator+"SM"
+				+ File.separator+appNo + File.separator+"Revision"+File.separator;
+		String tempDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tempDir += File.separator + filePath + getManagedBean().getApplicationNoParam()
+				+ SER_FILE_TYPE;
+
+		return tempDir;
+	}
+
+	private String getDropDownViewOnlyValueByCode(String parameterType,
+			String parameterCode) {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, null);
+		String retVal = "";
+		for (PmParameterDesc parameterDesc : parameterDescs) {
+
+			if (parameterCode.equals(parameterDesc.getPmParameter()
+					.getParameterCode())) {
+				retVal = parameterDesc.getCodeName();
+			}
+		}
+
+		return retVal;
 	}
 
 	private String getDropDownViewOnlyValueById(String parameterType,
@@ -311,13 +314,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-//		initTesting();
+		initTesting();
 	}
-	
-	private void initTesting(){
-		//testing user
+
+	private void initTesting() {
+		// testing user
 		getManagedBean().setApproverUser(true);
-		
+
 		SmApplSectionReview apprSec = new SmApplSectionReview();
 		apprSec.setBasicRemark("approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remarkapprover basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark ");
 		apprSec.setStaffRemark("approver staff remark");
@@ -334,7 +337,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		apprSec.setPersonnelRemark("approver personnel remark");
 		apprSec.setCategoryRemark("approver category remark");
 		getManagedBean().setApprvrSecReview(apprSec);
-		
+
 		SmApplSectionReview poSec = new SmApplSectionReview();
 		poSec.setBasicRemark("po basic remark");
 		poSec.setStaffRemark("po staff remark");
@@ -571,15 +574,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
 				.getSmChequeSignatories()) {
 			i++;
-			if(i<=2){
-				sb.append(smChequeSignatoryTmp.getSmPersonnel().getName()).append(
-						",");
-			}else{
+			if (i <= 2) {
+				sb.append(smChequeSignatoryTmp.getSmPersonnel().getName())
+						.append(",");
+			} else {
 				sb.append("<br />");
 				i = 0;
 			}
 		}
-		if(sb.length()>0){
+		if (sb.length() > 0) {
 			sb.deleteCharAt(sb.lastIndexOf(","));
 		}
 		getManagedBean().setChequeSignPersonnelName(sb.toString());
