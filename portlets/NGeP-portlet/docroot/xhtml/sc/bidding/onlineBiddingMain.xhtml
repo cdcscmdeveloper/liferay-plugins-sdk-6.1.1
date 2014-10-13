@@ -13,17 +13,10 @@
 
 	<ui:define name="contentSection">
 
-		<ui:param name="isZonal"
-			value="#{!onlineBiddingBB.scBidSchedule.tplSpecZoneDtl.zoneName eq null}" />
-		<ui:param name="isInProgress"
-			value="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
-		
-		
-		
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-		
+
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
 
@@ -76,17 +69,14 @@
 					</tr>
 
 					<tr>
-
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.document.title']}" /></td>
 						<td colspan="3"><p:inputText id="documentTitle"
 								value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
 								disabled="true" size="90" /></td>
-
 					</tr>
 
 					<tr>
-
 						<td style="width: 120px"><p:outputLabel
 								value="#{lbl['lbl.sc.ptj.name']}" /></td>
 						<td colspan="3"><p:inputText id="ptjName"
@@ -122,12 +112,202 @@
 
 		</p:panel>
 
-		<c:if test="#{!isInProgress}">
-			<ui:include src="onlineBiddingCountdown.xhtml"></ui:include>
-		</c:if>
-		<c:if test="#{isInProgress}">
-			<ui:include src="supplierOnlineBidding.xhtml"></ui:include>
-		</c:if>
+		<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+
+			<p:spacer height="5"></p:spacer>
+			<div style="align: left">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 9%;"><p:outputLabel
+								value="#{lbl['lbl.sc.remaining.time']}" /></td>
+						<td style="width: 41%; align: left"><script
+								type="application/javascript">
+							
+							
+						
+			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
+					
+					
+						
+						</script></td>
+						<TD style="width: 50%;"><h:outputLabel
+								value="#{lbl['lbl.sc.notes']}" /></TD>
+					</tr>
+				</table>
+			</div>
+			<p:spacer height="5"></p:spacer>
+			<p:dataTable id="itemWiseBidList"
+				style="word-wrap: break-word ; table-layout: fixed"
+				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
+
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
+							width="22%" />
+
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
+							width="7%" />
+
+						<p:column rowspan="2" style="white-space : normal"
+							headerText="#{lbl['lbl.sc.min.decrement.block']}" width="4%" />
+
+						<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
+							width="19%" style="text-align:center" />
+
+						<p:column colspan="2" headerText="#{lbl['lbl.sc.last.bid']}"
+							width="19%" style=" text-align:center" />
+
+						<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
+							width="19%" style=" text-align:center" />
+
+						<p:column rowspan="2"
+							headerText="#{lbl['lbl.sc.current.ranking']}"
+							style="white-space : normal" width="4%" />
+					</p:row>
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+
+						<p:column headerText="#{lbl['lbl.sc.decrement']}" width="7%" />
+
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%" />
+
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<p:commandLink
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.itemName}"
+						action="#{onlineBiddingBB.itemDetialsPopupAction(bidPriceItem)}"
+						oncomplete="onlineBiddingItemDetails.show()" />
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.uom.uomCode)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.scBidSupplierItem.itemStartPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.bidPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText style="float : right"
+						value="#{bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:spinner size="10" value="#{bidPriceItem.newPrice}"
+						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
+						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
+						<p:ajax event="change" process="@this"
+							partialSubmit="true" update="@([id$=itemWiseBidList])"
+							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
+					</p:spinner>
+					<p:spacer width="5"></p:spacer>
+					<p:commandLink
+						action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}"
+						process="@this" partialSubmit="true"
+						update="@([id$=itemWiseBidList])">
+						<p:graphicImage library="ep/images/design" name="submit.png"
+							value="/css/images/design/submit.png" />
+					</p:commandLink>
+				</p:column>
+				<p:column>
+					<h:outputText id="newPrice" style="float : right"
+						rendered="#{bidPriceItem.newBidPrice != null }"
+						value="#{bidPriceItem.newBidPrice.bidPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText id="newPriceSubTotal" style="float : right"
+						rendered="#{bidPriceItem.newBidPrice != null }"
+						value="#{bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
+				</p:column>
+				<p:column>
+					<p:outputLabel id="newRanking" value="#{bidPriceItem.ranking}" />
+				</p:column>
+
+				<p:columnGroup type="footer">
+					<p:row>
+						<p:column colspan="4" footerText="Total" style="text-align:right" />
+						<p:column footerText="#{onlineBiddingBB.itemStartPriceTotal}" />
+						<p:column footerText="Total" style="text-align:right" />
+						<p:column footerText="#{onlineBiddingBB.itemLastBidPriceTotal}" />
+						<p:column colspan="2" footerText="Total" style="text-align:right" />
+						<p:column footerText="#{onlineBiddingBB.itemNewBidPriceTotal}" />
+						<p:column />
+					</p:row>
+				</p:columnGroup>
+			</p:dataTable>
+
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+			toggleable="true">
+			<p:dataTable id="contactPersonDT"
+				value="#{onlineBiddingBB.bidContactPersons}" var="contact">
+
+				<p:column headerText="#{lbl['lbl.sc.name']}" style="width : 70%">
+					<h:outputText value="#{contact.contactName}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.tel.no']}" style="width : 30%">
+					<p:outputLabel value="#{contact.phoneNo}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		<p:dialog header="#{lbl['lbl.sc.item.details']}"
@@ -136,7 +316,7 @@
 			<ui:include
 				src="/xhtml/sc/bidding/onlineBiddingItemDetailsPopup.xhtml"></ui:include>
 		</p:dialog>
-		<p:dialog header="#{lbl['lbl.sc.notification']}" rendered="false" 
+		<p:dialog header="#{lbl['lbl.sc.notification']}" rendered="false"
 			widgetVar="onlineBiddingNotification" showEffect="fade"
 			hideEffect="fade" modal="true" id="onlineBiddingNotification">
 			<ui:include
