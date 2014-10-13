@@ -16,6 +16,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoiNegoLocation;
 import my.ep.persistence.entity.sc.loaloi.ScLoiReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoiSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoiTerm;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
@@ -129,6 +130,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<ScLoiReport> selectedScLoiReports;
 	private ScLoiReport selectedScLoiReport;
 	private String attachmentDocType;
+	
+	private ScQt scQt;
+	private ScLoiSupportingDoc selectedScLoiSuppDoc;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1049,6 +1053,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentDocType(String attachmentDocType) {
 		this.attachmentDocType = attachmentDocType;
+	}
+
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	public ScLoiSupportingDoc getSelectedScLoiSuppDoc() {
+		return selectedScLoiSuppDoc;
+	}
+
+	public void setSelectedScLoiSuppDoc(ScLoiSupportingDoc selectedScLoiSuppDoc) {
+		this.selectedScLoiSuppDoc = selectedScLoiSuppDoc;
 	}
 
 	
