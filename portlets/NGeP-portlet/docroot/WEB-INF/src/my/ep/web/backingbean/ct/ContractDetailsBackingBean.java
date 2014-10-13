@@ -82,6 +82,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.ct.dtl.item.CtItemMaxQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
@@ -755,6 +756,7 @@ public void ConstructSideTabMenu(){
 		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			    reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			 
+			    validateCtContractVer(reqDTO);
 			    contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
 	            ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		      
@@ -796,6 +798,140 @@ public void ConstructSideTabMenu(){
 		log.info("BackingBean: Performance Testing  saveContract Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 		
 		return null;	
+	}
+    
+    
+    private void validateCtContractVer(ContractReqDTO reqDTO) throws EpException {
+		CtContractVer contractVer = reqDTO.getCtContractVer();
+		Date today = new Date();
+		
+		if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
+				|| contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)){
+			if(reqDTO.getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+					&& contractVer.getCtAgencies().size() == 0){
+				throw new EpException(MessageConst.ERROR_750013); // At least one row should be in Agency section.
+			}
+			
+		 if(contractVer.getCtPerformanceBonds().size()>0) {
+			 
+				Calendar cal = Calendar.getInstance();
+		        cal.setTime(contractVer.getCtContractValue().getExpDate());
+		        cal.add(Calendar.YEAR, 1); 
+		        double bondAmount = 0.0;
+			
+		        for(CtPerformanceBond performanceBond : contractVer.getCtPerformanceBonds()) {
+					
+		        	if(performanceBond.isRecordStatus()) {
+					        bondAmount = bondAmount + performanceBond.getBondAmount();
+					
+					       if(performanceBond.getFileName() == null || performanceBond.getFileName().isEmpty()) 
+						         throw new EpException(MessageConst.ERROR_100022, new String[] { "Performance Bond Letter" });
+					 
+					      if(performanceBond.getEffDate().compareTo(contractVer.getCtContractValue().getEffDate()) != 0 || cal.getTime().compareTo(performanceBond.getExpDate()) != 0)
+						      throw new EpException(MessageConst.ERROR_750049); 
+					 }
+		        }
+				if(bondAmount != 0.0) {
+					int retval = Double.compare(bondAmount , contractVer.getCtContract().getLoa().getBondAmt().doubleValue());
+					  if( retval >0 ){
+				    	throw new EpException(MessageConst.ERROR_750048);
+					  }
+					  if(retval < 0){
+						  throw new EpException(MessageConst.ERROR_750050);  
+					  }
+				}	
+			}
+		 
+		     if(contractVer.getCtProgressivePayments() != null && contractVer.getCtProgressivePayments().size() > 0){
+			      for(CtProgressivePayment progressivePayment : contractVer.getCtProgressivePayments()){
+				          if(progressivePayment.getPhaseNo()== null){
+				        	  throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase" });
+				          }
+				        
+				          if(progressivePayment.getPhaseDesc()== null ||progressivePayment.getPhaseDesc() =="" ){
+				            	throw new EpException(MessageConst.ERROR_100022,new String[] { "Progressive Phase Description" });
+				          }
+			       }
+		    }
+			
+			if(contractVer.getCtAgencies().size()>0) {
+				double ceilingAmt = 0.0;
+				for(CtAgency ctAgency : contractVer.getCtAgencies()) {
+					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0){
+						throw new EpException(MessageConst.ERROR_750015); 
+						// Approval document is mandatory for AP178 agency. Please upload the document.
+					}
+				}
+				if(ceilingAmt > contractVer.getCtContractValue().getContractAmount().doubleValue()){
+					throw new EpException(MessageConst.ERROR_750014); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+				}
+				
+			}
+			
+			if(contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) && reqDTO.getOutcome().equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.getSelectedApprovers().size()==0) {
+				throw new EpException(MessageConst.ERROR_750017); //Approver is mandatory for document submission. Please select at least one approver.
+			}
+			
+			if(contractVer.getCtContractItems() != null){
+				
+				for(CtContractItem item : contractVer.getCtContractItems()) {
+					double totalCeilingQuantity = 0.0;
+					if(item.getCtItemMaxQties().size() != 0){
+						BigDecimal maxCeilingQty = new BigDecimal(0);
+						for(CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()){
+							if(ctItemMaxQty.getEffDate().before(today) && ctItemMaxQty.getExpDate().after(today)){
+								maxCeilingQty = ctItemMaxQty.getMaxQuantity();
+								break;
+							}
+						}
+						for(CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()){
+							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+						}
+						if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
+							throw new EpException(MessageConst.ERROR_750016, new String[]{item.getItemName()});
+						}
+					}
+				}
+			}
+		}
+		if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+			if(contractVer.getCtContractValue().getContractAmount().doubleValue() < ContractConst.CONTRACT_THRESHOLD_VALUE) {
+				if(contractVer.getCtAmendment().isItemPriceChange() || contractVer.getCtAmendment().isQuantityChange() 
+						|| contractVer.getCtAmendment().isValueChange()){
+					throw new EpException(MessageConst.ERROR_750022);// If original contract value is less than RM500k (threshold value for tender), 
+							//CA only can extend the contract period and change the clause.
+				}
+			}
+			if(contractVer.getCtAmendment().isContractExtend()) {
+				Calendar c = Calendar.getInstance();
+				c.add(Calendar.DATE, ContractConst.CONTRACT_EXTEND_BEFORE_DAYS);
+				
+				if(contractVer.getCtContractValue().getExpDate().before(c.getTime())){
+					throw new EpException(MessageConst.ERROR_750023);//CA only can extend the contract period 3 months before contract expired.
+				}
+			}
+			for (CtContractItem ctContractItem : contractVer.getCtContractItems()){
+				double sumOfCeilingQuantites = 0l;
+				BigDecimal maxCeilingQty = new BigDecimal(0);
+				if(ctContractItem.getCtItemMaxQties().size() != 0){
+					for(CtItemMaxQty ctItemMaxQty : ctContractItem.getCtItemMaxQties()){
+						if(ctItemMaxQty.getEffDate()==contractVer.getCtAmendment().getAmendmentEffDate()) {
+							maxCeilingQty = ctItemMaxQty.getMaxQuantity();
+							break;
+						}
+					}
+					for (CtItemCeilingQty ctItemCeilingQty : ctContractItem.getCtItemCeilingQties()) {
+						if(ctItemCeilingQty.getExpDate() == contractVer.getCtContractValue().getExpDate()) {
+							sumOfCeilingQuantites = sumOfCeilingQuantites + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+						}
+					}
+					if(sumOfCeilingQuantites < maxCeilingQty.doubleValue()){
+						throw new EpException(MessageConst.ERROR_750024);//Total ceiling amount for all PTJ defined in contract must be equals to contract amount.
+					}
+				}
+			}
+		}
 	}
     
     public void setBondRecordStatus(CtContractVer contractVar){
