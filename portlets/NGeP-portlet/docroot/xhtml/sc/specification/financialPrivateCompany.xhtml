@@ -115,10 +115,8 @@
 			<table>
 				<tr>
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel>
-							 <p:outputLabel
-							value="*" styleClass="mandatory"></p:outputLabel>
-							</td>
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><p:selectOneMenu required="true"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="financialPrivateAutoScore"
@@ -126,8 +124,8 @@
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 							<p:ajax event="change" update="finPrivateCompany"
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
-						</p:selectOneMenu> <p:message id="financialPrivateAutoScoreId" for="financialPrivateAutoScore"
-							display="icon"></p:message></td>
+						</p:selectOneMenu> <p:message id="financialPrivateAutoScoreId"
+							for="financialPrivateAutoScore" display="icon"></p:message></td>
 				</tr>
 			</table>
 
@@ -169,8 +167,10 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
+								<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
+							</td>
+
 							<td><p:inputText id="finprivateScore" required="true"
 									label="#{lbl['lbl.sc.spec.max.score']}" maxlength="18"
 									value="#{specificationBackingBean.managedBean.scQtCheckListScore.score}">
