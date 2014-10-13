@@ -17,23 +17,23 @@
 			<p:outputPanel rendered="#{cc.attrs.backingBean.managedBean.approverUser or cc.attrs.backingBean.managedBean.poUser}">
 				<br />
 				
-				<table style="width:70%">
+				<table style="width:60%;table-layout:fixed">
 					<tr>
 						<td>
 							<p:outputLabel value="#{lbl['lbl.sm.remark']}" style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;text-decoration: underline;float:right;font-style:italic;"/>
 						</td>
 					</tr>
 					<tr>
-						<td height="5"></td>
+						<td height="8"></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;font-style:italic;" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}"/></td>
 					</tr>
 					<c:if test="#{cc.attrs.backingBean.managedBean.approverUser}">
 						<tr>
-							<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-								<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}"/></td>
+							<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;font-style:italic;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+							<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}"/></td>
 						</tr>
 					</c:if>
 				</table>
