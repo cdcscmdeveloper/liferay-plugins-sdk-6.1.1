@@ -1494,6 +1494,22 @@ public class SpecificationBackingBean extends
 						}
 
 					}
+				} else {
+					ScQt scQt = this.getManagedBean().getScQt();
+					if (scQt.getEstimatedAmount().intValue() > 500000
+							&& this.getManagedBean().getAllStateCode() == 3
+							&& !scQt.getScQtSupplierCriteria().isAllState()) {
+						scQt.getScQtSupplierCriteria().setAllState(true);
+					}
+					if (scQt.getEstimatedAmount().intValue() <= 500000) {
+						if (null == scQt.getScQtSupplierCriteria()
+								.getLocationLevel()) {
+							scQt.getScQtSupplierCriteria().setLocationLevel(
+									new PmParameter());
+						}
+						scQt.getScQtSupplierCriteria().setAllState(false);
+					}
+					this.getManagedBean().setScQt(scQt);
 				}
 			} else {
 				tenderResDTO = QtDetailsSO
