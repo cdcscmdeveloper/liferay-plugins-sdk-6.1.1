@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.nego.loc']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.nego.loc']}" toggleable="true" rendered="#{not isPendingNegotiation}">
 		<p:dataTable id="negoloctbl" var="negoloc"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoLocations}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedNegoLocationList}"
@@ -58,7 +58,7 @@
 				disabledSelection="#{negoTerm.loiTermId ne null}" />
             #{negoTerm.brandNew}-#{negoTerm.loiTermId ne null}
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
-				style="width:80%">
+				style="width:#{isPendingNegotiation ? '45%' : '80%'}">
 				<h:outputText
 					value="#{negoTerm.pmTerm.termDesc}"
 					rendered="#{!negoTerm.brandNew}" />
@@ -68,8 +68,14 @@
 					rendered="#{negoTerm.brandNew}" />
 
 			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}"
+				style="width:45%" rendered="#{isPendingNegotiation}">
+				<p:inputTextarea  cols="70" rows="2"
+					value="#{negoTerm.negoResult}" autoResize="false" />
+			</p:column>
 
-			<p:column headerText="Negotiate">
+			<p:column headerText="Negotiate" rendered="#{not isPendingNegotiation}">
 				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{negoTerm.loiTermId eq null}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>

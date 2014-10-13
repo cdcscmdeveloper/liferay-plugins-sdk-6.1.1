@@ -11,14 +11,14 @@
 			icon="ui-icon-back" style="float:left;"
 			action="#{lOIDetailBackingBean.backToPervious}" />
 
-		<p:commandButton value="Preview Letter" icon="ui-icon-search" rendered="#{isPendingSubmissionStatus}"
+		<p:commandButton value="Preview Letter" icon="ui-icon-search" rendered="#{isPendingSubmissionStatus || isPendingNegotiation}"
 			process="@this"
 			action="#{lOIDetailBackingBean.getLoiLetterStreamContent}"
 			oncomplete="loiLetterDlg.show();" />
 			
 					
 		<p:commandButton value="#{lbl['lbl.so.save']}" icon="ui-icon-save" 
-			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus}"
+			action="#{lOIDetailBackingBean.saveAction}"  rendered="#{isEditableStatus || isPendingNegotiation}"
 			process="@form" update="@form" />
 			
 		<c:choose>
