@@ -2752,4 +2752,28 @@ public class LOADetailBackingBean extends
 	public String getApprovalActionDisplayName(String value) {
 		return ApprovalAction.getDisplayName(value);
 	}
+	
+	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
+		BigDecimal total = scLoiLoaItem.getUnitPrice();
+		
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
+		}
+		
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
+		}
+		
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
+		}
+		
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth());
+		}
+		
+		total = total.multiply(scLoiLoaItem.getQty());
+		
+		return total;
+	}
 }
