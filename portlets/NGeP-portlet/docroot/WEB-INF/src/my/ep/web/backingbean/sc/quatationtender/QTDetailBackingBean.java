@@ -1498,22 +1498,26 @@ public class QTDetailBackingBean extends
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
 			
-			if (null != qt.getScQtDocReports() && !qt.getScQtDocReports().isEmpty()) {
-				QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
-				List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
-				for (ScQtDocReport scQtDocReport : qt.getScQtDocReports()) {
-					ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
-					if(attachment == null) {
-						try {
-							attachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
-						} catch (Exception e) {
-							e.printStackTrace();
+			Long currentStatus = qt.getQtStatus().getStatusId();
+			if(currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)){
+				//check if its Pending Schedule and Documents , only execute this part
+				if (null != qt.getScQtDocReports() && !qt.getScQtDocReports().isEmpty()) {
+					QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
+					List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
+					for (ScQtDocReport scQtDocReport : qt.getScQtDocReports()) {
+						ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
+						if(attachment == null) {
+							try {
+								attachment = qtDocumentsBackingBean.generateDocumentAttachment(scQtDocReport);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						} else {
+							attachment.setScQtDocReport(scQtDocReport);
+							scQtDocReport.setScQtDocReportAttachment(attachment);
 						}
-					} else {
-						attachment.setScQtDocReport(scQtDocReport);
-						scQtDocReport.setScQtDocReportAttachment(attachment);
+						scAttachments.add(attachment);
 					}
-					scAttachments.add(attachment);
 				}
 			}
 			
