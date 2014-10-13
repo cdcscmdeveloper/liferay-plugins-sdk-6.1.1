@@ -79,7 +79,7 @@
 		         
 		           <p:panel id="searchPanel" header="#{lbl['lbl.btn.search']}" toggleable="true"   toggleSpeed="500">
 		              
-		                <h:panelGrid columns="2" width="100%" columnClasses="columnWidth20">
+		                <h:panelGrid id="changeCommitteMember" columns="2" width="100%" columnClasses="columnWidth20">
 		                  
 		                     <p:outputLabel for="nameId" value="#{lbl['lbl.ct.name']}" />
 	                         <p:inputText id="nameId" value="#{amendmentBackingBean.managedBean.name}" style="width:260px;"/>
@@ -96,7 +96,8 @@
                        <div class="ppRightBtn"> 
                   	      <p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" process="@form" 
                   	          action="#{amendmentBackingBean.existingCommitteMemberList}" update=":form:newCommitteTable" />
-		                  <p:commandButton value="#{lbl['lbl.ct.reset']}"  icon="ui-icon-reset" action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
+		                  <p:commandButton value="#{lbl['lbl.ct.reset']}"  icon="ui-icon-reset" 
+		                     action="#{amendmentBackingBean.searchExistingCommitteMemberReset}" update=":form:changeCommitteMember"/>
 		               </div> 
 		         </p:panel>
 		         

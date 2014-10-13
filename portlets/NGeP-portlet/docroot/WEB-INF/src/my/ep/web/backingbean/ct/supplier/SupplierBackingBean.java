@@ -311,15 +311,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 						                getPopulateBankAccountList();
 					               }
 				           }
-			        } else if(getManagedBean().getContractVerId().equals(new Long("123"))){
+			        } else {
 				
-			        	CtContractVer ctContractVer = new CtContractVer();
-				        CtContractValue ctContractValue = new CtContractValue();
-				        ctContractVer.setCtContractValue(ctContractValue);
+			        	       CtContractVer ctContractVer = new CtContractVer();
+				               CtContractValue ctContractValue = new CtContractValue();
+				               ctContractVer.setCtContractValue(ctContractValue);
 				
-				        getManagedBean().setContractVer(ctContractVer);
-				        getManagedBean().setCtContract(null);
-				        getManagedBean().setOriginalAccountNo(null);
+				               getManagedBean().setContractVer(ctContractVer);
+				               getManagedBean().setCtContract(null);
+				               getManagedBean().setOriginalAccountNo(null);
 			     }
 		     } finally {
 		       	contractSO = null;
