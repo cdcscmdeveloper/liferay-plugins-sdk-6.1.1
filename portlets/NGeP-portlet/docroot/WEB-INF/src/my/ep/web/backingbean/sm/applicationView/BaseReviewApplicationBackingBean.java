@@ -87,10 +87,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		if (reloadPreviousApplication()) {
-			initPreviousApplication();
-		}
-		constructMessage();
+//		if (reloadPreviousApplication()) {
+//			initPreviousApplication();
+//		}
+//		constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -314,7 +314,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-		initTesting();
+//		initTesting();
 	}
 
 	private void initTesting() {

@@ -27,12 +27,12 @@
 						<td height="8"></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;font-style:italic;" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
+						<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
 						<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.poRemark}"/></td>
 					</tr>
 					<c:if test="#{cc.attrs.backingBean.managedBean.approverUser}">
 						<tr>
-							<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;font-style:italic;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
+							<td><p:outputLabel style="width:auto;background-color:whitesmoke;font-size: 12px;font-weight: bold;font-family:Arial;float:right;" value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
 							<td style="word-wrap: break-word"><p:outputLabel styleClass="outputLabel-view" value="#{cc.attrs.approverRemark}"/></td>
 						</tr>
 					</c:if>
