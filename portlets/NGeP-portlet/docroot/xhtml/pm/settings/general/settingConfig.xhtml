@@ -13,46 +13,29 @@
 
 
 	<ui:define name="contentSection">
-	
-		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" ></p:messages>
-		
+
+		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
+
 		<p:blockUI block="form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
 		<h:panelGroup>
-			<p:tabMenu id="settingTabId"
+			<p:tabView id="settingTabId"
 				activeIndex="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex}">
 
-				<p:menuitem value="#{lbl['lbl.pm.settings.general.parameter']}"
-					action="#{ruleCatalogueBackingBean.onTabChange('general')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.pm.settings.rule.config']}"
-					action="#{ruleCatalogueBackingBean.onTabChange('rule')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:menuitem value="#{lbl['lbl.pm.settings.fee.setting']}"
-					action="#{ruleCatalogueBackingBean.onTabChange('fee')}"
-					update="@form" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				
-			</p:tabMenu>
-
-
-			<c:choose>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex == 0}">
+				<p:tab title="#{lbl['lbl.pm.settings.general.parameter']}">
 					<ui:include src="generalSettingTab.xhtml"></ui:include>
-				</c:when>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex == 1}">
+				</p:tab>
+				<p:tab title="#{lbl['lbl.pm.settings.rule.config']}">
 					<ui:include src="ruleConfig.xhtml"></ui:include>
-				</c:when>
-				<c:when
-					test="#{ruleCatalogueBackingBean.managedBean.tabActiveIndex == 2}">
+				</p:tab>
+				<p:tab title="#{lbl['lbl.pm.settings.fee.setting']}">
 					<ui:include src="feeSetting.xhtml"></ui:include>
-				</c:when>
+				</p:tab>
 
-			</c:choose>
-
+			</p:tabView>
 
 
 
