@@ -1885,23 +1885,23 @@ public class LOADetailBackingBean extends
 		String contractType = scLoa.getContractType().getParameterCode();
 
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
-			IOrgProfileSO orgProfileSO;
+			IQTAwardSO qtAwardSO;
 			try {
-				orgProfileSO = BusinessDelegate.getInstance()
+				qtAwardSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
+								IQTAwardSO.class);
 
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+				reqDTO.setScLoa(scLoa);
 
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+				AwardSupplierResDTO resDTO = qtAwardSO
+						.retrieveMinistryAgencyList(reqDTO);
 
 				getManagedBean().setAgencyProfileList(
-						resDTO.getOrgProfileList());
+						resDTO.getAgencyProfileList());
 
 			} finally {
-				orgProfileSO = null;
+				qtAwardSO = null;
 			}
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
