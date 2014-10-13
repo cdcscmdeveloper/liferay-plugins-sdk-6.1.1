@@ -205,30 +205,32 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
+		
+		System.out.println("newPrice value is "+scBidPrice.getNewPrice());
 		log.info("decrementAmountValueChangeListener");
 
 		ScBidPrice newBidPrice = new ScBidPrice();
-		BigDecimal bidPrice;
-		// /TODO
-		if (scBidPrice.getNewPrice() != null) {
-			bidPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
-					.doubleValue() - scBidPrice.getNewPrice().doubleValue());
-		} else {
-			bidPrice = scBidPrice.getBidPrice();
+		BigDecimal newPrice = null;
+		 if(scBidPrice.getBidPrice() == null && scBidPrice.getNewPrice() != null){
+			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem().getItemStartPrice().doubleValue() - scBidPrice.getNewPrice().doubleValue());
 		}
-		newBidPrice.setBidPrice(bidPrice);
+		
+		else if(scBidPrice.getBidPrice() != null && scBidPrice.getNewPrice() != null)  {
+			newPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
+					.doubleValue() - scBidPrice.getNewPrice().doubleValue());
+		} 
+		newBidPrice.setBidPrice(newPrice);
 		newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
 		scBidPrice.setNewBidPrice(newBidPrice);
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
 		setNewScBidPrice(newBidPrice);
 		setScBidPrice(scBidPrice);
-		// itemNewBidPriceTotal();
-
 	}
 
 	public void updateBidPriceAndCalculateRank() {
 		log.info("updateBidPriceNDcalculateRank");
+
 		IBiddingSO biddingSO = null;
 
 		try {
@@ -306,7 +308,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					newBidPriceTotal += (bidPrice.getBidPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
 				} else {
-					newBidPriceTotal += (bidPrice.getScBidSupplierItem().getItemStartPrice().doubleValue() * bidPrice
+					newBidPriceTotal += (bidPrice.getScBidSupplierItem()
+							.getItemStartPrice().doubleValue() * bidPrice
 							.getScBidSupplierItem().getScBidItem().getQty());
 				}
 			}
