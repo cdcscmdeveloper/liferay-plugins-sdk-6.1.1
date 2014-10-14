@@ -1096,7 +1096,7 @@ public class LOADetailBackingBean extends
 		}
 		context.put("supplierEmail", supplierEmail);
 
-		context.put("procurementMode", "Direct Purchase"); // TODO
+		context.put("procurementMode", "Tawaran Pelawaan Sebut Harga"); // TODO
 		context.put("title", scLoiLoa.getTitle());
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
