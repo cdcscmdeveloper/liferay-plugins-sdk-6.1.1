@@ -30,7 +30,7 @@
 				</f:facet>
 
 				<c:if test="#{isEditableStatus}">
-					<p:selectOneMenu id="deductionType"
+					<p:selectOneMenu id="deductionType" label="#{lbl['lbl.sc.deduction.type']}"
 						value="#{scQtDeduction.deductionType.parameterId}" required="true">
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
