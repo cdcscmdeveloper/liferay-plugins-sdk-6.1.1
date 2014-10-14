@@ -311,9 +311,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			}
 			resetPriceTypeDtl(newQuestion);
 			
-			pmParameter = getParameterByTypeAndCode(
-					ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS);
-			newQuestion.setClDeliveryTermTypeCode(pmParameter);
+			newQuestion.setClDeliveryTermTypeCode(new PmParameter());
 			
 			PmUom uom = new PmUom();
 			newQuestion.setClUom(uom);
@@ -516,22 +514,24 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 	
 	public void priceTypeChange(TplSpecQuestion specQuestion) {
-		IParameterSO parameterSO = null;
-		try {
-			Long parameterId = specQuestion.getClPriceTypeCode().getParameterId();
-			
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterId(parameterId);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
-			specQuestion.setClPriceTypeCode(resDTO.getPmParameter());
-			
-			resetPriceTypeDtl(specQuestion);
-		} finally {
-			parameterSO = null;
-		}
+		Long parameterId = specQuestion.getClPriceTypeCode().getParameterId();
 		
+		//if (parameterId != null) {
+			IParameterSO parameterSO = null;
+			try {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+				
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(parameterId);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				specQuestion.setClPriceTypeCode(resDTO.getPmParameter());
+				
+				resetPriceTypeDtl(specQuestion);
+			} finally {
+				parameterSO = null;
+			}	
+		//}		
 	}
 	
 	public void resetPriceTypeDtl(TplSpecQuestion specQuestion) {		
