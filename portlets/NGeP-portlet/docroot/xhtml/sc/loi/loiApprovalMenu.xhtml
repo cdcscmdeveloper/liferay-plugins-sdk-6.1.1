@@ -13,7 +13,7 @@
 						value="#{lbl['lbl.sc.loiloa.loi.contract.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td width="82%"><p:selectOneMenu id="contractSigner"
+				<td width="82%"><p:selectOneMenu id="contractSigner"  disabled="#{afterNegotiation}"
 						value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
 						style="width: 280px;margin-bottom: 5px;" required="true"
 						label="#{lbl['lbl.sc.loiloa.loi.contract.signer']}">
@@ -35,7 +35,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
-				<td colspan="3"><p:selectOneRadio
+				<td colspan="3"><p:selectOneRadio  disabled="#{afterNegotiation}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}">
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
@@ -46,7 +46,7 @@
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.approver']}"
 						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}" /></td>
-				<td><p:selectOneMenu id="approversId"
+				<td><p:selectOneMenu id="approversId" 
 						value="#{lOIDetailBackingBean.managedBean.reqApprove}"
 						rendered="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
 						style="width: 178px;margin-bottom: 5px;">

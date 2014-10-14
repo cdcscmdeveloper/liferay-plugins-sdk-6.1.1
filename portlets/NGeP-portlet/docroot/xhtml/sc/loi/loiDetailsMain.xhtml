@@ -18,7 +18,9 @@
 		<ui:param name="isSupplierAckStatus"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingNegotiation"
-			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId > QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId == QTStatusConst.LOI_PENDING_NEGOTIATION}" />
+		<ui:param name="afterNegotiation"
+			value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.statusId > QTStatusConst.LOI_PENDING_NEGOTIATION}" />
 
 		<ui:include src="loiButtons.xhtml" />
 
