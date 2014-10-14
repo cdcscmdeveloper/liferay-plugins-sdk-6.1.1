@@ -22,12 +22,23 @@
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
+					size="3" style="margin-right: 3px !important;">
+					<p:ajax event="blur"  update="openPtj" partialSubmit="true" process="@this"
+						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
+				</p:inputText>
+				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
+					size="3">
+					<p:ajax event="blur" update="openPtj" partialSubmit="true" process="@this"
+						listener="#{specificationBackingBean.updatedQtCategoryL2Code(cateGory)}"></p:ajax>
+				</p:inputText>
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="3"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					headerText="Category Lov"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
 					postUpdateListener="specificationBackingBean.categoryCodesUpdate(#{index},specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
+					conditionField="#{specificationBackingBean.constructCondtionFields(cateGory)}"
 					update=":form:openPnlId">
 
 				</ac:lov>
