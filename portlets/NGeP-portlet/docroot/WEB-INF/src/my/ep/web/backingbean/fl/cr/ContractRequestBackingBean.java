@@ -1476,7 +1476,28 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				itemsToSelectedAddress(flItemAddr);
 			}
 			
-		}else{//STANDARD PRICE and ZONAL
+		} else if(getManagedBean().getPmPriceType() != null 
+				&& (getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) || 
+					getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))){
+			if(null == flItemAddr.getOrderedQty() || flItemAddr.getOrderedQty().doubleValue()==0){
+				flItemAddr.setOrderedQty(new BigDecimal(0));
+				flItemAddr.setOrderedAmt(new BigDecimal(0));
+			} else {
+				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
+				if(getManagedBean().getContractedItemList().contains(flItemAddr)){
+					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
+					flItemAddr = clonedlItemAddr;
+				}	
+				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+				flItemAddr.setOrderedAmt(getTariffAmount(flItemAddr));
+				oriItemAddr.setUnitPrice(new BigDecimal(0));
+				oriItemAddr.setOrderedAmt(flItemAddr.getOrderedAmt());
+			}
+			// add  or remove items to Selected delivery address
+			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
+				itemsToSelectedAddress(flItemAddr);
+			}
+		} else{//STANDARD PRICE and ZONAL
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(new BigDecimal("0"));
 			} else {
@@ -1505,9 +1526,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
 				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()));
-				// add  or remove items to Selected delivery address
-				itemsToSelectedAddress(flItemAddr);
-			
 			}
 			// add  or remove items to Selected delivery address
 			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
@@ -1515,6 +1533,46 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		}
 		
+	}
+	
+	private BigDecimal getTariffAmount(FlFulfilmentItemAddr flItemAddr) {
+		BigDecimal amount = new BigDecimal(0);
+		BigDecimal quantity = flItemAddr.getOrderedQty();
+		double remainingQty = quantity.doubleValue();
+		
+		IContractItemSO contractItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,	IContractItemSO.class);
+		ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		reqDTO.setItemId(flItemAddr.getScRequestItem().getRequestNoteItemId());
+		ContractItemResDTO ciItemResDTO = contractItemSO.retrieveItemPriceAndZone(reqDTO);
+		if(ciItemResDTO.getCtItemPriceList() != null && ciItemResDTO.getCtItemPriceList().size() >0){
+			for (CtItemPrice contractItemPrice : ciItemResDTO.getCtItemPriceList() ) {
+				// First tariff
+				if(ciItemResDTO.getCtItemPriceList().get(0)==contractItemPrice && contractItemPrice.getSubSequence()==null) {
+					if(quantity.doubleValue()>=contractItemPrice.getFromQty().doubleValue() && 
+						quantity.doubleValue()<=contractItemPrice.getToQty().doubleValue()) {
+						return contractItemPrice.getUnitPrice();
+					} else if(quantity.doubleValue()<contractItemPrice.getFromQty().doubleValue()) {
+						return new BigDecimal(0);	
+					} else {
+						amount = amount.add(contractItemPrice.getUnitPrice());
+						remainingQty = quantity.doubleValue() - contractItemPrice.getToQty().doubleValue();
+					}
+				} else  { // Subsequence tariff
+					if(quantity.doubleValue()>=contractItemPrice.getFromQty().doubleValue() && 
+						quantity.doubleValue()<=contractItemPrice.getToQty().doubleValue()) {
+						double num = Math.ceil(remainingQty / contractItemPrice.getSubSequence().doubleValue());
+						amount = amount.add(new BigDecimal(contractItemPrice.getUnitPrice().doubleValue()*num));
+						return amount;
+					} else {
+						double num = Math.ceil((contractItemPrice.getToQty().doubleValue()-contractItemPrice.getFromQty().doubleValue()) / contractItemPrice.getSubSequence().doubleValue());
+						amount = amount.add(new BigDecimal(contractItemPrice.getUnitPrice().doubleValue()*num));
+						remainingQty = remainingQty - contractItemPrice.getToQty().doubleValue();
+					}
+				}
+			}
+		}
+		return amount;
 	}
 	
 	private void itemsToSelectedAddress(FlFulfilmentItemAddr flItemAddr) {
