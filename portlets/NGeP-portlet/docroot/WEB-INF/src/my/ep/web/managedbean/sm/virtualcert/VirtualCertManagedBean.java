@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name="virtualCertMB")
@@ -19,6 +20,7 @@ public class VirtualCertManagedBean extends BaseManagedBean{
 	private String effDate;
 	private String expDate;
 	private List<SmMofAccount> mofAccountLs;
+	private List<SmMofCert> mofCertLs;
 
 	/**
 	 * @return the smSupplier
@@ -104,4 +106,12 @@ public class VirtualCertManagedBean extends BaseManagedBean{
 		this.mofAccountLs = mofAccountLs;
 	}
 
+	public List<SmMofCert> getMofCertLs() {
+		return mofCertLs;
+	}
+
+	public void setMofCertLs(List<SmMofCert> mofCertLs) {
+		this.mofCertLs = mofCertLs;
+	}	
+	
 }
