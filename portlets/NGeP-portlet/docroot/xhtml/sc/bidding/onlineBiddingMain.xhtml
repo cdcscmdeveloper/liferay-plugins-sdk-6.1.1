@@ -13,10 +13,6 @@
 
 	<ui:define name="contentSection">
 
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
 
@@ -124,10 +120,14 @@
 								type="application/javascript">
 							
 							
+							
+							
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
 					
+						
+						
 						
 						</script></td>
 						<TD style="width: 50%;"><h:outputLabel
@@ -233,13 +233,13 @@
 						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
-						<p:ajax event="change" process="@this"
-							partialSubmit="true" update="@([id$=itemWiseBidList])"
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="@([id$=itemWiseBidList])"
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 					</p:spinner>
 					<p:spacer width="5"></p:spacer>
 					<p:commandLink
-						action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}"
+						action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
 						process="@this" partialSubmit="true"
 						update="@([id$=itemWiseBidList])">
 						<p:graphicImage library="ep/images/design" name="submit.png"
@@ -295,20 +295,6 @@
 			</p:dataTable>
 
 		</p:panel>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 		<p:dialog header="#{lbl['lbl.sc.item.details']}"
 			widgetVar="onlineBiddingItemDetails" showEffect="fade"

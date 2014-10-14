@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
@@ -54,14 +55,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
 	private String itemNewBidPriceTotal;
-	private Long interval = 30L;
+	private Long interval = 5L;
 	private Long remainingBidTime;
 	private Long remainingTimeToBid;
+	private int packageRank;
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
 
 	public OnlineBiddingBackingBean() {
+		initialCall();
+	}
+	
+	
+	private void initialCall(){
+		
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -158,6 +166,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	public void pollListener() {
+		System.out.println("***************pollListener**************");
 		log.info("pollListener");
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
 				getSmSupplier().getSupplierId());
@@ -224,12 +233,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		scBidPrice.setNewBidPrice(newBidPrice);
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
-		setNewScBidPrice(newBidPrice);
-		setScBidPrice(scBidPrice);
+		
 	}
 
-	public void updateBidPriceAndCalculateRank() {
+	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
+		
+		ScBidPrice priceItemToPersist = bidPriceItem.getNewBidPrice();
 
 		IBiddingSO biddingSO = null;
 
@@ -239,22 +249,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
 
-			reqDTO.setNewBidPrice(getNewScBidPrice());
+			reqDTO.setNewBidPrice(priceItemToPersist);
 
 			BiddingResDTO resDTO = biddingSO.submitBidPrice(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				setScBidSchedule(resDTO.getScBidSchedule());
-				int index = getBidPrices().indexOf(getScBidPrice());
+				//setScBidSchedule(resDTO.getScBidSchedule());
+				int index = getBidPrices().indexOf(bidPriceItem);
 				getBidPrices().set(index, resDTO.getScBidPrice());
-
-				List<ScBidPrice> bidPriceList = getBidPrices();
-
-				for (ScBidPrice bidPrice : bidPriceList) {
-
-					bidPrice.setNewBidPrice(null);
-				}
-				setBidPrices(bidPriceList);
+				
+				System.out.println("*****item rank is***** "+resDTO.getScBidPrice().getRanking());
+				
+				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this.getScBidSchedule().getScBid()
+						.getRecommendedTypeId().getParameterCode())) {
+					setPackageRank(resDTO.getPackageRanking().intValue());
+				} 
 			}
 
 		} finally {
@@ -590,6 +599,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void setScBidAction(ScBidAction scBidAction) {
 		this.scBidAction = scBidAction;
+	}
+
+	
+	/**
+	 * @return the packageRank
+	 */
+	public int getPackageRank() {
+		return packageRank;
+	}
+
+	/**
+	 * @param packageRank the packageRank to set
+	 */
+	public void setPackageRank(int packageRank) {
+		this.packageRank = packageRank;
 	}
 
 	private Long durationCalculator(Date startDate, Date endDate) {
