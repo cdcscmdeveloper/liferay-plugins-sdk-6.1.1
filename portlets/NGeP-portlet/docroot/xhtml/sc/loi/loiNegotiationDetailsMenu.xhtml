@@ -55,28 +55,30 @@
 		    rowKey="#{negoTerm}" rowIndexVar="rowIndex">
 		
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{negoTerm.loiTermId ne null}" />
+				disabledSelection="#{!empty negoTerm.pmTerm}" />
             #{negoTerm.brandNew}-#{negoTerm.loiTermId ne null}
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 				style="width:#{isPendingNegotiation ? '45%' : '80%'}">
 				<h:outputText
 					value="#{negoTerm.pmTerm.termDesc}"
-					rendered="#{!negoTerm.brandNew}" />
+					rendered="#{!empty negoTerm.pmTerm}" />
 
-				<p:inputTextarea  cols="140" rows="2"
-					value="#{negoTerm.pmTerm.termDesc}" autoResize="false"
-					rendered="#{negoTerm.brandNew}" />
+				<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
+					value="#{negoTerm.termDesc}" autoResize="false"
+					rendered="#{empty negoTerm.pmTerm}" />
 
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}"
 				style="width:45%" rendered="#{isPendingNegotiation}">
 				<p:inputTextarea  cols="70" rows="2"
-					value="#{negoTerm.negoResult}" autoResize="false" />
+					value="#{negoTerm.negoResult}" autoResize="false" >
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:inputTextarea>
 			</p:column>
 
 			<p:column headerText="Negotiate" rendered="#{not isPendingNegotiation}">
-				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{negoTerm.loiTermId eq null}">
+				<p:selectBooleanCheckbox value="#{negoTerm.selected}" disabled="#{empty negoTerm.pmTerm}">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:selectBooleanCheckbox>
 			</p:column>

@@ -604,7 +604,7 @@ public class LOIDetailBackingBean extends
 		if (null == scNegoTerms) {
 			scNegoTerms = new ArrayList<ScLoiTerm>();
 		}
-		negoTerm.setPmTerm(new PmTerm());
+		negoTerm.setPmTerm(null);
 		negoTerm.setSelected(Boolean.TRUE);
 		negoTerm.setScLoi(getManagedBean().getScLoi());
 		scNegoTerms.add(negoTerm);
@@ -1103,6 +1103,8 @@ public class LOIDetailBackingBean extends
 
 		
 		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getPmStatus().getStatusId())){
+		
+			
 			// Fulfilment Schedule
 
 			List<ScQtSchedule> scheduleList = scLoi.getScQtSchedules();
@@ -1540,7 +1542,7 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
-				this.getManagedBean().setScLoi(scLoi);
+				editLOI(scLoi);
 
 				FacesContext
 						.getCurrentInstance()
@@ -1902,9 +1904,24 @@ public class LOIDetailBackingBean extends
 
 		scLoi.setScLoiRemarks(finalizeRemarks(scLoi.getScLoiRemarks()));
 
-		for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
-			loiTerm.setTermDesc(loiTerm.getPmTerm().getTermDesc());
+		if(QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)){
+			List<ScLoiTerm> removeList = new ArrayList<ScLoiTerm>();
+			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {
+				if(!loiTerm.isSelected()){
+					removeList.add(loiTerm);
+				}else{
+					if(loiTerm.getPmTerm() != null){
+						loiTerm.setTermDesc(loiTerm.getPmTerm().getTermDesc());
+					}
+				}
+			}
+			scLoi.getScNegoTerms().removeAll(removeList);
+		}else{
+			for (ScLoiTerm loiTerm : scLoi.getScNegoTerms()) {			
+				loiTerm.setTermDesc(loiTerm.getTermDesc());				
+			}
 		}
+		
 		
 		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi.getPmStatus().getStatusId())){
 			if(("P").equals(getManagedBean().getScQt().getScheduleType())){
@@ -2516,7 +2533,10 @@ public class LOIDetailBackingBean extends
 		
 		ScLoiSupportingDoc scLoiSuppDoc = new ScLoiSupportingDoc();
 		scLoiSuppDoc.setScLoi(scLoi);
-		scLoiSuppDoc.setScLoiSupportingDocAttachment(new ScLoiSupportingDocAttachment());
+		scLoiSuppDoc.setDocId(scLoi.getLoiId().toString());
+		scLoiSuppDoc.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		scLoiSuppDoc.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_SUPPORTING_DOC);
+		scLoiSuppDoc.setPmDocument(null);
 
 		IParameterSO parameterSO = null;
 		try {
@@ -2547,7 +2567,7 @@ public class LOIDetailBackingBean extends
 				scLoiSupportingDocAttachment = new ScLoiSupportingDocAttachment();
 				scLoiSupportingDocAttachment.setScLoiSupportingDoc(selectedScLoiSuppDoc);
 				selectedScLoiSuppDoc.setScLoiSupportingDocAttachment(scLoiSupportingDocAttachment);
-			}
+			}			
 			scLoiSupportingDocAttachment.setDocNo(selectedScLoiSuppDoc.getScLoi().getLoiNo());
 			scAttachment = scLoiSupportingDocAttachment;
 			

@@ -132,6 +132,7 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String attachmentDocType;
 	
 	private ScQt scQt;
+	private List<ScLoiSupportingDoc> selectedScLoiSuppDocs;
 	private ScLoiSupportingDoc selectedScLoiSuppDoc;
 	
 	/**
@@ -1069,6 +1070,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedScLoiSuppDoc(ScLoiSupportingDoc selectedScLoiSuppDoc) {
 		this.selectedScLoiSuppDoc = selectedScLoiSuppDoc;
+	}
+
+	public List<ScLoiSupportingDoc> getSelectedScLoiSuppDocs() {
+		return selectedScLoiSuppDocs;
+	}
+
+	public void setSelectedScLoiSuppDocs(List<ScLoiSupportingDoc> selectedScLoiSuppDocs) {
+		this.selectedScLoiSuppDocs = selectedScLoiSuppDocs;
 	}
 
 	
