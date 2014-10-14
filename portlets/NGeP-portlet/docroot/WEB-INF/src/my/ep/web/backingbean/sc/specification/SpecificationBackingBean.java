@@ -13,7 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -39,7 +38,6 @@ import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -75,8 +73,6 @@ import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -111,7 +107,6 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -187,7 +182,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.python.parser.ast.listcompType;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -8815,7 +8809,31 @@ public class SpecificationBackingBean extends
 	public String specCommitteBpmTask(String action) {
 
 		if (isDigiSigningRequired(RoleCode.SC_CHAIRPERSON.value())) {
-			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			List<ScQtCommitteeActivity> committeActivities = this
+					.getManagedBean().getCommitteeActivities();
+			boolean chairPersonsignoff = false;
+			if (null != committeActivities) {
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				for (int i = 0; i < committeActivities.size(); i++) {
+					if (pmUser.getIdentificationNo() != committeActivities
+							.get(i).getScCommitteeMember().getPmUser()
+							.getIdentificationNo()) {
+						// committeActivities.get(i).setSignedOff(true);
+						if (!committeActivities.get(i).isSignedOff()) {
+							chairPersonsignoff = true;
+							break;
+						}
+
+					}
+
+				}
+			}
+			if (chairPersonsignoff) {
+				throw new EpException(
+						"Before submit chair person you must complete all CommitteeMembers");
+			} else {
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			}
 		} else {
 			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 			if (resDTO.isSuccessful()) {
