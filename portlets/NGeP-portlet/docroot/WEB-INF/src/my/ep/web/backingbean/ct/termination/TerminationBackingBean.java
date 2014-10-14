@@ -102,8 +102,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	
 	public TerminationBackingBean(){
-		if(this.getManagedBean().getAction() == null) 
-			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
+		if(this.getManagedBean().getAction() == null)
+			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		  
 		
 		if(ctBB == null){
 			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
@@ -142,8 +142,15 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 			
+			  String[] outcome = new String[res.getAction().length + 1];
+		      outcome[0] = BpmOutcomeConst.BPM_SAVE;
+		      int i = 1;
+		      for (String action : res.getAction()) {
+			     outcome[i++] = action;
+		      }
+			
 			this.getManagedBean().setTaskId(taskId);
-			this.getManagedBean().setAction(res.getAction());
+			this.getManagedBean().setAction(outcome);
 			this.getManagedBean().setTaskName(res.getTaskName());
 			
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
@@ -256,7 +263,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getContractVer().getDocType()), 
 								this.getManagedBean().getContractVer().getCtContract().getContractNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
