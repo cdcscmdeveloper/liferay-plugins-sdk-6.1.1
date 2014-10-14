@@ -84,8 +84,13 @@
 			<tr>
 				<td></td>
 				<td style="padding-right: 2px; text-align: center;">
-					<h:commandLink value="#{lbl['lbl.sm.view.previous.appr.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revAppUrl}');return false;" target="_blank">
-					</h:commandLink>
+					<!-- <h:commandLink value="#{lbl['lbl.sm.view.previous.appr.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revAppUrl}');return false;" target="_blank">
+					</h:commandLink> -->
+					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank">
+						#{lbl['lbl.sm.view.previous.appr.appl']}
+						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionApproverAppNoParam}"/>
+						<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
+					</h:outputLink>
 				</td>
 			</tr>
 		</table>	
@@ -94,9 +99,14 @@
 		rendered="#{backingBean.managedBean.approverUser and !backingBean.managedBean.redirectToPersonPage}">
 		<table style="width: 100%;">
 			<tr>
-				<td style="padding-right: 2px; text-align: center;">				      
-					<h:commandLink value="#{lbl['lbl.sm.view.original.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revSupUrl}');return false;" target="_blank">
-					</h:commandLink>
+				<td style="padding-right: 2px; text-align: center;">
+					<h:outputLink value="#{backingBean.managedBean.revisionBaseUrl}" target="_blank">
+						#{lbl['lbl.sm.view.original.appl']}
+						<f:param name="applicationNo" value="#{backingBean.managedBean.revisionSupplierAppNoParam}"/>
+						<f:param name="applicationType" value="#{backingBean.managedBean.smAppl.applType}"/>
+					</h:outputLink>				      
+					<!-- <h:commandLink value="#{lbl['lbl.sm.view.original.appl']}" style="float: right;" onclick="doPopup('#{backingBean.managedBean.revSupUrl}');return false;" target="_blank">
+					</h:commandLink> -->
 				</td>
 			</tr>
 		</table>	

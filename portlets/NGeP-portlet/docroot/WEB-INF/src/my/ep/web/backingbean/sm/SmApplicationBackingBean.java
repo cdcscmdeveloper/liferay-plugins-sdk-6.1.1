@@ -5395,18 +5395,24 @@ public class SmApplicationBackingBean extends
 		currentUrl = currentUrl.substring(0,
 				currentUrl.indexOf(layout.getFriendlyURL()));
 
-		String revSupUrl = portalUrl + currentUrl
-				+ "/view-revision-application?applicationNo="
-				+ getManagedBean().getSmAppl().getApplNo() + "_SUP";
+		String url = portalUrl + currentUrl + "/view-revision-application";
 
-		String rA = getManagedBean().getSmAppl().getApprovedSerFile();
-		String revApp = rA.substring(rA.lastIndexOf('/') + 1,
-				rA.indexOf("_APP"));
-		String revAppUrl = portalUrl + currentUrl
-				+ "/view-revision-application?applicationNo=" + revApp + "_APP";
+		String revApprvrAppNo = getManagedBean()
+				.getSmAppl()
+				.getApprovedSerFile()
+				.substring(
+						getManagedBean().getSmAppl().getApprovedSerFile()
+								.lastIndexOf('/') + 1,
+						getManagedBean().getSmAppl().getApprovedSerFile()
+								.indexOf("_APP"))
+				+ "_APP";
 
-		getManagedBean().setRevSupUrl(revSupUrl);
-		getManagedBean().setRevAppUrl(revAppUrl);
+		String revSupplAppNo = getManagedBean().getSmAppl().getApplNo()
+				+ "_SUP";
+
+		getManagedBean().setRevisionApproverAppNoParam(revApprvrAppNo);
+		getManagedBean().setRevisionSupplierAppNoParam(revSupplAppNo);
+		getManagedBean().setRevisionBaseUrl(url);
 	}
 
 }
