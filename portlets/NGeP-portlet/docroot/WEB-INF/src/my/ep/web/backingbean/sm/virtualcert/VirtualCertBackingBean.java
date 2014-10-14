@@ -79,13 +79,20 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
 			VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 			reqDTO.setSupplierId(supp.getSupplierId());
-			VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
+			/*VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
 			
 			this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
 			if(resDTO.getSmMofAccounts().size() > 0){
 				this.getManagedBean().setMofAccountLs(resDTO.getSmMofAccounts());
-			}
+			}*/
 
+			VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
+			
+			this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
+			if(resDTO.getSmMofCerts().size() > 0){
+				this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+			}
+			
 			quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
 		} catch(Exception ex){
 			log.error("viewVirtualCert ex:" + ex.getMessage());

@@ -9,10 +9,14 @@
 	
 	<ui:define name="contentSection">
 		<p:panel header="#{lbl['lbl.sm.virtual.cert']}">
-			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofAccountLs}"
-				var="mofAcc">
+			<p:dataTable value="#{virtualCertBackingBean.managedBean.mofCertLs}"
+				var="mofCert">
 				<p:column headerText="#{lbl['lbl.sm.mofno']}">
-					#{mofAcc.mofNo}
+					#{mofCert.smMofAccount.mofNo}
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.mofno']}">
+					#{mofCert.certSerialNo}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.type']}">
@@ -27,7 +31,7 @@
 				
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.download']}">
 					<p:commandButton value="#{lbl['lbl.btn.download']}"
-						action="#{virtualCertBackingBean.generatePdf(mofAcc)}" ajax="false"></p:commandButton>
+						action="#{virtualCertBackingBean.generatePdf(mofCert.smMofAccount)}" ajax="false"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 			
