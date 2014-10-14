@@ -718,18 +718,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		for (CtContractItem contractedItem : getManagedBean().getSelectedContractedItemList()) {
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
-			if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER) ||
-					getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
-							getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) ||
-									getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
-				flItemAddr = new FlFulfilmentItemAddr();
-				flItemAddr.setFlFulfilmentItem(flItem);
-				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-				flItemAddr.setUnitPrice(new BigDecimal(0));
-				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
-				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
-				flItemAddr.setItemType(contractedItem.getItemType());
-			}else{
+			if(getManagedBean().getPmPriceType() != null){
+				if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER) ||
+						getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
+						getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) ||
+						getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)){
+					flItemAddr = new FlFulfilmentItemAddr();
+					flItemAddr.setFlFulfilmentItem(flItem);
+					flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+					flItemAddr.setUnitPrice(new BigDecimal(0));
+					flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
+					flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
+					flItemAddr.setItemType(contractedItem.getItemType());
+				}
+			}else{//STANDARD AND ZONAL
 				IContractItemSO ctItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 				reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
@@ -744,6 +746,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
 				flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 				flItemAddr.setItemType(contractedItem.getItemType());
+				flItemAddr.setZoneId(resDTO.getContractZoneId()); // applicable for zonal only
 			}
 			
 			
@@ -823,12 +826,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLContractOrderDataType coObj = (FLContractOrderDataType) obj;
-			if (coObj.getContractId().intValue() == 0) {
-				flReqDTO.setFlRequestId(coObj.getAssociatedCrId().longValue());
-
-			} else {
-				flReqDTO.setFlRequestId(coObj.getContractId().longValue());
-			}
+			flReqDTO.setFlRequestId(coObj.getOrderDetails().getRequestId().longValue());
 
 			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
@@ -868,6 +866,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			setFulfilmentRequestField(resDTO);
+			getManagedBean().setPmPriceType(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			if(isRequisitioner()){
 				initializeApproverGroup();
 			}
@@ -1479,54 +1478,38 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				itemsToSelectedAddress(flItemAddr);
 			}
 			
-		}else{//STANDARD PRICE
+		}else{//STANDARD PRICE and ZONAL
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(new BigDecimal("0"));
 			} else {
-				reqDTO.setOrderedQty(flItemAddr.getOrderedQty());
-				ContractItemResDTO resDTO = contractItemSO.getItemPrice(reqDTO);
-				flItemAddr.setUnitPrice(resDTO.getItemPrice());
-				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
-				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-				    
-				if(flItemAddr.getFlFulfilmentItem()!=null) {
-					flItemAddr.getFlFulfilmentItem().setUnitPrice(flItemAddr.getUnitPrice());
-				} else {
-					FlFulfilmentItem fulfilmentItem = null;
-					String key = flItemAddr.getCmItem().getItemId().toString() + flItemAddr.getUnitPrice().doubleValue() + "";
-				    if(!getManagedBean().getFlItemMap().containsKey(key)) {
-						fulfilmentItem = new FlFulfilmentItem();
-						fulfilmentItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-						fulfilmentItem.setChargeLineSeq(1);
-						fulfilmentItem.setItemType(flItemAddr.getItemType());
-						fulfilmentItem.setCmItem(flItemAddr.getCmItem());
-						fulfilmentItem.setPmVotFund(flItemAddr.getPmVotFund());
-						fulfilmentItem.setAssetInd(flItemAddr.getAssetInd());
-						fulfilmentItem.setPmGlAccount(flItemAddr.getPmGlAccount());
-						fulfilmentItem.setPmPrgActivity(flItemAddr.getPmPrgActivity());
-						fulfilmentItem.setPmSubSetia(flItemAddr.getPmSubSetia());
-						fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
-					    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
-					    getManagedBean().getFlItemMap().put(key, flItemAddr.getFlFulfilmentItem());
-				    } else {
-				    	fulfilmentItem = getManagedBean().getFlItemMap().get(key);
-						fulfilmentItem.setUnitPrice(flItemAddr.getUnitPrice());
-					    flItemAddr.setFlFulfilmentItem(fulfilmentItem);
-					    flItemAddr.setPmVotFund(fulfilmentItem.getPmVotFund());
-					    flItemAddr.setAssetInd(fulfilmentItem.getAssetInd());
-					    flItemAddr.setPmGlAccount(fulfilmentItem.getPmGlAccount());
-					    flItemAddr.setPmPrgActivity(fulfilmentItem.getPmPrgActivity());
-					    flItemAddr.setPmSubSetia(fulfilmentItem.getPmSubSetia());
-				    }
-				    
-				    if(!fulfilmentItem.getFlFulfilmentItemAddr().contains(flItemAddr)) {
-				    	fulfilmentItem.getFlFulfilmentItemAddr().add(flItemAddr);
-				    }
-				    
-				    if(!getManagedBean().getFlRequest().getFlFulfilmentItems().contains(fulfilmentItem)) {
-				    	getManagedBean().getFlRequest().getFlFulfilmentItems().add(fulfilmentItem);
-				    }
+				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
+				if(getManagedBean().getContractedItemList().contains(flItemAddr)){
+					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
+					flItemAddr = clonedlItemAddr;
+				}			
+				if(getManagedBean().getPmPriceType() != null){
+					if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)){
+						if(flItemAddr.getZoneId() == null){
+							oriItemAddr.setOrderedQty(new BigDecimal(0));
+							flItemAddr.setOrderedQty(new BigDecimal(0));
+							throw new EpException("this item is not within the zone.");
+						}
+					}
 				}
+				
+				if(flItemAddr.getOrderedQty() == null){
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+				}
+				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()));
+				if(oriItemAddr.getOrderedQty() == null){
+					oriItemAddr.setOrderedQty(new BigDecimal(0));
+				}
+				oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
+				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()));
+				// add  or remove items to Selected delivery address
+				itemsToSelectedAddress(flItemAddr);
+			
 			}
 			// add  or remove items to Selected delivery address
 			if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
