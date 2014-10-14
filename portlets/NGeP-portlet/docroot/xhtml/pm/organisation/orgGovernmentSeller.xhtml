@@ -35,8 +35,7 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
 					required="true" style="margin-bottom: 5px;">
-					<f:selectItems
-						value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 			</p:column>

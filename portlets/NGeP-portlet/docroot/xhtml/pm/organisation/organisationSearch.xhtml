@@ -11,7 +11,7 @@
 				value="#{organisationBackingBean.managedBean.orgTypeCode}"
 				style="width: 275px;margin-bottom: 5px;">
 				<f:selectItems
-					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.organisationTypes)}" />
+					value="#{organisationBackingBean.getOrgTypeDropdownValues(ParameterTypeConst.organisationTypes)}" />
 			</p:selectOneMenu>
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.orgCode']}"></h:outputLabel>
 			<p:inputText value="#{organisationBackingBean.managedBean.orgCode}"
@@ -23,8 +23,7 @@
 			<p:selectOneMenu
 				value="#{organisationBackingBean.managedBean.orgStatus}"
 				style="width: 135px;margin-bottom: 5px;">
-				<f:selectItems
-					value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
 			</p:selectOneMenu>
 
 		</h:panelGrid>

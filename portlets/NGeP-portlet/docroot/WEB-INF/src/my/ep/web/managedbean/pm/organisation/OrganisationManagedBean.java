@@ -42,7 +42,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	private String orgStatus;
 	private String orgType;
 	// Org Details
-	private PmOrgProfile orgProfile = new PmOrgProfile();
+	private PmOrgProfile orgProfile;
 	private PmOrgValidity orgValidity = new PmOrgValidity();
 	private Date currentDate = new Date();
 	private List<PmZone> zoneList;
@@ -90,7 +90,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 
 		pmAddressType = new PmAddressType();
 		officeContactPerson= new PmContact();
-		
+		deliveryContactPerson= new PmContact();
+		orgProfile= new PmOrgProfile();
 		pmAddressType.setPmAddress(officeAddress);
 		officeAddressTypeList= new ArrayList<PmAddressType>();
 		contactList= new ArrayList<PmContact>();

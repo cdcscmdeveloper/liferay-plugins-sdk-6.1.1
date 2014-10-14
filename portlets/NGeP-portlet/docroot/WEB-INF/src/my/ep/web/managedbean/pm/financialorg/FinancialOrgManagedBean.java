@@ -95,11 +95,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		pmAddressType = new PmAddressType();
 		contactPerson = new PmContact();
 		contactPerson.setPmAddressType(pmAddressType);
-		/*pmAddress.setPmCity(new PmCity());
+		pmAddress.setPmCity(new PmCity());
 		pmAddress.setPmDistrict(new PmDistrict());
 		pmAddress.setPmCountry(new PmCountry());
 		pmAddress.setPmState(new PmState());
-		pmAddress.setPmDivision(new PmDivision());*/
+//pmAddress.setPmDivision(new PmDivision());
 		pmAddressType.setPmAddress(pmAddress);
 		financialOrg.setPmCountry(new PmCountry());
 		// Branch Address
@@ -110,11 +110,11 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		branchContactPerson = new PmContact();
 		branchAddressType.setPmAddress(branchAddress);
 		branchContactPerson.setPmAddressType(branchAddressType);
-		/*branchAddress.setPmCity(new PmCity());
+		branchAddress.setPmCity(new PmCity());
 		branchAddress.setPmDistrict(new PmDistrict());
 		branchAddress.setPmCountry(new PmCountry());
 		branchAddress.setPmState(new PmState());
-		branchAddress.setPmDivision(new PmDivision());*/
+		//branchAddress.setPmDivision(new PmDivision());
 		//branchAddressType.setPmAddress(branchAddress);
 		orgProfileList= new ArrayList<PmOrgProfile>();
 		

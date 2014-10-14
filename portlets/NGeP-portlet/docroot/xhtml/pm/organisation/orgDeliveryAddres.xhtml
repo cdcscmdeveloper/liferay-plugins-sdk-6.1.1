@@ -15,14 +15,13 @@
 				listener="#{organisationBackingBean.consolidateRowSelectRadio}" /> -->
 
 			<ac:paginator for="deliveryAddressId" />
-			
+
 			<p:column headerText="#{lbl['lbl.pm.address.address']}">
 				<h:outputText value="#{address.pmAddress.address1}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.district']}"
 				style="width : 15%">
-				<h:outputText
-					value="#{address.pmAddress.pmDistrict.districtName}" />
+				<h:outputText value="#{address.pmAddress.pmDistrict.districtName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.address.state']}"
 				style="width : 15%">
@@ -32,15 +31,14 @@
 				style="width : 5%">
 
 			</p:column>
-			<p:column headerText="Delivery Address" style="white-space:normal;">
+			<p:column >
 				<p:commandLink oncomplete="addressPopup.show();"
-					action="#{organisationBackingBean.editAddress(address)}"
-					update="deliveryAddressId"
-					style="padding-right:5px" >
+					action="#{organisationBackingBean.editDeliveryAddress(address)}"
+					update="deliveryAddressId" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
-				
+
 			</p:column>
 
 
@@ -51,29 +49,43 @@
 
 
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}" process="@this"
-				oncomplete="addressPopup.show();" 
+				oncomplete="addressPopup.show();"
 				action="#{organisationBackingBean.assignNewAddress}"
 				icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.so.delete']}"
 				icon="ui-icon-delete"
 				action="#{organisationBackingBean.deleteSelectedAdddress}"
-				update="deliveryAddressId"  process="@this,deliveryAddressId" partialSubmit="true"/>
+				update="deliveryAddressId" process="@this,deliveryAddressId"
+				partialSubmit="true" />
 		</div>
-		
+
 	</p:panel>
 	<p:dialog header="Delivery Address" widgetVar="addressPopup"
 		modal="true" width="900" height="450">
 
 		<p:panel id="deliveryAddress">
-			
+
 			<table style="width: 100%">
 				<tr>
-					<td width="120"><p:outputLabel value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="addressname" required="true"
+							label="#{lbl['lbl.pm.address.name']}" maxlength="80"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.addressName}"
+							size="35" /></td>
+					<td><p:message for="addressname" id="addressnameMsg"
+							display="icon" /></td>
+
+					<td></td>
+
+				</tr>
+				<tr>
+					<td width="120"><p:outputLabel
+							value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="deliveryCountry"
-							required="true"
-							label="#{lbl['lbl.pm.address.country']}"
+							required="true" label="#{lbl['lbl.pm.address.country']}"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmCountry.countryId}"
 							style="width: 212px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -85,12 +97,13 @@
 								listener="#{organisationBackingBean.retrieveStateList}"
 								update="deliveryState" />
 						</p:selectOneMenu></td>
-					<td><p:message for="deliveryCountry" id ="deliveryCountryMsg" display="icon" /></td>
-					<td width="150"><p:outputLabel value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
+					<td><p:message for="deliveryCountry" id="deliveryCountryMsg"
+							display="icon" /></td>
+					<td width="150"><p:outputLabel
+							value="#{lbl['lbl.pm.address.state']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td width="220"><p:selectOneMenu id="deliveryState"
-							required="true"
-							label="#{lbl['lbl.pm.address.state']}"
+							required="true" label="#{lbl['lbl.pm.address.state']}"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmState.stateId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -100,33 +113,23 @@
 								itemValue="#{stateList.stateId}" />
 							<p:ajax event="change"
 								listener="#{organisationBackingBean.retrieveDivisionList}"
-								update="deliveryDivision,deliveryDistrict" />
+								update="deliveryDistrict" />
 						</p:selectOneMenu></td>
-					<td><p:message for="deliveryState" id="deliveryStateMsg" display="icon" /></td>
+					<td><p:message for="deliveryState" id="deliveryStateMsg"
+							display="icon" /></td>
 				</tr>
 				<tr>
-					<td width="126"><p:outputLabel value="#{lbl['lbl.pm.address.address']}"  /> <p:outputLabel
+					<td width="126"><p:outputLabel
+							value="#{lbl['lbl.pm.address.address']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryAddres" label="#{lbl['lbl.pm.address.address']}" 
-							maxlength="255"
+					<td><p:inputText id="deliveryAddres"
+							label="#{lbl['lbl.pm.address.address']}" maxlength="255"
 							required="true"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.address1}"
 							size="35" /></td>
-					<td><p:message for="deliveryAddres" id="deliveryAddresMsg" display="icon" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.pm.address.division']}" /></td>
-					<td><p:selectOneMenu id="deliveryDivision"
-							value="#{organisationBackingBean.managedBean.deliveryAddress.pmDivision.divisionId}"
-							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="-- Select -- " itemValue="" />
-							<f:selectItems var="divisionList"
-								value="#{organisationBackingBean.managedBean.divisionList}"
-								itemValue="#{divisionList.divisionId}"
-								itemLabel="#{divisionList.divisionName}" />
-							<p:ajax event="change"
-								listener="#{organisationBackingBean.retrieveDistrictList}"
-								update="deliveryDistrict" />
-						</p:selectOneMenu></td>
-					<td></td>
+					<td><p:message for="deliveryAddres" id="deliveryAddresMsg"
+							display="icon" /></td>
+
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 2" /></td>
@@ -134,11 +137,10 @@
 							value="#{organisationBackingBean.managedBean.deliveryAddress.address2}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="deliveryDistrict"
-							required="true"
-							label ="#{lbl['lbl.pm.address.district']}"
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.district']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="deliveryDistrict" required="true"
+							label="#{lbl['lbl.pm.address.district']}"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmDistrict.districtId}"
 							style="width: 207px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="-- Select -- " itemValue="" />
@@ -149,9 +151,10 @@
 							<p:ajax event="change"
 								listener="#{organisationBackingBean.retrieveCityList}"
 								update="deliveryCity" />
-							
+
 						</p:selectOneMenu></td>
-					<td><p:message for="deliveryDistrict" id="deliveryDistrictMsg" display="icon" /></td>
+					<td><p:message for="deliveryDistrict" id="deliveryDistrictMsg"
+							display="icon" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 3" /></td>
@@ -161,8 +164,7 @@
 					<td></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.city']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu id="deliveryCity"
-							required="true"
+					<td><p:selectOneMenu id="deliveryCity" required="true"
 							label="#{lbl['lbl.pm.address.city']}"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.pmCity.cityId}"
 							style="width: 207px;margin-bottom: 5px;">
@@ -171,8 +173,9 @@
 								value="#{organisationBackingBean.managedBean.cityList}"
 								itemLabel="#{cityList.cityName}" itemValue="#{cityList.cityId}" />
 						</p:selectOneMenu></td>
-					<td><p:message id ="deliveryCityMsg" for="deliveryCity" display="icon" /></td>
-					
+					<td><p:message id="deliveryCityMsg" for="deliveryCity"
+							display="icon" /></td>
+
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Line 4" /></td>
@@ -180,48 +183,49 @@
 							value="#{organisationBackingBean.managedBean.deliveryAddress.address4}"
 							size="35" /></td>
 					<td></td>
-					<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryPostCode"
-							required="true"
-							label = "#{lbl['lbl.pm.address.postcode']}" maxlength="10"
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="deliveryPostCode" required="true"
+							label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.postcode}"
 							size="34" /></td>
-					<td><p:message for="deliveryPostCode" id="deliveryPostCodeMsg" display="icon" /></td>
+					<td><p:message for="deliveryPostCode" id="deliveryPostCodeMsg"
+							display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" /> <p:outputLabel value="*"
-							styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryEmail"
-							required="true"
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="deliveryEmail" required="true"
 							label="#{lbl['lbl.pm.address.email']}" maxlength="80"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.email}"
 							size="35" /></td>
-					<td><p:message for="deliveryEmail"   id="deliveryEmailMsg" display="icon" /></td>
+					<td><p:message for="deliveryEmail" id="deliveryEmailMsg"
+							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryTelNo"
-							required="true"
+					<td><p:inputText id="deliveryTelNo" required="true"
 							label="#{lbl['lbl.pm.address.tel']}" maxlength="20"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.phoneNo}"
 							size="35" /></td>
-					<td><p:message for="deliveryTelNo" id="deliveryTelNoMsg" display="icon" /></td>					
-					
+					<td><p:message for="deliveryTelNo" id="deliveryTelNoMsg"
+							display="icon" /></td>
+
 				</tr>
 
 
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.mobile']}" /></td>
-				<td><p:inputText maxlength="20"
-						value="#{organisationBackingBean.managedBean.deliveryAddress.mobileNo}"
-						size="35" required="false" /></td><td></td>
-						
-				<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
-				<td><p:inputText maxlength="20"
-						value="#{organisationBackingBean.managedBean.deliveryAddress.faxNo}"
-						size="35" /></td>
-			</tr>
-			
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.mobile']}" /></td>
+					<td><p:inputText maxlength="20"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.mobileNo}"
+							size="35" required="false" /></td>
+					<td></td>
+
+					<td><p:outputLabel value="#{lbl['lbl.pm.address.fax']}" /></td>
+					<td><p:inputText maxlength="20"
+							value="#{organisationBackingBean.managedBean.deliveryAddress.faxNo}"
+							size="35" /></td>
+				</tr>
+
 			</table>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.pm.header.general.org.contactPerson']}"
@@ -255,8 +259,9 @@
 
 		<div align="right">
 
-			<p:commandButton value="Ok" style="float:right;" action="#{organisationBackingBean.addNewAddress}" update="deliveryAddressId"
-				onclick="addressPopup.hide();">
+			<p:commandButton value="Ok" style="float:right;"
+				action="#{organisationBackingBean.assignNewAddress}"
+				update="deliveryAddressId" onclick="addressPopup.hide();">
 			</p:commandButton>
 			&#160;&#160;
 			<p:commandButton value="Cancel" style="float:right;"
