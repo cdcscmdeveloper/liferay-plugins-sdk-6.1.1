@@ -44,8 +44,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -1852,7 +1850,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void deleteLocationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getLocationTrees();
-		deleteLocTreeNodes(rootTrees);
+		
 
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (rootTrees != null) {
@@ -1864,9 +1862,71 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
+			
+			if(locationDTOs.size()>0){
+				deleteLocCriterias(locationDTOs);
+				
+			}
+			deleteLocTreeNodes(rootTrees);
 		}
 	}
-	
+
+	private void deleteLocCriterias(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<ScLocationStateCriteria>	locStateCriterias = new ArrayList<ScLocationStateCriteria>();
+		List<ScLocationDivisionCriteria>	locDivisionCriterias	=	new ArrayList<ScLocationDivisionCriteria>();
+		List<ScLocationDistrictCriteria>	locDistrictCriterias 	=	new ArrayList<ScLocationDistrictCriteria>();
+
+		ScQuote quote = 	getManagedBean().getScQuote();
+		List<Long> stateIds = null;
+		List<Long> divIds = null;
+		List<Long> distIds = null;
+
+		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
+			stateIds =  getPmStateIds(tplSpecZoneLocs);
+			divIds =  getPmDivisionIds(tplSpecZoneLocs);
+			distIds =  getPmDistrictsIds(tplSpecZoneLocs);
+		}
+
+		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_STATE)){
+			if(quote.getLocationStateCriterias() != null && quote.getLocationStateCriterias().size()>0){
+				for (ScLocationStateCriteria sclocStateCriteria : quote.getLocationStateCriterias()) {
+					if(stateIds != null && stateIds.size()>0){
+						if(!stateIds.contains(sclocStateCriteria.getPmState().getStateId())){
+							locStateCriterias.add(sclocStateCriteria);
+						}
+					}
+				}
+			}
+		}
+		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_DIVISION)){
+			if(quote.getLocationDivisionCriterias() != null && quote.getLocationDivisionCriterias().size()>0){
+				for (ScLocationDivisionCriteria scLocDivisionCriteria : quote.getLocationDivisionCriterias()) {
+					if(divIds != null && divIds.size()>0){
+						if(!divIds.contains(scLocDivisionCriteria.getPmDivision().getDivisionId())){
+							locDivisionCriterias.add(scLocDivisionCriteria);
+						}
+					}
+				}
+			}
+		}
+
+		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_DISTRICT)){
+			if(quote.getLocationStateCriterias() != null && quote.getLocationDistrictCriterias().size()>0){
+				for (ScLocationDistrictCriteria locationDistrictCriteria : quote.getLocationDistrictCriterias()) {
+					if(distIds != null && distIds.size()>0){
+						if(!distIds.contains(locationDistrictCriteria.getPmDistrict().getDistrictId())){
+							locDistrictCriterias.add(locationDistrictCriteria);
+						}
+					}
+
+				}
+			}
+		}
+		getManagedBean().getScQuote().setLocationStateCriterias(locStateCriterias);
+		getManagedBean().getScQuote().setLocationDivisionCriterias(locDivisionCriterias);
+		getManagedBean().getScQuote().setLocationDistrictCriterias(locDistrictCriterias);
+	}
+
 	public void deleteLocTreeNodes(List<TreeNode> rootTrees) {
 		if (rootTrees != null) {
 			for (int row = 0; row < rootTrees.size(); row++) {
@@ -2423,10 +2483,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public String getSupplierListCriteria(){
 		StringBuilder  criteria = new StringBuilder();
 		StringBuilder  busiNatureCriteria = new StringBuilder();
+		StringBuilder  supplierCriteria = new StringBuilder();
 		StringBuilder  stateCriteria = new StringBuilder();
 		StringBuilder  divCriteria = new StringBuilder();
 		StringBuilder  distCriteria = new StringBuilder();
 
+		// business nature criteria
 		if(getManagedBean().isByBusinessNature()){
 			// Business Nature Criteria
 			if(getManagedBean().getBusinessNatureCriterias() != null){
@@ -2446,6 +2508,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} 
 		}
 		
+		// By locality criteria
 		if(getManagedBean().isByLocality()){
 			// Locality Criteria
 			List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
@@ -2503,6 +2566,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.append("|");
 			} 
 		}
+		
+		// selected suppliers criteria
+		if(getManagedBean().getSupplierList() != null && getManagedBean().getSupplierList().size()>0){
+			for (ScQuoteSupplier scQuoteSupplier : getManagedBean().getSupplierList()) {
+				supplierCriteria.append(scQuoteSupplier.getSmSupplier().getSupplierId())
+				.append(",");
+			}
+
+			if(supplierCriteria.length() > 0){
+				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
+				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
+				criteria.append("supplierId").append("^").append(supplierCriteria.toString())
+				.append("|");
+			} 
+
+		}
+		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
@@ -2513,6 +2593,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @throws Exception 
 	 */
 	public void preRenderView() {
+		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
