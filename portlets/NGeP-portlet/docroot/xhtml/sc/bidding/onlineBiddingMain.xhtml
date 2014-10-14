@@ -13,6 +13,12 @@
 
 	<ui:define name="contentSection">
 
+		<p:poll interval="#{onlineBiddingBB.interval}"
+			
+			update="@form"
+			rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding' or onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress' }" />
+
+
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
 
@@ -122,10 +128,12 @@
 							
 							
 							
+							
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
 					
+						
 						
 						
 						
