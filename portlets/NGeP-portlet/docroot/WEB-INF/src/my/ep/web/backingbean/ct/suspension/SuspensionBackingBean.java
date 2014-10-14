@@ -221,7 +221,15 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 						   renewSesionObject();
 						   return CommonUIConst.ACKNOWLEDGE_PAGE;
 					  }
-		   	     }else {
+				      else {	
+				    	  ContractReqDTO ctReqDTO = new ContractReqDTO();
+				    	  ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
+				    	  ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
+					    	
+				    	  ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+				    	  setSuspensionContractVer(ctResDTO);
+				      }
+		   	     } else {
 						throw new EpException("Failed.");
 				  }
 			  }catch (Exception e) {
