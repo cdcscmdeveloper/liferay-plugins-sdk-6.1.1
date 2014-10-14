@@ -69,6 +69,7 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -97,13 +98,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String applType = originalServletRequest
 				.getParameter("applicationType");
 		getManagedBean().setApplicationNoParam(applNo);
-		String redirectToAppl = applNo.substring(applNo.length() - 3,
-				applNo.length()).equals("APP") ? SmApplicationUtil
-				.getReviewApplicationBasePage(applType) : SmApplicationUtil
-				.getReviewApplicationSupplierBasePage(applType);
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, redirectToAppl);
+		
+		if(StringUtils.isBlank(applNo) || StringUtils.isBlank(applType)){
+			constructMessage();
+		}else{
+			String redirectToAppl = applNo.substring(applNo.length() - 3,
+					applNo.length()).equals("APP") ? SmApplicationUtil
+					.getReviewApplicationBasePage(applType) : SmApplicationUtil
+					.getReviewApplicationSupplierBasePage(applType);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+					.handleNavigation(fc, null, redirectToAppl);
+		}
 	}
 
 	public void navigateToViewSuppProfile() {
