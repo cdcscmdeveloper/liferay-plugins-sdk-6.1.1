@@ -18,7 +18,7 @@
 			first="#{specificationBackingBean.managedBean.financialTableRow}"
 			rowKey="#{stageTwofunctional}">
 			<ac:paginator for="financeProposaltwo" />
-			<p:column selectionMode="multiple" style="text-align:left;"
+			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode ne 'TS'}" />
 
 			<p:column style="text-align:left;" selectionMode="multiple"
@@ -26,7 +26,35 @@
 				rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }" />
 			<p:column style="text-align:left;" selectionMode="multiple"
 				disabledSelection="true"
-				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" />
+				rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}" /> -->
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="financeProposaltwo"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
+					rendered="#{stageTwofunctional.manditory !='true' and stageTwofunctional.definationType.parameterCode ne 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
+					disabled="true"
+					rendered="#{stageTwofunctional.manditory ==true and stageTwofunctional.definationType.parameterCode ne 'TS' }">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwofunctional.selected}"
+					disabled="true"
+					rendered="#{stageTwofunctional.manditory !=true and stageTwofunctional.definationType.parameterCode eq 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
 			<p:column style="width:30%;white-space: normal;">
 
 				<f:facet name="header">
@@ -95,13 +123,20 @@
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
-						rendered="#{stageTwofunctional.action.parameterCode ne 'O' }">
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and   stageTwofunctional.action.parameterCode ne 'O'}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						rendered="#{stageTwofunctional.action.parameterCode eq 'O'}">
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'O'}">
 
 					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							update="actionView"
+							listener="#{specificationBackingBean.financialCheckListAction(index,specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"></p:ajax>
+					</p:selectBooleanCheckbox>
+
 				</h:panelGroup>
 			</p:column>
 
@@ -132,17 +167,29 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
-				<p:commandLink
-					action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
-					rendered="#{stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'}">
+				<h:panelGroup id="actionView">
+					<p:commandLink
+						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
+						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
 
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-					<f:setPropertyActionListener value="#{stageTwofunctional}"
-						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+						<f:setPropertyActionListener value="#{stageTwofunctional}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
-				</p:commandLink>
+					</p:commandLink>
 
+					<p:commandLink
+						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
+						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
+
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+						<f:setPropertyActionListener value="#{stageTwofunctional}"
+							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+					</p:commandLink>
+				</h:panelGroup>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
@@ -159,12 +206,16 @@
 				oncomplete="financialChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
 				update="@all,financeProposaltwo" icon="ui-icon-add" />
+
+
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{specificationBackingBean.deleteS2Fin}"
-				update="financeProposaltwo" />
-
-
+				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
+				update="financeProposaltwo">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
 
 
 		</div>
