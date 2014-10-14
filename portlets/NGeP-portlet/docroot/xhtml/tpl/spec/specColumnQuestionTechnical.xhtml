@@ -87,6 +87,7 @@
 					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
 					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
 			</h:panelGroup>
@@ -102,6 +103,7 @@
 					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
 			</h:panelGroup>
@@ -117,6 +119,7 @@
 					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
 					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
 			</h:panelGroup>
@@ -132,6 +135,7 @@
 					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
 					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
 					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
 				</p:inputText>
 				<p:message id="durationMsg" for="duration" display="icon" />
 			</h:panelGroup>
@@ -186,7 +190,9 @@
 		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:21%;" styleClass="ppNumericAlign"
 			value="#{question.clDeliveryTerm}" 
 			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
-			label="#{lbl['lbl.tpl.spec.content.delivery.term']}" />
+			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
+			<p:ajax partialSubmit="true" process="@this" update="@this" />
+		</p:inputText>
 		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="#{!question.selected}" style="width:75%;" 
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
@@ -233,6 +239,7 @@
 				required="#{!question.selected}" rendered="#{isPriceTypeStandard}" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputText>
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
