@@ -63,6 +63,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.constants.BpmConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ct.circular.CircularDetailReqDTO;
@@ -8415,6 +8416,7 @@ public class SpecificationBackingBean extends
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
 
+			String taskName = this.getManagedBean().getTaskName();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
 					.getDeliveryLocRemoveList();
@@ -8790,6 +8792,7 @@ public class SpecificationBackingBean extends
 			if (getManagedBean().getTempIndex() < activeIndex) {
 				getManagedBean().setTempIndex(activeIndex);
 			}
+			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setActiveIndex(activeIndex);
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
@@ -8807,34 +8810,10 @@ public class SpecificationBackingBean extends
 	}
 
 	public String specCommitteBpmTask(String action) {
-		
+
 		if (isDigiSigningRequired(RoleCode.SC_CHAIRPERSON.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			/*List<ScQtCommitteeActivity> committeActivities = this
-					.getManagedBean().getCommitteeActivities();
-			boolean chairPersonsignoff = false;
-			if (null != committeActivities) {
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				for (int i = 0; i < committeActivities.size(); i++) {
-					if (pmUser.getIdentificationNo() != committeActivities
-							.get(i).getScCommitteeMember().getPmUser()
-							.getIdentificationNo()) {
-						// committeActivities.get(i).setSignedOff(true);
-						if (!committeActivities.get(i).isSignedOff()) {
-							chairPersonsignoff = true;
-							break;
-						}
 
-					}
-
-				}
-			}
-			if (chairPersonsignoff) {
-				throw new EpException(
-						"Before submit chair person you must complete all CommitteeMembers");
-			} else {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}*/
 		} else {
 			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 			if (resDTO.isSuccessful()) {
@@ -9286,9 +9265,17 @@ public class SpecificationBackingBean extends
 
 	public SpecificationResDTO updateSpecCommitteDtls(String action,
 			PmDigiSign digiSign) {
-		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
-		spReqDTO.setOutcome(action);
 		ScQt scQt = this.getManagedBean().getScQt();
+		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+			loadPrepareSpecCommitteeDetails(scQt.getQtId(),
+					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
+		}
+		SpecificationReqDTO spReqDTO = constructSpecCommitteDtls();
+
+		spReqDTO.setOutcome(action);
+
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
 					ParameterConst.DOCTYPE_SPEC_COMMITTE, scQt.getQtId(),
@@ -9301,7 +9288,7 @@ public class SpecificationBackingBean extends
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
 		IQTSpecSO specSO = getSpecSO();
-		SpecificationResDTO resDTO = null;
+		SpecificationResDTO resDTO = new SpecificationResDTO();
 		try {
 			resDTO = specSO.updateBPMAction(spReqDTO);
 
