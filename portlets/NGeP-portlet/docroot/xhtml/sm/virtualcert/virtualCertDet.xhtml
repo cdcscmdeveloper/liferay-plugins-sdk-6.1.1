@@ -21,11 +21,11 @@
 
 				<p:column headerText="#{lbl['lbl.sm.virtual.cert.type']}">
 					<h:outputText
-						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONSULTANT}"
+						rendered="#{mofCert.smMofAccount.supplierType eq SupplierManagementConst.STYPE_CONSULTANT}"
 						value="#{lbl['lbl.sm.consultant']}" />
 
 					<h:outputText
-						rendered="#{mofAcc.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
+						rendered="#{mofCert.smMofAccount.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR}"
 						value="#{lbl['lbl.sm.contractor']}" />
 				</p:column>
 				
