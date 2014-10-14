@@ -114,11 +114,15 @@
             <td style="text-align:right">
                #if( $requestNoteVo.frQty != 0 )
                $requestNoteVo.frQty
+               #else
+               N/A
                #end
             </td>
             <td style="text-align:right">
                #if( $requestNoteVo.toQty != 0 )
                $requestNoteVo.toQty
+               #else
+               N/A
                #end	
             </td>
             <td style="text-align:right">$requestNoteVo.unitPrice</td>
@@ -159,26 +163,27 @@
          </tr>
          <tr>
             #if( $supplierId != $prevSupplierId )  
-            <td>$requestNoteVo.supplierName</td>
+            <td>$requestNoteVo.supplierName</td>      
+            #else
+            <td></td>      
+            #end
             <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
             <td style="text-align:right">$requestNoteVo.minQty</td>
             <td>$requestNoteVo.addItemDesc</td>
-            #else
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            #end
             <td>$requestNoteVo.priceType</td>
             <td>$requestNoteVo.zone</td>
             <td style="text-align:right">
                #if( $requestNoteVo.frQty != 0 )
                $requestNoteVo.frQty
+               #else
+               N/A
                #end
             </td>
             <td style="text-align:right">
                #if( $requestNoteVo.toQty != 0 )
                $requestNoteVo.toQty
+               #else
+               N/A
                #end	
             </td>
             <td style="text-align:right">$requestNoteVo.unitPrice</td>
@@ -187,25 +192,26 @@
          <tr>
             #if( $supplierId != $prevSupplierId )  
             <td>$requestNoteVo.supplierName</td>
+            #else
+            <td></td>   
+            #end
             <td style="text-align:right">$requestNoteVo.deliveryTerm</td>
             <td style="text-align:right">$requestNoteVo.minQty</td>
             <td>$requestNoteVo.addItemDesc</td>
-            #else
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            #end
             <td>$requestNoteVo.priceType</td>
             <td>$requestNoteVo.zone</td>
             <td style="text-align:right">
                #if( $requestNoteVo.frQty != 0 )
                $requestNoteVo.frQty
+               #else
+               N/A
                #end
             </td>
             <td style="text-align:right">
                #if( $requestNoteVo.toQty != 0 )
                $requestNoteVo.toQty
+               #else
+               N/A
                #end	
             </td>
             <td style="text-align:right">$requestNoteVo.unitPrice</td>
