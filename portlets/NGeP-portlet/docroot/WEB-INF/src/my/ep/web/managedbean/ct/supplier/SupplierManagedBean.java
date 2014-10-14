@@ -13,6 +13,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.model.DualListModel;
+
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
@@ -74,6 +76,9 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String fileDirectory;
 	private String accountNoAndName;
 	private PmUser supplierPmUser;
+	
+	private DualListModel<String> approverModel;
+	private Map<String, PmUser> userMap;
 	
 	public SupplierManagedBean(){
 		
@@ -357,5 +362,24 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setSupplierPmUser(PmUser supplierPmUser) {
 		this.supplierPmUser = supplierPmUser;
+	}
+
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+	
+	public Map<String, PmUser> getUserMap() {
+		if(userMap==null) {
+			userMap = new HashMap<String, PmUser>();
+		}
+		return userMap;
+	}
+
+	public void setUserMap(Map<String, PmUser> userMap) {
+		this.userMap = userMap;
 	}
 }
