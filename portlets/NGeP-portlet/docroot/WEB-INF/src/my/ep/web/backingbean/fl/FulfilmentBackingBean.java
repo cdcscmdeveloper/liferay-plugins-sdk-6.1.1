@@ -33,6 +33,7 @@ import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -147,8 +148,16 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
-	public void deleteAttachmentAction(int index) {
-		this.getManagedBean().getAttachmentList().remove(index);
+	public void confirmDeleteAttachment(int index) {
+		
+		//set to the managedbean property and show the diloag box.
+		this.getManagedBean().setAttachedFileIndex(index);
+	}
+	public void deleteAttachmentAction() {
+		//Cal this method when user clicks on confirm.no need to call once the user rejects.
+		//Read the index from managed bean and delete
+		this.getManagedBean().getAttachmentList().remove(this.getManagedBean().getAttachedFileIndex());
+		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
 
 	public void initializeRemarkAndAttachement(List<FlRemark> remarkList,
