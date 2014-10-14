@@ -273,8 +273,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			populateChargeLineData();
 			if(null == getManagedBean().getPaymentAdvice().getDescription()){
 				String desc = "";
-				if(getManagedBean().getPaymentAdvice().getFlRequest().getTitle().length() > 25){
-					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle().substring(0,25).trim();
+				if(getManagedBean().getPaymentAdvice().getFlRequest().getTitle().length() > 24){
+					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle().substring(0,24).trim();
 				}else{
 					desc = getManagedBean().getPaymentAdvice().getFlRequest().getTitle();
 				}
