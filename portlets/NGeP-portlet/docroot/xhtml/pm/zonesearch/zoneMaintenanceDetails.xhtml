@@ -40,8 +40,7 @@
 						label="#{lbl['lbl.pm.location.status']}"
 						value="#{zoneBackingBean.managedBean.pmZone.recordStatusFlg}"
 						required="true" style="width: 135px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{locationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+						<f:selectItems value="#{zoneBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
 				<td><p:message id="zonestatusMsg" for="zonestatus"
 						display="icon" /></td>

@@ -171,18 +171,17 @@
 						label="#{lbl['lbl.pm.organisation.status']}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="true" style="margin-bottom: 5px;">
-
 						<f:selectItems
-							value="#{organisationBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+							value="#{organisationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
 				<td><p:message id="orgStatusMsg" for="orgStatus" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<ui:fragment
+	<!-- <ui:fragment
 		rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 		<ui:include src="/xhtml/pm/organisation/orgControlProfile.xhtml" />
-	</ui:fragment> 
+	</ui:fragment>  -->
 
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.address']}"
@@ -194,10 +193,10 @@
 			</p:tab>
 
 
-			 <p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
+			<p:tab title="#{lbl['lbl.pm.header.general.org.delivery']}"
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
 				<ui:include src="/xhtml/pm/organisation/orgDeliveryAddres.xhtml" />
-			</p:tab>  
+			</p:tab>
 		</p:tabView>
 	</p:panel>
 

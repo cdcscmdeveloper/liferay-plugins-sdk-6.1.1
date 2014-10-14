@@ -31,8 +31,7 @@
 			<p:selectOneMenu
 				value="#{financialOrgBackingBean.managedBean.orgStatus}"
 				style="width: 135px;margin-bottom: 5px;">
-				<f:selectItems
-					value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+				<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
 			</p:selectOneMenu>
 		</h:panelGrid>
 	</p:panel>

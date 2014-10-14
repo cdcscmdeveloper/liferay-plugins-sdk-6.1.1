@@ -61,8 +61,7 @@
 						value="#{financialOrgBackingBean.managedBean.financialOrg.recordStatusFlg}"
 						id="recordSts" required="true"
 						style="width: 135px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{financialOrgBackingBean.getDropdownCodeValues(ParameterTypeConst.recordStatus)}" />
+						<f:selectItems value="#{financialOrgBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td><td> <p:message id="recordStsMsg" for="recordSts" display="icon" /></td>
 
 			</tr>

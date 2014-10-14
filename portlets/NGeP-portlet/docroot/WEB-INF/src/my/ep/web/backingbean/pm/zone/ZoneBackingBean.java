@@ -273,6 +273,12 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 		this.getManagedBean().setSelections(selectionTypes);
 	}
+	public SelectItem[] getStatusOptions() {
+		SelectItem[] items = new SelectItem[2];
+		items[0] = new SelectItem(1, "Active");
+		items[1] = new SelectItem(0, "Inactive");
+		return items;
+	}
 
 	public IPagingDataModel<PmZone> getSearchZone() {
 		return searchZone;
