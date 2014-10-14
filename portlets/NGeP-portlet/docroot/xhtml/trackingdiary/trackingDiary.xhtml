@@ -21,8 +21,8 @@
 					<h:outputLabel value="* Trackng Diary Function" />
 				</h:column>
 				<h:column>
-					<p:selectOneMenu value="#{smTrackingDiaryBackingBean.managedBean.codeType}">
-<!-- 						<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" /> -->
+					<p:selectOneMenu value="#{trackingDiaryBackingBean.codeType}">
+<!-- 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" /> -->
 			 			<f:selectItem itemLabel="Select One" itemValue="" />
 			            <f:selectItem itemLabel="Supplier Management" itemValue="SM" />
 			            <f:selectItem itemLabel="Procurement Plan" itemValue="PP" />					
@@ -38,25 +38,25 @@
 			</h:panelGrid>
 					
 			<h:panelGroup id="TrackingDiary">
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'SM'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'SM'}">
 					<ui:include src="/xhtml/trackingdiary/smTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'PP'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'PP'}">
 					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'CT'}">
-					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'CT'}">
+					<ui:include src="/xhtml/trackingdiary/trackingDiaryDetailResult.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'FL'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'FL'}">
 					<ui:include src="/xhtml/trackingdiary/flTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'CM'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'CM'}">
 					<ui:include src="/xhtml/trackingdiary/cmTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'SC'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'SC'}">
 					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{smTrackingDiaryBackingBean.managedBean.codeType == 'CD'}">
+				<c:if test="#{trackingDiaryBackingBean.codeType == 'CD'}">
 					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
 				</c:if>
 			</h:panelGroup>
