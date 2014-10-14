@@ -452,6 +452,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtApproval> toBeRemoveList;
 	private List<ScQtDeduction> removeDeductions;
 	private List<ScCommitteeMember> toBeDelCommitteMemebers;
+	
+	
+	private String action;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2691,6 +2694,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setTotalSuppliers(int totalSuppliers) {
 		this.totalSuppliers = totalSuppliers;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
 
 }
