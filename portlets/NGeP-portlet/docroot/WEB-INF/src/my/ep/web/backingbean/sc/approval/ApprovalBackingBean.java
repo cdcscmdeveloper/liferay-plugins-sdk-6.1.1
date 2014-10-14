@@ -27,7 +27,6 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -44,6 +43,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -72,6 +72,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.MenuModel;
@@ -89,6 +90,9 @@ public class ApprovalBackingBean extends
 
 	private FacesContext facesContext = FacesContext.getCurrentInstance();
 
+	private String textBeforeSign;
+	private PmDigiSign pmDigiSign;
+	
 	public ApprovalBackingBean() {
 
 	}
@@ -409,7 +413,175 @@ public class ApprovalBackingBean extends
 						"/xhtml/sc/quatationtender/Approver/approverMain.xhtml");
 	}
 
-	public String updateBpmTask(String outcome) {
+	public void approvalBpmTask(String action) {
+		this.getManagedBean().setAction(action);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+		
+	}
+	
+	public String gpkiSignAction(PmDigiSign digiSign) {
+		QuationTenderResDTO tenderResDTO = updateBpmTask(this.getManagedBean().getAction(), digiSign);
+		
+		if ((null != tenderResDTO && tenderResDTO.isSuccessful())) {
+			ScQt qt = tenderResDTO.getQtDetail();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													getMessgeConstant(this.getManagedBean().getAction()),
+													new String[] {
+															getParameterDesc(
+																	ParameterTypeConst.DOCUMENT_TYPES,
+																	ParameterConst.DOCTYPE_QUOTATION),
+															qt.getQtNo() },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
+	}
+	
+	/**
+	 * @param action
+	 * @param object
+	 * @return
+	 */
+	private QuationTenderResDTO updateBpmTask(String outcome, PmDigiSign digiSign) {
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctxToken);
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		String taskName = res.getTaskName();
+		QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+		try {
+			ScQt qt = this.getManagedBean().getQt();
+			qt.setScQtStatus(null);
+			qt.setScQtBriefings(null);
+			CommitteResDTO committeResDto = null;
+			QuationTenderResDTO qtResDTO = null;
+			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
+					|| SCProcessNameConst.REVISE_COMMITTEE
+							.equalsIgnoreCase(taskName)) {
+				// setting the remarks to ScQtApprovalRemarks
+				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				if (null != approval && null != approval.getQtApprovalId()) {
+					finalizeRemarks(approval.getScQtApprovalRemarks());
+					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
+					qtApproval.add(approval);
+					qt.setScQtApprovals(qtApproval);
+				}
+
+				List<TabBean> qtCommittes = this.getManagedBean()
+						.getScCommitteeMemberTabList();
+				List<ScQtCommittee> committees = null;
+				if (null != qtCommittes && !qtCommittes.isEmpty()) {
+					committees = new ArrayList<ScQtCommittee>();
+					for (int i = 0; i < qtCommittes.size(); i++) {
+						ScQtCommittee qtCommittee = qtCommittes.get(i)
+								.getScQtCommittee();
+						PmStatus committeStatus = new PmStatus();
+						if (BpmOutcomeConst.BPM_REVISE
+								.equalsIgnoreCase(outcome)) {
+							committeStatus
+									.setStatusId(QTStatusConst.CM_REVISION);
+						} else {
+							committeStatus
+									.setStatusId(QTStatusConst.CM_COMPLETE);
+						}
+						qtCommittee.getScCommittee().setCommitteStatus(
+								committeStatus);
+						qtCommittee.setQtCommitteRemarks(this.getManagedBean()
+								.getQtCommitteeRemarks());
+						committees.add(qtCommittee);
+					}
+					qt.setScQtCommittees(committees);
+				}
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								ICommitteSO.class);
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				committeReqDTO.setToken(ctxToken);
+				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				committeReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				committeReqDTO.setOutcome(outcome);
+				removeEmptyRemarks(qt);
+				committeReqDTO.setScQt(qt);
+				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
+				//TODO Need to changed the docType..
+				if (null != digiSign) {
+					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_QUOTATION, qt.getQtId(), qt.getQtNo());
+				}
+				committeReqDTO.setDigiSignData(digiSign);
+				committeResDto = committeSO.updateBPMAction(committeReqDTO);
+				tenderResDTO.setSuccessful(committeResDto.isSuccessful());
+			} else {
+				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
+				qtReqDTO.setToken(ctxToken);
+				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
+
+				IQTDetailSO detailSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTDetailSO.class);
+				ScQtApproval approval = this.getManagedBean().getScQtApproval();
+				if (null != approval && null != approval.getQtApprovalId()) {
+
+					approval.setApproverId(new FacesScopes()
+							.getUserSessionBean());
+					approval.setApproverActionDate(new Date());
+
+					if (ParameterConst.APPROVAL_CATEGORY_BPK
+							.equalsIgnoreCase(approval.getApprovalCategory()
+									.getParameterCode())) {
+						List<ScQtApprovalRequest> approvalRequests = approval
+								.getScQtApprovalDtls();
+						String action = constuctOutCome(approvalRequests, qt);
+						if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+							approval.setApproverAction(SourcingConstants.REVISE_ACTION);
+							((SCQuotationTenderDataType) this.getManagedBean()
+									.getQuotationTenderDataType())
+									.setBpkRevise(true);
+						}
+					}
+					finalizeRemarks(approval.getScQtApprovalRemarks());
+					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
+					qtApproval.add(approval);
+					qt.setScQtApprovals(qtApproval);
+				}
+				qt.setScQtCommittees(null);
+				qtReqDTO.setPayLoad(this.getManagedBean()
+						.getQuotationTenderDataType());
+				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
+				qtReqDTO.setQtdetail(qt);
+				qtReqDTO.setOutcome(outcome);
+				//TODO Need to changed the docType..
+				if (null != digiSign) {
+					updatePmDigiSignData(digiSign, "BPK", qt.getQtId(), qt.getQtNo());
+				}
+				qtReqDTO.setDigiSignData(digiSign);
+				qtResDTO = (QuationTenderResDTO) detailSO
+						.updateBPMAction(qtReqDTO);
+				tenderResDTO.setSuccessful(qtResDTO.isSuccessful());
+			}
+		}catch (Exception e) {
+			
+		}
+		return tenderResDTO;
+	}
+
+/*	public String updateBpmTask(String outcome) {
+		
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -550,7 +722,7 @@ public class ApprovalBackingBean extends
 			ex.printStackTrace();
 		}
 		return null;
-	}
+	}*/
 
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
@@ -782,4 +954,25 @@ public class ApprovalBackingBean extends
 		return retrieveParametersBySearchBean(
 				ParameterTypeConst.APPROVAL_DECISION_TYPE, searchBean);
 	}
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(getManagedBean().getQt().getQtNo());
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		this.textBeforeSign = sb.toString();
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+	
+	
 }

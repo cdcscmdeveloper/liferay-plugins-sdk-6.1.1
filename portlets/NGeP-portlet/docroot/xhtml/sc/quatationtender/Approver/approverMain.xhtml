@@ -6,10 +6,18 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<p:panel>
+			<p:messages id="specApprovalMessages"
+						showDetail="true" autoUpdate="true" closable="true"
+						showSummary="false" />
+			
+			<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
+			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
+			
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
@@ -21,7 +29,7 @@
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button"
 								icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
-								action="#{approvalBackingBean.updateBpmTask(bpmAction)}" />
+								action="#{approvalBackingBean.approvalBpmTask(bpmAction)}" />
 						</ui:repeat>
 					</p:column>
 				</p:row>
