@@ -131,6 +131,7 @@
 					</p:selectOneMenu>
 					<p:spacer width="2px"></p:spacer>
 					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
+					    rendered="#{requestNoteDtl.scRequestSupplierItem.supplierId ne null}"
 						update="@([id$=suppDetailsPopup])">
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
