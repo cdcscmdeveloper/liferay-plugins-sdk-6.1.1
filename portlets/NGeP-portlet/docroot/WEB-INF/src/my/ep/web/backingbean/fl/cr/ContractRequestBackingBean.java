@@ -718,7 +718,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		for (CtContractItem contractedItem : getManagedBean().getSelectedContractedItemList()) {
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
-			if(getManagedBean().getPmPriceType() != null){
 				if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER) ||
 						getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_ZONAL_TIER) ||
 						getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TARIFF) ||
@@ -730,8 +729,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					flItemAddr.setCmItem(contractedItem.getScRequestItem().getCmItem());
 					flItemAddr.setScRequestItem(contractedItem.getScRequestItem());
 					flItemAddr.setItemType(contractedItem.getItemType());
-				}
-			}else{//STANDARD AND ZONAL
+				}else{//STANDARD AND ZONAL
 				IContractItemSO ctItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 				reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
