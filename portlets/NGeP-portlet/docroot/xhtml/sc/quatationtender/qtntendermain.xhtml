@@ -155,11 +155,8 @@
 						</h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.bo.status']}"
-						style="width:150px;">
-						<h:outputText
-							value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}" 
-							style="white-space: normal;word-wrap: break-word;"/>
+					<p:column headerText="#{lbl['lbl.so.bo.status']}" style="width:200px;">
+						<h:outputText value="#{qTDetailBB.getStatusDescById(scQt.qtStatus.statusId)}"/>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
