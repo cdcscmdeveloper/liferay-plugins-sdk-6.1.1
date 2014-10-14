@@ -6,12 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:include src="loiNegotiationDetailsMenu.xhtml" />
+	
 	<p:panel header="#{lbl['lbl.sc.supporting.document']}" toggleable="false">
-		<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"  rows="10"
+		<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
 			widgetVar="suppDocTblWidget"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
 			rows="10" rowKey="#{scLoiSuppDoc}"
-			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc}">
+			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
 			
 			<ac:paginator for="suppDocTbl" />
 
@@ -23,12 +24,12 @@
 
 
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
-				<ui:fragment
+				<ui:fragment>
 					<h:outputText value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" />
-					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
+					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}" icon="ui-icon-attachment"
 						partialSubmit="true" process="@this"
-						update="@([id$=loiAttachmentPopup])">
+						update="@([id$=loiSuppAttmPopup])">
 						<f:setPropertyActionListener
 							target="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc}"
 							value="#{scLoiSuppDoc}" />
@@ -42,16 +43,16 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, suppDocTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.addLoiReportAction}"
+				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
-				update="reportContentsTbl" icon="ui-icon-add" />
+				update="suppDocTbl" icon="ui-icon-add" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, suppDocTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs, lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc)}"
+				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs, lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs)}"
 				icon="ui-icon-delete" update="suppDocTbl" />
+		</div>
 	</p:panel>
-	
 	
 	<ui:include src="loiAwardDetailsMenu.xhtml" />
 	
