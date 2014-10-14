@@ -87,10 +87,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-//		if (reloadPreviousApplication()) {
-//			initPreviousApplication();
-//		}
-//		constructMessage();
+		// if (reloadPreviousApplication()) {
+		// initPreviousApplication();
+		// }
+		// constructMessage();
 	}
 
 	private void initPreviousApplication() {
@@ -125,12 +125,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication();
 		String applType = getManagedBean().getSmAppl().getApplType();
-		String redirectToAppl = SmApplicationUtil
-				.getReviewApplicationBasePage(applType);
+		String redirectToAppl = applNo.substring(applNo.length() - 3,
+				applNo.length()).equals("APP") ? SmApplicationUtil
+				.getReviewApplicationBasePage(applType) : SmApplicationUtil
+				.getReviewApplicationSupplierBasePage(applType);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, redirectToAppl);
-		// return redirectToAppl;
 	}
 
 	public void navigateToViewSuppProfile() {
@@ -222,12 +223,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String appNo = getManagedBean().getApplicationNoParam().substring(0,
 				getManagedBean().getApplicationNoParam().length() - 4);
 
-		String filePath = Calendar.getInstance().get(Calendar.YEAR) + File.separator+"SM"
-				+ File.separator+appNo + File.separator+"Revision"+File.separator;
+		String filePath = Calendar.getInstance().get(Calendar.YEAR)
+				+ File.separator + "SM" + File.separator + appNo
+				+ File.separator + "Revision" + File.separator;
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += File.separator + filePath + getManagedBean().getApplicationNoParam()
-				+ SER_FILE_TYPE;
+		tempDir += File.separator + filePath
+				+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE;
 
 		return tempDir;
 	}
@@ -314,7 +316,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-//		initTesting();
+		// initTesting();
 	}
 
 	private void initTesting() {
