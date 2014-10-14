@@ -16,19 +16,19 @@
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.location']}"
 				style="width:40%">
-				<p:inputText value="#{negoloc.negoLocation}" size="30" />
+				<p:inputText value="#{negoloc.negoLocation}" size="30" disabled="#{afterNegotiation}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.date']}"
 				style="width:10%">
-				<p:calendar id="date"
+				<p:calendar id="date" disabled="#{afterNegotiation}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 					size="12" value="#{negoloc.negoDate}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
 				style="width:40%">
-				<p:inputText value="#{negoloc.remark}" size="30" />
+				<p:inputText value="#{negoloc.remark}" size="30" disabled="#{afterNegotiation}"/>
 			</p:column>
 
 		</p:dataTable>
@@ -37,11 +37,12 @@
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 				process="@this,negoloctbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationLocation}"
-				update="negoloctbl" icon="ui-icon-add" />
+				update="negoloctbl" icon="ui-icon-add" 
+				rendered="#{!afterNegotiation}"/>
 
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
 			    action="#{lOIDetailBackingBean.deleteNegoLocations}" 
-			    update="negoloctbl"
+			    update="negoloctbl" rendered="#{!afterNegotiation}"
 				process="@this negoloctbl" partialSubmit="true" icon="ui-icon-delete" />
 		</div>
 
@@ -64,7 +65,7 @@
 					rendered="#{!empty negoTerm.pmTerm}" />
 
 				<p:inputTextarea  cols="#{isPendingNegotiation ? '70' : '140'}" rows="2"
-					value="#{negoTerm.termDesc}" autoResize="false"
+					value="#{negoTerm.termDesc}" autoResize="false" disabled="#{afterNegotiation}"
 					rendered="#{empty negoTerm.pmTerm}" />
 
 			</p:column>
@@ -91,9 +92,9 @@
 			<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 				process="@this negoTermstbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addNegotiationTerm}"
-				update="negoTermstbl" icon="ui-icon-add" />
+				update="negoTermstbl" icon="ui-icon-add" rendered="#{!afterNegotiation}"/>
 
-			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}" rendered="#{!afterNegotiation}"
 			   action="#{lOIDetailBackingBean.deleteNegoTerm}" update="negoTermstbl"
 				process="@this negoTermstbl" partialSubmit="true" icon="ui-icon-delete" />
 		</div>
