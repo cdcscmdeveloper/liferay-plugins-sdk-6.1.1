@@ -193,13 +193,13 @@
 			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
 			<p:ajax partialSubmit="true" process="@this" update="@this" />
 		</p:inputText>
+		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="#{!question.selected}" style="width:75%;" 
 			rendered="#{isQuestionTypeItem}"
-			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
+			label="#{lbl['lbl.tpl.spec.content.delivery.term.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.deliveryTermChange(question)}" />
 		</h:selectOneMenu>
-		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 		<p:message id="delTermTypeMsg" for="delTermType" display="icon" />
 	</p:column>
 	<p:column style="width:125px;" rendered="#{isScoringReq}">
