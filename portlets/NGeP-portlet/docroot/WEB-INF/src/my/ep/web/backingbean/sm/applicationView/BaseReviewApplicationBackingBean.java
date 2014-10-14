@@ -80,8 +80,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		extends BaseBackingBean<T> {
 
 	private StreamedContent file;
-	private String redirect = "REVIEW APPLICATION TESTING PAGE";
 	private static final String SER_FILE_TYPE = ".ser";
+	private static final String FOLDER_NAME_SM = "SM";
+	private static final String FOLDER_NAME_REVISION = "Revision";
 
 	public BaseReviewApplicationBackingBean() {
 		if (MDC.get(LogKey.USER_ID) == null) {
@@ -190,8 +191,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String appNo = applNoParam.substring(0, applNoParam.length() - 4);
 
 		String filePath = Calendar.getInstance().get(Calendar.YEAR)
-				+ File.separator + "SM" + File.separator + appNo
-				+ File.separator + "Revision" + File.separator;
+				+ File.separator + FOLDER_NAME_SM + File.separator + appNo
+				+ File.separator + FOLDER_NAME_REVISION + File.separator;
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 		tempDir += File.separator + filePath + applNoParam + SER_FILE_TYPE;
@@ -939,11 +940,4 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		this.file = file;
 	}
 
-	public String getRedirect() {
-		return redirect;
-	}
-
-	public void setRedirect(String redirect) {
-		this.redirect = redirect;
-	}
 }
