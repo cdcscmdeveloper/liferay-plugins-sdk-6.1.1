@@ -39,6 +39,8 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
@@ -528,6 +530,9 @@ public class RuleCatalogueBackingBean extends
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(new Date());
+		if(this.getManagedBean().getSelectedRuleType().getRuleDataTypeId().getParameterCode().equals("C")){
+			newRuleValue.setCategoryL3Id(new PmCategoryL3());
+		}
 
 		int index = this.getManagedBean().getSelectedRuleType()
 				.getConfigRuleValues().size();
@@ -550,6 +555,7 @@ public class RuleCatalogueBackingBean extends
 		// newFeeExemption.setFeeExemptionType("1");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setItemId(new CmItem());
+		newFeeExemption.setOrgProfileId(new PmOrgProfile());
 
 		int index = this.getManagedBean().getFeeExemptionsForOrgAndItem()
 				.size();
@@ -605,6 +611,7 @@ public class RuleCatalogueBackingBean extends
 		// newFeeExemption.setFeeExemptionType("2");
 		newFeeExemption.setEffDate(new Date());
 		newFeeExemption.setRequestItemId(new ScRequestItem());
+		newFeeExemption.setContractId(new CtContract());
 
 		int index = this.getManagedBean().getFeeExemptionsForContract().size();
 		this.getManagedBean().getFeeExemptionsForContract()
