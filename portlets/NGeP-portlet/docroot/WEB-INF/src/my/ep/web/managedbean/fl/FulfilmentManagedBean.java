@@ -35,6 +35,8 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	private String docNo;
 	private boolean docMaintainRemarks = false;
 	
+	private int attachedFileIndex;
+	
 	public FulfilmentManagedBean(){
 		
 	}
@@ -115,6 +117,20 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	 */
 	public void setDocMaintainRemarks(boolean docMaintainRemarks) {
 		this.docMaintainRemarks = docMaintainRemarks;
+	}
+
+	/**
+	 * @return the attachedFileIndex
+	 */
+	public int getAttachedFileIndex() {
+		return attachedFileIndex;
+	}
+
+	/**
+	 * @param attachedFileIndex the attachedFileIndex to set
+	 */
+	public void setAttachedFileIndex(int attachedFileIndex) {
+		this.attachedFileIndex = attachedFileIndex;
 	}
 	
 }
