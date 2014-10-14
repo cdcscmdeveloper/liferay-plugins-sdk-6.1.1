@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
@@ -59,18 +62,20 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -579,10 +584,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			}
 
 			FacesScopes facesScopes = new FacesScopes();
-			if (scRemarks.size() == 0 || 
-				!compareUserName(prevRemark.getCreatedUser().getLoginId()) ||
-				(pmStatus != null && !prevRemark.getPmStatus().getStatusId().equals(pmStatus.getStatusId()))) {
-				
+			if (scRemarks.size() == 0
+					|| !compareUserName(prevRemark.getCreatedUser()
+							.getLoginId())
+					|| (pmStatus != null && !prevRemark.getPmStatus()
+							.getStatusId().equals(pmStatus.getStatusId()))) {
+
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
 						.getUserId());
@@ -687,14 +694,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
-
-
 	public String gotoQtSearchPage() {
 		return QTConstants.SEARCH_PAGE;
 	}
 
-	
-	protected File generatePdfFromOracle(String reportName, Map<String, String> paramMap, ScAttachment attachment) throws IOException {
+	protected File generatePdfFromOracle(String reportName,
+			Map<String, String> paramMap, ScAttachment attachment)
+			throws IOException {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils
 				.getProperty(EpPropertiesConst.EXC_PREV_URL);
@@ -729,29 +735,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			InputStream input = null;
 			try {
 				URL obj = new URL(reportUrl.toString());
-				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();				
-				input = new BufferedInputStream(uc.getInputStream()); 
+				HttpURLConnection uc = (HttpURLConnection) obj.openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	        byte[] buf = new byte[1024];
-	        try {
-	            for (int readNum; (readNum = input.read(buf)) != -1;) {
-	                bos.write(buf, 0, readNum); 	               
-	            }
-	        } catch (IOException ex) {
-	        	ex.printStackTrace();
-	        }
-	        byte[] bytes = bos.toByteArray();	        
-	        FileOutputStream fos = new FileOutputStream(localFile);
-	        fos.write(bytes);
-	        fos.flush();
-	        fos.close();			
-			input.close();	
-		}				
+			byte[] buf = new byte[1024];
+			try {
+				for (int readNum; (readNum = input.read(buf)) != -1;) {
+					bos.write(buf, 0, readNum);
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			byte[] bytes = bos.toByteArray();
+			FileOutputStream fos = new FileOutputStream(localFile);
+			fos.write(bytes);
+			fos.flush();
+			fos.close();
+			input.close();
+		}
 		out.flush();
-		out.close(); 		
+		out.close();
 		return localFile;
 	}
 
@@ -794,4 +800,92 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
+	/**
+	 * To update categoryCodel1..to scqtCategory..
+	 * 
+	 * @param qtCategory
+	 */
+	public void updatedQtCategoryL1Code(ScQtCategory qtCategory) {
+
+		ICategoryCodeSO codeSo = getCategoryCodeSO();
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setMainCatCode(qtCategory.getPmCategoryL1().getCategoryL1Code());
+		CategoryCodeResDTO resDto = codeSo.retrieveCategoryL1ByCode(reqDTO);
+		PmCategoryL1 categoryL1 = resDto.getCategoryL1();
+		if (null == categoryL1) {
+			throw new EpException("No category Code exists");
+		}
+		qtCategory.setPmCategoryL1(categoryL1);
+		if (!isNullOrEmpty(qtCategory.getPmCategoryL2().getCategoryL2Code())) {
+			reqDTO.setCategoryL1Id(categoryL1.getCategoryL1Id());
+			reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
+					.getCategoryL2Code());
+			CategoryCodeResDTO categoryCodeResDTO = codeSo
+					.retrieveCategoryL2ListByCode(reqDTO);
+			List<PmCategoryL2> categoryL2List = categoryCodeResDTO
+					.getCategoryL2List();
+			if (null != categoryL2List && !categoryL2List.isEmpty()) {
+				qtCategory.setPmCategoryL2(categoryCodeResDTO
+						.getCategoryL2List().get(0));
+			} else {
+				throw new EpException(MessageConst.ERROR_760132);
+			}
+		}
+
+	}
+
+	/**
+	 * To update categoryCodel2..to scqtCategory..
+	 * 
+	 * @param qtCategory
+	 */
+	public void updatedQtCategoryL2Code(ScQtCategory qtCategory) {
+		ICategoryCodeSO codeSo = getCategoryCodeSO();
+		if (!isNullOrEmpty(qtCategory.getPmCategoryL1().getCategoryL1Code())
+				&& !isNullOrEmpty(qtCategory.getPmCategoryL2()
+						.getCategoryL2Code())) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			reqDTO.setCategoryL1Id(qtCategory.getPmCategoryL1()
+					.getCategoryL1Id());
+			reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
+					.getCategoryL2Code());
+			CategoryCodeResDTO categoryCodeResDTO = codeSo
+					.retrieveCategoryL2ListByCode(reqDTO);
+			List<PmCategoryL2> categoryL2List = categoryCodeResDTO
+					.getCategoryL2List();
+			if (null != categoryL2List && !categoryL2List.isEmpty()) {
+				qtCategory.setPmCategoryL2(categoryCodeResDTO
+						.getCategoryL2List().get(0));
+			} else {
+				throw new EpException(MessageConst.ERROR_760133);
+			}
+		}
+
+	}
+
+	private ICategoryCodeSO getCategoryCodeSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+	}
+
+	protected boolean isNullOrEmpty(String str) {
+		if (null == str || "".equals(str)) {
+			return true;
+		}
+		return false;
+	}
+
+	public String constructCondtionFields(ScQtCategory category) {
+		StringBuffer buffer = new StringBuffer();
+		if (!isNullOrEmpty(category.getPmCategoryL1().getCategoryL1Code())) {
+			buffer.append("pmCategoryL2.pmCategoryL1.categoryL1Code ^");
+			buffer.append(category.getPmCategoryL1().getCategoryL1Code());
+			buffer.append("|");
+		}
+		if (!isNullOrEmpty(category.getPmCategoryL2().getCategoryL2Code())) {
+			buffer.append("pmCategoryL2.categoryL2Code ^");
+			buffer.append(category.getPmCategoryL2().getCategoryL2Code());
+		}
+		return buffer.toString();
+	}
 }
