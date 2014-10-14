@@ -144,10 +144,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
-		String tabParam = originalServletRequest.getParameter("currentTab");
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication(getManagedBean().getApplicationNoParam());
-		setTabParam(tabParam);
 	}
 
 	private void initApplication(String applNoParam) {
@@ -233,7 +231,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 
-	private void setTabParam(String tabParam) {
+	public void setTabParam() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String tabParam = originalServletRequest.getParameter("currentTab");
 		try {
 			if (tabParam != null) {
 				getManagedBean().setTabActiveIndex(Integer.parseInt(tabParam));

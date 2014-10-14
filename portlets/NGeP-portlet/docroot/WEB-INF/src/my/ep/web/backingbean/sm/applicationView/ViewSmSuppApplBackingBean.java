@@ -17,5 +17,6 @@ public class ViewSmSuppApplBackingBean extends BaseReviewApplicationBackingBean<
 		if(getManagedBean().getApplicationNoParam()==null){
 			initRedirectBackingBeanApplication();
 		}
+		setTabParam();
 	}
 }
