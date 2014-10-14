@@ -599,6 +599,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		this.getManagedBean().setCheckDoDocType(false);
 		this.getManagedBean().setCheckInDocType(false);
 		this.getManagedBean().setCheckDoInDocType(false);
+		renewSesionObject();
 	}
 	
 	public void filterSearchResults(List<VFlDocument> searchResultList){
