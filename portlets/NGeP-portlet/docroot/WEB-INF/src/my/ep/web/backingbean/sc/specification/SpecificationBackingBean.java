@@ -8807,9 +8807,10 @@ public class SpecificationBackingBean extends
 	}
 
 	public String specCommitteBpmTask(String action) {
-
+		
 		if (isDigiSigningRequired(RoleCode.SC_CHAIRPERSON.value())) {
-			List<ScQtCommitteeActivity> committeActivities = this
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			/*List<ScQtCommitteeActivity> committeActivities = this
 					.getManagedBean().getCommitteeActivities();
 			boolean chairPersonsignoff = false;
 			if (null != committeActivities) {
@@ -8833,7 +8834,7 @@ public class SpecificationBackingBean extends
 						"Before submit chair person you must complete all CommitteeMembers");
 			} else {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}
+			}*/
 		} else {
 			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
 			if (resDTO.isSuccessful()) {
