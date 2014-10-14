@@ -18,7 +18,7 @@
 			rowKey="#{stageTwoTechnical}">
 			<ac:paginator for="stageTwotechProposal" />
 
-			<p:column selectionMode="multiple" style="text-align:left;"
+			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
 
 			<p:column style="text-align:left;" selectionMode="multiple"
@@ -26,7 +26,34 @@
 				rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }" />
 			<p:column style="text-align:left;" disabledSelection="true"
 				selectionMode="multiple"
-				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" />
+				rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}" /> -->
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this"
+							update="stageTwotechProposal"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="true"
+					rendered="#{stageTwoTechnical.manditory ==true and stageTwoTechnical.definationType.parameterCode ne 'TS' }">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+
+				<p:selectBooleanCheckbox value="#{stageTwoTechnical.selected}"
+					disabled="true"
+					rendered="#{stageTwoTechnical.manditory !=true and stageTwoTechnical.definationType.parameterCode eq 'TS'}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
 
 
 			<p:column style="width:20%;white-space: normal;">
@@ -208,9 +235,14 @@
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
 				update="@all,stageTwotechProposal" icon="ui-icon-add" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{specificationBackingBean.deleteS2Tech}"
-				update="stageTwotechProposal" />
+				icon="ui-icon-delete" process="@this" partialSubmit="true"
+				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
+				update="stageTwotechProposal">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
+
 
 		</div>
 

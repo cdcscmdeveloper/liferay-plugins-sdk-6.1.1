@@ -52,14 +52,15 @@
 				<tr>
 					<td><p:outputLabel value=" #{lbl['lbl.sc.spec.from.month']}"></p:outputLabel>
 						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu required="true"
+							label="#{lbl['lbl.sc.spec.from.month']}"
 							value="#{specificationBackingBean.managedBean.fromMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change"
 								update="toDetailsUpdate,bankInfo,amountdetails"
 								listener="#{specificationBackingBean.fromChange}"></p:ajax>
-						</p:selectOneMenu> <p:spacer width="5"></p:spacer> <p:selectOneMenu
+						</p:selectOneMenu> <p:spacer width="1"></p:spacer> <p:selectOneMenu
 							value="#{specificationBackingBean.managedBean.startYear}">
 
 							<f:selectItem
@@ -68,7 +69,7 @@
 							</f:selectItem>
 						</p:selectOneMenu></td>
 
-					<td style="width: 30%"><p:outputLabel
+					<td style="width: 35%"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.to.month']}"></p:outputLabel> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
 					<td><h:panelGroup id="toDetailsUpdate">
