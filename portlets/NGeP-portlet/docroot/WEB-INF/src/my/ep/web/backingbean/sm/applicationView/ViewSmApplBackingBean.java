@@ -21,6 +21,7 @@ public class ViewSmApplBackingBean extends BaseReviewApplicationBackingBean<View
 		if(getManagedBean().getApplicationNoParam()==null){
 			initRedirectBackingBeanApplication();
 		}
+		setTabParam();
 	}
 
 }
