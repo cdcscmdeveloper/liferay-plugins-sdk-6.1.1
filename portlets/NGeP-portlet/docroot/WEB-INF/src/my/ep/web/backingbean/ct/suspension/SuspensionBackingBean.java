@@ -68,7 +68,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	
 	    public SuspensionBackingBean(){
 	           if(this.getManagedBean().getAction() == null) 
-	    	       this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SUBMIT});	
+	        	   this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
 	           
 	           if(ctBB == null){
 	  			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
@@ -101,8 +101,16 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 					  reqDTO.setTaskId(taskId);
 					  BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 					  Object obj = res.getPojo();
+					  
+					  String[] outcome = new String[res.getAction().length + 1];
+				      outcome[0] = BpmOutcomeConst.BPM_SAVE;
+				      int i = 1;
+				      for (String action : res.getAction()) {
+					     outcome[i++] = action;
+				      }
+				      
 					  getManagedBean().setTaskName(res.getTaskName());
-					  getManagedBean().setAction(res.getAction());
+					  getManagedBean().setAction(outcome);
 					  getManagedBean().setTaskId(taskId);
 						
 					  ContractReqDTO ctReqDTO = new ContractReqDTO();
@@ -196,7 +204,9 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			     if(resDTO.isSuccessful()) {
 					 log.info("Record saved successfully");
 					 String messageId = MessageConst.INFO_700005;
-				 	 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+					 if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+					     messageId = MessageConst.INFO_700025;
+				    } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
 						 messageId = MessageConst.INFO_700009;
 					 } else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 						messageId = MessageConst.INFO_700007;
