@@ -144,8 +144,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
+		String tabParam = originalServletRequest.getParameter("currentTab");
 		getManagedBean().setApplicationNoParam(applNo);
 		initApplication(getManagedBean().getApplicationNoParam());
+		setTabParam(tabParam);
 	}
 
 	private void initApplication(String applNoParam) {
@@ -231,9 +233,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		return retVal;
 	}
 
-	private void setTabParam() {
-		String tabParam = new FacesScopes().getParameter("tab");
-
+	private void setTabParam(String tabParam) {
 		try {
 			if (tabParam != null) {
 				getManagedBean().setTabActiveIndex(Integer.parseInt(tabParam));
@@ -281,46 +281,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
-		// initTesting();
-	}
-
-	private void initTesting() {
-		// testing user
-		getManagedBean().setApproverUser(true);
-
-		SmApplSectionReview apprSec = new SmApplSectionReview();
-		apprSec.setBasicRemark("approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remarkapprover basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark approver basic remark ");
-		apprSec.setStaffRemark("approver staff remark");
-		apprSec.setOfficeFacilityRemark("approver office remark");
-		apprSec.setCertRemark("approver cert remark");
-		apprSec.setAssocBodyRemark("approver assoc body remark");
-		apprSec.setTrnsNetworkRemark("approver trnsnetwork remark");
-		apprSec.setBranchRemark("approver branch remark");
-		apprSec.setAssociateRemark("approver associate remark");
-		apprSec.setExperienceRemark("approver experience remark");
-		apprSec.setCapitalRemark("approver capital remark");
-		apprSec.setShareholderRemark("approver shareholder remark");
-		apprSec.setEquityCompRemark("approver equitycomp remark");
-		apprSec.setPersonnelRemark("approver personnel remark");
-		apprSec.setCategoryRemark("approver category remark");
-		getManagedBean().setApprvrSecReview(apprSec);
-
-		SmApplSectionReview poSec = new SmApplSectionReview();
-		poSec.setBasicRemark("po basic remark");
-		poSec.setStaffRemark("po staff remark");
-		poSec.setOfficeFacilityRemark("po office remark");
-		poSec.setCertRemark("po cert remark");
-		poSec.setAssocBodyRemark("po assoc body remark");
-		poSec.setTrnsNetworkRemark("po trnsnetwork remark");
-		poSec.setBranchRemark("po branch remark");
-		poSec.setAssociateRemark("po associate remark");
-		poSec.setExperienceRemark("po experience remark");
-		poSec.setCapitalRemark("po capital remark");
-		poSec.setShareholderRemark("po shareholder remark");
-		poSec.setEquityCompRemark("po equitycomp remark");
-		poSec.setPersonnelRemark("po personnel remark");
-		poSec.setCategoryRemark("po category remark");
-		getManagedBean().setPoSecReview(poSec);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
