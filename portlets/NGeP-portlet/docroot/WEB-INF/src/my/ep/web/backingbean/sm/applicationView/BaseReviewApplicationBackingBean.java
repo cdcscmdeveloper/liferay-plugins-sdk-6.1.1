@@ -86,45 +86,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-
-		// if (reloadPreviousApplication()) {
-		// initPreviousApplication();
-		// }
-		// constructMessage();
-	}
-
-	private void initPreviousApplication() {
-		ISmApplRevisionSO applRevisionSO = null;
-
-		try {
-			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							ISmApplRevisionSO.class);
-
-			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setDeSerFileName(getDeSerFileNameAndPath());
-			SmApplRevisionResDTO resDTO = applRevisionSO
-					.readApplicationHist(reqDTO);
-
-			setApplication(resDTO);
-		} catch (NullPointerException ne) {
-			getManagedBean().setReviewApplicationExist(false);
-		} finally {
-			applRevisionSO = null;
-		}
 	}
 
 	public void navigateToRevAppl() {
-
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
-
+		String applType = originalServletRequest
+				.getParameter("applicationType");
 		getManagedBean().setApplicationNoParam(applNo);
-		initApplication();
-		String applType = getManagedBean().getSmAppl().getApplType();
 		String redirectToAppl = applNo.substring(applNo.length() - 3,
 				applNo.length()).equals("APP") ? SmApplicationUtil
 				.getReviewApplicationBasePage(applType) : SmApplicationUtil
@@ -150,7 +122,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			String applNo = smResDTO.getSmAppl().getApplNo();
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
-			initApplication();
+			initApplication(getManagedBean().getApplicationNoParam());
 			String applType = getManagedBean().getSmAppl().getApplType();
 			String redirectToAppl = SmApplicationUtil
 					.getReviewApplicationSupplierBasePage(applType);
@@ -160,7 +132,17 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
-	private void initApplication() {
+	public void initRedirectBackingBeanApplication() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String applNo = originalServletRequest.getParameter("applicationNo");
+		getManagedBean().setApplicationNoParam(applNo);
+		initApplication(getManagedBean().getApplicationNoParam());
+	}
+
+	private void initApplication(String applNoParam) {
 		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
@@ -170,7 +152,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 
-			reqDTO.setDeSerFileName(getDeSerFileNameAndPath());
+			reqDTO.setDeSerFileName(getDeSerFileNameAndPath(applNoParam));
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
@@ -198,38 +180,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
-	private boolean reloadPreviousApplication() {
-		boolean reload = false;
-		String applicationNo = new FacesScopes().getParameter("applicationNo");
-
-		if (applicationNo != null) {
-			if (getManagedBean().getApplicationNoParam() == null) {
-				reload = true;
-				getManagedBean().setApplicationNoParam(applicationNo);
-			} else {
-				if (!applicationNo.equals(getManagedBean()
-						.getApplicationNoParam())) {
-					reload = true;
-					getManagedBean().setApplicationNoParam(applicationNo);
-				}
-			}
-			setTabParam();
-		}
-
-		return reload;
-	}
-
-	private String getDeSerFileNameAndPath() {
-		String appNo = getManagedBean().getApplicationNoParam().substring(0,
-				getManagedBean().getApplicationNoParam().length() - 4);
+	private String getDeSerFileNameAndPath(String applNoParam) {
+		String appNo = applNoParam.substring(0, applNoParam.length() - 4);
 
 		String filePath = Calendar.getInstance().get(Calendar.YEAR)
 				+ File.separator + "SM" + File.separator + appNo
 				+ File.separator + "Revision" + File.separator;
 		String tempDir = EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += File.separator + filePath
-				+ getManagedBean().getApplicationNoParam() + SER_FILE_TYPE;
+		tempDir += File.separator + filePath + applNoParam + SER_FILE_TYPE;
 
 		return tempDir;
 	}

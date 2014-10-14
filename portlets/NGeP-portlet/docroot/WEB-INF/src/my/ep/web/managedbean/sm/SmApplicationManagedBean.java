@@ -276,6 +276,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String today;
 	private String revSupUrl;
 	private String revAppUrl;
+	private String revisionBaseUrl;
+	private String revisionSupplierAppNoParam;
+	private String revisionApproverAppNoParam;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2067,6 +2070,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRacesList(List<PmRace> racesList) {
 		this.racesList = racesList;
+	}
+
+	public String getRevisionBaseUrl() {
+		return revisionBaseUrl;
+	}
+
+	public void setRevisionBaseUrl(String revisionBaseUrl) {
+		this.revisionBaseUrl = revisionBaseUrl;
+	}
+
+	public String getRevisionSupplierAppNoParam() {
+		return revisionSupplierAppNoParam;
+	}
+
+	public void setRevisionSupplierAppNoParam(String revisionSupplierAppNoParam) {
+		this.revisionSupplierAppNoParam = revisionSupplierAppNoParam;
+	}
+
+	public String getRevisionApproverAppNoParam() {
+		return revisionApproverAppNoParam;
+	}
+
+	public void setRevisionApproverAppNoParam(String revisionApproverAppNoParam) {
+		this.revisionApproverAppNoParam = revisionApproverAppNoParam;
 	}
 
 }
