@@ -1190,12 +1190,13 @@ public void ConstructSideTabMenu(){
 	}
 		
 	public SelectItem[] getMonthList(){
-		 SelectItem[] items = new SelectItem[12];
+		 SelectItem[] items = new SelectItem[13];
 		 try{
-		      
+			
+			 items[0] = new SelectItem(0, "- Select One -");
 			String[] months = new DateFormatSymbols().getMonths();
-		    for(int i = 0; i < months.length; i++) {
-		        if(i == 12)
+		    for(int i = 1; i < months.length; i++) {
+		        if(i == 13)
 		          break;
 		        items[i] = new SelectItem(String.valueOf(i),months[i]);
 		    }      
@@ -1609,7 +1610,7 @@ public void ConstructSideTabMenu(){
 	 }
 		 
      public void validateDate(CtSchedule ctSchedule){
-    	 if(ctSchedule.getFromTranYear() == null || ctSchedule.getToTranYears() == null) {
+    	 if(ctSchedule.getFromTranYear() == null || ctSchedule.getToTranYears() == null || ctSchedule.getToTranDate() == 0) {
     		 for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
  			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
  			        dataList.setValidateScheduleDate(false);
