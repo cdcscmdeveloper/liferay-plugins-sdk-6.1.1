@@ -46,7 +46,7 @@
      	 #{(educationList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}                 
        </p:column >
         
-    	<p:column headerText="#{lbl['lbl.pm.profiles.search.result.action']}" style="width:5%;">
+    	<p:column headerText="#{lbl['lbl.pm.action']}" style="width:5%;">
    		 <p:commandLink action="#{educationBackingBean.goToMaintaincePage(educationList)}" process="@this" partialSubmit="true">
      		<p:graphicImage library="ep/images/design" name="edit.png"
      		 value="/resources/ep/images/design/edit.png" />
