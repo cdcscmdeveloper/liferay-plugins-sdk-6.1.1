@@ -23,21 +23,21 @@
 						<table style="margin-top: 10px; width: 60%;align:center">
 							<tr>
 								<td width="25%"><p:outputLabel value="Business Reg. No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{trackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
 								<td width="25%"><p:outputLabel value="MOF No." /></td>
-								<td width="25%"><p:inputText size="50" value="#{trackingDiaryBackingBean.MOFFilterBean.searchValue}"></p:inputText></td>
+								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 
 							<tr>
 								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
-								<td width="65%"><p:inputText size="50" value="#{trackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel value="Company Type" /></td>
 							
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
+										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
@@ -45,7 +45,7 @@
 								<td width="35%"><p:outputLabel value="Registration Status" /></td>
 								<td width="35%">					
 									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('PT')}" />
+										<f:selectItems value="#{smTrackingDiaryBackingBean.getDropdownCodeValues('PT')}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
@@ -56,10 +56,10 @@
 
 
 						<div style="text-align: right;">
-							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{trackingDiaryBackingBean.searchTrackingDiary}" id="searchButtonId">
-								<f:param name="unspscCode" value="aaaaaaaaaaa" />
+							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{smTrackingDiaryBackingBean.search}" id="searchButtonId">
+								<f:param name="unspscCode" value="Was" />
 							</p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{trackingDiaryBackingBean.resetAction}">
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{smTrackingDiaryBackingBean.reset}">
 							</p:commandButton>
 						</div>
 					</p:panel></td>
@@ -69,7 +69,7 @@
 			
 		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="supplierItemID" lazy="true" value="#{trackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
+			<p:dataTable id="supplierItemID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
 
 				<ac:paginator for="supplierItemID"></ac:paginator>
 
@@ -108,7 +108,7 @@
 					<f:facet name="header">
 					Action
 					</f:facet>
-					<p:commandLink action="#{trackingDiaryBackingBean.goToExtensionSearch(smSupplier)}">
+					<p:commandLink action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
 						#{smSupplier.regNo}
 					</p:commandLink>
 				</p:column>
@@ -117,17 +117,6 @@
 			<div class="clear"></div>
 
 		</p:panel>
-		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
-			modal="true">
-
-			<ui:include src="wishListPopUp.xhtml" />
-
-		</p:dialog>
-
-		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
-			width="500px" modal="true">
-			<ui:include src="viewWishListItem.xhtml"></ui:include>
-		</p:dialog> -->
 	</h:panelGroup>
 
 
