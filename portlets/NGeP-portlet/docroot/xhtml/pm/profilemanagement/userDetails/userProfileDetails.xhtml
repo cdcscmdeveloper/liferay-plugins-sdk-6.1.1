@@ -23,7 +23,7 @@
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.loginid']} - #{lbl['lbl.pm.profiles.invalidLogin']}">
-								<f:validateRegex pattern="^([a-zA-Z0-9@.]{8,60})?$" />
+								<f:validateRegex pattern="^([a-zA-Z0-9.]{8,60})?$" />
 							</p:inputText>
 							<p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
 
