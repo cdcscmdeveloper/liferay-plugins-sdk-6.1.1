@@ -12,12 +12,9 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-
-		<p:poll interval="#{onlineBiddingBB.interval}"
-			
-			update="@form"
+		<p:poll interval="10"
+			listener="#{onlineBiddingBB.pollListener}" update="@([id$=itemWiseBidList,remainingTimePanel])"
 			rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'Pending Bidding' or onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress' }" />
-
 
 		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
 			closable="true" />
@@ -55,8 +52,9 @@
 						<td><p:inputText id="bidNo"
 								value="#{onlineBiddingBB.scBidSchedule.bidNo}" disabled="true"
 								size="20" /></td>
-						<TD></TD>
-						<TD></TD>
+						<TD><p:inputText value="Interval" disabled="true" size="20" /></TD>
+						<TD><p:inputText value="#{onlineBiddingBB.interval}"
+								disabled="true" size="20" /></TD>
 						<td rowspan="4"></td>
 					</tr>
 
@@ -114,35 +112,35 @@
 
 		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+		<p:panel id="onLineBiddingTopPanel" header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
 
 			<p:spacer height="5"></p:spacer>
-			<div style="align: left">
-				<table style="width: 100%;">
-					<tr>
-						<td style="width: 9%;"><p:outputLabel
-								value="#{lbl['lbl.sc.remaining.time']}" /></td>
-						<td style="width: 41%; align: left"><script
-								type="application/javascript">
-							
-							
-							
-							
+
+			<p:panel id="remainingTimePanel"
+				rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+				<div style="align: left">
+					<table style="width: 100%;">
+						<tr>
+							<td style="width: 9%;"><p:outputLabel
+									value="#{lbl['lbl.sc.remaining.time']}" /></td>
+
+							<td style="width: 41%; align: left"><script
+									type="application/javascript">
+								
+								
 							
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
-					
 						
-						
-						
-						
-						</script></td>
-						<TD style="width: 50%;"><h:outputLabel
-								value="#{lbl['lbl.sc.notes']}" /></TD>
-					</tr>
-				</table>
-			</div>
+							
+							</script></td>
+							<TD style="width: 50%;"><h:outputLabel
+									value="#{lbl['lbl.sc.notes']}" /></TD>
+						</tr>
+					</table>
+				</div>
+			</p:panel>
 			<p:spacer height="5"></p:spacer>
 			<p:dataTable id="itemWiseBidList"
 				style="word-wrap: break-word ; table-layout: fixed"
@@ -163,13 +161,16 @@
 							width="19%" style="text-align:center" />
 
 						<p:column colspan="2" headerText="#{lbl['lbl.sc.last.bid']}"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}"
 							width="19%" style=" text-align:center" />
 
 						<p:column colspan="3" headerText="#{lbl['lbl.sc.new.bid']}"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}"
 							width="19%" style=" text-align:center" />
 
 						<p:column rowspan="2"
 							headerText="#{lbl['lbl.sc.current.ranking']}"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}"
 							style="white-space : normal" width="4%" />
 					</p:row>
 					<p:row>
@@ -177,15 +178,20 @@
 
 						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
 
-						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%" />
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="9%"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 
-						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 
-						<p:column headerText="#{lbl['lbl.sc.decrement']}" width="7%" />
+						<p:column headerText="#{lbl['lbl.sc.decrement']}" width="7%"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 
-						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%" />
+						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 
-						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%" />
+						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 					</p:row>
 				</p:columnGroup>
 				<p:column>
@@ -222,22 +228,25 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column>
-					<h:outputText style="float : right"
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+					<p:outputLabel style="float : right" 
 						value="#{bidPriceItem.bidPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</p:outputLabel>
 				</p:column>
-				<p:column>
-					<h:outputText style="float : right"
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+					<p:outputLabel style="float : right" 
 						value="#{bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</p:outputLabel>
 				</p:column>
-				<p:column>
-					<p:spinner size="10" value="#{bidPriceItem.newPrice}"
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+					<p:spinner size="10" value="#{bidPriceItem.newPrice}" 
 						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
 						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
@@ -246,7 +255,7 @@
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 					</p:spinner>
 					<p:spacer width="5"></p:spacer>
-					<p:commandLink
+					<p:commandLink 
 						action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
 						process="@this" partialSubmit="true"
 						update="@([id$=itemWiseBidList])">
@@ -254,23 +263,26 @@
 							value="/css/images/design/submit.png" />
 					</p:commandLink>
 				</p:column>
-				<p:column>
-					<h:outputText id="newPrice" style="float : right"
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+					<p:outputLabel id="newPrice" style="float : right"
 						rendered="#{bidPriceItem.newBidPrice != null }"
 						value="#{bidPriceItem.newBidPrice.bidPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</p:outputLabel>
 				</p:column>
-				<p:column>
-					<h:outputText id="newPriceSubTotal" style="float : right"
-						rendered="#{bidPriceItem.newBidPrice != null }"
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
+					<p:outputLabel id="newPriceSubTotal" style="float : right"
+						rendered="#{onlineBiddingBB.getStatusDescById(bidPriceItem.newBidPrice != null}"
 						value="#{bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					</p:outputLabel>
 				</p:column>
-				<p:column>
+				<p:column
+					rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}">
 					<p:outputLabel id="newRanking" value="#{bidPriceItem.ranking}" />
 				</p:column>
 
@@ -278,10 +290,15 @@
 					<p:row>
 						<p:column colspan="4" footerText="Total" style="text-align:right" />
 						<p:column footerText="#{onlineBiddingBB.itemStartPriceTotal}" />
-						<p:column footerText="Total" style="text-align:right" />
-						<p:column footerText="#{onlineBiddingBB.itemLastBidPriceTotal}" />
-						<p:column colspan="2" footerText="Total" style="text-align:right" />
-						<p:column footerText="#{onlineBiddingBB.itemNewBidPriceTotal}" />
+						<p:column footerText="Total" style="text-align:right"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
+						<p:column footerText="#{onlineBiddingBB.itemLastBidPriceTotal}"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
+						<p:column colspan="2" footerText="Total" style="text-align:right"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
+						<p:column id="itemNewBidPriceTotal"
+							footerText="#{onlineBiddingBB.itemNewBidPriceTotal}"
+							rendered="#{onlineBiddingBB.getStatusDescById(onlineBiddingBB.scBidSchedule.pmStatus.statusId) eq 'In Progress'}" />
 						<p:column />
 					</p:row>
 				</p:columnGroup>
@@ -314,7 +331,7 @@
 			widgetVar="onlineBiddingNotification" showEffect="fade"
 			hideEffect="fade" modal="true" id="onlineBiddingNotification">
 			<ui:include
-				src="/xhtml/sc/bidding/ onlineBiddingNotificationPopup.xhtml"></ui:include>
+				src="/xhtml/sc/bidding/onlineBiddingNotificationPopup.xhtml"></ui:include>
 		</p:dialog>
 
 	</ui:define>
