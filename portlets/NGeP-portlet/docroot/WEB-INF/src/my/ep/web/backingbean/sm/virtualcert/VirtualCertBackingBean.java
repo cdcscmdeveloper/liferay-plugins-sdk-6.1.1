@@ -90,11 +90,11 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 				IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
 				VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
 				reqDTO.setSupplierId(supp.getSupplierId());
-				VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
+				VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
 				
-				this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
-				if(resDTO.getSmMofAccounts().size() > 0){
-					this.getManagedBean().setMofAccountLs(resDTO.getSmMofAccounts());
+				this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
+				if(resDTO.getSmMofCerts().size() > 0){
+					this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
 				}
 				
 				FacesContext fc = FacesContext.getCurrentInstance();
