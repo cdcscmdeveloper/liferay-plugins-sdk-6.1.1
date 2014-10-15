@@ -29,13 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
-/*import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
-import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
-import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
-import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sm.SmSupplier;*/
 
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -61,10 +54,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
-/*import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
-import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;*/
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
@@ -884,7 +873,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	  public boolean isContractAdmin() {
-			return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()));
+			return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())||getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 		}
 
 	  private List<String> getAvailableApproverList() {
