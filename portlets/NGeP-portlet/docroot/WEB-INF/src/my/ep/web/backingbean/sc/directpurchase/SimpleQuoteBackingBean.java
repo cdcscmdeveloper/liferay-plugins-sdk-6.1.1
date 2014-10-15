@@ -755,6 +755,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
 					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
 					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
+				} else{
+					if(quote.getLocationStateCriterias() != null){
+						quote.getLocationStateCriterias().clear();
+					}
+					if(quote.getLocationDivisionCriterias() != null){
+						quote.getLocationDivisionCriterias().clear();
+					}
+					if(quote.getLocationDistrictCriterias() != null){
+						quote.getLocationDistrictCriterias().clear();
+					}
 				}
 			}
 			
@@ -973,6 +983,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
 					quote.setLocationDivisionCriterias(getLocationDivisionCriterias(getManagedBean().getLocationTrees(), quote));
 					quote.setLocationDistrictCriterias(getLocationDistrictCriterias(getManagedBean().getLocationTrees(), quote));
+				} else{
+					if(quote.getLocationStateCriterias() != null){
+						quote.getLocationStateCriterias().clear();
+					}
+					if(quote.getLocationDivisionCriterias() != null){
+						quote.getLocationDivisionCriterias().clear();
+					}
+					if(quote.getLocationDistrictCriterias() != null){
+						quote.getLocationDistrictCriterias().clear();
+					}
 				}
 			}
 			
@@ -1850,7 +1870,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void deleteLocationTreeNode() {
 		List<TreeNode> rootTrees = getManagedBean().getLocationTrees();
-		
+		deleteLocTreeNodes(rootTrees);
 
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (rootTrees != null) {
@@ -1862,71 +1882,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-			
-			if(locationDTOs.size()>0){
-				deleteLocCriterias(locationDTOs);
-				
-			}
-			deleteLocTreeNodes(rootTrees);
 		}
 	}
-
-	private void deleteLocCriterias(List<TplSpecZoneLoc> tplSpecZoneLocs) {
-		List<ScLocationStateCriteria>	locStateCriterias = new ArrayList<ScLocationStateCriteria>();
-		List<ScLocationDivisionCriteria>	locDivisionCriterias	=	new ArrayList<ScLocationDivisionCriteria>();
-		List<ScLocationDistrictCriteria>	locDistrictCriterias 	=	new ArrayList<ScLocationDistrictCriteria>();
-
-		ScQuote quote = 	getManagedBean().getScQuote();
-		List<Long> stateIds = null;
-		List<Long> divIds = null;
-		List<Long> distIds = null;
-
-		if(tplSpecZoneLocs != null && tplSpecZoneLocs.size()>0){
-			stateIds =  getPmStateIds(tplSpecZoneLocs);
-			divIds =  getPmDivisionIds(tplSpecZoneLocs);
-			distIds =  getPmDistrictsIds(tplSpecZoneLocs);
-		}
-
-		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_STATE)){
-			if(quote.getLocationStateCriterias() != null && quote.getLocationStateCriterias().size()>0){
-				for (ScLocationStateCriteria sclocStateCriteria : quote.getLocationStateCriterias()) {
-					if(stateIds != null && stateIds.size()>0){
-						if(!stateIds.contains(sclocStateCriteria.getPmState().getStateId())){
-							locStateCriterias.add(sclocStateCriteria);
-						}
-					}
-				}
-			}
-		}
-		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_DIVISION)){
-			if(quote.getLocationDivisionCriterias() != null && quote.getLocationDivisionCriterias().size()>0){
-				for (ScLocationDivisionCriteria scLocDivisionCriteria : quote.getLocationDivisionCriterias()) {
-					if(divIds != null && divIds.size()>0){
-						if(!divIds.contains(scLocDivisionCriteria.getPmDivision().getDivisionId())){
-							locDivisionCriterias.add(scLocDivisionCriteria);
-						}
-					}
-				}
-			}
-		}
-
-		if(getManagedBean().getLocationLevel().equals(ParameterConst.LOCATION_LEVEL_DISTRICT)){
-			if(quote.getLocationStateCriterias() != null && quote.getLocationDistrictCriterias().size()>0){
-				for (ScLocationDistrictCriteria locationDistrictCriteria : quote.getLocationDistrictCriterias()) {
-					if(distIds != null && distIds.size()>0){
-						if(!distIds.contains(locationDistrictCriteria.getPmDistrict().getDistrictId())){
-							locDistrictCriterias.add(locationDistrictCriteria);
-						}
-					}
-
-				}
-			}
-		}
-		getManagedBean().getScQuote().setLocationStateCriterias(locStateCriterias);
-		getManagedBean().getScQuote().setLocationDivisionCriterias(locDivisionCriterias);
-		getManagedBean().getScQuote().setLocationDistrictCriterias(locDistrictCriterias);
-	}
-
+	
 	public void deleteLocTreeNodes(List<TreeNode> rootTrees) {
 		if (rootTrees != null) {
 			for (int row = 0; row < rootTrees.size(); row++) {
