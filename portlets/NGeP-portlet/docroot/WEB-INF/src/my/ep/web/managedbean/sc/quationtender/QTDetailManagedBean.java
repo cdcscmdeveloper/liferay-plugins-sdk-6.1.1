@@ -132,6 +132,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmCountry> countries;
 	private List<PmDistrict> districts;
 	private List<PmCity> citys;
+	private List<PmDivision> divisionList;
+	private boolean stateCode;
 
 	public List<ScQtBudget> gosodos;
 	public List<ScQtDoc> scQtDocs;
@@ -274,7 +276,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecLoc> totalSuppliersSpecLoc;
 	private List<PmState> stateList;
 	private List<PmDistrict> districtList;
-	private List<PmDivision> divisionList;
 	
 	private int totalSuppliers;
 
@@ -2702,6 +2703,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public boolean isStateCode() {
+		return stateCode;
+	}
+
+	public void setStateCode(boolean stateCode) {
+		this.stateCode = stateCode;
 	}
 
 }
