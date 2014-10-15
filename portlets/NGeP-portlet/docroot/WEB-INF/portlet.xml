@@ -5573,7 +5573,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/bpmtasklist/tasksBar.xhtml
+				/xhtml/cc/tasksBar.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
