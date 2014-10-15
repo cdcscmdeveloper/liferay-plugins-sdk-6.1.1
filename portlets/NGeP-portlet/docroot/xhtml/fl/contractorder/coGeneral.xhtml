@@ -127,7 +127,7 @@
 							listener="#{flOrderBB.updateDeliveryDate}"
 							update="delEndDate" />
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.cr.mto']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
 						disabled="true" /></td>
@@ -138,7 +138,7 @@
 						value="#{flOrderBB.managedBean.flRequest.endDate}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.cr.factored']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
 						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /></td>
 			</tr>
