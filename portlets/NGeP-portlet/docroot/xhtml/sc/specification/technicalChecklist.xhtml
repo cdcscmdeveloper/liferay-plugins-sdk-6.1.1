@@ -168,6 +168,7 @@
 					</p:selectBooleanCheckbox>
 
 					<p:selectBooleanCheckbox value="#{stageTwoTechnical.scoringReq}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwoTechnical.action.parameterCode eq 'O'}">
 
 					</p:selectBooleanCheckbox>
@@ -188,6 +189,7 @@
 				<h:panelGroup id="uploadtech">
 					<p:commandLink oncomplete="uploadDlg.show();return false;"
 						styleClass="sample#{index}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
 						update="stageTwotechProposal">
 						<p:graphicImage library="ep/images/design" name="upload.png"
@@ -206,6 +208,7 @@
 				style="width:10%">
 
 				<p:commandLink
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					rendered="#{stageTwoTechnical.definationType.parameterCode eq 'TS' or stageTwoTechnical.definationType.parameterCode eq 'SD' or stageTwoTechnical.definationType.parameterCode eq 'WF'}"
 					action="#{specificationBackingBean.technicalChecklistEditAction(index,stageTwoTechnical,'T')}">
 
@@ -221,20 +224,24 @@
 
 		<div align="right">
 			<p:commandButton
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" oncomplete="stageTwoTech.show();"
 				actionListener="#{specificationBackingBean.stageTwoTechcompilenceList}"
 				update="compilencestageTwo" />
 			<p:commandButton value="Create Specification" process="@this"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();"
-				icon="ui-icon-add" />
+				icon="ui-icon-add"
+				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
 				process="@this,stageTwotechProposal"
 				oncomplete="technicalChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
-				update="@all,stageTwotechProposal" icon="ui-icon-add" />
+				update="@all,stageTwotechProposal" icon="ui-icon-add"
+				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2techProposal)}"
 				update="stageTwotechProposal">

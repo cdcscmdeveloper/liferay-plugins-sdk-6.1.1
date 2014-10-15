@@ -22,7 +22,9 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.status']}" style="width:20%">
-				<h:outputText value="#{specificationBackingBean.getStatusDescById(financialSpec.pmStatus.statusId)}" size="50"></h:outputText>
+				<h:outputText
+					value="#{specificationBackingBean.getStatusDescById(financialSpec.pmStatus.statusId)}"
+					size="50"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.created.by']}" style="width:20%">
@@ -33,6 +35,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}"
 				style="width:10%">
 				<p:commandLink process="@this" partialSubmit="true"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -46,6 +49,7 @@
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
 					process="@this" icon="ui-icon-add" partialSubmit="true"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					oncomplete="createOwnerSpec.show();" />
 
 

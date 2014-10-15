@@ -72,7 +72,7 @@
 				<td><p:inputText size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, specificationBackingBean.managedBean.scQt.evaluationType)}"
 						readonly="true" disabled="true" /></td>
-				<td style="width:215px;"><h:outputLabel
+				<td style="width: 215px;"><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
 				<td><p:inputText size="30"
@@ -82,7 +82,6 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputMask id="proposalId" size="30" mask="9"
-						placeHolder=""
 						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE'}"
 						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
@@ -93,7 +92,7 @@
 				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
-						label="#{lbl['lbl.sc.spec.ful.type']}"
+						label="#{lbl['lbl.sc.spec.ful.type']}" disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
 
@@ -108,7 +107,7 @@
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><p:inputMask id="contract" required="true" size="30"
-						mask="9?99" placeHolder="" maxlength="3"
+						mask="9?99" placeHolder="" maxlength="3" disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;">

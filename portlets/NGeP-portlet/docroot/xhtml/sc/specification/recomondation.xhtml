@@ -12,12 +12,15 @@
 
 		<p:panel style="margin-left:5%"
 			rendered="#{((specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false') or (specificationBackingBean.managedBean.scQt.evaluationType eq '2' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true') or (specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'true'))}">
-			<p:panel id="package" header="#{lbl['lbl.sc.spec.fin.score.by.package']}" toggleable="true">
+			<p:panel id="package"
+				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
+				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.technical']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallTechnical}">
 
 								<p:ajax event="blur" update="totalrecommendation"
@@ -29,6 +32,7 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.fin.scoring.financial']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.overallFin}">
 
 								<p:ajax event="blur" update="totalrecommendation"
@@ -49,6 +53,7 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}">
 
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
@@ -58,12 +63,14 @@
 
 
 
-			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}" toggleable="true">
+			<p:panel id="item" header="#{lbl['lbl.sc.spec.fin.score.by.item']}"
+				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>
@@ -83,6 +90,7 @@
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.recommendation.technical']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallTechnical}">
 
 								<p:ajax event="blur" update="technicalrecommendation"
@@ -93,6 +101,7 @@
 
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherTechnical}">
 
 								<p:ajax event="blur" update="technicalrecommendation"
@@ -109,6 +118,7 @@
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
 
 								<p:ajax event="blur" update="financialrecommendation"
@@ -119,6 +129,7 @@
 
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
 
 								<p:ajax event="blur" update="financialrecommendation"
@@ -141,13 +152,15 @@
 		<p:panel
 			rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1' and specificationBackingBean.managedBean.scQt.techEvaluationReq eq 'false'}">
 			<p:panel id="recommendTechnicalItem"
-				header="#{lbl['lbl.sc.spec.fin.score.by.package']}" toggleable="true">
+				header="#{lbl['lbl.sc.spec.fin.score.by.package']}"
+				toggleable="true">
 				<table>
 
 					<tr>
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationPackageScore.passingScore}"
 								style="text-align:right">
 
@@ -156,7 +169,8 @@
 				</table>
 			</p:panel>
 
-			<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.item']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.spec.fin.score.by.item']}"
+				toggleable="true">
 				<table>
 					<tr>
 						<td><h:outputLabel
@@ -182,6 +196,7 @@
 						<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.scoring.financial']}</p:column>
 						<p:column style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallFin}">
 
 								<p:ajax event="blur" update="financial"
@@ -192,6 +207,7 @@
 
 						<p:column colspan="1" style="font-weight: bold;">
 							<p:inputText style="text-align:right" maxlength="5"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.overallOtherFin}">
 
 								<p:ajax event="blur" update="financial"
