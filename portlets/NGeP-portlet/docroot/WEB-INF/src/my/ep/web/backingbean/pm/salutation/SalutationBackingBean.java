@@ -71,7 +71,8 @@ public class SalutationBackingBean extends
 	public void resetSalSearch() {
 		debugLogger("resetSalSearch");
 		
-        RequestContext.getCurrentInstance().reset("salPanel");
+        this.getManagedBean().setSalutationCodes(new String());
+        this.getManagedBean().setSalutationNames(new String());
 		
 	}
 	
@@ -106,22 +107,26 @@ public class SalutationBackingBean extends
 		private ISearchBean<PmSalutation> getSearchBeanData(ISearchBean<PmSalutation> searchBean){
 				
 			if (getManagedBean().getSalutationCodes() != null
-					&& !"".equals(getManagedBean().getSalutationCodes())) {
+					&& !"".equalsIgnoreCase(getManagedBean().getSalutationCodes())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
+						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("salutationCode");
+				codesSearchBean
+						.setCaseInsensitive(true);
 				codesSearchBean.setSearchValue(getManagedBean()
 						.getSalutationCodes());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
 			if (getManagedBean().getSalutationNames() != null
-					&& !"".equals(getManagedBean().getSalutationNames())) {
+					&& !"".equalsIgnoreCase(getManagedBean().getSalutationNames())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
-						SearchOperator.OPERATOR_EQUALS.value());
+						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
 						.setSearchField("salutationName");
+				codesSearchBean
+						.setCaseInsensitive(true);
 				codesSearchBean.setSearchValue(getManagedBean()
 						.getSalutationNames());
 				searchBean.getDataFilterBeans().add(codesSearchBean);
