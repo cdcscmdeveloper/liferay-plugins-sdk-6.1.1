@@ -90,19 +90,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
-
-	public void initRedirectBackingBeanApplication() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String applNo = originalServletRequest.getParameter("applicationNo");
-
-		getManagedBean().setApplicationNoParam(applNo);
-		initApplication(applNo);
+	public void initMain() {
+		if (reloadApplication()) {
+			initApplication();
+		}
+		setTabParam();
 	}
 
-	public void initApplication(String applNoParam) {
+	public void initApplication() {
 		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
@@ -112,7 +107,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
 
-			reqDTO.setDeSerFileName(getDeSerFileNameAndPath(applNoParam));
+			reqDTO.setDeSerFileName(getDeSerFileNameAndPath(getManagedBean()
+					.getApplicationNoParam()));
 			SmApplRevisionResDTO resDTO = applRevisionSO
 					.readApplicationHist(reqDTO);
 
@@ -123,6 +119,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			constructMessage();
 			applRevisionSO = null;
 		}
+	}
+
+	public boolean reloadApplication() {
+		boolean reload = false;
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String applicationNo = originalServletRequest
+				.getParameter("applicationNo");
+
+		if (applicationNo != null) {
+			if (getManagedBean().getApplicationNoParam() == null) {
+				reload = true;
+				getManagedBean().setApplicationNoParam(applicationNo);
+			} else {
+				if (!applicationNo.equals(getManagedBean()
+						.getApplicationNoParam())) {
+					reload = true;
+					getManagedBean().setApplicationNoParam(applicationNo);
+				}
+			}
+		}
+		return reload;
 	}
 
 	public void downloadSelectedSuppDoc(String fileName, String filePath) {

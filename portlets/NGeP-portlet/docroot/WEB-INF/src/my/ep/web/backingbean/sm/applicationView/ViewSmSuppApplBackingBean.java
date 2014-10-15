@@ -9,14 +9,13 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "viewSmSuppApplBackingBean")
 @RequestScoped
-public class ViewSmSuppApplBackingBean extends BaseReviewApplicationBackingBean<ViewSmSuppApplManagedBean>{
-	
-	public static Logger log = Logger.getLogger(ViewSmSuppApplBackingBean.class);
+public class ViewSmSuppApplBackingBean extends
+		BaseReviewApplicationBackingBean<ViewSmSuppApplManagedBean> {
+
+	public static Logger log = Logger
+			.getLogger(ViewSmSuppApplBackingBean.class);
 
 	public ViewSmSuppApplBackingBean() {
-		if(getManagedBean().getApplicationNoParam()==null){
-			initRedirectBackingBeanApplication();
-		}
-		setTabParam();
+		initMain();
 	}
 }
