@@ -8,21 +8,37 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
-		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
+		</f:facet>
+		
+		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory" widgetVar="restrictedCategoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList}"
-			rowIndexVar="index" styleClass="restrictedPnlId"
+			rowIndexVar="index" styleClass="restrictedPnlId" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedRestrictedCategoryList}"
 			rowKey="#{restrcitedCateGory}">
-
+			
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3"
+				<p:inputText value="#{restrcitedCateGory.pmCategoryL1.categoryL1Code}"
+					size="2" style="margin-right: 3px !important;">
+					<p:ajax event="blur"  update="restrictedPtj" partialSubmit="true" process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(restrcitedCateGory)}"/>
+				</p:inputText>
+				<p:inputText value="#{restrcitedCateGory.pmCategoryL2.categoryL2Code}"
+					size="2">
+					<p:ajax event="blur" update="restrictedPtj" partialSubmit="true" process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(restrcitedCateGory)}"/>
+				</p:inputText>
+				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3" size="2"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
 					postUpdateListener="qTSupplierQulCriteriaBackingBean.restrictedCategoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList, qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3)"
 					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
+					conditionField="#{qTSupplierQulCriteriaBackingBean.constructCondtionFields(restrcitedCateGory)}"
 					update=":form:restrictedtendertabView:restrictedPnlId">
 				</ac:lov>
 			</p:column>

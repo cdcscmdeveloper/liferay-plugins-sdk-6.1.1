@@ -8,21 +8,37 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.category.code.list']}"
 		toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
+		</f:facet>
+		
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-			rowIndexVar="index" styleClass="openPnlId"
+			rowIndexVar="index" styleClass="openPnlId" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
-
+		
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3"
+				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
+					size="2" style="margin-right: 3px !important;">
+					<p:ajax event="blur"  update="openPtj" partialSubmit="true" process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(cateGory)}"/>
+				</p:inputText>
+				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
+					size="2">
+					<p:ajax event="blur" update="openPtj" partialSubmit="true" process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(cateGory)}"/>
+				</p:inputText>
+				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="2"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
 					postUpdateListener="qTSupplierQulCriteriaBackingBean.categoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList, qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
+					conditionField="#{qTSupplierQulCriteriaBackingBean.constructCondtionFields(cateGory)}"
 					update=":form:openPnlId">
 				</ac:lov>
 			</p:column>
