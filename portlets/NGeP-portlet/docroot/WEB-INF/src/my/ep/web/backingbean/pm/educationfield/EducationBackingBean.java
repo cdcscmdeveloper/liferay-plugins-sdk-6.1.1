@@ -70,6 +70,19 @@ public class EducationBackingBean extends
 	}		
 	
 	/**
+	 * reset search for education field
+	 * 
+	 */
+	public void resetSearchEdu(){
+		debugLogger("resetSearchEdu");
+		
+		this.getManagedBean().setFieldCodes(new String());
+		this.getManagedBean().setFieldNames(new String());
+		
+		
+	}
+	
+	/**
 	 * reload to education field creation page
 	 * 
 	 */	
@@ -104,22 +117,26 @@ public class EducationBackingBean extends
 	private ISearchBean<PmEduField> getEducationSearchBeanData(ISearchBean<PmEduField> searchBean){
 			
 		if (getManagedBean().getFieldCodes() != null
-				&& !"".equals(getManagedBean().getFieldCodes())) {
+				&& !"".equalsIgnoreCase(getManagedBean().getFieldCodes())) {
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
+					SearchOperator.OPERATOR_LIKE.value());
 			codesSearchBean
 					.setSearchField("fieldCode");
+			codesSearchBean
+					.setCaseInsensitive(true);
 			codesSearchBean.setSearchValue(getManagedBean()
 					.getFieldCodes());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
 		}
 
 		if (getManagedBean().getFieldNames() != null
-				&& !"".equals(getManagedBean().getFieldNames())) {
+				&& !"".equalsIgnoreCase(getManagedBean().getFieldNames())) {
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
+					SearchOperator.OPERATOR_LIKE.value());
 			codesSearchBean
 					.setSearchField("fieldName");
+			codesSearchBean
+					.setCaseInsensitive(true);
 			codesSearchBean.setSearchValue(getManagedBean()
 					.getFieldNames());
 			searchBean.getDataFilterBeans().add(codesSearchBean);
