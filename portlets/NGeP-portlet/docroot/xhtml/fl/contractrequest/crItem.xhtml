@@ -109,14 +109,16 @@
 					onclick="delAddrDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
-		<p:spacer height="20" />
 		<h:panelGroup id="itemDetPanelGroup">
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false" rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}" />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.item.list']}" escape="false" 
+				rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) or 
+							(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeOneOff)}" />
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
 				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
-				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
+				rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) or 
+							(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeOneOff)}">
 				<ac:paginator for="itemDataTable" />
 				<p:column selectionMode="multiple" width="5%" />
 				<p:column headerText="#{lbl['lbl.fl.item.name']}">
