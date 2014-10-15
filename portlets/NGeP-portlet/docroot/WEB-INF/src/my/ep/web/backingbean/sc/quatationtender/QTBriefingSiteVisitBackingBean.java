@@ -7,25 +7,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -35,6 +30,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
@@ -46,6 +42,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
@@ -87,26 +84,51 @@ public class QTBriefingSiteVisitBackingBean extends
 		debugLogger("retrievePmStateList");
 		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 		if (null == this.getManagedBean().getStates()) {
-			IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStateSO.class);
-			StateReqDTO reqDTO = new StateReqDTO();
 			CountryReqDTO countryReqDTo = new CountryReqDTO();
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 			CountryResDTO countryResDTO = countrySo.retrieveCountryByCode(countryReqDTo);
 			
-			reqDTO.setCountryId(countryResDTO.getPmCountry().getCountryId());
-
-			StateResDTO resDTO = stateSO.retriveStatesListByCountryID(reqDTO);
-
-			List<PmState> list = resDTO.getStateList();
-			this.getManagedBean().setStates(list);
-
+			List<PmState> stateList = PmCommonUtil.retrievePmStateList(countryResDTO.getPmCountry().getCountryId());
+			this.getManagedBean().setStates(stateList);
 		}
-		retrievePmDistrictList();
+		//retrievePmDistrictList();
+	}
+	
+	public void retrieveDivisionList(AjaxBehaviorEvent e){
+		Long stateId = (Long) e.getComponent().getAttributes().get("value");
+		if(stateId!=null){
+			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			this.getManagedBean().setStateCode(
+					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
+		}
+		List<PmDivision> divisions = PmCommonUtil.retrievePmDivisionList(stateId);
+		getManagedBean().setDivisionList(divisions);
+		if(divisions.size()==0) {
+			List<PmDistrict> districts = PmCommonUtil.retrievePmDistrictList(stateId);
+			getManagedBean().setDistricts(districts);			
+		}
+	}
+	
+	public void retrievePmDistrictList(AjaxBehaviorEvent e) {
+		if (null != this.getManagedBean().getQtBriefing()) {
+			Long divisionId = (Long) e.getComponent().getAttributes().get("value");
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setDivisionId(divisionId);
+			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
+			getManagedBean().setDistrictList(resDTO.getDistrictList());
+		}
+	}
+	
+	public void retrievePmCityList(AjaxBehaviorEvent e) {
+		if (null != this.getManagedBean().getQtBriefing()) {
+			Long districtId = (Long) e.getComponent().getAttributes().get("value");
+			List<PmCity> citList = PmCommonUtil.retrievePmCityList(districtId);
+			this.getManagedBean().setCitys(citList);
+		}
 	}
 
-	public void retrievePmDistrictList() {
+	/*public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
@@ -126,9 +148,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 		}
 		retrievePmCityList();
-	}
+	}*/
 
-	public void retrievePmCityList() {
+	/*public void retrievePmCityList() {
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long districtId = this.getManagedBean().getQtBriefing()
 					.getAddress().getPmDistrict().getDistrictId();
@@ -143,7 +165,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				this.getManagedBean().setCitys(resDTO.getCityList());
 			}
 		}
-	}
+	}*/
 
 	public void processChecked(AjaxBehaviorEvent e) {
 		Boolean selectedValue = (Boolean) e.getComponent().getAttributes()
@@ -168,6 +190,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		address.setPmCity(pmCity);
 		PmState pmState = new PmState();
 		address.setPmState(pmState);
+		address.setPmDivision(new PmDivision());
 		address.setPmDistrict(new PmDistrict());
 		bsvDtl.setAddress(address);
 		PmStatus pmStatus = new PmStatus();
