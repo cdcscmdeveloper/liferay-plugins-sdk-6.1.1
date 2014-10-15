@@ -140,6 +140,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    getManagedBean().getFactoring().setCtContract(new CtContract());
 		    getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
 		    getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+		    getManagedBean().setAccountNo(null);
+		    getManagedBean().setFactoringBankName(null);
+		    
 	}
 	
 	 private FacesScopes getFacesScopes(){
