@@ -11,9 +11,9 @@
 			<p:dataGrid value="#{viewSmApplBackingBean.managedBean.smAppl.smStaffTotals}"
 				var="staff" columns="1" rowIndexVar="index" id="dtfGrd">
 
-				<table style="width: 100%">
+				<table style="width: 62%">
 					<tr>
-						<td width="200px">
+						<td>
 							<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.staff.totalStaff']} "
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CONTRACTOR}" />
 							<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.staff.profStaff']}"
@@ -22,23 +22,13 @@
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_SEMIPROF}" />
 							<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.staff.clericalStaff']}"
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
-						<td width="90px">
-							<p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" />
-						</td>
-						<td width="55px">
-							<p:outputLabel value="#{staff.totalBumi}"/>
-						</td>
-						<td width="100px">
-							<p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" />
-						</td>
-						<td width="55px">
-							<p:outputLabel value="#{staff.totalNonBumi}" />
-						</td>
-						<td width="100px">
-							<p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" />
-						</td>
-						<td width="55px">
-							<p:outputLabel value="#{staff.totalForeigner}" />
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" styleClass="outputLabel-view" />
+							<p:outputLabel value="(#{staff.totalBumi})" styleClass="outputLabel-view" /><br />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" styleClass="outputLabel-view" />
+							<p:outputLabel value="(#{staff.totalNonBumi})" styleClass="outputLabel-view" /><br />
+							<p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" styleClass="outputLabel-view" />
+							<p:outputLabel value="(#{staff.totalForeigner})" styleClass="outputLabel-view" />
 						</td>
 					</tr>
 				</table>
