@@ -71,32 +71,40 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	
 	public void viewVirtualCert(){
 		SmSupplier supp = getSmSupplier();
-		QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+		
 		String xhtml = "/xhtml/sm/virtualcert/virtualCertDet.xhtml";
 		
-		try {
-			
-			IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
-			VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
-			reqDTO.setSupplierId(supp.getSupplierId());
-			/*VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
-			
-			this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
-			if(resDTO.getSmMofAccounts().size() > 0){
-				this.getManagedBean().setMofAccountLs(resDTO.getSmMofAccounts());
-			}*/
-
-			VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFCertBySupplierId(reqDTO);
-			
-			this.getManagedBean().setMofCertLs(new ArrayList<SmMofCert>());
-			if(resDTO.getSmMofCerts().size() > 0){
-				this.getManagedBean().setMofCertLs(resDTO.getSmMofCerts());
+//		try {
+			log.info("viewVirtualCert appl ID>>>>" + supp.getSmAppl().getApplId());
+			log.info("isQuestionnaire>>>>" + supp.getSmAppl().isQuestionnaire());
+			if(!supp.getSmAppl().isQuestionnaire()){
+				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+				quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+				quesBackingBean.getManagedBean().setSmSupp(supp);
+				quesBackingBean.getManagedBean().setSmAppl(supp.getSmAppl());
+				quesBackingBean.retrieveQuestionnaire();	
+				
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+			}else{
+				IVirtualCertSO virtualCertSO = (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject("sm", IVirtualCertSO.class);
+				VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+				reqDTO.setSupplierId(supp.getSupplierId());
+				VirtualCertResDTO resDTO = virtualCertSO.retrieveMOFAccountBySupplierId(reqDTO);
+				
+				this.getManagedBean().setMofAccountLs(new ArrayList<SmMofAccount>());
+				if(resDTO.getSmMofAccounts().size() > 0){
+					this.getManagedBean().setMofAccountLs(resDTO.getSmMofAccounts());
+				}
+				
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, xhtml);
 			}
-			
-			quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
-		} catch(Exception ex){
+
+			//quesBackingBean.validateQuestionnaire(supp.getSmAppl().getApplId(), xhtml);
+/*		} catch(Exception ex){
 			log.error("viewVirtualCert ex:" + ex.getMessage());
-		}
+		}*/
 		
 	}
 	
@@ -475,6 +483,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			log.error("download exception>>>>" + ex.getMessage());
 		}
 	}
+	
 	
 }
 
