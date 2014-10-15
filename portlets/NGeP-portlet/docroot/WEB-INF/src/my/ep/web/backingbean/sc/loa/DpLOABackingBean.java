@@ -59,6 +59,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			LOADetailBackingBean loaDetailBackingBean = new LOADetailBackingBean();
 			loaDetailBackingBean.renewSesionObject();
 			loaDetailBackingBean.getManagedBean().setSourceId(sourceId);
+			loaDetailBackingBean.getManagedBean().setPayLoad(dpDataType);
 
 			retrieveLOAList(sourceId);
 
