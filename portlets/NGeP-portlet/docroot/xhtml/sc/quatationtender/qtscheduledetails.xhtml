@@ -238,6 +238,8 @@
 				<h:inputText value="#{contactpersondetails.email}" />
 			</p:column>
 		</p:dataTable>
+		
+		<p:spacer height="3" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this,cpersondetailsid" partialSubmit="true"
@@ -256,7 +258,7 @@
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
 			rowKey="#{deskofficeradmin}" rowIndexVar="rowIndex"
-			style="width : 100%;">
+			style="width : 100%;" rows="10">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 
@@ -274,6 +276,8 @@
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
+		
+		<p:spacer height="3" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
 				process="@this, doaaid" partialSubmit="true"
