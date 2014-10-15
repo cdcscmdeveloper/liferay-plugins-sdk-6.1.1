@@ -77,6 +77,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	}
 
 	public void saveZone() {
+		log.info("SavingZone");
 		ZoneReqDTO reqDTO = new ZoneReqDTO();
 		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -190,7 +191,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
-		StateResDTO resDTO = stateSO.retrieveZoneStateList();
+		StateResDTO resDTO = stateSO.retrieveStateList();
 		
 		this.getManagedBean().setStates(resDTO.getStateList());
 	}
@@ -253,8 +254,10 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 				}
 				if (itemIds.size() > 0) {
 					if (itemIds.contains(state.getStateId())) {
+						
 
 					} else {
+						
 						zoneList.add(zoneState);
 						this.getManagedBean().setZoneStateList(zoneList);
 					}

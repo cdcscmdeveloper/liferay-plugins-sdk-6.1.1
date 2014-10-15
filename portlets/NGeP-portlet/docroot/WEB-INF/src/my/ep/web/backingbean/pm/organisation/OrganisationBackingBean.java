@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -49,6 +50,8 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -415,7 +418,7 @@ public class OrganisationBackingBean extends
 		
 	}
 
-	public String saveOrganization() {
+	public String saveOrganization() throws Exception {
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		log.info("Org Type  ::" + getManagedBean().getOrgType());
@@ -456,6 +459,15 @@ public class OrganisationBackingBean extends
 						.getEffDate());
 				orgValidity.setExpDate(getManagedBean().getOrgValidity()
 						.getExpDate());
+				/*IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
+						.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IRegistrationSO.class);
+				RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+				regReqDTO.setBank(getManagedBean().getPm);
+				
+				RegistrationResDTO regResDTO = registrationSO.createPTJSupplier(regReqDTO);
+				regResDTO.setSuccessful(true);*/
 
 			} else {
 				orgValidity.setEffDate(new Date());
