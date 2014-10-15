@@ -192,7 +192,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			reqDTO.setSupplierId(supplierID);
 
 			BiddingResDTO resDTO = biddingSO
-					.retrieveOnlineBidScheduleDetails(reqDTO);
+					.retrieveCurrentBidDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				setBidContactPersons(resDTO.getBidContactPersons());
