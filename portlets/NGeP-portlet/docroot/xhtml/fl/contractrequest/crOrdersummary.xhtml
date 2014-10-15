@@ -15,9 +15,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" style="white-space:normal;">
 				<h:outputText rendered="#{delAddressSummary.addressType != null}"
-					value="#{delAddressSummary.addressType.pmAddress.address1}, #{delAddressSummary.addressType.pmAddress.address2}, #{delAddressSummary.addressType.pmAddress.address3}" />
+					value="#{contractRequestBackingBean.getFullAddress(delAddressSummary.addressType.pmAddress)}" />
 				<h:outputText rendered="#{delAddressSummary.addressType eq null}"
-					value="#{delAddressSummary.pmAddress.address1}, #{delAddressSummary.pmAddress.address2}, #{delAddressSummary.pmAddress.address3}" />
+					value="#{contractRequestBackingBean.getFullAddress(delAddressSummary.pmAddress)}" />			
 			</p:column>
 			<p:column>
 				<h:outputText value="#{lbl['lbl.fl.delivery.period']}" />
