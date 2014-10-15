@@ -8,6 +8,7 @@
 	<!--  Supplier Details dialog -->
 	<p:dialog id="suppDetailsPopup" widgetVar="suppDetailsPopup" 
 		header="#{lbl['lbl.sc.companyinfo']}" 
+	    modal="true" dynamic="true"
 		styleClass="pop_up_top" width="900" height="300" resizable="false">
 		
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -116,7 +117,7 @@
 		</table>
 	
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.sc.close']}" immediate="true" onclick="suppDetailsPopup.hide()" icon="ui-icon-cancel" />
+			<p:commandButton value="#{lbl['lbl.sc.close']}" immediate="true" onclick="suppDetailsPopup.hide()" oncomplete="blockWidget.hide();" icon="ui-icon-cancel" />
 		</div>
 
 	</p:dialog> 
