@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl.pr;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -447,20 +448,28 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
 		
-		Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
-		int deliveryTerm = 0;
-		deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
-		String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
-		if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.DATE, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
-		}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(startDate);
-			calendar.add(Calendar.MONTH, deliveryTerm);
-			getManagedBean().setMaxDate(calendar.getTime());
+		if(getManagedBean().getFulfilmentRequest().getStartDate() == null){
+			getManagedBean().getFulfilmentRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
+			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
+			int deliveryTerm = 0;
+			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
+			String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(startDate);
+				calendar.add(Calendar.DATE, deliveryTerm);
+				getManagedBean().setMaxDate(calendar.getTime());
+			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(startDate);
+				calendar.add(Calendar.MONTH, deliveryTerm);
+				getManagedBean().setMaxDate(calendar.getTime());
+			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_YEARS)) {
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTime(startDate);
+				calendar.add(Calendar.YEAR, deliveryTerm);
+				getManagedBean().setMaxDate(calendar.getTime());
+			}
 		}
 	}
 
