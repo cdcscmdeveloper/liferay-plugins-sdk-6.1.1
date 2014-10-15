@@ -32,7 +32,20 @@
 					<ui:include src="ruleConfig.xhtml"></ui:include>
 				</p:tab>
 				<p:tab title="#{lbl['lbl.pm.settings.fee.setting']}">
-					<ui:include src="feeSetting.xhtml"></ui:include>
+					<p:tabView
+						activeIndex="#{ruleCatalogueBackingBean.managedBean.feeExemptionIndex}">
+
+						<p:tab title="#{lbl['lbl.pm.settings.fee.by.org.item']}">
+							<ui:include src="feeSettingByOrg.xhtml"></ui:include>
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.fee.by.comodity']}">
+							<ui:include src="feeSettingByCommodity.xhtml" />
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.fee.by.contract']}">
+							<ui:include src="feeSettingByContract.xhtml"></ui:include>
+						</p:tab>
+
+					</p:tabView>
 				</p:tab>
 
 			</p:tabView>
