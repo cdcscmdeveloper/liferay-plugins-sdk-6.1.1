@@ -114,6 +114,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -961,22 +962,63 @@ public void ConstructSideTabMenu(){
 	  }
     }
     
-    public void convertProgressiveScheduleDate(){
+    public void convertProgressiveScheduleDate() {
     	try {
-    	 if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
-    		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
-    		 for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-    			 String fromDate = String.valueOf(ctProgressivePayment.getFromProDate()+1)+"-"+ ctProgressivePayment.getFromProYear();
-    			 String toDate = String.valueOf(ctProgressivePayment.getToProDate()+1)+"-"+ ctProgressivePayment.getToProYears();
-    			 Date date = dateFormat.parse((fromDate));
-    			 ctProgressivePayment.setFromDate(date);
-    			 Date date1 = dateFormat.parse((toDate));
-    			 ctProgressivePayment.setToDate(date1); 
-    		 }
-    	}
-      }catch (ParseException e) {
+    	
+    		if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
+    		     DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
+    		     for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
+    			        String fromDate = String.valueOf(ctProgressivePayment.getFromProDate()+1)+"-"+ ctProgressivePayment.getFromProYear();
+    			        String toDate = String.valueOf(ctProgressivePayment.getToProDate()+1)+"-"+ ctProgressivePayment.getToProYears();
+    			        Date date = dateFormat.parse((fromDate));
+    			        ctProgressivePayment.setFromDate(date);
+    			        Date date1 = dateFormat.parse((toDate));
+    			        ctProgressivePayment.setToDate(date1); 
+    		     }
+    	   }
+      } catch (ParseException e) {
 			e.printStackTrace();
 	  }
+    }
+    
+   public int  calculateTotalMonth(Object Var, String frequencyType){
+	   DateUtils dateUtil  = null;
+	   DateFormat dateFormat = null;
+	   String fromDate = null;
+	   String toDate = null;
+	   try{
+		     
+		   dateUtil = new DateUtils();
+           dateFormat = new SimpleDateFormat("MM-yyyy");
+		  
+           if(frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
+		             CtSchedule schedules = (CtSchedule)Var;
+		              if(schedules.getToTranDate() > 0) {
+	    	                 fromDate = String.valueOf(schedules.getFromTranDate()+1)+"-"+ schedules.getFromTranYear();
+		                     toDate = String.valueOf(schedules.getToTranDate()+1) +"-"+schedules.getToTranYears();
+		              }
+           } else if(frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
+        	      CtProgressivePayment progressivePayment = (CtProgressivePayment)Var;
+	              if(progressivePayment.getToProDate() > 0) {
+	            	    fromDate = String.valueOf(progressivePayment.getFromProDate()+1)+"-"+ progressivePayment.getFromProYear();
+    			        toDate = String.valueOf(progressivePayment.getToProDate()+1)+"-"+ progressivePayment.getToProYears();
+    			   }
+           }
+		   
+           Date date1 = dateFormat.parse((fromDate));
+		   Date date2 = dateFormat.parse((toDate));
+		   long days = dateUtil.getDaysDifference(date1, date2);
+		   int day = (int) days;
+		   int months = day / 30;   
+		   if(months < 0)
+			   return 0;
+		   else
+		   return months;
+         } catch(Exception ex){ }
+	   finally {
+		   dateUtil = null;
+	   }
+	   return 0;	
     }
 	
 	public void retriveZonesByContractVer() {
