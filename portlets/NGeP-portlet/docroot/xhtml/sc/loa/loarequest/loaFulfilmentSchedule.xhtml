@@ -37,9 +37,9 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
-							value="#{frequency.startMonth}">
+							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.spec.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
-							<p:ajax process="@this" event="change" partialSubmit="true"
+							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
 						</p:selectOneMenu>
 					</p:column>
@@ -47,7 +47,7 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
-							style="width:100px;" required="true">
+							style="width:100px;" required="true" label="#{lbl['lbl.sc.spec.freq.schedule.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
@@ -57,7 +57,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
-							value="#{frequency.endMonth}">
+							value="#{frequency.endMonth}" label="#{lbl['lbl.sc.spec.end.month']}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -69,7 +69,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}" 
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" disabled="#{!isEditableStatus}"
-							required="true">
+							required="true" label="#{lbl['lbl.sc.spec.freq.schedule.end.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
 								partialSubmit="true"

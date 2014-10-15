@@ -2186,6 +2186,8 @@ public class LOADetailBackingBean extends
 		if(endMonth == null && startMonth != null){
 		   endMonth = startMonth;
 		   endYear = startYear;
+		   schedule.setEndMonth(endMonth.toString());
+		   schedule.setEndYear(endYear.toString());
 		}
 		
 		if (startMonth != null && endMonth != null && startYear != null
