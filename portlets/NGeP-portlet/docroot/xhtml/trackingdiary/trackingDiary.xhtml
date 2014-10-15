@@ -45,7 +45,7 @@
 					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" />
 				</c:if>
 				<c:if test="#{trackingDiaryBackingBean.codeType == 'CT'}">
-					<ui:include src="/xhtml/trackingdiary/trackingDiaryDetailResult.xhtml" />
+					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
 				</c:if>
 				<c:if test="#{trackingDiaryBackingBean.codeType == 'FL'}">
 					<ui:include src="/xhtml/trackingdiary/flTrackingDiarySearch.xhtml" />
@@ -62,18 +62,6 @@
 			</h:panelGroup>
 
 
-		<!-- <p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
-			modal="true">
-
-			<ui:include src="wishListPopUp.xhtml" />
-
-		</p:dialog>
-
-		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
-			width="500px" modal="true">
-			<ui:include src="viewWishListItem.xhtml"></ui:include>
-		</p:dialog> -->
-				
 			<br />
 			<br />
 		</p:panel>

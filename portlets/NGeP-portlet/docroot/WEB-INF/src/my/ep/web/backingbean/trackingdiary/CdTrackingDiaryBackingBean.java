@@ -3,19 +3,15 @@ package my.ep.web.backingbean.trackingdiary;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.constant.MessageConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.persistence.entity.cm.catalog.CmBrand;
-import my.ep.persistence.entity.cm.catalog.CmColor;
-import my.ep.persistence.entity.cm.catalog.CmMeasurement;
-import my.ep.persistence.entity.cm.catalog.CmType;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -32,12 +28,12 @@ import org.apache.log4j.Logger;
 @SessionScoped
 public class CdTrackingDiaryBackingBean extends
 		BaseBackingBean<CdTrackingDiaryManagedBean> {
-
-	private static final String NAV_TO_EXTENSION_SEARCH = null;
 	private static Logger log = Logger.getLogger(CdTrackingDiaryBackingBean.class);
-	private SearchFilterBean codeTitleFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean UNSPSCCodeFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-//	private SearchFilterBean extensionCodeTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	public static final String NAV_TO_CODIFICATION_VIEW = "cdTrackingDiarySearch.xhtml";
+	public static final String NAV_TO_EXTENSION_SEARCH = "trackingDiaryDetailResult.xhtml";
+	private SearchFilterBean UNSPSCTitleFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean UNSPSCCodeFilterBean 		= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean extensionCodeFilterBean 	= new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean statusFilterBean 			= new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private IPagingDataModel<CmUnspsc> searchDataModel 	= new SearchPagingDataModel();
 
@@ -47,12 +43,26 @@ public class CdTrackingDiaryBackingBean extends
 		CmUnspsc cmUnspsc = new CmUnspsc();
 	}
 
-	public void searchTrackingDiary() {
-	    String unspscCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("unspscCode");
-	    System.out.println("unspscCode====================================: "+unspscCode);
+	public void search() {
+		String unspscCode = getManagedBean().getAutoCompleteUnspscCode().getUnspscCode();
+		String unspscTitle = UNSPSCTitleFilterBean.getSearchValue().toString();
 
-		searchDataModel.reloadData();
-	}
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean="
+				+ UNSPSCTitleFilterBean.getSearchValue());
+
+		if ((unspscCode == null && (unspscTitle == null || unspscTitle
+				.isEmpty()))
+				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle
+						.isEmpty()))) {
+			throw new EpException(MessageConst.ERROR_716006);
+		}
+
+		if (unspscCode != null && !unspscCode.isEmpty()
+				&& unspscCode.length() != 8) {
+			throw new EpException(MessageConst.ERROR_715026);
+		}
+
+		searchDataModel.reloadData();	}
 
 	
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
@@ -67,11 +77,11 @@ public class CdTrackingDiaryBackingBean extends
 		@Override
 		protected ISearchResultBean<CmUnspsc> pageChangeListener(
 				ISearchBean<CmUnspsc> searchBean) {
-			System.out.println("codeTitleFilterBean.getSearchValue()="+ codeTitleFilterBean.getSearchValue());
+			System.out.println("UNSPSCTitleFilterBean.getSearchValue()="+ UNSPSCTitleFilterBean.getSearchValue());
 		
 
 			if (StringUtils.isBlank((String) UNSPSCCodeFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String) codeTitleFilterBean
+					&& StringUtils.isBlank((String) UNSPSCTitleFilterBean
 							.getSearchValue())) {
 				return new SearchResultBean();
 			}
@@ -83,12 +93,12 @@ public class CdTrackingDiaryBackingBean extends
 						.getServiceObject("cm", ICodificationSO.class);
 
 
-				if (StringUtils.isNotBlank((String) codeTitleFilterBean
+				if (StringUtils.isNotBlank((String) UNSPSCTitleFilterBean
 						.getSearchValue())) {
-					System.out.println("*********codeTitleFilterBean***********");
-					codeTitleFilterBean.setSearchField("unspscTitle");
-					codeTitleFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(codeTitleFilterBean);
+					System.out.println("*********UNSPSCTitleFilterBean***********");
+					UNSPSCTitleFilterBean.setSearchField("UNSPSCCode");
+					UNSPSCTitleFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(UNSPSCTitleFilterBean);
 				}
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
@@ -131,25 +141,26 @@ public class CdTrackingDiaryBackingBean extends
 
 	}
 
-	public String goToExtensionSearch(CmUnspsc unspscObj) {
+	public String goToTrackingDiarySearch(CmUnspsc unspscObj) {
 		log.debug("**********goToExtensionSearch************");
 
 		return NAV_TO_EXTENSION_SEARCH + "?faces-redirect=true";
 	}
 
 
-	public String resetAction() {
+	public String reset() {
 		System.out.println("In reset action...................");
-		codeTitleFilterBean = null;
+		UNSPSCTitleFilterBean = null;
 		UNSPSCCodeFilterBean = (null);
 
-		codeTitleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		UNSPSCTitleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 		setUNSPSCCodeFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));
-//		extensionCodeTypeFilterBean = null;
+//		extensionCodeFilterBean = null;
 		statusFilterBean = (null);
 
-//		extensionCodeTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		setStatusFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));		this.setSearchDataModel(new SearchPagingDataModel());
+//		extensionCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		setStatusFilterBean(new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value()));		
+		this.setSearchDataModel(new SearchPagingDataModel());
 //		this.getManagedBean().setAutoCompleteUnspscCode(null);
 		System.out.println(" reset.........................");
 		return null;
@@ -163,12 +174,12 @@ public class CdTrackingDiaryBackingBean extends
 		this.searchDataModel = searchDataModel;
 	}
 
-	public SearchFilterBean getCodeTitleFilterBean() {
-		return codeTitleFilterBean;
+	public SearchFilterBean getUNSPSCTitleFilterBean() {
+		return UNSPSCTitleFilterBean;
 	}
 
-	public void setCodeTitleFilterBean(SearchFilterBean codeTitleFilterBean) {
-		this.codeTitleFilterBean = codeTitleFilterBean;
+	public void setUNSPSCTitleFilterBean(SearchFilterBean UNSPSCTitleFilterBean) {
+		this.UNSPSCTitleFilterBean = UNSPSCTitleFilterBean;
 	}
 
 	public SearchFilterBean getUNSPSCCodeFilterBean() {
@@ -186,6 +197,15 @@ public class CdTrackingDiaryBackingBean extends
 	public void setStatusFilterBean(SearchFilterBean statusFilterBean) {
 		this.statusFilterBean = statusFilterBean;
 	}
+
+	public SearchFilterBean getExtensionCodeFilterBean() {
+		return extensionCodeFilterBean;
+	}
+
+	public void setExtensionCodeFilterBean(SearchFilterBean extensionCodeFilterBean) {
+		this.extensionCodeFilterBean = extensionCodeFilterBean;
+	}
+
 
 }
 
