@@ -20,14 +20,14 @@
 				<p:selectBooleanCheckbox
 					value="#{doDelAddress.flTempDoAddr.selected}" />
 			</p:column>
-			<p:column headerText="Delivery Address" width="10"
+			<p:column headerText="Delivery Address" width="10%"
 				style="white-space:normal;" styleClass="fixed-size">
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column style="width:2%">
 				<h:outputText value="#{lbl['lbl.fl.do.delivery.service.start.end.date']}" />
-				<p:spacer width="4" />
+				<br/>
 				<p:inputText size="9" disabled="true"
 					value="#{doDelAddress.startDate}">
 					<f:convertDateTime
@@ -43,7 +43,7 @@
 			<p:column>
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.fl.do.supp.do.no']}" />
-				<p:spacer width="4" />
+				<br />
 				<p:inputText size="9" maxlength="30"
 					value="#{doDelAddress.flTempDoAddr.supplierDoRef}"></p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.order.no']}"/>
