@@ -239,14 +239,33 @@ public class QTScheduleDetailBackingBean extends
 	public void retrievePmuserName(ScQtContactPerson contactPerson) {
 		debugLogger("retrievePmuserName");
 		List<PmUser> list = this.getManagedBean().getDeskOfficerAdmin();
+		List<ScQtContactPerson> doaaList = this.getManagedBean().getPmuserContactpersonList();
+		List<Long> doaaIdList = new ArrayList<Long>();
+		
+		if(doaaList != null && doaaList.size() > 0){
+			for(ScQtContactPerson doa : doaaList){
+				String officeType = SourcingConstants.CONTACT_PERSON_TYPE_DOAA;
+				if(doa.getName() != null && contactPerson.getOfficerType().equals(officeType)){
+					doaaIdList.add(doa.getUser().getUserId());
+				}
+			}
+		}
+		
 		if (list != null) {
 			for (PmUser user : list) {
 				if (user.getUserId().equals(contactPerson.getUser().getUserId())) {
-					contactPerson.setName(user.getUserName());
-					contactPerson.setEmail(user.getEmail());
-					contactPerson.setPhoneNo(user.getPhoneNo());
-					contactPerson.setFaxNo(user.getFaxNo());
-					contactPerson.setUser(user);
+					
+					if(doaaList != null && doaaList.size() > 0){
+						if(doaaIdList.contains(contactPerson.getUser().getUserId())){
+							throw new EpException(MessageConst.ERROR_760125);
+						}else{
+							contactPerson.setName(user.getUserName());
+							contactPerson.setEmail(user.getEmail());
+							contactPerson.setPhoneNo(user.getPhoneNo());
+							contactPerson.setFaxNo(user.getFaxNo());
+							contactPerson.setUser(user);
+						}
+					}
 					break;
 				}
 			}
