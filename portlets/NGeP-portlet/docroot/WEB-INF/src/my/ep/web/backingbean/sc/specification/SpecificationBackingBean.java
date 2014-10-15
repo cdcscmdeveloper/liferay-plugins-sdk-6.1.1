@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -2152,9 +2153,7 @@ public class SpecificationBackingBean extends
 									.getParameterCode())) {
 						// String Title=list.getTitle();
 						// =localTitle.concat(Title)+"<br/>";
-						financialWeightageScore = financialWeightageScore
-								+ list.getQtScoreWeightage().getScore()
-										.intValue();
+
 						if (null == list.getQtScoreWeightage().getWeightage()) {
 							list.getQtScoreWeightage().setWeightage(
 									new BigDecimal(0));
@@ -2175,7 +2174,25 @@ public class SpecificationBackingBean extends
 				} //
 					// ScQtCheckList schecklist = specChecklist.get(0);
 				if (null != specChecklist && specChecklist.size() > 0) {
-					this.getManagedBean().setFinSpecList(specChecklist);
+
+					if (specChecklist.size() > 1) {
+
+						Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
+
+						for (ScQtCheckList checklistlocal : specChecklist) {
+							map.put(checklistlocal.getQtScoreWeightage()
+									.getQtScoreWeightageId(), checklistlocal
+									.getQtScoreWeightage());
+						}
+						List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
+								map.values());
+						for (ScQtScoreWeightage weightage : list) {
+							financialWeightageScore = financialWeightageScore
+									+ weightage.getScore().intValue();
+						}
+
+					}
+
 					ScQtCheckList tmpCheckList = new ScQtCheckList();
 					// PmParameter definationType = new PmParameter();
 					// definationType
@@ -2187,6 +2204,7 @@ public class SpecificationBackingBean extends
 
 					specChecklist.get(0).getQtScoreWeightage()
 							.setWeightage(new BigDecimal(financialWeightage));
+					this.getManagedBean().setFinSpecList(specChecklist);
 					tmpCheckList.setQtScoreWeightage(specChecklist.get(0)
 							.getQtScoreWeightage());
 					// this.getManagedBean().setScQtChecklist(tmpCheckList);
@@ -7961,13 +7979,14 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setReadOnly(true);
 
 		}
-		retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
-				getDocTypeByTaskName(taskName));
+
 		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
 						.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.SPECIFICATION_APPROVAL
 						.equalsIgnoreCase(taskName)) {
+			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
+					getDocTypeByTaskName(taskName));
 
 			if (SCProcessNameConst.SPECIFICATION_APPROVAL
 					.equalsIgnoreCase(taskName)) {
@@ -8005,6 +8024,8 @@ public class SpecificationBackingBean extends
 			}
 
 		} else {
+			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
+					getDocTypeByTaskName(taskName));
 			if (null == this.getManagedBean().getScQt().getFulfilmentType()) {
 
 				this.getManagedBean().getScQt()
@@ -8017,6 +8038,13 @@ public class SpecificationBackingBean extends
 				// loadPrepareSpecCommitteeDetails(quotationTenderDataType
 				// .getQtId().longValue(), getDocTypeByTaskName(taskName));
 
+			}
+
+			if (isDigiSigningRequired(RoleCode.SC_SECRETARY.value())) {
+				this.getManagedBean().setReadOnly(false);
+
+			} else {
+				this.getManagedBean().setReadOnly(true);
 			}
 			fc.getApplication()
 					.getNavigationHandler()
@@ -8826,7 +8854,7 @@ public class SpecificationBackingBean extends
 										null,
 										MessageUtils
 												.getMessage(
-														getMessgeConstant("SUBMIT"),
+														getMessgeConstant(action),
 														new String[] {
 																"Specification Preparation And Scoring For",
 																qt.getQtNo() },
