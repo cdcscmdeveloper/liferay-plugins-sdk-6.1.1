@@ -8,7 +8,6 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -61,8 +60,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	public void resetSearch() {
 		debugLogger("resetSearch");
 		
-        RequestContext.getCurrentInstance().reset("profPanel");
-
+        this.getManagedBean().setBodyCode(new String());
+        this.getManagedBean().setBodyName(new String());
 	}
 
 	/**
@@ -146,8 +145,8 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		}
 
 		@Override
-		protected ISearchResultBean<PmCertBody> pageChangeListener(
-				ISearchBean<PmCertBody> searchBean) {
+		protected ISearchResultBean<PmCertBody> pageChangeListener(ISearchBean<PmCertBody> searchBean) {
+			
 			if (null == searchBean) {
 				searchBean = new SearchBean<PmCertBody>();
 			}			
@@ -157,17 +156,29 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getManagedBean().getCertType()));
 			}			
-			if (!isNullOrEmpty(getManagedBean().getBodyCode())) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("bodyCode",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getBodyCode()));
+			if (getManagedBean().getBodyCode() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getBodyCode())) { 
+				SearchFilterBean profCertSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_LIKE.value());				
+			
+				profCertSearchBean.setSearchField("bodyCode");
+				profCertSearchBean.setCaseInsensitive(true);		
+				profCertSearchBean.setSearchValue(getManagedBean().getBodyCode());
+				
+				searchBean.getDataFilterBeans().add(profCertSearchBean);
+				
 			}
-			if (!isNullOrEmpty(getManagedBean().getBodyName())) {
-				searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("bodyName",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getBodyName()));
+			if (getManagedBean().getBodyCode() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getBodyName())) { 
+				SearchFilterBean profCertSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_LIKE.value());				
+					
+				profCertSearchBean.setSearchField("bodyName");
+				profCertSearchBean.setCaseInsensitive(true);		
+				profCertSearchBean.setSearchValue(getManagedBean().getBodyName());
+						
+				searchBean.getDataFilterBeans().add(profCertSearchBean);
+						
 			}
 			if (null != getManagedBean().getStatus()) {
 				searchBean.getDataFilterBeans().add(
