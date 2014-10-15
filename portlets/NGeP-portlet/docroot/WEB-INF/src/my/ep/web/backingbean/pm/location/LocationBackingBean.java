@@ -50,6 +50,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	private static Logger log = Logger.getLogger(LocationBackingBean.class);
 	private IPagingDataModel<VPmLocation> searchLocation = new SearchLocatonPagingDataModel();
 	boolean result = false;
+	// Navigation Details
+	public static final String NAV_TO_ADD = "/xhtml/pm/location/createLocationMain";
+	public static final String NAV_TO_MAIN = "/xhtml/pm/location/locationMain";
+	public static final String NAV_TO_EDIT = "/xhtml/pm/location/editLocationMain";
 
 	public LocationBackingBean() {
 
@@ -59,7 +63,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		searchLocation.reloadData();
 
-	}
+	}	
 
 	public void reset() {
 		this.getManagedBean().setLocationCode(null);
@@ -83,7 +87,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public String backToSearch() {
 		reset();
-		return "/xhtml/pm/location/locationMain";
+		return NAV_TO_MAIN;
 	}
 
 	public String addLocation() {
@@ -92,7 +96,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		retrievePmStateList();
 		retrievePmDistrictList();
 
-		return "/xhtml/pm/location/createLocationMain";
+		return NAV_TO_ADD;
 	}
 
 	/**
@@ -100,6 +104,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	 * 
 	 */
 	public String saveLocation() {
+		log.info("Save Method");
 
 		try {
 			if (getManagedBean().getSelectedType().equalsIgnoreCase(
@@ -237,7 +242,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			throw e;
 		}
 
-		return "/xhtml/pm/location/createLocationMain";
+		return NAV_TO_MAIN;
 
 	}
 
@@ -268,13 +273,12 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IDivisionSO.class);
 			DivisionResDTO resDTO = divisionSO
-					.retrieveDivisionDtlById(divisionReqDTO);
-			System.out.println("StateID:::"+resDTO.getPmDivision().getPmState().getStateId());
-			this.getManagedBean().getDivision().getPmState().setStateId(resDTO.getPmDivision().getPmState().getStateId());
+					.retrieveDivisionDtlById(divisionReqDTO);			
 			this.getManagedBean().setDivision(resDTO.getPmDivision());
 		}
 		if (locationType
 				.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DISTRICT)) {
+			retrievePmStateList();
 			DistrictReqDTO districtReqDTO = new DistrictReqDTO();
 			districtReqDTO.setDistrictId(locationId);
 			IDistrictSO districtSO = BusinessDelegate.getInstance()
@@ -286,6 +290,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		}
 		if (locationType.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_CITY)) {
+			 retrievePmDistrictList();
 			CityReqDTO cityReqDTO = new CityReqDTO();
 			cityReqDTO.setCityId(locationId);
 			ICitySO citySO = BusinessDelegate.getInstance().getServiceObject(
@@ -295,7 +300,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		}
 
-		return "/xhtml/pm/location/editLocationMain";
+		return NAV_TO_EDIT;
 	}
 
 	/**
@@ -414,7 +419,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							"Location Save failed."));
 			throw e;
 		}
-		return "/xhtml/pm/location/editLocationMain";
+		return NAV_TO_EDIT;
 	}
 
 	/**
@@ -546,6 +551,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		getManagedBean().setDistrict(resDTO.getPmDistrict());
 
 	}
+
 	public SelectItem[] getStatusOptions() {
 		SelectItem[] items = new SelectItem[2];
 		items[0] = new SelectItem(1, "Active");
