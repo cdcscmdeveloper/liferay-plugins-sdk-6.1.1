@@ -77,8 +77,14 @@
 				<td><p:selectBooleanCheckbox
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.mto}"
 						disabled="true" />
-						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>		
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.mto']}"/></td>	
+						
 			</tr>
+			<tr><td style="width: 145px;"><p:outputLabel
+									value="#{lbl['lbl.fl.dan.factored']}" /></td>
+						<td><p:selectBooleanCheckbox disabled="true"
+									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>	</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.payment.match.payment.desc']}" toggleable="true">
@@ -92,11 +98,6 @@
 									disabled="true"
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.supplierInvoiceRef}" /></td>
 							<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supplier.invoice.no']}"/></td>
-							<td style="width: 145px;"><p:outputLabel
-									value="#{lbl['lbl.fl.dan.factored']}" /></td>
-							<td><p:selectBooleanCheckbox disabled="true"
-									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
-									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supplier.invoice.no']}"/></td>
 							
 						</tr>
 					</table></td>
