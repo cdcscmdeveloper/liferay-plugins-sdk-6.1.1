@@ -454,22 +454,21 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			int deliveryTerm = 0;
 			deliveryTerm = getManagedBean().getFulfilmentRequest().getDeliveryTerm();
 			String uomCode = getManagedBean().getFulfilmentRequest().getPmUom().getParameterCode();
+			Calendar calendar = Calendar.getInstance();
 			if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(startDate);
 				calendar.add(Calendar.DATE, deliveryTerm);
 				getManagedBean().setMaxDate(calendar.getTime());
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(startDate);
 				calendar.add(Calendar.MONTH, deliveryTerm);
 				getManagedBean().setMaxDate(calendar.getTime());
 			}else if(uomCode.equalsIgnoreCase(ParameterConst.DELIVERY_TERM_YEARS)) {
-				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(startDate);
 				calendar.add(Calendar.YEAR, deliveryTerm);
 				getManagedBean().setMaxDate(calendar.getTime());
 			}
+			getManagedBean().getFulfilmentRequest().setEndDate(calendar.getTime());
 		}
 	}
 
