@@ -15,6 +15,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectOneRadio id="finScoreWeight"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.tech.weightage']}" required="true"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq}">
 						<f:selectItems
@@ -50,6 +51,7 @@
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'UP' }">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						maxlength="18" required="true"
 						label="#{lbl['lbl.sc.spec.stage2.score']}" id="finScoreWeightage"
 						style="text-align:right">
@@ -66,6 +68,7 @@
 				style="width:20%;"
 				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 
@@ -126,6 +129,7 @@
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.package']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.fromVariance}">
 
 						</p:inputText>
@@ -133,12 +137,14 @@
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.toVariance}">
 
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.belowScore}">
 
 						</p:inputText>
@@ -149,6 +155,7 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPricePackage.aboveScore}">
 
 						</p:inputText>
@@ -158,6 +165,7 @@
 					<p:column style="font-weight: bold;">#{lbl['lbl.sc.spec.fin.score.by.item']}</p:column>
 					<p:column style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.fromVariance}">
 
 
@@ -166,12 +174,14 @@
 
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.toVariance}">
 
 						</p:inputText>
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.belowScore}">
 
 						</p:inputText>
@@ -182,6 +192,7 @@
 					</p:column>
 					<p:column colspan="1" style="font-weight: bold;">
 						<p:inputText style="text-align:right;" maxlength="18"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.offerPriceItem.aboveScore}">
 
 						</p:inputText>
@@ -201,6 +212,7 @@
 				<td style="width: 100px;"><h:outputText
 						value="#{lbl['lbl.sc.spec.fin.scoring.financial']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
 
 					</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>

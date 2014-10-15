@@ -11,6 +11,7 @@
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
 			rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS'}">
 			<p:selectOneRadio
+				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
 				<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 				<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
@@ -29,6 +30,7 @@
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					<p:inputText
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.totalFrequency}">
 						<p:ajax event="blur" update="frequencySchedule"
 							partialSubmit="true" process="@this"
@@ -54,6 +56,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.schedule.no']}" />
 						</f:facet>
 						<p:inputText value="#{frequency.scheduleNo}" required="true"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							maxlength="3" label="#{lbl['lbl.sc.spec.schedule.no']}" size="5"
 							id="scheduleNum">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
@@ -63,6 +66,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:10%">
 						<p:selectOneMenu style="width:100px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -76,6 +80,7 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
@@ -89,6 +94,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.end.month']}"
 						style="width:25%">
 						<p:selectOneMenu style="width:100px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -99,7 +105,9 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;">
+						<p:selectOneMenu value="#{frequency.endYear}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -124,6 +132,7 @@
 						</f:facet>
 
 						<p:selectOneMenu style="width:120px;" required="true"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							id="scheduledTypeId" label="#{lbl['lbl.ct.fulfilment.type']}"
 							value="#{frequency.scheduleType.parameterId}">
 
@@ -153,6 +162,7 @@
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					<p:inputText
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
 						<p:ajax event="blur" update="progressivePayment"
 							partialSubmit="true" process="@this"
@@ -173,6 +183,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.phase']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseNo}" required="true"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.phase']}" id="progressivePhase"
 							maxlength="3" size="5">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
@@ -185,6 +196,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.description']}" />
 						</f:facet>
 						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							required="true" id="progressivePhasedesc" style="width:100px;"
 							label="#{lbl['lbl.sc.spec.description']}"></p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
@@ -194,6 +206,7 @@
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{payment.startMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}"></f:selectItems>
@@ -206,7 +219,9 @@
 						headerText="#{lbl['lbl.sc.spec.freq.schedule.start.year']}"
 						style="width:15%">
 
-						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
+						<p:selectOneMenu value="#{payment.startYear}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change"
@@ -217,7 +232,9 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;" value="#{payment.endMonth}">
+						<p:selectOneMenu style="width:100px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{payment.endMonth}">
 
 							<f:selectItems value="#{specificationBackingBean.yearDetails}">
 							</f:selectItems>
@@ -228,7 +245,9 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.freq.schedule.end.year']}"
 						style="width:15%">
-						<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
+						<p:selectOneMenu value="#{payment.endYear}"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							style="width:100px;">
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 						</p:selectOneMenu>
@@ -240,6 +259,7 @@
 							<h:outputText value="#{lbl['lbl.sc.spec.weight.percent']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							id="progressivePercentage" style="width:100px;"
 							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
