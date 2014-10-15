@@ -298,6 +298,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			validateOrderQuantity();
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
@@ -1761,8 +1762,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setManualAddrList(manualAddrList);
 	}
+	
 	public void onTabChange(int selectedTabIndex){
-		if(selectedTabIndex==3){
+		if(selectedTabIndex==1){
+			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			getManagedBean().setEmailValidate(true);
+		} else if(selectedTabIndex==2){
+			validateOrderQuantity();
+			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
+				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
+			}
+		} else if(selectedTabIndex==3){
+			validateOrderQuantity();
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
@@ -1771,23 +1782,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
-		}
-		if(selectedTabIndex==1){
-			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-			/*if(getManagedBean().getSelectedDelAddr()==null) { 
-				retrieveCountryList();
-			}*/
-			getManagedBean().setEmailValidate(true);
-		}
-		if(selectedTabIndex==2){
-			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
-				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
-			}
-		}
-		if(selectedTabIndex==4){
+		} else if(selectedTabIndex==4){
 			initializeApproverGroup();
 		}
 	}
+	
+	private void validateOrderQuantity() {
+		// Order quantity must be larger than 0 if fulfilment type = scheduled or as and when
+		if(!getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+				for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+					if(itemAddr.getOrderedQty().doubleValue()==0) {
+						throw new EpException(MessageConst.ERROR_740022, new String[]{getFullAddress(flDeliveryAddress.getPmAddress()),itemAddr.getScRequestItem().getItemName()});
+					}
+				}
+			}
+		}
+	}
+	
 	private void populateChargeLineData(boolean retainPreviousSelection) {
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 		Map<Long, List<FlFulfilmentItemAddr>> chargeLineItemsMap = new HashMap<Long, List<FlFulfilmentItemAddr>>();

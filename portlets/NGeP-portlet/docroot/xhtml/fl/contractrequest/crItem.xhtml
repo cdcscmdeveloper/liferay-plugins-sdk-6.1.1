@@ -34,9 +34,9 @@
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
 				<h:outputText rendered="#{address.addressType != null}"
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+					value="#{contractRequestBackingBean.getFullAddress(address.addressType.pmAddress)}" />
 				<h:outputText rendered="#{address.addressType eq null}"
-					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
+					value="#{contractRequestBackingBean.getFullAddress(address.pmAddress)}" />				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="text-align:right">
 				<h:outputText
@@ -123,12 +123,15 @@
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
-					<p:inputText value="#{item.unitPrice}" disabled="true" id="unitPrice"
-						style="text-align:right"></p:inputText>
+					<h:outputText value="#{item.unitPrice}" disabled="true" id="unitPrice" >
+						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{item.orderedQty}" style="text-align:right" id="orderedQty"
 						required="true" requiredMessage="Please input the quantity.">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />						
 						<p:ajax update="subTotalTxt,unitPrice,orderedQty,itemDataTable"
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{contractRequestBackingBean.retrieveOrderAmount(item)}"></p:ajax>
