@@ -1759,6 +1759,51 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 	}
 
 	/**
+	 * reset user password and re-send notification to user.
+	 * @throws Exception
+	 */
+	public void resendNotification() throws Exception{
+		UserReqDTO reqDTO = null;
+		IUserSO userSO = null;
+		PmUser pmUser =  null; 
+		Long userId = null;
+		try{
+			userId = this.getManagedBean().getSelectedUser().getUserId();
+			if(userId==null){
+				throw new EpException("User Id is required.");
+			}
+			pmUser = PmCommonUtil.retrieveUserById(userId, true);
+			
+			reqDTO = new UserReqDTO();
+			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
+			reqDTO.setServerPort(getFacesScopes().getRequest().getServerPort());
+			
+			
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			reqDTO.setPmUser(pmUser);
+			UserResDTO resDTO = userSO.resendNotificationAndPwd(reqDTO); 
+			if(resDTO!=null && resDTO.isSuccessful()){
+				//Reset password and notification sent successfully.
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(
+						    FacesMessage.SEVERITY_INFO,
+						    null,
+				    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
+					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
+					    		new FacesScopes().getUserLocale())
+				    		));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			userSO = null;
+		}
+		
+	}
+	/**
 	 * Method to update the user details
 	 */
 	public void saveUserProfile() throws Exception{
