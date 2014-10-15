@@ -1790,7 +1790,7 @@ public class ProfileManagementBackingBean extends BaseBackingBean<ProfileManagem
 						new FacesMessage(
 						    FacesMessage.SEVERITY_INFO,
 						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_770049, new String[]{resDTO.getPmUser().getLoginId()}, 
+				    		MessageUtils.getMessage(MessageConst.INFO_770107, new String[]{resDTO.getPmUser().getLoginId()}, 
 					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
 					    		new FacesScopes().getUserLocale())
 				    		));
