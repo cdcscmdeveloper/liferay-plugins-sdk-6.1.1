@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel>
+	
 		<div style="text-align: right; min-height: 40px;">
 
 			<h:panelGroup>
@@ -20,7 +20,7 @@
 
 		</div>
 
-		<p:panel>
+	
 			<p:dataTable id="feeByOrgItemTableID" var="feeObj" row="10"
 				value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem}"
 				selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
@@ -116,8 +116,7 @@
 
 				</div>
 			</h:panelGroup>
-		</p:panel>
-	</p:panel>
+
 
 
 </ui:composition>
