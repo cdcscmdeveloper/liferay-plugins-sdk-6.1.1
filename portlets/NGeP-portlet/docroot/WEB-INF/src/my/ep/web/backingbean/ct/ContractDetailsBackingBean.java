@@ -613,8 +613,6 @@ public void ConstructSideTabMenu(){
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			Calendar cal = Calendar.getInstance();
-			log.info("BackingBean: Performance Testing  Search Function: Time taken to start >>>>"+ cal.getTime());
 			try {
 				if(getManagedBean().getCtNumber()!=null && getManagedBean().getCtNumber().length()>0) {
 					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
@@ -695,9 +693,6 @@ public void ConstructSideTabMenu(){
 				reqDTO.setvCtContractSearchBean(searchBean);
 				ContractResDTO resDTO = contractSO.searchContractDocument(reqDTO);
 				getManagedBean().setSelectedIndex(0);
-				
-				log.info("BackingBean: Performance Testing  Search Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-				log.info("BackingBean: Performance Testing  Search Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 					
 				if(resDTO.isSuccessful()) {
 					return resDTO.getvCtContractResultBean();
@@ -712,10 +707,7 @@ public void ConstructSideTabMenu(){
     public String saveContract(String action) throws Exception{
 	  
     	IContractSO contractSO = null;
-	    Calendar cal = Calendar.getInstance();
-    	log.info("BackingBean: Performance Testing  saveContract Function: Time taken to start >>>>"+ cal.getTime());
-		
-    	try{
+	 	try{
 			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				      if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) 
 				       	throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
@@ -736,8 +728,15 @@ public void ConstructSideTabMenu(){
                 getZoneObjDetails();
                 setBondRecordStatus(getManagedBean().getContractVer());
                 if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-                	 convertScheduleDate();
-            	    convertProgressiveScheduleDate();
+                	
+                	if(getManagedBean().getContractVer().getCtContract().isFrequencySchedule()){
+                		 convertScheduleDate();
+                		 getManagedBean().getContractVer().setCtProgressivePayments(null);
+                	 
+                	 } else if(!getManagedBean().getContractVer().getCtContract().isFrequencySchedule()){
+                		 convertProgressiveScheduleDate();
+                		 getManagedBean().getContractVer().setCtSchedules(null);
+                	 }
                 }
             
                 reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
@@ -794,8 +793,6 @@ public void ConstructSideTabMenu(){
 		  } finally {
 			contractSO = null;
 		  }
-		log.info("BackingBean: Performance Testing  saveContract Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-		log.info("BackingBean: Performance Testing  saveContract Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
 		
 		return null;	
 	}
@@ -948,7 +945,7 @@ public void ConstructSideTabMenu(){
     
     public void convertScheduleDate(){
     	try {
-    	 if(this.getManagedBean().getContractVer().getCtSchedules().size() > 0){
+    	 if(getManagedBean().getContractVer().getCtSchedules().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
     			 String fromDate = String.valueOf(ctschedule.getFromTranDate()+1)+"-"+ ctschedule.getFromTranYear();
@@ -1345,14 +1342,15 @@ public void ConstructSideTabMenu(){
     /*Schedule Start*/
     public void progressivePayment() {
 		
-       this.getManagedBean().setChkSchedule(false);
-  	   this.getManagedBean().setChkProgressive(false);
-  	   if(this.getManagedBean().getFrequencySchedule().equalsIgnoreCase("S")){
-  		   this.getManagedBean().getCtContract().setFrequencySchedule(true);
-  	   }else if(this.getManagedBean().getFrequencySchedule().equalsIgnoreCase("P")){
-  		 this.getManagedBean().getCtContract().setFrequencySchedule(false);
-  	   }
-	   
+       getManagedBean().setChkSchedule(false);
+  	   getManagedBean().setChkProgressive(false);
+  	 
+  	   if(getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
+  		   getManagedBean().getContractVer().getCtContract().setFrequencySchedule(true);
+  	
+  	   } else if(getManagedBean().getFrequencySchedule().equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
+  	 	   getManagedBean().getContractVer().getCtContract().setFrequencySchedule(false);
+  	   }   
 	}
     
     public void addScheduleDetails(){
@@ -1639,7 +1637,7 @@ public void ConstructSideTabMenu(){
 	}
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
-    	if(ctProgressivePayment.getFromProYear() == null || ctProgressivePayment.getToProYears() == null) {
+    	if(ctProgressivePayment.getFromProYear() == null || ctProgressivePayment.getToProYears() == null || ctProgressivePayment.getToProDate() == 0) {
     		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
 			        dataList.setValidateProgressiveDate(false);
@@ -1850,8 +1848,6 @@ public void ConstructSideTabMenu(){
 	public String gotoUpdatePage(){
 		IContractSO contractSO = null;
 		try {
-			Calendar cal = Calendar.getInstance();
-			log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to start >>>>"+ cal.getTime());
 			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
 			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
@@ -1873,9 +1869,7 @@ public void ConstructSideTabMenu(){
 		    getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
 	        getManagedBean().setViewContract(false);
 	        this.getManagedBean().setSelectedTabIndex(0);
-	        log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Time taken to End >>>>"+ Calendar.getInstance().getTime());
-			log.info("BackingBean: Performance Testing  gotoUpdatePage Function: Total Time taken (Second) >>>>"+ (Calendar.getInstance().getTime().getTime() - cal.getTime().getTime()) / 1000);
-			
+	     
 			return CONTRACT_PAGE;
 		} finally {
 			contractSO = null;
