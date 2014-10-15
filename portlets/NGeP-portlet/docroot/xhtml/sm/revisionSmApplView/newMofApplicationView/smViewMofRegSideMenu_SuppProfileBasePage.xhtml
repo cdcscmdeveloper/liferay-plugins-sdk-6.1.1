@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+
+	</ui:define>
+	
+	<ui:param name="viewSmApplBackingBean" value="#{viewSuppProfileBackingBean}" />
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" />
+		
+		<c:if test="#{viewSmApplBackingBean.managedBean.reviewApplicationExist}">
+			<ac:smPanel id="tt">
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 0}">
+					<ui:include src="step1ViewCompanyInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 1}">
+					<ui:include src="step2ViewBranchCompanyInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 2}">
+					<ui:include src="step4ViewPersonnelInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 3}">
+					<ui:include src="step3ViewCaptialAndEquityStatusInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 4}">
+					<ui:include src="step5ViewBankInfo.xhtml" />
+				</c:if>
+				<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
+					<ui:include src="step6ViewRegisterCategoryCodesInfo.xhtml" />
+				</c:if>
+				<c:choose>
+					<c:when
+						test="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType eq 'S'}">
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+							<ui:include src="step6.1ViewFactoryInfo.xhtml" />
+						</c:if>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
+							<ui:include src="step6.2ViewEquipmentInfo.xhtml" />
+						</c:if>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
+							<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
+						</c:if>
+					</c:when>
+					<c:otherwise>
+						<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
+							<ui:include src="step7ViewSupportingDocumentsInfo.xhtml" />
+						</c:if>
+					</c:otherwise>
+				</c:choose>
+	
+			</ac:smPanel>
+		</c:if>
+	</ui:define>
+</ui:composition>

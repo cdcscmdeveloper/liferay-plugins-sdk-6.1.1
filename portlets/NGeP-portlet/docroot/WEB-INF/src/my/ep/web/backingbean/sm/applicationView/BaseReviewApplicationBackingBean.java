@@ -90,54 +90,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 	}
 
-	public void navigateToRevAppl() {
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String applNo = originalServletRequest.getParameter("applicationNo");
-		String applType = originalServletRequest
-				.getParameter("applicationType");
-		getManagedBean().setApplicationNoParam(applNo);
-		
-		if(StringUtils.isBlank(applNo) || StringUtils.isBlank(applType)){
-			constructMessage();
-		}else{
-			String redirectToAppl = applNo.substring(applNo.length() - 3,
-					applNo.length()).equals("APP") ? SmApplicationUtil
-					.getReviewApplicationBasePage(applType) : SmApplicationUtil
-					.getReviewApplicationSupplierBasePage(applType);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, redirectToAppl);
-		}
-	}
-
-	public void navigateToViewSuppProfile() {
-		SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
-
-		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-		supplierSearchReqDTO.setSupplierId(supplier.getSupplierId());
-		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISupplierSearchSO.class);
-		SupplierSearchResDTO smResDTO = supplierSearchSO
-				.retriveLatestApplBySupplierId(supplierSearchReqDTO);
-
-		if (smResDTO.getSmAppl() != null) {
-
-			String applNo = smResDTO.getSmAppl().getApplNo();
-			getManagedBean().setApplicationNoParam(applNo + "_APP");
-			initApplication(getManagedBean().getApplicationNoParam());
-			String applType = getManagedBean().getSmAppl().getApplType();
-			String redirectToAppl = SmApplicationUtil
-					.getReviewApplicationSupplierBasePage(applType);
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, redirectToAppl);
-		}
-	}
 
 	public void initRedirectBackingBeanApplication() {
 		HttpServletRequest servletRequest = PortalUtil
@@ -145,11 +97,12 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String applNo = originalServletRequest.getParameter("applicationNo");
+
 		getManagedBean().setApplicationNoParam(applNo);
-		initApplication(getManagedBean().getApplicationNoParam());
+		initApplication(applNo);
 	}
 
-	private void initApplication(String applNoParam) {
+	public void initApplication(String applNoParam) {
 		ISmApplRevisionSO applRevisionSO = null;
 
 		try {
