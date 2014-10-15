@@ -55,21 +55,22 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
 	private String itemNewBidPriceTotal;
-	private Long interval = 5L;
+	private Long interval ;
 	private Long remainingBidTime;
-	private Long remainingTimeToBid;
 	private int packageRank;
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
 
 	public OnlineBiddingBackingBean() {
+
+		System.out
+				.println("*********************OnlineBiddingBackingBean constructor*******************");
 		initialCall();
 	}
-	
-	
-	private void initialCall(){
-		
+
+	private void initialCall() {
+
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -195,11 +196,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					.retrieveCurrentBidDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				setBidContactPersons(resDTO.getBidContactPersons());
-				setBidPrices(resDTO.getBidPrices());
 				setScBidSchedule(resDTO.getScBidSchedule());
 				setPackageRanking(resDTO.getPackageRanking());
 				setScBidAction(resDTO.getScBidAction());
+				List<ScBidPrice> fetchedBidPrices = resDTO.getBidPrices();
+				for(int i = 0; i < fetchedBidPrices.size(); i++){
+					for (ScBidPrice bidPrice : this.getBidPrices()){
+						if(bidPrice.getScBidSupplierItem().getBidSupplierItemId() == fetchedBidPrices.get(i).getScBidSupplierItem().getBidSupplierItemId() ){
+							fetchedBidPrices.get(i).setNewBidPrice(bidPrice.getNewBidPrice());
+							fetchedBidPrices.get(i).setNewPrice(bidPrice.getNewPrice());
+							break;
+						}
+						 
+					}
+				}
+				setBidPrices(fetchedBidPrices);
 			}
 		} finally {
 			biddingSO = null;
@@ -214,31 +225,35 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
-		
-		System.out.println("newPrice value is "+scBidPrice.getNewPrice());
+
+		System.out.println("newPrice value is " + scBidPrice.getNewPrice());
 		log.info("decrementAmountValueChangeListener");
 
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal newPrice = null;
-		 if(scBidPrice.getBidPrice() == null && scBidPrice.getNewPrice() != null){
-			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem().getItemStartPrice().doubleValue() - scBidPrice.getNewPrice().doubleValue());
+		if (scBidPrice.getBidPrice() == null
+				&& scBidPrice.getNewPrice() != null) {
+			newPrice = BigDecimal.valueOf(scBidPrice.getScBidSupplierItem()
+					.getItemStartPrice().doubleValue()
+					- scBidPrice.getNewPrice().doubleValue());
 		}
-		
-		else if(scBidPrice.getBidPrice() != null && scBidPrice.getNewPrice() != null)  {
+
+		else if (scBidPrice.getBidPrice() != null
+				&& scBidPrice.getNewPrice() != null) {
 			newPrice = BigDecimal.valueOf(scBidPrice.getBidPrice()
 					.doubleValue() - scBidPrice.getNewPrice().doubleValue());
-		} 
+		}
 		newBidPrice.setBidPrice(newPrice);
 		newBidPrice.setScBidSupplierItem(scBidPrice.getScBidSupplierItem());
 		scBidPrice.setNewBidPrice(newBidPrice);
 		int index = getBidPrices().indexOf(scBidPrice);
 		getBidPrices().set(index, scBidPrice);
-		
+
 	}
 
 	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
-		
+
 		ScBidPrice priceItemToPersist = bidPriceItem.getNewBidPrice();
 
 		IBiddingSO biddingSO = null;
@@ -254,16 +269,18 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			BiddingResDTO resDTO = biddingSO.submitBidPrice(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				//setScBidSchedule(resDTO.getScBidSchedule());
+				// setScBidSchedule(resDTO.getScBidSchedule());
 				int index = getBidPrices().indexOf(bidPriceItem);
 				getBidPrices().set(index, resDTO.getScBidPrice());
-				
-				System.out.println("*****item rank is***** "+resDTO.getScBidPrice().getRanking());
-				
-				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this.getScBidSchedule().getScBid()
-						.getRecommendedTypeId().getParameterCode())) {
+
+				System.out.println("*****item rank is***** "
+						+ resDTO.getScBidPrice().getRanking());
+
+				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this
+						.getScBidSchedule().getScBid().getRecommendedTypeId()
+						.getParameterCode())) {
 					setPackageRank(resDTO.getPackageRanking().intValue());
-				} 
+				}
 			}
 
 		} finally {
@@ -337,36 +354,26 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @return the remainingTimeToBid
-	 */
-	public Long getRemainingTimeToBid() {
-
-		if (scBidSchedule != null) {
-
-			remainingTimeToBid = durationCalculator(new Date(),
-					scBidSchedule.getStartDate());
-		}
-
-		return remainingTimeToBid;
-	}
-
-	/**
-	 * @param remainingTimeToBid
-	 *            the remainingTimeToBid to set
-	 */
-	public void setRemainingTimeToBid(Long remainingTimeToBid) {
-		this.remainingTimeToBid = remainingTimeToBid;
-	}
-
-	/**
 	 * @return the remainingBidTime
 	 */
 	public Long getRemainingBidTime() {
 
-		if (scBidSchedule != null) {
+		if (scBidSchedule != null
+				&& getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_IN_PROGRESS)) {
 
 			remainingBidTime = durationCalculator(new Date(),
 					scBidSchedule.getEndDate());
+		}
+
+		else if (scBidSchedule != null
+				&& getScBidSchedule().getPmStatus().getStatusId()
+						.equals(BidStatusConst.BID_PENDING_BIDDING)) {
+
+			remainingBidTime = durationCalculator(new Date(),
+					scBidSchedule.getStartDate());
+		} else {
+			remainingBidTime = 0L;
 		}
 		return remainingBidTime;
 	}
@@ -537,14 +544,20 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public Long getInterval() {
 
-		/*
-		 * if
-		 * (getScBidSchedule().getPmStatus().getStatusId().equals(BidStatusConst
-		 * .BID_PENDING_BIDDING)){ setInterval(getRemainingTimeToBid()); }else
-		 * if
-		 * (getScBidSchedule().getPmStatus().getStatusId().equals(BidStatusConst
-		 * .BID_IN_PROGRESS)){ setInterval(5L); }
-		 */
+		if (getScBidSchedule().getPmStatus().getStatusId()
+				.equals(BidStatusConst.BID_PENDING_BIDDING)) {
+			
+			if (!(durationCalculator(new Date(),
+					scBidSchedule.getStartDate()) < 0)){
+				
+				interval = durationCalculator(new Date(),
+						scBidSchedule.getStartDate());
+			}else {interval = 10L;}
+			
+		} else   {
+			interval = 10L;
+		}
+
 		return interval;
 	}
 
@@ -601,7 +614,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.scBidAction = scBidAction;
 	}
 
-	
 	/**
 	 * @return the packageRank
 	 */
@@ -610,7 +622,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param packageRank the packageRank to set
+	 * @param packageRank
+	 *            the packageRank to set
 	 */
 	public void setPackageRank(int packageRank) {
 		this.packageRank = packageRank;
