@@ -1824,19 +1824,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.BEKALAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.TANGGUNGAN.value())) {
-			if(getManagedBean().getPrgActivityId()==null) {
+			if(getManagedBean().getPmPrgActivity()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Program / Activity"});
 			}
 		} else if(pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.PEMBANGUNAN.value()) || pmVotFund.getVotFundType().equalsIgnoreCase(VotFundType.SETIA.value())) {
-			if(getManagedBean().getProjectId()==null) {
+			if(getManagedBean().getPmSubSetia()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Project"});
 			}
-			if(getManagedBean().getSetiaId()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Setia"});
-			}
-			if(getManagedBean().getSubSetiaId()==null) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Sub Setia"});
-			}			
 		}
 	}
 	
