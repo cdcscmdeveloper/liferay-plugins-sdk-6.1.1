@@ -80,6 +80,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -163,6 +164,7 @@ public class LOADetailBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 
 		try {
+			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType)getManagedBean().getPayLoad();
 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -174,6 +176,27 @@ public class LOADetailBackingBean extends
 			reqDTO.setLanguageCode(language);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			
+			if(resDTO.getScLoa() != null && 
+					ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(resDTO.getScLoa().getScLoiLoa().getDocType())){
+				if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
+					awardDataType.setLetterCreator("D");
+					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
+				}
+				else {
+					awardDataType.setLetterCreator("R");
+					awardDataType.setRequisitioner(new FacesScopes().getUserSessionBean().getLoginId());
+				}
+			}else{
+				if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
+					awardDataType.setLetterCreator("D");
+					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
+				}
+				else {
+					awardDataType.setLetterCreator("S");
+					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
+				}
+			}
 
 			populateLOADetails(resDTO);
 
@@ -881,7 +904,7 @@ public class LOADetailBackingBean extends
 						.equals(docDefinitionKey)) {
 					generateAgreementLetterPdfFromVelocity(
 							(ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa());
+							getManagedBean().getScLoa(),getManagedBean().getScQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
 						.equals(docDefinitionKey)) {
 					generateDeclarationPdfFromVelocity(
@@ -989,7 +1012,7 @@ public class LOADetailBackingBean extends
 	}
 
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
-			ScLoa scLoa) throws Exception {
+			ScLoa scLoa,ScQt scQt) throws Exception {
 
 		attachment.setFileName("agreement_letter.pdf");
 		populateAttachmentDetails(attachment);
@@ -1095,8 +1118,21 @@ public class LOADetailBackingBean extends
 			supplierEmail = "";
 		}
 		context.put("supplierEmail", supplierEmail);
-
-		context.put("procurementMode", "Tawaran Pelawaan Sebut Harga"); // TODO
+		
+		String procurementMode = null;
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())){
+			procurementMode = "Tawaran Pelawaan Sebut Harga";
+		}else if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+			if(scQt != null){
+				if(ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode())){
+					procurementMode = "Sebut Harga";
+				}else{
+					procurementMode = "Tender";
+				}
+			}
+		}
+		
+		context.put("procurementMode", procurementMode); // TODO
 		context.put("title", scLoiLoa.getTitle());
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -2147,6 +2183,11 @@ public class LOADetailBackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
+		if(endMonth == null && startMonth != null){
+		   endMonth = startMonth;
+		   endYear = startYear;
+		}
+		
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null && endYear >= startYear) {
 			if (endYear != startYear) {
