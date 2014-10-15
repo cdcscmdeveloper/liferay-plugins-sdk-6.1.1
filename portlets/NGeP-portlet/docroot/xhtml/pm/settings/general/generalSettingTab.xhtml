@@ -20,7 +20,7 @@
 			</h:panelGroup>
 
 		</div>
-		<p:panel>
+		
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
@@ -62,7 +62,9 @@
 							update="@form" size="15" headerText="GL Account"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount.glAccCode}">
-						</ac:lov> <ac:lovPopup /></td>
+						</ac:lov> 
+						<ac:lovPopup />
+						</td>
 				</tr>
 				<tr style="height: 30px;">
 					<td><p:outputLabel
@@ -81,7 +83,9 @@
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund"
 							conditionField="recordStatus^1|votFundType^A"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund.votFundCode}">
-						</ac:lov> <ac:lovPopup /></td>
+						</ac:lov> 
+						<ac:lovPopup />
+						</td>
 				</tr>
 				<tr style="height: 30px;">
 					<td><p:outputLabel
@@ -97,7 +101,7 @@
 				</tr>
 
 			</table>
-		</p:panel>
+	
 
 	</p:outputPanel>
 
