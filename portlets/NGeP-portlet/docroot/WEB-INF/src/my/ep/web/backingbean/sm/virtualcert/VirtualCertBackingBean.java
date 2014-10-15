@@ -143,7 +143,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 		// instantiate velocity template
 		// replace value in velocity template
-		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc);
+		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc, false);
 		String contentHtml = getContentHtmlFromVelocity(smSupplier);
 		String lampiranBHtml = getLampiranBFromVelocity();
 		
@@ -204,6 +204,69 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	}
 	
 	
+	public void generateBumiPdf(SmMofAccount mofAcc) throws Exception {
+		
+		Long applId = getSmSupplier().getSmAppl().getApplId();
+		
+		log.info("******generatePdf>>>" + applId);
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		String mofNo = mofAcc.getMofNo();
+
+		tmpPath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		tmpPath = tmpPath + "/" + Calendar.getInstance().get(Calendar.YEAR) + "/" + "SAP/cert/" + mofNo + "/";
+		
+		File dir = new File(tmpPath);
+		if(!dir.exists()) dir.mkdirs();
+		
+		log.info("************tmp>>>" + tmpPath);
+		SmSupplier smSupplier = null;
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+	
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+			
+			reqDto.setApplId(applId);
+			resDto = mofRegistrationSO.retrieveSupplierProfileByApplId(reqDto);
+			log.info("*********Supplier ID>" + resDto.getSmAppl().getApplId());
+			smSupplier = resDto.getSmAppl().getSmSupplier();
+		} finally {
+			mofRegistrationSO = null;
+		}
+		// instantiate velocity template
+		// replace value in velocity template
+		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc, true);
+		String lampiranBHtml = getLampiranBFromVelocity();
+		
+		String timeStamp = String.valueOf((new Date()).getTime());
+		String suppId = smSupplier.getSupplierId().toString();
+		
+		// generate pdf from html string
+		tmpCover = tmpPath + "cover_" + suppId + "_" + timeStamp + ".pdf";
+		log.info("-------tmpCover-------" + tmpCover);
+		OutputStream os1 = new FileOutputStream(tmpCover);
+        generatePdf(os1, coverHtml);
+        os1.flush();
+        os1.close();
+		
+        File fCover = new File(tmpCover);
+              
+		// combine all pdf into 1
+        List<InputStream> list = new ArrayList<InputStream>();        
+        list.add(new FileInputStream(fCover));
+        list.add(new FileInputStream(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates/lampiranB.pdf"))));
+		
+        String latestFile = tmpPath + "Mof_" + suppId + "_" + timeStamp + ".pdf";
+        OutputStream combined = new FileOutputStream(new File(latestFile));
+        doMerge(list, combined);
+        combined.flush();
+        combined.close();
+        fCover.delete();
+        downloadFile(latestFile);
+	}
+	
 	private SmSupplier getSmSupplier() {
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		log.info("******getSmSupplier******" + pmUser.getUserId());
@@ -225,14 +288,22 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	}
 	
 	
-    public String getCoverHtmlFromVelocity(SmSupplier supplier, SmMofAccount mofAcc) throws Exception {
+    public String getCoverHtmlFromVelocity(SmSupplier supplier, SmMofAccount mofAcc, boolean isBumi) throws Exception {
     	String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
 
     	Properties p = new Properties();
     	p.setProperty( "file.resource.loader.path", myTemplatePath);
     	Velocity.init(p);
 
-    	Template template = Velocity.getTemplate( "vc-cover.vm" );
+    	String templateName = null;
+    	
+    	if(isBumi) {
+    		templateName = "vc-bumi.vm";
+    	} else {
+    		templateName = "vc-cover.vm";
+    	}
+    	
+    	Template template = Velocity.getTemplate( templateName );
     	
     	log.info("template: " + template);
     	
