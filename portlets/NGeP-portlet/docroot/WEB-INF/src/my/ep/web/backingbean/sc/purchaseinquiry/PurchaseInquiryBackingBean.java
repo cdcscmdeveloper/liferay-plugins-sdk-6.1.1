@@ -638,6 +638,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						if(scRequestNoteDtl.getDeliverTermType() == null){
 							scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
 									ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY));
+							scRequestNoteDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
+									ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY).getParameterId());
+						}else{
+							scRequestNoteDtl.setDeliverTermTypeId(scRequestNoteDtl.getDeliverTermType().getParameterId());
 						}
 						
 						// get PI id to Request note

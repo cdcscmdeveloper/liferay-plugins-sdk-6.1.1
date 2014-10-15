@@ -127,10 +127,12 @@
 							
 							<p:ajax event="change" update="priceType ,offerPriceId ,supplierViewId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
 					</p:selectOneMenu>
 					<p:spacer width="2px"></p:spacer>
-					<p:commandLink oncomplete="suppDetailsPopup.show();return false;" partialSubmit="true" process="@this" id="supplierViewId"
+					<p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
+					    onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
 					    rendered="#{requestNoteDtl.scRequestSupplierItem.supplierId ne null}"
 						update="@([id$=suppDetailsPopup])">
 						<p:graphicImage library="ep/images/design" name="evaluate.png"
@@ -160,7 +162,7 @@
 							
 							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
 					</p:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" />
 				</p:column>
@@ -214,7 +216,7 @@
 							itemValue="#{user.userId}"></f:selectItems>
 								<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
 					</p:selectOneMenu>
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
@@ -238,12 +240,12 @@
 					<p:selectOneMenu  style="width:75px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
 					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
 					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteBackingBean.checkServiceOrProduct(requestNoteDtl)}"
-						value="#{requestNoteDtl.deliverTermType.parameterId}">
+						value="#{requestNoteDtl.deliverTermTypeId}">
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
 						
 						<p:ajax event="change" update="prepareBy" partialSubmit="true"
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermType.parameterId)}" />
+									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
 					</p:selectOneMenu>
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
 					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
