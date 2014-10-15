@@ -20,8 +20,8 @@
          </h:panelGrid>  
        
          <p:outputPanel id="paymentSchedule">   
-             <h:panelGroup  style="width:100%;"  
-                 rendered="#{contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}">    
+             <h:panelGroup  style="width:100%;" 
+                 rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}">    
 	             <p:dataTable id="tableSchedule" var="schedVar"
 	                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
 	                 rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
@@ -108,7 +108,7 @@
            </h:panelGroup>
 		   
 		   <h:panelGroup style="width:100%"
-		        rendered="#{!contractDetailsBackingBean.managedBean.ctContract.frequencySchedule}" >
+		        rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}" >
 	            <p:dataTable id="tableProgress" var="ProgVar" 
 	                value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	                selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
