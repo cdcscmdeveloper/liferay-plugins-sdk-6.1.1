@@ -21,6 +21,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
@@ -308,6 +309,8 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * @param address
 	 */
 	public void updateAddress(int address){
+		logger.info("updateAddress");
+		logger.info("address: "  + address);
 		if(0==address){ //country
 			this.getManagedBean().getUserAddress().setPmState(new PmState());
 			this.getManagedBean().getUserAddress().setPmDivision(new PmDivision());
@@ -396,34 +399,46 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	 * Validation for PmAddress's fields (User Profile Sub Menu)
 	 * @param pmAddress
 	 */
-	private void validateUserAddress(PmAddress pmAddress){
+	private boolean validateUserAddress(PmAddress pmAddress){
 		logger.info("validateUserAddress");
-		if(pmAddress.getPmCountry().getCountryId()==null){
-			throw new EpException(MessageConst.ERROR_770039);
+		boolean addressEntered = false;
+		
+		//address is optional
+		if(pmAddress.getPmCountry().getCountryId()!=null || !StringUtils.isBlank(pmAddress.getAddress1()) ||
+				!StringUtils.isBlank(pmAddress.getPostcode()) || pmAddress.getPmState().getStateId()!=null ||
+				pmAddress.getPmDistrict().getDistrictId()!=null || pmAddress.getPmDivision().getDivisionId()!=null
+				){
+			addressEntered = true;
 		}
+		
+		if(addressEntered){
+			if(pmAddress.getPmCountry().getCountryId()==null){
+				throw new EpException(MessageConst.ERROR_770039);
+			}
 
-		if(StringUtils.isBlank(pmAddress.getAddress1())){
-			throw new EpException(MessageConst.ERROR_770040);
-		}
-		
-		if(StringUtils.isBlank(pmAddress.getPostcode())){
-			throw new EpException(MessageConst.ERROR_770041);
-		}
-		
-		if(pmAddress.getPmState().getStateId()==null){
-			throw new EpException(MessageConst.ERROR_770042);
-		}
+			if(StringUtils.isBlank(pmAddress.getAddress1())){
+				throw new EpException(MessageConst.ERROR_770040);
+			}
+			
+			if(StringUtils.isBlank(pmAddress.getPostcode())){
+				throw new EpException(MessageConst.ERROR_770041);
+			}
+			
+			if(pmAddress.getPmState().getStateId()==null){
+				throw new EpException(MessageConst.ERROR_770042);
+			}
 
-		if(pmAddress.getPmDistrict().getDistrictId()==null){
-			throw new EpException(MessageConst.ERROR_770043);
-		}
-		
-		if(this.getManagedBean().isDivisionFlagC()){
-			if(pmAddress.getPmDivision().getDivisionId()==null){
-				throw new EpException(MessageConst.ERROR_770044);
+			if(pmAddress.getPmDistrict().getDistrictId()==null){
+				throw new EpException(MessageConst.ERROR_770043);
+			}
+			
+			if(this.getManagedBean().isDivisionFlagC()){
+				if(pmAddress.getPmDivision().getDivisionId()==null){
+					throw new EpException(MessageConst.ERROR_770044);
+				}
 			}
 		}
-	
+		return addressEntered;
 	}	
 
 	/**
@@ -443,6 +458,68 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 		}
 	}
 
+	/**
+	 * load user address - C
+	 * @param user
+	 * @param isAddressExist
+	 */
+	private void loadUserAddress(PmUser user, boolean isAddressExist){
+		logger.info("loadUserAddress");
+		
+		
+		//update contact address
+		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
+			boolean isUserAddressExist = false;
+			for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
+				if(DbValueConst.RECORD_STATUS_ACTIVE == addressTypeObj.getRecordStatusFlg()){
+					if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
+						//update address
+						if(isAddressExist){
+							addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
+							if(addressTypeObj.getPmAddress().getPmDivision()!=null && addressTypeObj.getPmAddress().getPmDivision().getDivisionId()==null){
+								addressTypeObj.getPmAddress().setPmDivision(null);
+							}
+						}else{
+							//remove address
+							addressTypeObj.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						}
+						isUserAddressExist = true;
+						break;
+					}
+				}
+			}
+			
+			if(!isUserAddressExist){
+				//add address
+				PmAddressType pmAddressType = new PmAddressType();
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+				if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+					pmAddressType.getPmAddress().setPmDivision(null);
+				}
+				pmAddressType.setPmOrgProfile(null);
+				user.addPmAddressType(pmAddressType);
+			}
+		}else{
+			//add address
+			if(isAddressExist){
+				if(user.getPmAddressTypes()==null){
+					user.setPmAddressTypes(new ArrayList<PmAddressType>());
+				}
+				PmAddressType pmAddressType = new PmAddressType();
+				pmAddressType.setAddressType(ProfileManagementConst.ADDRESS_USER);
+				pmAddressType.setPmAddress(this.getManagedBean().getUserAddress());
+				if(pmAddressType.getPmAddress().getPmDivision()!=null && pmAddressType.getPmAddress().getPmDivision().getDivisionId()==null){
+					pmAddressType.getPmAddress().setPmDivision(null);
+				}
+				pmAddressType.setPmOrgProfile(null);
+				user.addPmAddressType(pmAddressType);
+			}
+		}
+	
+		
+
+	}
 	
 	/**
 	 * Method to update the user details
@@ -450,22 +527,14 @@ public class ProfilePersonalizationBackingBean extends BaseBackingBean<ProfilePe
 	public void saveUserProfile() throws Exception{
 		debugLogger("saveUserProfile");
 		PmUser user = this.getManagedBean().getSelectedUser();
-		
+		boolean addressEntered = false;
 		//validation
 		validateUser(user);	
-		validateUserAddress(this.getManagedBean().getUserAddress());		
+		addressEntered =validateUserAddress(this.getManagedBean().getUserAddress());		
 		validatePreference(user);
 
+		loadUserAddress(user, addressEntered);
 		
-		//update contact address
-		if(user.getPmAddressTypes()!=null && !user.getPmAddressTypes().isEmpty()){
-			for (PmAddressType addressTypeObj : user.getPmAddressTypes()) {
-				if (ProfileManagementConst.ADDRESS_USER.equalsIgnoreCase(addressTypeObj.getAddressType())) {
-					addressTypeObj.setPmAddress(this.getManagedBean().getUserAddress());
-					break;
-				}
-			}
-		}
 		
 		IUserSO userSO = null;
 		try {
