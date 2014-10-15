@@ -79,6 +79,9 @@ public class RuleCatalogueBackingBean extends
 
 	public String preRenderView() {
 		log.info("...........preRenderView............");
+		this.getManagedBean().setTabActiveIndex(0);
+		this.getManagedBean().setFeeExemptionIndex(0);
+		
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
