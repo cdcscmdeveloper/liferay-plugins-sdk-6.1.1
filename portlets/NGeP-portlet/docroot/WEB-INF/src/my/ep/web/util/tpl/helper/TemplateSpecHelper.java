@@ -19,13 +19,16 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
+import my.ep.persistence.entity.tpl.spec.TplSpecZone;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
@@ -391,6 +394,68 @@ public class TemplateSpecHelper {
 		}
 		
 		specQuestion.setTplSpecEstimations(specEstimations);
+	}
+	
+	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
+		specMaster.setTplSpecZone(specZone);
+		
+		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+			resetPriceType(specMaster, specQuestion);
+		}
+	}
+	
+	public void resetPriceType(TplSpecMaster specMaster, TplSpecQuestion specQuestion) {
+		boolean isZonal = specMaster.getTplSpecZone() != null;
+		PmParameter clPriceTypeCode = specQuestion.getClPriceTypeCode();
+		PmParameter newPriceTypeCode = null;
+		
+		if (ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode())) {			
+			newPriceTypeCode = getStandardPriceType(isZonal);		
+			
+		} else {
+			if (clPriceTypeCode != null && clPriceTypeCode.getParameterId() != null) {
+				if (isPriceTypeTier(clPriceTypeCode.getParameterCode())) {
+					newPriceTypeCode = getTierPriceType(isZonal);
+				} else {
+					newPriceTypeCode = getStandardPriceType(isZonal);
+				}
+			}	
+		}
+		specQuestion.setClPriceTypeCode(newPriceTypeCode);	
+		
+		resetEstimations(specQuestion);
+	}
+	
+	private PmParameter getStandardPriceType(boolean isZonal) {		
+		PmParameter priceTypeCode = null;
+		String priceType = null;
+		
+		if (isZonal) {
+			priceType = ParameterConst.PRICE_TYPE_ZONAL_STANDARD;
+		} else {
+			priceType = ParameterConst.PRICE_TYPE_STANDARD;
+		}
+		
+		priceTypeCode = ParameterHelper.getInstance().getParameterByTypeAndCode(
+				ParameterTypeConst.PRICE_TYPE, priceType);
+		
+		return priceTypeCode;
+	}
+	
+	private PmParameter getTierPriceType(boolean isZonal) {		
+		PmParameter priceTypeCode = null;
+		String priceType = null;
+		
+		if (isZonal) {
+			priceType = ParameterConst.PRICE_TYPE_ZONAL_TIER;
+		} else {
+			priceType = ParameterConst.PRICE_TYPE_TIER;
+		}
+		
+		priceTypeCode = ParameterHelper.getInstance().getParameterByTypeAndCode(
+				ParameterTypeConst.PRICE_TYPE, priceType);
+		
+		return priceTypeCode;
 	}
 	
 	private void setUserDetails(BaseEntity baseObject) {
