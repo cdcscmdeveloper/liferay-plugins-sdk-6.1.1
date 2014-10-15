@@ -22,39 +22,40 @@
          <p:outputPanel id="paymentSchedule">   
              <h:panelGroup  style="width:100%;" 
                  rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}">    
-	             <p:dataTable id="tableSchedule" var="schedVar"
-	                 value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
-	                 rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
-	                 <ac:paginator for="tableSchedule" />
-	                 <p:column selectionMode="multiple" style="width:1%;"/>
+	                <p:dataTable id="tableSchedule" var="schedVar"
+	                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
+	                   rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
+	                
+	                   <ac:paginator for="tableSchedule" />
+	                   <p:column selectionMode="multiple" style="width:1%;"/>
 		       
 		             <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
 		                <p:inputText value="#{schedVar.scheduleNo}"  style="width:60px;" maxlength="4" styleClass="ppRightBtn" />
 		             </p:column> 
 		      
-		             <p:column style="width:35%;" headerText="#{lbl['lbl.ct.start.period']}">
-		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:120px;">
+		             <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
+		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.fromTranDate}" style="width:110px;">
                              <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
                              <p:ajax event="change" update=":form:tableSchedule" 
                                 process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                          </p:selectOneMenu> 
                          <p:spacer width="1"/>
-                         <p:selectOneMenu id="fromYear" value="#{schedVar.fromTranYear}" style="width:120px;">
+                         <p:selectOneMenu id="fromYear" value="#{schedVar.fromTranYear}" style="width:100px;">
                               <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
                               <p:ajax event="change" update=":form:tableSchedule"
                                  process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                          </p:selectOneMenu> 
 		            </p:column> 	
 		       
-		            <p:column style="width:40%;" headerText="#{lbl['lbl.ct.end.period']}">
+		            <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                  <h:panelGroup>
-		                    <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:120px;" >
+		                    <p:selectOneMenu id="toMonth" value="#{schedVar.toTranDate}"  style="width:110px;" >
                                 <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                                 <p:ajax event="change" update=":form:tableSchedule"
                                     process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}" />
                             </p:selectOneMenu>
                             <p:spacer width="1"/>
-                            <p:selectOneMenu id="toYear" value="#{schedVar.toTranYears}" style="width:120px;" >
+                            <p:selectOneMenu id="toYear" value="#{schedVar.toTranYears}" style="width:100px;" >
                                 <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
                                 <p:ajax event="change" update=":form:tableSchedule" 
                                    process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
@@ -65,8 +66,13 @@
 			                     <p:tooltip for="schedValidation" showEffect="fade" value="#{lbl['lbl.ct.validation.schedule.date']}"/> 
 		                 </h:panelGroup>
 		            </p:column> 
+		            
+		            <p:column headerText="Total Month" style="width:10%;">
+		              <h:outputText id="totalMonth" style="float:right;"
+		                  value="#{contractDetailsBackingBean.calculateTotalMonth(schedVar, 'S')}"/>
+		           </p:column>
 		           
-		            <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;">
+		            <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;white-space:normal;">
 		               <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}" style="width:130px;"> 
                             <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
                             <p:ajax process="@this"/>
@@ -115,24 +121,24 @@
 		           <ac:paginator for="tableProgress" />
 		           <p:column selectionMode="multiple" style="width:1%;"/> 
                   
-                   <p:column style="width:5%;" headerText="#{lbl['lbl.ct.phase']}">
+                   <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}">
                         <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" 
                            style="width:25px;" label="#{lbl['lbl.ct.phase']}" styleClass="ppRightBtn" />
                    </p:column>
 		      
-		           <p:column style="width:30%;" headerText="#{lbl['lbl.ct.description']}">
+		           <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}">
 		               <p:inputText value="#{ProgVar.phaseDesc}" 
 		                   maxlength="50" style="width:200px;" label="#{lbl['lbl.ct.description']}" />
 		           </p:column>
               
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.start.period']}" >
-		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:120px;">
+		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.fromProDate}" style="width:110px;">
                            <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                            <p:ajax event="change" update=":form:tableProgress"
                               process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                       </p:selectOneMenu> 
                       <p:spacer width="1"/>
-                      <p:selectOneMenu id="fromProYear" value="#{ProgVar.fromProYear}" style="width:120px;">
+                      <p:selectOneMenu id="fromProYear" value="#{ProgVar.fromProYear}" style="width:100px;">
                          <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
                          <p:ajax event="change" update=":form:tableProgress" 
                             process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
@@ -141,13 +147,13 @@
 		        
 		          <p:column style="width:30%;" headerText="#{lbl['lbl.ct.end.period']}">
 		             <h:panelGroup columns="5">
-		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:120px;" >
+		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.toProDate}"  style="width:110px;" >
                             <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                             <p:ajax event="change" update=":form:tableProgress"
                                process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                         </p:selectOneMenu>
                         <p:spacer width="1"/>
-                        <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:120px;" >
+                        <p:selectOneMenu id="toProYear" value="#{ProgVar.toProYears}" style="width:100px;" >
                             <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
                             <p:ajax event="change" update=":form:tableProgress" 
                                process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
@@ -158,9 +164,14 @@
 			              <p:tooltip for="validateProAction" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.date']}"/> 
 		            </h:panelGroup>
 		         </p:column>       
+		         
+		          <p:column headerText="Total Month" style="width:8%;white-space:normal;">
+		              <h:outputText id="totalMonth" style="float:right;"
+		                 value="#{contractDetailsBackingBean.calculateTotalMonth(ProgVar,'P')}"/>
+		           </p:column>
                
-                   <p:column style="width:9%;" headerText="#{lbl['lbl.ct.percentage']}">
-                       <p:inputText value="#{ProgVar.percentage}" style="width:70px;" styleClass="ppRightBtn" label="#{lbl['lbl.ct.percentage']}">
+                   <p:column style="width:7%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
+                       <p:inputText value="#{ProgVar.percentage}" style="width:60px;" styleClass="ppRightBtn" label="#{lbl['lbl.ct.percentage']}">
                        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText> 
                   </p:column>
 		       </p:dataTable>  
