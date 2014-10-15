@@ -208,7 +208,8 @@
 				<h:panelGroup id="uploadFactoringPg">
                     <h:panelGrid columns="3">
 			               <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
-			                   icon="iconAttachment" disabled="#{supplierBackingBean.managedBean.removeFactoring}" update="factoringPanel" />	
+			                   icon="iconAttachment"   update="factoringPanel" 
+			                   disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />	
 				              <p:spacer width="1"/>
 		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
 		                        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.filePath != null}" 
