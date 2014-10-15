@@ -8,8 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-	<f:event listener="#{questionnaireBackingBean.retrieveQuestionnaire}" type="preRenderView"></f:event>
 		<p:panel header="#{lbl['lbl.sm.questionaire.answer.header']}" id="questionPanel">
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 			<table style="width: 100%">
 				<tr>
 					<td><h:outputText value="#{lbl['lbl.sm.questionaire.feedback.note1']}" escape="false"/></td>
@@ -67,38 +67,29 @@
 						</tr>
 						<tr>
 							<td></td>
-							<td><p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}">
-									<f:selectItems value="#{questionnaireBackingBean.getAnswerOptions(ques.smQuestion.smAnswerCategory.smAnswers)}" />
-								</p:selectOneRadio></td>
+							<td>
+								<p:inputTextarea value="#{ques.otherRemark}" rows="6" cols="50"
+									rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 2}" autoResize="false">
+									<c:set value="#{ques.smQuestion.smAnswerCategory.smAnswers[0].answerId}" target="#{ques.smAnswer}" property="answerId" />
+								</p:inputTextarea>
+											
+								<p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}" 
+								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
+								rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}">
+									<f:selectItems
+										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
+										var="ans" itemLabel="#{ans.answerValue}"
+										itemValue="#{ans.answerId}">
+									</f:selectItems>
+								</p:selectOneRadio>
+
+							</td>
 						</tr>
 						<tr>
 							<td><br /></td>
 						</tr>
 					</ui:repeat>
 				</table>
-				<!-- <table style="width: 100%">
-				<p:dataTable
-					value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
-					var="ques" rowIndexVar="rowIndex">
-					<p:column>
-						<tr>
-							<td>#{rowIndex+1}.#{ques.smQuestion.questionValue}</td>
-						</tr>
-						<tr>
-							<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
-									<f:selectItems
-										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
-										var="ans" itemLabel="#{ans.answerValue}"
-										itemValue="#{ans.answerId}">
-									</f:selectItems>
-								</p:selectOneRadio></td>
-						</tr>
-						<tr>
-							<td></td>
-						</tr>
-					</p:column>
-				</p:dataTable>
-			 </table> -->
 			</p:panel>
 		</div>
 		<div align="right">
