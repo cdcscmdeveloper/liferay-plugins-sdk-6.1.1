@@ -7,6 +7,9 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
+
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +25,7 @@ import java.util.regex.Pattern;
 public class WebappBean {
     
     public void validateEmail(FacesContext ctx, UIComponent fieldName, Object obj){
-		 String errMsg="Email not valid";
+		 String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.email", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		 String inputValue = (String) obj;
 		 inputValue=inputValue==null? "":inputValue;
 		 Pattern mask = null;
@@ -38,7 +41,7 @@ public class WebappBean {
     public void checkSpaces(FacesContext ctx, UIComponent fieldName, Object obj){
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
-        String errMsg="Only alphabets,underscore,hyphen are allowed";
+        String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.alphabet.hyphen", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         String pattern="^[a-zA-Z\\s]+$";  
 
         if(!inputValue.matches(pattern)){
@@ -50,7 +53,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
         if(!inputValue.isEmpty()){
-           String errMsg="Only alphabets and space are allowed";
+           String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.alphabet.space", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
            String pattern="^[a-zA-Z\\s]+$";  
           if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -62,7 +65,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         inputValue=inputValue==null? "":inputValue;
         if(!inputValue.isEmpty()){
-             String errMsg="Only alphabets and numbers are allow";
+             String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.alphabet.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
              String pattern="^[a-zA-Z0-9]+$";  
            if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -75,7 +78,7 @@ public class WebappBean {
        String inputValue=(String)obj;
        if(inputValue == null || inputValue.equalsIgnoreCase(""))
     	   return;
-       String errMsg="Invalid phone number";
+       String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.phone.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
        String pattern = "\\d{10}";
        if(!inputValue.matches(pattern)){
            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -87,7 +90,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         if(inputValue == null || inputValue.equalsIgnoreCase(""))
      	   return;
-        String errMsg="Invalid mobile number";
+        String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.mobile.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         String pattern = "\\d{10}";
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -99,7 +102,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         if(inputValue == null || inputValue.equalsIgnoreCase(""))
      	   return;
-        String errMsg="Invalid fax number";
+        String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.fax.number", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         String pattern = "\\d{10}";
         if(!inputValue.matches(pattern)){
             throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "", errMsg));
@@ -110,7 +113,7 @@ public class WebappBean {
         String inputValue=(String)obj;
         if(inputValue == null || inputValue.equalsIgnoreCase(""))
         	return;
-        String errMsg="Invalid email format";
+        String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.email", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         String pattern="[\\w\\.-]*[a-zA-Z0-9_]@[\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]";//[a-zA-Z]=alphabet; [\\d]or[0-9]=number; $=line end follows;
 
         if(!inputValue.matches(pattern)){
@@ -119,8 +122,8 @@ public class WebappBean {
     }
    
     public void validateDPeriod(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-    	Integer inputValue = (Integer) value;
-    	 String errMsg="Delivery Term must greater than 0.";
+    	Integer inputValue = (Integer) value; 	 
+    	String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.delivery.term", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         if(inputValue >= 1)
           return;
         else
@@ -128,7 +131,7 @@ public class WebappBean {
     }
     
     public void validateDate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-    	String errMsg = "From date cannot be greater than to date";
+    	String errMsg = ResourceBundleUtils.getMessage("lbl.ct.validation.start.end.period", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
         if (value == null || component.getAttributes().get("fromDate") == null) {
             return;
         }
