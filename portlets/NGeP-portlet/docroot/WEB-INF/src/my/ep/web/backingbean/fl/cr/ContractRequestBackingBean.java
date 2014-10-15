@@ -711,6 +711,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void addContractedItems() {
 		getManagedBean().setContractedItemList(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems());
+		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
 	}
 	
 	public void updateContractedItemDt() {
@@ -757,7 +758,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			for (FlFulfilmentItemAddr selectedItem : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()) {
 				if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
 					itemExisted=true;
-					throw new EpException(MessageConst.ERROR_740022);
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_745005, new String[]{flItemAddr.getScRequestItem().getItemName()}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
 			if(!itemExisted){
@@ -2492,7 +2495,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				for (FlFulfilmentItemAddr selectedItem : deliveryAddress.getFlFulfilmentItemAddr()) {
 					if (selectedItem.getScRequestItem().getRequestNoteItemId().equals(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
 						itemExisted=true;
-						throw new EpException(MessageConst.ERROR_740022);
+						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(MessageConst.INFO_745005, new String[]{flItemAddr.getScRequestItem().getItemName()}, 
+										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 					}
 				}
 				if(!itemExisted){
