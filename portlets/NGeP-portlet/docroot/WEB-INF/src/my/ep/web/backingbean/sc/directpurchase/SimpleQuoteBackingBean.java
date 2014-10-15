@@ -3063,25 +3063,25 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quoteZone = quote.getQuoteZone();
 			}
 			quoteZone.setScQuote(quote);
-			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
-			
-			// product
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
-			}
-
-			// service 
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
-			}
 
 		} else {
 			quote.setZonal(Boolean.FALSE);
-			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
-			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 		}
 		
+		// product
+		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+			TemplateSpecHelper.getInstance().updateZoneDtl(
+					getManagedBean().getProductTemplateSpecBean().getSpecMaster(), quoteZone);
+		}
+
+		// service 
+		if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+			TemplateSpecHelper.getInstance().updateZoneDtl(
+					getManagedBean().getServiceTemplateSpecBean().getSpecMaster(), quoteZone);
+		}
+		
+		quote.setQuoteZone(quoteZone);
 		this.getManagedBean().setScQuote(quote);
 	}
 	
