@@ -8,7 +8,6 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -56,7 +55,7 @@ public class UnitOfMeasurementBackingBean extends
 	}
 
 	/**
-	 * reload to salutation search page 
+	 * reload to UOM search page 
 	 * 
 	 */		
 	public String redirectMeasurementSearch() {
@@ -72,7 +71,8 @@ public class UnitOfMeasurementBackingBean extends
 	public void resetMeasurementSearch() {
 		debugLogger("resetMeasurementSearch");
 		
-        RequestContext.getCurrentInstance().reset("measurementPanel");
+		this.getManagedBean().setMeasurementCodes(new String());
+		this.getManagedBean().setMeasurementCodes(new String());
 		
 	}	
 	
@@ -109,7 +109,7 @@ public class UnitOfMeasurementBackingBean extends
 			}		 
 	
 	/**
-	 * reload to salutation maintain page
+	 * reload to UOM maintain page
 	 * 
 	 */	
 	public String createMeasurement() {
@@ -128,22 +128,26 @@ public class UnitOfMeasurementBackingBean extends
 	private ISearchBean<PmUom> getMeasurementSearchBeanData(ISearchBean<PmUom> searchBean){
 			
 		if (getManagedBean().getMeasurementCodes() != null
-				&& !"".equals(getManagedBean().getMeasurementCodes())) {
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementCodes())) {
 			SearchFilterBean uomSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
+					SearchOperator.OPERATOR_LIKE.value());
 			uomSearchBean
 					.setSearchField("uomCode");
+			uomSearchBean
+					.setCaseInsensitive(true);
 			uomSearchBean.setSearchValue(getManagedBean()
 					.getMeasurementCodes());
 			searchBean.getDataFilterBeans().add(uomSearchBean);
 		}
 
 		if (getManagedBean().getMeasurementNames() != null
-				&& !"".equals(getManagedBean().getMeasurementNames())) {
+				&& !"".equalsIgnoreCase(getManagedBean().getMeasurementNames())) {
 			SearchFilterBean uomSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
+					SearchOperator.OPERATOR_LIKE.value());
 			uomSearchBean
 					.setSearchField("uomName");
+			uomSearchBean
+					.setCaseInsensitive(true);
 			uomSearchBean.setSearchValue(getManagedBean()
 					.getMeasurementNames());
 			searchBean.getDataFilterBeans().add(uomSearchBean);
