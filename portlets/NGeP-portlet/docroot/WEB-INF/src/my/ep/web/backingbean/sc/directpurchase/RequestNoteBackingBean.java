@@ -481,6 +481,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getDeliverTermType() == null){
 					scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
 							ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY));
+					scRequestNoteDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
+							ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY).getParameterId());
+				} else{
+					scRequestNoteDtl.setDeliverTermTypeId(scRequestNoteDtl.getDeliverTermType().getParameterId());
 				}
 				if(scRequestNoteDtl.getPriceType() == null){
 					scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
@@ -736,9 +740,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
 				if(selectedReqDtl.isSelected()){
 					
-					selectedReqDtl.setFulfilmentType(getParameterByTypeAndCode(
-							ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
-
 					// prepare by
 					if(assignedUser != null){
 						selectedReqDtl.setAssignedUser(assignedUser);
@@ -747,16 +748,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					} else{
 						//throw new EpException("Please select Prepare By.");
 					}
-					// delivery term
-					if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
-						selectedReqDtl.setDeliverTermType(getParameterByTypeAndCode(
-								ParameterTypeConst.DELIVERY_TERM, getManagedBean().getPeriodType()));
-					} 
-
-					if(getManagedBean().getPeriodValue() >0){
-						selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
-					}
 					
+					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
+						// delivery term
+						if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
+							selectedReqDtl.setDeliverTermType(getParameterByTypeAndCode(
+									ParameterTypeConst.DELIVERY_TERM, getManagedBean().getPeriodType()));
+							selectedReqDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
+									ParameterTypeConst.DELIVERY_TERM, getManagedBean().getPeriodType()).getParameterId());
+						} 
+
+						if(getManagedBean().getPeriodValue() >0){
+							selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
+						}
+					}
 					// rec supplier
 					if(getManagedBean().getSupplierId() != null && getManagedBean().getSupplierId() > 0 ){
 
@@ -1269,6 +1274,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
 				ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY));
+		scRequestNoteDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
+				ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY).getParameterId());
 		
 	    scRequestNoteDtl.setFulfilmentType(getParameterByTypeAndCode(
 				ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
@@ -2189,6 +2196,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 				}
 			}
+			// delivery term type
+			if(deliveryTermId > 0){
+				PmParameter deliveryTermType = new PmParameter();
+				deliveryTermType.setParameterId(deliveryTermId);
+				deliveryTermType.setBrandNew(Boolean.FALSE);
+				requestNoteDtl.setDeliverTermType(deliveryTermType);
+			}
 			// prepared by
 			if(getManagedBean().getUserList() != null && getManagedBean().getUserList().size()>0){
 				for (PmUser user  : getManagedBean().getUserList()) {
@@ -2359,6 +2373,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			log.debug(message);
 		}
 		log.info(message);
+	}
+	
+	public void supplierViewAction() {
+		log.info("supplierViewAction");
+		RequestContext.getCurrentInstance().execute("suppDetailsPopup.show();");
 	}
 	
 	public List<PmStatusDesc> getStatusDescList() {
