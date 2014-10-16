@@ -191,8 +191,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
 			}
 
-			getManagedBean().setScQtDocReports(
-					resDTO.getScQtDocReports());
+			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 
 		} finally {
 			qtNoticeBoardSO = null;
@@ -464,7 +463,7 @@ public class NoticeBoardBackingBean extends
 		if (selectedNode.equalsIgnoreCase("location")) {
 			this.getManagedBean().setLocationSelectedNode(null);
 			TreeNode rootNode = this.getManagedBean().getTempLocationRootNode();
-			
+
 			if (rootNode != null) {
 				List<TreeNode> childNodes = rootNode.getChildren();
 
@@ -489,7 +488,7 @@ public class NoticeBoardBackingBean extends
 		ScQt scQt = new ScQt();
 		scQt.setQtId(qtId);
 		this.getManagedBean().setScQt(scQt);
-		
+
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml?faces-redirect=true";
 	}
 
@@ -505,7 +504,8 @@ public class NoticeBoardBackingBean extends
 		NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 		reqDTO.setUserId(pmUser.getUserId());
 		reqDTO.setQtId(qtId);
-		NoticeBoardResDTO resDTO = qtNoticeBoardSO.retrieveSupplierRegistrationDtl(reqDTO);
+		NoticeBoardResDTO resDTO = qtNoticeBoardSO
+				.retrieveSupplierRegistrationDtl(reqDTO);
 		ScQt scQt = resDTO.getScQt();
 		this.getManagedBean().setScQt(resDTO.getScQt());
 
@@ -579,7 +579,7 @@ public class NoticeBoardBackingBean extends
 
 		getManagedBean().setNormalBsvBean(selectedBsvBean);
 		getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
-		
+
 		this.getManagedBean().setSelectedBsvAttandance(null);
 		this.getManagedBean().setAttendanceList(null);
 		this.getManagedBean().setSmSupplier(null);
@@ -823,8 +823,9 @@ public class NoticeBoardBackingBean extends
 
 			IQTNoticeBoardSO qtNoticeBoardSO = null;
 			try {
-				qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
+				qtNoticeBoardSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTNoticeBoardSO.class);
 
 				// Filter By - Status
 				List<Long> statusIds = new ArrayList<Long>();
@@ -832,40 +833,35 @@ public class NoticeBoardBackingBean extends
 				if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES
 						.equals(selectedTab)) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"isChanged",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
+							new SearchFilterBean("IS_CHANGED",
+									SearchOperator.OPERATOR_EQUALS.value(), 1));
+					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
+						.equals(selectedTab)) {
+					statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
+					statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
+					statusIds.add(QTStatusConst.QT_LOI_LOA);
+				} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
+						.equals(selectedTab)) {
+					statusIds.add(QTStatusConst.QT_AWARDED);
 				} else {
-					if (ParameterConst.NOTICE_BOARD_STATUS_CLOSED
-							.equals(selectedTab)) {
-						statusIds.add(QTStatusConst.QT_EVALUATION_PROPOSAL);
-						statusIds.add(QTStatusConst.QT_SUPPLIER_FINALIZATION);
-						statusIds.add(QTStatusConst.QT_LOI_LOA);
-					} else if (ParameterConst.NOTICE_BOARD_STATUS_AWARDED
-							.equals(selectedTab)) {
-						statusIds.add(QTStatusConst.QT_AWARDED);
-					} else {
-						statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
-						statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
-					}
-
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtStatus.current",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									true));
-
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(
-									"scQtStatus.pmStatus.statusId",
-									SearchOperator.OPERATOR_IN.value(),
-									statusIds));
+					statusIds.add(QTStatusConst.QT_BRIEFING_SITE_VISIT);
+					statusIds.add(QTStatusConst.QT_PROPOSAL_PREPARATION);
 				}
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("status.IS_CURRENT",
+								SearchOperator.OPERATOR_EQUALS.value(), 1));
+
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmStatus.STATUS_ID",
+								SearchOperator.OPERATOR_IN.value(), statusIds));
 
 				// Filter By - QT No
 				if (StringUtils.isNotBlank(getManagedBean().getQtNo())) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("qtNo",
+							new SearchFilterBean("QT_NO",
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getQtNo()));
 
@@ -874,7 +870,7 @@ public class NoticeBoardBackingBean extends
 				// Filter By - Title
 				if (StringUtils.isNotBlank(getManagedBean().getTitle())) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("qtTitle",
+							new SearchFilterBean("QT_TITLE",
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getTitle(), true));
 
@@ -886,7 +882,7 @@ public class NoticeBoardBackingBean extends
 						&& pmCategoryL3.getCategoryL3Id() != null) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean(
-									"scQtCategorys.pmCategoryL3.categoryL3Id",
+									"pmcatL3.CATEGORY_L3_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									pmCategoryL3.getCategoryL3Id()));
 
@@ -900,7 +896,7 @@ public class NoticeBoardBackingBean extends
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
-									"pmOrgProfile.parentOrgProfile.parentOrgProfile.orgProfileId",
+									"parentOrg.ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ministryProfile.getOrgProfileId()));
 
@@ -910,7 +906,7 @@ public class NoticeBoardBackingBean extends
 				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
 				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile.orgProfileId",
+							new SearchFilterBean("org.ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ptjProfile.getOrgProfileId()));
 
@@ -921,7 +917,7 @@ public class NoticeBoardBackingBean extends
 						.getPublishSearchDataBean();
 				if (publishSearchDataBean != null) {
 					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean(
-							"publishDate", publishSearchDataBean);
+							"PUBLISH_DATE", publishSearchDataBean);
 
 					if (searchFilterBean != null) {
 						searchBean.getDataFilterBeans().add(searchFilterBean);
@@ -989,7 +985,7 @@ public class NoticeBoardBackingBean extends
 						.getClsDataBean();
 				if (clsDataBean != null) {
 					SearchFilterBean searchFilterBean = getSearchFilterBeanByDataBean(
-							"closingDate", clsDataBean);
+							"CLOSING_DATE", clsDataBean);
 
 					if (searchFilterBean != null) {
 						searchBean.getDataFilterBeans().add(searchFilterBean);
@@ -1014,7 +1010,7 @@ public class NoticeBoardBackingBean extends
 							searchBean
 									.getDataFilterBeans()
 									.add(new SearchFilterBean(
-											"scQtSupplierCriteria.scQtLocCriteria.pmState.stateId",
+											"state.STATE_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmState) treeNode.getData())
@@ -1023,7 +1019,7 @@ public class NoticeBoardBackingBean extends
 							searchBean
 									.getDataFilterBeans()
 									.add(new SearchFilterBean(
-											"scQtSupplierCriteria.scQtLocCriteria.pmDivision.divisionId",
+											"div.DIVISION_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmDivision) treeNode.getData())
@@ -1032,21 +1028,21 @@ public class NoticeBoardBackingBean extends
 							searchBean
 									.getDataFilterBeans()
 									.add(new SearchFilterBean(
-											"scQtSupplierCriteria.scQtLocCriteria.pmDistrict.districtId",
+											"distr.DISTRICT_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmDistrict) treeNode.getData())
 													.getDistrictId()));
-						} else if (treeNode.getType().equals("city")) {
+						} /*else if (treeNode.getType().equals("city")) {
 							searchBean
 									.getDataFilterBeans()
 									.add(new SearchFilterBean(
-											"scQtSupplierCriteria.scQtLocCriteria.pmDistrict.pmCities.cityId",
+											"city.CITY_ID",
 											SearchOperator.OPERATOR_EQUALS
 													.value(),
 											((PmCity) treeNode.getData())
 													.getCityId()));
-						}
+						}*/
 
 					}
 				}
@@ -1054,8 +1050,9 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
 
-				NoticeBoardResDTO resDTO = qtNoticeBoardSO.searchQTNoticeBoard(reqDTO);
-				
+				NoticeBoardResDTO resDTO = qtNoticeBoardSO
+						.searchQTNoticeBoard(reqDTO);
+
 				return resDTO.getQtResultBean();
 			} finally {
 				qtNoticeBoardSO = null;
@@ -1256,8 +1253,8 @@ public class NoticeBoardBackingBean extends
 						.getSupplierId());
 				BriefingResDTO briefingResDTO = qtBriefingSO
 						.retrieveBriefingRegistrationList(reqDTO);
-				registrations = briefingResDTO
-						.getBriefingRegResultBean().getResultList();
+				registrations = briefingResDTO.getBriefingRegResultBean()
+						.getResultList();
 				if (null == registrations || registrations.isEmpty()) {
 					ScQtBsvRegistration bsvRegistration = new ScQtBsvRegistration();
 					bsvRegistration.setBsvDtl(bsvDetail);
@@ -1324,18 +1321,19 @@ public class NoticeBoardBackingBean extends
 
 		return "/xhtml/sc/noticeboard/awardsupplier.xhtml?faces-redirect=true";
 	}
-	
+
 	public void downloadAllDocuments() throws IOException {
-		
+
 		List<ScQtDocReport> scQtDocReports = getManagedBean()
 				.getScQtDocReports();
 		List<ScQtDocReportAttachment> attachments = new ArrayList<ScQtDocReportAttachment>();
 		for (ScQtDocReport scQtDocReport : scQtDocReports) {
-			ScQtDocReportAttachment docReportAttachment = scQtDocReport.getScQtDocReportAttachment();
+			ScQtDocReportAttachment docReportAttachment = scQtDocReport
+					.getScQtDocReportAttachment();
 			if (docReportAttachment != null) {
 				attachments.add(docReportAttachment);
 			}
-			
+
 		}
 		downloadAllFiles("NGeP-QT-Documents", attachments);
 	}
