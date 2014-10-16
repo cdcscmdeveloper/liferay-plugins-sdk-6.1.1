@@ -42,6 +42,7 @@ public class ViewSuppProfileBackingBean extends
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, redirectToAppl);
 		}
+		setTabParam();
 	}
 
 }
