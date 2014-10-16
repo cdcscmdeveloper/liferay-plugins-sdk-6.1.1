@@ -16,7 +16,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -366,11 +365,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    Calendar cal = Calendar.getInstance();
 			    for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()) {
 		    	      cal.setTime(ctschedule.getFromDate());
-		    	      ctschedule.setFromTranDate(cal.get(Calendar.MONTH));
-		    	      ctschedule.setFromTranYear(dateFormatYear.format(ctschedule.getFromDate()));
+		    	      String str = String.valueOf(cal.get(Calendar.MONTH));
+		    	      ctschedule.setStartMonth(str);
+		    	      ctschedule.setStartYear(dateFormatYear.format(ctschedule.getFromDate()));
+		    	     
 		    	      cal.setTime(ctschedule.getToDate());
-		    	      ctschedule.setToTranDate(cal.get(Calendar.MONTH));
-		    	      ctschedule.setToTranYears(dateFormatYear.format(ctschedule.getToDate()));
+		    	      String str1 = String.valueOf(cal.get(Calendar.MONTH));
+		    	      ctschedule.setEndMonth(str1);
+		    	      ctschedule.setEndYear(dateFormatYear.format(ctschedule.getToDate()));
 		       }
 		
 		 } if (this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
@@ -379,11 +381,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		         Calendar cal = Calendar.getInstance();
 			     for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
 			            cal.setTime(ctProgressivePayment.getFromDate());
-			            ctProgressivePayment.setFromProDate(cal.get(Calendar.MONTH));
-			            ctProgressivePayment.setFromProYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
-			    	    cal.setTime(ctProgressivePayment.getToDate());
-			            ctProgressivePayment.setToProDate(cal.get(Calendar.MONTH));
-			            ctProgressivePayment.setToProYears(dateFormatYear.format(ctProgressivePayment.getToDate()));
+			            String str = String.valueOf(cal.get(Calendar.MONTH));
+			            ctProgressivePayment.setStartMonth(str);
+			            ctProgressivePayment.setStartYear(dateFormatYear.format(ctProgressivePayment.getFromDate()));
+			    	  
+			            cal.setTime(ctProgressivePayment.getToDate());
+			    	    String str1 = String.valueOf(cal.get(Calendar.MONTH));
+			            ctProgressivePayment.setEndMonth(str1);
+			            ctProgressivePayment.setEndYear(dateFormatYear.format(ctProgressivePayment.getToDate()));
 			      }
 		   }
 		    
@@ -949,11 +954,9 @@ public void ConstructSideTabMenu(){
     	 if(getManagedBean().getContractVer().getCtSchedules().size() > 0){
     		DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		 for(CtSchedule ctschedule : this.getManagedBean().getContractVer().getCtSchedules()){
-    			 String fromDate = String.valueOf(ctschedule.getFromTranDate()+1)+"-"+ ctschedule.getFromTranYear();
-    			 String toDate = String.valueOf(ctschedule.getToTranDate()+1) +"-"+ctschedule.getToTranYears();
-    			 Date date = dateFormat.parse((fromDate));
+    			 Date date = dateFormat.parse(ctschedule.getStartMonth()+"-"+ ctschedule.getStartYear());
+    			 Date date1 = dateFormat.parse(ctschedule.getEndMonth() +"-"+ctschedule.getEndYear());
     			 ctschedule.setFromDate(date);
-    			 Date date1 = dateFormat.parse((toDate));
     			 ctschedule.setToDate(date1); 
     		 }
     	}
@@ -968,11 +971,9 @@ public void ConstructSideTabMenu(){
     		if(this.getManagedBean().getContractVer().getCtProgressivePayments().size() > 0){
     		     DateFormat dateFormat = new SimpleDateFormat("MM-yyyy");
     		     for(CtProgressivePayment ctProgressivePayment : this.getManagedBean().getContractVer().getCtProgressivePayments()){
-    			        String fromDate = String.valueOf(ctProgressivePayment.getFromProDate()+1)+"-"+ ctProgressivePayment.getFromProYear();
-    			        String toDate = String.valueOf(ctProgressivePayment.getToProDate()+1)+"-"+ ctProgressivePayment.getToProYears();
-    			        Date date = dateFormat.parse((fromDate));
+    			        Date date = dateFormat.parse(ctProgressivePayment.getStartMonth()+"-"+ ctProgressivePayment.getStartYear());
     			        ctProgressivePayment.setFromDate(date);
-    			        Date date1 = dateFormat.parse((toDate));
+    			        Date date1 = dateFormat.parse(ctProgressivePayment.getEndMonth()+"-"+ ctProgressivePayment.getEndYear());
     			        ctProgressivePayment.setToDate(date1); 
     		     }
     	   }
@@ -993,15 +994,15 @@ public void ConstructSideTabMenu(){
 		  
            if(frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
 		             CtSchedule schedules = (CtSchedule)Var;
-		              if(schedules.getToTranDate() > 0) {
-	    	                 fromDate = String.valueOf(schedules.getFromTranDate()+1)+"-"+ schedules.getFromTranYear();
-		                     toDate = String.valueOf(schedules.getToTranDate()+1) +"-"+schedules.getToTranYears();
+		              if(schedules.getEndMonth() != null) {
+	    	                 fromDate = schedules.getStartMonth()+"-"+ schedules.getStartYear();
+		                     toDate = schedules.getEndMonth() +"-"+schedules.getEndYear();
 		              }
            } else if(frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_PROGRESSIVE)) {
         	      CtProgressivePayment progressivePayment = (CtProgressivePayment)Var;
-	              if(progressivePayment.getToProDate() > 0) {
-	            	    fromDate = String.valueOf(progressivePayment.getFromProDate()+1)+"-"+ progressivePayment.getFromProYear();
-    			        toDate = String.valueOf(progressivePayment.getToProDate()+1)+"-"+ progressivePayment.getToProYears();
+	              if(progressivePayment.getEndMonth() != null) {
+	            	    fromDate = progressivePayment.getStartMonth()+"-"+progressivePayment.getStartYear();
+    			        toDate =  progressivePayment.getEndMonth()+"-"+progressivePayment.getEndYear();
     			   }
            }
 		   
@@ -1228,22 +1229,31 @@ public void ConstructSideTabMenu(){
 		return items;
 	}
 		
-	public SelectItem[] getMonthList(){
-		 SelectItem[] items = new SelectItem[13];
-		 try{
-			
-			 items[0] = new SelectItem(0, "- Select One -");
-			String[] months = new DateFormatSymbols().getMonths();
-		    for(int i = 1; i < months.length; i++) {
-		        if(i == 13)
-		          break;
-		        items[i] = new SelectItem(String.valueOf(i),months[i]);
-		    }      
-		 }catch(Exception e){
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	public List<SelectItem> getMonthList(){
+		
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+
+			selectItems.add(new SelectItem(null, "--Select One--"));
+			selectItems.add(new SelectItem(0, "January"));
+			selectItems.add(new SelectItem(1, "February"));
+			selectItems.add(new SelectItem(2, "March"));
+			selectItems.add(new SelectItem(3, "April"));
+			selectItems.add(new SelectItem(4, "May"));
+			selectItems.add(new SelectItem(5, "June"));
+			selectItems.add(new SelectItem(6, "July"));
+			selectItems.add(new SelectItem(7, "August"));
+			selectItems.add(new SelectItem(8, "September"));
+			selectItems.add(new SelectItem(9, "October"));
+			selectItems.add(new SelectItem(10, "November"));
+			selectItems.add(new SelectItem(11, "December"));
+
+			this.getManagedBean().setMonthList(selectItems);
+		} finally {
+
 		}
-		 return items;
+		return getManagedBean().getMonthList();
 	 }
 
 	public List<String> getYearList() {
@@ -1650,7 +1660,7 @@ public void ConstructSideTabMenu(){
 	 }
 		 
      public void validateDate(CtSchedule ctSchedule){
-    	 if(ctSchedule.getFromTranYear() == null || ctSchedule.getToTranYears() == null || ctSchedule.getToTranDate() == 0) {
+    	 if(ctSchedule.getStartYear() == null || ctSchedule.getEndYear() == null || ctSchedule.getEndMonth() == null) {
     		 for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
  			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
  			        dataList.setValidateScheduleDate(false);
@@ -1658,10 +1668,13 @@ public void ConstructSideTabMenu(){
  			 }
     	 }
     	 else {    	 
-	    	 int startYearValue = Integer.valueOf((String) ctSchedule.getFromTranYear());  
-			 int toyearValue = Integer.valueOf((String) ctSchedule.getToTranYears()); 
-			 if((ctSchedule.getFromTranDate() > ctSchedule.getToTranDate() && startYearValue >= toyearValue)||
-			     (ctSchedule.getFromTranDate() <= ctSchedule.getToTranDate() && startYearValue > toyearValue)){
+	    	 int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
+			 int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
+			 int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
+			 int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
+			 
+			 if((startMonth > endMonth && startYear >= endYear)||
+			     (startMonth <= endMonth && startYear > endYear)){
 			     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
 			    	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
 			    		dataList.setValidateScheduleDate(true);
@@ -1679,7 +1692,7 @@ public void ConstructSideTabMenu(){
 	}
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
-    	if(ctProgressivePayment.getFromProYear() == null || ctProgressivePayment.getToProYears() == null || ctProgressivePayment.getToProDate() == 0) {
+    	if(ctProgressivePayment.getStartYear() == null || ctProgressivePayment.getEndYear() == null || ctProgressivePayment.getEndMonth() == null) {
     		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
 			        dataList.setValidateProgressiveDate(false);
@@ -1687,10 +1700,11 @@ public void ConstructSideTabMenu(){
 			 }
    	 	}
     	else {
-			int startYearValue = Integer.valueOf((String) ctProgressivePayment.getFromProYear()); 
-			int toyearValue = Integer.valueOf((String) ctProgressivePayment.getToProYears()); 
-			if((ctProgressivePayment.getFromProDate() > ctProgressivePayment.getToProDate()  &&  startYearValue >= toyearValue)||
-					(ctProgressivePayment.getFromProDate() <= ctProgressivePayment.getToProDate()  && startYearValue > toyearValue)){
+		     int startYear = Integer.valueOf((String) ctProgressivePayment.getStartYear());  
+			 int endYear = Integer.valueOf((String) ctProgressivePayment.getEndYear());
+			 int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());  
+			 int endMonth = Integer.valueOf((String) ctProgressivePayment.getEndMonth());
+			if((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)){
 			   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 			    	  if(dataList.equals(ctProgressivePayment)){
 			    		 dataList.setValidateProgressiveDate(true);
