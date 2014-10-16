@@ -1613,10 +1613,36 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()));
 			}
 		}
+		setCOAInfoForNewItem(flItemAddr);
 		// add  or remove items to Selected delivery address
 		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)){
 			itemsToSelectedAddress(flItemAddr);
 			populateItemsForSelectedAddress();
+		}
+	}
+	
+	private void setCOAInfoForNewItem(FlFulfilmentItemAddr flItemAddr) {
+		if(null!= flItemAddr.getOrderedQty() && flItemAddr.getOrderedQty().doubleValue()>=0 && flItemAddr.getPmVotFund()==null) {
+			// Check is it FlItemAddr COA set, if yes, set it for this new item
+			for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+				if(flDeliveryAddress!=getManagedBean().getSelectedDelAddr()) {
+					for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
+						if(itemAddr.getScRequestItem().getRequestNoteItemId().longValue()==flItemAddr.getScRequestItem().getRequestNoteItemId().longValue() 
+							&& itemAddr.getUnitPrice().doubleValue()==flItemAddr.getUnitPrice().doubleValue()
+							&& itemAddr.getPmVotFund()!=null) {
+							flItemAddr.setPmVotFund(itemAddr.getPmVotFund());
+							flItemAddr.setPmPrgActivity(itemAddr.getPmPrgActivity());
+							flItemAddr.setPmSubSetia(itemAddr.getPmSubSetia());
+							flItemAddr.setAssetInd(itemAddr.getAssetInd());
+							flItemAddr.setPmGlAccount(itemAddr.getPmGlAccount());
+							break;
+						}
+					}
+					if(flItemAddr.getPmVotFund()!=null) {
+						break;
+					}
+				}
+			}
 		}
 	}
 	
