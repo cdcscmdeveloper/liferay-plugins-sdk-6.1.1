@@ -19,27 +19,27 @@
 </style>
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
-		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.contr.no']}"
+					<p:outputLabel value="#{lbl['lbl.fl.contract.no']}"
 						style="width: 125px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.contractNo}"></p:inputText>
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.phys.contr.no']}"
+					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}"
 						style="padding-left: 50px;" />
 					<p:inputText size="40"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docLoaSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}"
+					<p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}"
 						style="width: 125px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.loaNo}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTitleSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
-					<p:outputLabel value="#{lbl['lbl.fl.ap59.contr.title']}"
+					<p:outputLabel value="#{lbl['lbl.fl.ap59.contract.title']}"
 						style="width: 125px;" />
 					<p:inputText size="80" value="#{invoiceBackingBean.managedBean.title}"></p:inputText>
 				</h:panelGrid>
@@ -53,41 +53,37 @@
 			<f:verbatim></f:verbatim>
 
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lblfl.doc.search.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					 icon="ui-icon-search" update="resultPanel" action="#{invoiceBackingBean.searchDocument}"/>
-				<p:commandButton value="#{lbl['lblfl.doc.search.btn.reset']}"
+				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					 icon="ui-icon-reset" update=":form" action="#{invoiceBackingBean.searchReset}"/>
 			</div>
 		</p:panel>
-		<p:panel id="resultPanel" header="RESULT" toggleable="true">
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<p:dataTable lazy="true"  width="100%" id="flInvoiceListDt"
 			value="#{invoiceBackingBean.flInvoiceDataModel}" 
 				var="flInvoice">
 				<ac:paginator for="flInvoiceListDt" />
 				<p:column
-					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.ord.no']}">
+					headerText="#{lbl['lbl.fl.do.poco.no']}">
 					<h:outputText value="#{flInvoice.flRequest.flFulfilmentOrder.docNo}"/>
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.no']}">
+					headerText="#{lbl['lbl.fl.contract.no']}">
 					<h:outputText value="#{flInvoice.flRequest.ctContract.contractNo}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.loa.no']}">
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.loa.no']}">
 					<h:outputText value="#{flInvoice.flRequest.ctContract.loa.loaNo}"/>
 				</p:column>
 				<p:column
-					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.own.ptj']}">
+					headerText="#{lbl['lbl.fl.ptj.name']}">
 					<h:outputText value="#{flInvoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/>
 				</p:column>
-				<p:column
-					headerText="#{lbl['lbl.fl.ap59.search.datatable.contr.ord.ptj']}">
-					<h:outputText value="#{flInvoice.flRequest.preparedOrgProfile.pmOrgValidity.orgName}"/>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.supp']}">
+				<p:column headerText="#{lbl['lbl.fl.ap59.contract.supplier']}">
 					<h:outputText value="#{flInvoice.flRequest.smSupplier.companyName}"/>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.fl.ap59.search.datatable.action']}"
+				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
 					style="text-align: center">
 					<p:commandLink onclick="goToDetail([{name:'invoiceId', value:'#{flInvoice.invoiceId}'}])">
 						<p:graphicImage library="ep/images/design" name="document.png"
