@@ -1232,19 +1232,25 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public SelectItem[] pmIdTypeDropdownValues() {
 		List<SelectItem> itemList = new ArrayList<SelectItem>();
-		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
 		
-		log.info("----------Items-------" + items.length);
 		for(SelectItem selectItem : items) {
-			log.info("----------selectItem-------" + selectItem.getValue());
-			if(selectItem.getValue() == null || !selectItem.getValue().equals("A")){
+			
+			if(selectItem.getValue() == null){
 				itemList.add(selectItem);
+			}else{
+				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
+				if(!pmParameter.getParameterCode().equals("A")){
+					itemList.add(selectItem);
+				}
 			}
 			
 		}
 		
 		return itemList.toArray(new SelectItem[itemList.size()]);
+		
 	}
+	
 	
 	/**
 	 * set supplier owner mask based on selected id type
