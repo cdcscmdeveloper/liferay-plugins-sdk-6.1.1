@@ -100,6 +100,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Date maxDate;
 	private Long currentPtjGroupId;
 	private Long currentPreparedOrgId;
+	private String searchItemType;
+	private String searchItemCode;
+	private String searchItemName;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -2199,6 +2202,46 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.showOneOffItemAddrList = showOneOffItemAddrList;
 	}
 
+	/**
+	 * @return the searchItemType
+	 */
+	public String getSearchItemType() {
+		return searchItemType;
+	}
 
+	/**
+	 * @param searchItemType the searchItemType to set
+	 */
+	public void setSearchItemType(String searchItemType) {
+		this.searchItemType = searchItemType;
+	}
+
+	/**
+	 * @return the searchItemCode
+	 */
+	public String getSearchItemCode() {
+		return searchItemCode;
+	}
+
+	/**
+	 * @param searchItemCode the searchItemCode to set
+	 */
+	public void setSearchItemCode(String searchItemCode) {
+		this.searchItemCode = searchItemCode;
+	}
+
+	/**
+	 * @return the searchItemName
+	 */
+	public String getSearchItemName() {
+		return searchItemName;
+	}
+
+	/**
+	 * @param searchItemName the searchItemName to set
+	 */
+	public void setSearchItemName(String searchItemName) {
+		this.searchItemName = searchItemName;
+	}
 
 }

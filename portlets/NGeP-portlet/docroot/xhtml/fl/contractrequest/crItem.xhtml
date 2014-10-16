@@ -172,7 +172,7 @@
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) and
 								(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) }"
-					update="contractedItemDt" process="@this,contractedItemDt"
+					process="@this"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" icon="ui-icon-delete"
 					rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) and 
@@ -204,42 +204,6 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" update="addressDataTable,itemDetPanelGroup">
-			</p:commandButton>
-		</div>
-	</p:dialog>
-	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
-		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
-		width="600" resizable="false">
-		<p:dataTable id="contractedItemDt" var="contractedItem"
-			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
-			rowKey="#{contractedItem.contractItemId}"
-			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
-			<p:ajax event="rowSelect" update=":form:addContractedItemDialog"
-				process="@this" />
-			<ac:paginator for="contractedItemDt" />
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.name']}"></p:column>
-					<p:column rowspan="1" headerText="#{lbl['lbl.fl.item.type']}"></p:column>
-				</p:row>
-			</p:columnGroup>
-			<p:column selectionMode="multiple" />
-			<p:column>
-				<h:outputText
-					value="#{contractedItem.scRequestItem.itemName}" />
-			</p:column>
-			<p:column>
-				<h:outputText
-					value="#{contractRequestBackingBean.getParameterDesc(contractedItem.itemType)}" />
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton  value="#{lbl['lbl.btn.add']}"
-				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();" update="itemDataTable"
-				process="@this,contractedItemDt">
 			</p:commandButton>
 		</div>
 	</p:dialog>
@@ -554,5 +518,71 @@
 				</p:dataTable>
 			</p:panel>
 		</h:panelGroup>
+	</p:dialog>
+	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
+		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
+		width="600" resizable="false">
+		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
+			<table style="width:100%">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.type']}" /></td>
+					<td><p:selectOneMenu 
+						value="#{contractRequestBackingBean.managedBean.searchItemType}"
+						style="width: 115px;">
+						<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}" />
+					</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.code']}" /></td>
+					<td><p:inputText value="#{contractRequestBackingBean.managedBean.searchItemCode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.item.name']}" /></td>
+					<td><p:inputText value="#{contractRequestBackingBean.managedBean.searchItemName}" /></td>
+				</tr>
+			</table>
+
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					action="#{contractRequestBackingBean.searchContractItemList}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					icon="ui-icon-search" update="resultPanel" />
+				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+					action="#{contractRequestBackingBean.searchReset}" icon="ui-icon-reset"
+					process="@this" update="searchPanel"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+			</div>
+		</p:panel>
+		
+		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
+			<p:dataTable id="itemListResultDt"
+				value="#{contractRequestBackingBean.contractItemPagingDataModel}" lazy="true"
+				var="item" rowIndexVar="rowIndex" rowKey="#{item}"
+				width="100%" 
+				selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
+			<p:ajax event="rowSelect" update=":form:addContractedItemDialog"
+				process="@this" />
+				<ac:paginator for="itemListResultDt" />
+				<p:column selectionMode="multiple" />
+				<p:column
+					headerText="#{lbl['lbl.fl.item.type']}">
+					<h:outputText
+						value="#{contractRequestBackingBean.getParameterDesc(item.itemType)}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.item.code']}">
+					<h:outputText value="#{item.scRequestItem.cmItem.extensionCode}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.fl.item.name']}">
+					<h:outputText value="#{item.itemName}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:panel>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton  value="#{lbl['lbl.btn.add']}"
+				action="#{contractRequestBackingBean.updateContractedItemDt}"
+				oncomplete="addItems.hide();" update="itemDataTable"
+				process="@this,itemListResultDt">
+			</p:commandButton>
+		</div>
 	</p:dialog>
 </ui:composition>
