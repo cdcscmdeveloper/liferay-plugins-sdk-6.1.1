@@ -490,6 +490,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
 				throw new EpException(MessageConst.INFO_100022,	new String[] { "Factoring Agreement" });
 			}
+			if(getManagedBean().isRemoveFactoring()){
+			    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
+				    throw new EpException(MessageConst.INFO_100022,	new String[] { "Factoring Agreement" });
+			  }
+			}
+			
 			if(!getManagedBean().isAgreeFactoringClause()) {
 				if(!isApproverRole() && !getManagedBean().isRemoveFactoring()) {
 					throw new EpException(MessageConst.ERROR_750001);
@@ -614,7 +620,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			   FinancialOrgResDTO resDTO = financialOrgSO.retriveFinAccDtlByBranchId(reqDTO);
 			   getManagedBean().setAccountNo(resDTO.getPmFinancialAcc().getAccountNo());
 			   getManagedBean().setFactoringBankName(resDTO.getPmFinancialAcc().getPmPaymentBankOrg().getFinOrgName());
-			   getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
+			 //  getManagedBean().setFactoringBankAddress(getFullAddress(resDTO.getPmAddressType().getPmAddress()));
 		   }
 	   }catch(Exception ex){
 		   ex.printStackTrace();
@@ -664,6 +670,24 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		   }
 	 }
     
+	public void removeFileUpload(FileUploadEvent event) throws Exception{
+	
+		UploadedFile item = event.getFile();
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		
+		String filePath = DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+				ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo());
+		File file = new File(filePath);
+		file.mkdirs();
+		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
+		
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();    	
+	    getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
+	    getManagedBean().getFactoring().setRemoveFilePath(filePath);
+	}
+	
     public void fileUpload(FileUploadEvent event) throws Exception {
     	UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
@@ -677,8 +701,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();    	
-	    this.getManagedBean().getFactoring().setFileName(item.getFileName());
-	    this.getManagedBean().getFactoring().setFilePath(filePath);
+	    getManagedBean().getFactoring().setFileName(item.getFileName());
+	    getManagedBean().getFactoring().setFilePath(filePath);
     }
     
     public void downloadFile(String filePath, String fileName) throws IOException {
