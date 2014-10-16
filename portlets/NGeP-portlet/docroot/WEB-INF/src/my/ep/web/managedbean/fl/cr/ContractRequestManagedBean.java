@@ -193,7 +193,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmAddressType> manualAddressList;
 	//private List<PmAddressType> addressManualTypesList;
 	private PmUser pmUser;
-
+	private List<FlFulfilmentItemAddr> oneOffItemAddrList;
+	private List<FlFulfilmentItemAddr> showOneOffItemAddrList;
+	
 	public ContractRequestManagedBean(){
 
 	}
@@ -2179,6 +2181,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setZonalTierMap(
 			HashMap<String, List<FlFulfilmentItemAddr>> zonalTierMap) {
 		this.zonalTierMap = zonalTierMap;
+	}
+
+	public List<FlFulfilmentItemAddr> getOneOffItemAddrList() {
+		return oneOffItemAddrList;
+	}
+
+	public void setOneOffItemAddrList(List<FlFulfilmentItemAddr> oneOffItemAddrList) {
+		this.oneOffItemAddrList = oneOffItemAddrList;
+	}
+
+	public List<FlFulfilmentItemAddr> getShowOneOffItemAddrList() {
+		return showOneOffItemAddrList;
+	}
+
+	public void setShowOneOffItemAddrList(List<FlFulfilmentItemAddr> showOneOffItemAddrList) {
+		this.showOneOffItemAddrList = showOneOffItemAddrList;
 	}
 
 

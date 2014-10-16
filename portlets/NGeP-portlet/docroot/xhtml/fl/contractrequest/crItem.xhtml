@@ -16,7 +16,9 @@
 			rowKey="#{address}">
 			<ac:paginator for="addressDataTable" />
 			<p:ajax event="rowSelect"
-				update=":form:itemDetPanelGroup,:form:deleteAddrBtn" />
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+				update=":form:itemDetPanelGroup,:form:deleteAddrBtn"
+				listener="#{contractRequestBackingBean.selectAddrEvent()}" />			
 			<p:column>
 				<p:selectBooleanCheckbox value="#{address.selectedAddressRowDelete}"
 					styleClass="myCustomChekBox">
@@ -115,13 +117,22 @@
 							(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeOneOff)}" />
 			<p:dataTable id="itemDataTable" var="item"
 				rowIndexVar="index" rowKey="#{item}"
-				value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
+				value="#{contractRequestBackingBean.getFulfilmentItemAddrList()}"
 				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
 				rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) or 
 							(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeOneOff)}">
 				<ac:paginator for="itemDataTable" />
-				<p:column selectionMode="multiple" width="5%" />
-				<p:column headerText="#{lbl['lbl.fl.item.name']}">
+				<p:column selectionMode="multiple" width="5%" 
+					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}" />
+				<p:column>
+					<f:facet name="header" style="width:8%;">
+						<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
+					</f:facet>
+					<h:outputText rendered="#{item.scRequestItem.cmItem==null}" value="#{item.scRequestItem.tempUnspscCode}" />
+					<h:outputText rendered="#{item.scRequestItem.cmItem!=null}" value="#{item.scRequestItem.cmItem.extensionCode}" />
+				</p:column>				
+				<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 					<h:outputText value="#{item.scRequestItem.itemName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
@@ -131,6 +142,7 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{item.orderedQty}" style="text-align:right" id="orderedQty"
+						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr)}"
 						required="true" requiredMessage="Please input the quantity.">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />						
@@ -158,11 +170,13 @@
 			<div style="width: 100%; text-align: right">
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 					action="#{contractRequestBackingBean.addContractedItems}"
-					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
+					rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) and
+								(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) }"
 					update="contractedItemDt" process="@this,contractedItemDt"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" icon="ui-icon-delete"
-					rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
+					rendered="#{(not empty contractRequestBackingBean.managedBean.selectedDelAddr) and 
+								(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}"
 					action="#{contractRequestBackingBean.removeItemRow}"
 					update="itemDataTable" partialSubmit="true" />
 			</div>
