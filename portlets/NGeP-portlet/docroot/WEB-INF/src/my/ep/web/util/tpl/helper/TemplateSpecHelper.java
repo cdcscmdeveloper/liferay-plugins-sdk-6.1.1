@@ -425,7 +425,10 @@ public class TemplateSpecHelper {
 				} else {
 					newPriceTypeCode = getStandardPriceType(isZonal);
 				}
-			}	
+			} 
+			else {
+				newPriceTypeCode = new PmParameter();
+			}
 		}
 		specQuestion.setClPriceTypeCode(newPriceTypeCode);	
 		
