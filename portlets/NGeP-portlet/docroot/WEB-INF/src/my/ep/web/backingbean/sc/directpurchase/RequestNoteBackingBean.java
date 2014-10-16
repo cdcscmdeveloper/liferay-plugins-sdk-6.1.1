@@ -31,6 +31,7 @@ import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
@@ -55,6 +56,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
@@ -2198,9 +2200,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			// delivery term type
 			if(deliveryTermId > 0){
-				PmParameter deliveryTermType = new PmParameter();
-				deliveryTermType.setParameterId(deliveryTermId);
-				deliveryTermType.setBrandNew(Boolean.FALSE);
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterId(deliveryTermId);
+				PmParameter deliveryTermType = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
 				requestNoteDtl.setDeliverTermType(deliveryTermType);
 			}
 			// prepared by
@@ -2698,6 +2700,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			generateReport(reportName, paramMap);
 		}
+	}
+	
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
 	/**
