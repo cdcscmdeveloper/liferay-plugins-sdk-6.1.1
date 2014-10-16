@@ -7,7 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:outputPanel id="generalSeting">
 
 		<div style="text-align: right; min-height: 40px;">
 
@@ -59,11 +58,11 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.gl.account']}" /></td>
 					<td><ac:lov id="lovGLAccount" lovId="PM_GL_ACCOUNT"
-							update="@form" size="15" headerText="GL Account"
+							size="15" headerText="GL Account"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmGlAccount.glAccCode}">
 						</ac:lov> 
-						<ac:lovPopup />
+						
 						</td>
 				</tr>
 				<tr style="height: 30px;">
@@ -79,12 +78,12 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.vot.fund.code']}" /></td>
 					<td><ac:lov id="lovVotFund" lovId="PM_VOT_FUND"
-							update="@form" size="15" headerText="Vot Fund"
+							size="15" headerText="Vot Fund"
 							saveObject="ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund"
 							conditionField="recordStatus^1|votFundType^A"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.pmVotFund.votFundCode}">
 						</ac:lov> 
-						<ac:lovPopup />
+						
 						</td>
 				</tr>
 				<tr style="height: 30px;">
@@ -102,7 +101,5 @@
 
 			</table>
 	
-
-	</p:outputPanel>
 
 </ui:composition>
