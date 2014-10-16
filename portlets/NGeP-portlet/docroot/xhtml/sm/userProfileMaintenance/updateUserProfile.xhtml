@@ -190,7 +190,7 @@
 										id="updatePermAddCountryList" label="#{lbl['lbl.sm.country']}"
 										value="#{smPersonnelBackingBean.managedBean.updateSmPersonnelPermanentAddress.smAddress.pmCountry.countryId}"
 										style="width: 207px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="- Select One -" itemValue="" />
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 										<f:selectItems
 											value="#{smPersonnelBackingBean.managedBean.permAddCountryList}" />
 										<p:ajax event="change"
