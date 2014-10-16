@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
@@ -150,6 +151,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<String> finalListOfSideMenu;
 	private String fileDirectory;
 	private CtAgency selectedAgency;
+	
+	private List<SelectItem> monthList;
 	
 	public String[] getAction() {
 		return action;
@@ -916,5 +919,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSelectedAgency(CtAgency selectedAgency) {
 		this.selectedAgency = selectedAgency;
+	}
+
+	public List<SelectItem> getMonthList() {
+		return monthList;
+	}
+
+	public void setMonthList(List<SelectItem> monthList) {
+		this.monthList = monthList;
 	}
 }
