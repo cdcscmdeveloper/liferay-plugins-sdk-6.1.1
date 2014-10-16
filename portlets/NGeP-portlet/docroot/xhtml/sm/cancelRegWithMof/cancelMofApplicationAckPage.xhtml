@@ -12,21 +12,20 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Cancel Registration With MOF">
+		<p:panel header="#{lbl['lbl.sm.mof.reg.cancel']}">
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The Cancel Registration with MOF - Application No :
+						<h:outputText value="#{lbl['lbl.sm.mof.reg.cancel.appno.note']} :" />
 						<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
 							style="color: blue; font-weight: bold;" />
-						is submitted successfully. <br /> Please wait for further
-						notification.
+						<h:outputText value="#{lbl['lbl.sm.mof.reg.cancel.submit.success.note']} :" escape="false" />
 					</p>
 
 				</p:outputPanel>
 			</div>
 			<div align="center">
-				<p:commandButton value="OK"
+				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
 			</div>
 		</p:panel>
