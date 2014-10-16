@@ -19,15 +19,15 @@
                  <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.refreshCeilingQuantity()}" />
 		 
 		         <p:column headerText="#{lbl['lbl.ct.item.desc']}"  
-		              filterBy="#{ctItemVar.itemName}" style="width:40%;" filterMatchMode="contains">
+		              filterBy="#{ctItemVar.itemName}" style="width:40%; white-space:normal;" filterMatchMode="contains">
 		              <p:outputLabel value="#{ctItemVar.itemName}" style="float:left;"/>
 		         </p:column>       
 		     
-		         <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%;">
+		         <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
 		              <p:outputLabel value="#{ctItemVar.uom.uomName}" style="float:left;"/>
 		         </p:column>        
 		  
-		         <p:column style="text-align: right;width:15%;">
+		         <p:column style="text-align: right;width:15%; white-space:normal;">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.min.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
@@ -47,7 +47,7 @@
 	             	</h:outputText>
 		         </p:column>     
 		  
-		         <p:column style="width:10%;">
+		         <p:column style="width:10%; white-space:normal;">
 		         	<f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.type.of.goods']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.type.of.goods']}"/>
@@ -58,7 +58,7 @@
 	                  	value="#{contractDetailsBackingBean.getParameterDesc(ctItemVar.itemOrigin)}" onclick="importedDlg.show();return false;" />	
 		          </p:column> 
 		    
-		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+		          <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		               <p:outputLabel value="#{ctItemVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		           </p:column>  
 		                
@@ -97,19 +97,19 @@
 			                        </h:outputText>
 			                   </p:column>   
                          
-                               <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+                               <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                       <h:outputText value="#{data.effDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                    </h:outputText>
 			                   </p:column>       
 			           
-			                  <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                  <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                      <h:outputText value="#{data.expDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                 </p:column>
 			                 
-			                <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                        <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                    </p:column>  
 			            </c:if>  
@@ -141,19 +141,19 @@
 			                     </h:outputText>
 			                 </p:column>
 			          
-			                 <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			                 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                      <h:outputText value="#{data.effDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                  </p:column>       
 			            
-			                  <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                  <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                      <h:outputText value="#{data.expDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                  </p:column>  
 			             
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                      </p:column>     
 			              </c:if>   
@@ -161,7 +161,7 @@
 			              <c:if  test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode 
 			                  eq ParameterConst.priceTypeZonalStandard}">
 			                
-			                   <p:column headerText="#{lbl['lbl.ct.zone']}">
+			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                       <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			                   </p:column>    
 			            
@@ -171,26 +171,26 @@
 			                       </h:outputText>
 			                   </p:column>
 			          
-			                   <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			                   <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                        <h:outputText value="#{data.effDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                      </h:outputText>
 			                    </p:column>       
 			             
-			                    <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                    <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                        <h:outputText value="#{data.expDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
 			                   </p:column>
 			                   
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                      </p:column>       
 			             </c:if>
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                  eq ParameterConst.priceTypeZonalTier}">
-			                 <p:column headerText="#{lbl['lbl.ct.zone']}">
+			                 <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                      <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			                 </p:column> 
 			                 <p:column style="text-align: right;">
@@ -220,19 +220,19 @@
 			                     </h:outputText>
 			                </p:column>
 			           
-			                <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			                <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                    <h:outputText value="#{data.effDate}" style="float:left;">
                                     <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                 </h:outputText>
 			                </p:column>       
 			           
-			                 <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                      <h:outputText value="#{data.expDate}" style="float:left;">
                                      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                 </p:column>  
 			               
-			                 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                 <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                     </p:column>     
 			              </c:if> 
@@ -276,26 +276,26 @@
 			                        </h:outputText>			                
 			                    </p:column>            
 			           
-			                    <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			                    <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                        <h:outputText value="#{data.effDate}" style="float:left;">
                                         <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                    </h:outputText>
 			                   </p:column>       
 			        
-			                   <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                   <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                        <h:outputText value="#{data.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                     </h:outputText>
 			                   </p:column>  
 			                   
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                           <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                      </p:column>           
 			             </c:if> 
 			           
 			             <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
 			                eq ParameterConst.priceTypeZonalTariff}">            
-			                <p:column headerText="#{lbl['lbl.ct.zone']}">
+			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                     <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			                 </p:column> 
 			            
@@ -336,19 +336,19 @@
 			                      </h:outputText>
 			                  </p:column>
 			         
-			                  <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			                  <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 			                      <h:outputText value="#{data.effDate}" style="float:left;">
                                       <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                   </h:outputText>
 			                   </p:column>       
 			           
-			                   <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+			                   <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 			                       <h:outputText value="#{data.expDate}" style="float:left;">
                                        <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                                    </h:outputText>
 			                   </p:column> 
 			                 
-			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+			                  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		                         <p:outputLabel value="#{data.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		                      </p:column>      
 			           </c:if>
@@ -362,11 +362,11 @@
 			         value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
 				     <ac:paginator for="ceilingTable"/>
 				
-				     <p:column headerText="#{lbl['lbl.ct.ministry']}">
+				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;">
 				          <p:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.parentOrgProfile.orgName}" style="float:left;" />
 			    	 </p:column>     
 				
-				     <p:column headerText="#{lbl['lbl.ct.ptj']}">
+				     <p:column headerText="#{lbl['lbl.ct.ptj']}" style="white-space:normal;">
 				          <p:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" style="float:left;" />
 				      </p:column>              
 			
@@ -383,19 +383,19 @@
 					       </p:inputText>
 				     </p:column>            
 			  
-			       	 <p:column headerText="#{lbl['lbl.ct.effective.date']}">
+			       	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
 				         <h:outputText value="#{itemCeilingQtiesVar.effDate}" style="float:left;">
                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                         </h:outputText>
 			         </p:column>       
 				
-				     <p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+				     <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
 				          <h:outputText value="#{itemCeilingQtiesVar.expDate}" style="float:left;">
                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
                          </h:outputText>
 				     </p:column>    
 				     
-				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;">
+				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		               <p:outputLabel value="#{itemCeilingQtiesVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
 		           </p:column>  
 		                  
