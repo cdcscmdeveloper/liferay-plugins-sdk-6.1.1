@@ -458,6 +458,9 @@ public class LOADetailBackingBean extends
 				if (enddate.equalsIgnoreCase("09")) {
 					endMonth = "8";
 				}
+				if (enddate.equalsIgnoreCase("10")) {
+					endMonth = "9";
+				}
 				if (enddate.equalsIgnoreCase("11")) {
 					endMonth = "10";
 				}
@@ -585,6 +588,9 @@ public class LOADetailBackingBean extends
 						}
 						if (enddate.equalsIgnoreCase("09")) {
 							endMonth = "8";
+						}
+						if (enddate.equalsIgnoreCase("10")) {
+							endMonth = "9";
 						}
 						if (enddate.equalsIgnoreCase("11")) {
 							endMonth = "10";
