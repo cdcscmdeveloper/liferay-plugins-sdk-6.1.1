@@ -30,7 +30,7 @@
 				<h:outputLabel value="#{lbl['lbl.sm.activation.key']}:" />
 			</td>
 			<td>
-				<p:inputText value="#{supplierUserActivationBackingBean.tempPassword}" required="true" label="Activation Key" />
+				<p:inputText value="#{supplierUserActivationBackingBean.tempPassword}" required="true" label="#{lbl['lbl.sm.activation.key']}" />
 			</td>
 		</tr>
 		<tr>
@@ -38,7 +38,7 @@
 				<h:outputLabel value="#{lbl['lbl.sm.activation.password']}:" />
 			</td>
 			<td>
-				<p:password id="pwd1" value="#{supplierUserActivationBackingBean.password}" feedback="false" match="pwd2" label="Password" required="true"/>
+				<p:password id="pwd1" value="#{supplierUserActivationBackingBean.password}" feedback="false" match="pwd2" label="#{lbl['lbl.sm.activation.password']}" required="true"/>
 			</td>
 		</tr>
 		<tr>
@@ -46,7 +46,7 @@
 				<h:outputLabel value="#{lbl['lbl.sm.activation.password2']}:" />
 			</td>
 			<td>
-				<p:password id="pwd2" value="#{supplierUserActivationBackingBean.confirmPassword}" feedback="false" label="Confirm Password" required="true"/>
+				<p:password id="pwd2" value="#{supplierUserActivationBackingBean.confirmPassword}" feedback="false" label="#{lbl['lbl.sm.activation.password2']}" required="true"/>
 			</td>
 		</tr>
 		<tr>
