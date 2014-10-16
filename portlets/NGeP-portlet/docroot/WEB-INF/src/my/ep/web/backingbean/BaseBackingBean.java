@@ -609,7 +609,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		uploadDir = tempDir + file.getFileName();
 		
 //		genFile(uploadDir, file.getContents());
-		genFile(tempDir, file.getContents());
+		genFile(tempDir, file);
 
 	}
 	
@@ -658,7 +658,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);	
 	}
 
-	public void genFile(String uploadDir, byte[] content){
+	public void genFile(String uploadDir, UploadedFile file){
 
 		File dir = new File(uploadDir);
 		log.info(" dir.exists()"+ dir.exists());		  
@@ -668,9 +668,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		
 		try {	
 			
-			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir));
+			BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(uploadDir + "/" + file.getFileName()));
 
-			bufferedOutputStream.write(content);
+			bufferedOutputStream.write(file.getContents());
 
 			if (bufferedOutputStream != null) {
 				bufferedOutputStream.flush();
