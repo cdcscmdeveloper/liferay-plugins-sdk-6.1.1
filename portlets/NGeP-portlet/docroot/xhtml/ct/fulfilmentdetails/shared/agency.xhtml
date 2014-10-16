@@ -154,10 +154,9 @@
 			      <p:graphicImage value="/resources/ep/images/ajax-loader.gif"></p:graphicImage>  
 		      </p:blockUI> 
              <f:facet name="footer">
-			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId" 
 				    action="#{contractDetailsBackingBean.addAgencyDetails()}" icon="ui-icon-accept" onclick="dlgAgency.hide();"/>
-                <p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>
 			</f:facet>
            </p:panel>
