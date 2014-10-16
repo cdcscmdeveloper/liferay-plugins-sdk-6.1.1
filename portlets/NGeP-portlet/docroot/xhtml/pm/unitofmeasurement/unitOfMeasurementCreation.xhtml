@@ -16,7 +16,7 @@
 		<td style="width:15%;"><p:outputLabel value="#{lbl['lbl.pm.uom.uomcode']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{unitOfMeasurementBackingBean.managedBean.pmUom.uomCode}"  
-		     size="30" maxlength="10" />
+		     disabled="#{!unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}" size="30" maxlength="10" />
 		</td>
 	  </tr>	
 	  <tr>

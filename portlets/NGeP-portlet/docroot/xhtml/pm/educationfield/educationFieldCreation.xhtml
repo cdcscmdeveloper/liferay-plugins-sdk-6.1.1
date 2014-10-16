@@ -17,7 +17,7 @@
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.ef.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{educationBackingBean.managedBean.pmEduField.fieldCode}" 
-			  size="30" maxlength="10" />
+			 disabled="#{!educationBackingBean.managedBean.pmEduField.brandNew}" size="30" maxlength="10" />
 		</td>
 	  </tr>	
 	  <tr>	  	
