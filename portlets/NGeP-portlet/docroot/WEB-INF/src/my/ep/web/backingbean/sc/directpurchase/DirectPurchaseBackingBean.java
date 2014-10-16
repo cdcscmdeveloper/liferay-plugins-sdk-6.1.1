@@ -534,7 +534,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			} 
 			PmStatus status = new PmStatus();
 			status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-			remark.setPmStatus(status);
+			//remark.setPmStatus(status);
 			remark.setRequestNote(scRequestNote);
 			results.add(0, remark);
 		}
