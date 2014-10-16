@@ -139,10 +139,10 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverAppDialog','APPROVE')}"
 				partialSubmit="true" process="approverAppDialog" />
-			<p:commandButton value="Cancel"
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelFinalApproveOrReject('approverAppDialog')}"
 				partialSubmit="true" process="@this" />
 		</div>
@@ -154,10 +154,10 @@
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="right">
-			<p:commandButton value="Submit" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" partialSubmit="true"
 				process="approverRejDialog"
 				action="#{backingBean.finalDecisionApproveOrRejectAppln('approverRejDialog','REJECT')}" />
-			<p:commandButton value="Cancel"
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 				action="#{backingBean.cancelFinalApproveOrReject('approverRejDialog')}"
 				partialSubmit="true" process="@this" />
 		</div>

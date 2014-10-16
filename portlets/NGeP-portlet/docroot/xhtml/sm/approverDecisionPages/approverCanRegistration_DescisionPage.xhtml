@@ -66,12 +66,7 @@
 			</table>
 			<p:separator />
 			<div>
-				<p>
-					You have finished reviewing all the necessary information for MOF
-					account registration. Please perform one the below operations to
-					provide your decision<br /> 1.Click 'Approve'' to approve the
-					application.<br /> 2. Click ' Reject' to reject the application.
-				</p>
+				<p><h:outputText value="#{lbl['lbl.sm.apprvr.splNotes']}" escape="false"/></p>
 			</div>
 			<p:separator />
 
@@ -105,7 +100,7 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="Submit" onclick="rejectAppCanDialog.hide();"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 				<p:commandButton value="Cancel" onclick="rejectAppCanDialog.hide();" />
 			</div>
