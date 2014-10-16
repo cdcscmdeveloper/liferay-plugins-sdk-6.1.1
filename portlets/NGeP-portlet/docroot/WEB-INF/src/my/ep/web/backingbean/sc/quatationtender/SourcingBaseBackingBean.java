@@ -651,6 +651,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			this.getManagedBean().setOutComes(resDTO.getAction());
 			this.getManagedBean().setCurrentStatusId(
 					Long.valueOf(resDTO.getDocStatus()));
+			this.getManagedBean().setTaskName(resDTO.getTaskName());
 
 			return (BPM_DATA_TYPE) resDTO.getPojo();
 
