@@ -28,25 +28,17 @@
 		</table>
 		<div align="left">
 			<p:selectBooleanCheckbox></p:selectBooleanCheckbox>
-			<h:outputText value="I have agreed the "></h:outputText>
-			<p:commandLink style="color:blue;" value="Terms &#38; Condition" onclick="dlg2.show();" />
+			<h:outputText value="#{lbl['lbl.sm.complaint.lodge.have.agreed']}"></h:outputText>
+			<p:commandLink style="color:blue;" value="#{lbl['lbl.sm.term.and.condition.header']}" onclick="dlg2.show();" />
 		</div>
-		<p:dialog id="modalDialog" header="Terms &#38; Conditions"
+		<p:dialog id="modalDialog" header="#{lbl['lbl.sm.term.and.condition.header']}"
 			widgetVar="dlg2" modal="true" height="500" width="800">
 			<ac:smPanel id="tt">
-				<p>Lorem ipsum dolor sit amet, enim evertitur percipitur id qui,
-					altera torquatos voluptaria ex duo. Mei utinam praesent dignissim
-					at. Et graeci definiebas vel. Eros iudicabit te sea.</p>
-				<br />
-				<p>Per salutandi eloquentiam ex, nisl causae adipiscing pri cu.
-					Ex vel eius virtute, eu nulla partem pro, agam fabulas usu ex. Ius
-					ludus comprehensam vituperatoribus ne, no soleat corpora mea.
-					Homero atomorum inimicus et sit. An unum graece has, tota
-					conclusionemque ea qui, at his legere dicunt efficiantur.</p>
+				<h:outputText value="#{lbl['lbl.sm.complaint.lodge.complaint.termscond.note']}" escape="false" />
 			</ac:smPanel>
 		</p:dialog>
 		<div align="right">
-			<p:commandButton value="Submit"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"
 				action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>
 		</div>
 	</ui:define>
