@@ -16,7 +16,7 @@
 	<ui:define name="content">
 		<p:panel header="#{lbl['lbl.sm.sdo.decision']}">
 
-			<h:outputText value="lbl.sm.sdo.dcsnNotes" escape="false"/>
+			<h:outputText value="#{lbl['lbl.sm.sdo.dcsnNotes']}" escape="false"/>
 			<p:separator />
 			<div align="center">
 				<p:splitButton value="#{lbl['lbl.sm.decision.select']}">
@@ -25,7 +25,7 @@
 				</p:splitButton>
 			</div>
 		</p:panel>
-		<p:dialog width="850px" height="500px" header="Send Enquiry"
+		<p:dialog width="850px" height="500px" header="#{lbl['lbl.sm.send.enquiry']}"
 			widgetVar="sendEnqDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
