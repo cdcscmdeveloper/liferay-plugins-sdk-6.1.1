@@ -508,23 +508,38 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedFactoryFacility(facilityBean);
-		getManagedBean().setFacilityType("FACTORY");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(ResourceBundleUtils.getMessage(
+						"lbl.sm.facility.type.factory",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
 	}
 
 	public void assignSelWorkshop(SmFacility facilityBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedWorkShopFacility(facilityBean);
-		getManagedBean().setFacilityType("WORKSHOP");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(ResourceBundleUtils.getMessage(
+						"lbl.sm.facility.type.workshop",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
 	}
 
 	public void assignSelDockyard(SmFacility facilityBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedDockyardFacility(facilityBean);
-		getManagedBean().setFacilityType("DOCKYARD");
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(ResourceBundleUtils.getMessage(
+						"lbl.sm.facility.type.dockyard",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
 	}
 
 	public void assignSelStore(SmFacility facilityBean) {
+		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedStoreFacility(facilityBean);
-		getManagedBean().setFacilityType("STORE");
+		getManagedBean().setFacilityType(StringUtils.upperCase(
+				ResourceBundleUtils.getMessage("lbl.sm.facility.type.store",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
 	}
 
 	public void assignSelManufacturer(SmManufacturingDtl manBean) {
