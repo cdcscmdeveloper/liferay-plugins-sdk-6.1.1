@@ -32,7 +32,7 @@
 				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true" label="UNSPSC code" update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 								size="15" headerText="unspsc commodity"
 								postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
-								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity[#{rowIndex}].unspscId" 
+								saveObject="ruleCatalogueBackingBean.managedBean.selectedComodity" 
 								conditionField="recordStatus^1|unspscLevel^3"
 								value="#{feeObj.unspscId.unspscCode}">
 							   </ac:lov>
