@@ -26,16 +26,18 @@
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					size="3" style="margin-right: 3px !important;">
-					<p:ajax event="blur" update="restrictedPtj" partialSubmit="true"
-						process="@this"
+					<p:ajax event="blur"
+						update=":form:restrictedtabView:restrictedPnlId"
+						partialSubmit="true" process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
 				</p:inputText>
 				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					size="3">
-					<p:ajax event="blur" update="restrictedPtj" partialSubmit="true"
-						process="@this"
+					<p:ajax event="blur"
+						update=":form:restrictedtabView:restrictedPnlId"
+						partialSubmit="true" process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL2Code(cateGory)}"></p:ajax>
 				</p:inputText>
 				<ac:lov id="restrictedPtj" lovId="PM_CATEGORY_L3" size="3"
