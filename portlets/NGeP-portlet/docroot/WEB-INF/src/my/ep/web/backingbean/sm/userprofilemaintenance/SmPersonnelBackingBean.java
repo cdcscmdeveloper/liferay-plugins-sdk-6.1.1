@@ -852,10 +852,10 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String save(){
 		
 		String returnValue = null;
-		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+//		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
 			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(1);
-		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
-			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(0);
+//		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
+//			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(0);
 		
 		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
