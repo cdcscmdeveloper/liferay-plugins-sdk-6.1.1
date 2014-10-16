@@ -6,8 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel>
-		<ui:param name="isChangesTab" value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
-		
+		<ui:param name="isChangesTab"
+			value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
+
 		<p:dataTable id="nbsearchresults"
 			value="#{noticeBoardBackingBean.qtDataModel}" lazy="true"
 			styleClass="nbsrhresultsStyleClass" style="width:100%" var="scqt"
@@ -39,10 +40,15 @@
 					<f:convertDateTime
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
-				
-				<h:outputText value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} " styleClass="lastUpdated" escape="false" rendered="#{isChangesTab and !empty scqt[6]}" />
-				<h:outputText value="#{scqt[6]}" styleClass="lastUpdated" rendered="#{isChangesTab and !empty scqt[6]}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+
+				<h:outputText
+					value="&#60;br/&#62;&#60;br/&#62;#{lbl['lbl.sc.updated.on']} "
+					styleClass="lastUpdated" escape="false"
+					rendered="#{isChangesTab and !empty scqt[6]}" />
+				<h:outputText value="#{scqt[6]}" styleClass="lastUpdated"
+					rendered="#{isChangesTab and !empty scqt[6]}">
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.qt.nb.countdowndays']}"
@@ -59,7 +65,7 @@
 						&#160;
 						<p:commandLink id="supRegIcon"
 					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
-					rendered="#{scqt[5]}">
+					rendered="#{scqt[5] eq '1'}">
 					<p:graphicImage library="ep/images/design" name="register.png"
 						value="/resources/ep/images/design/register.png" />
 				</p:commandLink>
