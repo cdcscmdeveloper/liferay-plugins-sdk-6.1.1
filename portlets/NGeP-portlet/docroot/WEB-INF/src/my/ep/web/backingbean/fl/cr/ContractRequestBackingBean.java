@@ -584,25 +584,27 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					
 					deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 					deliveryAddr.setAddressType(addrType);
-					paramReqDTO.setParameterId(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom().getParameterId());
 					deliveryAddr.setPmUom(zoneResDTO.getDeliveryTermUom());
 					deliveryAddr.setDeliveryTerm(zoneResDTO.getDeliveryTerm());
 					deliveryAddr.setStartDate(new Timestamp(System.currentTimeMillis()));
 					
 					Date startDate = deliveryAddr.getStartDate();
 					int deliveryTerm = deliveryAddr.getDeliveryTerm();
-					if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(startDate);
-						calendar.add(Calendar.DATE, deliveryTerm);
-						deliveryAddr.setEndDate(calendar.getTime());
-					}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
-						Calendar calendar = Calendar.getInstance();
-						calendar.setTime(startDate);
-						calendar.add(Calendar.MONTH, deliveryTerm);
-						deliveryAddr.setEndDate(calendar.getTime());
+					if(deliveryAddr.getPmUom()!=null) {
+						if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_DAYS)){
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(startDate);
+							calendar.add(Calendar.DATE, deliveryTerm);
+							deliveryAddr.setEndDate(calendar.getTime());
+						}else if(deliveryAddr.getPmUom().getParameterCode().equalsIgnoreCase(ParameterConst.DELIVERY_TERM_MONTHS)){
+							Calendar calendar = Calendar.getInstance();
+							calendar.setTime(startDate);
+							calendar.add(Calendar.MONTH, deliveryTerm);
+							deliveryAddr.setEndDate(calendar.getTime());
+						}
+					} else {
+						deliveryAddr.setEndDate(startDate);
 					}
-					
 					
 				}else{
 					deliveryAddr.setStartDate(getManagedBean().getFlRequest().getStartDate());
