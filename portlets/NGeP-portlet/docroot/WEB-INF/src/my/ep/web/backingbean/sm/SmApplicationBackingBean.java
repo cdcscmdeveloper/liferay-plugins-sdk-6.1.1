@@ -1090,6 +1090,9 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
+		} else if(getManagedBean().getSelectedShareHolder().getSoftcertFlg() != 1){
+			getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
+			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
 
 	}
@@ -2796,7 +2799,8 @@ public class SmApplicationBackingBean extends
 		role = new SelectItem();
 		role.setLabel("Catalogue User");
 		role.setValue(RoleCode.CM_USER.value());
-		roles.add(role);
+		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) // added this condition because do not want to show catalogue user for consultant
+			roles.add(role);
 		getManagedBean().setePRoleList(roles);
 	}
 
