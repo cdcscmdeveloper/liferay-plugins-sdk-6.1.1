@@ -105,7 +105,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String signUp = "signUp";
 	private static String firstUserRegistration = "firstUserRegistration";
 	
-	private static String defaultAccPurpose = "R";
+	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
 	private static Map<Long, Object> identityType;
 
