@@ -58,8 +58,8 @@
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, deductTbl" partialSubmit="true"
 					icon="ui-icon-delete"
-					action="#{lOADetailBackingBean.deleteRowAction(lOADetailBackingBean.managedBean.scLoa.scQtDeductions, lOADetailBackingBean.managedBean.selectedScQtDeduction)}"
-					update="deductTbl" />
+					action="#{lOADetailBackingBean.deleteDeductionPaymentAction()}"
+					update="deductTbl,deductClauseTbl" />
 			</div>
 		</c:if>
 
@@ -78,7 +78,7 @@
 
 				<ac:paginator for="deductClauseTbl" />
 
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
 
 				<p:column style="white-space:normal;">
 					<f:facet name="header">

@@ -917,6 +917,7 @@ public class LOADetailBackingBean extends
 							getManagedBean().getScLoa());
 				} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 						.equals(docDefinitionKey)) {
+					scLoaReportAttachment.setFileName(scLoaReport.getTitle()+".pdf");
 					generateAgreementLetterPdfFromVelocity(
 							(ScAttachment) scLoaReportAttachment,
 							getManagedBean().getScLoa(),getManagedBean().getScQt());
@@ -1029,7 +1030,7 @@ public class LOADetailBackingBean extends
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa,ScQt scQt) throws Exception {
 
-		attachment.setFileName("agreement_letter.pdf");
+		//attachment.setFileName("agreement_letter.pdf");
 		populateAttachmentDetails(attachment);
 
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
@@ -1916,7 +1917,7 @@ public class LOADetailBackingBean extends
 
 	public void contractTypeChanged() {
 		debugLogger("contractTypeChanged");
-
+	
 		ScLoa scLoa = getManagedBean().getScLoa();
 
 		IParameterSO parameterSO = null;
@@ -1932,9 +1933,9 @@ public class LOADetailBackingBean extends
 		} finally {
 			parameterSO = null;
 		}
-
+		
 		String contractType = scLoa.getContractType().getParameterCode();
-
+		
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 			IQTAwardSO qtAwardSO;
 			try {
@@ -1972,7 +1973,7 @@ public class LOADetailBackingBean extends
 
 			getManagedBean().setAgencyList(agencyList);
 		}
-
+	
 		contractAgencyChanged();
 	}
 
