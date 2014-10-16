@@ -2525,7 +2525,7 @@ public class SmApplicationBackingBean extends
 						.add(getManagedBean().getSelectedShareHolder());
 
 			}
-			if (!getManagedBean().getSelectedShareHolder().isAuthorized()) {
+			if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
 				getManagedBean().getSelectedShareHolder().setEpRole(null);
 				getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 				getManagedBean().getSelectedShareHolder().setContractSignerFlg(
