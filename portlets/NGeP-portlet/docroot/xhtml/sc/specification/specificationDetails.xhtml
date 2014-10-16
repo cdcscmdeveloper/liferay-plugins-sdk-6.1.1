@@ -63,7 +63,7 @@
 					</p:selectOneMenu></td>
 				<td><h:outputLabel value="Zone/Location" /></td>
 				<td><p:inputText readonly="true" disabled="true" size="30"
-						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, specificationBackingBean.managedBean.scQt.zonal)}" />
+						value="#{lbl[specificationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</td>
 			</tr>
 			<tr>
@@ -76,7 +76,7 @@
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
 				<td><p:inputText size="30"
-						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, specificationBackingBean.managedBean.scQt.techEvaluationReq)}"
+						value="#{lbl[specificationBackingBean.managedBean.scQt.techEvaluationReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
@@ -92,7 +92,8 @@
 				<td><p:outputLabel value=" #{lbl['lbl.sc.spec.ful.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><p:selectOneMenu required="true" id="fulfilId"
-						label="#{lbl['lbl.sc.spec.ful.type']}" disabled="#{specificationBackingBean.managedBean.readOnly}"
+						label="#{lbl['lbl.sc.spec.ful.type']}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 						style="width: 178px;margin-bottom: 5px;">
 
@@ -107,7 +108,8 @@
 						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> <p:outputLabel
 						value="*" styleClass="mandatory"></p:outputLabel></td>
 				<td><p:inputMask id="contract" required="true" size="30"
-						mask="9?99" placeHolder="" maxlength="3" disabled="#{specificationBackingBean.managedBean.readOnly}"
+						mask="9?99" placeHolder="" maxlength="3"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;">

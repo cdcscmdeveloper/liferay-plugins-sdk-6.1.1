@@ -17,20 +17,28 @@
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
-				<h:outputText value="#{cateGory.pmCategoryL3.categoryL3Code}"></h:outputText>
+
+				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
+					disabled="true" size="3">
+
+				</p:inputText>
+				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
+					disabled="true" size="3">
+
+				</p:inputText>
+				<p:inputText value="#{cateGory.pmCategoryL3.categoryL3Code}"
+					disabled="true" size="3"></p:inputText>
 
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
-				style="width:15%">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}"></h:outputText>
+				style="width:15%;white-space: normal;">
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category']}"
 				style="width:15%;white-space: normal;">
-				<h:outputText
-					value="#{cateGory.pmCategoryL3.pmCategoryL2.categoryName}"></h:outputText>
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.sub.category.division']}"
