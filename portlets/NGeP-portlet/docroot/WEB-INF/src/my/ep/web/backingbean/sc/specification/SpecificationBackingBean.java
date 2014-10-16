@@ -103,6 +103,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -1450,6 +1451,7 @@ public class SpecificationBackingBean extends
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
+
 					if (scQt.getEstimatedAmount().intValue() <= 500000) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
@@ -3056,10 +3058,19 @@ public class SpecificationBackingBean extends
 
 	// Display Location level Dropdown values
 	public SelectItem[] getDropdownLocationValues(String locationLevel) {
-
+		IOrgProfileSO orgProfile = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO orgResDto = orgProfile
+				.retrieveOrgStateCodeByOrgProfileId(this.getManagedBean()
+						.getScQt().getPmOrgProfile().getOrgProfileId());
+		this.getManagedBean().setAllStateCode(orgResDto.getStateStatusId());
 		List<String> types = new ArrayList<String>();
 		types.add(ParameterConst.LOCATION_LEVEL_STATE);
-		types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		if (this.getManagedBean().getAllStateCode() == 1
+				|| this.getManagedBean().getAllStateCode() == 2) {
+			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		}
 		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
 
 		SelectItem[] items = null;
@@ -3772,6 +3783,7 @@ public class SpecificationBackingBean extends
 				tenderReqDTO.setDocType(docType);
 				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
+
 				ScQt scQt = tenderResDTO.getQtDetail();
 
 				if (null != scQt.getFulfilmentType()
@@ -3848,6 +3860,20 @@ public class SpecificationBackingBean extends
 	public void onChangeQtType(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
+
+		this.getManagedBean().setSuppCriteriaopenList(
+				new ArrayList<ScQtCategory>());
+		if (type.equalsIgnoreCase("O")) {
+
+			if (null != this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria()
+					&& null == this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getLocationLevel()) {
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.setLocationLevel(new PmParameter());
+			}
+
+		}
 
 		this.getManagedBean().getScQt().setQtType(type);
 	}
@@ -7925,36 +7951,15 @@ public class SpecificationBackingBean extends
 	 */
 	public void preRenderView() {
 
-		renewSesionObject();
-		HttpServletRequest servletRequest = PortalUtil
-				.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil
-				.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		this.getManagedBean().setTaskId(taskId);
+		SCQuotationTenderDataType quotationTenderDataType = getBpmTaskDetails(SCQuotationTenderDataType.class);
 
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-
-		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		this.getManagedBean().setOutComes(res.getAction());
-		SCQuotationTenderDataType quotationTenderDataType = (SCQuotationTenderDataType) obj;
 		this.getManagedBean().setSpecificationDataType(quotationTenderDataType);
-
+		FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
-		String taskName = res.getTaskName();
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setTaskName(taskName);
-		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)
+		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())
 				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-						.equalsIgnoreCase(taskName)) {
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
 			PmUser curLogedInUser = facesScopes.getUserSessionBean();
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -7974,24 +7979,26 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setReadOnly(false);
 			}
 		}
-		if (SCProcessNameConst.SPECIFICATION_APPROVAL
-				.equalsIgnoreCase(taskName)) {
+		if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())) {
 			this.getManagedBean().setReadOnly(true);
 
 		}
 
-		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(taskName)
+		if (SCProcessNameConst.PREPARE_SPECIFICATION.equalsIgnoreCase(this
+				.getManagedBean().getTaskName())
 				|| SCProcessNameConst.CONSOLIDATE_SPECIFICATION
-						.equalsIgnoreCase(taskName)
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())
 				|| SCProcessNameConst.SPECIFICATION_APPROVAL
-						.equalsIgnoreCase(taskName)) {
+						.equalsIgnoreCase(this.getManagedBean().getTaskName())) {
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
-					getDocTypeByTaskName(taskName));
+					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
 
-			if (SCProcessNameConst.SPECIFICATION_APPROVAL
-					.equalsIgnoreCase(taskName)) {
+			if (SCProcessNameConst.SPECIFICATION_APPROVAL.equalsIgnoreCase(this
+					.getManagedBean().getTaskName())) {
 				loadPrepareSpecDetails(quotationTenderDataType.getQtId()
-						.longValue(), getDocTypeByTaskName(taskName));
+						.longValue(), getDocTypeByTaskName(this
+						.getManagedBean().getTaskName()));
 				this.getManagedBean().setActiveIndex(4);
 			}
 			ScQt scQt = this.getManagedBean().getScQt();
@@ -8025,7 +8032,7 @@ public class SpecificationBackingBean extends
 
 		} else {
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
-					getDocTypeByTaskName(taskName));
+					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
 			if (null == this.getManagedBean().getScQt().getFulfilmentType()) {
 
 				this.getManagedBean().getScQt()
@@ -9000,8 +9007,70 @@ public class SpecificationBackingBean extends
 			codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
 			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
 					.retrieveCategoryL3DtlById(codeReqDTO);
-			if (null != CategoryCodeResDTO
-					&& null != CategoryCodeResDTO.getCategoryL3()) {
+			if (null != categoryList && categoryList.size() > 1) {
+				boolean isDuplicate = false;
+
+				for (int i = 0; i < categoryList.size() - 1; i++) {
+					ScQtCategory category1 = categoryList.get(i);
+					if (category1
+							.getPmCategoryL3()
+							.getCategoryL3Code()
+							.equalsIgnoreCase(
+									CategoryCodeResDTO.getCategoryL3()
+											.getCategoryL3Code())
+							&& category1
+
+									.getPmCategoryL2()
+									.getCategoryL2Code()
+									.equalsIgnoreCase(
+											CategoryCodeResDTO.getCategoryL3()
+													.getPmCategoryL2()
+													.getCategoryL2Code())
+							&& category1
+
+									.getPmCategoryL1()
+									.getCategoryL1Code()
+									.equalsIgnoreCase(
+											CategoryCodeResDTO.getCategoryL3()
+													.getPmCategoryL2()
+													.getPmCategoryL1()
+													.getCategoryL1Code())) {
+						isDuplicate = true;
+
+						break;
+					}
+
+				}
+				if (isDuplicate) {
+
+					ScQtCategory category = categoryList.get(index);
+					this.getManagedBean().getSuppCriteriaopenList()
+							.remove(index);
+
+					// .setScQt(scQt);
+					category.setPmCategoryL1(new PmCategoryL1());
+					category.setPmCategoryL2(new PmCategoryL2());
+					category.setPmCategoryL3(new PmCategoryL3());
+
+					this.getManagedBean().getSuppCriteriaopenList()
+							.add(index, category);
+					throw new EpException(MessageConst.ERROR_760111);
+
+				} else {
+					ScQtCategory category = categoryList.get(index);
+					category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
+					category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3()
+							.getPmCategoryL2());
+					category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3()
+							.getPmCategoryL2().getPmCategoryL1());
+					category.setScQt(this.getManagedBean().getScQt());
+					setUserDetails(category);
+					this.getManagedBean().getSuppCriteriaopenList()
+							.remove(index);
+					this.getManagedBean().getSuppCriteriaopenList()
+							.add(index, category);
+				}
+			} else {
 				ScQtCategory category = categoryList.get(index);
 				category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
 				category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3()
