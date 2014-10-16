@@ -68,16 +68,16 @@
 								<c:choose>
 									<c:when
 										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
-										<li><h:outputText value="Facilities"
+										<li><h:outputText value="#{lbl['lbl.sm.facilities']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
-											<p:commandLink value="Facilities"
+											<p:commandLink value="#{lbl['lbl.sm.facilities']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
 												action="#{backingBean.updateSmAppl}" update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
 												styleClass="#{backingBean.managedBean.tabActiveIndex eq 5? 'currentStep' : ''}" /></li>
-										<li><h:outputText value="Equipment"
+										<li><h:outputText value="#{lbl['lbl.sm.equipment']}"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-											<p:commandLink value="Equipment"
+											<p:commandLink value="#{lbl['lbl.sm.equipment']}"
 												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 												action="#{backingBean.updateSmAppl}" update=":form"
 												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
@@ -146,7 +146,7 @@
 				<tr>
 					<td
 						style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
-							value="Last Submission Date : " /></td>
+							value="#{lbl['lbl.sm.dateLastSubmit']} :" /></td>
 					<td
 						style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
 							value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
