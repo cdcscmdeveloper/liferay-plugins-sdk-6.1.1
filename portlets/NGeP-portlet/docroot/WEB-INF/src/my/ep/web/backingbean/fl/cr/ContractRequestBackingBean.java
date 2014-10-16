@@ -19,13 +19,17 @@ import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
@@ -129,6 +133,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmProject;
 import my.ep.persistence.entity.pm.common.PmSetia;
@@ -139,6 +144,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
@@ -147,6 +153,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
@@ -176,7 +184,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 
 @ManagedBean(name = "contractRequestBackingBean")
-@RequestScoped
+@ViewScoped
 public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestManagedBean> {
 	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
@@ -726,7 +734,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void updateContractedItemDt() {
 		FlFulfilmentItem flItem = null;
-		
 		for (CtContractItem contractedItem : getManagedBean().getSelectedContractedItemList()) {
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
 				if(getManagedBean().getPmPriceType().getParameterCode().equals(ParameterConst.PRICE_TYPE_TIER) ||
@@ -2900,4 +2907,72 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		        };
 				Collections.sort(flItemAddressList, comparator);
 	    }
+		
+		public void searchReset(){
+			this.getManagedBean().setSearchItemType(null);
+			this.getManagedBean().setSearchItemCode(null);
+			this.getManagedBean().setSearchItemName(null);
+			
+		}
+		
+		private IPagingDataModel<CtContractItem> contractItemPagingDataModel = new ContractItemPagingDataModel();
+		
+		 
+		private class ContractItemPagingDataModel extends PagingDataModel<CtContractItem> {
+			private static final long serialVersionUID = 1L;
+
+			public ContractItemPagingDataModel() {
+				super("itemListResultDt",false);
+			}
+			@Override
+			public ISearchResultBean<CtContractItem> pageChangeListener(ISearchBean<CtContractItem> searchBean) {
+				IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+				ContractItemResDTO resDTO = new ContractItemResDTO();
+				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
+				try {
+					
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
+					if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode()));
+					}
+					if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName()));
+					}
+					if(getManagedBean().getSearchItemType() != null){
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
+					}
+					
+					reqDTO.setContractItemSearchBean(searchBean);
+					resDTO = contractItemSO.searchContractItem(reqDTO);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return resDTO.getContractItemResultBean();
+
+			}
+			
+		}
+		/**
+		 * @return the contractItemPagingDataModel
+		 */
+		public IPagingDataModel<CtContractItem> getContractItemPagingDataModel() {
+			return contractItemPagingDataModel;
+		}
+
+		public void searchContractItemList(){
+			getContractItemPagingDataModel().reloadData();
+		}
+		
+		public SelectItem[] getItemTypeValues(){
+			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+			String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
+
+			SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+			return items;
+		}
+			
 }
