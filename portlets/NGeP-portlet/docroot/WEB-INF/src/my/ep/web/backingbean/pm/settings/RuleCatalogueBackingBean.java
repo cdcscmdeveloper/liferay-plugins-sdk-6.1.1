@@ -465,10 +465,10 @@ public class RuleCatalogueBackingBean extends
 			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
-			reqDTO.setUnspscCode(exemption.getUnspscId().getUnspscCode());
+			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity().getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
-
+    
 			if (resDTO.isSuccessful()) {
 				CmUnspsc commodity = resDTO.getCommodityObj();
 				exemption.setTypes(new ArrayList<CmType>());
@@ -479,6 +479,11 @@ public class RuleCatalogueBackingBean extends
 				}
 
 			}
+
+		    exemption.setUnspscId(resDTO.getCommodityObj());
+		    this.getManagedBean().getFeeExemptionsForComodity().remove(index);
+			this.getManagedBean().getFeeExemptionsForComodity()
+					.add(index, exemption);
 
 		} catch (Exception e) {
 			e.printStackTrace();
