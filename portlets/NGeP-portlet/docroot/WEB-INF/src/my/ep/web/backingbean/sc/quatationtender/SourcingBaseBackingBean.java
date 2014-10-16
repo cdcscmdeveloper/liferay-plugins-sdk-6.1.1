@@ -810,28 +810,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		ICategoryCodeSO codeSo = getCategoryCodeSO();
 		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
-		reqDTO.setMainCatCode(qtCategory.getPmCategoryL1().getCategoryL1Code());
-		CategoryCodeResDTO resDto = codeSo.retrieveCategoryL1ByCode(reqDTO);
-		PmCategoryL1 categoryL1 = resDto.getCategoryL1();
-		if (null == categoryL1) {
-			throw new EpException("No category Code exists");
-		}
-		qtCategory.setPmCategoryL1(categoryL1);
-		if (!isNullOrEmpty(qtCategory.getPmCategoryL2().getCategoryL2Code())) {
-			reqDTO.setCategoryL1Id(categoryL1.getCategoryL1Id());
-			reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
-					.getCategoryL2Code());
-			CategoryCodeResDTO categoryCodeResDTO = codeSo
-					.retrieveCategoryL2ListByCode(reqDTO);
-			List<PmCategoryL2> categoryL2List = categoryCodeResDTO
-					.getCategoryL2List();
-			if (null != categoryL2List && !categoryL2List.isEmpty()) {
-				qtCategory.setPmCategoryL2(categoryCodeResDTO
-						.getCategoryL2List().get(0));
-			} else {
-				throw new EpException(MessageConst.ERROR_760132);
+		if (!isNullOrEmpty(qtCategory.getPmCategoryL1().getCategoryL1Code())) {
+			reqDTO.setMainCatCode(qtCategory.getPmCategoryL1()
+					.getCategoryL1Code());
+			CategoryCodeResDTO resDto = codeSo.retrieveCategoryL1ByCode(reqDTO);
+			PmCategoryL1 categoryL1 = resDto.getCategoryL1();
+			if (null == categoryL1) {
+				throw new EpException("No category Code exists");
 			}
+			qtCategory.setPmCategoryL1(categoryL1);
+			if (!isNullOrEmpty(qtCategory.getPmCategoryL2().getCategoryL2Code())) {
+				reqDTO.setCategoryL1Id(categoryL1.getCategoryL1Id());
+				reqDTO.setSubCatCode(qtCategory.getPmCategoryL2()
+						.getCategoryL2Code());
+				CategoryCodeResDTO categoryCodeResDTO = codeSo
+						.retrieveCategoryL2ListByCode(reqDTO);
+				List<PmCategoryL2> categoryL2List = categoryCodeResDTO
+						.getCategoryL2List();
+				if (null != categoryL2List && !categoryL2List.isEmpty()) {
+					qtCategory.setPmCategoryL2(categoryCodeResDTO
+							.getCategoryL2List().get(0));
+				} else {
+					throw new EpException(MessageConst.ERROR_760132);
+				}
+			}
+		} else {
+
+			qtCategory.setPmCategoryL1(new PmCategoryL1());
+			qtCategory.setPmCategoryL2(new PmCategoryL2());
+
 		}
+
 
 	}
 
