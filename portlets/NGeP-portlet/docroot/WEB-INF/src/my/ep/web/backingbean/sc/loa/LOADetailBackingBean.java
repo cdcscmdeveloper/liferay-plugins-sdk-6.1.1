@@ -794,6 +794,15 @@ public class LOADetailBackingBean extends
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
 	}
+	
+	public void deleteDeductionPaymentAction() {
+		debugLogger("deleteDeductionPaymentAction");
+		if (getManagedBean().getScLoa().getScQtDeductions() != null 
+				&& getManagedBean().getSelectedScQtDeduction() != null) {
+			getManagedBean().getScLoa().getScQtDeductions().remove(getManagedBean().getSelectedScQtDeduction());	
+		}
+		getManagedBean().setSelectedScQtDeduction(null);
+	}
 
 	public void addLoaContentAction() {
 		debugLogger("addLoaContentAction");
