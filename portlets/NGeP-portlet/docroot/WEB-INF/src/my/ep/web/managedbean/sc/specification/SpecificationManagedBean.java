@@ -260,7 +260,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	// Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
-	private String taskName;
+	
 	private CtCircularSearchBean ctSearchBean = new CtCircularSearchBean();
 	private List<SelectItem> evaluationTypeItem;
 	private TreeNode supplierSelectedTreeNode;
@@ -2625,20 +2625,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.circularVer = circularVer;
 	}
 
-	/**
-	 * @return the taskName
-	 */
-	public String getTaskName() {
-		return taskName;
-	}
-
-	/**
-	 * @param taskName
-	 *            the taskName to set
-	 */
-	public void setTaskName(String taskName) {
-		this.taskName = taskName;
-	}
+	
 
 	public CtCircularSearchBean getCtSearchBean() {
 		return ctSearchBean;
