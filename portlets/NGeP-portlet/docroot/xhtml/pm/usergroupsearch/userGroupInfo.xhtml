@@ -15,7 +15,8 @@
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupcode']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText size="30" style="width:178px" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"/></td>
+		<td><p:inputText size="30" style="width:178px" value="#{usergroupBackingBean.managedBean.userGroup.groupCode}"
+			  disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"/></td>
 	  </tr>	
 	  <tr>	
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.result.groupname']}" />

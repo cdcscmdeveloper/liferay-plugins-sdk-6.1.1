@@ -15,7 +15,7 @@
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.search.codes']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
 		<td><p:inputText value="#{profcertifiedbodyBackingBean.managedBean.certBody.bodyCode}" 
-			  size="20" maxlength="12" />
+			  disabled="#{!profcertifiedbodyBackingBean.managedBean.certBody.brandNew}" size="20" maxlength="12" />
 		</td>
 	  </tr>	
 	  <tr>	
