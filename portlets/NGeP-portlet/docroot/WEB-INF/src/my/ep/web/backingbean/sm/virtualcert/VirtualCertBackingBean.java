@@ -47,6 +47,7 @@ import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -341,9 +342,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	
     	SmAddress smAddress = supplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
     	String address1 = smAddress.getAddress1();
-    	String address2 = (smAddress.getAddress2() == null) ? smAddress.getAddress2() : "";
-    	String address3 = (smAddress.getAddress3() == null) ? smAddress.getAddress3() : "";
-    	String address4 = (smAddress.getAddress4() == null) ? smAddress.getAddress4() : "";
+    	String address2 = (StringUtils.isBlank(smAddress.getAddress2())) ? "" : smAddress.getAddress2();
+    	String address3 = (StringUtils.isBlank(smAddress.getAddress3())) ? "" : smAddress.getAddress3();
+    	String address4 = (StringUtils.isBlank(smAddress.getAddress4())) ? "" : smAddress.getAddress4();
     	String postCode = smAddress.getPostcode();
     	String cityName = smAddress.getPmCity().getCityName();
     	String stateName = smAddress.getPmState().getStateName();
