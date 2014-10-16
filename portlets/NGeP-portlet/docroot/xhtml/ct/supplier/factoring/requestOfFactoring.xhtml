@@ -151,7 +151,7 @@
          		    </h:panelGrid>
          		    <h:panelGrid columns="2">
          			   <p:calendar id="effdateCal" size="25"  required="true" showOn="button" label="#{lbl['lbl.ct.start.date']}"
-		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}"    mindate="#{supplierBackingBean.currentDate}" 
+		    			    value="#{supplierBackingBean.managedBean.factoring.effDate}"  
 		    			    disabled="#{supplierBackingBean.managedBean.removeFactoring}" readonlyInput="true" navigator="true" 
 		    			    pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		    			    <p:ajax event="dateSelect" update="expdateCal" />
@@ -191,15 +191,16 @@
                     <p:spacer width="1"/>
 			    	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.factoring.account.no']}" />
 			    </h:panelGrid>			 	
-				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
-				    <f:verbatim	rendered="#{!supplierBackingBean.managedBean.removeFactoring}" />
-				    
-				 <p:outputLabel value="#{lbl['lbl.ct.status']}" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
+				   
+		         <p:outputLabel value="#{lbl['lbl.ct.status']}" rendered="#{supplierBackingBean.managedBean.removeFactoring}" />
 				 <p:selectOneMenu style="width:210px;" rendered="#{supplierBackingBean.managedBean.removeFactoring}"
 				         disabled="true" value="#{supplierBackingBean.managedBean.factoring.recordStatusFlg}">
 					<f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 					<f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 				</p:selectOneMenu>
+				
+				<f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
+				<f:verbatim rendered="#{!supplierBackingBean.managedBean.removeFactoring}"/>
 				
 				<h:panelGrid columns="2" style="float:right;">
 					<p:outputLabel value="*" styleClass="mandatory" />
@@ -216,6 +217,23 @@
 			                	action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.filePath, supplierBackingBean.managedBean.factoring.fileName)}"/>		
 		             </h:panelGrid>		
 		        </h:panelGroup> 
+			
+				<h:panelGrid columns="2" style="float:right;" rendered="#{supplierBackingBean.managedBean.removeFactoring}" >
+					<p:outputLabel value="*" styleClass="mandatory" />
+					<p:outputLabel value="Copy Of Remove Factoring Letter" />
+				</h:panelGrid>
+				<h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}" >
+                    <h:panelGrid columns="3">
+			               <p:commandButton oncomplete="uploadRemoveFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
+			                   icon="iconAttachment"   update="factoringPanel" 
+			                   disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />	
+				              <p:spacer width="1"/>
+		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
+		                        style="float:left;" styleClass="blue_font"  rendered="#{supplierBackingBean.managedBean.factoring.removeFileName != null}" 
+			                	action="#{supplierBackingBean.downloadFile(supplierBackingBean.managedBean.factoring.removeFilePath, supplierBackingBean.managedBean.factoring.removeFileName)}"/>		
+		             </h:panelGrid>		
+		        </h:panelGroup> 
+				
              </h:panelGrid>
       
               <p:dialog id="uploadFactoringDlg" widgetVar="uploadFactoringDlg" modal="false"
@@ -223,6 +241,17 @@
 		          <p:ajax event="close" />
 	      	      <p:fileUpload style="display:inline;" mode="advanced" 
 			           fileUploadListener="#{supplierBackingBean.fileUpload}" 
+			           allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			           invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
+			           update="factoringPanel">
+		          </p:fileUpload> 
+	         </p:dialog>
+	         
+	         <p:dialog id="uploadRemoveFactoringDlg" widgetVar="uploadRemoveFactoringDlg" modal="false"
+                  resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		          <p:ajax event="close" />
+	      	      <p:fileUpload style="display:inline;" mode="advanced" 
+			           fileUploadListener="#{supplierBackingBean.removeFileUpload}" 
 			           allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			           invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			           update="factoringPanel">
