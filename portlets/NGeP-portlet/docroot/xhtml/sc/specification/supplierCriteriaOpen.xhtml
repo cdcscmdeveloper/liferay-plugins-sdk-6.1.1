@@ -26,7 +26,7 @@
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					size="3" style="margin-right: 3px !important;">
-					<p:ajax event="blur" update="openPtj" partialSubmit="true"
+					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
 						process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL1Code(cateGory)}"></p:ajax>
 				</p:inputText>
@@ -34,7 +34,7 @@
 					maxlength="2"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					size="3">
-					<p:ajax event="blur" update="openPtj" partialSubmit="true"
+					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
 						process="@this"
 						listener="#{specificationBackingBean.updatedQtCategoryL2Code(cateGory)}"></p:ajax>
 				</p:inputText>
