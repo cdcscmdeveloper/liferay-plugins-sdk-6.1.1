@@ -31,13 +31,13 @@
 					         <h:outputText value="*" styleClass="mandatory" /> <h:outputText value=" #{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			                   	</f:facet>
 					<ac:lov id="lovSupplier" lovId="SM_SUPPLIER" label="Organization / supplier Name"
-						update="@form" size="15" required="true"
+						size="15" required="true"
 						headerText="Supplier"
 						postUpdateListener="ruleCatalogueBackingBean.updateOrgProfileForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem)"
 						saveObject="ruleCatalogueBackingBean.managedBean.selectedSmSupplier"
 						value="#{feeObj.orgProfileId.smSupplier.companyName}">
 					</ac:lov>
-					<ac:lovPopup />
+					
 
 				</p:column>
 				<p:column>
@@ -46,12 +46,12 @@
 				                </f:facet>
            
 					<ac:lov id="lovItem" lovId="CM_ITEM"
-						update="@form" size="15"
+						size="15"
 						headerText="Item" 
 						saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 						value="#{feeObj.itemId.itemName}">
 					</ac:lov>
-					<ac:lovPopup />
+				
 
 
 				</p:column>

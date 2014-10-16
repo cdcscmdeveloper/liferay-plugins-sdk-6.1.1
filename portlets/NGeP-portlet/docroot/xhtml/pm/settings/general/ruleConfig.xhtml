@@ -7,7 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:outputPanel id="ruleCat">
 
 		<div style="text-align: right; min-height: 40px;">
 
@@ -78,13 +77,13 @@
 					                 #{lbl['lbl.pm.value']}
 				                </f:facet>
 
-					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" update="@form"
+					<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3" update=":form:settingTabId:ruleTypeValueTableID"
 						size="15" headerText="Category"
 						postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
 						saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
 						value="#{typeValueObj.ruleValue}">
 					</ac:lov>
-					<ac:lovPopup />
+					
 				</p:column>
 
 				<p:column width="15%"
@@ -165,6 +164,5 @@
 				</div>
 			</h:panelGroup>
 	
-	</p:outputPanel>
 
 </ui:composition>

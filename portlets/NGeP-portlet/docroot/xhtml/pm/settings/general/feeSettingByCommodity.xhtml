@@ -24,19 +24,19 @@
 						selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 						rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
 
-						<p:column>
+						<p:column width="20%">
 							<f:facet name="header">
 							
 					              <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.cm.unspsc.code']}" />
 			                   	</f:facet>
-				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true" label="UNSPSC code"
-								update="@form" size="15" headerText="unspsc commodity"
+				               <ac:lov id="lovCommodity" lovId="CM_UNSPSC" required="true" label="UNSPSC code" update=":form:settingTabId:feeByComodityTableID"
+								size="15" headerText="unspsc commodity"
 								postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
 								saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity[#{rowIndex}].unspscId" 
 								conditionField="recordStatus^1|unspscLevel^3"
 								value="#{feeObj.unspscId.unspscCode}">
 							   </ac:lov>
-							<ac:lovPopup />
+								
 
 						</p:column>
 						<p:column>
@@ -45,7 +45,7 @@
 				                </f:facet>
 				               #{feeObj.unspscId.unspscTitle}
 			            </p:column>
-			            <p:column width="10%">
+			            <p:column id="cmTypelist">
 							<f:facet name="header">
 					               <h:outputText value="*" styleClass="mandatory" /><h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
 				                </f:facet>
@@ -56,7 +56,7 @@
 								     itemLabel="#{type.typeName}" itemValue="#{type.typeId}" var="type"/>
 							</p:selectOneMenu>
 						</p:column>
-						<p:column>
+						<p:column width="10%">
 							<f:facet name="header">
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
@@ -69,7 +69,7 @@
 							</p:calendar>
 						</p:column>
 
-						<p:column>
+						<p:column width="10%">
 							<f:facet name="header">
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
@@ -119,5 +119,5 @@
 
 						</div>
 				
-			
+		
 </ui:composition>
