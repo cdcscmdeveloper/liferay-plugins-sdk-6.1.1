@@ -66,12 +66,7 @@
 			</table>
 			<p:separator />
 			<div>
-				<p>
-					You have finished reviewing all the necessary information for
-					Delete Pending Application .Please perform one the below operations
-					to provide your decision<br /> 1.Click 'Approve'' to approve the
-					application.<br /> 2. Click ' Reject' to reject the application.
-				</p>
+				<p><h:outputText value="#{lbl['lbl.sm.delete.pending.finished.review.notes']}" escape="false" /> </p>
 			</div>
 			<p:separator />
 
@@ -91,10 +86,10 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="Submit"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					onclick="approveAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
-				<p:commandButton value="Cancel"
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
 					onclick="approveAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
@@ -105,9 +100,9 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="Submit" onclick="rejectAppCanDialog.hide();"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
-				<p:commandButton value="Cancel" onclick="rejectAppCanDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="rejectAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
 	</ui:define>
