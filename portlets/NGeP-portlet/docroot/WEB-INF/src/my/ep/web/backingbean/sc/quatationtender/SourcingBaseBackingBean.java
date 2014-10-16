@@ -66,7 +66,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -570,7 +570,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	protected <PARENT_ENTITY extends BaseEntity, REMARK_CLASS extends ScRemark> List<REMARK_CLASS> initializeRemarks(
-			PARENT_ENTITY parent, PmStatus pmStatus,
+			PARENT_ENTITY parent, ScWorkFlowStatus workFlowStatus,
 			List<REMARK_CLASS> scRemarks, Class<REMARK_CLASS> clazz) {
 
 		try {
@@ -587,8 +587,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| (pmStatus != null && !prevRemark.getPmStatus()
-							.getStatusId().equals(pmStatus.getStatusId()))) {
+					|| (workFlowStatus != null && !prevRemark.getScWorkFlowStatus().getPmStatus()
+							.getStatusId().equals(workFlowStatus.getPmStatus().getStatusId()))) {
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
@@ -597,7 +597,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				remark.setChangedBy(remark.getCreatedBy());
 				remark.setCreatedUser(facesScopes.getUserSessionBean());
 				remark.setParent(parent);
-				remark.setPmStatus(pmStatus);
+				remark.setScWorkFlowStatus(workFlowStatus);
 
 				scRemarks.add(0, remark);
 			}
