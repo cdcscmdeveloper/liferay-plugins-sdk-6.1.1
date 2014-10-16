@@ -142,9 +142,15 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setSpecQuestionId(null);
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
 								newSpecQuestion.setTplSpecAnswers(null);
+								newSpecQuestion.setTplSpecEstimations(null);
 								
 								if (isTechnicalSpec) {
-									newSpecQuestion.setAnswerTypeCode(null);
+									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newSpecQuestion.getQuestionType())){
+										newSpecQuestion.setAnswerTypeCode(null);
+									}else{
+										newSpecQuestion.setAnswerTypeCode(new PmParameter());
+									}
+									
 								} else {
 									IParameterSO parameterSO = null;
 									try {
@@ -159,14 +165,14 @@ public class TemplateSpecHelper {
 									} finally {
 										parameterSO = null;
 									}
+									
+									resetEstimations(newSpecQuestion);
 								}
 								newSpecQuestion.setScoreTypeCode(null);
 								newSpecQuestion.setMaxScore(null);
 								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
-								
-								resetEstimations(newSpecQuestion);
 								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
