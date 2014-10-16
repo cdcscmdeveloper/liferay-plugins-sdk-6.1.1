@@ -19,12 +19,12 @@
 			showSummary="false" closable="true" severity="error, info" />
 		<table style="width: 100%">
 			<tr>
-				<td><p:commandButton value="Back" immediate="true" 
+				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
 						rendered="#{invoiceBackingBean.managedBean.taskId==null}"
 						icon="ui-icon-back" action="#{invoiceBackingBean.backToPervious}"  /></td>
 				<td colspan="4" style="text-align: right;"><p:commandButton 
 						onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-						value="SUBMIT" action="#{invoiceBackingBean.submitAp59}"
+						value="#{lbl['lbl.btn.submit']}" action="#{invoiceBackingBean.submitAp59}"
 						icon="ui-icon-submit">
 					</p:commandButton>
 					</td>

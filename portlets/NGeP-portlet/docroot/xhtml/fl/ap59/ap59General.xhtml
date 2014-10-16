@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="CONTRACT OWNER" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.menu.gen.info']}"  toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
@@ -13,62 +13,62 @@
 				<td><p:inputText size="50"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
-				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.phys.contr.no']}" /></td>
+				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractPhysicalNo}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
+						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/></td>
-			<td><p:outputLabel value="#{lbl['lbl.fl.ap59.loa.no']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.supp.name']}" /></td>
+						value="#{lbl['lbl.fl.doc.maintain.supp.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.smSupplier.companyName}"/></td>
 				
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.contr.title']}" /></td>
+						value="#{lbl['lbl.fl.ap59.contract.title']}" /></td>
 				<td><p:inputTextarea rows="4" cols="50" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractName}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="CONTRACT ORDER" toggleable="true" id="suppDetPnl">
+	<p:panel header="#{lbl['lbl.fl.menu.contract.order']}" toggleable="true" id="suppDetPnl">
 		<table>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"/></td>
-				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.date']}" /></td>
+				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.ap59.order.date']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.createdDate}">
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" /></p:inputText></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.ptj']}" /></td>
+						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.pmOrgValidity.orgName}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.ord.amt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.order.date']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel
-						value="#{lbl['lbl.fl.ap59.ord.title']}" /></td>
+						value="#{lbl['lbl.fl.ap59.order.title']}" /></td>
 				<td><p:inputTextarea rows="4" cols="50" value="#{invoiceBackingBean.managedBean.invoice.flRequest.title}"
 						style="margin-bottom:5px;" disabled="true" /></td>
 			</tr>
 
 		</table>
 	</p:panel>
-	<p:panel header="INVOICE SUMMARY" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.menu.invoice.summary']}" toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
-						value="#{lbl['lbl.fl.new.inv.amt']}" /></td>
+						value="#{lbl['lbl.fl.ap59.inv.amount']}" /></td>
 				<td><p:inputText size="35"
 						value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"
 						disabled="true" style="text-align:right">
@@ -77,13 +77,13 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.service.fee']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.service.fee']}" /></td>
 				<td><p:inputText size="35"
 						value="#{invoiceBackingBean.managedBean.serviceCharge}"
 						disabled="true" style="text-align:right" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.fee.amt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.fee.amount']}" /></td>
 				<td><p:inputText size="35" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.feeAmt}"
 						style="text-align:right">
@@ -92,7 +92,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.amt.to.supplier']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.payment.suppt']}" /></td>
 				<td><p:inputText size="35" disabled="true"
 						value="#{invoiceBackingBean.managedBean.invoice.supplierOrFactorAmt}"
 						style="text-align:right">
@@ -102,7 +102,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="BPK DECISION" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.menu.bpk.decision']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 139px"><p:outputLabel
