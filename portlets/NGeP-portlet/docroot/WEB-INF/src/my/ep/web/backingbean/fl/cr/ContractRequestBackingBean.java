@@ -100,6 +100,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
@@ -298,7 +299,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			validateOrderQuantity();
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
@@ -306,6 +306,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
 					throw new EpException(MessageConst.ERROR_750017);
 				}
+				validateOrderQuantity();
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
@@ -1022,22 +1023,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			
 			for(CtContractItem contractItem : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems()) {
-				flItemAddr = new FlFulfilmentItemAddr();
-				flItemAddr.setPriceType(getManagedBean().getPmPriceType());
-				flItemAddr.setItemType(contractItem.getItemType());
-				flItemAddr.setScRequestItem(contractItem.getScRequestItem());
-				flItemAddr.setCmItem(contractItem.getScRequestItem().getCmItem());
-				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
-					reqDTO.setItemId(contractItem.getScRequestItem().getRequestNoteItemId());
-					reqDTO.setOrderedQty(new BigDecimal(0));
-					resDTO = contractItemSO.getItemPrice(reqDTO);
-					flItemAddr.setUnitPrice(resDTO.getItemPrice());
-				} else {
-					flItemAddr.setUnitPrice(new BigDecimal(0));
+				if(contractItem.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					flItemAddr = new FlFulfilmentItemAddr();
+					flItemAddr.setPriceType(getManagedBean().getPmPriceType());
+					flItemAddr.setItemType(contractItem.getItemType());
+					flItemAddr.setScRequestItem(contractItem.getScRequestItem());
+					flItemAddr.setCmItem(contractItem.getScRequestItem().getCmItem());
+					if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_STANDARD)) {
+						reqDTO.setItemId(contractItem.getScRequestItem().getRequestNoteItemId());
+						reqDTO.setOrderedQty(new BigDecimal(0));
+						resDTO = contractItemSO.getItemPrice(reqDTO);
+						flItemAddr.setUnitPrice(resDTO.getItemPrice());
+					} else {
+						flItemAddr.setUnitPrice(new BigDecimal(0));
+					}
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+					flItemAddr.setOrderedAmt(new BigDecimal(0));
+					itemAddrList.add(flItemAddr);
 				}
-				flItemAddr.setOrderedQty(new BigDecimal(0));
-				flItemAddr.setOrderedAmt(new BigDecimal(0));
-				itemAddrList.add(flItemAddr);
 			}
 			sortItems(itemAddrList);
 			getManagedBean().setOneOffItemAddrList(itemAddrList);
@@ -1873,6 +1876,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					if(itemAddr.getOrderedQty().doubleValue()==0) {
 						throw new EpException(MessageConst.ERROR_740022, new String[]{getFullAddress(flDeliveryAddress.getPmAddress()),itemAddr.getScRequestItem().getItemName()});
 					}
+				}
+			}
+		} else { // validate all item quantity must be at least one
+			boolean itemQuantityNotZero = false;
+			for(FlFulfilmentItemAddr oneOffItemAddr : getManagedBean().getOneOffItemAddrList()) {
+				itemQuantityNotZero = false;
+				for(FlDeliveryAddress delAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()) {
+					for(FlFulfilmentItemAddr itemAddr : delAddress.getFlFulfilmentItemAddr()) {
+						if(itemAddr.getScRequestItem().getRequestNoteItemId().equals(oneOffItemAddr.getScRequestItem().getRequestNoteItemId())) {
+							itemQuantityNotZero = true;
+							break;
+						}
+					}
+					if(itemQuantityNotZero) {
+						break;
+					}
+				}
+				if(!itemQuantityNotZero) {
+					throw new EpException(MessageConst.ERROR_740027, new String[]{oneOffItemAddr.getScRequestItem().getItemName(),"0"});
 				}
 			}
 		}
