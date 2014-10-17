@@ -1097,6 +1097,11 @@ public class SmApplicationBackingBean extends
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			getManagedBean().getePRoleList().add(role);
 		}
+		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT) 
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null || getManagedBean().getSelectedShareHolder().getEpRole().isEmpty() || 
+				getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
+			getManagedBean().getSelectedShareHolder().setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
+		}
 		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
@@ -2720,6 +2725,12 @@ public class SmApplicationBackingBean extends
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			getManagedBean().getePRoleList().add(role);
+		} 
+
+		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT) 
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null || getManagedBean().getSelectedShareHolder().getEpRole().isEmpty() || 
+				getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
+			getManagedBean().getSelectedShareHolder().setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
 		}
 	}
 
