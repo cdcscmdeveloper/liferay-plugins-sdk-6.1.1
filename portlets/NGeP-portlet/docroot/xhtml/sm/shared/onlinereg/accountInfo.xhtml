@@ -10,7 +10,7 @@
 			<c:if
 				test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 				<div align="right">
-					<p:commandButton value="Submit" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}" onstart="submissionDialog.show();" oncomplete="submissionDialog.hide();"
 						action="#{registrationBackingBean.submitRegistration}" update="@([id$=Msg])">
 							<f:param name="disableValidation" value="true" />
 					</p:commandButton>
