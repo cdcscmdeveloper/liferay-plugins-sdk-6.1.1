@@ -25,16 +25,15 @@
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
-			<p:column style="width:2%">
+			<p:column >
 				<h:outputText value="#{lbl['lbl.fl.do.delivery.service.start.end.date']}" />
 				<br/>
-				<p:inputText size="9" disabled="true"
+				<p:inputText size="8" disabled="true"
 					value="#{doDelAddress.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
-				<p:spacer width="4" />
-				<p:inputText size="9" disabled="true"
+				<p:inputText size="8" disabled="true"
 					value="#{doDelAddress.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
