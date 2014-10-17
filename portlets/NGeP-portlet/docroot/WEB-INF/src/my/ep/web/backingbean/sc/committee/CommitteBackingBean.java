@@ -4,8 +4,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -87,6 +91,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -1147,12 +1152,26 @@ public class CommitteBackingBean extends
 				committeeMember.setScCommittee(scCommittee);
 				memberList.add(committeeMember);
 			}
+			memberList = sortByRole(memberList);
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
 		scCommittee.setScCommitteeMembers(memberList);
 		this.getManagedBean().getQtCommittee().setScCommittee(scCommittee);
 	}
+	
+	public List<ScCommitteeMember> sortByRole(List<ScCommitteeMember> memberList){
+		Map<Integer, ScCommitteeMember> tree = new TreeMap<Integer, ScCommitteeMember>();
+	    List<String> listOrdre = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
 
+	    for (ScCommitteeMember scCommitteeMember : memberList) {
+	    	String code = scCommitteeMember.getMemberRole().getParameterCode();
+	        tree.put(listOrdre.indexOf(code), scCommitteeMember);
+	    }
+	    List<ScCommitteeMember> sortedList = new ArrayList<ScCommitteeMember>(tree.values());
+	    return sortedList;
+	}
+	
+	
 	public void okQCCommitteeAction() {
 		debugLogger("okCommitteeAction");
 		UserReqDTO userReqDTO = new UserReqDTO();
