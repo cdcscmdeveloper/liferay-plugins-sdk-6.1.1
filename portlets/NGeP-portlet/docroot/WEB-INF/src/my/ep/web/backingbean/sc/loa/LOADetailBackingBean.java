@@ -910,7 +910,8 @@ public class LOADetailBackingBean extends
 				ScLoa scLoa = getManagedBean().getScLoa();
 				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 				StringBuilder filename = new StringBuilder();
-				filename.append(scLoaReport.getTitle());
+				//replace white space due to firefox 
+				filename.append(scLoaReport.getTitle().replaceAll("\\s",""));
 				if (scLoaReportAttachment == null) {
 					scLoaReportAttachment = new ScLoaReportAttachment();
 					scLoaReportAttachment.setScLoaReport(scLoaReport);
