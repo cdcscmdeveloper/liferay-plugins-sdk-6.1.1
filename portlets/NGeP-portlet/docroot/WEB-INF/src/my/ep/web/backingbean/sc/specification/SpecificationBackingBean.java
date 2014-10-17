@@ -867,12 +867,11 @@ public class SpecificationBackingBean extends
 		case 0:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
 			specSo.validateBoGeneralInfo(specReqDTO);
-			// retrieveQuationTenderDetails(this.getManagedBean().getQt().getQtId());
+
 			break;
 		case 1:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
-			specSo.validateSupplierQulificationInfo(specReqDTO);
-			// retrieveCommitteeAppointmentTabDtl();
+			// specSo.validateSupplierQulificationInfo(specReqDTO);
 			break;
 
 		case 2:
@@ -899,7 +898,6 @@ public class SpecificationBackingBean extends
 			retriveTechnicalSpecification();
 			break;
 		case 3:
-			// detailSO.validateApprovalDetails(prepareQTInfo());
 			retriveFinancialSpecification();
 			break;
 
@@ -3121,16 +3119,19 @@ public class SpecificationBackingBean extends
 					.getParameterId();
 
 			if (locationLevel == null) {
-				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
-				districtReqDTO
-						.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				districtReqDTO
-						.setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
-				ParameterResDTO districtResDTO = parameterSo
-						.retrieveParameterByTypeAndCode(districtReqDTO);
-
-				locationLevel = districtResDTO.getPmParameter()
-						.getParameterId();
+				/*
+				 * ParameterReqDTO districtReqDTO = new ParameterReqDTO();
+				 * districtReqDTO
+				 * .setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				 * districtReqDTO
+				 * .setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
+				 * ParameterResDTO districtResDTO = parameterSo
+				 * .retrieveParameterByTypeAndCode(districtReqDTO);
+				 * 
+				 * locationLevel = districtResDTO.getPmParameter()
+				 * .getParameterId();
+				 */
+				throw new EpException(MessageConst.ERROR_760063);
 			}
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
@@ -3179,16 +3180,19 @@ public class SpecificationBackingBean extends
 			countrySo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 			if (locationLevel == null) {
-				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
-				districtReqDTO
-						.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
-				districtReqDTO
-						.setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
-				ParameterResDTO districtResDTO = parameterSo
-						.retrieveParameterByTypeAndCode(districtReqDTO);
-
-				locationLevel = districtResDTO.getPmParameter()
-						.getParameterId();
+				/*
+				 * ParameterReqDTO districtReqDTO = new ParameterReqDTO();
+				 * districtReqDTO
+				 * .setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				 * districtReqDTO
+				 * .setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
+				 * ParameterResDTO districtResDTO = parameterSo
+				 * .retrieveParameterByTypeAndCode(districtReqDTO);
+				 * 
+				 * locationLevel = districtResDTO.getPmParameter()
+				 * .getParameterId();
+				 */
+				throw new EpException(MessageConst.ERROR_760063);
 			}
 
 			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
@@ -4260,22 +4264,7 @@ public class SpecificationBackingBean extends
 	public void templateChange(AjaxBehaviorEvent event) {
 		String template = (String) event.getComponent().getAttributes()
 				.get("value");
-		if (template.equalsIgnoreCase(TemplateSpecConst.PROCESS_TYPE_SOURCING)) {
-			getManagedBean().setSpecName(null);
-			// getManagedBean().setStandardTemplate(null);
-			getManagedBean().setSearchProcurementId(null);
-			getManagedBean().setQtNum(null);
-			getManagedBean().setSearchItemTypeId(null);
-
-		} else {
-			getManagedBean().setSpecName(null);
-			// getManagedBean().setStandardTemplate(null);
-			getManagedBean().setSearchProcurementId(
-					getManagedBean().getScQt().getPmProcurementCategory()
-							.getParameterId());
-			getManagedBean().setQtNum(null);
-			getManagedBean().setSearchItemTypeId(null);
-		}
+		templateSpecCreate.resetData();
 		this.getManagedBean().setStandardTemplate(template);
 	}
 
@@ -7680,6 +7669,8 @@ public class SpecificationBackingBean extends
 		getManagedBean().setSearchProcurementId(null);
 		getManagedBean().setQtNum(null);
 		getManagedBean().setSearchItemTypeId(null);
+		getManagedBean().setQtTitle(null);
+		getManagedBean().setPublishDate(null);
 	}
 
 	// Tenplate Spec Paging Data Model
@@ -7689,7 +7680,7 @@ public class SpecificationBackingBean extends
 
 		public CreateTemplateSpecPagingDataModel() {
 
-			super("createList");
+			super("createList", false);
 
 		}
 
@@ -7774,6 +7765,23 @@ public class SpecificationBackingBean extends
 					qtnoSearchBean.setSearchValue(specTypeCode);
 
 					searchBean.getDataFilterBeans().add(qtnoSearchBean);
+				}
+
+				if (null != getManagedBean().getQtTitle()
+						&& !"".equalsIgnoreCase(getManagedBean().getQtTitle())) {
+
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtDocs.scQt.qtTitle",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getQtTitle(), true));
+				}
+
+				if (null != getManagedBean().getPublishDate()) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("scQtDocs.scQt.publishDate",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getPublishDate()));
+
 				}
 
 				qtTemplateReqDTO.setSearchBean(searchBean);
