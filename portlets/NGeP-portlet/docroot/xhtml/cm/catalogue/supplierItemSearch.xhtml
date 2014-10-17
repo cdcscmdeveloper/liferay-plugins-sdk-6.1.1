@@ -14,7 +14,7 @@
 	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
 	</script>
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages id="catSrchMsg" autoUpdate="true" closable="true" showDetail="true"></p:messages>
 		
 		<p:blockUI block=":form" trigger="searchButtonId" widgetVar="blockWidget">
 				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
@@ -101,8 +101,8 @@
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search"
 								action="#{catalogueBackingBean.managedBean.searchCatalogue}"
-								update="searchViewId,catSrchMsg" id="searchButtonId"
-								oncomplete="updateCatButtons();">
+								update="searchViewId,catSrchMsg,btnId" id="searchButtonId"
+								>
 								<f:param name="unspscCode" value="#{unspscCode}" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
@@ -266,7 +266,7 @@
 								<p:dataGrid columns="3" rows="9" lazy="true"
 									rendered="#{catalogueBackingBean.managedBean.renderGridView}"
 									value="#{catalogueBackingBean.managedBean.searchDataModel}"
-									id="supplierItemGridViewID" var="supplierItem"
+									id="supplierItemGridViewID" var="supplierItem" first="10"
 									rowIndexVar="rowIndex" rowsPerPageTemplate="6,9,12">
 									<ac:paginator for="supplierItemGridViewID"></ac:paginator>
 

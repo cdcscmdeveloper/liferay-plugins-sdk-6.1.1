@@ -27,6 +27,7 @@ import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -382,11 +383,61 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 
-	public void searchCatalogue(){
-		// enable or disable simple quote in search catalogue
-		setSimpleQuoteFlag(Boolean.FALSE);
+	public void searchCatalogue() {
+		log.info("In searchCatalogue");
+		boolean hasSearchValue = false;
+		log.info("hasSearchValue: " + hasSearchValue);
+
+		if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
+
+		if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
+			hasSearchValue = true;
+		}
 		
-		searchDataModel.reloadData();
+		if(this.getDistrictId() != null && this.getDistrictId().length > 0) {
+			hasSearchValue = true;
+		}
+		
+		if(this.getStateId() != null && this.getStateId().length > 0) {
+			hasSearchValue = true;
+		}
+		
+		log.info("hasSearchValue: " + hasSearchValue);
+		
+		if(!hasSearchValue) {
+			throw new EpException(MessageConst.ERROR_716006);
+		} else {		
+			// enable or disable simple quote in search catalogue
+			setSimpleQuoteFlag(Boolean.FALSE);
+			
+			searchDataModel.reloadData();
+		}
 	}
 
 
