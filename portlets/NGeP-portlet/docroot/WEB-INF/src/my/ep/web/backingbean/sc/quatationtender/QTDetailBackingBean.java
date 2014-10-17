@@ -1663,13 +1663,14 @@ public class QTDetailBackingBean extends
 					.retriveQTApprovalDetails(reqDTO);
 			List<ScQtApproval> requiredApproval = resDTO.getApproval();
 			List<TabBean> tabBeans = new ArrayList<TabBean>();
+			List<TabBean> existingApprovalTabs = this.getManagedBean()
+					.getTabList();
 			this.getManagedBean().setToBeRemoveList(
 					getToBeRemoveApprovals(requiredApproval));
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					// qtApproval = checkIsApprovalExists(qtApproval,
-					// existingApprovalTabs);
+					qtApproval = checkIsApprovalExists(qtApproval, existingApprovalTabs);
 					if (!qtApproval.isDeleted()) {
 						qtApproval.setApprovalType(ApprovalCategory
 								.getDisplayName(qtApproval
@@ -1982,7 +1983,45 @@ public class QTDetailBackingBean extends
 							resDTO.getSampleSubmissionResultBean().get(0));
 					backingBean.retrievePmStateList();
 				}
-
+			}
+			Date publishDate = this.getManagedBean().getQt().getPublishDate();
+			Date bsvDate = null;
+			if (getManagedBean().getQt().isZonal()) {
+				List<BriefingZoneBean> briefingBeans = getManagedBean().getBriefingZoneBean();
+				if (null != briefingBeans && !briefingBeans.isEmpty()) {
+					for (BriefingZoneBean briefing : briefingBeans) {
+						briefing.getScQtBsv().getScQtBsvDtls();
+						ScQtBsv bsv = briefing.getScQtBsv();
+						for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
+							bsvDate = bsvDtl.getBsvDate();
+							this.getManagedBean().setBsvDate(bsvDate);
+							getManagedBean().getQt().setClosingDate(DateUtils.addDays(bsvDate, this.getManagedBean()
+									.getQt().getPublishPeriod()));
+						}
+					}
+				} else {
+					if (null != publishDate) {
+						getManagedBean().getQt().setClosingDate(DateUtils.addDays(getManagedBean().getQt().getPublishDate(), this.getManagedBean()
+								.getQt().getPublishPeriod()));
+					}
+				}
+			} else {
+				if (getManagedBean().getBsvDtlBean() != null) {
+					List<ScQtBsvDtl> selectedBriefList = getManagedBean().getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
+					if (selectedBriefList != null && !selectedBriefList.isEmpty()) {
+						for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
+							bsvDate = scQtBsvDtl.getBsvDate();
+							this.getManagedBean().setBsvDate(bsvDate);
+							getManagedBean().getQt().setClosingDate(DateUtils.addDays(bsvDate, this.getManagedBean()
+									.getQt().getPublishPeriod()));
+						}
+					} else {
+						if (null != publishDate) {
+							getManagedBean().getQt().setClosingDate(DateUtils.addDays(getManagedBean().getQt().getPublishDate(), this.getManagedBean()
+									.getQt().getPublishPeriod()));
+						}
+					}
+				}
 			}
 			Date clsDate = this.getManagedBean().getQt().getClosingDate();
 			if (null != clsDate) {
@@ -2695,8 +2734,10 @@ public class QTDetailBackingBean extends
 	private List<PmUser> retrievePmUserSecratryDtl() {
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		//long orgProfileId = this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
+		//userReqDTO.setOrgProfileId(orgProfileId);
 		UserResDTO resDto = userSO.retrieveUserListByRole(userReqDTO);
 		return resDto.getUserList();
 	}
@@ -2795,7 +2836,7 @@ public class QTDetailBackingBean extends
 		case 6:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 				reqDTO = prepareQTInfo();
-				detailSO.validateDeductionDtls(reqDTO);
+				//detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -2867,7 +2908,7 @@ public class QTDetailBackingBean extends
 
 		case 6:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
-				detailSO.validateDeductionDtls(prepareQTInfo());
+				//detailSO.validateDeductionDtls(prepareQTInfo());
 			}
 			break;
 
