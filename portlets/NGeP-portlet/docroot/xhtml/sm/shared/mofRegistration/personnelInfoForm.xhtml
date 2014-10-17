@@ -421,6 +421,9 @@
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
 							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.processing']}"
+								rendered="#{person.softcertFlg eq '3'}" />
+							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.requested']}"
 								rendered="#{person.softcertFlg eq '2'}" />
 							<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}"
