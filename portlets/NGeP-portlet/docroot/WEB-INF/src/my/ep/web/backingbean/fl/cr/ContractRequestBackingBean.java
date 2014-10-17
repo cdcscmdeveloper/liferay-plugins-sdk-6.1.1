@@ -493,7 +493,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			} else {
 				getManagedBean().setSelectedDelAddr(null);
 			}
-			populateItemsForSelectedAddress();
+			if(getManagedBean().getSelectedDelAddr()!=null) {
+				populateItemsForSelectedAddress();
+			}
 		}
 	}
 
