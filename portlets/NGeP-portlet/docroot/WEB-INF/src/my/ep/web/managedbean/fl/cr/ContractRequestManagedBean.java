@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -79,7 +78,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr selectedItemAddr;
 	private FlDeliveryAddress flManualAddress;
 	private List<SelectItem> supplierBranchesList;
-	private List<VCmSupplierItem> vCmSupplierItemList;
 	private List<PmUserGroup> userGroupList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
@@ -196,8 +194,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmAddressType> manualAddressList;
 	//private List<PmAddressType> addressManualTypesList;
 	private PmUser pmUser;
-	private List<FlFulfilmentItemAddr> oneOffItemAddrList;
-	private List<FlFulfilmentItemAddr> showOneOffItemAddrList;
+	private List<FlFulfilmentItemAddr> itemAddrList;
+	private List<FlFulfilmentItemAddr> showItemAddrList;
 	
 	public ContractRequestManagedBean(){
 
@@ -1712,23 +1710,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedAddrTypeList = selectedAddrTypeList;
 	}
 
-
-	/**
-	 * @return the vCmSupplierItemList
-	 */
-	public List<VCmSupplierItem> getvCmSupplierItemList() {
-		return vCmSupplierItemList;
-	}
-
-
-	/**
-	 * @param vCmSupplierItemList the vCmSupplierItemList to set
-	 */
-	public void setvCmSupplierItemList(List<VCmSupplierItem> vCmSupplierItemList) {
-		this.vCmSupplierItemList = vCmSupplierItemList;
-	}
-
-
 	/**
 	 * @return the fulfilmentRequisitioner
 	 */
@@ -2186,22 +2167,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.zonalTierMap = zonalTierMap;
 	}
 
-	public List<FlFulfilmentItemAddr> getOneOffItemAddrList() {
-		return oneOffItemAddrList;
-	}
-
-	public void setOneOffItemAddrList(List<FlFulfilmentItemAddr> oneOffItemAddrList) {
-		this.oneOffItemAddrList = oneOffItemAddrList;
-	}
-
-	public List<FlFulfilmentItemAddr> getShowOneOffItemAddrList() {
-		return showOneOffItemAddrList;
-	}
-
-	public void setShowOneOffItemAddrList(List<FlFulfilmentItemAddr> showOneOffItemAddrList) {
-		this.showOneOffItemAddrList = showOneOffItemAddrList;
-	}
-
 	/**
 	 * @return the searchItemType
 	 */
@@ -2242,6 +2207,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchItemName(String searchItemName) {
 		this.searchItemName = searchItemName;
+	}
+
+	public List<FlFulfilmentItemAddr> getItemAddrList() {
+		return itemAddrList;
+	}
+
+	public void setItemAddrList(List<FlFulfilmentItemAddr> itemAddrList) {
+		this.itemAddrList = itemAddrList;
+	}
+
+	public List<FlFulfilmentItemAddr> getShowItemAddrList() {
+		return showItemAddrList;
+	}
+
+	public void setShowItemAddrList(List<FlFulfilmentItemAddr> showItemAddrList) {
+		this.showItemAddrList = showItemAddrList;
 	}
 
 }
