@@ -34,6 +34,8 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
+import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.type.pm.RoleCode;
@@ -328,16 +330,22 @@ public class QTScheduleDetailBackingBean extends
 		ScQt scQt = this.getManagedBean().getQt();
 		Date clsDate = null;
 		if (scQt.isBsvRequired()) {
-			/*
-			 * List<ScQtBsv> bsvDetails = scQt.getScQtBriefings(); Date
-			 * briefingDate=null; if(null == bsvDetails){ //TODO Need to write
-			 * api to get higest date. briefingDate= new Date(); }else{
-			 * for(ScQtBsv bsvs : bsvDetails){ List<ScQtBsvDtl> dtls =
-			 * bsvs.getScQtBsvDtls(); for(int i=0;i<dtls.size();i++){
-			 * 
-			 * } } }
-			 */
-			clsDate = DateUtils.addDays(scQt.getPublishDate(),
+			List<ScQtBsv> bsvDetails = scQt.getScQtBriefings();
+			Date briefingDate=null;
+			if(null == bsvDetails){ 
+				//TODO Need to write api to get higest date. 
+				briefingDate= new Date();
+			} else {
+				for (ScQtBsv bsvs : bsvDetails) {
+					List<ScQtBsvDtl> dtls = bsvs.getScQtBsvDtls();
+					for (ScQtBsvDtl bsvDtl : dtls) {
+						briefingDate = bsvDtl.getBsvDate();
+					}
+					/*for(int i=0;i<dtls.size();i++){
+					}*/
+				}
+			}
+			clsDate = DateUtils.addDays(briefingDate,
 					scQt.getPublishPeriod());
 		} else {
 			clsDate = DateUtils.addDays(scQt.getPublishDate(),

@@ -38,12 +38,13 @@
 						<td><p:outputLabel value="#{lbl['lbl.so.briefdate']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td colspan="3"><p:calendar id="briefdate"
+								mindate="#{qTBriefingSiteVisitBackingBean.managedBean.today}"
 								required="#{qTBriefingSiteVisitBackingBean.managedBean.required}"
 								label="#{lbl['lbl.so.briefdate']}"
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.bsvDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-								showOn="button" /> <p:message id="briefdateMsg" for="briefdate"
-								display="icon" /></td>
+								showOn="button" readonlyInput="true" /> <p:message
+								id="briefdateMsg" for="briefdate" display="icon" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.so.location']}" /> <p:outputLabel
@@ -76,21 +77,22 @@
 						<td><p:inputText
 								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.address1}"
 								size="30" maxlength="255" /></td>
-						
-							<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
-							<td><p:selectOneMenu id="manDivison"
-									value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
-									style="width: 218px;margin-bottom: 5px;" disabled="#{!qTBriefingSiteVisitBackingBean.managedBean.stateCode}" >
-									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-									<f:selectItems var="divisionList"
-										value="#{qTBriefingSiteVisitBackingBean.managedBean.divisionList}"
-										itemValue="#{divisionList.divisionId}"
-										itemLabel="#{divisionList.divisionName}" />
-									<p:ajax event="change"
-										listener="#{qTBriefingSiteVisitBackingBean.retrievePmDistrictList}"
-										update="briefdistrict" />
-								</p:selectOneMenu></td>
-						
+
+						<td><p:outputLabel value="#{lbl['lbl.fl.division']}" /></td>
+						<td><p:selectOneMenu id="manDivison"
+								value="#{qTBriefingSiteVisitBackingBean.managedBean.qtBriefing.address.pmDivision.divisionId}"
+								style="width: 218px;margin-bottom: 5px;"
+								disabled="#{!qTBriefingSiteVisitBackingBean.managedBean.stateCode}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+								<f:selectItems var="divisionList"
+									value="#{qTBriefingSiteVisitBackingBean.managedBean.divisionList}"
+									itemValue="#{divisionList.divisionId}"
+									itemLabel="#{divisionList.divisionName}" />
+								<p:ajax event="change"
+									listener="#{qTBriefingSiteVisitBackingBean.retrievePmDistrictList}"
+									update="briefdistrict" />
+							</p:selectOneMenu></td>
+
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
