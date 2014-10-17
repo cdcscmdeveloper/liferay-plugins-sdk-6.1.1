@@ -10,12 +10,12 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" />
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" />
 		<p:panel header="#{lbl['lbl.sm.catcode.delete.cancel.header']}"
 			toggleable="true" id="catDelPan">
 			<p:dataTable var="catBean" id="delCatDT"
-				value="#{deleteCategoryCodeBB.managedBean.smAppl.smSupplierCategories}"
+				value="#{deleteCategoryCodeBB.managedBean.activeCategoryList}"
 				selection="#{deleteCategoryCodeBB.managedBean.selectedCategories}"
 				rowKey="#{catBean}" rowIndexVar="index">
 				<p:ajax event="toggleSelect"
@@ -63,18 +63,23 @@
 				</p:column>
 
 				<p:column>
-					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}" rendered="#{!catBean.specialCategory}" />
-					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}" rendered="#{catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+						rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+						rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column>
 					<p:inputTextarea cols="30" rendered="#{catBean.selected}"
-						value="#{catBean.remarks}" />
+						label="Remarks for selected record NO. - #{index+1}" id="delRmrks"
+						value="#{catBean.remarks}"  />
+					<p:message id="delRmrksMsg" for="delRmrks" showSummary="true"
+						showDetail="false" display="icon" />
 				</p:column>
 			</p:dataTable>
 			<br />
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}" disabled="true"
-					readonly="true"
+				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}"
+					disabled="true" readonly="true"
 					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() == 0}" />
 				<p:commandButton value="#{lbl['lbl.sm.catCodes.delete']}"
 					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() != 0}"
@@ -86,8 +91,8 @@
 			header="#{lbl['lbl.sm.catcode.delete.header']}" severity="alert"
 			widgetVar="confirmation">
 
-			<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}" update=":form:catDelPan"
-				oncomplete="confirmation.hide()" 
+			<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"
+				update=":form:catDelPan" oncomplete="confirmation.hide()"
 				action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
 			<p:commandButton id="decline" value="#{lbl['lbl.btn.no']}"
 				onclick="confirmation.hide()" type="button" />
