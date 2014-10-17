@@ -630,56 +630,60 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
 				saveOrUpdateAppl();
-			}
-			// else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-			// SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
-			// && (getManagedBean().isPoUser() || getManagedBean()
-			// .isApproverUser())) {
-			// saveOrUpdateAppl();
-			// }
-			else {
+			} else {
 				valid = retriveLatestApplAfterUpdate(currentPageType,
 						outputPageType);
 			}
 
 			mofRegistrationSO = null;
-			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
-					&& getManagedBean().isSupplierUser()) {
-				assignApplicationSupportingDocs();
-			}
+			if (getManagedBean().getCurrentPageType() != null) {
 
-			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
-				calcPersonnelListCount();
-			}
-			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
-				SmApplicationUtil.assignActiveCategoryList(getManagedBean());
-				if (getManagedBean().getSmAppl().getApplCategoryType()
-						.equalsIgnoreCase("N")) {
-					getManagedBean()
-							.setCatTypeConfirm(
-									"NOTE :  'Normal' categories can only be added in this applicaiton");
-				} else {
-					getManagedBean()
-							.setCatTypeConfirm(
-									"NOTE :  'Special' categories can only be added in this applicaiton");
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
+					if (getManagedBean().isSupplierUser()) {
+						assignApplicationSupportingDocs();
+					}
+					if (getManagedBean().isPoUser()
+							|| getManagedBean().isApproverUser() && !valid) {
+						saveOrUpdateAppl();
+					}
 				}
-			}
 
-			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
-					&& valid) {
-				log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
-				calculateCapital();
-			}
-			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
-					SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
-					|| getManagedBean().getCurrentPageType().equalsIgnoreCase(
-							SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
-				calcPersonnelListCount();
-				calculateBumiPercentageTotals();
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
+					calcPersonnelListCount();
+				}
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+					SmApplicationUtil
+							.assignActiveCategoryList(getManagedBean());
+					if (getManagedBean().getSmAppl().getApplCategoryType()
+							.equalsIgnoreCase("N")) {
+						getManagedBean()
+								.setCatTypeConfirm(
+										"NOTE :  'Normal' categories can only be added in this applicaiton");
+					} else {
+						getManagedBean()
+								.setCatTypeConfirm(
+										"NOTE :  'Special' categories can only be added in this applicaiton");
+					}
+				}
+
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
+						&& valid) {
+					log.info("*********OUPUT IS CAPITAL PAGE Values is capital *******");
+					calculateCapital();
+				}
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)
+						|| getManagedBean()
+								.getCurrentPageType()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)) {
+					calcPersonnelListCount();
+					calculateBumiPercentageTotals();
+				}
 			}
 			assignValReqdToFalse();
 		}
@@ -3589,6 +3593,9 @@ public class SmApplicationBackingBean extends
 
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode("O");
+			}
+			if (!bpmAppl.isActiveAppl()) {
+				bpmAppl.setActiveAppl(true);
 			}
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT);
