@@ -388,6 +388,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private boolean required = false;
 	private List<ScQtBsvAttendance> briefingAttendanceList;
 	private ScQtBsvAttendance scQtBriefingAttendance;
+	
+	private Date  today = new Date();
 
 	// Schedule & Contact Information
 	private List<ScQtContactPerson> pmuserContactpersonList;
@@ -2711,6 +2713,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setStateCode(boolean stateCode) {
 		this.stateCode = stateCode;
+	}
+
+	public Date getToday() {
+		return today;
+	}
+
+	public void setToday(Date today) {
+		this.today = today;
 	}
 
 }
