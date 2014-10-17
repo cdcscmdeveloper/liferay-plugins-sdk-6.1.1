@@ -35,11 +35,15 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" /></td>
-				<td colspan="3"><p:inputTextarea rows="3" cols="30"
-						style="margin-bottom:5px;"
-						value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
-						readonly="true" disabled="true" /></td>
+				<ui:fragment
+					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
+					<td><h:outputLabel
+							value=" #{lbl['lbl.sc.spec.justification']}" /></td>
+					<td colspan="3"><p:inputTextarea rows="3" cols="30"
+							style="margin-bottom:5px;"
+							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
+							readonly="true" disabled="true" /></td>
+				</ui:fragment>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="Quotation/Tender Type" /></td>
