@@ -83,8 +83,8 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 	}
 	
 	public void handleException(Throwable exception) {
-		// exception.printStackTrace();
-		log.error(exception.getMessage(), exception);
+		exception.printStackTrace();
+		//log.error(exception.getMessage(), exception);
 		
 		Locale userLocale = new FacesScopes().getUserLocale();
 		String msgCode = MessageConst.ERROR_000001;
