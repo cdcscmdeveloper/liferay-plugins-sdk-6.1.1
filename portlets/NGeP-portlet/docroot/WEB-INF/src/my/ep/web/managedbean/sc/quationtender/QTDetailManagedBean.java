@@ -404,6 +404,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtContactPerson> selectedContactPersons;	
 	private Date proposalValidityUntil;
 	private Date closingDate;
+	private Date bsvDate;
 
 	// Document
 	private ScQtCheckList scQtChecklist;
@@ -2721,6 +2722,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setToday(Date today) {
 		this.today = today;
+	}
+
+	public Date getBsvDate() {
+		return bsvDate;
+	}
+
+	public void setBsvDate(Date bsvDate) {
+		this.bsvDate = bsvDate;
 	}
 
 }
