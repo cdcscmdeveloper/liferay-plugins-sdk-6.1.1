@@ -567,7 +567,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			}
 			briefingZoneBean.setSitevisitList(siteVisitDetails);
 		} else {
-			throw new EpException(MessageConst.ERROR_760098);
+			throw new EpException(MessageConst.ERROR_760121);
 		}
 		briefingZoneBean.setSelectedBriefingDtls(null);
 		briefingZoneBean.setSelectedSiteVisitDtls(null);
