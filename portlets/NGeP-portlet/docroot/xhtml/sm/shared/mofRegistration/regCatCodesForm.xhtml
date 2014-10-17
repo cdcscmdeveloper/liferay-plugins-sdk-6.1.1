@@ -301,7 +301,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierParentCatList}"
-								var="parent" itemLabel="#{parent.categoryName}"
+								var="parent"
+								itemLabel="#{parent.categoryL1Code} - #{parent.categoryName}"
 								itemValue="#{parent.categoryL1Id}" />
 							<p:ajax event="change"
 								listener="#{backingBean.populateChildCategoryByParent(backingBean.managedBean.selectedCategory.pmCategoryL1.categoryL1Id,
@@ -324,7 +325,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierChildCatList}"
-								var="child" itemLabel="#{child.categoryName}"
+								var="child"
+								itemLabel="#{child.categoryL2Code} - #{child.categoryName}"
 								itemValue="#{child.categoryL2Id}" />
 							<p:ajax event="change"
 								listener="#{backingBean.populateSubChildCategoryByChild(backingBean.managedBean.selectedCategory.pmCategoryL2.categoryL2Id,backingBean.managedBean.selectedCategory.pmCategoryL3)}"
@@ -343,7 +345,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 								value="#{backingBean.managedBean.supplierSubChildCatList}"
-								var="subChild" itemLabel="#{subChild.categoryName}"
+								var="subChild"
+								itemLabel="#{subChild.categoryL3Code} - #{subChild.categoryName}"
 								itemValue="#{subChild.categoryL3Id}" />
 						</p:selectOneMenu> <p:message id="subChildMsg" for="subChild" showSummary="true"
 							showDetail="false" display="icon" /></td>
