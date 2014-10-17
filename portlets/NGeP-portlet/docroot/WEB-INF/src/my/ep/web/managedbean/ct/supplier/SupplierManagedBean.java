@@ -80,6 +80,11 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, PmUser> userMap;
 	
+	private SelectItem[] contractSupplierLoa;
+	private SelectItem[] listOfFinancialOrg;
+	
+	 private SelectItem[] populateContractList;
+	
 	public SupplierManagedBean(){
 		
 	}
@@ -381,5 +386,29 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	public void setUserMap(Map<String, PmUser> userMap) {
 		this.userMap = userMap;
+	}
+
+	public SelectItem[] getContractSupplierLoa() {
+		return contractSupplierLoa;
+	}
+
+	public void setContractSupplierLoa(SelectItem[] contractSupplierLoa) {
+		this.contractSupplierLoa = contractSupplierLoa;
+	}
+
+	public SelectItem[] getListOfFinancialOrg() {
+		return listOfFinancialOrg;
+	}
+
+	public void setListOfFinancialOrg(SelectItem[] listOfFinancialOrg) {
+		this.listOfFinancialOrg = listOfFinancialOrg;
+	}
+
+	public SelectItem[] getPopulateContractList() {
+		return populateContractList;
+	}
+
+	public void setPopulateContractList(SelectItem[] populateContractList) {
+		this.populateContractList = populateContractList;
 	}
 }
