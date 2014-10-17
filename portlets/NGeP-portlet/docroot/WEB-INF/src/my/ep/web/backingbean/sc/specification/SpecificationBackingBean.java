@@ -564,8 +564,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setScQtCheckSt2financeProposalList(
 				new ArrayList<ScQtCheckList>());
 		if (this.getManagedBean().isReadOnly()) {
-			throw new EpException(
-					"Business Owner (BO) with consolidate have to enter data for General and Supplier Qualification Criteria");
+			throw new EpException(MessageConst.ERROR_760135);
 
 		}
 
@@ -651,7 +650,7 @@ public class SpecificationBackingBean extends
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			PmStatus status = new PmStatus();
 			status.setStatusId(62651L);
-			remark.setPmStatus(status);
+			// remark.setPmStatus(status);
 			this.getManagedBean().setContractremark(remark);
 
 			return "searchCircularPanelContract.xhtml?faces-redirect=true";
@@ -927,6 +926,16 @@ public class SpecificationBackingBean extends
 
 		switch (previousIndex) {
 		case 0:
+			if (this.getManagedBean().isReadOnly()) {
+				if ((null != this.getManagedBean().getScQt()
+						.getFulfilmentType() && null == this.getManagedBean()
+						.getScQt().getFulfilmentType().getParameterId())
+						|| (null == this.getManagedBean().getScQt()
+								.getContractDuration())) {
+					throw new EpException(MessageConst.ERROR_760134);
+
+				}
+			}
 			specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
 			specSo.validateSpecCommitteGeneralInfo(specReqDTO);
 
@@ -2177,22 +2186,18 @@ public class SpecificationBackingBean extends
 					// ScQtCheckList schecklist = specChecklist.get(0);
 				if (null != specChecklist && specChecklist.size() > 0) {
 
-					if (specChecklist.size() > 1) {
+					Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
 
-						Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
-
-						for (ScQtCheckList checklistlocal : specChecklist) {
-							map.put(checklistlocal.getQtScoreWeightage()
-									.getQtScoreWeightageId(), checklistlocal
-									.getQtScoreWeightage());
-						}
-						List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
-								map.values());
-						for (ScQtScoreWeightage weightage : list) {
-							financialWeightageScore = financialWeightageScore
-									+ weightage.getScore().intValue();
-						}
-
+					for (ScQtCheckList checklistlocal : specChecklist) {
+						map.put(checklistlocal.getQtScoreWeightage()
+								.getQtScoreWeightageId(), checklistlocal
+								.getQtScoreWeightage());
+					}
+					List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
+							map.values());
+					for (ScQtScoreWeightage weightage : list) {
+						financialWeightageScore = financialWeightageScore
+								+ weightage.getScore().intValue();
 					}
 
 					ScQtCheckList tmpCheckList = new ScQtCheckList();
@@ -8037,20 +8042,13 @@ public class SpecificationBackingBean extends
 
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
-			} else if (null != this.getManagedBean().getScQt()
-					.getFulfilmentType()
-					&& null != this.getManagedBean().getScQt()
-							.getFulfilmentType().getParameterId()) {
-
-				// loadPrepareSpecCommitteeDetails(quotationTenderDataType
-				// .getQtId().longValue(), getDocTypeByTaskName(taskName));
-
 			}
 
 			if (isDigiSigningRequired(RoleCode.SC_SECRETARY.value())) {
 				this.getManagedBean().setReadOnly(false);
 
 			} else {
+
 				this.getManagedBean().setReadOnly(true);
 			}
 			fc.getApplication()
