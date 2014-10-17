@@ -1459,7 +1459,7 @@ public void ConstructSideTabMenu(){
 		
 		for(int i=0; i<selectedPmOrgProfile.length; i++) {
 			CtAgency ctAgency = new CtAgency();
-			ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+			ctAgency.setEffDate(new Date());
 			ctAgency.setExpDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 			ctAgency.setCeilingAmount(new BigDecimal(0));
 			
@@ -2274,4 +2274,8 @@ public void ConstructSideTabMenu(){
     public List<CtContractItem> getContractItemServiceList() {
 		return ContractItemServiceList;
 	}
+    
+    public Date getCurrentDate() {
+        return new Date();
+    }
 }

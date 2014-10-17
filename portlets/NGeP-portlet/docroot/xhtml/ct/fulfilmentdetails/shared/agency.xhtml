@@ -50,8 +50,12 @@
 		   	 </p:column>
 		   
 		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
-				<h:outputText value="#{agencyData.effDate}">
-				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+			  	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"
+		             showOn="button" readonlyInput="true" navigator="true"
+		             mindate="#{contractDetailsBackingBean.currentDate}" 
+		             maxdate="#{agencyData.expDate}"			             
+		             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		       	</p:calendar>
 		   	 </p:column>
 		   	
 		   	 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;">
