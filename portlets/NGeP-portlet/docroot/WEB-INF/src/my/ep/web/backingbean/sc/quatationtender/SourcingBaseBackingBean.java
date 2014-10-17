@@ -841,7 +841,6 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		}
 
-
 	}
 
 	/**
@@ -869,6 +868,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			} else {
 				throw new EpException(MessageConst.ERROR_760133);
 			}
+		} else {
+			qtCategory.setPmCategoryL2(new PmCategoryL2());
 		}
 
 	}
