@@ -12,4 +12,5 @@ public class BpmOutcomeConst {
 	public static final String BPM_CANCEL = "CANCEL";
 	public static final String BPM_REMOVE_FACTORING = "REMOVE FACTORING";
 	public static final String BPM_STOP_FULFILMENT = "STOP FULFILMENT";
+	public static final String BPM_VIEW = "VIEW";
 }

@@ -34,6 +34,7 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	private String docType;
 	private String docNo;
 	private boolean docMaintainRemarks = false;
+	private boolean hideRemarks = false;
 	
 	private int attachedFileIndex;
 	
@@ -131,6 +132,20 @@ public class FulfilmentManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachedFileIndex(int attachedFileIndex) {
 		this.attachedFileIndex = attachedFileIndex;
+	}
+
+	/**
+	 * @return the hideRemarks
+	 */
+	public boolean isHideRemarks() {
+		return hideRemarks;
+	}
+
+	/**
+	 * @param hideRemarks the hideRemarks to set
+	 */
+	public void setHideRemarks(boolean hideRemarks) {
+		this.hideRemarks = hideRemarks;
 	}
 	
 }
