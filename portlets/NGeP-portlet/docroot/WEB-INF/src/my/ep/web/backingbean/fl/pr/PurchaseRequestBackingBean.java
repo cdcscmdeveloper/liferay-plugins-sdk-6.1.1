@@ -1153,7 +1153,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					if(flDeliveryAddress!=getManagedBean().getSelectedDelAddr()) {
 						for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()) {
 							if(itemAddr.getScRequestItem().getRequestNoteItemId().longValue()==flItemAddr.getScRequestItem().getRequestNoteItemId().longValue() 
-								&& itemAddr.getUnitPrice().doubleValue()==flItemAddr.getUnitPrice().doubleValue()
+								// && itemAddr.getUnitPrice().doubleValue()==flItemAddr.getUnitPrice().doubleValue()
 								&& itemAddr.getPmVotFund()!=null) {
 								flItemAddr.setPmVotFund(itemAddr.getPmVotFund());
 								flItemAddr.setPmPrgActivity(itemAddr.getPmPrgActivity());

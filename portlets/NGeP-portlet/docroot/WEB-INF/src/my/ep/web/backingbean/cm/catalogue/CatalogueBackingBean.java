@@ -6832,8 +6832,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						themeDisplay.getLayout().getGroup().getFriendlyURL())
 						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
 								.length());
-		ContractRequestBackingBean crBB = new ContractRequestBackingBean();
-		crBB.getManagedBean().setvCmSupplierItemList(getManagedBean().getCtRequestList());
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
