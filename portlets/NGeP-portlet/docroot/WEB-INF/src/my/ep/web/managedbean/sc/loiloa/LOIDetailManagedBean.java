@@ -34,7 +34,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.web.backingbean.sc.loa.SuppLoiLoaBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -134,6 +133,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScQt scQt;
 	private List<ScLoiSupportingDoc> selectedScLoiSuppDocs;
 	private ScLoiSupportingDoc selectedScLoiSuppDoc;
+	
+	private List<ScQtRecommend> recommendList;
+	private List<ScQtRecommend> selectedRecommendList;
 	
 	/**
 	 * @return the scQtEvaluationResult
@@ -1078,6 +1080,35 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedScLoiSuppDocs(List<ScLoiSupportingDoc> selectedScLoiSuppDocs) {
 		this.selectedScLoiSuppDocs = selectedScLoiSuppDocs;
+	}
+
+	
+	/**
+	 * @return the recommendList
+	 */
+	public List<ScQtRecommend> getRecommendList() {
+		return recommendList;
+	}
+
+	/**
+	 * @param recommendList the recommendList to set
+	 */
+	public void setRecommendList(List<ScQtRecommend> recommendList) {
+		this.recommendList = recommendList;
+	}
+
+	/**
+	 * @return the selectedRecommendList
+	 */
+	public List<ScQtRecommend> getSelectedRecommendList() {
+		return selectedRecommendList;
+	}
+
+	/**
+	 * @param selectedRecommendList the selectedRecommendList to set
+	 */
+	public void setSelectedRecommendList(List<ScQtRecommend> selectedRecommendList) {
+		this.selectedRecommendList = selectedRecommendList;
 	}
 
 	

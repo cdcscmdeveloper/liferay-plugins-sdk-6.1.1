@@ -8,4 +8,239 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	
+	<p:panel header="#{lbl['lbl.sc.recommendation']}" toggleable="true">
+		
+		<p:dataTable id="recommendTbl" var="item"
+			value="#{lOIDetailBackingBean.managedBean.recommendList}"
+			rows="10"
+			selection="#{lOIDetailBackingBean.managedBean.selectedRecommendList}"
+			rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
+			<ac:paginator for="itemListTbl" />
+			
+			<p:column selectionQTDetailBackingBean.javaQTDetailBackingBean.javaMode="multiple" style="width:2%" /> 
+			<p:column headerText="#{lbl['lbl.sc.item']}">
+				<h:outputText value="#{item.requestItem.itemName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
+				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.recommendDtls}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							
+							<p:column>
+								<p:commandLink update="@([id$=suppDtlPopUp])"
+									action="#{lOIDetailBackingBean.supplier}"
+									oncomplete="suppDtlWidgetVar.show();">
+									<f:setPropertyActionListener value="#{supplier}" target="#{lOIDetailBackingBean.managedBean.shortlistedSupplier}" />
+									<h:outputText value="#{supplier.scQtProposal.scQtSupplier.smSupplier.companyName}" />
+								</p:commandLink>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<p:selectOneMenu id="#{rowIndex}_awardSupplier" value="#{lOIDetailBackingBean.managedBean.awardSupplier}"
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems value="#{lOIDetailBackingBean.getAwardSupplierListDropDown()}" />
+					<p:ajax event="change" listener="#{lOIDetailBackingBean.selectSupplierDropDownEvent}" process="@this" />
+	   			</p:selectOneMenu>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.proposal.id']}">
+				<p:outputPanel id="#{rowIndex}_selectedSupplierListTbl1" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							<p:column>
+								<h:outputText value="#{supplier.scQtProposal.proposalNo}" />
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.bumi.status']}">
+				<p:outputPanel id="#{rowIndex}_selectedSupplierListTbl2" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							<p:column>
+								<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, supplier.scQtProposal.scQtSupplier.smSupplier.bumi)}" />
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<h:outputText value="#{item.awardSupplierList}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.price.type']}">
+				<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}">
+				<p:outputPanel id="#{rowIndex}_selectedSupplierListTbl3" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							<p:column>
+								<h:outputText value="#{supplier.scQtProposal.proposalAmount.proposalAmt}">
+									<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+								</h:outputText>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<h:outputText value="#{supplier.scQtProposal.proposalAmount.proposalAmt}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}">
+				<p:outputPanel id="#{rowIndex}_selectedSupplierListTbl4" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							<p:column>
+								<h:outputText value="#{supplier.evaluationResultDtls[0].totalScore}">
+									<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+								</h:outputText>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<h:outputText value="#{supplier.evaluationResultDtls[0].totalScore}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+				<p:outputPanel id="#{rowIndex}_selectedSupplierListTbl5" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-noborder">
+						<p:dataList   
+							var="supplier"
+							value="#{item.awardSupplierList}" >
+							<p:column>
+								<h:outputText value="#{supplier.evaluationResultDtls[0].evalRank}">
+									<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+								</h:outputText>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<h:outputText value="#{supplier.evaluationResultDtls[0].evalRank}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+				<p:outputPanel id="#{rowIndex}_quantityListTbl"  
+						rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+								and item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<div class="datalist-quantity">
+						<p:dataList 
+							var="qty"
+							value="#{item.awardSupplierList}">
+							<p:column>
+								<h:inputText value="#{qty.qtyAward}" maxlength="6" size="10"/>
+							</p:column>
+						</p:dataList>
+					</div>
+				</p:outputPanel>
+				
+				<h:outputText value="#{item.requestItem.quantity}" 
+					rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+							and item.recommendByStr != ParameterConst.recommendByMultipleAward}"/>
+			</p:column>
+		</p:dataTable>
+		
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
+			columnClasses="columnWidth20">
+			
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu id="awardSupplier" value="#{lOIDetailBackingBean.managedBean.awardSupplier}">
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+					<f:selectItems value="#{lOIDetailBackingBean.getAwardSupplierListDropDown()}" />
+					<p:ajax event="change" listener="#{lOIDetailBackingBean.selectSupplierDropDownEvent}" process="@this" />
+	   			</p:selectOneMenu>
+				
+				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
+					process="@this"
+					partialSubmit="true"
+					action="#{lOIDetailBackingBean.awardSupplierEvent}" 
+					icon="ui-icon-check" 
+					update="@([id$=itemListTbl],[id$=supplierListTblMultiple])"/>
+			</h:column>
+			
+		</h:panelGrid>
+	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<table style="width: 100%" id="remarkslist">
+			<tr>
+				<td class="TableFieldLeft" style="width: 96px;">
+					<p:outputLabel value="#{lbl['lbl.sc.remark']}" />
+				</td>
+				
+				<td class="TableFieldRight">
+					<p:dataGrid var="remarkVar" value="#{lOIDetailBackingBean.managedBean.qtCommitteeRemarks}"
+						rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" valign="top">
+									<h:graphicImage height="30"
+										value="#{lOIDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										width="30" />
+								</td>
+								<td width="5"></td>
+								<td>
+									<h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<p:inputTextarea cols="40" value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId eq null}" /> 
+									<h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid>
+				</td>
+			</tr>
+		</table>
+	</p:panel>
+	
 </ui:composition>
