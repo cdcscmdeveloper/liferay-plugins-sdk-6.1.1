@@ -17,7 +17,7 @@
 
 				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
 						required="#{backingBean.managedBean.valueReqd}"
-						label="Rejection Reason(s)"
+						label="#{lbl['lbl.sm.rejection.reasons']}"
 						value="#{backingBean.managedBean.reasonId}"
 						style="height:200px;width:400px;">
 						<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
