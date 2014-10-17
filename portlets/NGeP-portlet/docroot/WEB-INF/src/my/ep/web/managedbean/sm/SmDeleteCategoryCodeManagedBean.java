@@ -29,6 +29,8 @@ public class SmDeleteCategoryCodeManagedBean extends BaseManagedBean {
 	private String deleteConfirmMsg;
 
 	private boolean termsAccepted;
+	
+	private List<SmSupplierCategory> activeCategoryList;
 
 	public SmDeleteCategoryCodeManagedBean() {
 		smSupplier = new SmSupplier();
@@ -117,6 +119,14 @@ public class SmDeleteCategoryCodeManagedBean extends BaseManagedBean {
 
 	public void setTermsAccepted(boolean termsAccepted) {
 		this.termsAccepted = termsAccepted;
+	}
+
+	public List<SmSupplierCategory> getActiveCategoryList() {
+		return activeCategoryList;
+	}
+
+	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
+		this.activeCategoryList = activeCategoryList;
 	}
 
 }

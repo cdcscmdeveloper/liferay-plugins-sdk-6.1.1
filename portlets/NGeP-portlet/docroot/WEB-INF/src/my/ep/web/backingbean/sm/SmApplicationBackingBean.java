@@ -630,7 +630,14 @@ public class SmApplicationBackingBean extends
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
 				saveOrUpdateAppl();
-			} else {
+			}
+			// else if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+			// SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)
+			// && (getManagedBean().isPoUser() || getManagedBean()
+			// .isApproverUser())) {
+			// saveOrUpdateAppl();
+			// }
+			else {
 				valid = retriveLatestApplAfterUpdate(currentPageType,
 						outputPageType);
 			}
@@ -641,22 +648,26 @@ public class SmApplicationBackingBean extends
 					&& getManagedBean().isSupplierUser()) {
 				assignApplicationSupportingDocs();
 			}
+
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 				calcPersonnelListCount();
 			}
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY)) {
+				SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 				if (getManagedBean().getSmAppl().getApplCategoryType()
-						.equalsIgnoreCase("N"))
+						.equalsIgnoreCase("N")) {
 					getManagedBean()
 							.setCatTypeConfirm(
 									"NOTE :  'Normal' categories can only be added in this applicaiton");
-			} else {
-				getManagedBean()
-						.setCatTypeConfirm(
-								"NOTE :  'Special' categories can only be added in this applicaiton");
+				} else {
+					getManagedBean()
+							.setCatTypeConfirm(
+									"NOTE :  'Special' categories can only be added in this applicaiton");
+				}
 			}
+
 			if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& valid) {
@@ -876,6 +887,12 @@ public class SmApplicationBackingBean extends
 			validSave = SmApplicationUtil.validateCategoriesBeforeSave(
 					validSave, getManagedBean(), currentTab);
 			break;
+		case SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS:
+			if (getManagedBean().isPoUser()
+					|| getManagedBean().isApproverUser()) {
+				validSave = SmApplicationUtil.checkSupportDocsValidity(
+						validSave, getManagedBean(), currentTab);
+			}
 
 		default:
 			log.info("****** Not a defined page ***********");
@@ -1090,7 +1107,7 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(0);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
-		} else if(getManagedBean().getSelectedShareHolder().getSoftcertFlg() != 1){
+		} else if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() != 1) {
 			getManagedBean().getSelectedShareHolder().setSoftcertFlg(2);
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
 		}
@@ -1106,6 +1123,10 @@ public class SmApplicationBackingBean extends
 					getManagedBean().getSmAppl().getSupplierType(),
 					getManagedBean().getBusinessTypeVal());
 		}
+	}
+
+	public void assignDocVerified(AjaxBehaviorEvent e) {
+		System.out.println(" *******Docs verified******88");
 	}
 
 	public void assignApplnCategoryType() {
@@ -1959,6 +1980,10 @@ public class SmApplicationBackingBean extends
 							.equals(getManagedBean().getSelectedCategory()
 									.getPmCategoryL3().getCategoryL3Id())) {
 				validCat = false;
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
+					throw new EpException(MessageConst.ERROR_722563);
+				}
 				throw new EpException(MessageConst.ERROR_722533);
 			}
 		}
@@ -2009,6 +2034,7 @@ public class SmApplicationBackingBean extends
 						.execute(
 								"smCatCodesRenewApplDtWidVar.paginator.endLink.click()");
 			}
+			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 			assignValReqdToFalse();
 			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
@@ -2799,7 +2825,20 @@ public class SmApplicationBackingBean extends
 		role = new SelectItem();
 		role.setLabel("Catalogue User");
 		role.setValue(RoleCode.CM_USER.value());
-		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) // added this condition because do not want to show catalogue user for consultant
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)) // added
+																				// this
+																				// condition
+																				// because
+																				// do
+																				// not
+																				// want
+																				// to
+																				// show
+																				// catalogue
+																				// user
+																				// for
+																				// consultant
 			roles.add(role);
 		getManagedBean().setePRoleList(roles);
 	}
@@ -4092,13 +4131,20 @@ public class SmApplicationBackingBean extends
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_REPLY_INQUIRY_BY_PROCESSING_OFFICER);
 			}
 			if (res.equalsIgnoreCase("Reject")) {
-				setSmApplRejectionReasons();
+
 				if (getManagedBean().isPoUser()) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER);
 				} else if (getManagedBean().isApproverUser()) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER);
 				}
-				reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
+				if (!getManagedBean()
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(
+								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					setSmApplRejectionReasons();
+					reqDTO.setRejectionReasons(getManagedBean().getReasonDesc());
+				}
 			}
 			if (res.equalsIgnoreCase("Approve")) {
 				if (getManagedBean()
@@ -4108,7 +4154,17 @@ public class SmApplicationBackingBean extends
 								ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					setApplPmStatus(SupplierManagementConst.PM_STATUS_APPROVED_BY_APPROVER);
 				} else {
-					if (pmStatId != null) {
+					if (pmStatId != null
+							&& !getManagedBean()
+									.getSmAppl()
+									.getApplType()
+									.equalsIgnoreCase(
+											ParameterConst.NEW_SM_APPLN_FOR_UPDATE)
+							&& !getManagedBean()
+									.getSmAppl()
+									.getApplType()
+									.equalsIgnoreCase(
+											ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)) {
 						for (PmStatusDesc desc : getManagedBean()
 								.getRegStatusDescList()) {
 							if (pmStatId.equals(desc.getPmStatus()
@@ -4526,8 +4582,8 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getSmAppl().getSupplierType());
 		log.info("** getApplCategoryType type ***"
 				+ getManagedBean().getSmAppl().getApplCategoryType());
-		// reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
-		// .getSupplierType());
+		reqDTO.setSupplierTypeCode(getManagedBean().getSmAppl()
+				.getSupplierType());
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			reqDTO.setIsSpecialCategory(false);
 		} else {

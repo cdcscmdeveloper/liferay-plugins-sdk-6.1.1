@@ -267,8 +267,9 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
-	
-	public static String getReviewApplicationSupplierBasePage(String applicationType) {
+
+	public static String getReviewApplicationSupplierBasePage(
+			String applicationType) {
 		String basePage = "";
 		if (applicationType != null) {
 			switch (applicationType) {
@@ -293,8 +294,9 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
-	
-	public static String getReviewApplicationSupplierProfileBasePage(String applicationType) {
+
+	public static String getReviewApplicationSupplierProfileBasePage(
+			String applicationType) {
 		String basePage = "";
 		if (applicationType != null) {
 			switch (applicationType) {
@@ -319,7 +321,6 @@ public class SmApplicationUtil {
 		}
 		return basePage;
 	}
-	
 
 	public static StatusResDTO setApplPmStatus(String statusId) {
 		StatusReqDTO reqDTO = new StatusReqDTO();
@@ -1412,6 +1413,47 @@ public class SmApplicationUtil {
 			}
 		}
 
+	}
+
+	public static boolean checkSupportDocsValidity(boolean validSave,
+			SmApplicationManagedBean managedBean, int currentTab) {
+		validSave = true;
+		int i = 0;
+		StringBuffer sb = new StringBuffer();
+		for (SmApplSupportDoc doc : managedBean.getSmAppl()
+				.getSmApplSupportDocs()) {
+			if (doc.getVerifiedFlg() == null) {
+				validSave = false;
+				sb.append("<br/>").append(++i).append(".)")
+						.append(doc.getPmDocument().getDocName());
+			}
+		}
+		if (!validSave) {
+			validSave = false;
+			setNavigationBackToCurrentPage(currentTab, managedBean);
+			throw new EpException(MessageConst.ERROR_722562,
+					new String[] { sb.toString() });
+		}
+		return validSave;
+	}
+
+	public static void assignActiveCategoryList(
+			SmApplicationManagedBean managedBean) {
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		for (SmSupplierCategory cat : managedBean.getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0
+					|| cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				catList.add(cat);
+			}
+		}
+		if (managedBean.getActiveCategoryList() != null
+				&& !managedBean.getActiveCategoryList().isEmpty()) {
+			managedBean.getActiveCategoryList().clear();
+		}
+		managedBean.setActiveCategoryList(catList);
 	}
 
 	private static SmStaffTotal setDefaultStaffValues(SmStaffTotal stf,
