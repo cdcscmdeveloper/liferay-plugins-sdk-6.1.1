@@ -14,14 +14,14 @@
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 139px"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractPhysicalNo}"/></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.contractPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ap59.physical.contr.no']}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/></td>
 			<td><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.loa.no']}" /></td>
-				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/></td>
+				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.loaPhysicalNo}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.loa']}"/></td>
 			</tr>
 			<tr>
 				<td style="width: 139px"><p:outputLabel
@@ -52,7 +52,7 @@
 				<td style="width: 139px"><p:outputLabel
 						value="#{lbl['lbl.fl.ptj.name']}" /></td>
 				<td><p:inputText size="50" disabled="true" value="#{invoiceBackingBean.managedBean.invoice.flRequest.issuedOrgProfile.pmOrgValidity.orgName}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.order.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.order.amt']}" /></td>
 				<td><p:inputText size="40" disabled="true" value="#{invoiceBackingBean.managedBean.sumOrderedAmt}"/></td>
 			</tr>
 			<tr>
@@ -80,7 +80,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.service.fee']}" /></td>
 				<td><p:inputText size="35"
 						value="#{invoiceBackingBean.managedBean.serviceCharge}"
-						disabled="true" style="text-align:right" /></td>
+						disabled="true" style="text-align:right" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.service.fee']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ap59.fee.amount']}" /></td>
