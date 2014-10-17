@@ -11,17 +11,24 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
-						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
-						id="noticePublish" required="true" readonlyInput="true"
-						pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button">
-
-						<p:ajax event="dateSelect" process="@this"
-							listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
-							update="proposalvalidityid, closingDate" />
-
-					</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
-						id="noticePublishMsg" for="noticePublish" display="icon" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:calendar label="#{lbl['lbl.so.noticepublish']}"
+									value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
+									id="noticePublish" required="true" readonlyInput="true"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									showOn="button"
+									maxdate="#{qTScheduleDetailBackingBean.managedBean.today}">
+									<p:ajax event="dateSelect" process="@this"
+										listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
+										update="proposalvalidityid, closingDate" />
+								</p:calendar> <h:inputText value="12:00PM" disabled="true" size="06" /></td>
+							<td><p:message id="noticePublishMsg" for="noticePublish"
+									display="icon" /></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.so.publsihperiod']}" /></td>
@@ -46,15 +53,22 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.so.sampleclosingdate']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
-							value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
-							id="sampleclsdate" required="true"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
-						<h:inputText value="12:00PM" disabled="true" size="06" /> <p:message
-							id="sampledate" for="sampleclsdate" display="icon" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:calendar label="#{lbl['lbl.so.sampleclosingdate']}"
+										value="#{qTScheduleDetailBackingBean.managedBean.qt.sampleClosingDate}"
+										id="sampleclsdate" required="true"
+										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+										showOn="button" /> <h:inputText value="12:00PM"
+										disabled="true" size="06" /></td>
+								<td><p:message id="sampledate" for="sampleclsdate"
+										display="icon" /></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 			</c:if>
-
 			<tr>
 				<td style="width: 204px;"><p:outputLabel
 						value="#{lbl['lbl.so.expectloadate']}" /></td>
