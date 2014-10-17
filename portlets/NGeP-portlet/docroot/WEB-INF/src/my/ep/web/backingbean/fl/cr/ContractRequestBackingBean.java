@@ -492,6 +492,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
 			} else {
 				getManagedBean().setSelectedDelAddr(null);
+				for(FlFulfilmentItemAddr flItemAddr : getManagedBean().getShowItemAddrList()) {
+					flItemAddr.setUnitPrice(new BigDecimal(0));
+					flItemAddr.setOrderedQty(new BigDecimal(0));
+					flItemAddr.setOrderedAmt(new BigDecimal(0));
+				}
 			}
 			if(getManagedBean().getSelectedDelAddr()!=null) {
 				populateItemsForSelectedAddress();
