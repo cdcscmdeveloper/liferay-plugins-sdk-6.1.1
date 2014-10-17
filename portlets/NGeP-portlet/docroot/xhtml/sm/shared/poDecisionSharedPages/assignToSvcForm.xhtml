@@ -119,8 +119,8 @@
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
-				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}" rendered="#{catBean.specialCategory}" />
-				<h:outputText value="#{lbl['lbl.sm.category.type.special']}" rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}" rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.special']}" rendered="#{catBean.specialCategory}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -145,7 +145,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
 					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approver']}" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.reject']}" />
 						</p:selectOneRadio></td>
 				</tr>

@@ -57,7 +57,7 @@
 			<h:inputHidden
 				value="#{backingBean.managedBean.smAppl.supportingDocMode}" />
 			<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
-				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+				value="#{backingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBean}" rowIndexVar="index" id="catDt"
 				rendered="#{!(backingBean.managedBean.smAppl.applType == 'R')}">
 				<ac:paginator for="catDt" />
@@ -167,7 +167,7 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<p:dataTable var="catBeanR" widgetVar="smCatCodesRenewApplDtWidVar"
-				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+				value="#{backingBean.managedBean.activeCategoryList}"
 				rowKey="#{catBeanR}" rowIndexVar="index" id="catDtR"
 				rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
 				selection="#{backingBean.managedBean.deleteCategoryList}">
