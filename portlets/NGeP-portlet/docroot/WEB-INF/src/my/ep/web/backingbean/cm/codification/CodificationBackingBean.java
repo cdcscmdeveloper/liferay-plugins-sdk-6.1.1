@@ -2630,7 +2630,8 @@ public class CodificationBackingBean extends
 			
 		}
 		bb.getManagedBean().setRequestCode(new CmRequestCode());
-		if (this.getManagedBean().getSelectedRequestItem().getItemType()
+		
+		if (this.getManagedBean().getSelectedRequestItem().getItemType().getParameterCode()
 				.equals("2")) {
 			bb.getManagedBean().getRequestCode().setItemType("S");
 		} else {
