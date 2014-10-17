@@ -166,11 +166,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	private Long searchProcurementId;
+
 	private List<ScQtDoc> docSearchlist;
 	private List<ScQtCheckList> checkListItem;
 	private List<SelectItem> zoneList;
 	private String specName;
 	private String qtNum;
+	private String qtTitle;
+	private Date publishDate;
+
 	private Long statusId;
 	private boolean isRecordStatus;
 	private int index = -1;
@@ -260,7 +264,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	// Added By Sagar.. for Delete funcationality..
 	private TreeNode selectedTreeNode;
-	
+
 	private CtCircularSearchBean ctSearchBean = new CtCircularSearchBean();
 	private List<SelectItem> evaluationTypeItem;
 	private TreeNode supplierSelectedTreeNode;
@@ -305,6 +309,22 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isTechStandaraChecklist;
 	private boolean isFinStandaraChecklist;
 	private String localOutCome;
+
+	public String getQtTitle() {
+		return qtTitle;
+	}
+
+	public void setQtTitle(String qtTitle) {
+		this.qtTitle = qtTitle;
+	}
+
+	public Date getPublishDate() {
+		return publishDate;
+	}
+
+	public void setPublishDate(Date publishDate) {
+		this.publishDate = publishDate;
+	}
 
 	public String getLocalOutCome() {
 		return localOutCome;
@@ -2624,8 +2644,6 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
 	}
-
-	
 
 	public CtCircularSearchBean getCtSearchBean() {
 		return ctSearchBean;
