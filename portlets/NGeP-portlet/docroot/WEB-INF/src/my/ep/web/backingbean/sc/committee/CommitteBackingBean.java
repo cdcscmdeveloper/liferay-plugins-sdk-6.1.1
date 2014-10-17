@@ -1152,7 +1152,7 @@ public class CommitteBackingBean extends
 				committeeMember.setScCommittee(scCommittee);
 				memberList.add(committeeMember);
 			}
-			memberList = sortByRole(memberList);
+			//memberList = sortByRole(memberList); 
 			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
 		scCommittee.setScCommitteeMembers(memberList);
