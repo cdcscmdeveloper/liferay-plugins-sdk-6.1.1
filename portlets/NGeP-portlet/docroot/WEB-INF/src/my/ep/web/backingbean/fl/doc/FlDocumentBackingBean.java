@@ -188,6 +188,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		flBB.getManagedBean().setDocMaintainRemarks(false);
+		flBB.getManagedBean().setHideRemarks(false);
 		String navgPage="/xhtml/fl/docsearch/flDocSearch.xhtml";
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
@@ -216,6 +217,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			PrBB.setFulfilmentRequestField(resDTO);
 			PrBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
@@ -235,6 +239,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.setFulfilmentRequestField(resDTO);
 			crBB.initializeApproverGroup();
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
+			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)){
 				String[] outcome = new String[2];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -308,6 +316,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			} else if(null != resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId()){
 				flOrderBB.getRfcAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
 			}
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
@@ -353,6 +364,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					flOrderBB.getFactoringAddress(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId(), null);
 				}				
 			}
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
@@ -371,6 +385,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
@@ -392,7 +409,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			doBB.getManagedBean().setDocMaintainRemarks(true);
 			doBB.getManagedBean().setFromPageUrl(navgPage);
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
-			
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
@@ -415,6 +434,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			invBB.getManagedBean().setDocMaintainRemarks(true);
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
@@ -436,7 +458,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				recNoteBB.getManagedBean().setFrnCancellationProcess(true);
 			}
-			
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
 			recNoteBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
@@ -462,6 +486,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			pmBB.getManagedBean().setFulfilmentRequest(resDTO.getPaymentAdvice().getFlRequest());
 			pmBB.getManagedBean().getPaymentAdvice().setFlPaymentDeduction(resDTO.getPaymentAdvice().getFlPaymentDeduction());
 			pmBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
@@ -479,7 +506,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			siBB.getManagedBean().setSelectedTabIndex(0);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
 			siBB.populateChargeLineData();
-			
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			navgPage=NAV_TO_STOP_INSTRUCTION;
 		} else if(docType.equals(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE) || docType.equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
@@ -487,6 +516,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setDanId(Long.valueOf(flDocId));
 			flReqDTO.setDocType(docType);
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.getManagedBean().setHideRemarks(true);
+			}
 			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 			
 			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
