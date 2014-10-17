@@ -48,7 +48,7 @@
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
-	<p:column style="width:125px;">
+	<p:column style="width:135px;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
@@ -62,7 +62,9 @@
 				conditionField="recordStatus^1"
 				rendered="#{isQuestionTypeItem}"
 				required="#{!question.selected}"
-				size="11"
+				label="#{lbl['lbl.tpl.spec.content.uom']}"
+				required="true"
+				size="10"
 				readonly="true"
 				update1="#{p:component('freqUOM')}">
 				<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
