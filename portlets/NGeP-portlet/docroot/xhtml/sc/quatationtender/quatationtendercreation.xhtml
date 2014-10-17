@@ -9,6 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
+			<ac:title value="#{lbl['lbl.sc.qtn.dtl']}" />
+		</c:if>
+		
 		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%"><p:messages id="specmessages"
