@@ -2059,6 +2059,7 @@ public void ConstructSideTabMenu(){
 	/*Implementation of search method for agency*/
 	public void searchAgencyDetails() {
 		try { 
+			   
 			agencyDataModel.reloadData();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2161,6 +2162,11 @@ public void ConstructSideTabMenu(){
 			}
 			return null;
 		}
+	}
+	
+	public void setMinistryOwnerId(){
+		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+        this.getManagedBean().setCodeNameSearchValues(true);
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
