@@ -127,6 +127,7 @@ public class SupplierManagementConst {
 	public static final String NEW_IC = "I";
 	public static final int PENDING_ACT_STATUS = 8;
 	public static final int APPROVED_RECORD_STATUS = 1;
+	public static final int DELETED_RECORD_STATUS = 9;
 
 	public static final String SECTION_REV_ROLE_PO = "P";
 	public static final String SECTION_REV_ROLE_APP = "A";

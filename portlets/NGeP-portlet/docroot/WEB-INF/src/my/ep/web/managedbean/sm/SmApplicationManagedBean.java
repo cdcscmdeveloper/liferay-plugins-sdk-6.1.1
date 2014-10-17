@@ -53,7 +53,6 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -87,6 +86,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierCategory selectedCategory;
 	private List<SmSupplierCategory> selectedCategories;
 	private List<SmSupplierCategory> deleteCategoryList;
+	private List<SmSupplierCategory> activeCategoryList;
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
@@ -2070,6 +2070,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRacesList(List<PmRace> racesList) {
 		this.racesList = racesList;
+	}
+
+	public List<SmSupplierCategory> getActiveCategoryList() {
+		return activeCategoryList;
+	}
+
+	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
+		this.activeCategoryList = activeCategoryList;
 	}
 
 	public String getRevisionBaseUrl() {

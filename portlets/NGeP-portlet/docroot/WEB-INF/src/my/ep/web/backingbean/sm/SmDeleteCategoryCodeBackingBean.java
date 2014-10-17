@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +21,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.managedbean.sm.SmDeleteCategoryCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -42,20 +44,18 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	// @PostConstruct
 	// public void init() {
-	// System.out.println(" **** EXCUTE ON LOAD EVENT **********");
+	// log.info(" **** EXCUTE ON LOAD EVENT **********");
 	// }
 
 	public String getRegCategoryCodes() {
 		try {
-			System.out.println("**** ENTER On Page Load Event  *************");
-
+			log.info("**** ENTER On Page Load Event  *************");
 			SmSupplier smApplSupplier = getCurrentSupplier();
-			System.out.println("**** Supplier Id is ********** "
+			log.info("**** Supplier Id is ********** "
 					+ smApplSupplier.getSupplierId());
 			SmAppl smAppl = smApplSupplier.getSmAppl();
-
 			if (smAppl != null) {
-				System.out.println("******** The application id is *******"
+				log.info("******** The application id is *******"
 						+ smAppl.getApplId());
 				getManagedBean().setSmAppl(smAppl);
 				retriveLatestApplAfterUpdate();
@@ -67,7 +67,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 			}
 
 			getManagedBean().setSmSupplier(smApplSupplier);
-
+			assignActiveCategoryList();
 			return SupplierManagementConst.PROCEED_DELETE_CATCODES_APPLN;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -77,49 +77,43 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
-	public void sampleTest(ComponentSystemEvent event) {
-		System.out.println(" **** EXCUTE ON LOAD EVENT **********");
+	public void assignActiveCategoryList() {
+		List<SmSupplierCategory> catList = new ArrayList<>();
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				catList.add(cat);
+			}
+		}
+		if (getManagedBean().getActiveCategoryList() != null
+				&& !getManagedBean().getActiveCategoryList().isEmpty()) {
+			getManagedBean().getActiveCategoryList().clear();
+		}
+		getManagedBean().setActiveCategoryList(catList);
 	}
 
-	// private MofRegistrationResDTO retriveSupplierById(long id) {
-	// IMofRegistrationSO mofRegistrationSO = null;
-	//
-	// try {
-	// mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-	// .getInstance().getServiceObject("sm",
-	// IMofRegistrationSO.class);
-	// MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-	// reqDto.setSupplierId(id);
-	// MofRegistrationResDTO resDTO = mofRegistrationSO
-	// .retrieveSupplierProfile(reqDto);
-	// return resDTO;
-	//
-	// } catch (Exception e) {
-	// return new MofRegistrationResDTO();
-	// } finally {
-	//
-	// }
-	// }
-	//
+	public void sampleTest(ComponentSystemEvent event) {
+		log.info(" **** EXCUTE ON LOAD EVENT **********");
+	}
+
 	public void onRowSelect(SelectEvent event) {
-		System.out
-				.println("*********** Enterd THE RoW SELECT METHOD ***********"
-						+ getManagedBean().getSelectedCategories().size());
+		log.info("*********** Enterd THE RoW SELECT METHOD ***********"
+				+ getManagedBean().getSelectedCategories().size());
 		manageSelectedRecords();
 
 	}
 
 	public void onToggleSelect(ToggleSelectEvent event) {
-		System.out.println("*********** On Select or Unslect all ***********"
+		log.info("*********** On Select or Unslect all ***********"
 				+ getManagedBean().getSelectedCategories().size());
 		manageSelectedRecords();
 
 	}
 
 	public void onRowUnSelect(UnselectEvent event) {
-		System.out
-				.println("*********** Enterd THE RoW UN SELECT METHOD ***********"
-						+ getManagedBean().getSelectedCategories().size());
+		log.info("*********** Enterd THE RoW UN SELECT METHOD ***********"
+				+ getManagedBean().getSelectedCategories().size());
 		manageSelectedRecords();
 
 	}
@@ -134,7 +128,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 						.getSelectedCategories()) {
 					if (sdbTemp.equals(sdb)) {
 						sdbTemp.setSelected(Boolean.TRUE);
-						System.out.println("*** ENTER *****");
+						log.info("*** ENTER *****");
 						break;
 					} else {
 						// sdbTemp.setRemarks("");
@@ -143,7 +137,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 				}
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.set(i, sdbTemp);
-				System.out.println("Data List For Index = "
+				log.info("Data List For Index = "
 						+ i
 						+ "  is "
 						+ getManagedBean().getSmAppl()
@@ -166,19 +160,27 @@ public class SmDeleteCategoryCodeBackingBean extends
 	public void deleteSelectedCatCodes() {
 		try {
 			int delListSize = getManagedBean().getSelectedCategories().size();
-			System.out.println(" **** SIZE OF SELECTED *** " + delListSize);
-			if (delListSize == getManagedBean().getSmAppl()
-					.getSmSupplierCategories().size()) {
-				getManagedBean().getSmAppl().getSmSupplierCategories().clear();
-			} else {
-				for (SmSupplierCategory selCat : getManagedBean()
-						.getSelectedCategories()) {
-					getManagedBean().getSmAppl().getSmSupplierCategories()
-							.remove(selCat);
+			log.info(" **** SIZE OF SELECTED *** " + delListSize);
+			// if (delListSize == getManagedBean().getSmAppl()
+			// .getSmSupplierCategories().size()) {
+			// getManagedBean().getSmAppl().getSmSupplierCategories().clear();
+			// } else {
+			for (SmSupplierCategory selCat : getManagedBean()
+					.getSelectedCategories()) {
+				// getManagedBean().getSmAppl().getSmSupplierCategories()
+				// .remove(selCat);
+				selCat.setRecordStatusFlg(SupplierManagementConst.DELETED_RECORD_STATUS);
+				getManagedBean()
+						.getSmAppl()
+						.getSmSupplierCategories()
+						.set(getManagedBean().getSmAppl()
+								.getSmSupplierCategories().indexOf(selCat),
+								selCat);
 
-				}
 			}
+			// }
 			updateSmAppl();
+			assignActiveCategoryList();
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -189,7 +191,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 									delListSize
 											+ " - Category Code(s) Deleted Successfully"));
 		} catch (Exception e) {
-			System.out.println("this is error");
+			log.info("this is error");
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
