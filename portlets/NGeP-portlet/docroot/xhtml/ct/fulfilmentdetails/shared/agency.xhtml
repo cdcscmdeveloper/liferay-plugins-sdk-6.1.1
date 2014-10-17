@@ -75,8 +75,9 @@
 			</p:dataTable> 
        	</div>
        	<div class="ppRightBtn">
-       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" onclick="dlgAgency.show();" 
-       		     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
+       		    action="#{contractDetailsBackingBean.setMinistryOwnerId()}"  update=":form:ministry"
+       		    rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
        			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
@@ -105,7 +106,8 @@
 		   </div>
         </p:dialog>  
 	   </p:panel>  
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="650" height="450">
+		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="700" height="500">
+		<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <p:panel  id="agencyies">
               <h:panelGrid columns="7">
@@ -124,10 +126,10 @@
                   <p:selectOneMenu  style="width:70px" disabled="true">
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.and']}" itemValue=""/>
                  </p:selectOneMenu>
-                 <p:selectOneMenu for="ptjcodename" value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:100px;">
-                    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="null"/>
-            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="Code"/>
-            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="Name"/>
+                 <p:selectOneMenu for="ptjcodename" 
+                    value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:100px;">
+                       <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="Code"/>
+            	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="Name"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.ptjSearchtype}"  style="width:70px">
@@ -135,12 +137,14 @@
             	     <f:selectItem itemLabel="#{lbl['lbl.ct.like']}" itemValue="L"/>
                  </p:selectOneMenu>
                  <p:spacer height="1"/>
-                 <p:inputText  style="width:220px;" 
-                     value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" />
+                 <p:inputText id="ptjCodeVaue"  style="width:220px;" required="#{contractDetailsBackingBean.managedBean.codeNameSearchValues}"
+                     label="Ptj code or name" value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" ></p:inputText>
+                        <p:message id="ptjMsg" for="ptjCodeVaue" display="icon"/>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency" icon="ui-icon-search" 
-       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
+       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" 
+       		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}"
 			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>

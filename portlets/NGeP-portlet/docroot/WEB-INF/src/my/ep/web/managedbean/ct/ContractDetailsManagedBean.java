@@ -153,6 +153,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtAgency selectedAgency;
 	
 	private List<SelectItem> monthList;
+	private boolean codeNameSearchValues = false;
 	
 	public String[] getAction() {
 		return action;
@@ -928,4 +929,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setMonthList(List<SelectItem> monthList) {
 		this.monthList = monthList;
 	}
+
+	public boolean isCodeNameSearchValues() {
+		return codeNameSearchValues;
+	}
+
+	public void setCodeNameSearchValues(boolean codeNameSearchValues) {
+		this.codeNameSearchValues = codeNameSearchValues;
+	}
+	
+	
 }
