@@ -6,8 +6,8 @@ package my.ep.web.backingbean.sc.loiloa;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.math.BigDecimal;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -59,6 +60,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -69,9 +72,7 @@ import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pm.common.PmTerm;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
-import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -290,9 +291,10 @@ public class LOIDetailBackingBean extends
 	public void preRenderMultipleLoiView() {
 		debugLogger("preRenderMultipleLoiView");
 		IQTAwardSO qtAwardSO = null;
+		IStatusSO statusSO = null;
 		try {
-			//SCAwardSupplierDataType multiLoiDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-
+			Long sourceId = 3928L;
+			retrieveQTDetails(sourceId);
 			//TODO
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -301,6 +303,24 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		} finally {
 			qtAwardSO = null;
+			statusSO = null;
+		}
+	}
+	
+	public void retrieveQTDetails(Long qtId) {
+		IQTDetailSO qtDetailSO;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(qtId);
+			
+			QuationTenderResDTO resDTO = qtDetailSO.retriveQtById(reqDTO);
+			ScQt scQt = resDTO.getQtDetail();
+			populateParentOrgProfile(scQt);
+			getManagedBean().setScQt(scQt);
+		} finally {
+			qtDetailSO = null;
 		}
 	}
 
@@ -2683,6 +2703,35 @@ public class LOIDetailBackingBean extends
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/loi/loi-cover.vm", context, new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	public void retrieveResultNegotiation(){
+		this.getManagedBean().setSelectedTabIndex(0);
+	}
+	
+	public void retrieveNegotiationCommitteeDtls(){
+		this.getManagedBean().setSelectedTabIndex(1);
+	}
 
+	public void retrieveMultipleLoiRecommendation(){
+		this.getManagedBean().setSelectedTabIndex(2);
+		
+		IQTAwardSO qtAwardSO;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			Long qtId = getManagedBean().getScQt().getQtId();
+			reqDTO.setDocId(qtId);
+			
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveMultipleLoiRecommendation(reqDTO);
+			if(resDTO.isSuccessful()){
+				getManagedBean().setRecommendList(resDTO.getScQtRecommendList());
+			}
+			
+		} finally {
+			qtAwardSO = null;
+		}
+		
+	}
 
 }
