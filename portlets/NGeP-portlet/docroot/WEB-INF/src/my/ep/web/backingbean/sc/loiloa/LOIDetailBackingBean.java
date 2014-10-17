@@ -1957,7 +1957,9 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(outcomes);
 		getManagedBean().setCurrentStatusId(currentStatusId);
-		getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+		if(awardDataType != null){
+			getManagedBean().setRecommendDtlIds(awardDataType.getGroupkeyList());
+		}
 		getManagedBean().setDocType(docType);
 	}
 
