@@ -164,7 +164,8 @@ public class LOADetailBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 
 		try {
-			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType)getManagedBean().getPayLoad();
+			SCAwardSupplierDataType awardDataType = (SCAwardSupplierDataType) getManagedBean()
+					.getPayLoad();
 
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
@@ -176,25 +177,30 @@ public class LOADetailBackingBean extends
 			reqDTO.setLanguageCode(language);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
-			
-			if(resDTO.getScLoa() != null && 
-					ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(resDTO.getScLoa().getScLoiLoa().getDocType())){
-				if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
+
+			if (resDTO.getScLoa() != null
+					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(resDTO
+							.getScLoa().getScLoiLoa().getDocType())) {
+				if (new FacesScopes()
+						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 					awardDataType.setLetterCreator("D");
-					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
-				}
-				else {
+					awardDataType.setDeskOfficer(new FacesScopes()
+							.getUserSessionBean().getLoginId());
+				} else {
 					awardDataType.setLetterCreator("R");
-					awardDataType.setRequisitioner(new FacesScopes().getUserSessionBean().getLoginId());
+					awardDataType.setRequisitioner(new FacesScopes()
+							.getUserSessionBean().getLoginId());
 				}
-			}else{
-				if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
+			} else {
+				if (new FacesScopes()
+						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
 					awardDataType.setLetterCreator("D");
-					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
-				}
-				else {
+					awardDataType.setDeskOfficer(new FacesScopes()
+							.getUserSessionBean().getLoginId());
+				} else {
 					awardDataType.setLetterCreator("S");
-					awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
+					awardDataType.setDeskOfficer(new FacesScopes()
+							.getUserSessionBean().getLoginId());
 				}
 			}
 
@@ -312,7 +318,7 @@ public class LOADetailBackingBean extends
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loaId = Long.valueOf(dpDataType.getAwardId());
-			
+
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoad(dpDataType);
 
@@ -794,12 +800,13 @@ public class LOADetailBackingBean extends
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
 	}
-	
+
 	public void deleteDeductionPaymentAction() {
 		debugLogger("deleteDeductionPaymentAction");
-		if (getManagedBean().getScLoa().getScQtDeductions() != null 
+		if (getManagedBean().getScLoa().getScQtDeductions() != null
 				&& getManagedBean().getSelectedScQtDeduction() != null) {
-			getManagedBean().getScLoa().getScQtDeductions().remove(getManagedBean().getSelectedScQtDeduction());	
+			getManagedBean().getScLoa().getScQtDeductions()
+					.remove(getManagedBean().getSelectedScQtDeduction());
 		}
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
@@ -882,14 +889,9 @@ public class LOADetailBackingBean extends
 
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
-
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
-
-		if (scLoaReportAttachment == null) {
-			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-		}
-
+		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 		downloadFile(scLoaReportAttachment);
 	}
 
@@ -897,54 +899,96 @@ public class LOADetailBackingBean extends
 			ScLoaReport scLoaReport) {
 		String definitionType = scLoaReport.getDefinationType()
 				.getParameterCode();
-		ScLoaReportAttachment scLoaReportAttachment = null;
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+				.getScLoaReportAttachment();
 
 		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
 				.equals(definitionType)) {
 			try {
 				String docDefinitionKey = scLoaReport.getPmDocument()
 						.getDocDefinitionKey();
-
-				scLoaReportAttachment = new ScLoaReportAttachment();
-				scLoaReportAttachment.setScLoaReport(scLoaReport);
-				scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
-						.getLoaNo());
-
-				if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
-						.equals(docDefinitionKey)) {
-					generateContractSummaryPdfFromVelocity(
-							(ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa());
-				} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-						.equals(docDefinitionKey)) {
-					scLoaReportAttachment.setFileName(scLoaReport.getTitle()+".pdf");
-					generateAgreementLetterPdfFromVelocity(
-							(ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa(),getManagedBean().getScQt());
-				} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
-						.equals(docDefinitionKey)) {
-					generateDeclarationPdfFromVelocity(
-							(ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa());
-				} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
-						.equals(docDefinitionKey)) {
-					saveScheduleList();
-					generateFrequencySchedulePdfFromVelocity(
-							(ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa());
-				} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
-						.equals(docDefinitionKey)) {
-					formJadualHarga((ScAttachment) scLoaReportAttachment,
-							getManagedBean().getScLoa());
+				ScLoa scLoa = getManagedBean().getScLoa();
+				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+				StringBuilder filename = new StringBuilder();
+				filename.append(scLoaReport.getTitle());
+				if (scLoaReportAttachment == null) {
+					scLoaReportAttachment = new ScLoaReportAttachment();
+					scLoaReportAttachment.setScLoaReport(scLoaReport);
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
+					
+					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateContractSummaryPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAgreementLetterPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						saveScheduleList();
+						generateFrequencySchedulePdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formJadualHarga((ScAttachment) scLoaReportAttachment,
+								scLoa);
+					}
+				}else if(scLoaReportAttachment != null && 
+						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)){
+					// if pending supplier acknowledgement , always regenerate 
+					filename.append(".pdf");
+					scLoaReportAttachment.setFileName(filename.toString());
+					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+							.equals(docDefinitionKey)) {					
+						generateContractSummaryPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						generateAgreementLetterPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {					
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					}
+				}else if(scLoaReportAttachment != null && 
+						QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
+					// if pending submission , always regenerate 
+					if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						saveScheduleList();
+						generateFrequencySchedulePdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					}
 				}
-				// TODO - generate documents
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
-			
-			//TODO
-			if(scLoaReportAttachment.getFileName()!=null && scLoaReportAttachment.getFilePath()!=null){
+
+			// TODO
+			if (scLoaReportAttachment.getFileName() != null
+					&& scLoaReportAttachment.getFilePath() != null) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
 			}
 		}
@@ -962,11 +1006,7 @@ public class LOADetailBackingBean extends
 		for (ScLoaReport scLoaReport : scLoaReports) {
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
-
-			if (scLoaReportAttachment == null) {
-				scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
-			}
-
+			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 			scAttachments.add(scLoaReportAttachment);
 		}
 
@@ -976,7 +1016,6 @@ public class LOADetailBackingBean extends
 	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa) throws Exception {
 
-		attachment.setFileName("contract_summary.pdf");
 		populateAttachmentDetails(attachment);
 
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
@@ -1028,9 +1067,8 @@ public class LOADetailBackingBean extends
 	}
 
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
-			ScLoa scLoa,ScQt scQt) throws Exception {
+			ScLoa scLoa, ScQt scQt) throws Exception {
 
-		//attachment.setFileName("agreement_letter.pdf");
 		populateAttachmentDetails(attachment);
 
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
@@ -1134,20 +1172,23 @@ public class LOADetailBackingBean extends
 			supplierEmail = "";
 		}
 		context.put("supplierEmail", supplierEmail);
-		
+
 		String procurementMode = null;
-		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())){
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
 			procurementMode = "Tawaran Pelawaan Sebut Harga";
-		}else if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
-			if(scQt != null){
-				if(ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt.getProcurementMode().getParameterCode())){
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
 					procurementMode = "Sebut Harga";
-				}else{
+				} else {
 					procurementMode = "Tender";
 				}
 			}
 		}
-		
+
 		context.put("procurementMode", procurementMode); // TODO
 		context.put("title", scLoiLoa.getTitle());
 		context.put("hasLoi", false); // TODO
@@ -1278,7 +1319,6 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa) throws Exception {
 		String termsConditions = generateDeclarationFromVelocity(scLoa);
 
-		attachment.setFileName("integrity_pact.pdf");
 		populateAttachmentDetails(attachment);
 
 		DocumentGenerator.getInstance().generatePdf(
@@ -1903,7 +1943,7 @@ public class LOADetailBackingBean extends
 		} else {
 			saveScheduleList();
 			saveProgressivePaymntList();
-			
+
 			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 		}
 
@@ -1917,7 +1957,7 @@ public class LOADetailBackingBean extends
 
 	public void contractTypeChanged() {
 		debugLogger("contractTypeChanged");
-	
+
 		ScLoa scLoa = getManagedBean().getScLoa();
 
 		IParameterSO parameterSO = null;
@@ -1933,15 +1973,14 @@ public class LOADetailBackingBean extends
 		} finally {
 			parameterSO = null;
 		}
-		
+
 		String contractType = scLoa.getContractType().getParameterCode();
-		
+
 		if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 			IQTAwardSO qtAwardSO;
 			try {
-				qtAwardSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IQTAwardSO.class);
+				qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IQTAwardSO.class);
 
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
@@ -1973,7 +2012,7 @@ public class LOADetailBackingBean extends
 
 			getManagedBean().setAgencyList(agencyList);
 		}
-	
+
 		contractAgencyChanged();
 	}
 
@@ -2199,13 +2238,13 @@ public class LOADetailBackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if(endMonth == null && startMonth != null){
-		   endMonth = startMonth;
-		   endYear = startYear;
-		   schedule.setEndMonth(endMonth.toString());
-		   schedule.setEndYear(endYear.toString());
+		if (endMonth == null && startMonth != null) {
+			endMonth = startMonth;
+			endYear = startYear;
+			schedule.setEndMonth(endMonth.toString());
+			schedule.setEndYear(endYear.toString());
 		}
-		
+
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null && endYear >= startYear) {
 			if (endYear != startYear) {
@@ -2342,7 +2381,7 @@ public class LOADetailBackingBean extends
 
 	private void generateFrequencySchedulePdfFromVelocity(
 			ScAttachment attachment, ScLoa scLoa) throws Exception {
-		attachment.setFileName("Frequency_Schedule.pdf");
+
 		populateAttachmentDetails(attachment);
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
 		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
@@ -2395,7 +2434,6 @@ public class LOADetailBackingBean extends
 
 	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
 			throws Exception {
-		attachment.setFileName("JadualHarga.xlsx");
 		populateAttachmentDetails(attachment);
 		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
 		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
@@ -2633,7 +2671,7 @@ public class LOADetailBackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		List<ScQtProgressivePayment> progressive = this.getManagedBean()
 				.getProgressivePaymentList();
-		
+
 		if (null == progressive) {
 			progressive = new ArrayList<ScQtProgressivePayment>();
 
@@ -2751,7 +2789,7 @@ public class LOADetailBackingBean extends
 					e.printStackTrace();
 				}
 				getManagedBean().getScLoa().getScQtProgPayments();
-				
+
 				paymentList.add(payment);
 			}
 			getManagedBean().getScLoa().setScQtProgPayments(paymentList);
@@ -2811,28 +2849,36 @@ public class LOADetailBackingBean extends
 	public String getApprovalActionDisplayName(String value) {
 		return ApprovalAction.getDisplayName(value);
 	}
-	
+
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
 		BigDecimal total = scLoiLoaItem.getUnitPrice();
-		
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomFrequency());
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomFrequency() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomFrequency());
 		}
-		
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerDay());
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomPerDay() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomPerDay());
 		}
-		
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClUomPerMonth());
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClUomPerMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClUomPerMonth());
 		}
-		
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClDurationMonth());
+
+		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
+				.getClDurationMonth() != null) {
+			total = total.multiply(scLoiLoaItem.getScRequestItem()
+					.getTplSpecQuestion().getClDurationMonth());
 		}
-		
+
 		total = total.multiply(scLoiLoaItem.getQty());
-		
+
 		return total;
 	}
 }
