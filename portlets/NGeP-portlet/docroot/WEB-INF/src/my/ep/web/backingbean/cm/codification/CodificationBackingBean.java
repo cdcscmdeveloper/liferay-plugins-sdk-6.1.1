@@ -2622,18 +2622,21 @@ public class CodificationBackingBean extends
 	}
 
 	public String redirectToRequestUnspscCodeII() {
+		log.info(".................redirectToRequestUnspscCodeII................");
 		// renewSesionObject();
 		UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 		if (bb.getManagedBean().getRequestExtCodeList() != null) {
 			bb.getManagedBean().getRequestExtCodeList().clear();
+			
 		}
+		bb.getManagedBean().setRequestCode(new CmRequestCode());
 		if (this.getManagedBean().getSelectedRequestItem().getItemType()
 				.equals("2")) {
 			bb.getManagedBean().getRequestCode().setItemType("S");
 		} else {
 			bb.getManagedBean().getRequestCode().setItemType("P");
 		}
-		return "unspscRequestFormII";
+		return "unspscRequestFormII.xhtml";
 	}
 
 	public void preRenderCodificationView() {
