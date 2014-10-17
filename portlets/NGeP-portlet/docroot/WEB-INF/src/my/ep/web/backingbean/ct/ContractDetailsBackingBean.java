@@ -1750,6 +1750,42 @@ public void ConstructSideTabMenu(){
 				System.out.println(e);
 		   }
 	}
+    
+    public void validateCeilingAmount(CtAgency agencyData) {
+    	List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
+    	if(agencyList.size()>0) {
+			double ceilingAmt = 0.0;
+			for(CtAgency ctAgency : agencyList) {
+				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
+			}
+			if(ceilingAmt >  this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue()) {
+				agencyData.setCeilingAmount(BigDecimal.valueOf(0));
+				throw new EpException(MessageConst.ERROR_750014); // Total ceiling value exceeded contract value. Please check your ceiling amount.
+			}
+    	}
+    }
+    
+    public void validateCeilingQty(CtItemCeilingQty ceilingQtyData) {
+    	Date today = new Date();
+    	double totalCeilingQuantity = 0.0;
+    	CtContractItem item = this.getManagedBean().getSelectedItem();
+		if(item.getCtItemMaxQties().size() != 0){
+			BigDecimal maxCeilingQty = new BigDecimal(0);
+			for(CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()){
+				if(ctItemMaxQty.getEffDate().before(today) && ctItemMaxQty.getExpDate().after(today)){
+					maxCeilingQty = ctItemMaxQty.getMaxQuantity();
+					break;
+				}
+			}
+			for(CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()){
+				totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
+			}
+			if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
+				ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0));
+				throw new EpException(MessageConst.ERROR_750016, new String[]{item.getItemName()});
+			}
+		}
+    }
 			
 	public void onRowSelect(SelectEvent event) {}/*End*//*End Item Details*/
     public void onEdit(RowEditEvent event){}
