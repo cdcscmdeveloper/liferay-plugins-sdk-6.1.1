@@ -812,6 +812,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getItemAddrList().addAll(itemAddrList);
 		getManagedBean().getShowItemAddrList().addAll(itemAddrList);
 		sortItems(getManagedBean().getShowItemAddrList());
+		if(getManagedBean().getSelectedDelAddr()!=null) {
+			populateItemsForSelectedAddress();
+		}
 	}
 
 	private List<String> getAvailableApproverList() {
