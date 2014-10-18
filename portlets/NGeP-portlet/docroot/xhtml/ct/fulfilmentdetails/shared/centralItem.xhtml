@@ -275,20 +275,20 @@
 		     <h:panelGrid columns="2" width="100%">
 		      
 		        <p:outputLabel id="centralcentralmtoloa" value="MTO LOA No." />
-	            <p:inputText id="centraltxtmtoloa" style="width:200px;"></p:inputText>
+	            <p:inputText id="centraltxtmtoloa" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
                
                 <p:outputLabel id="centralmtocontract" value="MTO Contract No." />
-	            <p:inputText id="centraltxtmtocontract" style="width:200px;"></p:inputText>
+	            <p:inputText id="centraltxtmtocontract" style="width:200px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
                 
                 <p:outputLabel id="centralagentname" value="Agent Name" />
-                 <p:selectOneMenu id="centraltxtagentname" style="width:210px;">
+                 <p:selectOneMenu id="centraltxtagentname" style="width:210px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="-Select One-" itemValue="" /> 
                    <f:selectItem itemLabel="-Interspiro AB-" itemValue="Interspiro AB" /> 
                 </p:selectOneMenu>
                 
                 <p:outputLabel id="centralpromethod" value="Procurement Method" />
                 <h:panelGrid columns="3">
-                    <p:selectOneMenu id="centraltxtpromethod"  style="width:100px;">
+                    <p:selectOneMenu id="centraltxtpromethod"  style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                        <f:selectItem itemLabel="-Select One-" itemValue="" /> 
                        <f:selectItem itemLabel="-Ex-Work-" itemValue="Ex-Work" /> 
                        <f:selectItem itemLabel="-FOB-" itemValue="FOB" /> 
@@ -296,32 +296,32 @@
                        <f:selectItem itemLabel="-Others-" itemValue="Others" /> 
                     </p:selectOneMenu>
                     <p:spacer width="1"/>
-                    <p:inputText style="width:95px;"/>
+                    <p:inputText style="width:95px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
                 </h:panelGrid>
 	            
                 <p:outputLabel id="centralexportlicense" value="Required Export License" />
-                <p:selectOneRadio id="centraloptions">  
+                <p:selectOneRadio id="centraloptions" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">  
                     <f:selectItem itemLabel="Yes" itemValue="1" />  
                     <f:selectItem itemLabel="No" itemValue="2" />  
                  </p:selectOneRadio>  
                   
                 <h:outputLabel id="centralcountryoforigin" value="* Country of Origin" />
-                <p:selectOneMenu id="centraltxtcountryoforigin" style="width:110px;">
+                <p:selectOneMenu id="centraltxtcountryoforigin" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="-Select One-" itemValue="" /> 
                    <f:selectItem itemLabel="Sewden" itemValue="Sewden" /> 
                 </p:selectOneMenu>
 	             
                 <h:outputLabel id="centralloadingport" value="* Loading Port" />
-	            <p:inputText id="centraltxtloadingport" style="width:100px;"></p:inputText>
+	            <p:inputText id="centraltxtloadingport" style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
                  
                 <p:outputLabel id="centralcountryofdestination" value="* Country of Destination" />
-                <p:selectOneMenu id="centraltxtcountryofdestination" style="width:110px;">
+                <p:selectOneMenu id="centraltxtcountryofdestination" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="-Select One-" itemValue="" /> 
                    <f:selectItem itemLabel="Malaysia" itemValue="Malaysia" /> 
                 </p:selectOneMenu>
 	             
                 <h:outputLabel id="centraldischargeport" value="* Discharge Port" />
-	            <p:inputText id="centraltxtdischargeport" style="width:100px;"></p:inputText>
+	            <p:inputText id="centraltxtdischargeport" style="width:100px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputText>
 	            
 	            <h:panelGroup>
                   <div style="height: 40px; vertical-align:top;">
@@ -329,10 +329,11 @@
                   </div>
                </h:panelGroup>
                <h:panelGrid>
-                   <p:inputTextarea id="centralfinaldestination" rows="4" cols="31" maxlength="100"  autoResize="false" />
+                   <p:inputTextarea id="centralfinaldestination" rows="4" cols="31" maxlength="100"  autoResize="false" 
+                   	disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
               </h:panelGrid>
               <h:outputLabel id="centraltransportmode" value=" Transport Mode" />
-	          <p:selectOneMenu id="centraltxttransportmode" style="width:110px;">
+	          <p:selectOneMenu id="centraltxttransportmode" style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                    <f:selectItem itemLabel="-Select One-" itemValue="" /> 
                    <f:selectItem itemLabel="Sea" itemValue="Sea" /> 
                    <f:selectItem itemLabel="Air" itemValue="Air" /> 
@@ -366,7 +367,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>

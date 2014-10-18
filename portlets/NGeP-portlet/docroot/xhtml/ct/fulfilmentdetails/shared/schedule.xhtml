@@ -12,7 +12,8 @@
 	   <h:panelGrid columns="4">
            <p:selectOneRadio id="radiOptions"  required="true"
                value="#{contractDetailsBackingBean.managedBean.frequencySchedule}" 
-               disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio}">  
+               disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio
+               		or contractDetailsBackingBean.managedBean.viewContract}">  
                <f:selectItems value="#{contractDetailsBackingBean.managedBean.radioButtonSchedule}" />
                <p:ajax event="change"  update=":form:paymentSchedule"
                   process="@form" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
@@ -27,20 +28,25 @@
 	                   rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	                
 	                   <ac:paginator for="tableSchedule" />
-	                   <p:column selectionMode="multiple" style="width:1%;"/>
+	                   <p:column selectionMode="multiple" style="width:1%;"
+	                   		rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 		       
 		             <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
-		                <p:inputText value="#{schedVar.scheduleNo}"  style="width:60px;" maxlength="4" styleClass="ppRightBtn" />
+		                <p:inputText value="#{schedVar.scheduleNo}"  style="width:60px;" 
+			                disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+			                maxlength="4" styleClass="ppRightBtn" />
 		             </p:column> 
 		      
 		             <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
-		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.startMonth}" style="width:110px;">
+		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.startMonth}" 
+		                 	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
                              <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
                              <p:ajax event="change" update=":form:tableSchedule" 
                                 process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
                          </p:selectOneMenu> 
                          <p:spacer width="1"/>
-                         <p:selectOneMenu id="fromYear" value="#{schedVar.startYear}" style="width:100px;">
+                         <p:selectOneMenu id="fromYear" value="#{schedVar.startYear}" 
+                         	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
                               <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
                               <p:ajax event="change" update=":form:tableSchedule"
                                  process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
@@ -49,13 +55,15 @@
 		       
 		            <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                  <h:panelGroup>
-		                    <p:selectOneMenu id="toMonth" value="#{schedVar.endMonth}"  style="width:110px;" >
+		                    <p:selectOneMenu id="toMonth" value="#{schedVar.endMonth}"
+		                    	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
                                 <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                                 <p:ajax event="change" update=":form:tableSchedule"
                                     process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}" />
                             </p:selectOneMenu>
                             <p:spacer width="1"/>
-                            <p:selectOneMenu id="toYear" value="#{schedVar.endYear}" style="width:100px;" >
+                            <p:selectOneMenu id="toYear" value="#{schedVar.endYear}" 
+                            	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" >
                                 <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
                                 <p:ajax event="change" update=":form:tableSchedule" 
                                    process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
@@ -67,13 +75,14 @@
 		                 </h:panelGroup>
 		            </p:column> 
 		            
-		            <p:column headerText="Total Month" style="width:10%;">
+		            <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:10%;">
 		              <h:outputText id="totalMonth" style="float:right;"
 		                  value="#{contractDetailsBackingBean.calculateTotalMonth(schedVar, 'S')}"/>
 		           </p:column>
 		           
 		            <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;white-space:normal;">
-		               <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}" style="width:130px;"> 
+		               <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}"
+		               		disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:130px;"> 
                             <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
                             <p:ajax process="@this"/>
                        </p:selectOneMenu> 
@@ -83,12 +92,14 @@
 	         <p:spacer height="2"  />
 		        <div class="ppRightBtn"> 
 		            <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
-		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule">
+		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule"
+		               rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
 		               <p:tooltip for="addScheduleBtn">
 						    <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
 						</p:tooltip>
 		       		</p:commandButton>
-		 	        <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" onclick="dlgSchedule.show()" icon="ui-icon-delete">
+		 	        <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
+		 	        	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" onclick="dlgSchedule.show()" icon="ui-icon-delete">
 		 	        	<p:tooltip for="deleteScheduleBtn">
 						    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
 						</p:tooltip>
@@ -119,26 +130,29 @@
 	                value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
 	                selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		           <ac:paginator for="tableProgress" />
-		           <p:column selectionMode="multiple" style="width:1%;"/> 
+		           <p:column selectionMode="multiple" style="width:1%;"
+		           	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/> 
                   
                    <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}">
-                        <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" 
+                        <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
                            style="width:25px;" label="#{lbl['lbl.ct.phase']}" styleClass="ppRightBtn" />
                    </p:column>
 		      
 		           <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}">
-		               <p:inputText value="#{ProgVar.phaseDesc}" 
+		               <p:inputText value="#{ProgVar.phaseDesc}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		                   maxlength="50" style="width:200px;" label="#{lbl['lbl.ct.description']}" />
 		           </p:column>
               
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.start.period']}" >
-		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.startMonth}" style="width:110px;">
+		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.startMonth}" style="width:110px;"
+		               	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                            <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                            <p:ajax event="change" update=":form:tableProgress"
                               process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                       </p:selectOneMenu> 
                       <p:spacer width="1"/>
-                      <p:selectOneMenu id="fromProYear" value="#{ProgVar.startYear}" style="width:100px;">
+                      <p:selectOneMenu id="fromProYear" value="#{ProgVar.startYear}" style="width:100px;"
+                         disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                          <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
                          <p:ajax event="change" update=":form:tableProgress" 
                             process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
@@ -147,13 +161,15 @@
 		        
 		          <p:column style="width:30%;" headerText="#{lbl['lbl.ct.end.period']}">
 		             <h:panelGroup columns="5">
-		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.endMonth}"  style="width:110px;" >
+		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.endMonth}"  style="width:110px;"
+		                	disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                             <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
                             <p:ajax event="change" update=":form:tableProgress"
                                process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
                         </p:selectOneMenu>
                         <p:spacer width="1"/>
-                        <p:selectOneMenu id="toProYear" value="#{ProgVar.endYear}" style="width:100px;" >
+                        <p:selectOneMenu id="toProYear" value="#{ProgVar.endYear}" style="width:100px;"
+                        	disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                             <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
                             <p:ajax event="change" update=":form:tableProgress" 
                                process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
@@ -165,13 +181,14 @@
 		            </h:panelGroup>
 		         </p:column>       
 		         
-		          <p:column headerText="Total Month" style="width:8%;white-space:normal;">
+		          <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:8%;white-space:normal;">
 		              <h:outputText id="totalMonth" style="float:right;"
 		                 value="#{contractDetailsBackingBean.calculateTotalMonth(ProgVar,'P')}"/>
 		           </p:column>
                
                    <p:column style="width:7%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
-                       <p:inputText value="#{ProgVar.percentage}" style="width:60px;" styleClass="ppRightBtn" label="#{lbl['lbl.ct.percentage']}">
+                       <p:inputText value="#{ProgVar.percentage}" style="width:60px;" styleClass="ppRightBtn" 
+                       	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
                        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText> 
                   </p:column>
 		       </p:dataTable>  
@@ -180,9 +197,12 @@
 		       
 		        <div class="ppRightBtn"> 
 		           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true"
-		            icon="ui-icon-add" update="tableProgress" action="#{contractDetailsBackingBean.addFrequencyDetails()}"/>
+			            rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+			            icon="ui-icon-add" update="tableProgress" action="#{contractDetailsBackingBean.addFrequencyDetails()}"/>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
+		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" 
+			           rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+			           process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
 		        </div>
 		       
 		       <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" width="330"
@@ -228,7 +248,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
+													disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>

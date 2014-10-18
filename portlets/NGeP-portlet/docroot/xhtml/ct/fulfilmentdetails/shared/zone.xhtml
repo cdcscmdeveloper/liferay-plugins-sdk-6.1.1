@@ -42,9 +42,10 @@
             </f:facet>
              <p:treeNode type="zone">
                 <p:inputText value="#{zoneTree.deliveryTerm}"  rendered="#{zoneTree.zone != null}"  required="true"
-                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="Delivery Term" />
+                     style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
+                     disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
                 <p:spacer width="2" />
-                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}"
+                <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
                   required="true" rendered="#{zoneTree.zone != null}" style="width:100px;" label="#{lbl['lbl.ct.delivery.term']}">
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			    </p:selectOneMenu>
@@ -78,7 +79,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
