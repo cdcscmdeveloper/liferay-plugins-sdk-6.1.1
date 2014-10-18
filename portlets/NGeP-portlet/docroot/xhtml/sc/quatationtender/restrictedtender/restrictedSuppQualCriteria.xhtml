@@ -46,7 +46,6 @@
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3"
 					postUpdateListener="qTSupplierQulCriteriaBackingBean.restrictedCategoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList, qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList[#{index}].pmCategoryL3)"
 					value="#{restrcitedCateGory.pmCategoryL3.categoryL3Code}"
-					conditionField="#{qTSupplierQulCriteriaBackingBean.constructCondtionFields(restrcitedCateGory)}"
 					update=":form:restrictedtendertabView:restrictedPnlId">
 				</ac:lov>
 			</p:column>

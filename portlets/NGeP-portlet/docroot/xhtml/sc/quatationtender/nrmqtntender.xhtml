@@ -42,7 +42,6 @@
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
 					postUpdateListener="qTSupplierQulCriteriaBackingBean.categoryCodesUpdate(#{index},qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList, qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
-					conditionField="#{qTSupplierQulCriteriaBackingBean.constructCondtionFields(cateGory)}"
 					update=":form:openPnlId">
 				</ac:lov>
 
