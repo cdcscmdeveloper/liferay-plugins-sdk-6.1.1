@@ -10,7 +10,9 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadDlg.show();return false;" icon="iconAttachment" 
 					update="lampiran" value="#{lbl['lbl.ct.upload.attach.files']}"
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" />
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract
+								or centralContractBackingBean.managedBean.viewContract
+								or panelBackingBean.managedBean.viewContract}" />
 			</td>
 		</tr>
 		<tr>

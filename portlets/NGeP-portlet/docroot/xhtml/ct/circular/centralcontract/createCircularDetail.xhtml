@@ -13,6 +13,7 @@
 				</td>
 				<td style="width: 200px">
 					<p:inputText id="circularNoTxt" style="width:170px;" required="true" label="#{lbl['lbl.ct.circular.no']}"
+						disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" maxlength="50" />
 				</td>
 				<td>
@@ -24,6 +25,7 @@
 				</td>
 				<td rowspan="2" style="width: 180px">
 					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px; margin-bottom:5px;" label="#{lbl['lbl.ct.circular.name']}"
+						disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						required="true" value="#{centralContractBackingBean.managedBean.circularVer.name}" maxlength="200" />
 				</td>
 				<td>
@@ -33,6 +35,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" /></td>
 				<td><p:inputText  style="width:170px;"
+						disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" maxlength="50" /></td>
 			</tr>
 			<tr>
@@ -55,6 +58,7 @@
 			<td><h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg" value="#{lbl['lbl.bpm.choose.file']}"
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"
 					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
 				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />					

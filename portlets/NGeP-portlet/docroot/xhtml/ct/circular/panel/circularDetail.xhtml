@@ -18,27 +18,34 @@
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
 			rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
-			<p:column selectionMode="multiple" style="width:3%" />
+			<p:column selectionMode="multiple" style="width:3%" 
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
-				<p:inputText value="#{data.name}" style="width:95%;" maxlength="20" />
+				<p:inputText value="#{data.name}" style="width:95%;" maxlength="20" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
-				<p:inputText value="#{data.address}" style="width:95%;" maxlength="200" />
+				<p:inputText value="#{data.address}" style="width:95%;" maxlength="200" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.email']}"  style="width:20%;">
 				<p:inputText id="email" value="#{data.email}" style="width:95%;" maxlength="100"
-				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" />
+				 validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" 
+				 disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:20%;">
 				<p:inputText id="phoneNo" value="#{data.phoneNo}" style="width:95%;" maxlength="100"
-				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" />
+				  validator="#{webappBean.checkPhoneNumber}" label="#{lbl['lbl.ct.tel']}" 
+				  disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"/>						
+				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" 
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		</div>
 		
 		<p:dialog id="delCtPersonDlg" resizable="false"
@@ -62,7 +69,8 @@
 			value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{panelBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />		
-			<p:column selectionMode="multiple" style="width:3%" />
+			<p:column selectionMode="multiple" style="width:3%" 
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.circular.no']}">
 				<h:outputText value="#{data.circularVer.circularNo}" />
 			</p:column>
@@ -73,9 +81,11 @@
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
-				actionListener="#{panelBackingBean.addCancelCircularListener()}" />
+				actionListener="#{panelBackingBean.addCancelCircularListener()}" 
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" icon="ui-icon-delete"
-				action="#{panelBackingBean.deleteCancelCircular()}" update="cancelCircularDt" />				
+				action="#{panelBackingBean.deleteCancelCircular()}" update="cancelCircularDt" 
+				rendered="#{!panelBackingBean.managedBean.viewContract}"/>				
 		</div>	
 	</p:panel>
 	
@@ -128,7 +138,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{panelBackingBean.managedBean.viewContract}"/> 
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
 										</tr>

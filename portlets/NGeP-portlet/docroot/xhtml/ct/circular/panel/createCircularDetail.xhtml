@@ -13,7 +13,7 @@
 				</td>
 				<td style="width: 200px">
 					<p:inputText id="circularNoTxt" style="width:170px; margin-top:2px;" label="#{lbl['lbl.ct.circular.no']}"
-					 required="true" maxlength="50"
+					 	required="true" maxlength="50" disabled="#{panelBackingBean.managedBean.viewContract}"
 						value="#{panelBackingBean.managedBean.circularVer.circularNo}"/>
 				</td>
 				<td>
@@ -25,6 +25,7 @@
 				</td>
 				<td rowspan="2" style="width: 180px">
 					<p:inputTextarea id="circularNameTxt" rows="3" style="width:170px;" maxlength="200" required="true" 
+						disabled="#{panelBackingBean.managedBean.viewContract}"
 						label="#{lbl['lbl.ct.circular.name']}" value="#{panelBackingBean.managedBean.circularVer.name}" />
 				</td>
 				<td>
@@ -34,6 +35,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" /></td>
 				<td><p:inputText  style="width:170px;" maxlength="50"
+						disabled="#{panelBackingBean.managedBean.viewContract}"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" /></td>
 			</tr>
 			<tr>
@@ -44,7 +46,8 @@
 			   <td>
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
-			       		navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}">
+			       		navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
+			       		disabled="#{panelBackingBean.managedBean.viewContract}">
 			       	 <p:ajax event="dateSelect" update="popupButtonCal1" />
 			       	</p:calendar> 
 			   </td>
@@ -59,7 +62,8 @@
 			   		<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 			   			pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 			         	mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
-			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}">
+			         	showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.end.date']}"
+			         	disabled="#{panelBackingBean.managedBean.viewContract}">
 			         	 <f:attribute name="startDate" value="#{panelBackingBean.managedBean.circularVer.startDate}" />
                          <f:validator validatorId="primeDateRangeValidator" />
 			         	</p:calendar>
@@ -72,7 +76,8 @@
 		   	     <td><h:outputLabel value="#{lbl['lbl.ct.complaint.deadline']}" /></td>
 			     <td><h:panelGroup>
 				     <p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" 
-				       maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.complaint.deadline']}" />
+				     	disabled="#{panelBackingBean.managedBean.viewContract}"
+				       	maxlength="4" style="text-align:right;margin-top:2px; width:50px;" label="#{lbl['lbl.ct.complaint.deadline']}" />
 				     <p:spacer width="5" />
 				     <h:outputText value="#{lbl['lbl.ct.months']}" />
 			        </h:panelGroup>	</td>
@@ -80,6 +85,7 @@
 			<td><h:outputLabel value="#{lbl['lbl.ct.payment.day']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"
 				    maxlength="4" style="text-align:right; width:50px;margin-top:2px;" label="#{lbl['lbl.ct.payment.day']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.days']}" />
@@ -91,6 +97,7 @@
 			<td><h:outputLabel value="#{lbl['lbl.ct.delivery.period']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"
 				    maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.delivery.period']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.days']}" />
@@ -99,6 +106,7 @@
 			<td><h:outputLabel value="#{lbl['lbl.ct.contract.effective.end.date']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"
 				     maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.contract.effective.end.date']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.days']}" />
@@ -110,7 +118,8 @@
 			<td><h:outputLabel value="#{lbl['lbl.ct.replacement.day']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" 
-				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.replacement.day']}" />
+					disabled="#{panelBackingBean.managedBean.viewContract}"
+				  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.replacement.day']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.days']}" />
 			</h:panelGroup>	</td>
@@ -118,7 +127,8 @@
 			<td><h:outputLabel value="#{lbl['lbl.ct.warranty.period']}" /></td>
 			<td><h:panelGroup>
 				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" 
-				  maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
+					disabled="#{panelBackingBean.managedBean.viewContract}"
+				  	maxlength="4" style="text-align:right; width:50px;" label="#{lbl['lbl.ct.warranty.period']}" />
 				<p:spacer width="5" />
 				<h:outputText value="#{lbl['lbl.ct.months']}" />
 			</h:panelGroup>	</td>
@@ -132,7 +142,8 @@
 			<td> <h:panelGroup id="uploadCircularPg">
 				   <p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg" value="#{lbl['lbl.bpm.choose.file']}"
-					rendered="#{panelBackingBean.isPanelAdmin()}" />	
+					rendered="#{panelBackingBean.isPanelAdmin()}" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"/>	
 					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 					action="#{panelBackingBean.downloadFile(1)}" />				
 			</h:panelGroup>	</td>

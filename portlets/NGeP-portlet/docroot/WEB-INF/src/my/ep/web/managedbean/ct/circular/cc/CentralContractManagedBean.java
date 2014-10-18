@@ -58,7 +58,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private int selectedTabIndex;
 	
-	private boolean updateAction;
+	private boolean updateAction = false;
+	private boolean viewContract = false;
 	private boolean updateTypeDisable;
 	private boolean chkItemZone;
 	private boolean chkItemPrice;
@@ -324,5 +325,11 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setOrgProfiles(List<PmOrgProfile> orgProfiles) {
 		this.orgProfiles = orgProfiles;
-	}	
+	}
+	public boolean isViewContract() {
+		return viewContract;
+	}
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
+	}
 }
