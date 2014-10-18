@@ -17,26 +17,26 @@
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
-			<p:column rowspan="2" width="5%">
+			<p:column rowspan="2" width="2%">
 				<p:selectBooleanCheckbox
 					value="#{doDelAddress.flTempDoAddr.selected}" >
 					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />	
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="Delivery Address" width="10%"
-				style="white-space:normal;" styleClass="fixed-size">
+			<p:column headerText="Delivery Address" 
+				style="white-space:normal;" >
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
 			<p:column >
 				<h:outputText value="#{lbl['lbl.fl.do.delivery.service.start.end.date']}" />
 				<br/>
-				<p:inputText size="8" disabled="true"
+				<p:inputText size="7" disabled="true"
 					value="#{doDelAddress.startDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
-				<p:inputText size="8" disabled="true"
+				<p:inputText size="7" disabled="true"
 					value="#{doDelAddress.endDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -59,8 +59,6 @@
 						value="/resources/ep/images/design/attach.png"
 						title="Remark and Attachment" />
 				</p:commandLink>
-
-				<p:spacer width="10" />
 			</p:column>
 			<p:rowExpansion>
 				<p:dataTable id="doItems" var="doItems"
