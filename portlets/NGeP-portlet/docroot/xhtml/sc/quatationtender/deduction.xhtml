@@ -28,13 +28,8 @@
 			<ac:paginator for="deductPaymentTblId" />
 
 			<p:column>
-				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.deduction.type']}" />
-				</f:facet>
-
 				<p:selectOneMenu id="deductionType"
-					value="#{scQtDeduction.deductionType.parameterId}" required="true">
+					value="#{scQtDeduction.deductionType.parameterId}">
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
@@ -53,9 +48,7 @@
 					</p:inputText>
 				</h:panelGroup>
 			</p:column>
-
 		</p:dataTable>
-
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, deductPaymentTblId" partialSubmit="true"
@@ -79,31 +72,19 @@
 
 				<ac:paginator for="deductClauseTblId" />
 
-
 				<p:column selectionMode="multiple" style="width:2%" />
 
-
 				<p:column style="white-space:normal">
-					<f:facet name="header">
-						<h:outputText value="* " styleClass="mandatory" />
-						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
-					</f:facet>
 					<ui:fragment
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
-
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
 							cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;" />
 					</ui:fragment>
 					<ui:fragment
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode ne ParameterConst.deductionTypeOthers}">
-
 						<h:outputText value="#{scQtDeductionClause.pmClause.clauseDesc}" />
-
-
 					</ui:fragment>
-
 				</p:column>
-
 			</p:dataTable>
 			<div class="ppRightBtn">
 				<h:panelGroup
