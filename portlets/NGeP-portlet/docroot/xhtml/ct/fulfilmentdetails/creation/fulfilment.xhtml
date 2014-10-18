@@ -47,7 +47,18 @@
 			cursor: default;
 			padding: 10px;
          }
+        
     </style> 
+    <script type="text/javascript">  
+    $(function(){
+    	  $('form').on('keypress', function(event){
+    	    if(event.which === 13){
+    	        event.preventDefault();
+    	        $('#save').trigger('click');
+    	    }
+    	  });
+    	});
+				</script> 			
 		<p:panel>
 			<f:event listener="#{contractDetailsBackingBean.preRenderView}"  type="preRenderView"  />	
 			<p:messages id="messages" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
