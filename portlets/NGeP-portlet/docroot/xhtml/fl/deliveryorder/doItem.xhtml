@@ -13,12 +13,15 @@
 			rowIndexVar="index" rowKey="#{doDelAddress}"
 			value="#{createDOBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
 			<ac:paginator for="doDelAddress" />
+			<p:ajax event="rowToggle" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			<p:column style="width:2%">
 				<p:rowToggler />
 			</p:column>
 			<p:column rowspan="2" width="5%">
 				<p:selectBooleanCheckbox
-					value="#{doDelAddress.flTempDoAddr.selected}" />
+					value="#{doDelAddress.flTempDoAddr.selected}" >
+					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />	
+				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column headerText="Delivery Address" width="10%"
 				style="white-space:normal;" styleClass="fixed-size">
