@@ -6,11 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
-
-
 		<div align="right">
-			<p:commandButton immediate="true" value="#{lbl['lbl.sc.notice.board.backbtn']}"
-				icon="ui-icon-back"
+			<p:commandButton immediate="true"
+				value="#{lbl['lbl.sc.notice.board.backbtn']}" icon="ui-icon-back"
 				action="#{qTBusinessOwnerBackingBean.gotoQtSearchPage}"
 				style="float:left;" />
 			<c:if
@@ -18,20 +16,35 @@
 				<p:commandButton value="#{lbl['lbl.so.save']}"
 					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
 					process="@all" icon="ui-icon-save" update="@all" />
-				
+
 				<p:commandButton value="#{lbl['lbl.so.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
 					process="@all" icon="ui-icon-submit" update="@all" />
 
-				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}"
-					process="@all" style="float:right;margin-right: 12px;"
-					icon="ui-icon-cancel" update="@form"
-					rendered="#{!qTDetailBB.managedBean.qt.brandNew}" />
+				<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" process="@all"
+					style="float:right;margin-right: 12px;" icon="ui-icon-cancel"
+					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
+					onclick="cancelBODlg.show()" />
 			</c:if>
-
 		</div>
-
+		<p:dialog id="cancelBODlg" widgetVar="cancelBODlg"
+			header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false" width="325"
+			height="70" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="All data will be Cancel, are you sure to Cancel?" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					oncomplete="cancelBODlg.hide();"
+					action="#{qTBusinessOwnerBackingBean.cancelQTDetails}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					onclick="cancelBODlg.hide();" type="button" />
+			</div>
+		</p:dialog>
 	</p:panel>
 </ui:composition>
