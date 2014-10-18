@@ -86,7 +86,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" /></td>
 				<td><p:inputMask id="proposalId" size="30" mask="9"
-						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE'}"
+						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE' or specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;">
