@@ -64,7 +64,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private int selectedTabIndex;
 	
 	private boolean editZone;
-	private boolean updateAction;
+	private boolean updateAction =false;
+	private boolean viewContract =false;
 	private boolean buttonHideActive;
 	private boolean selectionOfZone;
 	private boolean chkCancelPage;
@@ -477,5 +478,12 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setChkCancelPage(boolean chkCancelPage) {
 		this.chkCancelPage = chkCancelPage;
+	}
+	
+	public boolean isViewContract() {
+		return viewContract;
+	}
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
 	}
 }

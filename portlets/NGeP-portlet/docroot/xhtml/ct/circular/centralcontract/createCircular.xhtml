@@ -19,29 +19,36 @@
 		<p:dataTable id="contactPersonDt" var="contactPersonsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
 		 	rowKey="#{contactPersonsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
-			<p:column selectionMode="multiple" style="width:5%" />
+			<p:column selectionMode="multiple" style="width:5%" 
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.contact.person.name']}" style="width:20%;">
 				<p:inputText id="cperson" value="#{contactPersonsVar.name}" maxlength="20"
-				   style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}" />
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"
+				   	style="width:95%;" label="#{lbl['lbl.ct.contact.person.name']}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.address']}" style="width:40%;">
-				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200" />
+				<p:inputText value="#{contactPersonsVar.address}" style="width:95%;" maxlength="200"
+					disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.email']}" style="width:20%;">
 				  <p:inputText id="validateEmail" value="#{contactPersonsVar.email}" maxlength="100"
-				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}" />
+				     style="width:95%;" validator="#{webappBean.checkEmail}" label="#{lbl['lbl.ct.email']}"
+				     disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.tel']}" style="width:15%;">
 				<p:inputText id="validPhone" style="width:95%;" label="#{lbl['lbl.ct.tel']}" maxlength="100"
-				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}" />
+				   value="#{contactPersonsVar.phoneNo}"  validator="#{webappBean.checkPhoneNumber}"
+				   disabled="#{centralContractBackingBean.managedBean.viewContract}"/>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt" />
+				action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt"
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-			  partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"/>				
+			  partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"
+			  rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
 		</div>
 		
 		<p:dialog id="delCtPersonDlg" resizable="false"
@@ -64,7 +71,8 @@
 		<p:dataTable id="exemptedOrgDt" var="exemptedOrgsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctExemptedOrgs}"
 		 	rowKey="#{exemptedOrgsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedExemptedOrgs}">
 			<ac:paginator for="exemptedOrgDt" />
-			<p:column selectionMode="multiple" style="width:3%" />
+			<p:column selectionMode="multiple" style="width:3%"
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.ministry']}">
 				#{exemptedOrgsVar.orgProfile.orgName}
 			</p:column>
@@ -83,12 +91,14 @@
 						buttonIcon="ui-icon-add" 
 						selectionMode="multiple"
 						saveObject="centralContractBackingBean.managedBean.orgProfiles"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form" />
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form"
+						rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 					</td>
 					<td>
 					  <p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 						  partialSubmit="true" icon="ui-icon-delete" 
-						  onsuccess="delExemptedOrgDlg.show()"/>
+						  onsuccess="delExemptedOrgDlg.show()"
+						  rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 					</td>
 					</tr></table>
 				</td>
@@ -116,7 +126,8 @@
 			value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			selection="#{centralContractBackingBean.managedBean.selectedCancelCirculars}" >
 			<ac:paginator for="cancelCircularDt" />
-			<p:column selectionMode="multiple" style="width:3%" />
+			<p:column selectionMode="multiple" style="width:3%"
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:column headerText="#{lbl['lbl.ct.circular.no']}">
 				<h:outputText value="#{cancelCircularVar.circularVer.circularNo}" />
 			</p:column>
@@ -127,9 +138,11 @@
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" oncomplete="cancelCircularDlg.show();" update="cancelledCclDt"
-				actionListener="#{centralContractBackingBean.addCancelCircularListener()}" />
+				actionListener="#{centralContractBackingBean.addCancelCircularListener()}" 
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@form" partialSubmit="true" icon="ui-icon-delete"
-				action="#{centralContractBackingBean.deleteCancelCircular()}" update="cancelCircularDt" />			
+				action="#{centralContractBackingBean.deleteCancelCircular()}" update="cancelCircularDt" 
+				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>			
 		</div>		
 	</p:panel>
 	

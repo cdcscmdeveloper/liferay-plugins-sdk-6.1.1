@@ -583,6 +583,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					getManagedBean().setSelectedPanelItems(null);
 					getManagedBean().setSelectedPanelZone(null);
 					getManagedBean().setUpdateAction(false);
+					getManagedBean().setViewContract(false);
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
@@ -1135,11 +1136,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(action.equalsIgnoreCase("view")) {
 			        getManagedBean().setUpdateAction(false);
+					getManagedBean().setViewContract(true);
 			        getManagedBean().setOutComes(new String[]{});
 			
 			} else if(action.equalsIgnoreCase("update")) {
 				    reqDTO.setUpdateAction(true);
 				    getManagedBean().setUpdateAction(true);
+					getManagedBean().setViewContract(false);
 				    getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			
 			}

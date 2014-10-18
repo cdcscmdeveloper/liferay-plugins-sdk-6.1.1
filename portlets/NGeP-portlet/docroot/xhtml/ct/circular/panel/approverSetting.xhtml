@@ -11,6 +11,7 @@
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{panelBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
+					disabled="#{panelBackingBean.managedBean.viewContract}"
 					showTargetControls="true" filterMatchMode="contains">
 					<f:facet name="sourceCaption">#{lbl['lbl.ct.available.approver']}</f:facet>  
         			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet> 

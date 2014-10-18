@@ -583,6 +583,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
 					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
 					getManagedBean().setUpdateAction(false);
+					getManagedBean().setViewContract(false);
 					initializeRemarks();
 					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
@@ -705,6 +706,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(false);
+				getManagedBean().setViewContract(true);
 				getManagedBean().setOutComes(new String[]{});
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
@@ -712,6 +714,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
+				getManagedBean().setViewContract(false);
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 			}
 			
