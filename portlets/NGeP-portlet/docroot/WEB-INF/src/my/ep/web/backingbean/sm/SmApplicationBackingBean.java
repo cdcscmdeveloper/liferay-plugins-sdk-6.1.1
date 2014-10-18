@@ -113,6 +113,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
@@ -149,7 +150,8 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void prerenderApplicationForResubmission() {
+	public void prerenderResubmissionQuestionaire() {
+		log.info("**** Prerender Questions *************");
 		HttpServletRequest originalServletRequest = new FacesScopes()
 				.getOriginalServletRequest();
 		String applId = originalServletRequest.getParameter("apId");
@@ -158,7 +160,7 @@ public class SmApplicationBackingBean extends
 
 		SmAppl appl = null;
 		SmSupplier supplierProfile = null;
-
+		String xhtml = "/xhtml/sm/resubmitApplication/prerenderResubmitApplication.xhtml";
 		try {
 			if (applId != null) {
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
@@ -169,6 +171,48 @@ public class SmApplicationBackingBean extends
 			}
 		} finally {
 		}
+
+		if (appl != null && supplierProfile != null) {
+			QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+			quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+			quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
+			quesBackingBean.getManagedBean().setSmAppl(appl);
+			quesBackingBean.retrieveQuestionnaire();
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+			getManagedBean().setSmAppl(appl);
+			getManagedBean().setSmSupplier(supplierProfile);
+		} else {
+			// redirect & display resubmit expired
+			this.getManagedBean().setValidResubmit(false);
+		}
+
+	}
+
+	public void prerenderApplicationForResubmission() {
+		HttpServletRequest originalServletRequest = new FacesScopes()
+				.getOriginalServletRequest();
+		String applId = originalServletRequest.getParameter("apId");
+
+		log.info("application id : " + applId);
+		log.info("**** Prerender Application *************");
+		SmAppl appl = getManagedBean().getSmAppl();
+		SmSupplier supplierProfile = getManagedBean().getSmSupplier();
+
+		// try {
+		// if (applId != null) {
+		// MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+		// mofResDto = SmApplicationUtil.retriveApplicationById(Integer
+		// .parseInt(applId));
+		// appl = mofResDto.getSmAppl();
+		// supplierProfile = mofResDto.getSmSupplier();
+		// }
+		// } finally {
+		// }
 
 		if (appl != null && supplierProfile != null) {
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
@@ -1101,10 +1145,15 @@ public class SmApplicationBackingBean extends
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			getManagedBean().getePRoleList().add(role);
 		}
-		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT) 
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null || getManagedBean().getSelectedShareHolder().getEpRole().isEmpty() || 
-				getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
-			getManagedBean().getSelectedShareHolder().setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null
+						|| getManagedBean().getSelectedShareHolder()
+								.getEpRole().isEmpty() || getManagedBean()
+						.getSelectedShareHolder().getEpRole()
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
+			getManagedBean().getSelectedShareHolder().setEpRole(
+					RoleCode.MOF_SUPPLIER_USER.value());
 		}
 		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(0);
@@ -2729,12 +2778,17 @@ public class SmApplicationBackingBean extends
 			role.setLabel("Supplier Admin");
 			role.setValue(RoleCode.MOF_SUPPLIER_ADMIN.value());
 			getManagedBean().getePRoleList().add(role);
-		} 
+		}
 
-		if(getManagedBean().getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT) 
-				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null || getManagedBean().getSelectedShareHolder().getEpRole().isEmpty() || 
-				getManagedBean().getSelectedShareHolder().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))){
-			getManagedBean().getSelectedShareHolder().setEpRole(RoleCode.MOF_SUPPLIER_USER.value());
+		if (getManagedBean().getSmAppl().getSupplierType()
+				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
+				&& (getManagedBean().getSelectedShareHolder().getEpRole() == null
+						|| getManagedBean().getSelectedShareHolder()
+								.getEpRole().isEmpty() || getManagedBean()
+						.getSelectedShareHolder().getEpRole()
+						.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
+			getManagedBean().getSelectedShareHolder().setEpRole(
+					RoleCode.MOF_SUPPLIER_USER.value());
 		}
 	}
 
