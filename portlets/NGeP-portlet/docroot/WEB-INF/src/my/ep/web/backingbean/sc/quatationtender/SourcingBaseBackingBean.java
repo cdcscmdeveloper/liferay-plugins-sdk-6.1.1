@@ -837,7 +837,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} else {
 
 			qtCategory.setPmCategoryL1(new PmCategoryL1());
-			qtCategory.setPmCategoryL2(new PmCategoryL2());
+			//qtCategory.setPmCategoryL2(new PmCategoryL2());
 
 		}
 
