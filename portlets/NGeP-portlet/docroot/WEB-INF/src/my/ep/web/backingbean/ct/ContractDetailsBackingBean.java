@@ -477,6 +477,9 @@ public void ConstructSideTabMenu(){
 	                
 		  } if(this.getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
 		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFulfilement);
+		               if(getManagedBean().getCtContract().isZonalPricing()) {
+			 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
+				      }
 		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
 	                   if(this.getManagedBean().getCtContract().isFactored()){
 	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
