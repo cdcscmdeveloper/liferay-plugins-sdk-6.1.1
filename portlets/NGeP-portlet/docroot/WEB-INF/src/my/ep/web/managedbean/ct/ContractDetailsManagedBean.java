@@ -111,7 +111,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean updateCompanyName;
 	private boolean showZoneDetails;
 	private boolean chkButton;
-	private boolean updateContract;
+	private boolean updateContract = false;
 	private boolean viewContract = false;
 	private boolean validateScheduleDate;
 	private boolean chkJustification;

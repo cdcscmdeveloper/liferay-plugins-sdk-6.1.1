@@ -43,7 +43,7 @@
 						 <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
 					 </h:panelGrid>
                         <p:spacer width="5"/>
-                        <h:panelGrid columns="3" 
+                        <h:panelGrid columns="4" 
                            rendered="#{!contractDetailsBackingBean.managedBean.viewContract and contractDetailsBackingBean.managedBean.updateCompanyName}">
 			               <p:selectBooleanCheckbox  disabled="#{contractDetailsBackingBean.isApprover()}"
 			                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
@@ -52,6 +52,7 @@
 				           </p:selectBooleanCheckbox>
 			               <p:spacer width="2" />	
 			               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:100px;"/>
+			               <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.business.name']}" />
 		               </h:panelGrid>
                  </h:panelGrid>
                 
@@ -74,7 +75,7 @@
                     <p:inputTextarea id="supplierAddress" disabled="true" rows="3"   maxlength="200"   autoResize="false"
                         value="#{contractDetailsBackingBean.managedBean.supplierAddress}"  style="width:170px; margin-bottom: 5px;" />
                      <p:spacer width="5"/>
-                     <h:panelGrid columns="3" 
+                     <h:panelGrid columns="4" 
                         rendered="#{!contractDetailsBackingBean.managedBean.viewContract and contractDetailsBackingBean.managedBean.updateSupplierAddress}">
 			            <p:selectBooleanCheckbox disabled="#{contractDetailsBackingBean.isApprover()}"
 			                value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.addressChange}" >
@@ -82,6 +83,7 @@
 			            </p:selectBooleanCheckbox>
 			            <p:spacer width="2" />	
 			         <p:outputLabel value="#{lbl['lbl.ct.update.address']}" style="width:100px;"/>
+			         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.update.supplier.address']}" />
 		           </h:panelGrid>
                  </h:panelGrid>
           
