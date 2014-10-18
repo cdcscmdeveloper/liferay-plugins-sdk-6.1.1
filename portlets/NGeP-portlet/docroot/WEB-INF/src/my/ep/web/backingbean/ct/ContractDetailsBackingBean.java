@@ -1992,6 +1992,10 @@ public void ConstructSideTabMenu(){
 		return TERMINATE_HISTORY_PAGE;
 	}
 	
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
+	}
+	
 	public void deleteAttachmentAction(int index) {
 		getManagedBean().getContractVer().getAgencyAttachements().remove(index);
 	}
