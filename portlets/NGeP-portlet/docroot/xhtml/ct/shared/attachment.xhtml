@@ -35,8 +35,8 @@
 							<td></td>
 							<td>
 								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
-								<p:commandLink action="#{ctBackingBean.deleteAttachmentAction(attachFileIndex)}" immediate="true" 
-									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}" update="lampiran" >
+								<p:commandLink onclick="deleteAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
+									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}">
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
 			 	 			</td>
@@ -56,6 +56,21 @@
 			invalidFileMessage="#{lbl['lbl.ct.upload.invalid.msg']}"
 			update="lampiran" >
 		</p:fileUpload> 
-	</p:dialog>		
+	</p:dialog>	
+	
+	<p:dialog id="deleteAttachmentDlg" widgetVar="deleteAttachmentDlg"
+      	styleClass="screen-title" resizable="false" modal="true" width="330">  
+      	<h:panelGrid columns="3">
+ 			<p:graphicImage library="ep/images/design" name="exclamation.png"
+		     	value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+		   	<p:spacer width="10"/>
+            <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.delete.attachment.msg']}</div>
+     	</h:panelGrid>
+		<div class="ppRightBtn">
+	     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="lampiran" process="@form" 
+	     	actionListener="#{ctBackingBean.deleteAttachmentAction(ctBackingBean.managedBean.attachFileIndex)}" onclick="deleteAttachmentDlg.hide();"/>
+		 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="deleteAttachmentDlg.hide();" type="button" />
+	   </div>
+ 	</p:dialog>	
 		
 </ui:composition>

@@ -143,6 +143,10 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
+	public void setAttachFileIndex(int index) {
+		this.getManagedBean().setAttachFileIndex(index);
+	}
+	
 	public void deleteAttachmentAction(int index) {
 		this.getManagedBean().getAttachmentList().remove(index);
 	}

@@ -28,6 +28,7 @@ public class ContractManagedBean extends BaseManagedBean{
 	private String fileDirectory;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private int attachFileIndex;
 	
 	public List<CtRemark> getRemarkList() {
 		if(remarkList==null) {
@@ -52,6 +53,12 @@ public class ContractManagedBean extends BaseManagedBean{
 	}
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
 	}
 	
 }

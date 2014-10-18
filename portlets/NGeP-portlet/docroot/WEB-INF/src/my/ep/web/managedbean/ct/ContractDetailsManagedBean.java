@@ -154,6 +154,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private List<SelectItem> monthList;
 	private boolean codeNameSearchValues = false;
+	private int attachFileIndex;
 	
 	public String[] getAction() {
 		return action;
@@ -937,6 +938,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setCodeNameSearchValues(boolean codeNameSearchValues) {
 		this.codeNameSearchValues = codeNameSearchValues;
 	}
-	
-	
+
+	public int getAttachFileIndex() {
+		return attachFileIndex;
+	}
+
+	public void setAttachFileIndex(int attachFileIndex) {
+		this.attachFileIndex = attachFileIndex;
+	}
 }
