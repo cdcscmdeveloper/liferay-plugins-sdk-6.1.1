@@ -30,7 +30,9 @@
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							<td>
-							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.remarks']}"/>
+								<h:panelGroup rendered="#{remarkIndex==0}">
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.remarks']}"/> 
+								</h:panelGroup>
 							</td>
 						</tr>
 					</table>
