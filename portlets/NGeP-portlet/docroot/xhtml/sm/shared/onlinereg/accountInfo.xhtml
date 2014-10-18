@@ -31,8 +31,8 @@
 					test="#{registrationBackingBean.managedBean.smAppl.applType == SupplierManagementConst.ACC_MOF}">
 
 					<td class="tdTitle">
-						<p:outputLabel value="*" styleClass="mandatory" />
 						<p:outputLabel value="#{lbl['lbl.sm.mofsuppliertype']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="suppTypeId" required="#{!empty param['disableValidation']}"
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}"
@@ -49,8 +49,8 @@
 				</c:if>
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
 					<p:selectOneMenu id="busTypeId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.businesscomptype']}"
