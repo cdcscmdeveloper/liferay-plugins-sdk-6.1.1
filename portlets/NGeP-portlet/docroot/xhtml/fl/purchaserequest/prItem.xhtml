@@ -42,17 +42,17 @@
 			</p:column>
 			
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.period']}">
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;">
 				<p:outputLabel style="text-align:right"
 					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}">
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" style="white-space:normal;">
 				<h:outputText value="#{address.startDate}" style="text-align:right">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}">
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" style="white-space:normal;">
 				<h:outputText value="#{address.endDate}" style="text-align:right">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
