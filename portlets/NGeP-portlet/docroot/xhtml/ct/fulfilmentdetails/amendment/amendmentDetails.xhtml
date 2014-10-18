@@ -97,7 +97,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<p:inputText id="txtname" style="width:530px;" required="true" label="#{lbl['lbl.ct.amendment.title']}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" />
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="99" />
 				<p:message for="txtname" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -112,8 +112,8 @@
 			</h:panelGroup>
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtdesc" rows="5"  required="true" label="#{lbl['lbl.ct.amendment.desc']}"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"
-					style="width:530px;margin-bottom: 5px;" />
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}" maxlength="199"
+					style="width:530px;margin-bottom: 5px;"  autoResize="false"/>
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>
 		</h:panelGrid>
@@ -122,16 +122,10 @@
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
 			<h:panelGrid columns="3"
 				rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
-				<p:selectOneMenu id="ceperiod" style="width:80px;"
-					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" >
-					<p:ajax event="change" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" />
-					<f:selectItem itemLabel="3" itemValue="3" />
-					<f:selectItem itemLabel="6" itemValue="6" />
-					<f:selectItem itemLabel="9" itemValue="9" />
-					<f:selectItem itemLabel="12" itemValue="12" />
-					<f:selectItem itemLabel="24" itemValue="24" />
-					<f:selectItem itemLabel="36" itemValue="36" />
-				</p:selectOneMenu>
+				<p:inputText style="width:80px;" required="true" label="#{lbl['lbl.ct.extension.period']}"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.extendPeriod}" maxlength="3" >
+					<p:ajax event="blur" update="extStartDate, extEndDate" listener="#{amendmentBackingBean.onExtensionPeriodChanged}" />
+					</p:inputText>
 				<p:spacer width="2" />
 				<p:outputLabel value="#{lbl['lbl.ct.months']}" />
 			</h:panelGrid>

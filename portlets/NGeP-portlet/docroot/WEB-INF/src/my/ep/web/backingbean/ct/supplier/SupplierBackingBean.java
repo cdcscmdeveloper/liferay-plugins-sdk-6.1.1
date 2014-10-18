@@ -511,11 +511,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 
 			if(getManagedBean().getFactoring().getFileName() == null || getManagedBean().getFactoring().getFileName().isEmpty()) {
-				throw new EpException(MessageConst.INFO_100022,	new String[] { "Factoring Agreement" });
+				throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Factoring Agreement" });
 			}
 			if(getManagedBean().isRemoveFactoring()){
 			    if(getManagedBean().getFactoring().getRemoveFileName() == null || getManagedBean().getFactoring().getRemoveFileName().isEmpty()) {
-				    throw new EpException(MessageConst.INFO_100022,	new String[] { "Factoring Agreement" });
+				    throw new EpException(MessageConst.INFO_100022,	new String[] { "Copy Of Remove Factoring" });
 			  }
 			}
 			
