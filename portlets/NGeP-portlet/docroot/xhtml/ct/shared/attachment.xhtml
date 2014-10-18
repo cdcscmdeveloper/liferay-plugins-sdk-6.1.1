@@ -9,7 +9,8 @@
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadDlg.show();return false;" icon="iconAttachment" 
-					update="lampiran" value="#{lbl['lbl.ct.upload.attach.files']}" />
+					update="lampiran" value="#{lbl['lbl.ct.upload.attach.files']}"
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}" />
 			</td>
 		</tr>
 		<tr>

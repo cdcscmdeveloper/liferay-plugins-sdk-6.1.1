@@ -19,7 +19,7 @@
 			 </h:panelGrid>
 		     <p:outputLabel id="centralphyNo" value="#{lbl['lbl.ct.physical.no']}" />
 		     <h:panelGrid columns="3">
-		     	<p:inputText for="centralphyNo" style="width:170px;"  maxlength="30"
+		     	<p:inputText for="centralphyNo" style="width:170px;"  maxlength="30" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		       		value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
 		      	<p:spacer width="1"/>
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
@@ -40,10 +40,12 @@
 		     </h:panelGrid>
 		     <h:panelGrid columns="4">
 		       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}"
-		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"/>
+		          maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
+		          disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
                <p:spacer width="2" />
-               <p:selectOneMenu id="centralDelPeriod" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
-                 style="width:120px;" required="true"  label="#{lbl['lbl.ct.delivery.period']}" >
+               <p:selectOneMenu id="centralDelPeriod" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+               	  	value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" 
+                 	style="width:120px;" required="true"  label="#{lbl['lbl.ct.delivery.period']}" >
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>			   
 			   <p:message for="centralDelPeriod" display="icon"/>
@@ -114,7 +116,8 @@
 			   </h:panelGrid>
 		     </h:panelGrid> 
 		     <h:panelGrid columns="3">
-			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" style="text-align:top;">
+			  <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" style="text-align:top;"
+			  	 disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 			     <p:ajax event="change" update=":form:centalJustificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />
@@ -137,8 +140,9 @@
 		    </div>
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
-	    <p:inputTextarea id="centralJustificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		   rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" required="true" autoResize="false" 
+	    <p:inputTextarea id="centralJustificationLbl" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+	    	value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
+		   	rows="4" style="width:570px;" maxlength="200" validator="#{webappBean.checkSpaces}" required="true" autoResize="false" 
 		    label="#{lbl['lbl.ct.justification.ap201']}">
 		  </p:inputTextarea>	
 	     <p:message for="centralJustificationLbl" display="icon"/>

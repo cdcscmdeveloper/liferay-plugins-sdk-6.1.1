@@ -19,7 +19,8 @@
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
                <ac:paginator for="tableAgencyDetails"/>
                <p:ajax event="rowSelect" update=":form:agencyId" />
-               <p:column selectionMode="multiple" style="width:2%;" />
+               <p:column selectionMode="multiple" style="width:2%;"
+               	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
             
              <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
 				<h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
@@ -41,19 +42,19 @@
 					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
                	</f:facet>
-           		<p:inputText value="#{agencyData.ceilingAmount}"  required="true"
+           		<p:inputText value="#{agencyData.ceilingAmount}"  required="true" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 			     	maxlength="23"  styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.amount']}">
 			 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			 		<p:ajax event="change" update=":form:tableAgencyDetails"
-                                 process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
+                    	process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
 				</p:inputText>
 		   	 </p:column>
 		   
 		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
 			  	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"
 		             showOn="button" readonlyInput="true" navigator="true"
-		             mindate="#{contractDetailsBackingBean.currentDate}" 
-		             maxdate="#{agencyData.expDate}"			             
+		             mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
+		             disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 		       	</p:calendar>
 		   	 </p:column>
@@ -68,7 +69,7 @@
 					<h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
                	</f:facet>
-		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;"
+		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
 		   	      rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
 		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
 		   	 </p:column>
@@ -78,13 +79,16 @@
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
        		    action="#{contractDetailsBackingBean.setMinistryOwnerId()}"  update=":form:ministry"
        		    rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
+       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0 and
+       			!contractDetailsBackingBean.managedBean.viewContract}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>
        		</p:commandButton> 
-			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
-       			fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0}">
+			<p:commandButton id="delBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onclick="dlgDel.show();"
+				rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and
+       				fn:length(contractDetailsBackingBean.managedBean.contractVer.ctAgencies.get(0).ctAgencyAddresses)==0 and
+       				!contractDetailsBackingBean.managedBean.viewContract}">
        			<p:tooltip for="delBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.agency']}" escape="false" />
 				</p:tooltip>
@@ -206,7 +210,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" />
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000"
+													disabled="#{contractDetailsBackingBean.managedBean.viewContract}" />
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.remark']}" rendered="#{remarkIndex==0}" />
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
@@ -223,7 +228,8 @@
 			           <td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
 			           <td class="TableFieldRight">
 				         <p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
-					        update="lampiran1" value="#{lbl['lbl.ct.upload.attach.files']}" />
+					        update="lampiran1" value="#{lbl['lbl.ct.upload.attach.files']}"
+					        disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
 			           </td>
 		             </tr>
 		             <tr>

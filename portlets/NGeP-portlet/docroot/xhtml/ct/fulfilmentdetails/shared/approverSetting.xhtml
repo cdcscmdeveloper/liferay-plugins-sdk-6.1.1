@@ -12,7 +12,8 @@
 			<p:spacer height="1" />
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{contractDetailsBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
+					var="data" itemValue="#{data}" itemLabel="#{data}"
+					disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 					showTargetControls="true" filterMatchMode="contains">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}

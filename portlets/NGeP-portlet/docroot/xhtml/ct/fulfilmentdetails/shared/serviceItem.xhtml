@@ -124,7 +124,8 @@
 										<tr>
 											<td></td>
 											<td>
-												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" /> 
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" maxlength="1000" 
+													disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/> 
 												<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.remark']}"/>
 												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 											</td>
