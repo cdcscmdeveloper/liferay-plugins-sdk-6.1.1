@@ -3289,6 +3289,10 @@ public class SpecificationBackingBean extends
 		List<TreeNode> localList = new ArrayList<TreeNode>();
 		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this
 				.getManagedBean().getLocalLevelCode())) {
+			if (getManagedBean().getIndex() >= 0) {
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}
 			if (null != states && !states.isEmpty()) {
 				for (PmState state : states) {
 					List<PmState> localStaeList = new ArrayList<PmState>();
@@ -3303,24 +3307,19 @@ public class SpecificationBackingBean extends
 					}
 					if (getManagedBean().getIndex() >= 0) {
 
-						getManagedBean().getZoneTrees().remove(
-								getManagedBean().getIndex());
+						/*
+						 * getManagedBean().getZoneTrees().remove(
+						 * getManagedBean().getIndex());
+						 */
 						localList.add(LocationSingleton.getInstance()
 								.buildLocationTree(null, localStaeList,
 										districts, divisions, cities,
 										ScQtLocCriteria.class));
-						getManagedBean().getZoneTrees().addAll(localList);
-						/*
-						 * getManagedBean().getZoneTrees().add(
-						 * getManagedBean().getIndex(),
-						 * LocationSingleton.getInstance()
-						 * .buildLocationTree(null, localStaeList, districts,
-						 * divisions, cities, ScQtLocCriteria.class));
-						 */
 
 					}
-				}
 
+				}
+				getManagedBean().getZoneTrees().addAll(localList);
 			}
 		}
 
@@ -9619,10 +9618,11 @@ public class SpecificationBackingBean extends
 								.isTechEvaluationReq()) {
 					// retriveTechnicalSpecification();
 					// retriveTechnicalCheckList();
-					//settemplateSpecList(savedCheckLists);
-					if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-						 retriveTechnicalSpecification();	
-					}else{
+					// settemplateSpecList(savedCheckLists);
+					if (SourcingConstants.TECHNICAL_DOCTYPE
+							.equalsIgnoreCase(specType)) {
+						retriveTechnicalSpecification();
+					} else {
 						retriveFinancialCheckList();
 					}
 				} else if (QTConstants.EVALUATION_TWO_TIER
@@ -9815,10 +9815,11 @@ public class SpecificationBackingBean extends
 								.isTechEvaluationReq()) {
 					// retriveTechnicalSpecification();
 					// retriveTechnicalCheckList();
-					//settemplateSpecList(savedCheckLists);
-					if (SourcingConstants.TECHNICAL_DOCTYPE.equalsIgnoreCase(specType)) {
-						 retriveTechnicalSpecification();	
-					}else{
+					// settemplateSpecList(savedCheckLists);
+					if (SourcingConstants.TECHNICAL_DOCTYPE
+							.equalsIgnoreCase(specType)) {
+						retriveTechnicalSpecification();
+					} else {
 						retriveFinancialCheckList();
 					}
 				} else if (QTConstants.EVALUATION_TWO_TIER
