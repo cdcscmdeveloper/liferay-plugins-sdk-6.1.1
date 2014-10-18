@@ -83,10 +83,11 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 	}
 	
 	public void handleException(Throwable exception) {
-		exception.printStackTrace();
+		//exception.printStackTrace();
 		//log.error(exception.getMessage(), exception);
 		
 		Locale userLocale = new FacesScopes().getUserLocale();
+		boolean isValidationException = false;
 		String msgCode = MessageConst.ERROR_000001;
 		int bpmcode = 0;
 		String componentId = null;
@@ -98,31 +99,41 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 
 		while (throwables.size() > 0) {
 			// get the root exception from context
-			Throwable rootException = throwables.remove(throwables
+			Throwable throwable = throwables.remove(throwables
 					.size() - 1);
 
 			if (log.isDebugEnabled()) {
-				log.debug("Throwable: " + rootException);
+				log.debug("Throwable: " + throwable);
 				// log.debug("Message: " + rootException.getMessage());
 			}
 
-			if (rootException instanceof EpException) {
-				EpException epex = (EpException) rootException;
+			if (throwable instanceof EpException) {
+				EpException epex = (EpException) throwable;
 				msgCode = epex.getMessage();
 				params = epex.getParameters();
+				isValidationException = !MessageConst.ERROR_000001.equals(msgCode);
 				// FIXME - have to set the component id if wan to let
 				// the exception decide where to display the msg
+				
 				break;
-			} else if (rootException instanceof EpBpmException) {
-				EpBpmException epex = (EpBpmException) rootException;
+			} else if (throwable instanceof EpBpmException) {
+				EpBpmException epex = (EpBpmException) throwable;
 				msgCode = epex.getMessage();
 				bpmcode = epex.getCode();
+				isValidationException = true;
+				
 				break;
 			}
 		}
 
 		if (log.isDebugEnabled()) {
 			log.debug("msgCode: " + msgCode);
+		}
+		
+		if (isValidationException) {
+			exception.printStackTrace();
+		} else {
+			log.error(exception.getMessage(), exception);
 		}
 
 		// String message = BUNDLE.getString(msgCode);
