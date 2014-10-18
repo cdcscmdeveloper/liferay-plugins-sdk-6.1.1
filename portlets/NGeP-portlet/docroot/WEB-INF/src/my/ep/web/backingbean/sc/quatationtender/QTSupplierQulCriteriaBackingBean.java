@@ -26,6 +26,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -46,6 +47,7 @@ import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -1015,25 +1017,49 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public void categoryCodesUpdate(int index, List<ScQtCategory> categoryList, PmCategoryL3 categoryL3) {
 		ICategoryCodeSO categoryCodeSo;
 		try {
-			categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 			CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
 			codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
-			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
-					.retrieveCategoryL3DtlById(codeReqDTO);
-			if (null != CategoryCodeResDTO
-					&& null != CategoryCodeResDTO.getCategoryL3()) {
+			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo.retrieveCategoryL3DtlById(codeReqDTO);
+			if (null != categoryList && categoryList.size() > 1) {
+				boolean isDuplicate = false;
+				for (int i = 0; i < categoryList.size() - 1; i++) {
+					ScQtCategory scQtCategory = categoryList.get(i);
+					if (scQtCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getCategoryL3Code())
+							&& scQtCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code())
+							&& scQtCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code())) {
+						isDuplicate = true;
+						break;
+					}
+				}
+				if (isDuplicate) {
+					ScQtCategory scQtCategory = categoryList.get(index);
+					this.getManagedBean().getQtCategoryList().remove(index);
+					// .setScQt(scQt);
+					scQtCategory.setPmCategoryL1(new PmCategoryL1());
+					scQtCategory.setPmCategoryL2(new PmCategoryL2());
+					scQtCategory.setPmCategoryL3(new PmCategoryL3());
+					this.getManagedBean().getQtCategoryList().add(index, scQtCategory);
+					throw new EpException(MessageConst.ERROR_760111);
+				} else {
+					ScQtCategory category = categoryList.get(index);
+					category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
+					category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2());
+					category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1());
+					category.setScQt(this.getManagedBean().getQt());
+					setUserDetails(category);
+					this.getManagedBean().getQtCategoryList().remove(index);
+					this.getManagedBean().getQtCategoryList().add(index, category);
+				}
+			} else {
 				ScQtCategory category = categoryList.get(index);
 				category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
-				category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3()
-						.getPmCategoryL2());
-				category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3()
-						.getPmCategoryL2().getPmCategoryL1());
+				category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2());
+				category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1());
 				category.setScQt(this.getManagedBean().getQt());
 				setUserDetails(category);
 				this.getManagedBean().getQtCategoryList().remove(index);
-				this.getManagedBean().getQtCategoryList()
-						.add(index, category);
+				this.getManagedBean().getQtCategoryList().add(index, category);
 			}
 		} finally {
 
@@ -1043,28 +1069,51 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public void restrictedCategoryCodesUpdate(int index, List<ScQtCategory> categoryList, PmCategoryL3 categoryL3) {
 		ICategoryCodeSO categoryCodeSo;
 		try {
-			categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+			categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
 			CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
 			codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
-			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
-					.retrieveCategoryL3DtlById(codeReqDTO);
-			if (null != CategoryCodeResDTO
-					&& null != CategoryCodeResDTO.getCategoryL3()) {
+			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo.retrieveCategoryL3DtlById(codeReqDTO);
+			if (null != categoryList && categoryList.size() > 1) {
+				boolean isDuplicate = false;
+				for (int i = 0; i < categoryList.size() - 1; i++) {
+					ScQtCategory scQtCategory = categoryList.get(i);
+					if (scQtCategory.getPmCategoryL3().getCategoryL3Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getCategoryL3Code())
+							&& scQtCategory.getPmCategoryL2().getCategoryL2Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code())
+							&& scQtCategory.getPmCategoryL1().getCategoryL1Code().equalsIgnoreCase(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code())) {
+						isDuplicate = true;
+						break;
+					}
+				}
+				if (isDuplicate) {
+					ScQtCategory scQtCategory = categoryList.get(index);
+					this.getManagedBean().getSuppCriteriarestrictedList().remove(index);
+					// .setScQt(scQt);
+					scQtCategory.setPmCategoryL1(new PmCategoryL1());
+					scQtCategory.setPmCategoryL2(new PmCategoryL2());
+					scQtCategory.setPmCategoryL3(new PmCategoryL3());
+					this.getManagedBean().getSuppCriteriarestrictedList().add(index, scQtCategory);
+					throw new EpException(MessageConst.ERROR_760111);
+				} else {
+					ScQtCategory category = categoryList.get(index);
+					category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
+					category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2());
+					category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1());
+					category.setScQt(this.getManagedBean().getQt());
+					setUserDetails(category);
+					this.getManagedBean().getSuppCriteriarestrictedList().remove(index);
+					this.getManagedBean().getSuppCriteriarestrictedList().add(index, category);
+				}
+			} else {
 				ScQtCategory category = categoryList.get(index);
 				category.setPmCategoryL3(CategoryCodeResDTO.getCategoryL3());
-				category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3()
-						.getPmCategoryL2());
-				category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3()
-						.getPmCategoryL2().getPmCategoryL1());
+				category.setPmCategoryL2(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2());
+				category.setPmCategoryL1(CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1());
 				category.setScQt(this.getManagedBean().getQt());
 				setUserDetails(category);
 				this.getManagedBean().getSuppCriteriarestrictedList().remove(index);
-				this.getManagedBean().getSuppCriteriarestrictedList()
-						.add(index, category);
+				this.getManagedBean().getSuppCriteriarestrictedList().add(index, category);
 			}
 		} finally {
-
 		}
 	}
 	
