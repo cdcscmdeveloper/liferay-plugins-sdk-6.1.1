@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.sdoreview;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +30,15 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.StreamedContent;
 
 @ManagedBean(name = "sdoReviewBackingBean")
 @RequestScoped
 public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> {
 
 	public static Logger log = Logger.getLogger(SdoReviewBackingBean.class);
-
+	private StreamedContent file;
+	
 	public SdoReviewBackingBean() {
 		
 	}
@@ -49,6 +52,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//this.getManagedBean().setAppId(1006);
 		log.info("----------appID------------"+ this.getManagedBean().getAppId());
 		//this.getManagedBean().setAppId(2765); 
+		//this.getManagedBean().setAppId(3654);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -71,10 +75,14 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 		for(SmApplSupportDoc applSuppDoc : this.getManagedBean().getSmAppl().getSmApplSupportDocs()){
 			if(!applSuppDoc.isReceived()){
-
-				this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+				if(applSuppDoc.getSmApplDocFiles().size() > 0){
+					applSuppDoc.setReceived(true);
+				}else{
+					this.getManagedBean().getUnselectedSmApplSuppDocs().add(applSuppDoc);
+				}
 			}
 		}
+		
 		retrieveBusinessTypeList();
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
 
@@ -224,6 +232,22 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	
 	public void showVerifyConfirmation(){
 		RequestContext.getCurrentInstance().execute("submissionConfirmDlg.show()");
+	}
+	
+	public void downloadSuppDoc(String fileName, String filePath) {
+		file = null;
+		String finalFilePath = filePath + fileName;
+		try {
+			file = commonDownload(finalFilePath, fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finalFilePath = null;
+	}
+	
+	public StreamedContent getFile(){
+		return file;
 	}
 	
 }
