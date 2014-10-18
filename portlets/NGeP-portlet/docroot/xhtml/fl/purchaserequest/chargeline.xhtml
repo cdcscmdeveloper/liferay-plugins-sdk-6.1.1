@@ -14,7 +14,7 @@
 			selectionMode="single"
 			value="#{purchaseRequestBackingBean.managedBean.chargeLineItemRoot}" >
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
-			<p:ajax event="select"
+			<p:ajax event="select" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
 				update="@(.chargeLineSection)" />
 			<p:ajax event="unselect"
