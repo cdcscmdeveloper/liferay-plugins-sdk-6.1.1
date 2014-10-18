@@ -284,15 +284,30 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	     	         ContractSupplierReqDTO reqDTO = null;
 	     	         ContractSupplierResDTO resDTO = null;
 	     	         SelectItem[] items = null;
-	                
-	     	         try {
-		        		   int i =1;
-		        	       reqDTO = new ContractSupplierReqDTO();
-		        	       reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-		        	       supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-				           resDTO = supplierSO.retrieveSupplierContract(reqDTO);
-				           List<CtContract> list = resDTO.getContractList();
-				           items = new SelectItem[list.size() + 1];
+	     	         
+	     	        ISupplierSearchSO supplierSearchSO = null;
+		            SupplierSearchReqDTO supplierReqDTO = null;
+		            SupplierSearchResDTO supplierResDTO = null;
+		     
+		            try {
+		       
+		            	        supplierReqDTO = new SupplierSearchReqDTO();
+		         		        supplierReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		         		        supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISupplierSearchSO.class);
+                                supplierResDTO = supplierSearchSO.retriveSupplierProfiles(supplierReqDTO);
+		         		
+		         		        List<Long> supplierIdList = new ArrayList<Long>();
+		         		        for(SmSupplier supplier : supplierResDTO.getResultBean().getResultList()) {
+		         		              	supplierIdList.add(supplier.getSupplierId());
+		         		        }
+		         		        
+		                    int i =1;
+		        	        reqDTO = new ContractSupplierReqDTO();
+		        	        reqDTO.setSupplierIds(supplierIdList);
+		        	        supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+				            resDTO = supplierSO.retrieveSupplierContract(reqDTO);
+				            List<CtContract> list = resDTO.getContractList();
+				            items = new SelectItem[list.size() + 1];
 				            items[0] = new SelectItem(null, "- Select One -");
 				            for (CtContract obj : list) {
 				        		   items[i++] = new SelectItem(obj.getLatestContractVer().getContractVerId(), obj.getContractNo());
@@ -301,6 +316,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		         	supplierSO = null;
 		         	reqDTO = null;
 		 		    resDTO = null;
+		 		    supplierSearchSO = null;
+		            supplierReqDTO = null;
+		            supplierResDTO = null;
 		         }
 		     } 
 		     return getManagedBean().getPopulateContractList();
