@@ -144,7 +144,7 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.date']}"/></td>
 				</h:panelGroup>	
 			</tr>
 			<tr>
@@ -157,7 +157,7 @@
 				<h:panelGroup rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.status.statusId ne FulfilmentStatusCont.paPendingPaymentMatch}">	
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.ref']}" /></td>
 				<td><p:inputText size="20" disabled="true"
-						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /></td>
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentRefNo}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pm.payment.reference']}"/></td>
 				</h:panelGroup>		
 			</tr>
 		</table>
