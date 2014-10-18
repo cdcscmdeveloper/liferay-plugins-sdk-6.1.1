@@ -36,7 +36,7 @@
 				<p:spacer width="7" />
 				<h:outputText value="#{lbl['lbl.fl.delivery.end']}" />
 				<p:spacer width="7" />
-				<p:inputText size="9"
+				<p:inputText size="9" style="width:100px"
 					value="#{flOrderBB.managedBean.flRequest.endDate}" disabled="true">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
