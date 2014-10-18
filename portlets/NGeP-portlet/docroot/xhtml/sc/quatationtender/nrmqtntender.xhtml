@@ -12,27 +12,31 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.spec.category.code.list']}" />
 		</f:facet>
-		
+
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
 			rowIndexVar="index" styleClass="openPnlId" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
-		
+
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column headerText="#{lbl['lbl.sc.spec.category.code']}"
 				style="width:15%">
 				<p:inputText value="#{cateGory.pmCategoryL1.categoryL1Code}"
-					size="2" style="margin-right: 3px !important;">
-					<p:ajax event="blur"  update="openPtj" partialSubmit="true" process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(cateGory)}"/>
+					maxlength="2" size="2" style="margin-right: 3px !important;">
+					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
+						process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL1Code(cateGory)}" />
 				</p:inputText>
+
 				<p:inputText value="#{cateGory.pmCategoryL2.categoryL2Code}"
 					size="2">
-					<p:ajax event="blur" update="openPtj" partialSubmit="true" process="@this"
-						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(cateGory)}"/>
+					<p:ajax event="blur" update=":form:openPnlId" partialSubmit="true"
+						maxlength="2" process="@this"
+						listener="#{qTSupplierQulCriteriaBackingBean.updatedQtCategoryL2Code(cateGory)}" />
 				</p:inputText>
+
 				<ac:lov id="openPtj" lovId="PM_CATEGORY_L3" size="2"
 					headerText="Category Lov"
 					saveObject="qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList[#{index}].pmCategoryL3"
@@ -41,6 +45,7 @@
 					conditionField="#{qTSupplierQulCriteriaBackingBean.constructCondtionFields(cateGory)}"
 					update=":form:openPnlId">
 				</ac:lov>
+
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.main.category']}"
@@ -148,7 +153,7 @@
 						<td style="width: 145px"><p:outputLabel
 								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="locLevels" required="true"
+						<td><p:selectOneMenu id="locLevels"
 								label="#{lbl['lbl.sc.spec.zone.location.level']}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
@@ -322,9 +327,11 @@
 				<td style="width: 125px"><p:outputLabel
 						value="#{lbl['lbl.so.totalsup']}" /></td>
 				<td style="width: 150px"><p:inputText style="margin-right:5px;"
-						disabled="true" value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}"/></td>
+						disabled="true"
+						value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
 				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
-						update="totalSuppliersId" action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
+						update="totalSuppliersId"
+						action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
 						icon="ui-icon-search" partialSubmit="true" process="@this" /></td>
 				<td />
 			</tr>
