@@ -1,0 +1,108 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+		<p:messages id="onlineBidding" showDetail="true" autoUpdate="true"
+			closable="true" />
+
+		<div align="right" style="width: 100%">
+			<TABLE>
+				<TR>
+					<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
+
+					<TD><p:selectOneMenu id="currentDayBidList"
+							style="width : 160px">
+							<f:selectItems var="bid"
+								value="#{onlineBiddingBB.activeBidSchedules}"
+								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}"></f:selectItems>
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								listener="#{onlineBiddingBB.selectedBidChangeListener}"></p:ajax>
+
+						</p:selectOneMenu>
+						<p:commandLink
+						action="#{onlineBiddingBB.navigateToSelectedBid}"
+						 partialSubmit="true">
+						<p:graphicImage library="ep/images/design" name="submit.png"
+							value="/css/images/design/submit.png" />
+					</p:commandLink>
+						
+						</TD>
+				</TR>
+			</TABLE>
+
+		</div>
+
+		<p:panel header="#{lbl['lbl.sc.bid.details']}" id="bidDetailsPanel"
+			toggleable="true">
+
+			<div style="width: 100%">
+
+				<table style="width: 60%; align: LEFT">
+
+					<tr>
+						<td style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.bidding.no']}" /></td>
+						<td><p:inputText id="bidNo"
+								value="#{onlineBiddingBB.scBidSchedule.bidNo}" disabled="true"
+								size="20" /></td>
+						<TD></TD>
+						<TD></TD>
+						<td rowspan="4"></td>
+					</tr>
+
+					<tr>
+						<td style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.document.no']}" /></td>
+						<td><p:inputText id="documentNo"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.docNo}"
+								disabled="true" size="20" /></td>
+						<TD></TD>
+						<TD></TD>
+					</tr>
+
+					<tr>
+						<td style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.document.title']}" /></td>
+						<td colspan="3"><p:inputText id="documentTitle"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.docTitle}"
+								disabled="true" size="90" /></td>
+					</tr>
+
+					<tr>
+						<td style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.ptj.name']}" /></td>
+						<td colspan="3"><p:inputText id="ptjName"
+								value="#{onlineBiddingBB.scBidSchedule.scBid.pmOrgProfile.orgName}"
+								disabled="true" size="90" /></td>
+
+					</tr>
+
+					<tr>
+
+						<td style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.bidding.start']}" /></td>
+						<td><p:inputText id="bidStart"
+								value="#{onlineBiddingBB.scBidSchedule.startDate}"
+								disabled="true" size="20">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</p:inputText></td>
+						<TD style="width: 120px"><p:outputLabel
+								value="#{lbl['lbl.sc.bidding.end']}" /></TD>
+						<TD><p:inputText id="bidEnd"
+								value="#{onlineBiddingBB.scBidSchedule.endDate}" disabled="true"
+								size="20">
+								<f:convertDateTime
+									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+							</p:inputText></TD>
+
+					</tr>
+
+				</table>
+
+			</div>
+		</p:panel>
+	
+</ui:composition>
