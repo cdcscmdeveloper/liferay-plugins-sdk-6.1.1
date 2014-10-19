@@ -13,20 +13,15 @@
 					<TD><p:outputLabel value="#{lbl['lbl.sc.bidding.no']}" /></TD>
 
 					<TD><p:selectOneMenu id="currentDayBidList"
-							style="width : 160px">
+							style="width : 160px"
+							value="#{onlineBiddingBB.selectedBidScheduleId}">
 							<f:selectItems var="bid"
 								value="#{onlineBiddingBB.activeBidSchedules}"
-								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}"></f:selectItems>
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{onlineBiddingBB.selectedBidChangeListener}"></p:ajax>
+								itemLabel="#{bid.bidNo}" itemValue="#{bid.bidScheduleId}" />
+							<p:ajax event="change" process="@this" partialSubmit="true" update="@this"
+								listener="#{onlineBiddingBB.selectedBidChangeListener()}" />
 
 						</p:selectOneMenu>
-						<p:commandLink
-						action="#{onlineBiddingBB.navigateToSelectedBid}"
-						 partialSubmit="true">
-						<p:graphicImage library="ep/images/design" name="submit.png"
-							value="/css/images/design/submit.png" />
-					</p:commandLink>
 						
 						</TD>
 				</TR>
