@@ -34,11 +34,51 @@
 								
 								
 								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
 							
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
 						
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
 							
 							
 							
@@ -132,18 +172,21 @@
 					</h:outputText>
 				</p:column>
 				<p:column>
-					<p:outputLabel style="float : right"
+					<p:outputLabel style="float : right" id="lastBidPrice"
 						value="#{bidPriceItem.bidPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:outputLabel>
 				</p:column>
 				<p:column>
-					<p:outputLabel style="float : right"
-						value="#{bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+					<h:panelGrid id="lastBidPriceSubTotal"
+						styleClass="noBorders tr,noBorders td">
+						<p:outputLabel style="float : right" rendered="#{(bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty) ne 0}"
+							value="#{bidPriceItem.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:outputLabel>
+					</h:panelGrid>
 				</p:column>
 				<p:column>
 					<p:spinner size="10" value="#{bidPriceItem.newPrice}"
@@ -151,53 +194,112 @@
 						max="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt * 10}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
-							update="newPrice,newPriceSubTotal,newRanking"
+							update="newPrice,newPriceSubTotal"
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"></p:ajax>
 					</p:spinner>
 					<p:spacer width="5"></p:spacer>
 					<p:commandLink
 						action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
 						process="@this" partialSubmit="true"
-						update="@([id$=itemWiseBidList])">
+						update="lastBidPrice,lastBidPriceSubTotal,newRanking,:form:packageRankingPanel">
 						<p:graphicImage library="ep/images/design" name="submit.png"
 							value="/css/images/design/submit.png" />
 					</p:commandLink>
 				</p:column>
 				<p:column>
-					<p:outputLabel id="newPrice" style="float : right"
-						rendered="#{bidPriceItem.newBidPrice != null}"
-						value="#{bidPriceItem.newBidPrice.bidPrice}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+					<h:panelGrid styleClass="noBorders tr,noBorders td"
+						rendered="#{bidPriceItem.newBidPrice != null}">
+						<p:outputLabel id="newPrice" style="float : right"
+							value="#{bidPriceItem.newBidPrice.bidPrice}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:outputLabel>
+					</h:panelGrid>
 				</p:column>
 				<p:column>
-					<p:outputLabel id="newPriceSubTotal" style="float : right"
-						rendered="#{bidPriceItem.newBidPrice != null}"
-						value="#{bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</p:outputLabel>
+
+					<h:panelGrid id="newPriceSubTotal"
+						styleClass="noBorders tr,noBorders td"
+						rendered="#{bidPriceItem.newBidPrice != null}">
+						<p:outputLabel style="float : right" rendered="#{(bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty) ne 0}"
+							value="#{bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty}">
+							<f:convertNumber
+								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:outputLabel>
+					</h:panelGrid>
 				</p:column>
 				<p:column>
-					<p:outputLabel id="newRanking" value="#{bidPriceItem.ranking}" />
+					<h:panelGrid id="newRanking" styleClass="noBorders tr,noBorders td"
+						rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'I'}">
+						<p:outputLabel value="#{bidPriceItem.ranking}" />
+					</h:panelGrid>
 				</p:column>
 
 				<p:columnGroup type="footer">
 					<p:row>
-						<p:column colspan="4" footerText="Total" style="text-align:right" />
-						<p:column footerText="#{onlineBiddingBB.itemStartPriceTotal}" />
-						<p:column footerText="Total" style="text-align:right" />
-						<p:column footerText="#{onlineBiddingBB.itemLastBidPriceTotal}" />
-						<p:column colspan="2" footerText="Total" style="text-align:right" />
-						<p:column id="itemNewBidPriceTotal"
-							footerText="#{onlineBiddingBB.itemNewBidPriceTotal}" />
+						<p:column colspan="4">
+							<f:facet name="footer">
+								<h:outputText value="#{lbl['lbl.sc.total']}"
+									style="text-align:right" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="footer">
+								<h:outputText value="#{onlineBiddingBB.itemStartPriceTotal}" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="footer">
+								<h:outputText value="#{lbl['lbl.sc.total']}"
+									style="text-align:right" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="footer">
+								<h:outputText id="itemLastBidPriceTotal"
+									value="#{onlineBiddingBB.itemLastBidPriceTotal}" />
+							</f:facet>
+						</p:column>
+						<p:column colspan="2">
+
+							<f:facet name="footer">
+								<h:outputText value="#{lbl['lbl.sc.total']}"
+									style="text-align:right" />
+							</f:facet>
+						</p:column>
+						<p:column>
+							<f:facet name="footer">
+
+								<h:outputText id="itemNewBidPriceTotal"
+									value="#{onlineBiddingBB.itemNewBidPriceTotal}" />
+							</f:facet>
+						</p:column>
 						<p:column />
 					</p:row>
 				</p:columnGroup>
 			</p:dataTable>
 
 		</p:panel>
+
+		<p:panel id="packageRankingPanel">
+
+			<h:panelGrid styleClass="noBorders tr,noBorders td"
+				rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'P'}">
+
+				<div style="align: right">
+					<TABLE>
+						<TR>
+							<TD><p:outputLabel value="#{lbl['lbl.sc.package.ranking']}" /></TD>
+							<TD><p:inputText disabled="true" size="5"
+									value="#{onlineBiddingBB.packageRanking}"></p:inputText></TD>
+						</TR>
+					</TABLE>
+				</div>
+
+			</h:panelGrid>
+
+		</p:panel>
+
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingBottom.xhtml" />
 
 	</ui:define>
