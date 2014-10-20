@@ -988,13 +988,11 @@ public void ConstructSideTabMenu(){
     }
     
    public int  calculateTotalMonth(Object Var, String frequencyType){
-	   DateUtils dateUtil  = null;
 	   DateFormat dateFormat = null;
 	   String fromDate = null;
 	   String toDate = null;
 	   try{
 		     
-		   dateUtil = new DateUtils();
            dateFormat = new SimpleDateFormat("MM-yyyy");
 		  
            if(frequencyType.equalsIgnoreCase(ContractConst.CONTRACT_FREQUENCY_SCHEDULE)) {
@@ -1023,10 +1021,10 @@ public void ConstructSideTabMenu(){
 		   if(months < 0){
 			   return 0;
 		   }
-		   return months;
+		   return months+1;
          } catch(Exception ex){ }
 	   finally {
-		   dateUtil = null;
+		 
 	   }
 	   return 0;	
     }
