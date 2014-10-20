@@ -257,6 +257,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private BigDecimal equiPerCapTotal;
 	private BigDecimal equiCompCapTotal;
 	private boolean validResubmit;
+	private boolean resubmitWithActiveDraft;
 	private boolean draftedAppl;
 	private String currentPageType;
 	private boolean redirectToPersonPage;
@@ -2103,5 +2104,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setRevisionApproverAppNoParam(String revisionApproverAppNoParam) {
 		this.revisionApproverAppNoParam = revisionApproverAppNoParam;
 	}
+
+	public boolean isResubmitWithActiveDraft() {
+		return resubmitWithActiveDraft;
+	}
+
+	public void setResubmitWithActiveDraft(boolean resubmitWithActiveDraft) {
+		this.resubmitWithActiveDraft = resubmitWithActiveDraft;
+	}
+
 
 }

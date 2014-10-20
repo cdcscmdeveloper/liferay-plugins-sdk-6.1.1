@@ -157,7 +157,6 @@ public class SmApplicationBackingBean extends
 		String applId = originalServletRequest.getParameter("apId");
 
 		log.info("application id : " + applId);
-
 		SmAppl appl = null;
 		SmSupplier supplierProfile = null;
 		String xhtml = "/xhtml/sm/resubmitApplication/prerenderResubmitApplication.xhtml";
@@ -173,22 +172,31 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (appl != null && supplierProfile != null) {
-			QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-			quesBackingBean.getManagedBean().setTargetUrl(xhtml);
-			quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
-			quesBackingBean.getManagedBean().setSmAppl(appl);
-			quesBackingBean.retrieveQuestionnaire();
+			this.getManagedBean().setValidResubmit(true);
+			boolean activeExist = false;
+			activeExist = SmApplicationUtil
+					.checkActiveSmApplForSupp(supplierProfile);
+			if (!activeExist) {
+				QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+				quesBackingBean.getManagedBean().setTargetUrl(xhtml);
+				quesBackingBean.getManagedBean().setSmSupp(supplierProfile);
+				quesBackingBean.getManagedBean().setSmAppl(appl);
+				quesBackingBean.retrieveQuestionnaire();
 
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-			getManagedBean().setSmAppl(appl);
-			getManagedBean().setSmSupplier(supplierProfile);
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(fc, null,
+								"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+				getManagedBean().setSmAppl(appl);
+				getManagedBean().setSmSupplier(supplierProfile);
+			} else {
+				this.getManagedBean().setResubmitWithActiveDraft(false);
+			}
 		} else {
 			// redirect & display resubmit expired
 			this.getManagedBean().setValidResubmit(false);
+			this.getManagedBean().setResubmitWithActiveDraft(true);
 		}
 
 	}
@@ -296,7 +304,8 @@ public class SmApplicationBackingBean extends
 
 				} else if (applicationType.equalsIgnoreCase("R")
 						|| applicationType.equalsIgnoreCase("A")
-						|| applicationType.equalsIgnoreCase("B")) {
+						|| applicationType.equalsIgnoreCase("B")
+						|| applicationType.equalsIgnoreCase("U")) {
 					cannotProceedAlertMsg = SmApplicationUtil
 							.validateBeforeProceed(currSupp.getSupplierId(),
 									applicationType);

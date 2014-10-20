@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.context.FacesContext;
@@ -70,6 +71,7 @@ import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -153,10 +155,11 @@ public class SmApplicationUtil {
 		StringBuffer sb = new StringBuffer();
 		sb.append("<br/>");
 		for (SmApplSupportDoc doc : suppDocs) {
-			if (doc.getSmApplDocFiles().get(0).getFileName()
-					.equalsIgnoreCase(" ")
-					|| doc.getSmApplDocFiles().get(0).getFilePath()
-							.equalsIgnoreCase(" ")) {
+			if (doc.getPmDocument() != null
+					&& doc.getPmDocument().isMandatory()
+					&& (doc.getSmApplDocFiles().get(0).getFileName()
+							.equalsIgnoreCase(" ") || doc.getSmApplDocFiles()
+							.get(0).getFilePath().equalsIgnoreCase(" "))) {
 				sb.append(++i + ".)");
 				sb.append(doc.getPmDocument().getDocName());
 				// sb.append(",  ");
@@ -1510,12 +1513,21 @@ public class SmApplicationUtil {
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
-						smSupplier.getSmAppl().getSupplierType())) {
+						smSupplier.getSmAppl().getSupplierType())
+						&& account.getRecordStatusFlg().compareTo(
+								DbValueConst.RECORD_STATUS_ACTIVE) == 0) {
 					Timestamp currentDate = new Timestamp(
 							System.currentTimeMillis());
 					long diff = account.getExpDate().getTime()
 							- currentDate.getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
+					if (!applicationType.equalsIgnoreCase("R")) {
+						Date today = new Date();
+						if (!(today.compareTo(account.getExpDate()) < 0)) {
+							result = true;
+							throw new EpException(MessageConst.ERROR_722564);
+						}
+					}
 					if (applicationType.equalsIgnoreCase("R")) {
 						if (diffDays > 90) {
 							result = true;
