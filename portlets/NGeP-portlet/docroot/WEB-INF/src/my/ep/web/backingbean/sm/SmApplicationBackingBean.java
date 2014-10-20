@@ -300,9 +300,9 @@ public class SmApplicationBackingBean extends
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
-				} else if (applicationType.equalsIgnoreCase("B")) {
-
-				} else if (applicationType.equalsIgnoreCase("R")
+				} 
+				//else if (applicationType.equalsIgnoreCase("B")) {}
+				else if (applicationType.equalsIgnoreCase("R")
 						|| applicationType.equalsIgnoreCase("A")
 						|| applicationType.equalsIgnoreCase("B")
 						|| applicationType.equalsIgnoreCase("U")) {
