@@ -19,6 +19,7 @@ import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -2485,6 +2486,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		String imgUrl = getServerUrl()+ "NGeP-portlet/images/letter/gov.png";
+		
+		String rightImgUrl = getServerUrl()+ "NGeP-portlet/css/images/eperolehan-footer.png";
 		
 		VelocityContext context = new VelocityContext();
 		context.put("productCode", scRequestItem.getCmItem() !=null ? scRequestItem.getCmItem().getExtensionCode() : "");
@@ -2498,7 +2502,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			context.put("productCode", "");
 			context.put("itemName", "");
 		}
-		
+		context.put("imgUrl", imgUrl);
+		context.put("rightImgUrl", rightImgUrl);
 		context.put("desc", scRequestItem.getItemDesc() != null ? scRequestItem.getItemDesc() : "" );
 		context.put("uom", scRequestItem.getUom() != null ? scRequestItem.getUom() .getUomName() : "");
 		List<MarketSummaryAndPIBean> requestNoteVOList = new ArrayList<>();
@@ -2697,6 +2702,16 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	private IParameterSO getParameterSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	}
+	
+	private String getServerUrl() {
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		String requestURL = httpServletRequest.getRequestURL().toString();
+		String url = requestURL.substring(0, requestURL.length()- httpServletRequest.getRequestURI().length())+ httpServletRequest.getContextPath() + "/";
+
+		return url;
 	}
 
 	/**
