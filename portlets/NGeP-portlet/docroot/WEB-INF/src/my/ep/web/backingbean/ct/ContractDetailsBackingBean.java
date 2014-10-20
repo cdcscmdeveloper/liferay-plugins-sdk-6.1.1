@@ -583,6 +583,7 @@ public void ConstructSideTabMenu(){
 	}
 	
 	public String backAction() {
+		this.getManagedBean().setViewContract(false);
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl() : CONTRACT_MAINT_PAGE;
 	}
 	
