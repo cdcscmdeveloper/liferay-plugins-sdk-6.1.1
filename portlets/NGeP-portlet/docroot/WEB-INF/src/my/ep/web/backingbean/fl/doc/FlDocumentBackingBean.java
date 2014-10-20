@@ -434,6 +434,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			invBB.getManagedBean().setFulfilmentRequest(resDTO.getInvoice().getFlRequest());
 			invBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			invBB.getManagedBean().setDocMaintainRemarks(true);
+			if(invBB.getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
+				invBB.getFactoringBranchDtl(); 
+			}			
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
