@@ -16,7 +16,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
-import my.ep.biz.service.pm.general.settings.kpi.IKPIStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -32,8 +31,6 @@ import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
-import my.ep.dto.pm.general.settings.kpi.KPIReqDTO;
-import my.ep.dto.pm.general.settings.kpi.KPIResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -44,6 +41,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.pm.general.settings.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.util.MessageUtils;
@@ -198,169 +196,6 @@ public class RuleCatalogueBackingBean extends
 		return "";
 	}
 
-//	public String onTabChange(String status) {
-//		System.out.println("******status*******" + status);
-//		IConfigGeneralSO cgeneralSO = null;
-//		IRuleSO ruleSO = null;
-//		// IKPIStatusSO kpiSO = null;
-//		IFeeExemptionSO feeSO = null;
-//		try {
-//			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IConfigGeneralSO.class);
-//			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-//					"pm", IRuleSO.class);
-//			// kpiSO = (IKPIStatusSO) BusinessDelegate.getInstance()
-//			// .getServiceObject("pm", IKPIStatusSO.class);
-//			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IFeeExemptionSO.class);
-//
-//			if (status.equalsIgnoreCase("general")) {
-//
-//				ConfigGeneralReqDTO reqDTO = new ConfigGeneralReqDTO();
-//				ConfigGeneralResDTO resDTO = cgeneralSO
-//						.getConfigGeneral(reqDTO);
-//				this.getManagedBean().setSelectedConfigGeneral(
-//						resDTO.getPmConfigGeneral());
-//
-//				this.getManagedBean().setTabActiveIndex(0);
-//			} else if (status.equalsIgnoreCase("rule")) {
-//
-//				RuleReqDTO reqRDTO = new RuleReqDTO();
-//				FacesScopes fs = new FacesScopes();
-//				reqRDTO.setLanguageCode(fs.getUserLocale().getLanguage());
-//
-//				RuleResDTO resRDTO = ruleSO.getRuleTypes(reqRDTO);
-//
-//				this.getManagedBean().setConfigRuleList(
-//						resRDTO.getRuleTypeList());
-//				this.getManagedBean().setSelectedRuleType(
-//						this.getManagedBean().getConfigRuleList().get(0));
-//				this.getManagedBean().setTabActiveIndex(1);
-//				// return "ruleConfig.xhtml";
-//				// FacesContext fc = FacesContext.getCurrentInstance();
-//				// fc.getApplication().getNavigationHandler()
-//				// .handleNavigation(fc, null, "ruleConfig");
-//			} else if (status.equalsIgnoreCase("fee")) {
-//				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
-//				this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
-//						.clear();
-//				FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-//
-//				FeeExemptionResDTO resDTO = feeSO
-//						.getFeeExemptionsForOrgAndItem(reqDTO);
-//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-//					if (exemption.getItemId() == null) {// TODO: clear it before
-//														// updating the fee list
-//						exemption.setItemId(new CmItem());
-//					}
-//					this.getManagedBean().getFeeExemptionsForOrgAndItem()
-//							.add(exemption);
-//				}
-//
-//				this.getManagedBean().setTabActiveIndex(2);
-//				this.getManagedBean().setFeeExemptionIndex(0);
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			cgeneralSO = null;
-//			ruleSO = null;
-//		}
-//		return "settingConfig.xhtml";
-//
-//	}
-//
-//	public void onFeeTabChange(String status) {
-//		System.out.println("******status*******" + status);
-//		IFeeExemptionSO feeSO = null;
-//		try {
-//			feeSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", IFeeExemptionSO.class);
-//
-//			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-//			FeeExemptionResDTO resDTO = null;
-//			if (status.equalsIgnoreCase("byOrg")) {
-//				this.getManagedBean().getFeeExemptionsForOrgAndItem().clear();
-//				this.getManagedBean().getDeletedOrgAndItemFeeExemptions()
-//						.clear();
-//				resDTO = feeSO.getFeeExemptionsForOrgAndItem(reqDTO);
-//
-//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-//					if (exemption.getItemId() == null) {// TODO: clear it before
-//														// updating the fee list
-//						exemption.setItemId(new CmItem());
-//					}
-//					this.getManagedBean().getFeeExemptionsForOrgAndItem()
-//							.add(exemption);
-//				}
-//
-//				this.getManagedBean().setFeeExemptionIndex(0);
-//			} else if (status.equalsIgnoreCase("byComodity")) {
-//				this.getManagedBean().getFeeExemptionsForComodity().clear();
-//				this.getManagedBean().getDeletedComodityFeeExemptions().clear();
-//				resDTO = feeSO.getFeeExemptionsForComodity(reqDTO);
-//				this.getManagedBean().setFeeExemptionsForComodity(
-//						resDTO.getFeeExemptions());
-//
-//				ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-//						.getInstance().getServiceObject("cm",
-//								ICodificationSO.class);
-//				CodificationReqDTO cReqDTO = new CodificationReqDTO();
-//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-//					cReqDTO.setUnspscCode(exemption.getUnspscId()
-//							.getUnspscCode());
-//					CodificationResDTO cResDTO = unspscSO
-//							.retrieveUNSPSCByCommodityCode(cReqDTO);
-//
-//					if (cResDTO.isSuccessful()) {
-//
-//						CmUnspsc commodity = cResDTO.getCommodityObj();
-//
-//						exemption.setTypes(new ArrayList<CmType>());
-//						for (CmType type : commodity.getCmType()) {
-//							if (!StringUtils.isBlank(type.getTypeName())) {
-//								exemption.getTypes().add(type);
-//							}
-//						}
-//					}
-//				}
-//
-//				this.getManagedBean().setFeeExemptionIndex(1);
-//			} else if (status.equalsIgnoreCase("byContract")) {
-//				this.getManagedBean().getFeeExemptionsForContract().clear();
-//				this.getManagedBean().getDeletedContractFeeExemptions().clear();
-//				resDTO = feeSO.getFeeExemptionsForContractAndReqItem(reqDTO);
-//
-//				for (PmFeeExemption exemption : resDTO.getFeeExemptions()) {
-//					if (exemption.getRequestItemId() == null) {
-//						exemption.setRequestItemId(new ScRequestItem());// TODO:
-//																		// clear
-//																		// it
-//																		// before
-//																		// updating
-//																		// the
-//																		// fee
-//																		// list
-//					}
-//					this.getManagedBean().getFeeExemptionsForContract()
-//							.add(exemption);
-//				}
-//
-//				this.getManagedBean().setFeeExemptionIndex(2);
-//				System.out
-//						.println("...................resDTO.getFeeExemptions().size()="
-//								+ resDTO.getFeeExemptions().size());
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			feeSO = null;
-//		}
-//		// return "settingConfig.xhtml";
-//
-//	}
 
 	public void categoryCodesUpdate(int index,
 			List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
@@ -373,8 +208,8 @@ public class RuleCatalogueBackingBean extends
 			codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
 			CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
 					.retrieveCategoryL3DtlById(codeReqDTO);
-			if (null != CategoryCodeResDTO
-					&& null != CategoryCodeResDTO.getCategoryL3()) {
+			if (CategoryCodeResDTO != null 
+					&& CategoryCodeResDTO.getCategoryL3() != null) {
 				PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
 				ruleValue.setCategoryL3Id(CategoryCodeResDTO.getCategoryL3());
 				String categoryL3Code = CategoryCodeResDTO.getCategoryL3()
@@ -538,8 +373,11 @@ public class RuleCatalogueBackingBean extends
 		PmConfigRuleValue newRuleValue = new PmConfigRuleValue();
 		newRuleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 		newRuleValue.setEffDate(new Date());
+		log.info("..............this.getManagedBean().getSelectedRuleType()="+this.getManagedBean().getSelectedRuleType());
+		log.info("..............this.getManagedBean().getSelectedRuleType().getRuleType()="+this.getManagedBean().getSelectedRuleType().getRuleType());
+		log.info("..............this.getManagedBean().getSelectedRuleType().getRuleDataTypeId()="+this.getManagedBean().getSelectedRuleType().getRuleDataTypeId());
 		if(this.getManagedBean().getSelectedRuleType().getRuleDataTypeId().getParameterCode().equals("C")){
-			newRuleValue.setCategoryL3Id(new PmCategoryL3());
+			newRuleValue.setCategoryL3Id(new PmCategoryL3());// make sure to delete the new obj before update if doesn't selected
 		}
 
 		int index = this.getManagedBean().getSelectedRuleType()
@@ -562,7 +400,7 @@ public class RuleCatalogueBackingBean extends
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 		// newFeeExemption.setFeeExemptionType("1");
 		newFeeExemption.setEffDate(new Date());
-		newFeeExemption.setItemId(new CmItem());
+		newFeeExemption.setItemId(new CmItem());// make sure to delete the new objs before update if doesn't selected
 		newFeeExemption.setOrgProfileId(new PmOrgProfile());
 
 		int index = this.getManagedBean().getFeeExemptionsForOrgAndItem()
@@ -589,7 +427,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................addMoreComodityFee...................");
 		PmFeeExemption newFeeExemption = new PmFeeExemption();
 
-		newFeeExemption.setEffDate(new Date());
+		newFeeExemption.setEffDate(new Date());// make sure to delete the new objs before update if doesn't selected
 		newFeeExemption.setTypeId(new CmType());
 		newFeeExemption.setUnspscId(new CmUnspsc());
 
@@ -642,15 +480,27 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void saveRuleCatalog() {
-
+		// make sure to delete the new obj before update if doesn't selected
+		  for(PmConfigRule ruleType:this.getManagedBean().getConfigRuleList()){
+       	   
+       	   if(ruleType.getRuleDataTypeId().getParameterCode().equals("C")){
+       		   for(PmConfigRuleValue ruleTypeValue:ruleType.getConfigRuleValues()){
+       			if(ruleTypeValue.getCategoryL3Id()!= null && ruleTypeValue.getCategoryL3Id().getCategoryL3Id() == null){
+       				ruleTypeValue.setCategoryL3Id(null);
+       			}
+       		   }
+      		}
+          }
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					"pm", IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
-
+			
+         
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
+			//retrive updated list
 			reqDTO = new RuleReqDTO();
 			FacesScopes fs = new FacesScopes();
 			reqDTO.setLanguageCode(fs.getUserLocale().getLanguage());
@@ -658,6 +508,8 @@ public class RuleCatalogueBackingBean extends
 			resDTO = ruleSO.getRuleTypes(reqDTO);
 
 			this.getManagedBean().setConfigRuleList(resDTO.getRuleTypeList());
+			this.getManagedBean().setSelectedRuleType(
+					this.getManagedBean().getConfigRuleList().get(0));
 			if (resDTO.isSuccessful()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(
