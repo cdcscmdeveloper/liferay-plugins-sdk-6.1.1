@@ -76,7 +76,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	    
 	    FlAttachment attachment = new FlAttachment();
 		attachment.setFileName(item.getFileName());
-		attachment.setFilePath(filePath);
+		attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 		
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
@@ -126,12 +126,12 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		if (attachment.getFilePath() != null) {
 			InputStream input = null;
 			try {
-				URLConnection uc = new URL(attachment.getFilePath())
+				URLConnection uc = new URL(DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath())
 						.openConnection();
 				input = new BufferedInputStream(uc.getInputStream());
 			} catch (Exception e) {
 				// Cannot open connection, maybe local file
-				input = new FileInputStream(attachment.getFilePath());
+				input = new FileInputStream(DocumentRepositoryUtils.getBaseDir()+attachment.getFilePath());
 			}
 			byte[] buffer = new byte[4096];
 			int bytesRead;
