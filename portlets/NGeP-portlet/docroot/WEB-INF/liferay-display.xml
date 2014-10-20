@@ -61,18 +61,10 @@
 
 		<!-- Procurement Plan - START -->
 		<category name="category.ep.pp">
-			<portlet id="ppBudgetAlloc"></portlet>
-			<portlet id="ppBudgetDisburse"></portlet>
-			<portlet id="ppPlan"></portlet>
-			<portlet id="ppProcurementApproval"></portlet>
-			<portlet id="reviewBudgetAllocation"></portlet>
-			<portlet id="revisePlanPreparation"></portlet>
-			<portlet id="reviewPlanPreparation"></portlet>
-			<portlet id="ppDisburseBudgetList"></portlet>
-			<portlet id="ppAllocatedBudgetList"></portlet>			
+			<portlet id="pPlanProcurementPlan"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
-
+		
 		<!-- sourcing -->
 		<category name="category.ep.sc">
 			<portlet id="scProcurementList" />

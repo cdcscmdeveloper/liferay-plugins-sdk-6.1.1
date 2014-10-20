@@ -1,0 +1,40 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+
+	<p:panel id="pPlanResult" header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
+		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			 lazy="true">
+			<ac:paginator for="dtPlanResult" />
+	        <p:column headerText="#{lbl['lbl.pp.plan.year']}">  
+		    	
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.type']}">  
+	            
+	        </p:column> 
+	        <p:column headerText="#{lbl['lbl.pp.ministry']}">  
+	            
+	        </p:column>
+	        
+	        <p:column headerText="#{lbl['lbl.pm.status']}">  
+	            
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+      		   <p:commandLink >
+					<p:graphicImage value="/css/images/design/edit.png"/>
+				</p:commandLink>
+	        </p:column>  
+	   	</p:dataTable> 
+	   	<br/>
+	   	<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.create']}"  action="#{pPlanBackingBean.redirectToMaintainPlan(null)}"  
+				ajax="false"/>
+		</div>
+	</p:panel>
+</ui:composition>

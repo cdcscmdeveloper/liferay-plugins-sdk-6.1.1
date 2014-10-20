@@ -1,0 +1,81 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<p:outputPanel id="opPlanEp">
+	<br/>
+	   	<p:dataTable id="dtExpenditurePlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+		     selectionMode="multiple">
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.object']}" />
+			    </f:facet>
+		  		<p:selectOneMenu styleClass="ppDropDownWidthS">  
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />      
+	            </p:selectOneMenu>
+	        </p:column>	 
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.type.of.expenses']}" />
+			    </f:facet>
+		  		<p:inputText styleClass="ppDisplayTextM">
+				</p:inputText>
+	        </p:column>
+	         <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
+			    </f:facet>
+		  		<p:inputText styleClass="ppDisplayTextM">
+				</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
+			    </f:facet>
+		  		<p:inputText styleClass="ppDisplayTextM">
+				</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
+			    </f:facet>
+		  		<p:inputText styleClass="ppDisplayTextM">
+				</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
+			    </f:facet>
+		  		<p:inputText styleClass="ppDisplayTextM">
+				</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.reject']}" />
+			    </f:facet>
+		  		
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.reject.reason']}" />
+			    </f:facet>
+		  		
+	        </p:column>
+	         <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.remarks']}" />
+			    </f:facet>
+		  		
+	        </p:column>
+		</p:dataTable>
+	</p:outputPanel>
+</ui:composition>

@@ -1,0 +1,45 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+		
+	<ui:define name="contentSection">
+		<p:outputPanel id="opPlanDetails">
+			<!-- Validation Message -->
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		
+			<!-- Header -->
+			<ui:include src="common/headerSection.xhtml"/>
+
+			<!-- Plan General Info -->
+			<ui:include src="common/planGeneralInfo.xhtml"/>
+					
+			<!-- Plan Header -->			
+			<p:panel id="pPlanHeader" header="#{lbl['lbl.pp.header']}" toggleable="true">
+				<ui:include src="planDetHeader.xhtml"/>
+			</p:panel>	
+				
+			<!-- Plan Details -->
+			<p:panel id="pPlanDet" header="#{lbl['lbl.pp.plan.detail']}" toggleable="true">
+				<ui:include src="planDetPp.xhtml"/>
+				<ui:include src="planDetEp.xhtml"/>  
+			</p:panel>
+			
+			<!-- Plan Actors -->			
+			<p:panel id="pPlanActor" header="Approver Details" toggleable="true">
+				<ui:include src="planActors.xhtml"/> 	
+			</p:panel>	
+			
+			<!-- Plan Remarks -->			
+			<p:panel id="pPlanRemark" header="#{lbl['lbl.pp.remarks']}" toggleable="true">
+				<ui:include src="planRemarks.xhtml"/>  
+			</p:panel>	
+		</p:outputPanel>
+		
+	</ui:define>
+</ui:composition>
