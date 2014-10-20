@@ -377,7 +377,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			   
 		  	    if(getManagedBean().getContractVer().getCtAmendment()==null) {
 				     getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
-				     getManagedBean().getContractVer().getCtAmendment().setFileRefNo(getManagedBean().getCtContract().getContractNo()+"-");
+				     getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
 				     getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
