@@ -6,11 +6,10 @@ package my.ep.web.backingbean.fl.invoice;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -25,7 +24,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -44,8 +43,8 @@ import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
@@ -65,12 +64,10 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -548,8 +545,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().getInvoice().setPaymentBank(supplierBank.getPmFinancialOrg());
 		}
 	}
+	
 	public void getFactoringBranchDtl(){
-		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+		IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IFinancialOrgSO.class);
+		FinancialOrgReqDTO finOrgReqDTO = new FinancialOrgReqDTO();
+		FinancialOrgResDTO finOrgResDTO = null;
+		
 		getManagedBean().setBranchName(null);
 		getManagedBean().setSupplierAddress(null);
 		getManagedBean().setPhoneNo(null);
@@ -560,57 +561,31 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch()!=null && getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId()!=null) {
 			getManagedBean().setBranchName(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getBranchName());
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(resDTO.getAddressTypeList().get(0).getPmContacts() != null && resDTO.getAddressTypeList().get(0).getPmContacts().size()>0){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
-					getManagedBean().setContactPerson(pmContact.getContactName());
-					getManagedBean().setContactEmail(pmContact.getEmail());
-					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
-				}
-			}
-			for (PmFinancialAcc financialAcc : getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
-					break;
-				}
-	        }
+			finOrgReqDTO.setFinancialBranchId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialBranch().getFinancialBranchId());
+			finOrgResDTO = financialOrgSO.retriveFinAccDtlByBranchId(finOrgReqDTO);
 		} else { //reset back to HQ info
-			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
-			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			if(!resDTO.getAddressTypeList().isEmpty()){
-				getManagedBean().setSupplierAddress(getFullAddress(resDTO.getAddressTypeList().get(0).getPmAddress()));
-				getManagedBean().setPhoneNo(resDTO.getAddressTypeList().get(0).getPmAddress().getPhoneNo());
-				getManagedBean().setFaxNo(resDTO.getAddressTypeList().get(0).getPmAddress().getFaxNo());
-				if(!resDTO.getAddressTypeList().get(0).getPmContacts().isEmpty() ){
-					PmContact pmContact = resDTO.getAddressTypeList().get(0).getPmContacts().get(0);
+			finOrgReqDTO.setFinancialOrgId(getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getFinancialOrgId());
+			finOrgResDTO = financialOrgSO.retriveFinAccDtlByFinOrgId(finOrgReqDTO);
+		}
+		
+		if(finOrgResDTO.isSuccessful()) {
+			if(finOrgResDTO.getPmAddressType()!=null){
+				getManagedBean().setSupplierAddress(getFullAddress(finOrgResDTO.getPmAddressType().getPmAddress()));
+				getManagedBean().setPhoneNo(finOrgResDTO.getPmAddressType().getPmAddress().getPhoneNo());
+				getManagedBean().setFaxNo(finOrgResDTO.getPmAddressType().getPmAddress().getFaxNo());
+				if(!finOrgResDTO.getPmAddressType().getPmContacts().isEmpty() ){
+					PmContact pmContact = finOrgResDTO.getPmAddressType().getPmContacts().get(0);
 					getManagedBean().setContactPerson(pmContact.getContactName());
 					getManagedBean().setContactEmail(pmContact.getEmail());
 					getManagedBean().setContactPhoneNo(pmContact.getPhoneNo());
 				}
 			}
 			
-			for (PmFinancialAcc financialAcc : getManagedBean().getInvoice().getFlFulfilmentOrder().getPmFinancialOrg().getPmFinancialAccs()) {
-				if(financialAcc.getEffDate().before(new Date()) && (financialAcc.getExpDate()==null || financialAcc.getExpDate().after(new Date()))) {
-					getManagedBean().getInvoice().setAccountNo(financialAcc.getAccountNo());
-					getManagedBean().getInvoice().setPaymentBank(financialAcc.getPmPaymentBankOrg());
-					getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
-					break;
-				}
-	        }
+			if(finOrgResDTO.getPmFinancialAcc()!=null) {
+				getManagedBean().getInvoice().setAccountNo(finOrgResDTO.getPmFinancialAcc().getAccountNo());
+				getManagedBean().getInvoice().setPaymentBank(finOrgResDTO.getPmFinancialAcc().getPmPaymentBankOrg());
+				getManagedBean().setAccountNoName(getManagedBean().getInvoice().getAccountNo()+"  "+getManagedBean().getInvoice().getPaymentBank().getFinOrgName());
+			}
 		}
 	}
 	
