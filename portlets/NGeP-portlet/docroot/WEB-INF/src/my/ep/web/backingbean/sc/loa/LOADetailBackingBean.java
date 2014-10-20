@@ -1989,8 +1989,8 @@ public class LOADetailBackingBean extends
 				AwardSupplierResDTO resDTO = qtAwardSO
 						.retrieveMinistryAgencyList(reqDTO);
 
-				getManagedBean().setAgencyProfileList(
-						resDTO.getAgencyProfileList());
+				getManagedBean().setAgencyProfileDDList(
+						resDTO.getAgencyProfileDDList());
 
 			} finally {
 				qtAwardSO = null;

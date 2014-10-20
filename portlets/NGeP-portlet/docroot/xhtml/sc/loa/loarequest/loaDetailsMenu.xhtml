@@ -273,9 +273,9 @@
 						
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOADetailBackingBean.managedBean.agencyProfileList}"
-							var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgName}"
-							itemValue="#{pmOrgProfile.orgProfileId}" />
+							value="#{lOADetailBackingBean.managedBean.agencyProfileDDList}"
+							var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}"
+							itemValue="#{pmOrgProfile[0]}" />
 						<p:ajax event="change" 
 							listener="#{lOADetailBackingBean.contractAgencyChanged()}"
 							partialSubmit="true" process="@this"
