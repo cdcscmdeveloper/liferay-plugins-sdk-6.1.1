@@ -28,76 +28,9 @@
 							<td style="width: 41%; align: left"><script
 									type="application/javascript">
 								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-								
-							
 						
 			var myCountdownBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "hour",rangeLo: "second",width: 250,height: 70}); 
 					
-						
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
 							
 							</script></td>
 							<TD style="width: 50%;"><h:outputLabel
@@ -132,7 +65,7 @@
 							width="19%" style=" text-align:center" />
 
 						<p:column rowspan="2"
-							rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'I'}"
+							rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem}"
 							headerText="#{lbl['lbl.sc.current.ranking']}"
 							style="white-space : normal" width="4%" />
 					</p:row>
@@ -246,7 +179,7 @@
 					</h:panelGrid>
 				</p:column>
 				<p:column
-					rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'I'}">
+					rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem}">
 					<h:panelGrid id="newRanking" styleClass="noBorders tr,noBorders td">
 						<p:outputLabel value="#{bidPriceItem.ranking}" />
 					</h:panelGrid>
@@ -291,7 +224,7 @@
 							</f:facet>
 						</p:column>
 						<p:column
-							rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'I'}" />
+							rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypeItem}" />
 					</p:row>
 				</p:columnGroup>
 			</p:dataTable>
@@ -301,7 +234,7 @@
 		<p:panel id="packageRankingPanel" style="width : 100%">
 
 			<p:panel style="width : 100% ; align: right "
-				rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq 'P'}">
+				rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage}">
 
 				<div style="align: right">
 					<TABLE style="width : 100%">

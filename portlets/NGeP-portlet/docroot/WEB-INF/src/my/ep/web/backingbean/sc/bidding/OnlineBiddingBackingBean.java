@@ -60,6 +60,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private BigDecimal newBidPrice;
 	private String hashSupplierId;
 	private Long selectedBidScheduleId;
+	private String recommendTypeItem = ParameterConst.RECOMMEND_TYPE_ITEM;
+	private String recommendTypePackage = ParameterConst.RECOMMEND_TYPE_PACKAGE;
 
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
@@ -73,14 +75,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	public OnlineBiddingBackingBean() {
 
-		System.out
-				.println("*********************OnlineBiddingBackingBean constructor*******************");
 	}
 
 	@PostConstruct
 	private void init() {
-
-		System.out.println("********************* init() *******************");
 
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -321,7 +319,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 
-		System.out.println("newPrice value is " + scBidPrice.getNewPrice());
 		log.info("decrementAmountValueChangeListener");
 
 		ScBidPrice newBidPrice = new ScBidPrice();
@@ -367,9 +364,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				// setScBidSchedule(resDTO.getScBidSchedule());
 				int index = getBidPrices().indexOf(bidPriceItem);
 				getBidPrices().set(index, resDTO.getScBidPrice());
-
-				System.out.println("*****item rank is***** "
-						+ resDTO.getScBidPrice().getRanking());
 
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this
 						.getScBidSchedule().getScBid().getRecommendedTypeId()
@@ -754,6 +748,36 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void setSelectedBidScheduleId(Long selectedBidScheduleId) {
 		this.selectedBidScheduleId = selectedBidScheduleId;
+	}
+	
+
+
+	/**
+	 * @return the recommendTypeItem
+	 */
+	public String getRecommendTypeItem() {
+		return recommendTypeItem;
+	}
+
+	/**
+	 * @param recommendTypeItem the recommendTypeItem to set
+	 */
+	public void setRecommendTypeItem(String recommendTypeItem) {
+		this.recommendTypeItem = recommendTypeItem;
+	}
+
+	/**
+	 * @return the recommendTypePackage
+	 */
+	public String getRecommendTypePackage() {
+		return recommendTypePackage;
+	}
+
+	/**
+	 * @param recommendTypePackage the recommendTypePackage to set
+	 */
+	public void setRecommendTypePackage(String recommendTypePackage) {
+		this.recommendTypePackage = recommendTypePackage;
 	}
 
 	private Long durationCalculator(Date startDate, Date endDate) {
