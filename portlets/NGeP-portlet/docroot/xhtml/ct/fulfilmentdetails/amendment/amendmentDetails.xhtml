@@ -176,7 +176,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
-				<p:calendar size="10" style="float:left;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+				<p:calendar style="float:left;width:100px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
 				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" mindate="#{amendmentBackingBean.currentDate}">

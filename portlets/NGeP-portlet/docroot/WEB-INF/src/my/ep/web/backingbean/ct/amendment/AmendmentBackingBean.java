@@ -376,14 +376,15 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			   
 		  	    if(getManagedBean().getContractVer().getCtAmendment()==null) {
-				     getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
+				
+		  	    	getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				     getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
 				     getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
 				     getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(new Date());
 				     getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 			  
-			    } if (resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0){
+			    } if(resDTO.getCtContractVer().getCtContractItems() != null && resDTO.getCtContractVer().getCtContractItems().size() > 0) {
 			           this.getManagedBean().getCtItemList().clear();
 			           this.getManagedBean().getCtServiceItemList().clear();
 			           
@@ -415,8 +416,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    		 retriveZonesByContractVer();
 		         }
 			  initializeRemarks();
-			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.
-			  getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 		      getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			  
 			  getManagedBean().setRemarkList(resDTO.getCtRemarks());
@@ -454,8 +454,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		
 		       if(this.getManagedBean().getAckFA() == null){
 			         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithAmendFulfilment);
-			         if(getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()){
-			    	   
+			         if(getManagedBean().getContractVer().getCtAmendment() != null &&
+			        		  (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()|| getManagedBean().getContractVer().getCtAmendment().isItemPriceChange())){
 			        	   if(getManagedBean().getCtContract().isZonalPricing())
 				    	         getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithZone);
 			    	       getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithItem);
@@ -489,8 +489,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 	    	    menuItem.setUpdate("@all");
 	 	    	    menuItem.setActionExpression(FacesScopes
 						.createMethodExpression(facesContext,
-								"#{amendmentBackingBean.amendTabChangeAction("
-										+ zoneTabIndex + ")}", null, new Class[] { Integer.class }));
+								"#{amendmentBackingBean.amendTabChangeAction("+ zoneTabIndex + ")}", null, new Class[] { Integer.class }));
 	 	    	    amendMenuModel.addMenuItem(menuItem);
                     zoneTabIndex++;
 	 	     } getManagedBean().setAmendMenuModel(amendMenuModel);
@@ -621,6 +620,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Type"});
 		 
 		   }
+		   
+		   if(getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == null || getManagedBean().getContractVer().getCtAmendment().getFileRefNo() == "") {
+				        throw new EpException(MessageConst.INFO_100022, new String[]{"File Reference No."});
+			 
+			   }
+		   
+		   if(getManagedBean().getContractVer().getCtAmendment().getTitle() == null || getManagedBean().getContractVer().getCtAmendment().getTitle() == "") {
+		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Title"});
+	       }
+		   
+		   if(getManagedBean().getContractVer().getCtAmendment().getDescription() == null || getManagedBean().getContractVer().getCtAmendment().getDescription() == "") {
+		        throw new EpException(MessageConst.INFO_100022, new String[]{"Amendment Description"});
+	       }
 		   
 		   if (getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)) {
 			     if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE) && !getManagedBean().isTermAndConditionFlg()) {
