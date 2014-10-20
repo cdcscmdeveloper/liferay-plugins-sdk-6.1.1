@@ -166,80 +166,14 @@
 
 	<!-- Procurement Plan - START -->
 	<portlet>
-		<portlet-name>ppBudgetAlloc</portlet-name>
+		<portlet-name>pPlanProcurementPlan</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
-		<css-class-wrapper>pp-budget-alloc-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>ppBudgetDisburse</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>pp-budget-disburse-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>ppPlan</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>pp-plan-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>reviewPlanPreparation</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>
-			reviewplanpreparation-portlet
-		</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>revisePlanPreparation</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>
-			reviseplanpreparation-portlet
-		</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>reviewBudgetAllocation</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>
-			reviewbudgetallocation-portlet
-		</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>ppProcurementApproval</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>pp-approval-portlet</css-class-wrapper>
+		<css-class-wrapper>pp-procurement-plan-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Procurement Plan - END -->
 
@@ -1201,28 +1135,7 @@
 		<css-class-wrapper>
 			Bidding List-portlet
 		</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>ppDisburseBudgetList</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>pp-DisBudgetList-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>ppAllocatedBudgetList</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>pp-AlloBudgetList-portlet</css-class-wrapper>
-	</portlet>		
-	
+	</portlet>	
 	<portlet>
 		<portlet-name>PurchaseInquiry</portlet-name>
 		<icon>/icon.png</icon>
