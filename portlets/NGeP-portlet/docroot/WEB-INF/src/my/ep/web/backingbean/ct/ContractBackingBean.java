@@ -79,8 +79,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		} else {
 			getManagedBean().setRemarkList(remarkList);
 		}
-		if(getManagedBean().getAttachmentList() != null & getManagedBean().getAttachmentList().size()==0)
-			getManagedBean().setAttachmentList(attachmentList);
+		getManagedBean().setAttachmentList(attachmentList);
 	}
 	
 	public String determineIcon(CtAttachment attachment) {
