@@ -127,6 +127,7 @@ public class TemplateSpecHelper {
 			if (specQuestions != null && !specQuestions.isEmpty()) {
 				boolean isTechnicalSpec = ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equals(
 						newSpecMaster.getSpecTypeCode().getParameterCode());
+				TplSpecQuestion prevNewSpecQuestion = null;
 				
 				newSpecQuestions = new ArrayList<TplSpecQuestion>();
 				
@@ -174,8 +175,24 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
 								
+								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
+									String prevQuestionType = prevNewSpecQuestion.getQuestionType();
+									
+									if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
+										newSpecQuestion.setParentSpecQuestion(prevNewSpecQuestion);
+									} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(prevQuestionType)) {
+										newSpecQuestion.setParentSpecQuestion(prevNewSpecQuestion.getParentSpecQuestion());
+									} else {
+										newSpecQuestion.setParentSpecQuestion(null);
+									}
+								} else {
+									newSpecQuestion.setParentSpecQuestion(null);
+								}
+								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
+								
+								prevNewSpecQuestion = newSpecQuestion;
 								
 								// clone spec quantities
 								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
@@ -475,5 +492,6 @@ public class TemplateSpecHelper {
 			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(user.getUserId());
+		baseObject.setChangedDate(null);
 	}
 }

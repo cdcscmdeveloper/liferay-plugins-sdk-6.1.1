@@ -288,6 +288,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(questionType);
 		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(tplSpecMaster.getSpecTypeCode().getParameterCode());
 		
+		if (questionList == null) {
+			questionList = new ArrayList<TplSpecQuestion>();
+			
+			tplSpecMaster.setTplSpecQuestions(questionList);
+		}
+		
 		newQuestion.setTplSpecMaster(tplSpecMaster);
 		newQuestion.setQuestionType(questionType);
 		
@@ -332,10 +338,15 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			newQuestion.setWeightageReq(true);
 		}
 		
-		if (questionList == null) {
-			questionList = new ArrayList<TplSpecQuestion>();
+		if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newQuestion.getQuestionType()) && row < questionList.size()) {
+			TplSpecQuestion prevSpecQuestion = questionList.get(row);
+			String prevQuestionType = prevSpecQuestion.getQuestionType();
 			
-			tplSpecMaster.setTplSpecQuestions(questionList);
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
+				newQuestion.setParentSpecQuestion(prevSpecQuestion);
+			} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(prevQuestionType)) {
+				newQuestion.setParentSpecQuestion(prevSpecQuestion.getParentSpecQuestion());
+			}
 		}
 		
 		questionList.add(row + 1, newQuestion);
