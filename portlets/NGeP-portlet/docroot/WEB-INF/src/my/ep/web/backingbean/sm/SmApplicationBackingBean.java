@@ -3739,6 +3739,11 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("O")) {
 			validateSupportingDocs();
+		}else{
+			log.info("*** Remove unnecessary files for the sm supporting docs **** ");
+			for(SmApplSupportDoc doc : getManagedBean().getSmAppl().getSmApplSupportDocs()){
+				doc.getSmApplDocFiles().clear();
+			}
 		}
 		initiateSmApplicationTask();
 		String msgConst = "";
