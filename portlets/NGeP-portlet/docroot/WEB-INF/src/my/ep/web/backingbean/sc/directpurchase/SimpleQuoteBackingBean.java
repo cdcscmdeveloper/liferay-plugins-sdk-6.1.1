@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -166,7 +165,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public String simpleQuoteAction(Long docId, boolean panelItemFlag ,List<CmSupplierItem> compareSupplierItems) {
 		debugLogger("simpleQuoteAction");
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,ICatalogueSO.class);
-		IPanelSupplierSO panelSupplierSO	=	(IPanelSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 		IQuoteSO quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		ScQuote scQuote = getManagedBean().getScQuote();
@@ -334,12 +332,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			
+			// WorkFlow Status should be set In the save
+			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
+			ScSQWorkFlowStatus  scWorkFlowStatus = new ScSQWorkFlowStatus();
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			
 			getCurrentStatus(statusResDTO.getPmStatus());
+			
+			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			scWorkFlowStatus.setQuote(scQuote);
+			//scQuote.setCurrentStatus(scWorkFlowStatus);
+			
+			workFlowStatuses.add(scWorkFlowStatus);
+		   scQuote.setWorkflowStatuses(workFlowStatuses);
+
 			
 		} finally {
 			statusSO = null;
@@ -348,7 +355,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
-				getManagedBean().getSimpleQuoteStatus(),
+				null,
 				scQuote.getRemarks(),
 				ScSQRemark.class));
 		this.getManagedBean().setScQuote(scQuote);
@@ -654,7 +661,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		IQuoteSO quoteSO = null;
 		ScRequestNote requestNote = null;
 		try {
-			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			quoteSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
@@ -773,28 +779,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// remarks
-			quote.setRemarks(initializeRemarks(
+			/*quote.setRemarks(initializeRemarks(
 					quote, 
-					getManagedBean().getSimpleQuoteStatus(),
+					quote.getCurrentStatus(),
 					quote.getRemarks(),
-					ScSQRemark.class));
+					ScSQRemark.class));*/
 			finalizeRemarks(quote.getRemarks());
 			
-		    // WorkFlow Status should be set In the save
-		    List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
-		    ScSQWorkFlowStatus workFlowStatus = new ScSQWorkFlowStatus();
-		    workFlowStatus.setQuote(quote);
-		    PmStatus status = new PmStatus();
-		    status.setStatusId(DPStatusConstants.SQ_PENDING_SUBMISSION);
-		    StatusReqDTO statusReqDTO = new StatusReqDTO();
-		    if (status != null) {
-		    	statusReqDTO.setStatusId(status.getStatusId());
-		    	StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-		    	workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-		    	workFlowStatus.setCurrent(Boolean.TRUE);
-		    }
-		    workFlowStatuses.add(workFlowStatus);
-		    quote.setWorkflowStatuses(workFlowStatuses);
+			
 			
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
@@ -1003,7 +995,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// remarks
 			quote.setRemarks(initializeRemarks(
 					quote, 
-					getManagedBean().getSimpleQuoteStatus(),
+					quote.getCurrentStatus(),
 					quote.getRemarks(),
 					ScSQRemark.class));
 			finalizeRemarks(quote.getRemarks());
@@ -2764,7 +2756,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// remarks
 			scQuote.setRemarks(initializeRemarks(
 					scQuote, 
-					getManagedBean().getSimpleQuoteStatus(),
+					scQuote.getCurrentStatus(),
 					scQuote.getRemarks(),
 					ScSQRemark.class));
 			
@@ -2851,7 +2843,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				// remarks
 				scQuote.setRemarks(initializeRemarks(
 						scQuote, 
-						getManagedBean().getSimpleQuoteStatus(),
+						scQuote.getCurrentStatus(),
 						scQuote.getRemarks(),
 						ScSQRemark.class));
 
@@ -3045,7 +3037,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		// remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
-				getManagedBean().getSimpleQuoteStatus(),
+				scQuote.getCurrentStatus(),
 				scQuote.getRemarks(),
 				ScSQRemark.class));
 	}
@@ -3063,10 +3055,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quoteZone = quote.getQuoteZone();
 			}
 			quoteZone.setScQuote(quote);
+			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
+			
+			// product
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
+			}
+
+			// service 
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
+			}
 
 		} else {
 			quote.setZonal(Boolean.FALSE);
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
+			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 		}
 		
 		// product
