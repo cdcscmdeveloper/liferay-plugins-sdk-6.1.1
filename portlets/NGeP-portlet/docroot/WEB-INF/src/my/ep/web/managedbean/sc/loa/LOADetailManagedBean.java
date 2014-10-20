@@ -62,6 +62,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	// Selection list - LOA Details.
 	private List<PmParameterDesc> agencyList;
 	private List<PmOrgProfile> agencyProfileList;
+	private List<Object[]> agencyProfileDDList;
 	private List<PmUser> contractAdminList;
 	private List<PmUser> contractSignerList;
 	private List<SmSupplierBranch> branchsList;
@@ -733,6 +734,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
+	}
+
+	public List<Object[]> getAgencyProfileDDList() {
+		return agencyProfileDDList;
+	}
+
+	public void setAgencyProfileDDList(List<Object[]> agencyProfileDDList) {
+		this.agencyProfileDDList = agencyProfileDDList;
 	}
 
 }
