@@ -82,7 +82,7 @@
 	    <url-pattern>/filedownload/*</url-pattern>
 	</servlet-mapping>
 	
-	<context-param>
+	<!-- <context-param>
 		<param-name>quartz:shutdown-on-unload</param-name>
 		<param-value>true</param-value>
 	</context-param>
@@ -93,21 +93,21 @@
 	<context-param>
 		<param-name>quartz:start-on-load</param-name>
 		<param-value>true</param-value>
-	</context-param>
+	</context-param> -->
 	
 	<!-- used to initialize Quartz Scheduler Factory-->
-	<listener>
+	<!-- <listener>
 		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
-	</listener>
+	</listener> -->
 	
 	<!-- use to initialize Quartz Jobs from Servlet -->
-	<servlet>
+	<!-- <servlet>
 		<servlet-name>EpBatchJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.sc.ebidding.servlet.EpJobServletInitializer</servlet-class>
-		<!-- Load this servlet at server startup time. Number not special. Just 
-			indicates the sequence of loading servlets -->
+		Load this servlet at server startup time. Number not special. Just 
+			indicates the sequence of loading servlets
 		<load-on-startup>3</load-on-startup>
-	</servlet>
+	</servlet> -->
 	
 	<!-- used to initialize Quartz Job Trigger from Context -->
 	<!-- <listener>
