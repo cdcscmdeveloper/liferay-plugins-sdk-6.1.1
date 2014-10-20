@@ -64,6 +64,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -240,7 +241,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  requestSupplierItem.setScPrInquiy(scPrInquiry);
 		  requestItem.setSupplierItems(supplierItems);
 		  scPrInquiry.setRequestItem(requestItem);
-		  getManagedBean().setScPrInquiry(scPrInquiry);
 		  
 		  requestSupplierItem.setRequestNoteItem(requestItem);
 		  getManagedBean().setScRequestSupplierItem(requestSupplierItem);
@@ -262,7 +262,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 				
 				getCurrentStatus(statusResDTO.getPmStatus());
-				
+
 			} finally {
 				statusSO = null;
 			}
@@ -270,12 +270,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		  // Initializing Remarks 
 		  scPrInquiry.setRemarks(initializeRemarks(
 				  scPrInquiry, 
-				  getManagedBean().getPriStatus(), 
+				  null, 
 				  scPrInquiry.getRemarks(), 
 				  ScPRIRemark.class));
 		  
 		  //TODO default value to  price type drop down listing
 		  getManagedBean().setPriceType(ParameterConst.PRICE_TYPE_STANDARD);
+		  getManagedBean().setScPrInquiry(scPrInquiry);
 		  priceTypeChangeListener();
 		  
 			// to get ptj
@@ -489,7 +490,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		    	// setting remarks 
 		    	prInquiry.setRemarks(initializeRemarks(
 		    			prInquiry, 
-		    			getManagedBean().getPriStatus(), 
+		    			prInquiry.getCurrentStatus(), 
 		    			prInquiry.getRemarks(), 
 		    			ScPRIRemark.class));
 		    	
@@ -538,7 +539,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			   //remarks 
 			   prInquiry.setRemarks(initializeRemarks(
 					   prInquiry, 
-					   getManagedBean().getPriStatus(), 
+					   prInquiry.getCurrentStatus(), 
 					   prInquiry.getRemarks(), 
 					   ScPRIRemark.class));
 			   
@@ -713,7 +714,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				
 				requestNote.setRemarks(initializeRemarks(
 						requestNote,
-						requestNoteBackingBean.getManagedBean().getRequestNoteStatus(),
+						requestNote.getCurrentStatus(),
 						requestNote.getRemarks(),
 						ScRequestNoteRemark.class));
 				
@@ -848,7 +849,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		 // remarks
 		 prInquiry.setRemarks(initializeRemarks(
 				 prInquiry, 
-				 getManagedBean().getPriStatus(), 
+				 prInquiry.getCurrentStatus(), 
 				 prInquiry.getRemarks(), 
 				 ScPRIRemark.class));
 		  

@@ -246,28 +246,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// Remarks
 		requestNote.setRemarks(initializeRemarks(
 				requestNote,
-				getManagedBean().getRequestNoteStatus(),
+				requestNote.getCurrentStatus(),
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 		finalizeRemarks(requestNote.getRemarks());
 	    
-	    // WorkFlow Status should be set In the save
-	    List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
-	    ScRNWorkFlowStatus workFlowStatus = new ScRNWorkFlowStatus();
-	    requestNote.setWorkFlowStatuses(workFlowStatuses);
-	    workFlowStatus.setRequestNote(requestNote);
-	    PmStatus status = new PmStatus();
-	    status.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-	    StatusReqDTO statusReqDTO = new StatusReqDTO();
-	    if (status != null) {
-	    	statusReqDTO.setStatusId(status.getStatusId());
-	    	StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-	    	workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-	    	workFlowStatus.setCurrent(Boolean.TRUE);
-	    }
-	    workFlowStatuses.add(workFlowStatus);
-
-	    requestNote.setWorkFlowStatuses(workFlowStatuses);
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
 	    FacesScopes face = new FacesScopes();
@@ -350,7 +333,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			// Remarks
 			requestNote.setRemarks(initializeRemarks(
 					requestNote,
-					getManagedBean().getRequestNoteStatus(),
+					requestNote.getCurrentStatus(),
 					requestNote.getRemarks(),
 					ScRequestNoteRemark.class));
 			if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
@@ -566,7 +549,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// remarks
 		requestNote.setRemarks(initializeRemarks(
 				requestNote,
-				getManagedBean().getRequestNoteStatus(),
+				requestNote.getCurrentStatus(),
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 					
@@ -1350,13 +1333,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			statusSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+			// WorkFlow Status 
+			List<ScRNWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScRNWorkFlowStatus>();
+			ScRNWorkFlowStatus scWorkFlowStatus = new ScRNWorkFlowStatus();
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(DPStatusConstants.RN_PENDING_SUBMISSION);
-			
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			
 			getCurrentStatus(statusResDTO.getPmStatus());
+			scWorkFlowStatus.setCurrent(Boolean.TRUE);
+			scWorkFlowStatus.setPmStatus(statusResDTO.getPmStatus());
+			scWorkFlowStatus.setRequestNote(requestNote);
+			//requestNote.setCurrentStatus(scWorkFlowStatus);
+
+			workFlowStatuses.add(scWorkFlowStatus);
+			requestNote.setWorkFlowStatuses(workFlowStatuses);
+			
 			
 		} finally {
 			statusSO = null;
@@ -1364,13 +1355,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		
 		requestNote.setRemarks(initializeRemarks(
 				requestNote,
-				getManagedBean().getRequestNoteStatus(),
+				null,
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
 		
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
+		getManagedBean().setRequestNote(requestNote);
 		
 		//clear the selected price type
 		getManagedBean().setPriceType(null);
@@ -1963,7 +1955,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// remarks
 				prInquiry.setRemarks(initializeRemarks(
 						prInquiry,
-						purchaseInquiryBackingBean.getManagedBean().getPriStatus(),
+						prInquiry.getCurrentStatus(),
 						prInquiry.getRemarks(),
 						ScPRIRemark.class));
 			}
@@ -2095,7 +2087,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					// remarks
 					scQuote.setRemarks(initializeRemarks(
 							scQuote,
-							simpleQuoteBackingBean.getManagedBean().getSimpleQuoteStatus(),
+							scQuote.getCurrentStatus(),
 							scQuote.getRemarks(),
 							ScSQRemark.class));
 
