@@ -2217,7 +2217,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						questions.addAll(cloneQuestions);
 					}
 
-					prodSpecMaster.setBrandNew(Boolean.TRUE);
+					//prodSpecMaster.setBrandNew(Boolean.TRUE);
 					prodSpecMaster.setTplSpecQuestions(questions);
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
@@ -2240,7 +2240,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
-					serviceSpecMaster.setBrandNew(Boolean.TRUE);
+					//serviceSpecMaster.setBrandNew(Boolean.TRUE);
 					serviceSpecMaster.setTplSpecQuestions(questions);
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
