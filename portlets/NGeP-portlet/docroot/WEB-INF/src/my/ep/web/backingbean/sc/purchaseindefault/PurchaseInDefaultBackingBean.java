@@ -17,7 +17,6 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
@@ -35,8 +34,6 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
 import my.ep.dto.ct.dtl.ContractItemResDTO;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -119,7 +116,6 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			IPurchaseInDefaultSO purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
 			IContractItemSO contractItemSO	=	(IContractItemSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
-			IPanelSupplierSO panelSupplierSO	=	(IPanelSupplierSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
 			ScPurchaseInDefault scPurchaseInDefault = new ScPurchaseInDefault(); 
 			//TODO check contract item or panel item
 			if(vCmSupplierItem.getContractNo() !=null){
@@ -144,27 +140,21 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 			}
 			scPurchaseInDefault.setPurchaseInDefaultNo(purchaseInDefaultSO.generatePIDNo());
+			
 			// WorkFlow Status
-			List<ScPIDWorkFlowStatus> wflowStatus =  new  ArrayList<ScPIDWorkFlowStatus>();
 			ScPIDWorkFlowStatus workFlowStatus = new ScPIDWorkFlowStatus();
-			PmStatus status = new PmStatus();
-			status.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			if (status != null) {
-				statusReqDTO.setStatusId(status.getStatusId());
-				StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-				workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
-			}
-			workFlowStatus.setCurrent(true);
+			statusReqDTO.setStatusId(DPStatusConstants.PID_PENDING_SUBMISSION);
+			StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
+			workFlowStatus.setPmStatus(statusResDTO.getPmStatus());
 			workFlowStatus.setPurchaseInDefault(scPurchaseInDefault);
-			//wflowStatus.add(workFlowStatus);
-			scPurchaseInDefault.setWorkFlowStatuses(wflowStatus);
+			//scPurchaseInDefault.setCurrentStatus(workFlowStatus);
 			getCurrentStatus(workFlowStatus.getPmStatus());  
 
 			// initializing remarks
 			scPurchaseInDefault.setRemarks(initializeRemarks(
 					scPurchaseInDefault,
-					getManagedBean().getPidStatus(),
+					 null,
 					scPurchaseInDefault.getRemarks(),
 					ScPIDRemark.class));
 
@@ -319,7 +309,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		   // remarks
 		   scPurchaseInDefault.setRemarks(initializeRemarks(
 					scPurchaseInDefault,
-					getManagedBean().getPidStatus(),
+					scPurchaseInDefault.getCurrentStatus(),
 					scPurchaseInDefault.getRemarks(),
 					ScPIDRemark.class));
 		   
@@ -632,7 +622,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			// remarks
 			purchaseInDefault.setRemarks(initializeRemarks(
 					   purchaseInDefault,
-						getManagedBean().getPidStatus(),
+					   purchaseInDefault.getCurrentStatus(),
 						purchaseInDefault.getRemarks(),
 						ScPIDRemark.class));
 
