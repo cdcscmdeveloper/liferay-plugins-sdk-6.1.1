@@ -48,7 +48,7 @@
 		</h:selectOneMenu>
 		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
 	</p:column>
-	<p:column style="width:135px;">
+	<p:column style="width:113px;">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
@@ -77,12 +77,12 @@
 	<ui:param name="isFulfilmentTypeOneOff" value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
 	<ui:param name="isShowService" value="#{(!isFulfilmentTypeReq or (isFulfilmentTypeReq and !isFulfilmentTypeOneOff))}" />
 	<c:if test="#{isItemTypeService}">
-		<p:column style="width:50px;white-space:normal;">
+		<p:column style="width:52px;white-space:normal;">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
 			</f:facet>
-			<h:panelGroup id="freqUOMPG">
+			<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
 				<p:inputText id="freqUOM" style="min-width:0px !important;width:46%;" styleClass="ppNumericAlign" 
 					value="#{question.clUomFrequency}" 
 					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
@@ -98,7 +98,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"/>
 			</f:facet>
-			<h:panelGroup id="dayUOMPG">
+			<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
 				<p:inputText id="dayUOM" style="min-width:0px !important;width:55%;" styleClass="ppNumericAlign"
 					value="#{question.clUomPerDay}" 
 					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="5"
@@ -114,7 +114,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"/>
 			</f:facet>
-			<h:panelGroup id="monthUOMPG">
+			<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
 				<p:inputText id="monthUOM" style="min-width:0px !important;width:60%;" styleClass="ppNumericAlign"
 					value="#{question.clUomPerMonth}" 
 					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="5"
@@ -130,7 +130,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.duration.month']}"/>
 			</f:facet>
-			<h:panelGroup id="durationPG">
+			<h:panelGroup id="durationPG" style="white-space:nowrap;">
 				<p:inputText id="duration" style="min-width:0px !important;width:55%;" styleClass="ppNumericAlign"
 					value="#{question.clDurationMonth}" 
 					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
@@ -234,7 +234,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.estimate.cost']}"/>
 		</f:facet>
-		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}">
+		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}" style="white-space:nowrap;">
 			<p:inputText id="estCost" style="min-width:0px !important;width:62%;" styleClass="ppNumericAlign"
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
 				required="#{!question.selected}" rendered="#{isPriceTypeStandard}" maxlength="19"
