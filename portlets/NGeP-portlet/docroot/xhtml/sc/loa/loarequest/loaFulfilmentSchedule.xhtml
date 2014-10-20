@@ -18,7 +18,8 @@
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-					<p:inputText disabled="#{!isEditableStatus}"
+					<p:inputText disabled="#{!isEditableStatus}" 
+						label ="#{lbl['lbl.sc.spec.total.frequency']}"
 						value="#{lOADetailBackingBean.managedBean.totalFrequency}"
 						styleClass="ppNumericAlign">
 						<p:ajax event="blur" update="frequencySchedule"
