@@ -157,6 +157,7 @@ public class SmApplicationUtil {
 		for (SmApplSupportDoc doc : suppDocs) {
 			if (doc.getPmDocument() != null
 					&& doc.getPmDocument().isMandatory()
+					&& !doc.getPmDocument().isHardCopyReq()
 					&& (doc.getSmApplDocFiles().get(0).getFileName()
 							.equalsIgnoreCase(" ") || doc.getSmApplDocFiles()
 							.get(0).getFilePath().equalsIgnoreCase(" "))) {
@@ -170,6 +171,13 @@ public class SmApplicationUtil {
 		if (!validSupportDocs) {
 			throw new EpException(MessageConst.ERROR_722537,
 					new String[] { sb.toString() });
+		} else {
+			for (SmApplSupportDoc doc : suppDocs) {
+				if (doc.getPmDocument() != null
+						&& doc.getPmDocument().isHardCopyReq()) {
+					doc.getSmApplDocFiles().clear();
+				}
+			}
 		}
 		return validSupportDocs;
 	}
