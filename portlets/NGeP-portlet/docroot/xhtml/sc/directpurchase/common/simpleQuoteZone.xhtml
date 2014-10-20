@@ -15,8 +15,9 @@
 	 <table style="width: 100%">
 				<tr>
 					<td style="width: 160px"><p:outputLabel value="#{lbl['lbl.sc.sq.supp.criteria.location.level']}" /></td>
-					<td><p:selectOneMenu id="locLevels"
+					<td style="width: 180px;margin-bottom: 5px;"><p:selectOneMenu id="locLevels"
 							value="#{simpleQuoteBackingBean.managedBean.locationLevel}"
+							disabled="#{!simpleQuoteBackingBean.managedBean.panelItemFlag}"
 							style="width: 178px;margin-bottom: 5px;">
 							<f:selectItems value="#{simpleQuoteBackingBean.locationLevelDropdown}" />
 								<p:ajax event="change" update="zoneLocationDataTable" partialSubmit="true"
