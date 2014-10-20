@@ -424,7 +424,7 @@ public class ApprovalBackingBean extends
 				committeReqDTO.setOutcome(outcome);
 				removeEmptyRemarks(qt);
 				committeReqDTO.setScQt(qt);
-				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
+				//committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 				//TODO Need to changed the docType..
 				if (null != digiSign) {
 					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_QUOTATION, qt.getQtId(), qt.getQtNo());
