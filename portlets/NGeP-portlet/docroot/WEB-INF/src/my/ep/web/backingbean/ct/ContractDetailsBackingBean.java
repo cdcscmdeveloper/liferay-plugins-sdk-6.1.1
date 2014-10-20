@@ -1010,14 +1010,18 @@ public void ConstructSideTabMenu(){
     			   }
            }
 		   
-           Date date1 = dateFormat.parse((fromDate));
-		   Date date2 = dateFormat.parse((toDate));
-		   long days = dateUtil.getDaysDifference(date1, date2);
-		   int day = (int) days;
-		   int months = day / 30;   
-		   if(months < 0)
+           Date startDate = dateFormat.parse((fromDate));
+		   Date endDate = dateFormat.parse((toDate));
+		   Calendar sDate = Calendar.getInstance();
+		   Calendar eDate = Calendar.getInstance();
+		   sDate.setTime(startDate);
+		   eDate.setTime(endDate);
+		   int months  = (eDate.get(Calendar.YEAR) - sDate.get(Calendar.YEAR)) * 12 +
+			       (eDate.get(Calendar.MONTH)- sDate.get(Calendar.MONTH));
+		 
+		   if(months < 0){
 			   return 0;
-		   else
+		   }
 		   return months;
          } catch(Exception ex){ }
 	   finally {
