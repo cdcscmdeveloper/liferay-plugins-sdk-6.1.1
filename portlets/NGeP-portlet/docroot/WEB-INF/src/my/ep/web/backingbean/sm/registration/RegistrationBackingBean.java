@@ -1167,23 +1167,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public boolean validateBankInfo(){
 		List<String> bankList = new ArrayList<String>();
 		for(SmSupplierBank suppBank : this.getManagedBean().getSmAppl().getSmSupplierBanks()){
-			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
 			System.out.println("*********suppBank.getPmFinancialOrg().getFinancialOrgId()****" + suppBank.getPmFinancialOrg().getFinancialOrgId());
 			if(suppBank.getPmFinancialOrg().getFinancialOrgId() == null){
 				throw new EpException(MessageConst.ERROR_721008);
 			}
-			
+
 			if(suppBank.getAccountNo() == null || suppBank.getAccountNo() == ""){
 				throw new EpException(MessageConst.ERROR_721009);
 			}
-			
+
+			String uniqBank = suppBank.getPmFinancialOrg().getFinancialOrgId().toString() + suppBank.getAccountNo();
 			if(bankList.contains(uniqBank)){
 				throw new EpException(MessageConst.ERROR_721012);
 			}
-			
 			bankList.add(uniqBank);
+
 		}
-		
 		return true;
 	}
 
