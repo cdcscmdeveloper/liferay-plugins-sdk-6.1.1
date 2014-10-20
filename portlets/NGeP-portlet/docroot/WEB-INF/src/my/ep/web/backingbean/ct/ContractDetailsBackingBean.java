@@ -715,13 +715,14 @@ public void ConstructSideTabMenu(){
 	}
 	
     public String saveContract(String action) throws Exception{
-	  
+
     	IContractSO contractSO = null;
-	 	try{
-			    if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				      if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) 
-				       	throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-			    }
+    	try{
+	 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+	 			if(getManagedBean().getRemarkList().get(0).getRemark()==null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) { 
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
+	 		}
 			
 			   ContractReqDTO reqDTO = new ContractReqDTO();
 			   reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
