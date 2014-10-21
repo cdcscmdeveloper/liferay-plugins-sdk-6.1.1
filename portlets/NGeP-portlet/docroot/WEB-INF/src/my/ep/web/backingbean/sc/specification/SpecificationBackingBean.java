@@ -29,7 +29,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -53,9 +52,6 @@ import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -103,7 +99,6 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
@@ -156,7 +151,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
@@ -184,8 +178,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author ACER
@@ -915,6 +907,42 @@ public class SpecificationBackingBean extends
 
 	}
 
+	public void checktemplateSpecStatus(ScQt scqt) {
+		List<ScQtCheckList> techCheckList = this.getManagedBean()
+				.getScQtCheckSt2techProposal();
+		if (techCheckList != null && !techCheckList.isEmpty()) {
+			for (ScQtCheckList checkList : techCheckList) {
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+						.equalsIgnoreCase(checkList.getDefinationType()
+								.getParameterCode())) {
+					if (checkList.getPmStatus().getStatusId()
+							.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+						if (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(scqt.getEvaluationType())
+								&& !scqt.isTechEvaluationReq()) {
+
+							throw new EpException(MessageConst.ERROR_760137);
+
+						} else if (QTConstants.EVALUATION_TWO_TIER
+								.equalsIgnoreCase(scqt.getEvaluationType())
+								|| (QTConstants.EVALUATION_ONE_TIER
+										.equalsIgnoreCase(scqt
+												.getEvaluationType()) && scqt
+										.isTechEvaluationReq())) {
+							throw new EpException(MessageConst.ERROR_760138);
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
 	public void qtChecklistTabChange(int activeIndex) {
 
 		int previousIndex = this.getManagedBean().getActiveIndex();
@@ -948,10 +976,11 @@ public class SpecificationBackingBean extends
 
 		case 2:
 			ScQt scQtTechChecklist = constructSpecCommitteDtls().getScQt();
-
+			checktemplateSpecStatus(scQtTechChecklist);
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(scQtTechChecklist.getEvaluationType())
 					&& !scQtTechChecklist.isTechEvaluationReq()) {
+
 				// specReqDTO.setScQt(constructSpecCommitteDtls().getQtdetail());
 				// specSo.validateSupplierQulificationInfo(specReqDTO);
 
@@ -970,11 +999,13 @@ public class SpecificationBackingBean extends
 
 			break;
 		case 3:
-
+			ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
+			checktemplateSpecStatus(scQtFinChecklist);
 			break;
 
 		case 4:
 			ScQt scQtTechScore = constructSpecCommitteDtls().getScQt();
+			checktemplateSpecStatus(scQtTechScore);
 
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scQtTechScore
 					.getEvaluationType())
@@ -1024,6 +1055,7 @@ public class SpecificationBackingBean extends
 		case 5:
 
 			ScQt scQtFinScore = constructSpecCommitteDtls().getScQt();
+			checktemplateSpecStatus(scQtFinScore);
 
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scQtFinScore
 					.getEvaluationType())
@@ -4314,7 +4346,7 @@ public class SpecificationBackingBean extends
 					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 				this.getManagedBean().setZoneGeneralTrees(null);
 			}
-			
+
 		} else {
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.getLocationLevel().setParameterId(location);
@@ -7795,7 +7827,7 @@ public class SpecificationBackingBean extends
 						&& !"".equalsIgnoreCase(getManagedBean().getQtNum())) {
 
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDocs.scQt.qtNo",
+							new SearchFilterBean("scQtDoc.scQt.qtNo",
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getQtNum(), true));
 				}
@@ -7812,14 +7844,14 @@ public class SpecificationBackingBean extends
 						&& !"".equalsIgnoreCase(getManagedBean().getQtTitle())) {
 
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDocs.scQt.qtTitle",
+							new SearchFilterBean("scQtDoc.scQt.qtTitle",
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getQtTitle(), true));
 				}
 
 				if (null != getManagedBean().getPublishDate()) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("scQtDocs.scQt.publishDate",
+							new SearchFilterBean("scQtDoc.scQt.publishDate",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getPublishDate()));
 
