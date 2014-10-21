@@ -61,6 +61,25 @@
 				<ui:include src="requestPTJdetails.xhtml" />
 				<ui:include src="publicApproval.xhtml" />
 			</c:if>
+			
+			<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
+				header="Revice Confirmation" resizable="false" width="325"
+				height="75" closable="false">
+				<table>
+					<tr>
+						<td align="center"><p:outputLabel
+								value="Are you sure to send for Revise?" /></td>
+					</tr>
+				</table>
+				<p:spacer height="1" />
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+						oncomplete="reviceApprovalDlg.hide();"
+						action="#{approvalBackingBean.updateReviceBpmTask}" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+						onclick="reviceApprovalDlg.hide();" type="button" />
+				</div>
+			</p:dialog>
 		</p:panel>
 	</ui:define>
 </ui:composition>
