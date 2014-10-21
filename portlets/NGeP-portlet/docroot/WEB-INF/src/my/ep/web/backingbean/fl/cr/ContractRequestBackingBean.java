@@ -2914,8 +2914,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
 						(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
 						(getManagedBean().getSearchItemType() == null)){
-					getManagedBean().setAutoUpdateAddItemPopUp(true);
-					getManagedBean().setAutoUpdate(false);
+//					getManagedBean().setAutoUpdateAddItemPopUp(true);
+//					getManagedBean().setAutoUpdate(false);
 					return null;
 //					throw new EpException(MessageConst.ERROR_740023);
 				}
