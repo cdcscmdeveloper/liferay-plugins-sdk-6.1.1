@@ -142,7 +142,7 @@ public class QTBriefingSiteVisitBackingBean extends
 
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
 					.getPmState().getStateId();
-			//PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			// PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
 			if (!this.getManagedBean().isStateCode() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
@@ -165,15 +165,17 @@ public class QTBriefingSiteVisitBackingBean extends
 						.retriveDistrictListByDivision(reqDTO);
 				this.getManagedBean().setDistricts(resDTO.getDistrictList());
 			}
-			retrievePmCityList();
+
 		}
+		retrievePmCityList();
 	}
 
 	public void retrievePmCityList() {
+		this.getManagedBean().setCitys(null);
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long districtId = this.getManagedBean().getQtBriefing()
 					.getAddress().getPmDistrict().getDistrictId();
-			this.getManagedBean().setCitys(null);
+			
 			if (null != districtId) {
 				CityReqDTO reqDTO = new CityReqDTO();
 				reqDTO.setDistrictId(districtId);
@@ -205,8 +207,15 @@ public class QTBriefingSiteVisitBackingBean extends
 					this.getManagedBean().setDivisionList(
 							PmCommonUtil.retrievePmDivisionList(stateId));
 				} else {
+					PmDivision division = this.getManagedBean().getQtBriefing().getAddress()
+					.getPmDivision();
+					if(null != division){
 					this.getManagedBean().getQtBriefing().getAddress()
 							.getPmDivision().setDivisionId(null);
+					}else{
+						this.getManagedBean().getQtBriefing().getAddress()
+						.setPmDivision(new PmDivision());
+					}
 
 				}
 			}
