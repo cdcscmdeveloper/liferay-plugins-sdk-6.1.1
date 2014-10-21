@@ -28,7 +28,7 @@
 							<f:selectItem itemLabel="No" itemValue="SC"></f:selectItem>
 							<p:ajax event="change"
 								listener="#{specificationBackingBean.templateChange}"
-								update="cretaeupdate,listUpdate"></p:ajax>
+								update="cretaeupdate,createList"></p:ajax>
 
 						</p:selectOneRadio> <p:message id="strdTemplate" for="tempSpecStandardTemplate"
 							display="icon"></p:message></td>
@@ -81,6 +81,23 @@
 									display="icon"></p:message></td>
 						</tr>
 						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
+							<td colspan="3"><p:inputText
+									value="#{specificationBackingBean.managedBean.qtTitle}"
+									size="100" maxlength="100" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.so.noticepublish']}" />
+							</td>
+							<td><p:calendar
+									value="#{specificationBackingBean.managedBean.publishDate}"
+									readonlyInput="true"
+									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+									showOn="button">
+								</p:calendar></td>
+						</tr>
+						<tr>
 							<td style="width: 115px;"><h:outputLabel
 									value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel></td>
 							<td><p:inputText size="100" style="margin-bottom:5px;"
@@ -123,29 +140,48 @@
 			<h:panelGrid style="width:100%;">
 				<p:dataTable id="createList" var="tplSpecMaster" rows="10"
 					value="#{specificationBackingBean.templateSpecCreate}"
-					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index" lazy="true">
+					rowKey="#{tplSpecMaster.specMasterId}" rowIndexVar="index"
+					lazy="true">
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 					<ac:paginator for="createList"></ac:paginator>
 
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.title']}">
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.title']}"
+						style="width:20%;white-space: normal;">
 						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}">
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}"
+						style="width:15%;white-space: normal;">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.specTypeCode)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}">
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}"
+						style="width:10%;">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.itemTypeCode)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}">
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}"
+						style="width:20%;white-space: normal;">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.procurementCategory)}" />
 					</p:column>
-					<!-- <p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}">
-						<h:outputText value="#{tplSpecMaster.scQtDocs.scQt.qtNo}" />
-					</p:column> -->
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
+
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}"
+						style="width:10%;white-space: normal;"
+						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
+
+						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtNo}" />
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.so.title']}"
+						style="width:15%;white-space: normal;"
+						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
+
+						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtTitle}" />
+
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}"
+						style="width:10%;">
 						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}">
 							<p:commandButton value="Create" process="@all"
