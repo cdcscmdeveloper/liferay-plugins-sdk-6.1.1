@@ -30,6 +30,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.type.sm.ApplType;
 import my.ep.web.constant.sm.SupplierManagementConst;
+import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -127,14 +128,16 @@ public class SmCommonUtil {
 
 		return resDTO.getPmParameter();
 	}
-	
-	public static PmBusinessNature retrieveBusinessNatureById(Long bizId){
+
+	public static PmBusinessNature retrieveBusinessNatureById(Long bizId) {
 		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 		reqDTO.setBusinessNatureId(bizId);
-		
-		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
-		BusinessNatureResDTO resDTO = reqSO.retrieveBusinessNatureDtlById(reqDTO);
-		
+
+		IBusinessNatureSO reqSO = (IBusinessNatureSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IBusinessNatureSO.class);
+		BusinessNatureResDTO resDTO = reqSO
+				.retrieveBusinessNatureDtlById(reqDTO);
+
 		return resDTO.getBusinessNature();
 	}
 
@@ -614,6 +617,28 @@ public class SmCommonUtil {
 		}
 
 	}
-	
-	
+
+	public static void calcAllEquityOwnerPercent(
+			SmApplicationManagedBean managedBean) {
+		for (SmPersonnel person : managedBean.getSmapplShareHolders()) {
+			BigDecimal mul = new BigDecimal(100);
+			if (person.getShareAmt() != null
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital() != null
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+				person.setSharePercentage(person
+						.getShareAmt()
+						.divide(managedBean.getSmAppl().getSmCompanyBasic()
+								.getPaidUpCapital(), 4, RoundingMode.HALF_UP)
+						.multiply(mul).setScale(2, RoundingMode.HALF_UP));
+			} else {
+				person.setShareAmt(new BigDecimal(0).setScale(2,
+						RoundingMode.HALF_UP));
+				person.setSharePercentage(new BigDecimal(0).setScale(2,
+						RoundingMode.HALF_UP));
+			}
+		}
+
+	}
 }

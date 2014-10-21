@@ -1050,13 +1050,30 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722552,
 						new String[] { sb.toString() });
 			}
-			if (perShrSum.compareTo(managedBean.getSmAppl().getSmCompanyBasic()
-					.getPaidUpCapital()) != 0) {
+			BigDecimal allPersCapSum = new BigDecimal(0);
+			if (managedBean.getSmAppl().getSmCompanyBasic().getBumiEquity() != null
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getNonBumiEquity() != null
+					&& managedBean.getSmAppl().getSmCompanyBasic()
+							.getForeignerEquity() != null) {
+				allPersCapSum = allPersCapSum
+						.add(managedBean.getSmAppl().getSmCompanyBasic()
+								.getBumiEquity())
+						.add(managedBean.getSmAppl().getSmCompanyBasic()
+								.getNonBumiEquity())
+						.add(managedBean.getSmAppl().getSmCompanyBasic()
+								.getForeignerEquity());
+
+			}
+			// TODO checking the personnel sum is exactly same as the sum of
+			// bumi +non bumi + non malaysian
+			if (perShrSum.compareTo(allPersCapSum) != 0) {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				System.out.println("*** Value **** " + s);
-				throw new EpException(MessageConst.ERROR_722554,
-						new String[] { s.toString() });
+				throw new EpException(
+						MessageConst.ERROR_722554,
+						new String[] { "sum of Bumi,Non-Bumi and Non-Malaysian amounts" });
 			}
 		}
 		return validAmt;
