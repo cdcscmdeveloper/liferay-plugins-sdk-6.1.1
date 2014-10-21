@@ -6646,9 +6646,19 @@ public class SpecificationBackingBean extends
 					checkListScore = new ArrayList<ScQtCheckListScore>();
 				}
 				if (checkListScore.size() < 2) {
-					throw new EpException("At least Two Auto Scores Required");
+					throw new EpException(MessageConst.ERROR_760140);
 				}
 				List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
+				for (int i = 0; i < checkListScore.size(); i++) {
+					ScQtCheckListScore Score = checkListScore.get(i);
+					if (null == Score.getScore()
+							|| Score.getScore().intValue() <= 0) {
+						throw new EpException(MessageConst.ERROR_760139);
+
+					}
+
+				}
+
 				for (int i = 0; i < checkListScore.size() - 1; i++) {
 					ScQtCheckListScore Score = checkListScore.get(i);
 					localScore.add(Score);
@@ -6695,8 +6705,16 @@ public class SpecificationBackingBean extends
 						scoreYears = new ArrayList<ScQtCheckListScore>();
 					}
 					if (scoreYears.size() < 2) {
-						throw new EpException(
-								"At least Two Auto Scores Required");
+						throw new EpException(MessageConst.ERROR_760140);
+					}
+					for (int i = 0; i < scoreYears.size(); i++) {
+						ScQtCheckListScore Score = scoreYears.get(i);
+						if (null == Score.getScore()
+								|| Score.getScore().intValue() <= 0) {
+							throw new EpException(MessageConst.ERROR_760139);
+
+						}
+
 					}
 
 					List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
@@ -6796,7 +6814,17 @@ public class SpecificationBackingBean extends
 					checkListScore = new ArrayList<ScQtCheckListScore>();
 				}
 				if (checkListScore.size() < 2) {
-					throw new EpException("At least Two Auto Scores Required");
+					throw new EpException(MessageConst.ERROR_760140);
+				}
+
+				for (int i = 0; i < checkListScore.size(); i++) {
+					ScQtCheckListScore Score = checkListScore.get(i);
+					if (null == Score.getScore()
+							|| Score.getScore().intValue() <= 0) {
+						throw new EpException(MessageConst.ERROR_760139);
+
+					}
+
 				}
 				List<ScQtCheckListScore> localScore = new ArrayList<ScQtCheckListScore>();
 				for (int i = 0; i < checkListScore.size() - 1; i++) {
