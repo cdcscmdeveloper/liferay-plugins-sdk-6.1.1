@@ -13,9 +13,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.so.status']}" /></td>
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
-						size="30" disabled="true" readonly="true" /></td>
-				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}"
-						disabled="#{committe.approvalReq}" /></td>
+						size="30" readonly="true" /></td>
+				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}" /></td>
 				<td style="width: 130px"><p:outputLabel
 						value="#{lbl['lbl.so.send.for.approval']}" /></td>
 			</tr>
@@ -26,12 +25,14 @@
 			rowIndexVar="index" rowKey="#{specificationcommittee}"
 			selection="#{selectedCommittee}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable}" />
 
-			<ac:paginator for="specificationcommitteeid" />
+			
 
 			<p:column headerText="#{lbl['lbl.so.bo.name']}">
-				<h:outputText value="#{specificationcommittee.memberName}" style="white-space: normal;"/>
+				<h:outputText value="#{specificationcommittee.memberName}"
+					style="white-space: normal;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.identification.no']}"
@@ -40,11 +41,13 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.designation']}">
-				<h:outputText value="#{specificationcommittee.designation}" style="white-space: normal;"/>
+				<h:outputText value="#{specificationcommittee.designation}"
+					style="white-space: normal;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.email']}">
-				<h:outputText value="#{specificationcommittee.email}" style="white-space: normal;"/>
+				<h:outputText value="#{specificationcommittee.email}"
+					style="white-space: normal;" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.so.bo.grade']}" style="width: 10%">
@@ -65,13 +68,13 @@
 				<ui:fragment rendered="#{specificationcommittee.PNP}">
 					<h:outputText value="Chairperson"
 						rendered="#{specificationcommittee.memberRole.parameterCode eq 'C'}"
-						disabled="#{committe.committeStatus.statusId eq 60202}" />
+						disabled="#{QTStatusConst.CM_COMPLETE == committe.committeStatus.statusId}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!specificationcommittee.PNP}">
 					<p:selectOneMenu id="roleid" label="#{lbl['lbl.so.role']}"
 						value="#{specificationcommittee.memberRole.parameterId}"
 						style="width: 110px;margin-bottom: 5px;"
-						disabled="#{committe.committeStatus.statusId eq 60202}">
+						disabled="#{qTDetailBB.managedBean.selectedTabBean.editable}">
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{qTCommitteBackingBean.roleChangeListner(specificationcommittee)}" />
 						<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />

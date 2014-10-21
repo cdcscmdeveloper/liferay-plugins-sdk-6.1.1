@@ -15,12 +15,14 @@
 						<td align="right"><p:commandButton
 								value="#{lbl['lbl.so.save']}"
 								action="#{qTDetailBB.saveQtDetailsAction}" process="@all"
-								icon="ui-icon-save" update="@all" /> <c:if
-								test="#{qTDetailBB.managedBean.taskId eq null}">
-								<p:commandButton value="#{lbl['lbl.so.submit']}"
-									action="#{qTDetailBB.submitQTDetailsAction}" process="@all"
-									icon="ui-icon-submit" update="@all" />
-							</c:if> <c:if test="#{qTDetailBB.managedBean.taskId ne null}">
+								icon="ui-icon-save" update="@all" /> <p:commandButton
+								value="#{lbl['lbl.so.submit']}"
+								action="#{qTDetailBB.submitQtDetailsForApproval}" process="@all"
+								icon="ui-icon-submit" update="@all"
+								rendered="#{qTDetailBB.managedBean.qt.getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
+
+
+							<c:if test="#{qTDetailBB.managedBean.taskId ne null}">
 								<ui:repeat var="bpmAction"
 									value="#{qTDetailBB.managedBean.outComes}">
 									<ui:param name="buttonLabel"
