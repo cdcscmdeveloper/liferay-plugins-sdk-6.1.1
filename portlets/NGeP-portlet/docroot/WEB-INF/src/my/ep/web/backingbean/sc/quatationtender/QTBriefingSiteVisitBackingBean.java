@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
@@ -17,6 +18,8 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.common.city.CityReqDTO;
+import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -82,59 +85,65 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void retrievePmStateList() {
 		debugLogger("retrievePmStateList");
-		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		ICountrySO countrySo = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
 		if (null == this.getManagedBean().getStates()) {
 			CountryReqDTO countryReqDTo = new CountryReqDTO();
 			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
-			CountryResDTO countryResDTO = countrySo.retrieveCountryByCode(countryReqDTo);
-			
-			List<PmState> stateList = PmCommonUtil.retrievePmStateList(countryResDTO.getPmCountry().getCountryId());
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+
+			List<PmState> stateList = PmCommonUtil
+					.retrievePmStateList(countryResDTO.getPmCountry()
+							.getCountryId());
 			this.getManagedBean().setStates(stateList);
 		}
-		//retrievePmDistrictList();
-	}
-	
-	public void retrieveDivisionList(AjaxBehaviorEvent e){
-		Long stateId = (Long) e.getComponent().getAttributes().get("value");
-		if(stateId!=null){
-			PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
-			this.getManagedBean().setStateCode(
-					(pmState!=null && ParameterConst.SARAK_SK_CODE.equals(pmState.getStateCode())) ? true : false);
-		}
-		List<PmDivision> divisions = PmCommonUtil.retrievePmDivisionList(stateId);
-		getManagedBean().setDivisionList(divisions);
-		if(divisions.size()==0) {
-			List<PmDistrict> districts = PmCommonUtil.retrievePmDistrictList(stateId);
-			getManagedBean().setDistricts(districts);			
-		}
-	}
-	
-	public void retrievePmDistrictList(AjaxBehaviorEvent e) {
-		if (null != this.getManagedBean().getQtBriefing()) {
-			Long divisionId = (Long) e.getComponent().getAttributes().get("value");
-			DistrictReqDTO reqDTO = new DistrictReqDTO();
-			reqDTO.setDivisionId(divisionId);
-			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-			DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
-			getManagedBean().setDistrictList(resDTO.getDistrictList());
-		}
-	}
-	
-	public void retrievePmCityList(AjaxBehaviorEvent e) {
-		if (null != this.getManagedBean().getQtBriefing()) {
-			Long districtId = (Long) e.getComponent().getAttributes().get("value");
-			List<PmCity> citList = PmCommonUtil.retrievePmCityList(districtId);
-			this.getManagedBean().setCitys(citList);
-		}
+		retrievePmDivisions();
 	}
 
-	/*public void retrievePmDistrictList() {
+	/*
+	 * public void retrieveDivisionList(AjaxBehaviorEvent e) { Long stateId =
+	 * (Long) e.getComponent().getAttributes().get("value");
+	 * this.getManagedBean().setDistricts(null); if (stateId != null) { PmState
+	 * pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+	 * this.getManagedBean().setStateCode( (pmState != null &&
+	 * ParameterConst.SARAK_SK_CODE .equals(pmState.getStateCode())) ? true :
+	 * false); } List<PmDivision> divisions = PmCommonUtil
+	 * .retrievePmDivisionList(stateId);
+	 * getManagedBean().setDivisionList(divisions); if (divisions.size() == 0) {
+	 * List<PmDistrict> districts = PmCommonUtil
+	 * .retrievePmDistrictList(stateId);
+	 * getManagedBean().setDistricts(districts); } }
+	 */
+	/*
+	 * public void retrievePmDistrictList(AjaxBehaviorEvent e) { if (null !=
+	 * this.getManagedBean().getQtBriefing()) { Long divisionId = (Long)
+	 * e.getComponent().getAttributes() .get("value"); DistrictReqDTO reqDTO =
+	 * new DistrictReqDTO(); reqDTO.setDivisionId(divisionId); IDistrictSO reqSO
+	 * = (IDistrictSO) BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+	 * DistrictResDTO resDTO = reqSO.retriveDistrictListByDivision(reqDTO);
+	 * getManagedBean().setDistrictList(resDTO.getDistrictList()); } }
+	 * 
+	 * public void retrievePmCityList(AjaxBehaviorEvent e) { if (null !=
+	 * this.getManagedBean().getQtBriefing()) { Long districtId = (Long)
+	 * e.getComponent().getAttributes() .get("value"); List<PmCity> citList =
+	 * PmCommonUtil.retrievePmCityList(districtId);
+	 * this.getManagedBean().setCitys(citList); } }
+	 */
+
+	public void retrievePmDistrictList() {
 		debugLogger("retrievePmDistrictList");
 		if (null != this.getManagedBean().getQtBriefing()) {
+			this.getManagedBean().setDistricts(null);
+
+			Long divisionId = this.getManagedBean().getQtBriefing()
+					.getAddress().getPmDivision().getDivisionId();
+
 			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
 					.getPmState().getStateId();
-			this.getManagedBean().setDistricts(null);
-			if (null != stateId) {
+			//PmState pmState = PmCommonUtil.retrievePmStateByStateId(stateId);
+			if (!this.getManagedBean().isStateCode() && divisionId == null) {
 				DistrictReqDTO reqDTO = new DistrictReqDTO();
 				reqDTO.setStateId(stateId);
 				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
@@ -145,12 +154,22 @@ public class QTBriefingSiteVisitBackingBean extends
 						.retriveDistrictListByStateID(reqDTO);
 				this.getManagedBean().setDistricts(resDTO.getDistrictList());
 
+			} else if (divisionId != null) {
+				DistrictReqDTO reqDTO = new DistrictReqDTO();
+				reqDTO.setDivisionId(divisionId);
+				IDistrictSO reqSO = (IDistrictSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDistrictSO.class);
+				DistrictResDTO resDTO = reqSO
+						.retriveDistrictListByDivision(reqDTO);
+				this.getManagedBean().setDistricts(resDTO.getDistrictList());
 			}
+			retrievePmCityList();
 		}
-		retrievePmCityList();
-	}*/
+	}
 
-	/*public void retrievePmCityList() {
+	public void retrievePmCityList() {
 		if (null != this.getManagedBean().getQtBriefing()) {
 			Long districtId = this.getManagedBean().getQtBriefing()
 					.getAddress().getPmDistrict().getDistrictId();
@@ -165,7 +184,37 @@ public class QTBriefingSiteVisitBackingBean extends
 				this.getManagedBean().setCitys(resDTO.getCityList());
 			}
 		}
-	}*/
+	}
+
+	public void retrievePmDivisions() {
+		debugLogger("retrievePmDistrictList");
+		this.getManagedBean().setStateCode(false);
+		if (null != this.getManagedBean().getQtBriefing()) {
+			this.getManagedBean().getQtBriefing().getAddress()
+					.setPostcode(null);
+			Long stateId = this.getManagedBean().getQtBriefing().getAddress()
+					.getPmState().getStateId();
+			this.getManagedBean().setDivisionList(null);
+			this.getManagedBean().setDistrictList(null);
+			if (stateId != null) {
+				PmState pmState = PmCommonUtil
+						.retrievePmStateByStateId(stateId);
+				if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(pmState
+						.getStateCode())) {
+					this.getManagedBean().setStateCode(true);
+					this.getManagedBean().setDivisionList(
+							PmCommonUtil.retrievePmDivisionList(stateId));
+				} else {
+					this.getManagedBean().getQtBriefing().getAddress()
+							.getPmDivision().setDivisionId(null);
+
+				}
+			}
+
+		}
+
+		retrievePmDistrictList();
+	}
 
 	public void processChecked(AjaxBehaviorEvent e) {
 		Boolean selectedValue = (Boolean) e.getComponent().getAttributes()
@@ -260,11 +309,11 @@ public class QTBriefingSiteVisitBackingBean extends
 					zoneBeans.add(i, briefingBean);
 					break;
 				}
-			}		
+			}
 			this.getManagedBean().setBsvDtlBean(briefingBean);
 		}
 		this.getManagedBean().setQtBriefing(null);
-		//facesmgs error hide..
+		// facesmgs error hide..
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide()");
 		getManagedBean().setRequired(Boolean.FALSE);
 	}
@@ -292,8 +341,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 				}
 			}
-			briefingDtlBean
-			.setSelectedBriefingDtls(null);
+			briefingDtlBean.setSelectedBriefingDtls(null);
 		} else if (SourcingConstants.BSV_TYPE_SITEVISIT
 				.equalsIgnoreCase(bsvType)) {
 			List<ScQtBsvDtl> siteVisitDetails = briefingDtlBean
@@ -314,8 +362,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					}
 				}
 			}
-			briefingDtlBean
-			.setSelectedSiteVisitDtls(null);
+			briefingDtlBean.setSelectedSiteVisitDtls(null);
 		}
 		this.getManagedBean().setBsvDtlBean(briefingDtlBean);
 	}
@@ -542,8 +589,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * Method to add briefing details to site visit details.
 	 */
 	public void addToSiteVisitDtl() {
- 		BriefingZoneBean briefingZoneBean = this.getManagedBean().getBsvDtlBean();
-		List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean.getSelectedBriefingDtls();
+		BriefingZoneBean briefingZoneBean = this.getManagedBean()
+				.getBsvDtlBean();
+		List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean
+				.getSelectedBriefingDtls();
 		List<ScQtBsvDtl> siteVisitDetails = briefingZoneBean.getSitevisitList();
 		if (null == siteVisitDetails) {
 			siteVisitDetails = new ArrayList<ScQtBsvDtl>();
@@ -551,16 +600,17 @@ public class QTBriefingSiteVisitBackingBean extends
 		if (selectedBsvDtls != null && !selectedBsvDtls.isEmpty()) {
 			for (ScQtBsvDtl bsvDtls : selectedBsvDtls) {
 				if (siteVisitDetails.contains(bsvDtls)) {
-					//briefingZoneBean.setSitevisitList(null);
+					// briefingZoneBean.setSitevisitList(null);
 					throw new EpException(MessageConst.ERROR_760099);
 				}
-			}					
-	
+			}
+
 			for (ScQtBsvDtl bsvDtl : selectedBsvDtls) {
 				try {
 					ScQtBsvDtl siteVisitDtl = new ScQtBsvDtl();
 					siteVisitDtl = (ScQtBsvDtl) BeanUtils.cloneBean(bsvDtl);
-					siteVisitDtl.setBsvType(SourcingConstants.BSV_TYPE_SITEVISIT);
+					siteVisitDtl
+							.setBsvType(SourcingConstants.BSV_TYPE_SITEVISIT);
 					siteVisitDetails.add(siteVisitDtl);
 				} catch (Exception e) {
 				}
@@ -618,15 +668,16 @@ public class QTBriefingSiteVisitBackingBean extends
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
-	/** 
+
+	/**
 	 * Will be called on change of accordian panel..
+	 * 
 	 * @param event
 	 */
-	public void onZoneTabChange(TabChangeEvent event){
-	BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
+	public void onZoneTabChange(TabChangeEvent event) {
+		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
 
-	//this.getManagedBean().setBsvZoneindx(1);
-	this.getManagedBean().setBsvDtlBean(zoneBean);
+		// this.getManagedBean().setBsvZoneindx(1);
+		this.getManagedBean().setBsvDtlBean(zoneBean);
 	}
 }

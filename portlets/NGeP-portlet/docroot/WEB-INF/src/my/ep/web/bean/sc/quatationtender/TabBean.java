@@ -19,6 +19,7 @@ public class TabBean {
 	private List<ScQtApproverSettings> selectedApproverList;
 	private List<ScQtApproval> scQtApprovalList;
 	private ScQtCommittee scQtCommittee;
+	private boolean isEditable;
 
 	private List<ScCommitteeMember> members;
 	
@@ -39,9 +40,10 @@ public class TabBean {
 		this.scQtApproval = scQtApproval;
 	}
 
-	public TabBean(String titleName, ScCommittee scCommittee) {
+	public TabBean(String titleName, ScCommittee scCommittee,boolean editable) {
 		this.titleName = titleName;
 		this.scCommittee = scCommittee;
+		this.isEditable=editable;
 	}
 
 	public TabBean(String titleName, List<ScQtApproval> scQtApprovalList) {
@@ -126,6 +128,20 @@ public class TabBean {
 
 	public void setMembers(List<ScCommitteeMember> members) {
 		this.members = members;
+	}
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
+	}
+	
+	public TabBean(String titleName, ScQtCommittee scQtCommittee,boolean editable) {
+		this.titleName = titleName;
+		this.scQtCommittee = scQtCommittee;
+		this.setEditable(editable);
 	}
 
 }
