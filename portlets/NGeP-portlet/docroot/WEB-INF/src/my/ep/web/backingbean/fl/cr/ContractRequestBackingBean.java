@@ -206,7 +206,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	private Long disPmPrjSetia;
 	private Long disPmPrgActivity;
-
+	
 	/**
 	 * get faces scopes
 	 * 
@@ -775,6 +775,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void addContractedItems() {
 		getManagedBean().setContractedItemList(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems());
 		getManagedBean().setSelectedContractedItemList(new ArrayList<CtContractItem>());
+		this.getManagedBean().setSearchItemType(null);
+		this.getManagedBean().setSearchItemCode(null);
+		this.getManagedBean().setSearchItemName(null);
+		getContractItemPagingDataModel().resetData();
 	}
 	
 	public void updateContractedItemDt() {
@@ -2889,7 +2893,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			this.getManagedBean().setSearchItemType(null);
 			this.getManagedBean().setSearchItemCode(null);
 			this.getManagedBean().setSearchItemName(null);
-			
+			getContractItemPagingDataModel().resetData();
 		}
 		
 		private IPagingDataModel<CtContractItem> contractItemPagingDataModel = new ContractItemPagingDataModel();
@@ -2906,24 +2910,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 				ContractItemResDTO resDTO = new ContractItemResDTO();
 				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
-				try {
-					
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
-					if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode()));
-					}
-					if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName()));
-					}
-					if(getManagedBean().getSearchItemType() != null){
-						searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
-					}
-					
-					reqDTO.setContractItemSearchBean(searchBean);
-					resDTO = contractItemSO.searchContractItem(reqDTO);
-				} catch (Exception e) {
-					e.printStackTrace();
+				
+				if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
+						(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
+						(getManagedBean().getSearchItemType() == null)){
+					getManagedBean().setAutoUpdateAddItemPopUp(true);
+					getManagedBean().setAutoUpdate(false);
+					return null;
+//					throw new EpException(MessageConst.ERROR_740023);
 				}
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
+				if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode()));
+				}
+				if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName()));
+				}
+				if(getManagedBean().getSearchItemType() != null){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
+				}
+
+				reqDTO.setContractItemSearchBean(searchBean);
+				resDTO = contractItemSO.searchContractItem(reqDTO);
+
 				return resDTO.getContractItemResultBean();
 
 			}
@@ -2992,5 +3002,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 		}
-	}		
+	}
+
 }
