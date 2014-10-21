@@ -614,9 +614,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			    }
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
+				String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
+	 			String itemRemark = getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0) 
+	 					&& (itemRemark == null || itemRemark.length() == 0)) {
+	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();

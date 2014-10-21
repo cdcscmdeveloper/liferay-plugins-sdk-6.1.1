@@ -607,11 +607,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		   
 		   if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT) || 
 				   (isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
-				if((getManagedBean().getRemarkList().get(0).getRemark() == null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) &&
-						(getManagedBean().getContractVer().getAp201Remark().get(0).getRemark() == null || getManagedBean().getContractVer().getAp201Remark().get(0).getRemark().length()==0) &&
-						(getManagedBean().getContractVer().getItemRemarks().get(0).getRemark() == null || getManagedBean().getContractVer().getItemRemarks().get(0).getRemark().length()==0)) {
-						throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-				}
+				
+			  	String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+	 			String ap201Remark = getManagedBean().getContractVer().getAp201Remark().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0) && (itemRemark == null || itemRemark.length() == 0) && (ap201Remark == null || ap201Remark.length() == 0)) {
+	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
 		   }
 		   
 		   if(!getManagedBean().getContractVer().getCtAmendment().isContractExtend() && !getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()

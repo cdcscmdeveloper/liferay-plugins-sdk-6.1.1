@@ -719,8 +719,17 @@ public void ConstructSideTabMenu(){
     	IContractSO contractSO = null;
     	try{
 	 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-	 			if(getManagedBean().getRemarkList().get(0).getRemark()==null || getManagedBean().getRemarkList().get(0).getRemark().length()==0) { 
-	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			String agencyRemark = getManagedBean().getContractVer().getAgencyRemarks().get(0).getRemark();
+	 			String zoneRemark = getManagedBean().getContractVer().getZoneRemarks().get(0).getRemark();
+	 			String itemRemark = getManagedBean().getContractVer().getItemRemarks().get(0).getRemark();
+	 			String deductionRemark = getManagedBean().getContractVer().getDeductionRemarks().get(0).getRemark();
+	 			String scheduleRemark = getManagedBean().getContractVer().getScheduleRemarks().get(0).getRemark();
+	 			String settingRemark = getManagedBean().getContractVer().getSettingRemarks().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0) && (agencyRemark == null || agencyRemark.length() == 0) &&  (zoneRemark == null || zoneRemark.length() == 0)
+	 					&& (itemRemark == null || itemRemark.length() == 0) && (deductionRemark == null || deductionRemark.length() == 0)
+	 					&& (scheduleRemark == null || scheduleRemark.length() == 0) && (settingRemark == null || settingRemark.length() == 0)) {
+	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 	 			}
 	 		}
 			
