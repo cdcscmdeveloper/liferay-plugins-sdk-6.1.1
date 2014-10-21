@@ -57,7 +57,7 @@
 			</td>
 			<td><h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
-					update="uploadCircularPg" value="#{lbl['lbl.bpm.choose.file']}"
+					update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
 					rendered="#{centralContractBackingBean.isCentralContractAdmin()}" />	
 				<h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
