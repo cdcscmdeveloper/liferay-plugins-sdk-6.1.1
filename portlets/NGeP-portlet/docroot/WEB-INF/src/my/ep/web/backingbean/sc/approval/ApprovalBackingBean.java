@@ -26,6 +26,7 @@ import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -350,9 +351,13 @@ public class ApprovalBackingBean extends
 	}
 
 	public void approvalBpmTask(String action) {
-		this.getManagedBean().setAction(action);
+		if ("REVISE".equalsIgnoreCase(action)) {
+			this.getManagedBean().setAction(action);
+			RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
+		} else {
+			this.getManagedBean().setAction(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		
+		}
 	}
 	
 	public String gpkiSignAction(PmDigiSign digiSign) {
@@ -474,8 +479,8 @@ public class ApprovalBackingBean extends
 		return tenderResDTO;
 	}
 
-/*	public String updateBpmTask(String outcome) {
-		
+	public String updateReviceBpmTask() {
+		String outcome = this.getManagedBean().getAction();
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
@@ -490,10 +495,8 @@ public class ApprovalBackingBean extends
 			qt.setScQtStatus(null);
 			qt.setScQtBriefings(null);
 			CommitteResDTO committeResDto = null;
-			QuationTenderResDTO qtResDTO = null;
 			if (SCProcessNameConst.APPROVE_COMMITTEE.equalsIgnoreCase(taskName)
-					|| SCProcessNameConst.REVISE_COMMITTEE
-							.equalsIgnoreCase(taskName)) {
+					|| SCProcessNameConst.REVISE_COMMITTEE.equalsIgnoreCase(taskName)) {
 				// setting the remarks to ScQtApprovalRemarks
 				ScQtApproval approval = this.getManagedBean().getScQtApproval();
 				if (null != approval && null != approval.getQtApprovalId()) {
@@ -512,80 +515,25 @@ public class ApprovalBackingBean extends
 						ScQtCommittee qtCommittee = qtCommittes.get(i)
 								.getScQtCommittee();
 						PmStatus committeStatus = new PmStatus();
-						if (BpmOutcomeConst.BPM_REVISE
-								.equalsIgnoreCase(outcome)) {
-							committeStatus
-									.setStatusId(QTStatusConst.CM_REVISION);
-						} else {
-							committeStatus
-									.setStatusId(QTStatusConst.CM_COMPLETE);
-						}
-						qtCommittee.getScCommittee().setCommitteStatus(
-								committeStatus);
-						qtCommittee.setQtCommitteRemarks(this.getManagedBean()
-								.getQtCommitteeRemarks());
+						committeStatus.setStatusId(QTStatusConst.CM_REVISION);
+						qtCommittee.getScCommittee().setCommitteStatus(committeStatus);
+						qtCommittee.setQtCommitteRemarks(this.getManagedBean().getQtCommitteeRemarks());
 						committees.add(qtCommittee);
 					}
 					qt.setScQtCommittees(committees);
 				}
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ICommitteSO.class);
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 				committeReqDTO.setToken(ctxToken);
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				committeReqDTO.setPayLoad(this.getManagedBean()
-						.getQuotationTenderDataType());
+				committeReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
 				committeReqDTO.setOutcome(outcome);
 				removeEmptyRemarks(qt);
 				committeReqDTO.setScQt(qt);
 				committeReqDTO.setUser(new FacesScopes().getUserSessionBean());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
-			} else {
-				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
-				qtReqDTO.setToken(ctxToken);
-				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
-
-				IQTDetailSO detailSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTDetailSO.class);
-				ScQtApproval approval = this.getManagedBean().getScQtApproval();
-				if (null != approval && null != approval.getQtApprovalId()) {
-
-					approval.setApproverId(new FacesScopes()
-							.getUserSessionBean());
-					approval.setApproverActionDate(new Date());
-
-					if (ParameterConst.APPROVAL_CATEGORY_BPK
-							.equalsIgnoreCase(approval.getApprovalCategory()
-									.getParameterCode())) {
-						List<ScQtApprovalRequest> approvalRequests = approval
-								.getScQtApprovalDtls();
-						String action = constuctOutCome(approvalRequests, qt);
-						if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-							approval.setApproverAction(SourcingConstants.REVISE_ACTION);
-							((SCQuotationTenderDataType) this.getManagedBean()
-									.getQuotationTenderDataType())
-									.setBpkRevise(true);
-						}
-					}
-					finalizeRemarks(approval.getScQtApprovalRemarks());
-					List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
-					qtApproval.add(approval);
-					qt.setScQtApprovals(qtApproval);
-				}
-				qt.setScQtCommittees(null);
-				qtReqDTO.setPayLoad(this.getManagedBean()
-						.getQuotationTenderDataType());
-				qtReqDTO.setDeskOfficer(new FacesScopes().getUserSessionBean());
-				qtReqDTO.setQtdetail(qt);
-				qtReqDTO.setOutcome(outcome);
-				qtResDTO = (QuationTenderResDTO) detailSO
-						.updateBPMAction(qtReqDTO);
 			}
-			if ((null != committeResDto && committeResDto.isSuccessful())
-					|| (null != qtResDTO && qtResDTO.isSuccessful())) {
+			if (null != committeResDto && committeResDto.isSuccessful()) {
 				FacesContext
 						.getCurrentInstance()
 						.addMessage(
@@ -616,7 +564,7 @@ public class ApprovalBackingBean extends
 			ex.printStackTrace();
 		}
 		return null;
-	}*/
+	}
 
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
