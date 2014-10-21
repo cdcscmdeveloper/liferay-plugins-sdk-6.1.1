@@ -513,7 +513,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 getManagedBean().setRfcContactPerson(null);
 		 getManagedBean().setRfcContactEmail(null);
 		 getManagedBean().setRfcContactPhoneNo(null);
-		 if(financialOrgId!=null) {
+		 if(financialOrgId!=null || financialBranchId!=null) {
 				AddressReqDTO reqDTO = new AddressReqDTO();
 				reqDTO.setFinancialOrgId(financialOrgId);
 				reqDTO.setFinancialBranchId(financialBranchId);
@@ -545,7 +545,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setContactEmail(null);
 		getManagedBean().setContactPhoneNo(null);
 
-		if (financialOrgId != null) {
+		if (financialOrgId != null || financialBranchId!=null) {
 			AddressReqDTO reqDTO = new AddressReqDTO();
 			reqDTO.setFinancialOrgId(financialOrgId);
 			reqDTO.setFinancialBranchId(financialBranchId);
