@@ -2402,6 +2402,47 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}else{
 			getManagedBean().setChargeLinePanel(false);
 		}
+		
+		//Poulate chargeline data.
+		//Get the selected chargeline item.
+		updateSelectedTreeNodes();
+		TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
+				 
+		//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
+		//Because multiple nodes conflict chargeline data.
+		if(null!=selectedNodes && selectedNodes.length==1){
+			 TreeNode selectedNode=selectedNodes[0];
+			 //Populate Chargeline data....
+			 for(TreeNode children:selectedNode.getChildren()){
+					FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
+					if(null !=childData.getPmVotFund()){
+						if(VotFundType.AMANAH.value().equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
+							getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+							getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
+						}else{
+							getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+							getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
+						}
+					}
+					
+					if(childData.getAssetInd()!=null) {
+						getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+						getManagedBean().setAssetIndId(childData.getAssetInd().getParameterId());
+					}
+						
+					if(childData.getPmGlAccount()!=null) {
+						getManagedBean().setGosodo(childData.getPmGlAccount());
+					}
+					
+					if(childData.getPmPrgActivity()!=null) {
+						getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+					}
+					
+					if(childData.getPmSubSetia()!=null) {
+						getManagedBean().setPmSubSetia(childData.getPmSubSetia());
+					}
+				}
+		}	 
 	}
 	
 	public String retrieveMofNo(SmSupplier smSupplier) {
