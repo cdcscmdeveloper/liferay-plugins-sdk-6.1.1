@@ -623,9 +623,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		//}
 		
 		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-			if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
-				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
-			}
+			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+ 			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
+ 			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0)) {
+ 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+ 			}
 		}
 		
 		CircularDetailReqDTO cdReqDTO = new CircularDetailReqDTO();
