@@ -172,15 +172,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.company']}" /></td>
 					<td><p:inputText size="50" disabled="true" value="#{danBackingBean.managedBean.adjustment.flOrder.pmFinancialOrg.finOrgName}"/></td>
 					<td style="width: 133px;"><p:outputLabel
-							value="#{lbl['lbl.fl.payment.match.paymentbankname']}" /></td>
+							value="#{lbl['lbl.fl.invoice.acc.bank']}" /></td>
 					<td><p:inputText size="40" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" /></td>
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.accountNo}  #{danBackingBean.managedBean.adjustment.flInvoice.paymentBank.finOrgName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.factoring.branch']}" /></td>
 					<td><p:inputText  disabled="true" size="50" value="#{danBackingBean.managedBean.branchName}"/></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.bank.acc.no']}" /></td>
-					<td><p:inputText size="40" disabled="true" value="#{danBackingBean.managedBean.adjustment.flInvoice.accountNo}"/></td>
 				</tr>
 				<tr>
 					<td valign="top" style="width: 137px;"><p:outputLabel
