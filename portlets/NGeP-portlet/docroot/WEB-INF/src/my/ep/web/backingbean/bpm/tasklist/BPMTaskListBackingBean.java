@@ -244,6 +244,9 @@ public class BPMTaskListBackingBean extends
 				+ SCProcessNameConst.ENDORSE_SCORING, "specpreparation");
 		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_SCORING, "specpreparation");
+		temp.put(SCProcessNameConst.SCORING_PREPARATION_PROCESS_NAME
+				+ SCProcessNameConst.VIEW_SCORING, "specpreparation");
+		
 		// temp.put(SCProcessNameConst.BDG_APPROVAL_PROCESS
 		// +SCProcessNameConst.REVISE_BDG_APPROVAL , "qtdetails");
 		temp.put(SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
