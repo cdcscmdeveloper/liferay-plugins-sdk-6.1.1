@@ -16,7 +16,7 @@
 
 			<p:row>
 				<p:column width="100%">
-				
+
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval' and specificationBackingBean.managedBean.readOnly eq 'false'}">
 						<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
@@ -51,6 +51,23 @@
 			</p:row>
 		</p:panelGrid>
 
+		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
+			header="Revice Confirmation" resizable="false" width="325"
+			height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="Are you sure to send for Revise?" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					oncomplete="reviceApprovalDlgs.hide();" action="" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					onclick="reviceApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
 	</p:panel>
 
 </ui:composition>
