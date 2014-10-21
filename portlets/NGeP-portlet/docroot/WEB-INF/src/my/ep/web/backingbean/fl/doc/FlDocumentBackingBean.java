@@ -354,7 +354,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(null != resDTO.getFlOrder().getPmFinancialBranch()){
 					IFinancialOrgSO financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFinancialOrgSO.class); 
 					FinancialOrgReqDTO financialOrgReqDTO = new FinancialOrgReqDTO();
-					financialOrgReqDTO.setFinancialOrgId(resDTO.getFlOrder().getPmFinancialBranch().getFinancialBranchId());
+					financialOrgReqDTO.setFinancialOrgId(resDTO.getFlOrder().getPmFinancialOrg().getFinancialOrgId());
 					FinancialOrgResDTO financialOrgResDTO = financialOrgSO.retriveFinancialBranchByFinancialOrgId(financialOrgReqDTO);
 					if(financialOrgResDTO.getFinancialBranchList() != null && !financialOrgResDTO.getFinancialBranchList().isEmpty()){
 						flOrderBB.getManagedBean().setFactoringBranchList(financialOrgResDTO.getFinancialBranchList());
