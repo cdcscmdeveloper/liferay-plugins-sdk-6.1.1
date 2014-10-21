@@ -37,11 +37,11 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.spec.start.month']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu id="startMonth" style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.spec.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />						
 						</p:selectOneMenu>
 					</p:column>
 					<p:column
@@ -51,7 +51,7 @@
 							style="width:100px;" required="true" label="#{lbl['lbl.sc.spec.freq.schedule.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}" />
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}" />
 						</p:selectOneMenu>
 					</p:column>
 
@@ -63,7 +63,7 @@
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
 								partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -74,7 +74,7 @@
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
 								partialSubmit="true"
-								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency)}"></p:ajax>
+								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column

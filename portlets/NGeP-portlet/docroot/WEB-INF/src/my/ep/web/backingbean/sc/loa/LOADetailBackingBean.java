@@ -2221,7 +2221,7 @@ public class LOADetailBackingBean extends
 		return getManagedBean().getYearsDisplayList();
 	}
 
-	public void calculateScheduleMonths(ScQtSchedule schedule) {
+	public void calculateScheduleMonths(ScQtSchedule schedule, Boolean startMonthAction) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -2239,7 +2239,7 @@ public class LOADetailBackingBean extends
 		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
 				.getEndYear()) : null;
 
-		if (endMonth == null && startMonth != null) {
+		if (startMonthAction !=null && startMonthAction && startMonth != null) {
 			endMonth = startMonth;
 			endYear = startYear;
 			schedule.setEndMonth(endMonth.toString());
@@ -2248,7 +2248,7 @@ public class LOADetailBackingBean extends
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null && endYear >= startYear) {
-			if (endYear != startYear) {
+			if (!endYear.equals(startYear)) {
 				diffYear = endYear - startYear;
 			}
 			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
