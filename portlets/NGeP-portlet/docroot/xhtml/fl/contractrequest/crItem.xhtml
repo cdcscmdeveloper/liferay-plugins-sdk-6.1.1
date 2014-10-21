@@ -167,7 +167,7 @@
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
 					action="#{contractRequestBackingBean.addContractedItems}"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff) }"
-					process="@this" update="resultPanel"
+					process="@this" update="resultPanel,searchPanel"
 					oncomplete="addItems.show();" />
 				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" icon="ui-icon-delete"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}"
@@ -530,7 +530,8 @@
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-			<table style="width:100%">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
+			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.item.type']}" /></td>
 					<td><p:selectOneMenu 
@@ -555,7 +556,7 @@
 					icon="ui-icon-search" update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{contractRequestBackingBean.searchReset}" icon="ui-icon-reset"
-					process="@this" update="searchPanel"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
+					process="@this" update="searchPanel,resultPanel"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
 		
