@@ -395,6 +395,7 @@ public class SpecificationBackingBean extends
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
 			boolean selectPanelItem = this.getManagedBean().isSelectPanelItem();
+			Long statusId = this.getManagedBean().getCurrentStatusId();
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
 			List<CtPanelItem> panelList = this.getManagedBean()
@@ -494,6 +495,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtPanelItem(panelItem);
 			this.getManagedBean().setCtCircularVer(circularVer);
 			this.getManagedBean().setSelectpanelItem(panelList);
+			this.getManagedBean().setCurrentStatusId(statusId);
 		} finally {
 
 		}
@@ -7081,11 +7083,15 @@ public class SpecificationBackingBean extends
 	public String updateBpmTask(String action) {
 
 		SpecificationReqDTO spReqDTO = null;
-		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)
-				|| BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			this.getManagedBean().setLocalOutCome(action);
+			RequestContext.getCurrentInstance().execute(
+					"reviceApprovalDlgs.show()");
+		} else if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setLocalOutCome(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-		} else {
+		} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
 			spReqDTO = prepareSpecReq();
 			spReqDTO.setOutcome(action);
 			spReqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -8558,7 +8564,7 @@ public class SpecificationBackingBean extends
 			SpecificationResDTO resDTO = null;
 			String taskId = this.getManagedBean().getTaskId();
 			String[] outComes = this.getManagedBean().getOutComes();
-
+			Long statusId = this.getManagedBean().getCurrentStatusId();
 			String taskName = this.getManagedBean().getTaskName();
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			List<ScQtDeliveryLoc> deliveryRemoveList = this.getManagedBean()
@@ -8938,6 +8944,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTaskName(taskName);
 			this.getManagedBean().setActiveIndex(activeIndex);
 			this.getManagedBean().setTaskId(taskId);
+			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
 		} finally {
 
@@ -9328,8 +9335,10 @@ public class SpecificationBackingBean extends
 		specReqDTO.setScQt(scQt);
 
 		specReqDTO.setOutcome(action);
-		updatePmDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_QUOTATION,
-				scQt.getQtId(), scQt.getQtNo());
+		if (null != pmDigiSign) {
+			updatePmDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_QUOTATION,
+					scQt.getQtId(), scQt.getQtNo());
+		}
 		specReqDTO.setDigiSignData(pmDigiSign);
 		specReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		specReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
@@ -9472,8 +9481,7 @@ public class SpecificationBackingBean extends
 			PmDigiSign digiSign) {
 		ScQt scQt = this.getManagedBean().getScQt();
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
 			loadPrepareSpecCommitteeDetails(scQt.getQtId(),
 					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
 		}
@@ -9554,8 +9562,8 @@ public class SpecificationBackingBean extends
 	}
 
 	public String gpkiSignAction(PmDigiSign digiSign) {
-		SpecificationResDTO resDTO = updateSpecCommitteDtls(
-				BpmOutcomeConst.BPM_SUBMIT, digiSign);
+		SpecificationResDTO resDTO = updateSpecCommitteDtls(this
+				.getManagedBean().getLocalOutCome(), digiSign);
 		if (resDTO.isSuccessful()) {
 			ScQt qt = resDTO.getScQt();
 			FacesContext
@@ -9567,13 +9575,36 @@ public class SpecificationBackingBean extends
 									null,
 									MessageUtils
 											.getMessage(
-													getMessgeConstant(BpmOutcomeConst.BPM_SUBMIT),
+													getMessgeConstant(this
+															.getManagedBean()
+															.getLocalOutCome()),
 													new String[] {
 															"Specification Preparation And Scoring For",
 															qt.getQtNo() },
 													MessageUtils.BUNDLE_COMMON_MESSAGES,
 													new FacesScopes()
 															.getUserLocale())));
+
+			return CommonUIConst.ACKNOWLEDGE_PAGE;
+		}
+		return null;
+	}
+
+	public String reviseMinistrySpecApproval() {
+		SpecificationResDTO resDTO = prepareSpecChirPersonRequest(this
+				.getManagedBean().getLocalOutCome(), null);
+		if (resDTO.isSuccessful()) {
+			ScQt qt = resDTO.getScQt();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									getMessgeConstant(this.getManagedBean()
+											.getLocalOutCome()),
+									new String[] { "Specification For",
+											qt.getQtNo() },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 
 			return CommonUIConst.ACKNOWLEDGE_PAGE;
 		}
