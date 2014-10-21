@@ -257,6 +257,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			crBB.getManagedBean().setPmPriceType(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtContractItems().get(0).getPriceType());
 			if(buttonVal.equalsIgnoreCase("complain")){
 				return NAV_TO_COMPLAIN_CC_ITEM;	
 			}else{
