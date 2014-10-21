@@ -530,7 +530,7 @@ public class QTDetailBackingBean extends
 			renewSesionObject();
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			
+
 			reqDTO.setQtId(qtId);
 			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 			ScQt selectedScQt = resDTO.getQtDetail();
@@ -1398,7 +1398,10 @@ public class QTDetailBackingBean extends
 				.getScCommitteeMembers();
 		List<ScCommitteeMember> boMembers = boCommitte.getScCommittee()
 				.getScCommitteeMembers();
-		if (spceMembers.isEmpty() || !spceMembers.containsAll(boMembers)) {
+		if (QTStatusConst.CM_PENDING_SUBMISSION.equals(specCommitte
+				.getScCommittee().getCommitteStatus().getStatusId())
+				&& spceMembers.isEmpty()) {
+
 			for (ScCommitteeMember committeeMember : boMembers) {
 				ScCommitteeMember specCommitteeMember = new ScCommitteeMember();
 				try {
@@ -1673,7 +1676,8 @@ public class QTDetailBackingBean extends
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
 				for (ScQtApproval qtApproval : requiredApproval) {
-					qtApproval = checkIsApprovalExists(qtApproval, existingApprovalTabs);
+					qtApproval = checkIsApprovalExists(qtApproval,
+							existingApprovalTabs);
 					if (!qtApproval.isDeleted()) {
 						qtApproval.setApprovalType(ApprovalCategory
 								.getDisplayName(qtApproval
@@ -1990,7 +1994,8 @@ public class QTDetailBackingBean extends
 			Date publishDate = this.getManagedBean().getQt().getPublishDate();
 			Date bsvDate = null;
 			if (getManagedBean().getQt().isZonal()) {
-				List<BriefingZoneBean> briefingBeans = getManagedBean().getBriefingZoneBean();
+				List<BriefingZoneBean> briefingBeans = getManagedBean()
+						.getBriefingZoneBean();
 				if (null != briefingBeans && !briefingBeans.isEmpty()) {
 					for (BriefingZoneBean briefing : briefingBeans) {
 						briefing.getScQtBsv().getScQtBsvDtls();
@@ -1998,30 +2003,42 @@ public class QTDetailBackingBean extends
 						for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
 							bsvDate = bsvDtl.getBsvDate();
 							this.getManagedBean().setBsvDate(bsvDate);
-							getManagedBean().getQt().setClosingDate(DateUtils.addDays(bsvDate, this.getManagedBean()
-									.getQt().getPublishPeriod()));
+							getManagedBean().getQt().setClosingDate(
+									DateUtils.addDays(bsvDate, this
+											.getManagedBean().getQt()
+											.getPublishPeriod()));
 						}
 					}
 				} else {
 					if (null != publishDate) {
-						getManagedBean().getQt().setClosingDate(DateUtils.addDays(getManagedBean().getQt().getPublishDate(), this.getManagedBean()
-								.getQt().getPublishPeriod()));
+						getManagedBean().getQt().setClosingDate(
+								DateUtils.addDays(getManagedBean().getQt()
+										.getPublishDate(), this
+										.getManagedBean().getQt()
+										.getPublishPeriod()));
 					}
 				}
 			} else {
 				if (getManagedBean().getBsvDtlBean() != null) {
-					List<ScQtBsvDtl> selectedBriefList = getManagedBean().getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
-					if (selectedBriefList != null && !selectedBriefList.isEmpty()) {
+					List<ScQtBsvDtl> selectedBriefList = getManagedBean()
+							.getBsvDtlBean().getScQtBsv().getScQtBsvDtls();
+					if (selectedBriefList != null
+							&& !selectedBriefList.isEmpty()) {
 						for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
 							bsvDate = scQtBsvDtl.getBsvDate();
 							this.getManagedBean().setBsvDate(bsvDate);
-							getManagedBean().getQt().setClosingDate(DateUtils.addDays(bsvDate, this.getManagedBean()
-									.getQt().getPublishPeriod()));
+							getManagedBean().getQt().setClosingDate(
+									DateUtils.addDays(bsvDate, this
+											.getManagedBean().getQt()
+											.getPublishPeriod()));
 						}
 					} else {
 						if (null != publishDate) {
-							getManagedBean().getQt().setClosingDate(DateUtils.addDays(getManagedBean().getQt().getPublishDate(), this.getManagedBean()
-									.getQt().getPublishPeriod()));
+							getManagedBean().getQt().setClosingDate(
+									DateUtils.addDays(getManagedBean().getQt()
+											.getPublishDate(), this
+											.getManagedBean().getQt()
+											.getPublishPeriod()));
 						}
 					}
 				}
@@ -2738,10 +2755,11 @@ public class QTDetailBackingBean extends
 	private List<PmUser> retrievePmUserSecratryDtl() {
 		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		//long orgProfileId = this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
+		// long orgProfileId =
+		// this.getManagedBean().getQt().getPmOrgProfile().getOrgProfileId();
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.QCA_SECRETARY.value());
-		//userReqDTO.setOrgProfileId(orgProfileId);
+		// userReqDTO.setOrgProfileId(orgProfileId);
 		UserResDTO resDto = userSO.retrieveUserListByRole(userReqDTO);
 		return resDto.getUserList();
 	}
@@ -2750,6 +2768,7 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
+		this.getManagedBean().setToBeDelCommitteMemebers(null);
 		TabBean previousTabBean = this.getManagedBean().getSelectedTabBean();
 		if (!QTConstants.FINALIZATION_SECRETARY_TAB
 				.equalsIgnoreCase(previousTabBean.getTitleName())) {
@@ -2870,7 +2889,7 @@ public class QTDetailBackingBean extends
 		case 6:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION) {
 				reqDTO = prepareQTInfo();
-				//detailSO.validateDeductionDtls(reqDTO);
+				// detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				renewSesionObject();
 				this.getManagedBean().setQt(resDTO.getQtDetail());
@@ -2942,7 +2961,7 @@ public class QTDetailBackingBean extends
 
 		case 6:
 			if (getManagedBean().getQt().getQtStatus().getStatusId() >= QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) {
-				//detailSO.validateDeductionDtls(prepareQTInfo());
+				// detailSO.validateDeductionDtls(prepareQTInfo());
 			}
 			break;
 
