@@ -53,7 +53,7 @@
 			<ui:param name="isAllPriceTypesStandard" value="#{templateSpecBackingBean.isAllPriceTypesStandard(templateSpecBean)}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
-			<c:if test="#{isItemTypeService}">
+			<c:if test="#{isItemTypeService and !isDurationByItem}">
 				<table style="width:100%">
 				<tr>
 					<td width="16%" class="TableFieldLeft">
@@ -217,8 +217,7 @@
 			</c:if>
 		</p:dialog>
 		
-		<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{estimationPopup}" modal="true" width="450" height="290">
-			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="estimationPopup"/>
+		<p:dialog id="estimationPopup" header="#{lbl['lbl.tpl.spec.content.estimation.title']}" widgetVar="#{estimationPopup}" modal="true" width="450" height="290" closable="false">
 			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:250px;">
@@ -240,9 +239,8 @@
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this"
-						oncomplete="#{estimationPopup}.hide()" rendered="#{editable}">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						action="#{templateSpecBackingBean.estCostCancelAction(templateSpecBean)}"
+						oncomplete="#{estimationPopup}.hide()" rendered="#{editable}" />
 				</div>			
 			</c:if>
 		</p:dialog>
