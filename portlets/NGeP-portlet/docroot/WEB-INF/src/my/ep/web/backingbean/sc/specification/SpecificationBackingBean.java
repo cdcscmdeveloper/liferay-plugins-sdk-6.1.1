@@ -291,36 +291,53 @@ public class SpecificationBackingBean extends
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
-		for (TreeNode treeNode : treeNodes) {
+		if (null != treeNodes && !treeNodes.isEmpty()) {
+			for (TreeNode treeNode : treeNodes) {
 
-			List<TreeNode> zoneNodes = treeNode.getChildren();
-			// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
-			// zoneDtl = (TplSpecZoneDtl) zoneNodes.getData();
-			// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
-			zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
-			for (TreeNode treeNode1 : zoneNodes) {
-				results = new ArrayList<TplSpecZoneLoc>();
-				List<TreeNode> stateNodes = treeNode1.getChildren();
+				List<TreeNode> zoneNodes = treeNode.getChildren();
+				// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
+				// zoneDtl = (TplSpecZoneDtl) zoneNodes.getData();
+				// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
+				zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
+				for (TreeNode treeNode1 : zoneNodes) {
+					results = new ArrayList<TplSpecZoneLoc>();
+					List<TreeNode> stateNodes = treeNode1.getChildren();
 
-				for (TreeNode treeNode2 : stateNodes) {
+					for (TreeNode treeNode2 : stateNodes) {
 
-					List<TreeNode> district = treeNode2.getChildren();
-					if (null != district && !district.isEmpty()) {
-						for (TreeNode devision : district) {
+						List<TreeNode> district = treeNode2.getChildren();
+						if (null != district && !district.isEmpty()) {
+							for (TreeNode devision : district) {
 
-							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-									TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
+								if (devision.getChildCount() > 0) {
+									for (TreeNode districtNode : devision
+											.getChildren()) {
+										TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
+												.getData();
+
+										criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
+												.getData()).getPmDistrict());
+										criteria.setPmDivision(((TplSpecZoneLoc) districtNode
+												.getParent().getData())
+												.getPmDivision());
+										criteria.setPmState(((TplSpecZoneLoc) treeNode2
+												.getData()).getPmState());
+										criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+												.getData()));
+										// criteria.setScQtSupplierCriteria(supplierCriteria);
+										setUserDetails(criteria);
+										results.add(criteria);
+
+									}
+								} else {
+
+									TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
 											.getData();
-
-									criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
+									criteria.setPmDistrict(((TplSpecZoneLoc) devision
 											.getData()).getPmDistrict());
-									criteria.setPmDivision(((TplSpecZoneLoc) districtNode
-											.getParent().getData())
-											.getPmDivision());
 									criteria.setPmState(((TplSpecZoneLoc) treeNode2
 											.getData()).getPmState());
+
 									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
 											.getData()));
 									// criteria.setScQtSupplierCriteria(supplierCriteria);
@@ -328,42 +345,27 @@ public class SpecificationBackingBean extends
 									results.add(criteria);
 
 								}
-							} else {
 
-								TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
-										.getData();
-								criteria.setPmDistrict(((TplSpecZoneLoc) devision
-										.getData()).getPmDistrict());
-								criteria.setPmState(((TplSpecZoneLoc) treeNode2
-										.getData()).getPmState());
-
-								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-										.getData()));
-								// criteria.setScQtSupplierCriteria(supplierCriteria);
-								setUserDetails(criteria);
-								results.add(criteria);
+								// zoneDtl.setTplSpecZoneLocs(results);
 
 							}
+						} else {
 
-							// zoneDtl.setTplSpecZoneLocs(results);
+							TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
+									.getData();
+							criteria.setPmState(((TplSpecZoneLoc) treeNode2
+									.getData()).getPmState());
 
+							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+									.getData()));
+							// criteria.setScQtSupplierCriteria(supplierCriteria);
+							// setUserDetails(criteria);
+							setUserDetails(criteria);
+							results.add(criteria);
 						}
-					} else {
-
-						TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
-								.getData();
-						criteria.setPmState(((TplSpecZoneLoc) treeNode2
-								.getData()).getPmState());
-
-						criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
-								.getData()));
-						// criteria.setScQtSupplierCriteria(supplierCriteria);
-						// setUserDetails(criteria);
-						setUserDetails(criteria);
-						results.add(criteria);
 					}
-				}
 
+				}
 			}
 			zoneDtl.setTplSpecZoneLocs(results);
 			// zoneDtl.setTplSpecZone(new ScQtZoneCriteria());
@@ -1707,7 +1709,7 @@ public class SpecificationBackingBean extends
 			// specMaster.setDurationMonth(12);
 			specMaster
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
-			specMaster.setScQtDocs(null);
+			specMaster.setScQtDoc(scqtDocDest);
 			specMaster.setScQuoteDocs(null);
 			specMaster.setBrandNew(false);
 			specMaster.setRecordStatus(true);
@@ -3174,6 +3176,7 @@ public class SpecificationBackingBean extends
 	public void showGeneralZoneLocationPopup() {
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
+		this.getManagedBean().setZoneLocation(true);
 		try {
 			Long locationLevel = this.getManagedBean().getScQt()
 					.getZoneLocationLevel().getParameterId();
@@ -3325,6 +3328,11 @@ public class SpecificationBackingBean extends
 
 		else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this
 				.getManagedBean().getLocalLevelCode())) {
+			if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}
 			if (null != districts && !districts.isEmpty()) {
 
 				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
@@ -3380,17 +3388,19 @@ public class SpecificationBackingBean extends
 							}
 							if (getManagedBean().getIndex() >= 0) {
 
-								getManagedBean().getZoneTrees().remove(
-										getManagedBean().getIndex());
+								/*
+								 * getManagedBean().getZoneTrees().remove(
+								 * getManagedBean().getIndex());
+								 */
 								localList.add(LocationSingleton.getInstance()
 										.buildLocationTree(null, states,
 												districts, divisions, cities,
 												ScQtLocCriteria.class));
-								getManagedBean().getZoneTrees().addAll(
-										localList);
+								// getManagedBean().setZoneTrees(localList);
 							}
 						}
 					}
+					getManagedBean().getZoneTrees().addAll(localList);
 				}
 
 				if (statesDistrictsCitiesKeySet != null
@@ -3422,16 +3432,19 @@ public class SpecificationBackingBean extends
 						}
 						if (getManagedBean().getIndex() >= 0) {
 
-							getManagedBean().getZoneTrees().remove(
-									getManagedBean().getIndex());
+							/*
+							 * getManagedBean().getZoneTrees().remove(
+							 * getManagedBean().getIndex());
+							 */
 							localList.add(LocationSingleton.getInstance()
 									.buildLocationTree(null, states, districts,
 											divisions, cities,
 											ScQtLocCriteria.class));
-							getManagedBean().getZoneTrees().addAll(localList);
+							// getManagedBean().setZoneTrees(localList);
 
 						}
 					}
+					getManagedBean().getZoneTrees().addAll(localList);
 				}
 
 			}
@@ -3439,6 +3452,11 @@ public class SpecificationBackingBean extends
 
 		else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
 				.getManagedBean().getLocalLevelCode())) {
+			if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+			}
 			if (null != divisions && !divisions.isEmpty()) {
 
 				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
@@ -3471,17 +3489,19 @@ public class SpecificationBackingBean extends
 							}
 							if (getManagedBean().getIndex() >= 0) {
 
-								getManagedBean().getZoneTrees().remove(
-										getManagedBean().getIndex());
+								/*
+								 * getManagedBean().getZoneTrees().remove(
+								 * getManagedBean().getIndex());
+								 */
 								localList.add(LocationSingleton.getInstance()
 										.buildLocationTree(null, states,
 												districts, divisions, cities,
 												ScQtLocCriteria.class));
-								getManagedBean().getZoneTrees().addAll(
-										localList);
+								// getManagedBean().setZoneTrees(localList);
 							}
 						}
 					}
+					getManagedBean().getZoneTrees().addAll(localList);
 				}
 
 			}
@@ -3526,7 +3546,6 @@ public class SpecificationBackingBean extends
 		TplSpecZoneDtl zone = new TplSpecZoneDtl();
 
 		zone.setZoneName(getManagedBean().getZoneName());
-		getManagedBean().setZoneName(null);
 
 		List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTO(allNodes);
@@ -3542,27 +3561,33 @@ public class SpecificationBackingBean extends
 		if (null == getManagedBean().getZoneGeneralTrees()) {
 			getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 		}
+		if (null != allNodes && !allNodes.isEmpty()) {
+			if (getManagedBean().getIndex() == -1) {
 
-		if (getManagedBean().getIndex() == -1) {
+				getManagedBean().getZoneGeneralTrees().add(
+						LocationSingleton.getInstance().buildLocationTree(zone,
+								states, districts, divisions, cities,
+								TplSpecZoneLoc.class));
 
-			getManagedBean().getZoneGeneralTrees().add(
-					LocationSingleton.getInstance().buildLocationTree(zone,
-							states, districts, divisions, cities,
-							TplSpecZoneLoc.class));
+			}
 
+			else if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneGeneralTrees().remove(
+						getManagedBean().getIndex());
+				getManagedBean().getZoneGeneralTrees().add(
+						getManagedBean().getIndex(),
+						LocationSingleton.getInstance().buildLocationTree(zone,
+								states, districts, divisions, cities,
+								TplSpecZoneLoc.class));
+			}
+		} else {
+			throw new EpException("Please select At least one Zone Location");
 		}
-
-		else if (getManagedBean().getIndex() >= 0) {
-
-			getManagedBean().getZoneGeneralTrees().remove(
-					getManagedBean().getIndex());
-			getManagedBean().getZoneGeneralTrees().add(
-					getManagedBean().getIndex(),
-					LocationSingleton.getInstance().buildLocationTree(zone,
-							states, districts, divisions, cities,
-							TplSpecZoneLoc.class));
-		}
+		this.getManagedBean().setZoneLocation(false);
+		getManagedBean().setZoneName(null);
 		this.getManagedBean().setIndex(-1);
+		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
 
 	}
 
@@ -4289,6 +4314,7 @@ public class SpecificationBackingBean extends
 					&& !this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 				this.getManagedBean().setZoneGeneralTrees(null);
 			}
+			
 		} else {
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.getLocationLevel().setParameterId(location);
@@ -5394,6 +5420,7 @@ public class SpecificationBackingBean extends
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 			String startMonth = "";
 			String endMonth = "";
+			String endToMonth = "";
 			String fromdate = dateFormat.format(checkListValue.getFromDate());
 			String todate = dateFormat.format(checkListValue.getToDate());
 			String startdate = fromdate.substring(3, 5);
@@ -5440,46 +5467,59 @@ public class SpecificationBackingBean extends
 			}
 
 			if (enddate.equalsIgnoreCase("01")) {
+				endToMonth = "0";
 				endMonth = "January";
 			}
 			if (enddate.equalsIgnoreCase("02")) {
+				endToMonth = "1";
 				endMonth = "February";
 			}
 			if (enddate.equalsIgnoreCase("03")) {
+				endToMonth = "2";
 				endMonth = "March";
 			}
 			if (enddate.equalsIgnoreCase("04")) {
+				endToMonth = "3";
 				endMonth = "April";
 			}
 			if (enddate.equalsIgnoreCase("05")) {
+				endToMonth = "4";
 				endMonth = "May";
 			}
 			if (enddate.equalsIgnoreCase("06")) {
+				endToMonth = "5";
 				endMonth = "June";
 			}
 
 			if (enddate.equalsIgnoreCase("07")) {
+				endToMonth = "6";
 				endMonth = "July";
 			}
 			if (enddate.equalsIgnoreCase("08")) {
+				endToMonth = "7";
 				endMonth = "August";
 			}
 			if (enddate.equalsIgnoreCase("09")) {
+				endToMonth = "8";
 				endMonth = "September";
 			}
 			if (enddate.equalsIgnoreCase("10")) {
+				endToMonth = "9";
 				endMonth = "October";
 			}
 			if (enddate.equalsIgnoreCase("11")) {
+				endToMonth = "10";
 				endMonth = "November";
 			}
 			if (enddate.equalsIgnoreCase("12")) {
+				endToMonth = "11";
 				endMonth = "December";
 			}
 			this.getManagedBean().setFromMonth(startMonth);
 			this.getManagedBean().setBankstmntTomonth(endMonth);
 			this.getManagedBean().setStartYear(startYear);
 			this.getManagedBean().setEndYear(endYear);
+			this.getManagedBean().setToMonth(endToMonth);
 		}
 	}
 
@@ -8047,6 +8087,8 @@ public class SpecificationBackingBean extends
 		} else {
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
 					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
+			System.out.println("=====current status id==="
+					+ this.getManagedBean().getCurrentStatusId());
 			if (null == this.getManagedBean().getScQt().getFulfilmentType()) {
 
 				this.getManagedBean().getScQt()
@@ -9905,6 +9947,7 @@ public class SpecificationBackingBean extends
 		}
 		status.setStatusId(60550L);
 		specMaster.setStatus(status);
+		specMaster.setScQtDoc(scqtDocDest);
 		ParameterReqDTO localGoodsReqDTO = new ParameterReqDTO();
 		localGoodsReqDTO.setParameterType(ParameterTypeConst.ITEM_ORIGIN);
 		localGoodsReqDTO.setParameterCode(ParameterConst.LOCAL_GOODS);
