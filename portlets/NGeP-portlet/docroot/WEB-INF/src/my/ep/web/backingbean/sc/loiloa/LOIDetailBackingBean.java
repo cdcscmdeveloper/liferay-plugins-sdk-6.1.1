@@ -457,40 +457,40 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Initializing remarks in loi approval
 	 */
-	public List<ScLoiRemark> initializeRemarks(ScLoi scLoi) {
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		FacesScopes facesScopes = new FacesScopes();
-		List<ScLoiRemark> results = scLoi.getScLoiRemarks();
-		if (results == null) {
-			results = new ArrayList<ScLoiRemark>();
-		}
-		if (results.size() == 0
-				|| !compareUserName(results.get(0).getCreatedUser()
-						.getLoginId())) {
-			ScLoiRemark remark = new ScLoiRemark();
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			remark.setRemark("");
-			PmStatus status = new PmStatus();
-			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			if (status != null) {
-				statusReqDTO.setStatusId(status.getStatusId());
-				StatusResDTO statusResDTO = iStatusSO
-						.retrieveStatusByStatusId(statusReqDTO);
-				remark.setPmStatus(statusResDTO.getPmStatus());
-			}
-			remark.setPmStatus(status);
-
-			results.add(0, remark);
-		}
-		// getManagedBean().setRemarks(results);
-		return results;
-	}
+//	public List<ScLoiRemark> initializeRemarks(ScLoi scLoi) {
+//		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance()
+//				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+//						IStatusSO.class);
+//		FacesScopes facesScopes = new FacesScopes();
+//		List<ScLoiRemark> results = scLoi.getScLoiRemarks();
+//		if (results == null) {
+//			results = new ArrayList<ScLoiRemark>();
+//		}
+//		if (results.size() == 0
+//				|| !compareUserName(results.get(0).getCreatedUser()
+//						.getLoginId())) {
+//			ScLoiRemark remark = new ScLoiRemark();
+//			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+//			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+//			remark.setChangedBy(remark.getCreatedBy());
+//			remark.setCreatedUser(facesScopes.getUserSessionBean());
+//			remark.setRemark("");
+//			PmStatus status = new PmStatus();
+//			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
+//			StatusReqDTO statusReqDTO = new StatusReqDTO();
+//			if (status != null) {
+//				statusReqDTO.setStatusId(status.getStatusId());
+//				StatusResDTO statusResDTO = iStatusSO
+//						.retrieveStatusByStatusId(statusReqDTO);
+//				remark.setPmStatus(statusResDTO.getPmStatus());
+//			}
+//			remark.setPmStatus(status);
+//
+//			results.add(0, remark);
+//		}
+//		// getManagedBean().setRemarks(results);
+//		return results;
+//	}
 
 	/**
 	 * viewItemDetails method to view item details in loi listing
