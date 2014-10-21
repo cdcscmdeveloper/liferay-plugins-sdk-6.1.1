@@ -44,7 +44,7 @@
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
 					process="@this, specificationcommitteeid" update="@(.clonetecid)"
-					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
+					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTDetailBB.managedBean.selectedTabBean.editable}"
 					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 					icon="ui-icon-clone" />
 			</div>
