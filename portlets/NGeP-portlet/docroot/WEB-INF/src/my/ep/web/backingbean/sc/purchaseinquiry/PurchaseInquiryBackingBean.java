@@ -64,7 +64,6 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPIZone;
 import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
-import my.ep.persistence.entity.sc.directpurchase.ScPRIWorkFlowStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
@@ -487,13 +486,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		    	prInquiry.setScRequestSupplierItems(requestSupplierItems);
 		    	
 		    	prInquiry.setCreatedDate(DateUtils.getCurrentDate());
-		    	// setting remarks 
-		    	prInquiry.setRemarks(initializeRemarks(
-		    			prInquiry, 
-		    			prInquiry.getCurrentStatus(), 
-		    			prInquiry.getRemarks(), 
-		    			ScPRIRemark.class));
-		    	
 		    	prInquiry.setWorkflowStatuses(null);
 
 		    	finalizeRemarks(prInquiry.getRemarks());
@@ -536,13 +528,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			   PrInquiryReqDTO reqDTO = new PrInquiryReqDTO();
 			   ScPrInquiry prInquiry = getManagedBean().getScPrInquiry();
 				ScRequestSupplierItem scRequestSupplierItem   = getManagedBean().getScRequestSupplierItem();
-			   //remarks 
-			   prInquiry.setRemarks(initializeRemarks(
-					   prInquiry, 
-					   prInquiry.getCurrentStatus(), 
-					   prInquiry.getRemarks(), 
-					   ScPRIRemark.class));
-			   
 			   finalizeRemarks(prInquiry.getRemarks());
 			   
 			   // updating price 
