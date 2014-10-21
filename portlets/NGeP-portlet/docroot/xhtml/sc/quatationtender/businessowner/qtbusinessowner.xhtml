@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.so.general.info']}" toggleable="true">
+	<ui:param name="readOnly" value="#{qTDetailBB.managedBean.editable}"></ui:param>
 		<table>
 			<tr>
 				<td style="width: 154px;" valign="top"><p:outputLabel
@@ -14,10 +15,10 @@
 				<td colspan="4">
 					<table>
 						<tr>
-							<td><p:inputTextarea id="title" maxlength="1000"
+							<td><p:inputTextarea id="title" maxlength="1000"  disabled="#{readOnly}"
 									label="#{lbl['lbl.so.title']}" required="true"
 									value="#{qTDetailBB.managedBean.qt.qtTitle}" cols="115"
-									rows="2" style=" margin-bottom:5px; width: 100%; " /></td>
+									rows="2" style=" margin-bottom:5px; width: 100%; "  /></td>
 							<td><p:message id="titleMsg" for="title" display="icon" /></td>
 						</tr>
 					</table>
@@ -25,7 +26,7 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.so.crtdt']}" /></td>
-				<td><p:inputText size="30"
+				<td><p:inputText size="30" 
 						value="#{qTDetailBB.managedBean.qt.createdDate}" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />

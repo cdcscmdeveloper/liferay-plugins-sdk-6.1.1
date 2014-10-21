@@ -19,17 +19,19 @@
 			<p:ajax event="rowSelectRadio"
 				listener="#{qTBusinessOwnerBackingBean.consolidateRowSelectRadio}" />
 
-			<ac:paginator for="businessownerId" />
 
-			<p:column style="width:2%">
+
+			<p:column style="width:2%" rendered="#{!readOnly}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk"
 						value="#{qTBusinessOwnerBackingBean.flag}">
-						<p:ajax  update="businessownerId" listener="#{qTBusinessOwnerBackingBean.selectAll}"></p:ajax>
+						<p:ajax update="businessownerId"
+							listener="#{qTBusinessOwnerBackingBean.selectAll}"></p:ajax>
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{businessowner.selected}">
-					<p:ajax update="businessownerId" listener="#{qTBusinessOwnerBackingBean.getConsolidateSelectAll}"/>
+					<p:ajax update="businessownerId"
+						listener="#{qTBusinessOwnerBackingBean.getConsolidateSelectAll}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
 
@@ -51,7 +53,8 @@
 				<h:outputText value="#{businessowner.grade}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.bo.pp']}" style="width : 6%">
-				<h:outputText value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				<h:outputText
+					value="#{lbl[businessowner.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.bo.consolidate']}"
 				style="width:10%" selectionMode="single">
@@ -62,30 +65,32 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.clone']}"
-				actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
-				oncomplete="cloneBusinessOwner.show();" process="@this"
-				icon="ui-icon-clone" update="@(.cloneAddMember)"
-				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
+			<c:if test="#{!readOnly}">
+				<p:commandButton value="#{lbl['lbl.btn.clone']}"
+					actionListener="#{qTBusinessOwnerBackingBean.cloneBusinessOwnerPopupAction}"
+					oncomplete="cloneBusinessOwner.show();" process="@this"
+					icon="ui-icon-clone" update="@(.cloneAddMember)"
+					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
-			<p:commandButton id="businessowneradd"
-				value="#{lbl['lbl.btn.add']}" process="@this"
-				action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
-				oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
-				icon="ui-icon-add"
-				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
+				<p:commandButton id="businessowneradd" value="#{lbl['lbl.btn.add']}"
+					process="@this"
+					action="#{qTBusinessOwnerBackingBean.addBusinessOwner}"
+					oncomplete="newbusinessowner.show();" update="@(.qtAddMember)"
+					icon="ui-icon-add"
+					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				icon="ui-icon-delete"
-				action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
-				update="businessownerId"
-				rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
+				<p:commandButton value="#{lbl['lbl.btn.delete']}"
+					icon="ui-icon-delete"
+					action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
+					update="businessownerId"
+					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
+			</c:if>
 		</div>
 	</p:panel>
 	<p:panel header="Specification Approval" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
 			columnClasses="columnWidth10" style="margin-left: 26px;">
-			<p:selectBooleanCheckbox
+			<p:selectBooleanCheckbox disabled="#{readOnly}"
 				value="#{qTDetailBB.managedBean.qt.specApprovalReq}">
 				<p:ajax update="approvalSpec"
 					listener="#{qTBusinessOwnerBackingBean.processChecked}" />
@@ -100,11 +105,12 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 					<h:outputLabel value="#{lbl['lbl.so.ministry.spec.secretary']}" />
 
-					<p:selectOneMenu id="ministryspec"
+					<p:selectOneMenu id="ministryspec" disabled="#{readOnly}"
 						label="#{lbl['lbl.so.ministry.spec.secretary']}" required="true"
 						value="#{qTDetailBB.managedBean.qt.ministrySpecSecrataryId.userId}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
 						<f:selectItems
 							value="#{qTBusinessOwnerBackingBean.managedBean.comitteeUserName}"
 							var="appName" itemLabel="#{appName.userName}"
