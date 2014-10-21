@@ -587,8 +587,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			if (scRemarks.size() == 0
 					|| !compareUserName(prevRemark.getCreatedUser()
 							.getLoginId())
-					|| (workFlowStatus != null && prevRemark.getScWorkFlowStatus() !=null && !prevRemark.getScWorkFlowStatus().getPmStatus()
-							.getStatusId().equals(workFlowStatus.getPmStatus().getStatusId()))) {
+					|| (workFlowStatus != null && prevRemark.getScWorkFlowStatus() !=null && !prevRemark.getScWorkFlowStatus().getWorkflowStatusId().equals(workFlowStatus.getWorkflowStatusId()))) {
 
 				REMARK_CLASS remark = clazz.newInstance();
 				remark.setCreatedBy(facesScopes.getUserSessionBean()
