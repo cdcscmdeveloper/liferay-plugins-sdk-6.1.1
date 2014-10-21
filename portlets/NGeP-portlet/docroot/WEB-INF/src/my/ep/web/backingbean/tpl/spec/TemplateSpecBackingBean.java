@@ -62,6 +62,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -673,6 +674,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyPopupAction");
 		
+		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
+		
+		List<TplSpecTierQty> oriSpecTierQties = TemplateSpecHelper.getInstance().cloneTplSpecTierQty(
+				oriSpecQuestion, templateSpecBean.getSelectedSpecQuestion().getTplSpecTierQties());
+		
+		if (oriSpecTierQties != null) {
+			for (TplSpecTierQty oriSpecTierQty : oriSpecTierQties) {
+				oriSpecTierQty.setTplSpecQuestion(tplSpecQuestion);
+			}	
+		}
+		
+		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
+		
 		templateSpecBean.setSelectAll(false);
 	}
 	
@@ -688,6 +703,24 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		// update selected score type id
 		templateSpecBean.setSelectedScoreTypeId(
 				tplSpecQuestion.getScoreTypeCode().getParameterId());
+		
+		try {
+			TplSpecQuestion oriSpecQuestion = (TplSpecQuestion) BeanUtils.cloneBean(tplSpecQuestion);			
+			List<TplSpecScoring> oriSpecScorings = TemplateSpecHelper.getInstance().cloneTplSpecScoring(
+					oriSpecQuestion, tplSpecQuestion.getTplSpecScorings());
+			
+			if (oriSpecScorings != null) {
+				for (TplSpecScoring oriSpecScoring : oriSpecScorings) {
+					oriSpecScoring.setTplSpecQuestion(tplSpecQuestion);
+				}
+			}
+			
+			templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e);
+		} 
 		
 		templateSpecBean.setSelectAll(false);
 	}
@@ -860,6 +893,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				templateSpecBean.getSpecComponentId() + "tierQtyPopup.hide()");
 	}
 	
+	public void tierQtyCancelAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("tierQtyCancelAction");
+		
+		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		
+		selectedSpecQuestion.setTplSpecTierQties(oriSpecQuestion.getTplSpecTierQties());
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
+	}
+	
 	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringOkAction");
 		
@@ -885,6 +929,21 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId() + "scoringSetPopup.hide()");
+	}
+	
+	public void scoringCancelAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("scoringCancelAction");
+		
+		TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		
+		selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion.getScoreTypeCode());
+		selectedSpecQuestion.setMaxScore(oriSpecQuestion.getMaxScore());
+		selectedSpecQuestion.setWeightageReq(oriSpecQuestion.isWeightageReq());
+		selectedSpecQuestion.setWeightage(oriSpecQuestion.getWeightage());
+		selectedSpecQuestion.setTplSpecScorings(oriSpecQuestion.getTplSpecScorings());
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 	
 	public void estCostOkAction(TemplateSpecBean templateSpecBean) {

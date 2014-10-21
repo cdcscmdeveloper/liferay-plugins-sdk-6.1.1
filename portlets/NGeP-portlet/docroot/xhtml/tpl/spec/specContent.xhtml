@@ -53,6 +53,27 @@
 			<ui:param name="isAllPriceTypesStandard" value="#{templateSpecBackingBean.isAllPriceTypesStandard(templateSpecBean)}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			
+			<c:if test="#{isItemTypeService}">
+				<table style="width:100%">
+				<tr>
+					<td width="16%" class="TableFieldLeft">
+						<p:outputLabel value="#{lbl['lbl.sc.tpl.duration.month']}" />
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</td>
+					<td width="84%" class="TableFieldRight">
+						<p:inputText id="durationMonth" styleClass="ppNumericAlign"
+							value="#{templateSpecBean.specMaster.durationMonth}" 
+							required="true" maxlength="4"
+							label="#{lbl['lbl.tpl.spec.content.duration.month']}">
+							<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+							<p:ajax partialSubmit="true" process="@this" update="@this" />
+						</p:inputText>
+						<p:message id="durationMonthMsg" for="durationMonth" display="icon" />
+					</td>
+				</tr>
+				</table>
+			</c:if>
+			
 			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
 				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
 					<ac:lovPopup />
@@ -142,8 +163,7 @@
 			</div>
 		</p:dialog>
 		
-		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="#{tierQtyPopup}" modal="true" width="450" height="390">
-			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="tierQtyPopup"/>
+		<p:dialog id="tierQtyPopup" header="#{lbl['lbl.tpl.spec.content.tier.title']}" widgetVar="#{tierQtyPopup}" modal="true" width="450" height="390" closable="false">
 			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
 				<div style="height:330px;">
@@ -165,24 +185,20 @@
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this" 
-						oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable}">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						action="#{templateSpecBackingBean.tierQtyCancelAction(templateSpecBean)}"
+						oncomplete="#{tierQtyPopup}.hide()" rendered="#{editable}" />
 				</div>			
 			</c:if>
 		</p:dialog>
 
-		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="630" height="490" rendered="#{isScoringReq}">
-			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="scoringSetPopup"/>
+		<p:dialog id="scoringSetPopup" header="#{lbl['lbl.tpl.spec.content.scoring.settings.title']}" widgetVar="#{scoringSetPopup}" modal="true" width="630" height="490" rendered="#{isScoringReq}" closable="false">
 			
 			<c:if test="#{!empty templateSpecBean.selectedSpecQuestion}">
-				<div style="height:440px;">
-					<h:panelGroup id="scoreSettPnl">
-						<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
+				<h:panelGroup id="scoreSettPnl">
+					<p:messages id="scorePopupMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 						
-						<ui:include src="scoringSettings.xhtml" />
-					</h:panelGroup>
-				</div>
+					<ui:include src="scoringSettings.xhtml" />
+				</h:panelGroup>
 				
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}" 
@@ -195,9 +211,8 @@
 					</p:commandButton>
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}" icon="ui-icon-cancel" 
 						partialSubmit="true" process="@this" update="@this"
-						oncomplete="#{scoringSetPopup}.hide()" rendered="#{editable}">
-						<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{null}" />
-					</p:commandButton>
+						action="#{templateSpecBackingBean.scoringCancelAction(templateSpecBean)}"
+						oncomplete="#{scoringSetPopup}.hide()" rendered="#{editable}" />
 				</div>
 			</c:if>
 		</p:dialog>
