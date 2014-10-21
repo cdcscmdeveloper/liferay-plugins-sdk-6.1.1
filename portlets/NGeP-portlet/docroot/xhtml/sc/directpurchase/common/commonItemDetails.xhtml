@@ -260,6 +260,7 @@
 					<p:spacer width="6px;"></p:spacer>
 					<p:outputPanel autoUpdate="true">
 						<p:selectOneMenu value="#{requestNoteBackingBean.managedBean.supplierId}" 
+						 rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}"
 							style="width:155px;">  
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{requestNoteBackingBean.suppliersBySelectedItems}" 
