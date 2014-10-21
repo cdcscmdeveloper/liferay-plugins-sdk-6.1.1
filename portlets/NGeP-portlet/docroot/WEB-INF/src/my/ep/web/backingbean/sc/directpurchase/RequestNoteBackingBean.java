@@ -204,7 +204,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * return String
 	 */
 	public String saveAction(String outcome) {
-		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
@@ -242,14 +241,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
     	} else{
     		requestNote.getApprovalUsers().addAll(createTargetApprover(requestNote));
     	}
-		
-		
-		// Remarks
-		requestNote.setRemarks(initializeRemarks(
-				requestNote,
-				requestNote.getCurrentStatus(),
-				requestNote.getRemarks(),
-				ScRequestNoteRemark.class));
+	
 		finalizeRemarks(requestNote.getRemarks());
 	    
 	    setUserDetails(requestNote);
@@ -331,12 +323,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	}
 
 			requestNote.setWorkFlowStatuses(null);
-			// Remarks
-			requestNote.setRemarks(initializeRemarks(
-					requestNote,
-					requestNote.getCurrentStatus(),
-					requestNote.getRemarks(),
-					ScRequestNoteRemark.class));
+			
 			if (getManagedBean().getSourceMethod().equalsIgnoreCase(ParameterConst.METHOD_SQ)) {
 				requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SQ);
 			} else {
