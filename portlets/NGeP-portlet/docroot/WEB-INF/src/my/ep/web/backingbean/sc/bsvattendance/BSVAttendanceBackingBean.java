@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sc.bsvattendance;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +8,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.QTStatusConst;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
@@ -36,8 +28,6 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
@@ -47,8 +37,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author sri
@@ -109,7 +97,11 @@ public class BSVAttendanceBackingBean extends
 								.retrieveBriefingSiteVisitDtls(reqDTO);
 						if (null != briefingResDTO.getScQtBsv()
 								&& briefingResDTO.getScQtBsv().getQtBsvId() != null) {
-							initializeRemarks(briefingResDTO.getScQtBsv());
+							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
+							
+							scQtBsv.setBsvRemarks(initializeRemarks(
+									scQtBsv, null, scQtBsv.getBsvRemarks(), ScQtBSVRemark.class));
+							
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
@@ -131,7 +123,9 @@ public class BSVAttendanceBackingBean extends
 				BriefingZoneBean briefingZoneBean = null;
 				if (null != resDTO.getScQtBsv()
 						&& resDTO.getScQtBsv().getQtBsvId() != null) {
-					initializeRemarks(scQtBsv);
+					scQtBsv.setBsvRemarks(initializeRemarks(
+							scQtBsv, null, scQtBsv.getBsvRemarks(), ScQtBSVRemark.class));
+					
 					briefingZoneBean = new BriefingZoneBean(null,
 							resDTO.getBriefingList(),
 							resDTO.getSiteVisitList(), scQtBsv);
@@ -514,36 +508,6 @@ public class BSVAttendanceBackingBean extends
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
 		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
-	}
-
-	public void initializeRemarks(ScQtBsv bsv) {
-
-		List<ScQtBSVRemark> bsvRemarks = new ArrayList<ScQtBSVRemark>();
-		if (bsv.getBsvRemarks() == null || bsv.getBsvRemarks().isEmpty()) {
-			FacesScopes facesScopes = new FacesScopes();
-			IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IStatusSO.class);
-			ScQtBSVRemark remark = new ScQtBSVRemark();
-
-			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-			remark.setChangedBy(remark.getCreatedBy());
-			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			remark.setScQtBsv(bsv);
-			PmStatus status = new PmStatus();
-			status.setStatusId(QTStatusConst.QT_BRIEFING_SITE_VISIT);
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			if (status != null) {
-				statusReqDTO.setStatusId(status.getStatusId());
-				StatusResDTO statusResDTO = iStatusSO
-						.retrieveStatusByStatusId(statusReqDTO);
-				remark.setPmStatus(statusResDTO.getPmStatus());
-
-			}
-			bsvRemarks.add(remark);
-			bsv.setBsvRemarks(bsvRemarks);
-		}
 	}
 
 	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {

@@ -11,7 +11,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.sc.BidPackageBean;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
@@ -21,10 +20,7 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
@@ -38,7 +34,6 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -50,7 +45,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.util.MessageUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBiddingManagedBean;
@@ -406,52 +400,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
-		List<ScQtFinalizationEndorsementRemarks> remarks = scQtFinalization
-				.getScQtFinalizationEndorsementRemarks();
-		if (remarks != null) {
-			if (getManagedBean().getRemarks() == null) {
-				getManagedBean().setRemarks(
-						new ArrayList<ScQtFinalizationEndorsementRemarks>());
-			}
-			getManagedBean().getRemarks().addAll(remarks);
-		}
-		initializeNewRemarks();
-	}
-
-	private void initializeNewRemarks() {
-		FacesScopes facesScopes = new FacesScopes();
-
-		ScQtFinalizationEndorsementRemarks remark = new ScQtFinalizationEndorsementRemarks();
-		setUserDetails(remark);
-		remark.setCreatedUser(facesScopes.getUserSessionBean());
-		remark.setScQtFinalization(getManagedBean().getScQtFinalization());
-
-		PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
-		remark.setPmStatus(status);
-
-		if (getManagedBean().getRemarks() == null) {
-			getManagedBean().setRemarks(
-					new ArrayList<ScQtFinalizationEndorsementRemarks>());
-		}
-		getManagedBean().getRemarks().add(remark);
-	}
-
-	private PmStatus getStatusById(Long statusId) {
-		IStatusSO statusSO = null;
-		try {
-			statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO reqDTO = new StatusReqDTO();
-			reqDTO.setStatusId(statusId);
-
-			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
-			PmStatus status = resDTO.getPmStatus();
-
-			return status;
-		} finally {
-			statusSO = null;
-		}
+		
+		List<ScQtFinalizationEndorsementRemarks> remarks = initializeRemarks(
+				scQtFinalization, null, scQtFinalization.getScQtFinalizationEndorsementRemarks(), ScQtFinalizationEndorsementRemarks.class);
+		
+		scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
+		getManagedBean().setRemarks(remarks);
 	}
 
 	public void handleFileUpload(FileUploadEvent event)
@@ -556,12 +510,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private ScQtFinalization prepareFinalizationInfo() {
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
-
-		List<ScQtFinalizationEndorsementRemarks> remarks = getManagedBean()
-				.getRemarks();
-		if (remarks != null && remarks.size() > 0) {
-			scQtFinalization.setScQtFinalizationEndorsementRemarks(remarks);
-		}
+		
+		finalizeRemarks(scQtFinalization.getScQtFinalizationEndorsementRemarks());		
+		
 		setUserDetails(scQtFinalization);
 
 		return scQtFinalization;
