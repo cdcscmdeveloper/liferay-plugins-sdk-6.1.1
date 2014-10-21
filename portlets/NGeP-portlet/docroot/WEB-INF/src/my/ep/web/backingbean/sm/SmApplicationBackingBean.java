@@ -209,9 +209,10 @@ public class SmApplicationBackingBean extends
 		SmSupplier supplierProfile = getManagedBean().getSmSupplier();
 
 		try {
-			if (appl != null && appl.getApplId() != null ) {
+			if (appl != null && appl.getApplId() != null) {
 				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-				mofResDto = SmApplicationUtil.retriveApplicationById(appl.getApplId().intValue());
+				mofResDto = SmApplicationUtil.retriveApplicationById(appl
+						.getApplId().intValue());
 				appl = mofResDto.getSmAppl();
 				supplierProfile = mofResDto.getSmSupplier();
 			}
@@ -296,8 +297,8 @@ public class SmApplicationBackingBean extends
 				if (applicationType.equalsIgnoreCase("N")) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
-				} 
-				//else if (applicationType.equalsIgnoreCase("B")) {}
+				}
+				// else if (applicationType.equalsIgnoreCase("B")) {}
 				else if (applicationType.equalsIgnoreCase("R")
 						|| applicationType.equalsIgnoreCase("A")
 						|| applicationType.equalsIgnoreCase("B")
@@ -460,6 +461,10 @@ public class SmApplicationBackingBean extends
 			// calcPersonnelListCount();
 			// calculateCapital();
 			// calculateBumiPercentageTotals();
+			if (getManagedBean().getSmAppl().getSupplierType()
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+				getManagedBean().getSmAppl().setApplCategoryType("N");
+			}
 			updateSmAppl(applicationType, "", "");
 			getManagedBean().setCurrentPageType(
 					SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC);
@@ -3735,9 +3740,10 @@ public class SmApplicationBackingBean extends
 				&& getManagedBean().getSmAppl().getSupportingDocMode()
 						.equals("O")) {
 			validateSupportingDocs();
-		}else{
+		} else {
 			log.info("*** Remove unnecessary files for the sm supporting docs **** ");
-			for(SmApplSupportDoc doc : getManagedBean().getSmAppl().getSmApplSupportDocs()){
+			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
+					.getSmApplSupportDocs()) {
 				doc.getSmApplDocFiles().clear();
 			}
 		}
@@ -4671,6 +4677,20 @@ public class SmApplicationBackingBean extends
 		} else {
 			reqDTO.setIsSpecialCategory(true);
 		}
+		if (getManagedBean().getBasicCompanyFacility() != null
+				&& getManagedBean().getBasicCompanyFacility().getFacilityType() != null
+				&& getManagedBean().getBasicCompanyFacility().getFacilityType()
+						.equalsIgnoreCase("H")) {
+			reqDTO.setHomeOperated(1);
+		} else {
+			reqDTO.setHomeOperated(0);
+		}
+		if (getManagedBean().getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
+			reqDTO.setPaidUpCapital(getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getPaidUpCapital().intValue());
+		}
+		// TODO get clarification 
+		// reqDTO.setBumiPercentage(0);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
 		return resDTO.getCategoryL3List();

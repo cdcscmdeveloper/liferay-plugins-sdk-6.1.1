@@ -12,7 +12,7 @@
 		<p:panel id="catCodeInfPan">
 			<c:choose>
 				<c:when
-					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser}">
+					test="#{!backingBean.managedBean.poUser and !backingBean.managedBean.approverUser  and backingBean.managedBean.smAppl.supplierType ne 'J'}">
 					<table>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
