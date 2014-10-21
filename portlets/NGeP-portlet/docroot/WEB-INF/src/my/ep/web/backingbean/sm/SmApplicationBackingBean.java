@@ -204,23 +204,19 @@ public class SmApplicationBackingBean extends
 	public void prerenderApplicationForResubmission() {
 		HttpServletRequest originalServletRequest = new FacesScopes()
 				.getOriginalServletRequest();
-		String applId = originalServletRequest.getParameter("apId");
-
-		log.info("application id : " + applId);
 		log.info("**** Prerender Application *************");
 		SmAppl appl = getManagedBean().getSmAppl();
 		SmSupplier supplierProfile = getManagedBean().getSmSupplier();
 
-		// try {
-		// if (applId != null) {
-		// MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
-		// mofResDto = SmApplicationUtil.retriveApplicationById(Integer
-		// .parseInt(applId));
-		// appl = mofResDto.getSmAppl();
-		// supplierProfile = mofResDto.getSmSupplier();
-		// }
-		// } finally {
-		// }
+		try {
+			if (appl != null && appl.getApplId() != null ) {
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = SmApplicationUtil.retriveApplicationById(appl.getApplId().intValue());
+				appl = mofResDto.getSmAppl();
+				supplierProfile = mofResDto.getSmSupplier();
+			}
+		} finally {
+		}
 
 		if (appl != null && supplierProfile != null) {
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
