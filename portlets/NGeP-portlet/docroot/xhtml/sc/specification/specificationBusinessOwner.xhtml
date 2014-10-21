@@ -92,7 +92,8 @@
 								var="parameter" itemLabel="#{parameter.codeName}"
 								itemValue="#{parameter.pmParameter.parameterCode}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form" listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
+								update="@form"
+								listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
 						</p:selectOneRadio>
 						<p:message id="tenderMsg" for="tenderType" display="icon" />
 					</ui:fragment></td>
@@ -213,7 +214,7 @@
 
 							<f:selectItems
 								value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change" update="zoneGeneralDataTable"
+							<p:ajax event="change" update="generalLocationList"
 								listener="#{specificationBackingBean.selectLocation}"></p:ajax>
 						</p:selectOneMenu> <p:message id="withzone" for="locationLevels" display="icon"></p:message>
 					</td>
@@ -288,15 +289,20 @@
 	<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 		widgetVar="ZoneGeneral" modal="true" width="600" position="top"
 		height="500">
+		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true" />
 		<p:panel id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td" border="0">
 
 				<TR>
-					<TD width="20%" valign="top"><p:outputLabel
+					<TD width="30%" valign="top"><p:outputLabel value="*"
+							styleClass="mandatory" /> <p:outputLabel
 							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel></TD>
-					<TD width="80%"><p:inputText size="70"
+					<TD width="70%"><p:inputText size="70" id="zoneNameId"
+							label="#{lbl['lbl.sc.spec.zone.zoneName']}"
+							required="#{specificationBackingBean.managedBean.zoneLocation}"
 							value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
-					</TD>
+						<p:message id="zoneNameMsg" for="zoneNameId" display="icon" /></TD>
 				</TR>
 
 
@@ -335,7 +341,7 @@
 			icon="ui-icon-cancel" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-			style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
+			style="float:right;" process="@all"
 			update="@this, zoneGeneralDataTable,zonePopupGeneral"
 			icon="ui-icon-accept"
 			action="#{specificationBackingBean.updateZoneGeneralLocation}">

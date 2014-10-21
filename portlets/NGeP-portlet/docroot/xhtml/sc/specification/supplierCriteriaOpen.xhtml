@@ -387,15 +387,22 @@
 			<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
 				widgetVar="ZoneGeneral" modal="true" width="600" position="top"
 				height="500">
+				<p:messages id="specSupplierCriteriaZonemessages" showDetail="true"
+			showSummary="false" autoUpdate="true" closable="true" />
 				<p:panel id="zonePopupGeneral">
 					<table styleClass="noBorders tr,noBorders td" border="0">
 
 						<TR>
-							<TD width="20%" valign="top"><p:outputLabel
+							<TD width="30%" valign="top"><p:outputLabel value="*"
+									styleClass="mandatory" /> <p:outputLabel
 									value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel></TD>
-							<TD width="80%"><p:inputText size="70"
+							<TD width="70%"><p:inputText size="70"
+									id="suppliercriteriaZoneId"
+									label="#{lbl['lbl.sc.spec.zone.zoneName']}"
+									required="#{specificationBackingBean.managedBean.zoneLocation}"
 									value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
-							</TD>
+								<p:message id="suppliercriteriaZoneMsgId"
+									for="suppliercriteriaZoneId" display="icon" /></TD>
 						</TR>
 
 
@@ -434,7 +441,7 @@
 					icon="ui-icon-cancel" />
 			&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}"
-					style="float:right;" onclick="ZoneGeneral.hide();" process="@all"
+					style="float:right;" process="@all"
 					update="@this, zoneyesDataTable,zonePopupGeneral"
 					icon="ui-icon-accept"
 					action="#{specificationBackingBean.updateZoneGeneralLocation}">

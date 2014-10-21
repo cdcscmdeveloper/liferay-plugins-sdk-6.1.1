@@ -17,7 +17,6 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tech.weightage']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneRadio required="true"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.tech.weightage']}" id="techWeightage"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq}">
 						<f:selectItems
@@ -48,7 +47,6 @@
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					id="techScoreWeight" required="true" maxlength="18"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
 					rendered="#{tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD'}">
@@ -66,7 +64,6 @@
 				style="width:20%;"
 				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
-					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					maxlength="5" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 
@@ -122,7 +119,6 @@
 					<td><h:outputText
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
 
 						</p:inputText> <p:spacer width="5"></p:spacer> <h:outputText value="/100 " /></td>

@@ -127,12 +127,10 @@
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey ne 'SD' and stageTwofunctional.action.parameterCode eq 'O'}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.action.parameterCode eq 'V'}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							update="actionView"
@@ -154,7 +152,6 @@
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 						update="financeProposaltwo"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						rendered="#{stageTwofunctional.definationType.parameterCode eq 'UP'}">
 						<p:graphicImage library="ep/images/design" name="upload.png"
 							value="/resources/ep/images/design/upload.png" />
@@ -172,7 +169,6 @@
 				style="width:10%">
 				<h:panelGroup id="actionView">
 					<p:commandLink
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey ne 'SD') and (stageTwofunctional.definationType.parameterCode eq 'WF' or stageTwofunctional.definationType.parameterCode eq 'SD' or stageTwofunctional.definationType.parameterCode eq 'TS'))}">
 
@@ -184,7 +180,6 @@
 					</p:commandLink>
 
 					<p:commandLink
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
@@ -203,12 +198,10 @@
 			<p:commandButton
 				value="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 				process="@this" partialSubmit="true"
-				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="stageTwoFinance.show();"
 				actionListener="#{specificationBackingBean.stageTwoFincompilenceList}"
 				update="stageTwoFinPopup" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				process="@this,financeProposaltwo" partialSubmit="true"
 				oncomplete="financialChecklist.paginator.endLink.click();"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
@@ -216,7 +209,6 @@
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
-				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				icon="ui-icon-delete" process="@this" partialSubmit="true"
 				action="#{specificationBackingBean.deleteSelectedRowsAction(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList)}"
 				update="financeProposaltwo">
