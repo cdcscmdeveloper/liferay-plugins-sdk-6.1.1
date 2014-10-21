@@ -16,6 +16,7 @@ public class TemplateSpecBean {
 	private Long selectedScoreTypeId;
 	private String specComponentId;
 	private TplSpecQuestion selectedSpecQuestion;
+	private TplSpecQuestion oriSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	
 	public TemplateSpecBean() {
@@ -122,6 +123,20 @@ public class TemplateSpecBean {
 	 */
 	public void setSelectedSpecQuestion(TplSpecQuestion selectedSpecQuestion) {
 		this.selectedSpecQuestion = selectedSpecQuestion;
+	}
+
+	/**
+	 * @return the oriSpecQuestion
+	 */
+	public TplSpecQuestion getOriSpecQuestion() {
+		return oriSpecQuestion;
+	}
+
+	/**
+	 * @param oriSpecQuestion the oriSpecQuestion to set
+	 */
+	public void setOriSpecQuestion(TplSpecQuestion oriSpecQuestion) {
+		this.oriSpecQuestion = oriSpecQuestion;
 	}
 
 	/**

@@ -42,51 +42,49 @@ import org.apache.log4j.Logger;
  */
 public class TemplateSpecHelper {
 	private static Logger log = EpLogger.getLogger(TemplateSpecHelper.class);
-
-	private static TemplateSpecHelper instance;
-
+	
+	private static TemplateSpecHelper instance;	
+	
 	/**
 	 * Get singleton of TemplateSpecHelper
 	 * 
 	 * @return TemplateSpecHelper singleton
 	 */
-	public static TemplateSpecHelper getInstance() {
-		if (instance == null) {
+	public static TemplateSpecHelper getInstance(){
+		if (instance == null){
 			instance = new TemplateSpecHelper();
 		}
 		return instance;
 	}
-
+	
 	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-	}
-
+        if(log.isDebugEnabled()) {
+            log.debug(message);
+        }
+    }
+	
 	/**
 	 * Clone the Spec Master
 	 * 
 	 * @param specMaster
-	 *            the TplSpecMaster to be clone.
+	 * 		the TplSpecMaster to be clone.
 	 * @param includeQuestions
-	 *            clone including child entities.
-	 * @return the new cloned TplSpecMaster instance.
+	 * 		clone including child entities.
+	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster,
-			boolean includeQuestions) {
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions) {
 		debugLogger("cloneTplSpecMaster : " + specMaster);
-
+		
 		TplSpecMaster newSpecMaster = null;
 
 		if (specMaster != null) {
 			try {
 				newSpecMaster = (TplSpecMaster) BeanUtils.cloneBean(specMaster);
-
+				
 				if (newSpecMaster != null) {
 					newSpecMaster.setBrandNew(true);
 					newSpecMaster.setSpecMasterId(null);
-					newSpecMaster
-							.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+					newSpecMaster.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
 					newSpecMaster.setAdminRemark(null);
 					newSpecMaster.setApproverRemark(null);
 					newSpecMaster.setTplSpecZone(null);
@@ -96,95 +94,79 @@ public class TemplateSpecHelper {
 
 					if (includeQuestions) {
 						// clone spec questions
-						cloneTplSpecQuestions(newSpecMaster,
-								specMaster.getTplSpecQuestions());
+						cloneTplSpecQuestions(newSpecMaster, specMaster.getTplSpecQuestions());	
 					}
 				}
-			} catch (IllegalAccessException | InstantiationException
-					| InvocationTargetException | NoSuchMethodException e) {
-
+			} catch (IllegalAccessException
+					| InstantiationException
+					| InvocationTargetException
+					| NoSuchMethodException e) {
 				log.error(e);
-				log.warn("clone " + specMaster + ": "
-						+ specMaster.getSpecMasterId() + " failed.");
+				log.warn("clone " + specMaster + ": " + specMaster.getSpecMasterId() + " failed.");
 			}
 		}
-
+		
 		return newSpecMaster;
 	}
-
+	
 	/**
 	 * Clone the list of Spec Questions.
 	 * 
 	 * @param newSpecMaster
-	 *            the new TplSpecMaster cloned.
+	 * 		the new TplSpecMaster cloned.
 	 * @param specQuestions
-	 *            the list of TplSpecQuestion to be clone.
-	 * @return the list of new cloned TplSpecQuestion instance.
+	 * 		the list of TplSpecQuestion to be clone.
+	 * @return	the list of new cloned TplSpecQuestion instance.
 	 */
-	public List<TplSpecQuestion> cloneTplSpecQuestions(
-			TplSpecMaster newSpecMaster, List<TplSpecQuestion> specQuestions) {
+	public List<TplSpecQuestion> cloneTplSpecQuestions(TplSpecMaster newSpecMaster, List<TplSpecQuestion> specQuestions) {
 		debugLogger("cloneTplSpecQuestions : " + newSpecMaster);
-
+		
 		List<TplSpecQuestion> newSpecQuestions = null;
-
+		
 		if (newSpecMaster != null) {
 			if (specQuestions != null && !specQuestions.isEmpty()) {
-				boolean isTechnicalSpec = ParameterConst.SPECIFICATION_TYPE_TECHNICAL
-						.equals(newSpecMaster.getSpecTypeCode()
-								.getParameterCode());
+				boolean isTechnicalSpec = ParameterConst.SPECIFICATION_TYPE_TECHNICAL.equals(
+						newSpecMaster.getSpecTypeCode().getParameterCode());
 				TplSpecQuestion prevNewSpecQuestion = null;
-
+				
 				newSpecQuestions = new ArrayList<TplSpecQuestion>();
-
+				
 				for (TplSpecQuestion specQuestion : specQuestions) {
 					try {
-						TplSpecQuestion newSpecQuestion = (TplSpecQuestion) BeanUtils
-								.cloneBean(specQuestion);
-
+						TplSpecQuestion newSpecQuestion = (TplSpecQuestion) BeanUtils.cloneBean(specQuestion);
+						
 						if (newSpecQuestion != null) {
-							if (isTechnicalSpec
-									|| (!isTechnicalSpec && TemplateSpecConst.QUESTION_TYPE_ITEM
-											.equals(newSpecQuestion
-													.getQuestionType()))) {
-
+							if (isTechnicalSpec || 
+									(!isTechnicalSpec && TemplateSpecConst.QUESTION_TYPE_ITEM.equals(
+											newSpecQuestion.getQuestionType()))) {
+								
 								newSpecQuestion.setSpecQuestionId(null);
 								newSpecQuestion.setTplSpecMaster(newSpecMaster);
 								newSpecQuestion.setTplSpecAnswers(null);
 								newSpecQuestion.setTplSpecEstimations(null);
-
+								
 								if (isTechnicalSpec) {
-									if (TemplateSpecConst.QUESTION_TYPE_ITEM
-											.equals(newSpecQuestion
-													.getQuestionType())) {
+									if(TemplateSpecConst.QUESTION_TYPE_ITEM.equals(newSpecQuestion.getQuestionType())){
 										newSpecQuestion.setAnswerTypeCode(null);
-									} else {
-										newSpecQuestion
-												.setAnswerTypeCode(new PmParameter());
+									}else{
+										newSpecQuestion.setAnswerTypeCode(new PmParameter());
 									}
-
+									
 								} else {
 									IParameterSO parameterSO = null;
 									try {
-										parameterSO = BusinessDelegate
-												.getInstance()
-												.getServiceObject(
-														ModuleCodeConst.PROFILE_MANAGEMENT,
-														IParameterSO.class);
-
+										parameterSO = BusinessDelegate.getInstance().getServiceObject(
+												ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+									
 										ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-										parameterReqDTO
-												.setParameterType(ParameterTypeConst.ANSWER_TYPE);
-										parameterReqDTO
-												.setParameterCode(ParameterConst.ANSWER_TYPE_NUMERIC);
-										ParameterResDTO parameterResDTO = parameterSO
-												.retrieveParameterByTypeAndCode(parameterReqDTO);
-										newSpecQuestion
-												.setAnswerTypeCode(parameterResDTO
-														.getPmParameter());
+										parameterReqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
+										parameterReqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_NUMERIC);
+										ParameterResDTO parameterResDTO = parameterSO.retrieveParameterByTypeAndCode(parameterReqDTO);
+										newSpecQuestion.setAnswerTypeCode(parameterResDTO.getPmParameter());
 									} finally {
 										parameterSO = null;
 									}
-
+									
 									resetEstimations(newSpecQuestion);
 								}
 								newSpecQuestion.setScoreTypeCode(null);
@@ -192,81 +174,67 @@ public class TemplateSpecHelper {
 								newSpecQuestion.setWeightageReq(false);
 								newSpecQuestion.setWeightage(null);
 								newSpecQuestion.setTplSpecScorings(null);
-
-								if (prevNewSpecQuestion != null
-										&& TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
-												.equals(newSpecQuestion
-														.getQuestionType())) {
-									String prevQuestionType = prevNewSpecQuestion
-											.getQuestionType();
-
-									if (TemplateSpecConst.QUESTION_TYPE_ITEM
-											.equals(prevQuestionType)) {
-										newSpecQuestion
-												.setParentSpecQuestion(prevNewSpecQuestion);
-									} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC
-											.equals(prevQuestionType)) {
-										newSpecQuestion
-												.setParentSpecQuestion(prevNewSpecQuestion
-														.getParentSpecQuestion());
+								
+								if (prevNewSpecQuestion != null && TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(newSpecQuestion.getQuestionType())) {
+									String prevQuestionType = prevNewSpecQuestion.getQuestionType();
+									
+									if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(prevQuestionType)) {
+										newSpecQuestion.setParentSpecQuestion(prevNewSpecQuestion);
+									} else if (TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC.equals(prevQuestionType)) {
+										newSpecQuestion.setParentSpecQuestion(prevNewSpecQuestion.getParentSpecQuestion());
 									} else {
-										newSpecQuestion
-												.setParentSpecQuestion(null);
+										newSpecQuestion.setParentSpecQuestion(null);
 									}
 								} else {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
-
+								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
-
+								
 								prevNewSpecQuestion = newSpecQuestion;
-
+								
 								// clone spec quantities
-								cloneTplSpecTierQty(newSpecQuestion,
-										specQuestion.getTplSpecTierQties());
+								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
 							}
 						}
 					} catch (IllegalAccessException | InstantiationException
 							| InvocationTargetException | NoSuchMethodException e) {
 						log.error(e);
-						log.warn("clone " + specQuestion + ": "
-								+ specQuestion.getSpecQuestionId() + " failed.");
+						log.warn("clone " + specQuestion + ": " + specQuestion.getSpecQuestionId() + " failed.");
 					}
 				}
 				newSpecMaster.setTplSpecQuestions(newSpecQuestions);
-
+				
 				updateItemWeightageReq(newSpecMaster, newSpecQuestions);
 			}
 		}
-
+		
 		return newSpecQuestions;
 	}
-
+	
 	/**
 	 * Clone the list of Spec Tier Quantities.
 	 * 
 	 * @param newSpecMaster
-	 *            the new TplSpecMaster cloned.
+	 * 		the new TplSpecMaster cloned.
 	 * @param specTierQties
-	 *            the list of TplSpecTierQty to be clone.
-	 * @return the list of new cloned TplSpecTierQty instance.
+	 * 		the list of TplSpecTierQty to be clone.
+	 * @return	the list of new cloned TplSpecTierQty instance.
 	 */
-	public List<TplSpecTierQty> cloneTplSpecTierQty(
-			TplSpecQuestion newSpecQuestion, List<TplSpecTierQty> specTierQties) {
+	public List<TplSpecTierQty> cloneTplSpecTierQty(TplSpecQuestion newSpecQuestion, List<TplSpecTierQty> specTierQties) {
 		debugLogger("cloneTplSpecTierQty : " + newSpecQuestion);
-
+		
 		List<TplSpecTierQty> newSpecTierQties = null;
 
 		if (newSpecQuestion != null) {
-			if (specTierQties != null && !specTierQties.isEmpty()) {
+			if (specTierQties != null && !specTierQties.isEmpty()) {	
 				newSpecTierQties = new ArrayList<TplSpecTierQty>();
-
+				
 				for (TplSpecTierQty specTierQty : specTierQties) {
 					try {
-						TplSpecTierQty newSpecTierQty = (TplSpecTierQty) BeanUtils
-								.cloneBean(specTierQty);
-
+						TplSpecTierQty newSpecTierQty = (TplSpecTierQty) BeanUtils.cloneBean(specTierQty);
+						
 						if (newSpecTierQty != null) {
 							newSpecTierQty.setSpecTierQtyId(null);
 							newSpecTierQty.setTplSpecQuestion(newSpecQuestion);
@@ -274,163 +242,155 @@ public class TemplateSpecHelper {
 							newSpecTierQties.add(newSpecTierQty);
 
 						}
-					} catch (IllegalAccessException | InstantiationException
-							| InvocationTargetException | NoSuchMethodException e) {
+					} catch (IllegalAccessException
+							| InstantiationException
+							| InvocationTargetException
+							| NoSuchMethodException e) {
 						log.error(e);
-						log.warn("clone " + specTierQty + ": "
-								+ specTierQty.getSpecTierQtyId() + " failed.");
+						log.warn("clone " + specTierQty + ": " + specTierQty.getSpecTierQtyId() + " failed.");
 					}
 				}
 			}
-			newSpecQuestion.setTplSpecTierQties(newSpecTierQties);
+			newSpecQuestion.setTplSpecTierQties(newSpecTierQties);	
 		}
-
+		
 		return newSpecTierQties;
 	}
-
+	
 	/**
 	 * Clone the list of Spec Scoring.
 	 * 
 	 * @param newSpecMaster
-	 *            the new TplSpecMaster cloned.
+	 * 		the new TplSpecMaster cloned.
 	 * @param specScorings
-	 *            the list of TplSpecScoring to be clone.
-	 * @return the list of new cloned TplSpecScoring instance.
+	 * 		the list of TplSpecScoring to be clone.
+	 * @return	the list of new cloned TplSpecScoring instance.
 	 */
-	public List<TplSpecScoring> cloneTplSpecScoring(
-			TplSpecQuestion newSpecQuestion, List<TplSpecScoring> specScorings) {
+	public List<TplSpecScoring> cloneTplSpecScoring(TplSpecQuestion newSpecQuestion, List<TplSpecScoring> specScorings) {
 		debugLogger("cloneTplSpecScoring : " + newSpecQuestion);
-
+		
 		List<TplSpecScoring> newSpecScorings = null;
-
+		
 		if (newSpecQuestion != null) {
 			if (specScorings != null && !specScorings.isEmpty()) {
 				newSpecScorings = new ArrayList<TplSpecScoring>();
-
+				
 				for (TplSpecScoring specScoring : specScorings) {
 					try {
-						TplSpecScoring newSpecScoring = (TplSpecScoring) BeanUtils
-								.cloneBean(specScoring);
-
+						TplSpecScoring newSpecScoring = (TplSpecScoring) BeanUtils.cloneBean(specScoring);
+						
 						if (newSpecScoring != null) {
 
 							newSpecScoring.setSpecScoringId(null);
 							newSpecScoring.setTplSpecQuestion(newSpecQuestion);
-							newSpecScoring.setScore(null);
+							//newSpecScoring.setScore(null);
 							setUserDetails(newSpecScoring);
 							newSpecScorings.add(newSpecScoring);
 						}
-					} catch (IllegalAccessException | InstantiationException
-							| InvocationTargetException | NoSuchMethodException e) {
+					} catch (IllegalAccessException
+							| InstantiationException
+							| InvocationTargetException
+							| NoSuchMethodException e) {
 						log.error(e);
-						log.warn("clone " + specScoring + ": "
-								+ specScoring.getSpecScoringId() + " failed.");
+						log.warn("clone " + specScoring + ": " + specScoring.getSpecScoringId() + " failed.");
 					}
-
+					
 				}
 			}
-			newSpecQuestion.setTplSpecScorings(newSpecScorings);
+			newSpecQuestion.setTplSpecScorings(newSpecScorings);	
 		}
-
+		
 		return newSpecScorings;
 	}
-
+	
 	/**
 	 * Clone the list of Spec Estimations.
 	 * 
 	 * @param newSpecMaster
-	 *            the new TplSpecMaster cloned.
+	 * 		the new TplSpecMaster cloned.
 	 * @param specEstimations
-	 *            the list of TplSpecEstimation to be clone.
-	 * @return the list of new cloned TplSpecEstimation instance.
+	 * 		the list of TplSpecEstimation to be clone.
+	 * @return	the list of new cloned TplSpecEstimation instance.
 	 */
-	public List<TplSpecEstimation> cloneTplSpecEstimation(
-			TplSpecQuestion newSpecQuestion,
-			List<TplSpecEstimation> specEstimations) {
+	public List<TplSpecEstimation> cloneTplSpecEstimation(TplSpecQuestion newSpecQuestion, List<TplSpecEstimation> specEstimations) {
 		debugLogger("cloneTplSpecEstimation : " + newSpecQuestion);
-
+		
 		List<TplSpecEstimation> newSpecEstimations = null;
-
+		
 		if (newSpecQuestion != null) {
 			if (specEstimations != null && !specEstimations.isEmpty()) {
 				newSpecEstimations = new ArrayList<TplSpecEstimation>();
-
+				
 				for (TplSpecEstimation specEstimation : specEstimations) {
 					try {
 						// TODO - clone only standard price type.
-						TplSpecEstimation newSpecEstimation = (TplSpecEstimation) BeanUtils
-								.cloneBean(specEstimation);
-
+						TplSpecEstimation newSpecEstimation = (TplSpecEstimation) BeanUtils.cloneBean(specEstimation);
+						
 						if (newSpecEstimation != null) {
 							newSpecEstimation.setSpecEstimationId(null);
-							newSpecEstimation
-									.setTplSpecQuestion(newSpecQuestion);
+							newSpecEstimation.setTplSpecQuestion(newSpecQuestion);
 							newSpecEstimation.setTplSpecZoneDtl(null);
 							newSpecEstimation.setTplSpecTierQty(null);
 							newSpecEstimation.setEstimatedCost(null);
 							setUserDetails(newSpecEstimation);
 							newSpecEstimations.add(newSpecEstimation);
 						}
-					} catch (IllegalAccessException | InstantiationException
-							| InvocationTargetException | NoSuchMethodException e) {
+					} catch (IllegalAccessException
+							| InstantiationException
+							| InvocationTargetException
+							| NoSuchMethodException e) {
 						log.error(e);
-						log.warn("clone " + specEstimation + ": "
-								+ specEstimation.getSpecEstimationId()
-								+ " failed.");
+						log.warn("clone " + specEstimation + ": " + specEstimation.getSpecEstimationId() + " failed.");
 					}
 
 				}
 			}
-			newSpecQuestion.setTplSpecEstimations(newSpecEstimations);
+			newSpecQuestion.setTplSpecEstimations(newSpecEstimations);	
 		}
-
+		
 		return newSpecEstimations;
 	}
-
-	public void updateItemWeightageReq(TplSpecMaster specMaster,
-			List<TplSpecQuestion> specQuestions) {
-		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL
-				.equals(specMaster.getSpecTypeCode().getParameterCode());
+	
+	public void updateItemWeightageReq(TplSpecMaster specMaster, List<TplSpecQuestion> specQuestions) {
+		boolean isFinancialSpec = ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode());
 		boolean isWeightageReq = specMaster.isWeightageReq();
-
+		
 		if (specQuestions != null) {
 			for (TplSpecQuestion specQuestion : specQuestions) {
-				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM
-						.equals(specQuestion.getQuestionType());
-
+				boolean isQuestionTypeItem = TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType());
+				
 				if ((isFinancialSpec || (!isFinancialSpec && !isQuestionTypeItem))) {
 					specQuestion.setWeightageReq(isWeightageReq);
 				}
 			}
 		}
 	}
-
+	
 	public boolean isPriceTypeStandard(String priceType) {
 		return ParameterConst.PRICE_TYPE_STANDARD.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_PROMOTION.equals(priceType);
 	}
-
+	
 	public boolean isPriceTypeZonalStandard(String priceType) {
 		return ParameterConst.PRICE_TYPE_ZONAL_STANDARD.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION.equals(priceType);
 	}
-
+	
 	public boolean isPriceTypeTier(String priceType) {
 		return ParameterConst.PRICE_TYPE_TIER.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_PROMOTION_TIER.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_ZONAL_TIER.equals(priceType)
-				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER
-						.equals(priceType) || isPriceTypeTariff(priceType);
+				|| ParameterConst.PRICE_TYPE_ZONAL_PROMOTION_TIER.equals(priceType)
+				|| isPriceTypeTariff(priceType);
 	}
-
+	
 	public boolean isPriceTypeTariff(String priceType) {
 		return ParameterConst.PRICE_TYPE_TARIFF.equals(priceType)
 				|| ParameterConst.PRICE_TYPE_ZONAL_TARIFF.equals(priceType);
 	}
-
-	public boolean isTierPriceMatched(TplSpecTierQty specTierQty,
-			BigDecimal orderQuantity) {
-
+	
+	public boolean isTierPriceMatched(TplSpecTierQty specTierQty, BigDecimal orderQuantity) {
+		
 		if (specTierQty.getFromQty() != null && specTierQty.getToQty() != null) {
 			if (specTierQty.getFromQty().compareTo(orderQuantity) <= 0
 					&& orderQuantity.compareTo(specTierQty.getToQty()) <= 0) {
@@ -442,100 +402,94 @@ public class TemplateSpecHelper {
 
 		return false;
 	}
-
+	
 	public void resetEstimations(TplSpecQuestion specQuestion) {
 		List<TplSpecEstimation> specEstimations = null;
-		if (specQuestion.getTplSpecMaster().isEstCostReq()
-				&& isPriceTypeStandard(specQuestion.getClPriceTypeCode()
-						.getParameterCode())) {
-
+		if (specQuestion.getTplSpecMaster().isEstCostReq() && 
+				isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())) {
+			
 			specEstimations = new ArrayList<TplSpecEstimation>();
-
+			
 			TplSpecEstimation specEstimation = new TplSpecEstimation();
 			specEstimation.setTplSpecQuestion(specQuestion);
-
+			
 			specEstimations.add(specEstimation);
 		}
-
+		
 		specQuestion.setTplSpecEstimations(specEstimations);
 	}
-
+	
 	public void updateZoneDtl(TplSpecMaster specMaster, TplSpecZone specZone) {
 		specMaster.setTplSpecZone(specZone);
-
+		
 		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
 			resetPriceType(specMaster, specQuestion);
 		}
 	}
-
-	public void resetPriceType(TplSpecMaster specMaster,
-			TplSpecQuestion specQuestion) {
+	
+	public void resetPriceType(TplSpecMaster specMaster, TplSpecQuestion specQuestion) {
 		boolean isZonal = specMaster.getTplSpecZone() != null;
 		PmParameter clPriceTypeCode = specQuestion.getClPriceTypeCode();
 		PmParameter newPriceTypeCode = null;
-
-		if (ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster
-				.getItemTypeCode().getParameterCode())) {
-			newPriceTypeCode = getStandardPriceType(isZonal);
-
+		
+		if (ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode())) {			
+			newPriceTypeCode = getStandardPriceType(isZonal);		
+			
 		} else {
-			if (clPriceTypeCode != null
-					&& clPriceTypeCode.getParameterId() != null) {
+			if (clPriceTypeCode != null && clPriceTypeCode.getParameterId() != null) {
 				if (isPriceTypeTier(clPriceTypeCode.getParameterCode())) {
 					newPriceTypeCode = getTierPriceType(isZonal);
 				} else {
 					newPriceTypeCode = getStandardPriceType(isZonal);
 				}
-			} else {
+			} 
+			else {
 				newPriceTypeCode = new PmParameter();
 			}
 		}
-		specQuestion.setClPriceTypeCode(newPriceTypeCode);
-
+		specQuestion.setClPriceTypeCode(newPriceTypeCode);	
+		
 		resetEstimations(specQuestion);
 	}
-
-	private PmParameter getStandardPriceType(boolean isZonal) {
+	
+	private PmParameter getStandardPriceType(boolean isZonal) {		
 		PmParameter priceTypeCode = null;
 		String priceType = null;
-
+		
 		if (isZonal) {
 			priceType = ParameterConst.PRICE_TYPE_ZONAL_STANDARD;
 		} else {
 			priceType = ParameterConst.PRICE_TYPE_STANDARD;
 		}
-
-		priceTypeCode = ParameterHelper.getInstance()
-				.getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,
-						priceType);
-
+		
+		priceTypeCode = ParameterHelper.getInstance().getParameterByTypeAndCode(
+				ParameterTypeConst.PRICE_TYPE, priceType);
+		
 		return priceTypeCode;
 	}
-
-	private PmParameter getTierPriceType(boolean isZonal) {
+	
+	private PmParameter getTierPriceType(boolean isZonal) {		
 		PmParameter priceTypeCode = null;
 		String priceType = null;
-
+		
 		if (isZonal) {
 			priceType = ParameterConst.PRICE_TYPE_ZONAL_TIER;
 		} else {
 			priceType = ParameterConst.PRICE_TYPE_TIER;
 		}
-
-		priceTypeCode = ParameterHelper.getInstance()
-				.getParameterByTypeAndCode(ParameterTypeConst.PRICE_TYPE,
-						priceType);
-
+		
+		priceTypeCode = ParameterHelper.getInstance().getParameterByTypeAndCode(
+				ParameterTypeConst.PRICE_TYPE, priceType);
+		
 		return priceTypeCode;
 	}
-
+	
 	private void setUserDetails(BaseEntity baseObject) {
 		PmUser user = new FacesScopes().getUserSessionBean();
-
+		
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(user.getUserId());
-			baseObject
-					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(user.getUserId());
 		baseObject.setChangedDate(null);
