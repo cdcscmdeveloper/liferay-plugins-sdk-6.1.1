@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +26,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -37,15 +34,12 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -75,7 +69,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.CommitteType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -91,7 +84,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
@@ -479,6 +471,8 @@ public class CommitteBackingBean extends
 		// committee.setStatusId(1);
 
 		scQtCommittee.setScCommittee(committee);
+		
+		finalizeRemarks(committee.getScCommitteeRemarks());
 
 		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
@@ -544,18 +538,13 @@ public class CommitteBackingBean extends
 				if (null == committee) {
 					committee = new ScCommittee();
 				}
-				List<ScCommitteeRemark> committeeRemarks = committee.getScCommitteeRemarks();
-				if (committeeRemarks == null) {
-					committeeRemarks = new ArrayList<ScCommitteeRemark>();
-				}
-				if (null != committeeRemarks && !committeeRemarks.isEmpty()) {
-					for (ScCommitteeRemark remark : getManagedBean().getScCommittee().getScCommitteeRemarks()) {
-						ScCommitteeRemark qtRemark = (ScCommitteeRemark) remark;
-						committeeRemarks.add(qtRemark);
-					}
-					this.getManagedBean().setScCommitteeRemarksList(committeeRemarks);
-				}
-				initializeRemarks();
+				
+				List<ScCommitteeRemark> committeeRemarks = initializeRemarks(
+						committee, null, committee.getScCommitteeRemarks(), ScCommitteeRemark.class);
+				
+				committee.setScCommitteeRemarks(committeeRemarks);
+				this.getManagedBean().setScCommitteeRemarksList(committeeRemarks);
+				
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -656,41 +645,6 @@ public class CommitteBackingBean extends
 			return NAV_TO_COMMITTEE_MAINTENANACE + "?faces-redirect=true";
 		}
 		return null;
-	}
-
-	/**
-	 * 
-	 */
-	private void initializeRemarks() {
-		debugLogger("initializeRemarks");
-		FacesScopes facesScopes = new FacesScopes();
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStatusSO.class);
-		ScCommitteeRemark committeeRemark = null;
-		if (this.getManagedBean().getScCommitteeRemarksList() == null) {
-			this.getManagedBean().setScCommitteeRemarksList(
-					new ArrayList<ScCommitteeRemark>());
-		}
-		if (null == committeeRemark) {
-			committeeRemark = new ScCommitteeRemark();
-		}
-		committeeRemark.setCreatedBy(facesScopes.getUserSessionBean()
-				.getUserId());
-		committeeRemark
-				.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		committeeRemark.setChangedBy(committeeRemark.getCreatedBy());
-		committeeRemark.setCreatedUser(facesScopes.getUserSessionBean());
-		PmStatus status = new PmStatus();
-		status.setStatusId(QTStatusConst.CM_PENDING_SUBMISSION);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		if (status != null) {
-			statusReqDTO.setStatusId(status.getStatusId());
-			StatusResDTO statusResDTO = iStatusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			committeeRemark.setPmStatus(statusResDTO.getPmStatus());
-		}
-		this.getManagedBean().getScCommitteeRemarksList().add(committeeRemark);
 	}
 
 	public String viewHistoryAction(ScQtCommittee scQtCommittee) {

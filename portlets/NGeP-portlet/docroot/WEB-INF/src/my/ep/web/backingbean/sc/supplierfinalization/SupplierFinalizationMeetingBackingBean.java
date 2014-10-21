@@ -70,7 +70,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -197,42 +196,18 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 					getManagedBean().getCommitteeMembersList().add(member2);
 				}*/
 			}
-
-			List<ScQtCommitteRemarks> qtRemarkList = new ArrayList<ScQtCommitteRemarks>();
-			this.getManagedBean().setQtCommitteeRemarks(new ArrayList<ScQtCommitteRemarks>());
 			
 			ScQtCommittee committee = resDTO.getQtCommittee();
 			getManagedBean().setScQtCommittee(committee);
 			
-			List<ScQtCommitteRemarks> remarks = committee.getQtCommitteRemarks();
-			if (remarks != null && !remarks.isEmpty()) {
-				for (ScRemark remark : remarks) {
-					ScQtCommitteRemarks qtRemark = (ScQtCommitteRemarks) remark;
-					qtRemarkList.add(qtRemark);
-				}
-				this.getManagedBean().setQtCommitteeRemarks(qtRemarkList);
-			}
-			initializeNewRemarks();
+			List<ScQtCommitteRemarks> remarks = initializeRemarks(
+					committee, null, committee.getQtCommitteRemarks(), ScQtCommitteRemarks.class);
+			
+			committee.setQtCommitteRemarks(remarks);
+			this.getManagedBean().setQtCommitteeRemarks(remarks);
 		} finally {
 			qtMeetingSO = null;
 		}
-	}
-
-	private void initializeNewRemarks() {
-		FacesScopes facesScopes = new FacesScopes();
-		
-		ScQtCommitteRemarks remark = new ScQtCommitteRemarks();
-		setUserDetails(remark);
-		remark.setCreatedUser(facesScopes.getUserSessionBean());
-		remark.setScQtCommittee(getManagedBean().getScQtCommittee());
-		
-		PmStatus status = getStatusById(QTStatusConst.ACTIVE_STATUS);
-		remark.setPmStatus(status);
-		
-		if(getManagedBean().getQtCommitteeRemarks() == null){
-			getManagedBean().setQtCommitteeRemarks(new ArrayList<ScQtCommitteRemarks>());
-		}
-		getManagedBean().getQtCommitteeRemarks().add(remark);
 	}
 	
 	public void meetingAddAction() {
@@ -993,21 +968,13 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			List<ScQtMeeting> deletedMeetingList = this.getManagedBean().getDeletedMeetingList();
 			reqDTO.setDeletedMeetingList(deletedMeetingList);
 			
-			List<ScQtCommitteRemarks> remarksList=	this.getManagedBean().getQtCommitteeRemarks();
-			List<ScQtCommitteRemarks> committeeRemarks = null;
-			if (isNotNullOREmpty(remarksList)) {
-				committeeRemarks = new ArrayList<ScQtCommitteRemarks>();
-				for (ScQtCommitteRemarks remarks : remarksList) {
-					if (remarks.getRemark() != null && "" != remarks.getRemark()) {
-						committeeRemarks.add(remarks);
-					}
-				}
-			}
-			scQtCommittee.setQtCommitteRemarks(committeeRemarks);
+			finalizeRemarks(scQtCommittee.getQtCommitteRemarks());
+			
 			scQtCommittee.setMeetingAttendances(null);
 			setUserDetails(scQtCommittee);
 			
 			reqDTO.setScQtCommitte(scQtCommittee);
+			
 			return reqDTO;
 		} finally {
 

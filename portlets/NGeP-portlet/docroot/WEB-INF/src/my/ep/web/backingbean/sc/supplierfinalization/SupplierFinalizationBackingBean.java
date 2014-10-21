@@ -3,7 +3,6 @@ package my.ep.web.backingbean.sc.supplierfinalization;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +68,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.quationtender.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
@@ -410,33 +408,6 @@ public class SupplierFinalizationBackingBean extends SourcingBaseBackingBean<Sup
 			getManagedBean().setCommitteeList(committeeList);
 		} finally {
 		}
-	}
-	
-	public void initializeRemarks() {
-		debugLogger("..In initializeRemarks()..");
-		
-		IStatusSO iStatusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		ScQtCommitteRemarks remark = null;
-		if (this.getManagedBean().getCommitteeRemarkList() == null) {
-			this.getManagedBean().setCommitteeRemarkList(new ArrayList<ScQtCommitteRemarks>());
-		}
-
-		remark = new ScQtCommitteRemarks();
-		remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		
-		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		remark.setChangedBy(remark.getCreatedBy());
-		remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-		remark.setScQtCommittee(this.getManagedBean().getScQtCommittee());
-		PmStatus status = new PmStatus();
-		status.setStatusId(1L);
-		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		if (status != null) {
-			statusReqDTO.setStatusId(status.getStatusId());
-			StatusResDTO statusResDTO = iStatusSO.retrieveStatusByStatusId(statusReqDTO);
-			remark.setPmStatus(statusResDTO.getPmStatus());
-		}
-		this.getManagedBean().getCommitteeRemarkList().add(remark);
 	}
 	
 	public void retrieveMeetingAttendanceDtls() {
