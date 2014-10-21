@@ -97,7 +97,15 @@
 	               value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.expDate}"> 
 	              <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 	           </p:inputText> 
-	
+	           
+	            <p:outputLabel value="Ministry Name" />
+	           <p:inputText style="width:200px;" disabled="true" 
+	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/> 
+	           
+	           
+	               <p:outputLabel value="PTJ Name" />
+	           <p:inputText style="width:200px;" disabled="true" 
+	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/> 
 	       </h:panelGrid>
         </p:panel>
    
