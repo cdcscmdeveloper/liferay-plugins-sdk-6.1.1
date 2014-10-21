@@ -5357,6 +5357,7 @@ public class SmApplicationBackingBean extends
 			SmCommonUtil
 					.calculateSmApplicationPaidUpCapitalPercent(getManagedBean()
 							.getSmAppl().getSmCompanyBasic());
+			SmCommonUtil.calcAllEquityOwnerPercent(getManagedBean());
 
 		} catch (NumberFormatException ne) {
 			throw new EpException(MessageConst.ERROR_722522);
