@@ -68,7 +68,7 @@
 									itemLabel="#{stateList.stateName}"
 									itemValue="#{stateList.stateId}" />
 								<p:ajax event="change"
-									listener="#{qTBriefingSiteVisitBackingBean.retrieveDivisionList}"
+									listener="#{qTBriefingSiteVisitBackingBean.retrievePmDivisions}"
 									update="manDivison, briefdistrict, briefcity, briefpost" />
 							</p:selectOneMenu> <p:message id="briefstateMsg" for="briefstate" display="icon" /></td>
 					</tr>
