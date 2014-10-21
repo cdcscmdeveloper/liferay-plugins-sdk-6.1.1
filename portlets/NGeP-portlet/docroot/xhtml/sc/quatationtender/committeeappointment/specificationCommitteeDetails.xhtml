@@ -14,7 +14,8 @@
 				<td><p:inputText
 						value="#{qTCommitteBackingBean.getStatusDescById(committe.committeStatus.statusId)}"
 						size="30" readonly="true" /></td>
-				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}" /></td>
+				<td><p:selectBooleanCheckbox value="#{committe.approvalReq}"
+						disabled="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee'}" /></td>
 				<td style="width: 130px"><p:outputLabel
 						value="#{lbl['lbl.so.send.for.approval']}" /></td>
 			</tr>
@@ -28,7 +29,7 @@
 			<p:column selectionMode="multiple" style="width:2%"
 				rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable}" />
 
-			
+
 
 			<p:column headerText="#{lbl['lbl.so.bo.name']}">
 				<h:outputText value="#{specificationcommittee.memberName}"
