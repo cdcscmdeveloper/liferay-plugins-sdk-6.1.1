@@ -64,7 +64,7 @@
 					</h:panelGroup>
 					  	<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
 							<p:commandButton oncomplete="uploadUserDefineDlg.show();return false;"
-								icon="iconAttachment" update=":form:contentTable">
+								icon="iconAttachment" update=":form:contentTable, uploadUserDefineDlg">
 								<f:setPropertyActionListener value="#{contentsVar}" 
 								  target="#{agreementBackingBean.managedBean.selectedAgreementContent}" />
 							</p:commandButton>
@@ -131,7 +131,7 @@
 				</h:panelGrid>
 				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
-					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg" />
+					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
 				<h:outputLabel rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}" />
 				<h:commandLink value="#{agreementBackingBean.managedBean.ctAgreement.fileName}"
 					style="float:left;" styleClass="blue_font"

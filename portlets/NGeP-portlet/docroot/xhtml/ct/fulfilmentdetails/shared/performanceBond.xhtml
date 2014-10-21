@@ -84,7 +84,7 @@
 			<p:column styleClass="column-align-center" style="width:22%;">
 				<h:panelGroup id="uploadBondPg">
 					<p:commandButton oncomplete="uploadBondDlg.show();return false;"
-						icon="iconAttachment" update=":form:tableBond" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+						icon="iconAttachment" update=":form:tableBond, uploadBondDlg" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 						rendered="#{varBond.filePath == null and contractDetailsBackingBean.managedBean.updateContract}">
 						<f:setPropertyActionListener value="#{varBond}" target="#{contractDetailsBackingBean.managedBean.ctPerformanceBond}" />
 					</p:commandButton>

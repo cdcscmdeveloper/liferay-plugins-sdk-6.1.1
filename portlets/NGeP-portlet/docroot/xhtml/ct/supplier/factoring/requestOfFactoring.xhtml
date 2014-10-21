@@ -209,7 +209,7 @@
 				<h:panelGroup id="uploadFactoringPg">
                     <h:panelGrid columns="3">
 			               <p:commandButton oncomplete="uploadFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
-			                   icon="iconAttachment"   update="factoringPanel" 
+			                   icon="iconAttachment"   update="factoringPanel, uploadFactoringDlg" 
 			                   disabled="#{supplierBackingBean.managedBean.removeFactoring or supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />	
 				              <p:spacer width="1"/>
 		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 
@@ -225,7 +225,7 @@
 				<h:panelGroup id="uploadRemoveFactoringPg" rendered="#{supplierBackingBean.managedBean.removeFactoring}" >
                     <h:panelGrid columns="3">
 			               <p:commandButton oncomplete="uploadRemoveFactoringDlg.show();return false;" value="#{lbl['lbl.btn.upload']}"
-			                   icon="iconAttachment"   update="factoringPanel" 
+			                   icon="iconAttachment"   update="factoringPanel, uploadRemoveFactoringDlg" 
 			                   disabled="#{supplierBackingBean.isContractAdmin() or  supplierBackingBean. isApproverRole() }" />	
 				              <p:spacer width="1"/>
 		                      <h:commandLink value="#{supplierBackingBean.managedBean.factoring.fileName}" 

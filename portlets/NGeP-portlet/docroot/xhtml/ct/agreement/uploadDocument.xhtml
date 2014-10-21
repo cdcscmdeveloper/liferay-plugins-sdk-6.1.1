@@ -28,7 +28,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upAgrSignedPagePg">
-					<p:commandButton
+					<p:commandButton update="upAgrSignedPageDlg"
 						oncomplete="upAgrSignedPageDlg.show();return false;"
 						icon="iconAttachment" update="upAgrSignedPagePg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
@@ -50,7 +50,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upStampedPagePg">
-					<p:commandButton
+					<p:commandButton update="upStampedPageDlg"
 						oncomplete="upStampedPageDlg.show();return false;"
 						icon="iconAttachment" update="upStampedPagePg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
