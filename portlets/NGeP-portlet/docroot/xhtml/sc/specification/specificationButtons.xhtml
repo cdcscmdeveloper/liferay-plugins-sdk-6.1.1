@@ -63,7 +63,7 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
-					oncomplete="reviceApprovalDlgs.hide();" action="" />
+					oncomplete="reviceApprovalDlgs.hide();" action="#{specificationBackingBean.reviseMinistrySpecApproval}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
 			</div>
