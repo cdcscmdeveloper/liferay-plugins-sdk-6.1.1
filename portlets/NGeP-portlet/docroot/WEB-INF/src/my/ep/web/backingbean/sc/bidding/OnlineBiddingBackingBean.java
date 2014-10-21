@@ -68,7 +68,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String itemNewBidPriceTotal;
 	private Long interval;
 	private Long remainingBidTime;
-	private int packageRank;
 
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
@@ -145,11 +144,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				setSmSupplier(resDTO.getSmSupplier());
 
 				if (resDTO.getPackageRanking() != null) {
-					setScBidAction(resDTO.getScBidAction());
+					setPackageRanking(resDTO.getPackageRanking());
 				}
 
 				if (resDTO.getScBidAction() != null) {
-					setPackageRanking(resDTO.getPackageRanking());
+					setScBidAction(resDTO.getScBidAction());
+					
 				}
 
 				if (resDTO.getBidPrices() != null) {
@@ -363,12 +363,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			if (resDTO.isSuccessful()) {
 				// setScBidSchedule(resDTO.getScBidSchedule());
 				int index = getBidPrices().indexOf(bidPriceItem);
-				getBidPrices().set(index, resDTO.getScBidPrice());
+				ScBidPrice persistedItem = resDTO.getScBidPrice();
+				persistedItem.setNewPrice(null);
+				getBidPrices().set(index, persistedItem);
 
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this
 						.getScBidSchedule().getScBid().getRecommendedTypeId()
 						.getParameterCode())) {
-					setPackageRank(resDTO.getPackageRanking().intValue());
+					setPackageRanking(resDTO.getPackageRanking());
 				}
 			}
 
@@ -706,20 +708,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.scBidAction = scBidAction;
 	}
 
-	/**
-	 * @return the packageRank
-	 */
-	public int getPackageRank() {
-		return packageRank;
-	}
-
-	/**
-	 * @param packageRank
-	 *            the packageRank to set
-	 */
-	public void setPackageRank(int packageRank) {
-		this.packageRank = packageRank;
-	}
 
 	/**
 	 * @return the hashSupplierId
