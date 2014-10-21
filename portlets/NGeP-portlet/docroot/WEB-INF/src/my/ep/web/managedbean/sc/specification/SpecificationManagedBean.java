@@ -309,6 +309,15 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isTechStandaraChecklist;
 	private boolean isFinStandaraChecklist;
 	private String localOutCome;
+	private boolean isZoneLocation;
+
+	public boolean isZoneLocation() {
+		return isZoneLocation;
+	}
+
+	public void setZoneLocation(boolean isZoneLocation) {
+		this.isZoneLocation = isZoneLocation;
+	}
 
 	public String getQtTitle() {
 		return qtTitle;
