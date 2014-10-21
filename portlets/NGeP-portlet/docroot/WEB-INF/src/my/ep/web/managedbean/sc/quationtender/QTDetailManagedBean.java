@@ -208,7 +208,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String uploadUpdateId;
 	// Payload for BPM
 	private Object quotationTenderDataType;
-	private boolean isEditable = true;
+	private boolean isEditable;
 
 	private List<SmSupplier> panelSuppliers;
 
@@ -272,11 +272,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private int allStateCode;
 	private String LocalLevelCode;
-	
+
 	private List<TplSpecLoc> totalSuppliersSpecLoc;
 	private List<PmState> stateList;
 	private List<PmDistrict> districtList;
-	
+
 	private int totalSuppliers;
 
 	// Business Owner
@@ -291,13 +291,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScCommitteeMember> cloneCommitteMemebers;
 	private List<ScCommitteeMember> selectedCommitteMemebers;
 	private ScQtCommittee selectedScQtCommittee;
-	
+
 	private IPagingDataModel<ScQt> cloneBusinessOwnerDataModel;
 	private IPagingDataModel<PmUser> userSearchBusinessOwnerDataModel;
 	private UserCommitteeSearchBean userBusineeOwnerSearchBean;
 	private QtnTenderSearchBean cloneBusinessOwnerSearchBean;
 	private List<ScQt> selectedCloneBOList;
-	
+
 	// Search properties
 	private String title = null;
 	private String qtNo = null;
@@ -368,12 +368,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmUser> userSearchCommitteeDataModel;
 	private UserCommitteeSearchBean userCommitteeSearchBean;
 	private String commType;
-	
+
 	private List<PmUser> pmUsersSecretaryList;
 
 	// Briefing & Site Visit Details
 	private ScQtBsvDtl qtBriefing;
-	
+
 	private String briefingZoneName;
 	private String previousPage;
 	private List<ScQtBsvRegistration> briefingRegistrationList;
@@ -383,8 +383,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> zones;
 	private List<ScRemark> remarks;
 	private TplSpecZoneDtl selectedZone;
-	private ScQtBsvRegistration scQtBsvRegistration;	
-	
+	private ScQtBsvRegistration scQtBsvRegistration;
+
 	private boolean required = false;
 	private List<ScQtBsvAttendance> briefingAttendanceList;
 	private ScQtBsvAttendance scQtBriefingAttendance;
@@ -401,7 +401,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtSampleSubmission> scQtSampleSubmissionList;
 	private List<ScQtSampleSubmission> selectedSubmissionList;
 	private List<ScQtContactPerson> scQtContactPersons;
-	private List<ScQtContactPerson> selectedContactPersons;	
+	private List<ScQtContactPerson> selectedContactPersons;
 	private Date proposalValidityUntil;
 	private Date closingDate;
 	private Date bsvDate;
@@ -416,14 +416,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtDocReport selectedScQtDocReport;
 	private ScQtDocReport scQtDocReport;
 	private TplDocMaster tplDocMaster;
-	
+
 	private IPagingDataModel<ScQt> cloneDocumentDataModel;
 	private QtnTenderSearchBean cloneDocumentSearchBean;
 	private List<ScQtDocReport> cloneScQtDocReports;
 	private List<ScQtDocReport> selectedCloneScQtDocReports;
-	
+
 	private List<ScQtDocReport> removeDocReports;
-	
+
 	private TreeNode[] selectedGeneralTreeNodes;
 
 	public ScQtSupplierCriteria supplierCriteria;
@@ -440,11 +440,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private MenuModel menuModel;
 	public int selectedTabIndex;
 	public TabBean selectedTabBean;
-	
+
 	public MenuModel approvalMenuModel;
 	public int selectedApprovalTabIndex;
 	public TabBean selectedApprovalTabBean;
-	
+
 	private BriefingZoneBean bsvDtlBean;
 	private String bsvType;
 	private boolean showBsvText;
@@ -452,13 +452,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int bsvIndex;
 	private int sampleAddressIndex;
 	private String actionType;
-	private String bsvZoneindx="0";
+	private String bsvZoneindx = "0";
 	private List<ScQtApproval> toBeRemoveList;
 	private List<ScQtDeduction> removeDeductions;
 	private List<ScCommitteeMember> toBeDelCommitteMemebers;
-	
-	
+
 	private String action;
+	private boolean isSaveFlow;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -477,16 +477,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 		cloneDocumentSearchBean = new QtnTenderSearchBean();
 
-		/*root2 = new DefaultTreeNode("Root", null);
-		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
-		node0.setExpanded(true);*/
+		/*
+		 * root2 = new DefaultTreeNode("Root", null); TreeNode node0 = new
+		 * DefaultTreeNode("Clone All", root2); node0.setExpanded(true);
+		 */
 
-		/*CloneAll[] enumValues = CloneAll.values();
-		for (CloneAll cloneValue : enumValues) {
-			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(),
-					node0);
-		}
-*/
+		/*
+		 * CloneAll[] enumValues = CloneAll.values(); for (CloneAll cloneValue :
+		 * enumValues) { TreeNode node1 = new
+		 * DefaultTreeNode(cloneValue.getDisplayName(), node0); }
+		 */
 		getPTJApproverNames();
 	}
 
@@ -1187,8 +1187,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtBriefing = qtBriefing;
 	}
 
-
-
 	public ScQtDoc getQtDoc() {
 		return qtDoc;
 	}
@@ -1196,8 +1194,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setQtDoc(ScQtDoc qtDoc) {
 		this.qtDoc = qtDoc;
 	}
-
-
 
 	public List<ScQtDoc> getScQtDocs() {
 		return scQtDocs;
@@ -1496,7 +1492,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedScQtDeductions = selectedScQtDeductions;
 	}
 
-	
 	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
 		return selectedDeductionClauses;
 	}
@@ -2064,7 +2059,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scQtBsvRegistration = scQtBsvRegistration;
 	}
 
-	
 	public List<ScQtSampleSubmission> getScQtSampleSubmissionList() {
 		return scQtSampleSubmissionList;
 	}
@@ -2160,7 +2154,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtCommittes = qtCommittes;
 	}
 
-	
 	public List<ScQtCheckList> getTechnicalSpecList() {
 		return technicalSpecList;
 	}
@@ -2716,6 +2709,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.stateCode = stateCode;
 	}
 
+	public boolean isSaveFlow() {
+		return isSaveFlow;
+	}
+
+	public void setSaveFlow(boolean isSaveFlow) {
+		this.isSaveFlow = isSaveFlow;
+	}
+	
 	public Date getToday() {
 		return today;
 	}
