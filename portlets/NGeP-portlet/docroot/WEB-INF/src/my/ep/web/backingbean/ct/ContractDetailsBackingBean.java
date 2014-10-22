@@ -2158,16 +2158,13 @@ public void ConstructSideTabMenu(){
 		ContractReqDTO reqDTO  = null;
 		TerminationBackingBean trBB= null;
 		try{
-			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
-			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-//			if(contractVerId == null) {
-				reqDTO.setContractId(contractId);
-				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-//			}			
+			reqDTO.setContractId(contractId);
+			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+			
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
@@ -2207,14 +2204,12 @@ public void ConstructSideTabMenu(){
 		ContractReqDTO reqDTO  = null;
 		SuspensionBackingBean suspBB = null;
 		try{
-			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
-			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 		    reqDTO.setContractId(contractId);
-		    contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+		   Long  contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 		
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
@@ -2238,17 +2233,14 @@ public void ConstructSideTabMenu(){
 		IContractSO contractSO = null;
 		AmendmentBackingBean amendBB = null;
 		try {
-			String versionId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId");
-			Long contractVerId = (!versionId.isEmpty()) ? Long.parseLong(versionId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-//			if(contractVerId == null) {
-				reqDTO.setContractId(contractId);
-				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-//			}
+			reqDTO.setContractId(contractId);
+			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+				
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			if (action.equalsIgnoreCase("update"))
@@ -2266,12 +2258,19 @@ public void ConstructSideTabMenu(){
 	
 	public String gotoViewPage() {
 		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
-		ContractReqDTO ctReqDTO = new ContractReqDTO();
-    	ctReqDTO.setContractVerId(contractVerId);
-    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 		
-	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+		 IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+		 ContractReqDTO reqDTO = new ContractReqDTO();
+		 reqDTO.setContractId(contractId);
+		 CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
+		 if (latestContractVer != null)
+			 reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		 else
+			 reqDTO.setContractVerId(contractVerId);
+		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		
+	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO); 
 	    this.getManagedBean().setViewContract(true);
 	    this.getManagedBean().setSelectedTabIndex(0);
@@ -2281,16 +2280,13 @@ public void ConstructSideTabMenu(){
 	public String gotoUpdatePage(){
 		IContractSO contractSO = null;
 		try {
-			String latestContractVerId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("latestContractVerId");
-			Long contractVerId = (!latestContractVerId.isEmpty()) ? Long.parseLong(latestContractVerId) : null;
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
-//			if(contractVerId == null) {
-				reqDTO.setContractId(contractId);
-				contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
-//			}		
+			reqDTO.setContractId(contractId);
+			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
+				
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			reqDTO.setUpdateAction(true);
@@ -2310,15 +2306,15 @@ public void ConstructSideTabMenu(){
 	}
 	
 	public String gotoTerminateHistoryPage() {
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(contractId);
+		Long contractVerId = contractSO.getLatestContractVer(ctReqDTO).getCtContractVer().getContractVerId();
     	ctReqDTO.setContractVerId(contractVerId);
 	
-	    IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-	    ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+    	ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
     	
 		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	

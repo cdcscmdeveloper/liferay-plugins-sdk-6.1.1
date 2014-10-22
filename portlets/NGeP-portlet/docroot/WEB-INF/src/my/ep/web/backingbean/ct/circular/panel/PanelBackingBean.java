@@ -482,10 +482,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 								cancelStatus.setStatusId(0L);
 								circularVer.setStatus(cancelStatus);
 							
-						  }if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
+						  }
+							//if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.PQ_REJECTED)) {
 								if(circularVer.getCtCircular().getLatestCircularVer() != null)
 									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-						  }
+						 // }
 					  }
 				  }
 				return resDTO.getCircularVerResultBean();
