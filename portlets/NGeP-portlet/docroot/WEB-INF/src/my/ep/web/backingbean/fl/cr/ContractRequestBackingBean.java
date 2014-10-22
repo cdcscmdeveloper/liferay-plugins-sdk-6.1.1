@@ -1032,6 +1032,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().setPmUom(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTermUom());
 				getManagedBean().getFlRequest().setDeliveryTerm(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getDeliveryTerm());
 			}
+			getSupplierBranchesList(getManagedBean().getFlRequest().getSmSupplier());
 		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
