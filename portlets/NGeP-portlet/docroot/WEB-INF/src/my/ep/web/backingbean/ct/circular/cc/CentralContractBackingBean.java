@@ -535,6 +535,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
+			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
+			}
+			else {
+				for (CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()) {
+					if(circularContract.getCtCircularItems().size() == 0) {
+						throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract Item List"});
+					}
+				}
+			}
 			
 			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
 			       validateCircular(action);
@@ -618,17 +628,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
-			
-			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
-			}
-			else {
-				for (CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()) {
-					if(circularContract.getCtCircularItems().size() == 0) {
-						throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract Item List"});
-					}
-				}
-			}
 			
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
