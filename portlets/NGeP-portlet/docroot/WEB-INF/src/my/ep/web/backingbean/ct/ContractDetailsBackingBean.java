@@ -648,7 +648,7 @@ public void ConstructSideTabMenu(){
 				      }
 		               this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
 	                   if(this.getManagedBean().getCtContract().isFactored()){
-	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuPaymentTracking);
+	            	         this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuFactoring);
 		                }
         	          this.getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSetting);   
 		      }
