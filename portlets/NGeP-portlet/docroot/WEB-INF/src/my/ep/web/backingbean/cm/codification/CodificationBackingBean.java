@@ -953,7 +953,7 @@ public class CodificationBackingBean extends
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
 
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
-			log.info("code:" + brand.getBrandCode());
+			log.debug("code:" + brand.getBrandCode());
 			if (!StringUtils.isBlank(brand.getBrandName())) {
 				this.getManagedBean()
 						.getBrandCriteria()
