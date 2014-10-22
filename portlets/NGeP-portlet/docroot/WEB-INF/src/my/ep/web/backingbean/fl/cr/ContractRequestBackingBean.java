@@ -421,7 +421,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 		getManagedBean().getFlRequest().setTitle(getManagedBean().getFlRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(getManagedBean().getFlRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
 		getSumOrderedQty(getManagedBean().getFlRequest());
 
@@ -898,11 +898,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			///flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-
 			if (coObj.getContractId().intValue() == 0) {//TODO
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
@@ -953,6 +948,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setContractId(Long.parseLong(contractId));
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.renewSesionObject();
 			IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 			ContractReqDTO ctDTO = new ContractReqDTO();
@@ -1022,7 +1018,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
-			flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			flBackingBean.initializeRemarkAndAttachement(getManagedBean().getFlRequest().getFlWorkflowStatus(), flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			getManagedBean().setSelectedTabIndex(0);
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));

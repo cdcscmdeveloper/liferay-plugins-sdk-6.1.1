@@ -275,7 +275,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setContractRequest(Boolean.TRUE);
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().getContractNo());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
 		}
@@ -333,7 +333,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
 				getManagedBean().setProcessName(res.getProcessName());
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else {
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -354,7 +354,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}  
 			getManagedBean().setSelectedTabIndex(0);
 		}

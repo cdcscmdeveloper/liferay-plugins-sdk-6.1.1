@@ -169,7 +169,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		} else {
 			new FulfilmentBackingBean(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE, adjustment.getFlRequest().getCtContract().getContractNo());
 		}			
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(adjustment.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 	}
 	
 	private void calInvSummary(FlAdjustment adjustment) {

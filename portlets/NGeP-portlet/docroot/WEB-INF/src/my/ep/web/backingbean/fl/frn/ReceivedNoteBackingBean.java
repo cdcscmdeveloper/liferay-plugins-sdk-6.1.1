@@ -167,7 +167,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 					getManagedBean().setSelectedItem(getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem().get(0));
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),	resDTO.getAttachmentList());
+					flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 			}
 		} finally {
@@ -200,7 +200,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
 				resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setTaskId(taskId);
@@ -272,7 +272,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				} else {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_FULFILMENT_NOTE, getManagedBean().getFulfilmentRequest().getCtContract().getContractNo());
 				}				
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				if(resDTO.getFulfilmentNote()!=null) {
+					flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				} else {
+					flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+				}
 				
 				String[] outcome = new String[res.getAction().length + 1];
 				outcome[0] = BpmOutcomeConst.BPM_SAVE;

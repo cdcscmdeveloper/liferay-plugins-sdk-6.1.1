@@ -186,7 +186,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					}					
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 			}
 		}finally {
@@ -231,7 +231,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flReqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 				paymentAdvice = initializePaymentAdvice(resDTO);
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				paymentAdvice = resDTO.getPaymentAdvice();
 				for(FlPaymentItem flPaymentItem : paymentAdvice.getFlPaymentItems()) {
@@ -242,7 +242,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				}
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}
 
 			getManagedBean().setPaymentAdvice(paymentAdvice);

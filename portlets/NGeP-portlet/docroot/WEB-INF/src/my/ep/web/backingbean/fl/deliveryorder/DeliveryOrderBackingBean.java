@@ -450,7 +450,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setTaskId(taskId);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		}
 	}
 
