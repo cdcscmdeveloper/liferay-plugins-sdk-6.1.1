@@ -218,7 +218,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					resDTO = invoiceSO.retrieveInvoiceByFlOrderId(reqDTO);
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setInvoice(resDTO.getInvoice());
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 						getFactoringBranchDtl(); 
 					}
@@ -279,7 +279,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			}else{
 				Object obj = res.getPojo();
 				String[] outcome = new String[res.getAction().length + 1];
@@ -304,11 +304,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					
 					getManagedBean().getInvoice().setFlFulfilmentOrder(resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder());
 					getManagedBean().getInvoice().setFlRequest(resDTO.getFlFulfilmentRequest());					
-					flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+					flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 					getInvoiceTable(resDTO);				
 				} else {
 					getManagedBean().setInvoice(resDTO.getInvoice());
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 				}
 				
 				getManagedBean().setChargeLineItemRoot(null);
@@ -722,7 +722,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		 invBB.getManagedBean().setExpDate(expDate);
 		 invBB.getManagedBean().setEffDate(effDate);
 		 FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		return navgPage;
 	}
 	
@@ -770,7 +770,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					getManagedBean().setInvoice(resDTO.getInvoice());
-					flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+					flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 					if(getManagedBean().getInvoice().getFlFulfilmentOrder().isFactored()){
 						getFactoringBranchDtl(); 
 					}

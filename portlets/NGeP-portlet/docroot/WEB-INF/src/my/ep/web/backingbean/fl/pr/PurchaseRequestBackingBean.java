@@ -40,7 +40,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
-import my.ep.biz.service.sc.directpurchase.IRequestNoteSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -79,8 +78,6 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
-import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -361,7 +358,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		getManagedBean().getFulfilmentRequest().setTitle(getManagedBean().getFulfilmentRequest().getTitle().trim());
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean(ParameterConst.DOCTYPE_PURCHASE_REQUEST, resDTO.getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(resDTO.getFlFulfilmentRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
 
 		if(getManagedBean().getApproverModel()==null) {
@@ -1171,31 +1168,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
 			}
 		}
-	}
-
-	public void retrieveRequestNoteList() {
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		
-		IRequestNoteSO requestNoteSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IRequestNoteSO.class);
-		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		reqDTO.setAssignedTo(2L);
-		reqDTO.setFulfillmentType("O");
-		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNotes(reqDTO);
-		getManagedBean().setRequestNoteList(resDTO.getRequestNoteList());
-
-		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
-		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-	}
-
-	public String navigateToPurchaseRequest() {
-		getManagedBean().getSelectedRequestNote();
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
-		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		this.getManagedBean().setOutComes(new String[] { "Submit" });
-		return NAV_TO_CREATE_PURCHASE_REQUEST;
 	}
 
 	public void preRenderView() {

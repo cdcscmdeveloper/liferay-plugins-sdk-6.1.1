@@ -221,10 +221,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			} else {
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-			}
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			} 
 			navgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals(ParameterConst.DOCTYPE_CONTRACT_REQUEST)){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
@@ -250,10 +248,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				crBB.getManagedBean().setOutComes(outcome);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
-			} else {
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-			}
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			} 
 			
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			crBB.getManagedBean().setPmUser(reqDTO.getPmUser());
@@ -290,7 +286,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				} else {
 					new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().getContractNo());
 				}
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				navgPage = "stopInstr";
 			}
 		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER) && buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_REMOVE_FACTORING)) {
@@ -323,7 +319,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			String[] outcome = new String[1];
 			outcome[0] = BpmOutcomeConst.BPM_REMOVE_FACTORING;
 			flOrderBB.getManagedBean().setOutComes(outcome);
-			flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			navgPage=NAV_TO_REMOVE_FACTORING_COMPANY;
 		} else if(docType.equals(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
@@ -369,11 +365,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 				getSumOrderedQty(flOrderBB.getManagedBean().getFlRequest());
 			} else {
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}
 			navgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
@@ -390,9 +386,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	
 			navgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_DELIVERY_ORDER)){
@@ -414,11 +410,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE)) {
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else { // view
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals(ParameterConst.DOCTYPE_INVOICE)){
@@ -442,10 +438,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 			} else {
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getInvoice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_INV;
 		}
@@ -472,10 +468,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			recNoteBB.getManagedBean().setDocMaintainRemarks(true);
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
-			}	 else {
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+			} else {
+				flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_FRN;
 		}else if(docType.equals(ParameterConst.DOCTYPE_PAYMENT_ADVICE)){
@@ -494,10 +490,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				flBB.getManagedBean().setHideRemarks(true);
 			}
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 				flBB.getManagedBean().setDocMaintainRemarks(true);
 			} else {
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			navgPage=NAV_TO_MAINTAIN_PA;
 		} else if(docType.equals(ParameterConst.DOCTYPE_STOP_DELIVERY)){
@@ -513,7 +509,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+			flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 			navgPage=NAV_TO_STOP_INSTRUCTION;
 		} else if(docType.equals(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE) || docType.equals(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)){
 			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
