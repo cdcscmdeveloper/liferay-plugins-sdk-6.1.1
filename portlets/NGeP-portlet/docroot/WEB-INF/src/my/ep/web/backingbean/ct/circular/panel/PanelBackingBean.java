@@ -135,6 +135,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
+	private ContractBackingBean ctBB = null;
+	
 	public PanelBackingBean(){
 		 
 		if(getManagedBean().getOutComes()==null) {
@@ -147,12 +149,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				status = new PmStatus();
 				status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
 				getManagedBean().getCancelCircularReq().setStatus(status);
-				
-				initializeRemarks();
-				ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-				ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
-	    	} if(getManagedBean().getUserMap().size()==0) {
+	    	}  if(ctBB == null){
+		          initializeRemarks();
+			      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			      ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			 }
+	    	if(getManagedBean().getUserMap().size()==0) {
 			   initializeApproverList();
 			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());	
 	       

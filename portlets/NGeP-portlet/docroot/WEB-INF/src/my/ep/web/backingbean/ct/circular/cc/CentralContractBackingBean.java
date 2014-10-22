@@ -126,6 +126,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
+	private ContractBackingBean ctBB = null;
+	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -133,10 +135,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
+		
+		  if(ctBB == null){
+	          initializeRemarks();
+		      ctBB = new ContractBackingBean(fileDirectory);
+		      ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		 }
 		
 		if(isCentralContractAdmin()) 
 			getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
