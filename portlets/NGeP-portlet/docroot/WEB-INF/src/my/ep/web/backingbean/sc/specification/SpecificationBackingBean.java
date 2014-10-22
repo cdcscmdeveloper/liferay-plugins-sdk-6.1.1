@@ -10121,7 +10121,7 @@ public class SpecificationBackingBean extends
 		List<PmState> states = null;
 		List<PmDistrict> districts = null;
 		List<PmDivision> divisions = null;
-		supplierSearchReqDTO.setCategoryCodes(constructL3Codes(this
+		supplierSearchReqDTO.setCategoryCodeIds(constructL3Ids(this
 				.getManagedBean().getSuppCriteriaopenList()));
 		supplierSearchReqDTO.setPaidUpCapital(this.getManagedBean().getScQt()
 				.getScQtSupplierCriteria().getMinPaidUpCapital());
@@ -10177,20 +10177,16 @@ public class SpecificationBackingBean extends
 
 	}
 
-	private List<String> constructL3Codes(List<ScQtCategory> categories) {
-		List<String> categoryCodes = null;
-
+	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
+		List<Long> categoryIds = null;
 		if (null != categories) {
-			categoryCodes = new ArrayList<String>();
+			categoryIds = new ArrayList<Long>();
 			for (ScQtCategory category : categories) {
-				String code = category.getPmCategoryL3().getCategoryL3Code();
-				categoryCodes.add(code);
-
+				Long code = category.getPmCategoryL3().getCategoryL3Id();
+				categoryIds.add(code);
 			}
 		}
-
-		return categoryCodes;
-
+		return categoryIds;
 	}
 
 	private void getStatesNDistrict(List<? extends TplSpecLoc> locations,

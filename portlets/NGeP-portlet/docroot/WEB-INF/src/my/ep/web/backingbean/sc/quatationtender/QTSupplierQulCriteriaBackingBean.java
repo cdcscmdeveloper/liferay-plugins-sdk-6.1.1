@@ -1122,7 +1122,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<PmState> states = null;
 		List<PmDistrict> districts = null;
 		List<PmDivision> divisions = null;
-		supplierSearchReqDTO.setCategoryCodes(constructL3Codes(this.getManagedBean().getQtCategoryList()));
+		supplierSearchReqDTO.setCategoryCodeIds(constructL3Ids(this.getManagedBean().getQtCategoryList()));
 		supplierSearchReqDTO.setPaidUpCapital(this.getManagedBean().getQt().getScQtSupplierCriteria().getMinPaidUpCapital());
 		String locLevel = "";
 		if (null != this.getManagedBean().getQt().getScQtSupplierCriteria() && null != this.getManagedBean().getQt().getScQtSupplierCriteria().getLocationLevel()) {
@@ -1202,15 +1202,15 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param qtCategoryList
 	 * @return
 	 */
-	private List<String> constructL3Codes(List<ScQtCategory> categories) {
-		List<String> categoryCodes = null;
+	private List<Long> constructL3Ids(List<ScQtCategory> categories) {
+		List<Long> categoryIds = null;
 		if (null != categories) {
-			categoryCodes = new ArrayList<String>();
+			categoryIds = new ArrayList<Long>();
 			for (ScQtCategory category : categories) {
-				String code = category.getPmCategoryL3().getCategoryL3Code();
-				categoryCodes.add(code);
+				Long code = category.getPmCategoryL3().getCategoryL3Id();
+				categoryIds.add(code);
 			}
 		}
-		return categoryCodes;
+		return categoryIds;
 	}
 }
