@@ -1168,18 +1168,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 		    	CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 
-		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
+		    	if(catalogueResDTO.getSupplierItemList() != null && catalogueResDTO.getSupplierItemList().size()>0){
 
-		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-		    				CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+		    		for (CmSupplierItem supplierItem : catalogueResDTO.getSupplierItemList()) {
+		    			if (supplierItem.getItemPricings() != null && supplierItem.getItemPricings().size() > 0) {
 
 		    				if(cmSupplieritemIds.contains(supplierItem.getSupplierItemId())){
 
 		    					if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId())){
 
 		    						ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-		    								scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+		    								scRequestItem, supplierItem.getSmSupplier(), supplierItem.getItemPricings());
 		    						supplierItems.add(scRequestSupplierItem);	
 		    					}
 		    				}
@@ -1197,12 +1196,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
 		    	catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 		    	CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
-		    	if(catalogueResDTO.getViewSuppItemResultBean().getResultList() != null && catalogueResDTO.getViewSuppItemResultBean().getResultList().size()>0){
-		    		for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-		    			if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-		    				CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+		    	if(catalogueResDTO.getSupplierItemList() != null && catalogueResDTO.getSupplierItemList().size()>0){
+		    		for (CmSupplierItem supplierItem : catalogueResDTO.getSupplierItemList()) {
+		    			if (supplierItem.getItemPricings() != null && supplierItem.getItemPricings().size() > 0) {
 		    				ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-		    						scRequestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+		    						scRequestItem, supplierItem.getSmSupplier(), supplierItem.getItemPricings());
 
 		    				supplierItems.add(scRequestSupplierItem);	
 		    			}

@@ -220,16 +220,15 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			  CatalogueResDTO catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 			 
 			  List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
-			  for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-				  if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-					  CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+			  for (CmSupplierItem supplierItem : catalogueResDTO.getSupplierItemList()) {
+				  if (supplierItem.getItemPricings() != null && supplierItem.getItemPricings().size() > 0) {
 
 					  if(cmSupplieritemIds.contains(supplierItem.getSupplierItemId())){
 
 						  if(supplierItem.getCmItem().getItemId().equals(cmSupplierItem.getCmItem().getItemId())){
 
 							  ScRequestSupplierItem scRequestSupplierItem = createScRequestSupplierItem(
-									  requestItem, supplierItem.getSmSupplier(), vCmSupplierItem.getCmPricings());
+									  requestItem, supplierItem.getSmSupplier(), supplierItem.getItemPricings());
 							  supplierItems.add(scRequestSupplierItem);	
 						  }
 					  }

@@ -63,7 +63,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
@@ -277,9 +276,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
 							catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
 							List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
-							for (VCmSupplierItem vCmSupplierItem : catalogueResDTO.getViewSuppItemResultBean().getResultList()) {
-								if (vCmSupplierItem.getCmPricings() != null && vCmSupplierItem.getCmPricings().size() > 0) {
-									CmSupplierItem supplierItem = vCmSupplierItem.getCmPricings().get(0).getCmSupplierItem();
+							for (CmSupplierItem supplierItem : catalogueResDTO.getSupplierItemList()) {
+								if (supplierItem.getItemPricings() != null && supplierItem.getItemPricings().size() > 0) {
 									if(supplierItem.getSmSupplier() != null){
 										selectedSuppliers.add(supplierItem.getSmSupplier());
 									}
