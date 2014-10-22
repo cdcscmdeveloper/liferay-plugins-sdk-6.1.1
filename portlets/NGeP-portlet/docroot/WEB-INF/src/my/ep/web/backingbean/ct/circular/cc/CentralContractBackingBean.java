@@ -479,10 +479,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								cancelStatus.setStatusId(0L);
 								circularVer.setStatus(cancelStatus);
 							}
-							if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.CQ_REJECTED)) {
+							//if(circularVer.getStatus() != null && circularVer.getStatus().getStatusId().equals(ContractStatusConst.CQ_REJECTED)) {
 								if(circularVer.getCtCircular().getLatestCircularVer() != null)
 									circularVer.setCircularVerId(circularVer.getCtCircular().getLatestCircularVer().getCircularVerId());
-							}
+							//}
 						}
 					}
 					return resDTO.getCircularVerResultBean();
