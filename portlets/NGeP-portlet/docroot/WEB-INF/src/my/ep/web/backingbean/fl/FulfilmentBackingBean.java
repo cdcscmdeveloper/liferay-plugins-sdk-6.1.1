@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.FlWorkflowStatus;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
@@ -160,6 +161,7 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		RequestContext.getCurrentInstance().execute("delFileDlg.hide()");
 	}
 
+	@Deprecated
 	public void initializeRemarkAndAttachement(List<FlRemark> remarkList,
 			List<FlAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
@@ -183,6 +185,38 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 		getManagedBean().setAttachmentList(attachmentList);
 	}
 
+	public void initializeRemarkAndAttachement(FlWorkflowStatus flWorkflowStatus ,List<FlRemark> remarkList, List<FlAttachment> attachmentList) {
+		FacesScopes facesScopes = new FacesScopes();
+
+		boolean flWorkflowStatusMatch = false;
+		if(flWorkflowStatus!=null) {
+			if(remarkList.size()>0 && remarkList.get(0).getFlWorkflowStatus()!=null) {
+				if(flWorkflowStatus.getWorkflowStatusId().longValue()==remarkList.get(0).getFlWorkflowStatus().getWorkflowStatusId().longValue()) {
+					flWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			flWorkflowStatusMatch = true;
+		}
+		
+		if (remarkList.size() == 0 || !flWorkflowStatusMatch) {
+			FlRemark remark = new FlRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUsername(facesScopes.getUserSessionBean()
+					.getUserName());
+			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
+
+			getManagedBean().setRemarkList(remarkList);
+			getManagedBean().getRemarkList().add(0, remark);
+		} else {
+			getManagedBean().setRemarkList(remarkList);
+		}
+		getManagedBean().setAttachmentList(attachmentList);
+	}
+	
 	public void openAttachmentPage(FlDeliveryAddress fldelAddress) {
 		if(fldelAddress.getRemarkList().isEmpty() || !compareUserName(fldelAddress.getRemarkList().get(0).getUserId())) {
 			FacesScopes facesScopes = new FacesScopes();
