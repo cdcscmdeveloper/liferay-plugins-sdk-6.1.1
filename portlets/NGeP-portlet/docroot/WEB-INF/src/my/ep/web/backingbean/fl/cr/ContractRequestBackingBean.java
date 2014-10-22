@@ -58,6 +58,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -353,6 +354,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 				flRequest.setCreatedOrgProfile(userResDTO.getUserOrgList().get(0).getPmOrgProfile());
+			}
+			if(flRequest.getTitle() == null || flRequest.getTitle().trim().length() < 1){
+				flRequest.setTitle(FulfilmentConst.CONTRACT_REQUEST);
 			}
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
