@@ -85,21 +85,8 @@
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:30%">
-						<f:facet name="header">
-							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.ct.fulfilment.type']}" />
-						</f:facet>
-
-						<p:selectOneMenu style="width:120px;" required="true" disabled="#{!isEditableStatus}"
-							id="scheduledTypeId" label="#{lbl['lbl.ct.fulfilment.type']}"
-							value="#{frequency.scheduleType.parameterId}">
-
-							<f:selectItems
-								value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.scheduleType)}" />
-							<p:message id="freqScheduledTypeId" for="scheduledTypeId"
-								display="icon"></p:message>
-						</p:selectOneMenu>
+					<p:column style="width:30%" headerText="#{lbl['lbl.ct.fulfilment.type']}">
+						#{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)}
 					</p:column>
 				</p:dataTable>
 				<p:spacer height="20"></p:spacer>
