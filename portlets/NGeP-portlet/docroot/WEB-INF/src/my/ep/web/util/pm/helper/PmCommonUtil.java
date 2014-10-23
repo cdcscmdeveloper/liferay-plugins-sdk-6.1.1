@@ -657,7 +657,7 @@ public class PmCommonUtil {
 		try{
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			OrgProfileResDTO resDTO = null;
-			reqDTO.setUserId(id);
+			reqDTO.setOrgProfileId(id);
 			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			if(resDTO.isSuccessful()){
@@ -759,6 +759,64 @@ public class PmCommonUtil {
 		}
 		return pmUsers;
 	}
+	
+
+	/**
+	 * retrieve user by role and org id
+	 * @param orgProfileId
+	 * @param roleCode
+	 * @return @return List<PmUser>
+	 */
+	public static List<PmUser> retrieveUserListByRole(Long orgProfileId, String roleCode){
+		List<PmUser> pmUsers = new ArrayList<PmUser>();
+		IUserSO userSO  = null;
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setOrgProfileId(orgProfileId);
+			reqDTO.setRoleCode(roleCode);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getUserList()!=null){
+				pmUsers = resDTO.getUserList();
+			}
+			
+
+		}finally{
+			userSO = null;
+		}
+		return pmUsers;
+	}
+	
+	/**
+	 * retriever user org by user id
+	 * @param userId
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrieveUserOrgListByUserId(Long userId){
+		PmOrgProfile pmOrgProfile = new PmOrgProfile();
+		IUserSO userSO  = null;
+		try{
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = new UserResDTO();
+			reqDTO.setUserId(userId);
+			
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			if(resDTO.isSuccessful() && resDTO.getUserOrgList()!=null){
+				pmOrgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+				pmOrgProfile = retrievePmOrgProfile(pmOrgProfile.getOrgProfileId()); // retrieve the full details
+			}
+			
+
+		}finally{
+			userSO = null;
+		}
+		return pmOrgProfile;
+	}
+	
 	
 	
 }
