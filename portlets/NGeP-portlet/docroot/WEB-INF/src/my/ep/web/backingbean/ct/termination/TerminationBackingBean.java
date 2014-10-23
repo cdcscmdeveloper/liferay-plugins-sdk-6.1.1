@@ -104,11 +104,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	public TerminationBackingBean(){
 		if(this.getManagedBean().getAction() == null)
 			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		  
-		
-		if(ctBB == null){
-			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		}
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -192,7 +187,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 				getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
 		flush();
 		if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
@@ -214,6 +209,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 IContractSO contractSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
+	 		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+	 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
+	 			if((remark == null || remark.length() == 0)) {
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			}
+	 		}
+		 		
 			// Mandatory to upload meeting minutes if the decision is Mutual Termination		
 			if(this.getManagedBean().isMutualTermination() && this.getManagedBean().getAttachmentList().size()==0) {
 				throw new EpException(MessageConst.ERROR_750044);
@@ -372,7 +374,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 				}
 				context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
 //				context.put("JABATAN_NAME", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-				context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
+					context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+				}
 				if(pmAddressType!=null) {
 					context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 					context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
