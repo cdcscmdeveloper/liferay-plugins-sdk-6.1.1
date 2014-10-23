@@ -69,11 +69,29 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long interval;
 	private Long remainingBidTime;
 
+	private String remainingHours;
+	private String remainingMinutes;
+	private String remainingSeconds;
+
 	private static Logger log = Logger
 			.getLogger(OnlineBiddingBackingBean.class);
 
+	DecimalFormat durationFormat = new DecimalFormat("#00");
+
+	CommonUtils commonUtils = new CommonUtils();
+	DecimalFormat nf = new DecimalFormat(
+			commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+
 	public OnlineBiddingBackingBean() {
 
+	}
+
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
 	}
 
 	@PostConstruct
@@ -90,27 +108,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.getParameter("bidScheduleId");
 
 		Long bidScheduleId = null;
-		
+
 		if (StringUtils.isNotBlank(bidScheduleIdStr)) {
 			bidScheduleId = Long.parseLong(bidScheduleIdStr);
 		}
-		
+
 		retrieveOnlineBiddingDtls(Long.parseLong(docId), encodedSupplierId,
 				bidScheduleId,
 				((PmUser) (new FacesScopes().getUserSessionBean())).getUserId());
 	}
-
-	private void debugLogger(Object message) {
-		if (log.isDebugEnabled()) {
-			log.debug(message);
-		}
-		log.info(message);
-	}
-
-	CommonUtils commonUtils = new CommonUtils();
-	DecimalFormat nf = new DecimalFormat(
-			commonUtils
-					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	private void retrieveOnlineBiddingDtls(Long docId, String hashSupplierId,
 			Long bidScheduleId, Long userId) {
@@ -129,13 +135,13 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			reqDTO.setHashSupplierId(hashSupplierId);
 			reqDTO.setDocId(docId);
 			reqDTO.setBidScheduleId(bidScheduleId);
-			
+
 			BiddingResDTO resDTO = biddingSO
 					.retrieveSupplierBidScheduleDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				ScBidSchedule bidSchedule =resDTO.getScBidSchedule();
-				
+				ScBidSchedule bidSchedule = resDTO.getScBidSchedule();
+
 				setActiveBidSchedules(resDTO.getActiveBidSchedules());
 				setScBidSchedule(bidSchedule);
 				setHashSupplierId(hashSupplierId);
@@ -149,7 +155,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 				if (resDTO.getScBidAction() != null) {
 					setScBidAction(resDTO.getScBidAction());
-					
+
 				}
 
 				if (resDTO.getBidPrices() != null) {
@@ -164,87 +170,87 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		itemStartPriceTotal();
 
 	}
-	
-	/*public String navigateToSelectedBid(){
-		
-		Long bidScheduleId = getSelectedBidScheduleId();
-		System.out.println("********* bidScheduleId *******"+ bidScheduleId);
-		IBiddingSO biddingSO = null;
 
-		try {
-			biddingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-		BiddingReqDTO reqDTO = new BiddingReqDTO();
-		reqDTO.setBidScheduleId(bidScheduleId);
-		BiddingResDTO resDTO = biddingSO
-				.retrieveBidScheduleById(reqDTO);
-		this.setScBidSchedule(resDTO
-				.getScBidSchedule());
-		}finally {
-			biddingSO = null;
-		}
+	/*
+	 * public String navigateToSelectedBid(){
+	 * 
+	 * Long bidScheduleId = getSelectedBidScheduleId();
+	 * System.out.println("********* bidScheduleId *******"+ bidScheduleId);
+	 * IBiddingSO biddingSO = null;
+	 * 
+	 * try { biddingSO = BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class); BiddingReqDTO
+	 * reqDTO = new BiddingReqDTO(); reqDTO.setBidScheduleId(bidScheduleId);
+	 * BiddingResDTO resDTO = biddingSO .retrieveBidScheduleById(reqDTO);
+	 * this.setScBidSchedule(resDTO .getScBidSchedule()); }finally { biddingSO =
+	 * null; }
+	 * 
+	 * //getOnlineBidScheduleDetails(bidScheduleId, getSmSupplier() //
+	 * .getSupplierId());
+	 * 
+	 * //FacesContext fc = FacesContext.getCurrentInstance();
+	 * 
+	 * if (getScBidSchedule().getPmStatus().getStatusId()
+	 * .equals(BidStatusConst.BID_PENDING_BIDDING)) {
+	 * 
+	 * String reDirectionQueryStringForPB = "onlineBiddingCountdown.xhtml" +
+	 * "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" +
+	 * getHashSupplierId() + "&bidScheduleId=" +
+	 * getScBidSchedule().getBidScheduleId();
+	 * System.out.println("********* reDirectionQueryStringForPB *******"+
+	 * reDirectionQueryStringForPB);
+	 * //fc.getApplication().getNavigationHandler() // .handleNavigation(fc,
+	 * null, reDirectionQueryStringForPB);
+	 * 
+	 * return reDirectionQueryStringForPB; } else if
+	 * (getScBidSchedule().getPmStatus().getStatusId()
+	 * .equals(BidStatusConst.BID_IN_PROGRESS)) {
+	 * 
+	 * String reDirectionQueryStringForOB = "onlineBiddingMain.xhtml" +
+	 * "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" +
+	 * getHashSupplierId() + "&bidScheduleId=" +
+	 * getScBidSchedule().getBidScheduleId();
+	 * System.out.println("********* reDirectionQueryStringForOB *******"+
+	 * reDirectionQueryStringForOB);
+	 * //fc.getApplication().getNavigationHandler() // .handleNavigation(fc,
+	 * null, reDirectionQueryStringForOB); return reDirectionQueryStringForOB; }
+	 * else {
+	 * 
+	 * String reDirectionQueryStringForRest = "supplierOnlineBidding.xhtml" +
+	 * "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" +
+	 * getHashSupplierId() + "&bidScheduleId=" +
+	 * getScBidSchedule().getBidScheduleId();
+	 * System.out.println("********* reDirectionQueryStringForRest *******"+
+	 * reDirectionQueryStringForRest);
+	 * //fc.getApplication().getNavigationHandler() // .handleNavigation(fc,
+	 * null, reDirectionQueryStringForRest); return
+	 * reDirectionQueryStringForRest; }
+	 * 
+	 * }
+	 */
 
-		//getOnlineBidScheduleDetails(bidScheduleId, getSmSupplier()
-			//	.getSupplierId());
-
-		//FacesContext fc = FacesContext.getCurrentInstance();
-		
-		if (getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_PENDING_BIDDING)) {
-			
-			String reDirectionQueryStringForPB = "onlineBiddingCountdown.xhtml"
-					+ "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" + getHashSupplierId()
-					+ "&bidScheduleId=" + getScBidSchedule().getBidScheduleId();
-			System.out.println("********* reDirectionQueryStringForPB *******"+ reDirectionQueryStringForPB);
-			//fc.getApplication().getNavigationHandler()
-				//	.handleNavigation(fc, null, reDirectionQueryStringForPB);
-			
-			return reDirectionQueryStringForPB;
-		} else if (getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_IN_PROGRESS)) {
-			
-			String reDirectionQueryStringForOB = "onlineBiddingMain.xhtml"
-					+ "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" + getHashSupplierId()
-					+ "&bidScheduleId=" + getScBidSchedule().getBidScheduleId();
-			System.out.println("********* reDirectionQueryStringForOB *******"+ reDirectionQueryStringForOB);
-			//fc.getApplication().getNavigationHandler()
-				//	.handleNavigation(fc, null, reDirectionQueryStringForOB);
-			return reDirectionQueryStringForOB;
-		} else {
-			
-			String reDirectionQueryStringForRest = "supplierOnlineBidding.xhtml"
-					+ "&faces-redirect=true&docId=" + getDocId() + "&supplierId=" + getHashSupplierId()
-					+ "&bidScheduleId=" + getScBidSchedule().getBidScheduleId();
-			System.out.println("********* reDirectionQueryStringForRest *******"+ reDirectionQueryStringForRest);
-			//fc.getApplication().getNavigationHandler()
-				//	.handleNavigation(fc, null, reDirectionQueryStringForRest);
-			return reDirectionQueryStringForRest;
-		}
-
-	}*/
-
-	public void selectedBidChangeListener() throws PortalException, SystemException, IOException {
+	public void selectedBidChangeListener() throws PortalException,
+			SystemException, IOException {
 		log.info("selectedBidChangeListener");
-		
+
 		ThemeDisplay themeDisplay = (ThemeDisplay) new FacesScopes()
-			.getRequestScope(WebKeys.THEME_DISPLAY);
+				.getRequestScope(WebKeys.THEME_DISPLAY);
 		String commonUrl = themeDisplay.getURLCurrent().substring(
 				0,
 				themeDisplay.getURLCurrent().indexOf(
-						themeDisplay.getLayout().getGroup()
-								.getFriendlyURL())
-						+ themeDisplay.getLayout().getGroup()
-								.getFriendlyURL().length());
+						themeDisplay.getLayout().getGroup().getFriendlyURL())
+						+ themeDisplay.getLayout().getGroup().getFriendlyURL()
+								.length());
 
 		System.out.println("commonUrl" + commonUrl);
 
 		ExternalContext externalContext = FacesContext.getCurrentInstance()
 				.getExternalContext();
 
-		externalContext.redirect(commonUrl + "/" + 
-				SourcingConstants.SC_BID_PAGE + scBidSchedule.getScBid().getDocId() +
-				"&supplierId=" + hashSupplierId +
-				"&bidScheduleId=" + selectedBidScheduleId);
+		externalContext.redirect(commonUrl + "/"
+				+ SourcingConstants.SC_BID_PAGE
+				+ scBidSchedule.getScBid().getDocId() + "&supplierId="
+				+ hashSupplierId + "&bidScheduleId=" + selectedBidScheduleId);
 	}
 
 	public void pollListener() {
@@ -259,14 +265,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
 		}
-		
+
 		if (!getScBidSchedule().getPmStatus().getStatusId()
 				.equals(BidStatusConst.BID_COMPLETED)) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, "supplierOnlineBidding.xhtml");
 		}
-		
+
 		log.info("pollListener - end");
 	}
 
@@ -463,11 +469,11 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 			remainingBidTime = durationCalculator(new Date(),
 					scBidSchedule.getStartDate());
-			
+
 		} else {
 			remainingBidTime = 0L;
 		}
-		
+
 		return remainingBidTime;
 	}
 
@@ -708,7 +714,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		this.scBidAction = scBidAction;
 	}
 
-
 	/**
 	 * @return the hashSupplierId
 	 */
@@ -723,7 +728,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public void setHashSupplierId(String hashSupplierId) {
 		this.hashSupplierId = hashSupplierId;
 	}
-	
+
 	/**
 	 * @return the selectedBidScheduleId
 	 */
@@ -732,13 +737,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param selectedBidScheduleId the selectedBidScheduleId to set
+	 * @param selectedBidScheduleId
+	 *            the selectedBidScheduleId to set
 	 */
 	public void setSelectedBidScheduleId(Long selectedBidScheduleId) {
 		this.selectedBidScheduleId = selectedBidScheduleId;
 	}
-	
-
 
 	/**
 	 * @return the recommendTypeItem
@@ -748,7 +752,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param recommendTypeItem the recommendTypeItem to set
+	 * @param recommendTypeItem
+	 *            the recommendTypeItem to set
 	 */
 	public void setRecommendTypeItem(String recommendTypeItem) {
 		this.recommendTypeItem = recommendTypeItem;
@@ -762,12 +767,86 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param recommendTypePackage the recommendTypePackage to set
+	 * @param recommendTypePackage
+	 *            the recommendTypePackage to set
 	 */
 	public void setRecommendTypePackage(String recommendTypePackage) {
 		this.recommendTypePackage = recommendTypePackage;
 	}
 
+	/**
+	 * @return the remainingHours
+	 */
+	public String getRemainingHours() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffHours = durationInMills / (60 * 60 * 1000) % 24;
+			remainingHours = durationFormat.format(diffHours);
+		}
+
+		return remainingHours;
+	}
+
+	/**
+	 * @param remainingHours
+	 *            the remainingHours to set
+	 */
+	public void setRemainingHours(String remainingHours) {
+		this.remainingHours = remainingHours;
+	}
+
+	/**
+	 * @return the remainingMinutes
+	 */
+	public String getRemainingMinutes() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffMinutes = durationInMills / (60 * 1000) % 60;
+			remainingHours = durationFormat.format(diffMinutes);
+		}
+
+		return remainingMinutes;
+	}
+
+	/**
+	 * @param remainingMinutes
+	 *            the remainingMinutes to set
+	 */
+	public void setRemainingMinutes(String remainingMinutes) {
+		this.remainingMinutes = remainingMinutes;
+	}
+
+	/**
+	 * @return the remainingSeconds
+	 */
+	public String getRemainingSeconds() {
+
+		if (scBidSchedule != null && scBidAction != null) {
+
+			long durationInMills = scBidSchedule.getEndDate().getTime()
+					- scBidAction.getCreatedDate().getTime();
+			long diffSeconds = durationInMills / 1000 % 60;
+			remainingHours = durationFormat.format(diffSeconds);
+		}
+
+		return remainingSeconds;
+	}
+
+	/**
+	 * @param remainingSeconds
+	 *            the remainingSeconds to set
+	 */
+	public void setRemainingSeconds(String remainingSeconds) {
+		this.remainingSeconds = remainingSeconds;
+	}
+
+	
 	private Long durationCalculator(Date startDate, Date endDate) {
 
 		long durationInMills = endDate.getTime() - startDate.getTime();
