@@ -50,9 +50,9 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upStampedPagePg">
-					<p:commandButton update="upStampedPageDlg"
+					<p:commandButton
 						oncomplete="upStampedPageDlg.show();return false;"
-						icon="iconAttachment" update="upStampedPagePg"
+						icon="iconAttachment" update="upStampedPagePg, upStampedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.stampedPageName}"
