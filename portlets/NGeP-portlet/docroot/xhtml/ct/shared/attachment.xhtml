@@ -10,9 +10,7 @@
 			<td class="TableFieldRight">
 				<p:commandButton oncomplete="uploadDlg.show();return false;" icon="iconAttachment" 
 					update="lampiran, uploadDlg" value="#{lbl['lbl.ct.upload.attach.files']}"
-					disabled="#{contractDetailsBackingBean.managedBean.viewContract
-								or centralContractBackingBean.managedBean.viewContract
-								or panelBackingBean.managedBean.viewContract}" />
+					disabled="#{ctBackingBean.managedBean.viewContract}" />
 			</td>
 		</tr>
 		<tr>
@@ -37,9 +35,7 @@
 								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink onclick="deleteAttachmentDlg.show();" action="#{ctBackingBean.setAttachFileIndex(attachFileIndex)}"
 									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)
-												and !contractDetailsBackingBean.managedBean.viewContract
-												and !centralContractBackingBean.managedBean.viewContract
-												and !panelBackingBean.managedBean.viewContract}">
+												and !ctBackingBean.managedBean.viewContract}">
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
 			 	 			</td>

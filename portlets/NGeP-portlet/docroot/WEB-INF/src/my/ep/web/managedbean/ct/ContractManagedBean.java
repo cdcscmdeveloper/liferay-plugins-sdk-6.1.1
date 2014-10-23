@@ -29,6 +29,7 @@ public class ContractManagedBean extends BaseManagedBean{
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private int attachFileIndex;
+	private boolean viewContract = false;
 	
 	public List<CtRemark> getRemarkList() {
 		if(remarkList==null) {
@@ -60,5 +61,10 @@ public class ContractManagedBean extends BaseManagedBean{
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
 	}
-	
+	public boolean isViewContract() {
+		return viewContract;
+	}
+	public void setViewContract(boolean viewContract) {
+		this.viewContract = viewContract;
+	}
 }

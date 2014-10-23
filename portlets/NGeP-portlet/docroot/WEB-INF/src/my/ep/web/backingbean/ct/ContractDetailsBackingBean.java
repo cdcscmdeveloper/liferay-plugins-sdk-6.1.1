@@ -401,6 +401,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 					getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 		    ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	}
 	
@@ -2277,8 +2278,8 @@ public void ConstructSideTabMenu(){
 		 reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-	    setValidateContractField(resDTO); 
 	    this.getManagedBean().setViewContract(true);
+	    setValidateContractField(resDTO); 
 	    this.getManagedBean().setSelectedTabIndex(0);
 		return CONTRACT_PAGE;
 	}
