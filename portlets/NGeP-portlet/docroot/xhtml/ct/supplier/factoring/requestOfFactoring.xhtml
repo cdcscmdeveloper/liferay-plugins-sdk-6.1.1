@@ -100,12 +100,12 @@
 	           
 	            <p:outputLabel value="Ministry Name" />
 	           <p:inputText style="width:200px;" disabled="true" 
-	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"/> 
+	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/> 
 	           
 	           
 	               <p:outputLabel value="PTJ Name" />
 	           <p:inputText style="width:200px;" disabled="true" 
-	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/> 
+	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile == null ? ' ':supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"/> 
 	       </h:panelGrid>
         </p:panel>
    
