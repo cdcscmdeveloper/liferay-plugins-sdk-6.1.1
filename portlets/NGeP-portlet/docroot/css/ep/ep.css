@@ -1761,6 +1761,11 @@ td {
 		endColorstr='#FDD655', GradientType=0); /* IE6-8 */
 }
 /* --------------------------       PP Related     ------------------------------ */
+
+.ui-picklist.ppActors .ui-picklist-list {
+	height: 100px;
+}
+
 .ppPanelGrid td,.ppPanelGrid tr {
 	border: 0;
 }
@@ -1841,7 +1846,10 @@ table.ppTwoTable td {
 	/* table-layout:fixed;*/
 	width: 100% !important;
 }
-
+.ui-datatable.ppTablePlanItem td {
+	vertical-align: top;
+	white-space: normal;
+}
 .ui-datatable.ppFixTdWidth table {
 	/* table-layout:fixed;*/
 	width: 100% !important;
