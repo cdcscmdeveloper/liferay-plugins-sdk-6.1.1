@@ -2156,8 +2156,8 @@ public class LOADetailBackingBean extends
 					schedule.setStartYear(String.valueOf(year));
 					schedule.setEndYear(String.valueOf(year));
 					schedule.setScheduleNo(BigDecimal.valueOf(i + 1));
-					PmParameter parameter = new PmParameter();
-					schedule.setScheduleType(parameter);
+					PmParameter parameter = this.getParameterByTypeAndCode(ParameterTypeConst.SCHEDULE_TYPE, ParameterConst.SCHEDULE_TYPE_PERIODIC);
+					schedule.setScheduleType(parameter);					
 					setUserDetails(schedule);
 					freqSchedule.add(schedule);
 				}
