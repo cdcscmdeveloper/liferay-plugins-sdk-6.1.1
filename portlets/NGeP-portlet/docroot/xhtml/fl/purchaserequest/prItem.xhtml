@@ -113,7 +113,10 @@
 					action="#{purchaseRequestBackingBean.removeAddRow()}"
 					oncomplete="delAddrDlg.hide();" />
 				<p:commandButton value="No" icon="ui-icon-reject"
-					onclick="delAddrDlg.hide();" type="button" />
+					partialSubmit="true"
+					update=":form:deleteAddrBtn,itemDetPanelGroup,addressDataTable,@(.orderSummaryChange)"
+					action="#{purchaseRequestBackingBean.notRemoveAddressRow()}"
+					onclick="delAddrDlg.hide();" />
 			</div>
 		</p:dialog>
 	</p:panel>

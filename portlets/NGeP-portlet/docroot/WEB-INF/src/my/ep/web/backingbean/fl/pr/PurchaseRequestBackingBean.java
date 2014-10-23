@@ -2484,7 +2484,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public boolean isRequisitioner() {
 		return getFacesScopes().hasRoleUser(RoleCode.REQUISITIONER.value());
-
+	}
+	
+	public void notRemoveAddressRow(){
+		getManagedBean().setDeleteButtonHide(true);
+		if(null !=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().iterator();
+			while(delAddressIterator.hasNext()){
+				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
+				deliveryAddress.setSelectedAddressRowDelete(false);
+			}
+		}
 	}
 	
 }
