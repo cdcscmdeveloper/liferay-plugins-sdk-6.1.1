@@ -141,6 +141,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					getManagedBean().setApplicationNoParam(applicationNo);
 				}
 			}
+			getManagedBean().setHasPreviousApplication(
+					applicationNo.substring(applicationNo.length() - 3,
+							applicationNo.length()).equals("APP") ? true
+							: false);
 		}
 		return reload;
 	}
@@ -258,6 +262,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep6_2EquipmentInfo();
 		initStep7SupportingDocumentsInfo();
 		initStep8_9PoApproverDefaultDecision();
+
+		// testing by user
+//		getManagedBean().setApproverUser(true);
+//		getManagedBean().setSupplierUser(false);
+//		getManagedBean().setPoUser(false);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
@@ -537,8 +546,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void assignSelStore(SmFacility facilityBean) {
 		Locale locale = new FacesScopes().getUserLocale();
 		getManagedBean().setSelectedStoreFacility(facilityBean);
-		getManagedBean().setFacilityType(StringUtils.upperCase(
-				ResourceBundleUtils.getMessage("lbl.sm.facility.type.store",
+		getManagedBean().setFacilityType(
+				StringUtils.upperCase(ResourceBundleUtils.getMessage(
+						"lbl.sm.facility.type.store",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)));
 	}
 
