@@ -28,9 +28,9 @@
 			</h:panelGrid>
 			<h:panelGrid columns="2">
 				<h:panelGroup id="upAgrSignedPagePg">
-					<p:commandButton update="upAgrSignedPageDlg"
+					<p:commandButton
 						oncomplete="upAgrSignedPageDlg.show();return false;"
-						icon="iconAttachment" update="upAgrSignedPagePg"
+						icon="iconAttachment" update="upAgrSignedPagePg, upAgrSignedPageDlg"
 						value="#{lbl['lbl.btn.upload.doc']}" />
 					<h:commandLink
 						value="#{agreementBackingBean.managedBean.ctContract.currentAgreement.signedPageName}"
