@@ -469,8 +469,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						.getDistrictFromCtPanelZone(ctPanelZone.getPanelZoneDtls());
 
 				getManagedBean().getZoneTrees().add(
-						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
-								districts, null, null,TplSpecZoneLoc.class));
+						LocationSingleton.getInstance().buildTreeWithDisabledChilds(tplSpecZoneDtl, states,
+								districts, null, null,false,TplSpecZoneLoc.class));
 				
 
 				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size()>0){
@@ -776,16 +776,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
-			// remarks
-			/*quote.setRemarks(initializeRemarks(
-					quote, 
-					quote.getCurrentStatus(),
-					quote.getRemarks(),
-					ScSQRemark.class));*/
 			finalizeRemarks(quote.getRemarks());
-			
-			
-			
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if(quote.getQuoteDocs() !=null && quote.getQuoteDocs().size() >0){
@@ -990,12 +981,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				quote.setScQuoteSuppliers(suppliers);
 			}
 			
-			// remarks
-			quote.setRemarks(initializeRemarks(
-					quote, 
-					quote.getCurrentStatus(),
-					quote.getRemarks(),
-					ScSQRemark.class));
 			finalizeRemarks(quote.getRemarks());
 			quote.setWorkflowStatuses(null);
 
@@ -1825,9 +1810,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void deletePanelItemZoneTreeNode() {
 		List<TreeNode>	zones = new ArrayList<TreeNode>();
+		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
 		TreeNode selectedTreeNode = getManagedBean().getSelectedTreeNode();
-		if (selectedTreeNode.getChildren() != null) {
-			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getChildren().get(0).getData();
+		
+		if(selectedTreeNode ==null){
+			throw new EpException("Please select At least one Zone Location");
+			
+		} else if (selectedTreeNode.getChildren() != null) {
+			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getData();
 
 			for (TreeNode node : getManagedBean().getZoneTrees()) {
 
@@ -1842,8 +1832,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						if(getManagedBean().getPanelSuppliers() != null && getManagedBean().getPanelSuppliers().size()>0){
 							for (ScQuoteSupplier sqQuoteSupplier : getManagedBean().getPanelSuppliers()) {
 								if(sqQuoteSupplier.getTplSpecZoneDtl() != null && sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone() != null){
-									if(sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
-										getManagedBean().getPanelSuppliers().remove(sqQuoteSupplier);
+									if(!sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
+										panelSuppliers.add(sqQuoteSupplier);
 									}
 								}
 							}
@@ -1852,6 +1842,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 			this.getManagedBean().setZoneTrees(zones);
+			getManagedBean().setPanelSuppliers(panelSuppliers);
+		}
+	}
+	
+	public void onSelectZoneItemZone(NodeSelectEvent event) {
+		log.info("onSelectZoneItemZone");
+		TreeNode selectedNode = (TreeNode) event.getTreeNode();
+		if(selectedNode.getChildren() != null && selectedNode.getChildCount()>0){
+			getManagedBean().setSelectedTreeNode(selectedNode);
 		}
 	}
 
@@ -2215,8 +2214,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						questions.addAll(cloneQuestions);
 					}
 
-					//prodSpecMaster.setBrandNew(Boolean.TRUE);
 					prodSpecMaster.setTplSpecQuestions(questions);
+					
+					if (getManagedBean().getScQuote().getMultipleQuote()){ // for multiple quote
+						prodSpecMaster.setEstCostReq(Boolean.TRUE);
+					} else{
+						prodSpecMaster.setEstCostReq(Boolean.FALSE);
+					}
+					
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 
@@ -2238,8 +2243,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
-					//serviceSpecMaster.setBrandNew(Boolean.TRUE);
 					serviceSpecMaster.setTplSpecQuestions(questions);
+					
+					if (getManagedBean().getScQuote().getMultipleQuote()){ // for multiple quote
+						serviceSpecMaster.setEstCostReq(Boolean.TRUE);
+					} else{
+						serviceSpecMaster.setEstCostReq(Boolean.FALSE);
+					}
+					
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 				}
@@ -3055,21 +3066,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quoteZone.setScQuote(quote);
 			quote.setQuoteZone(quoteZone);
 			quote.setZonal(Boolean.TRUE);
-			
-			// product
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
-			}
-
-			// service 
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(quoteZone);
-			}
-
+		
 		} else {
 			quote.setZonal(Boolean.FALSE);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 			getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
+			this.getManagedBean().getZoneTrees().clear();
 		}
 		
 		// product
