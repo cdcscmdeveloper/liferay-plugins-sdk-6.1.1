@@ -708,7 +708,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		deliveryAddr = new FlDeliveryAddress();
 		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 		deliveryAddr.setPmAddress(manualAddr);
-		//deliveryAddr.setAddressType(manualAddr);
+		
+		ICitySO citySO = (ICitySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICitySO.class);
+		CityReqDTO cityReqDTO = new CityReqDTO();
+		cityReqDTO.setCityId(manualAddr.getPmCity().getCityId());
+		CityResDTO cityResDTO = citySO.retriveCityById(cityReqDTO);
+		manualAddr.setPmCity(cityResDTO.getPmCity());
+		
+		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
+		StateReqDTO reqDTO = new StateReqDTO();
+		reqDTO.setStateId(manualAddr.getPmState().getStateId());
+		StateResDTO resDTO = reqSO.retriveStateByID(reqDTO);
+		manualAddr.setPmState(resDTO.getPmState());
+		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 			ContractZoneReqDTO zoneReqDTO = new ContractZoneReqDTO();
 			zoneReqDTO.setPmAddress(manualAddr);
@@ -2716,6 +2728,47 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}else{
 				getManagedBean().setChargeLinePanel(false);
 			}
+			
+			//Poulate chargeline data.
+			//Get the selected chargeline item.
+			updateSelectedTreeNodes();
+			TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
+					 
+			//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
+			//Because multiple nodes conflict chargeline data.
+			if(null!=selectedNodes && selectedNodes.length==1){
+				 TreeNode selectedNode=selectedNodes[0];
+				 //Populate Chargeline data....
+				 for(TreeNode children:selectedNode.getChildren()){
+						FlFulfilmentItemAddr childData=((FlFulfilmentItemAddr)children.getData());
+						if(null !=childData.getPmVotFund()){
+							if(VotFundType.AMANAH.value().equalsIgnoreCase(childData.getPmVotFund().getVotFundType())){
+								getManagedBean().getPmVoteFund().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+								getManagedBean().getPmVoteFund().setVotFundId(childData.getPmVotFund().getVotFundId());
+							}else{
+								getManagedBean().setVotFundCode(childData.getPmVotFund().getVotFundCode());
+								getManagedBean().setVotFundId(childData.getPmVotFund().getVotFundId());
+							}
+						}
+						
+						if(childData.getAssetInd()!=null) {
+							getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+							getManagedBean().setAssetIndId(childData.getAssetInd().getParameterId());
+						}
+							
+						if(childData.getPmGlAccount()!=null) {
+							getManagedBean().setGosodo(childData.getPmGlAccount());
+						}
+						
+						if(childData.getPmPrgActivity()!=null) {
+							getManagedBean().getPmPrgActivity().setPrgActivityCode(childData.getPmPrgActivity().getPrgActivityCode());
+						}
+						
+						if(childData.getPmSubSetia()!=null) {
+							getManagedBean().setPmSubSetia(childData.getPmSubSetia());
+						}
+					}
+			}	 
 		}
 		
 		public void checkVotFundLov(){
@@ -3001,6 +3054,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if(getManagedBean().getSelectedDelAddr()!=null) {
 					populateItemsForSelectedAddress();
 				}
+			}
+		}
+	}
+	
+	public void notRemoveAddressRow(){
+		getManagedBean().setDeleteButtonHide(true);
+		if(null !=getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			Iterator<FlDeliveryAddress> delAddressIterator=getManagedBean().getFlRequest().getFlDeliveryAddresses().iterator();
+			while(delAddressIterator.hasNext()){
+				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
+				deliveryAddress.setSelectedAddressRowDelete(false);
 			}
 		}
 	}
