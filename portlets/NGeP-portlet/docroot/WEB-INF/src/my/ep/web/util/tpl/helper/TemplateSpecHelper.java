@@ -189,13 +189,15 @@ public class TemplateSpecHelper {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
 								
+								resetPriceType(newSpecMaster, newSpecQuestion);
+								
+								// clone spec quantities
+								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
+								
 								setUserDetails(newSpecQuestion);
 								newSpecQuestions.add(newSpecQuestion);
 								
 								prevNewSpecQuestion = newSpecQuestion;
-								
-								// clone spec quantities
-								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
 							}
 						}
 					} catch (IllegalAccessException | InstantiationException
