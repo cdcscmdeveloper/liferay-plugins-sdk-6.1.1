@@ -271,8 +271,8 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
-			
-		}  
+
+		}
 		getManagedBean()
 				.setDefPmCountry(
 						SmCommonUtil
@@ -288,12 +288,11 @@ public class SmApplicationBackingBean extends
 
 				boolean cannotProceedAlertMsg = false;
 				if (applicationType.equalsIgnoreCase("C")) {
-					
-					System.out.println(">>>>>>>>>>>>>>>> Supp: " + currSupp);
-					boolean hasActiveTransactions = SmApplicationUtil.hasActiveTransactions(currSupp);
-					
-					if(hasActiveTransactions) {
-						throw new EpException(MessageConst.ERROR_722542);
+					log.info(">>>>>>>>>>>>>>>> Supp: " + currSupp);
+					boolean hasActiveTransactions = SmApplicationUtil
+							.hasActiveTransactions(currSupp);
+					if (hasActiveTransactions) {
+						throw new EpException(MessageConst.ERROR_722565);
 					}
 				}
 				cannotProceedAlertMsg = SmApplicationUtil
@@ -471,7 +470,7 @@ public class SmApplicationBackingBean extends
 			// calculateCapital();
 			// calculateBumiPercentageTotals();
 			if (getManagedBean().getSmAppl().getSupplierType()
-					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)){
+					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				getManagedBean().getSmAppl().setApplCategoryType("N");
 			}
 			updateSmAppl(applicationType, "", "");
@@ -4698,7 +4697,7 @@ public class SmApplicationBackingBean extends
 			reqDTO.setPaidUpCapital(getManagedBean().getSmAppl()
 					.getSmCompanyBasic().getPaidUpCapital().intValue());
 		}
-		// TODO get clarification 
+		// TODO get clarification
 		// reqDTO.setBumiPercentage(0);
 		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL3ListByL2Id(reqDTO);
 
