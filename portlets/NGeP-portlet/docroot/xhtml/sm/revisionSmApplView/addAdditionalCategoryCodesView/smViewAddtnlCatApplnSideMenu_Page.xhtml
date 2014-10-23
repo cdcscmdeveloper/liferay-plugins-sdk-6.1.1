@@ -40,7 +40,7 @@
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
+								<ui:include src="step6ViewAddnlCatCode_SupportingDocumentsInfo.xhtml" />
 							</c:if>
 							<c:choose>
 								<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
@@ -48,12 +48,12 @@
 										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
 									</c:if>
 									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 9}">
-										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<ui:include src="step7ViewAddnlPoDecision.xhtml" />
 									</c:if>
 								</c:when>
 								<c:otherwise>
 									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<ui:include src="step7ViewAddnlPoDecision.xhtml" />
 									</c:if>
 								</c:otherwise>
 							</c:choose>
@@ -61,10 +61,10 @@
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
+								<ui:include src="step6ViewAddnlCatCode_SupportingDocumentsInfo.xhtml" />
 							</c:if>
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 8}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
+								<ui:include src="step7ViewAddnlApproverDecision.xhtml" />
 							</c:if>
 						</c:when>
 						<c:otherwise>
@@ -81,7 +81,7 @@
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.poUser}">
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poReviewSupportingDocumentsViewOnly.xhtml" />
+								<ui:include src="step6ViewAddnlCatCode_SupportingDocumentsInfo.xhtml" />
 							</c:if>
 							<c:choose>
 								<c:when test="#{viewSmApplBackingBean.managedBean.reviewSiteVisit}">
@@ -89,12 +89,12 @@
 										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/reviewSiteVisitReportDocumentsViewOnly.xhtml" />
 									</c:if>
 									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 7}">
-										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<ui:include src="step7ViewAddnlPoDecision.xhtml" />
 									</c:if>
 								</c:when>
 								<c:otherwise>
 									<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-										<ui:include src="/xhtml/sm/shared/applViewOnlyPages/poDefault_DescisionPageViewOnly.xhtml" />
+										<ui:include src="step7ViewAddnlPoDecision.xhtml" />
 									</c:if>
 								</c:otherwise>
 							</c:choose>
@@ -102,10 +102,10 @@
 						</c:when>
 						<c:when test="#{viewSmApplBackingBean.managedBean.approverUser}">
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 5}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverReviewSupportingDocumentsViewOnly.xhtml" />
+								<ui:include src="step6ViewAddnlCatCode_SupportingDocumentsInfo.xhtml" />
 							</c:if>
 							<c:if test="#{viewSmApplBackingBean.managedBean.tabActiveIndex eq 6}">
-								<ui:include src="/xhtml/sm/shared/applViewOnlyPages/approverDefault_DescisionPageViewOnly.xhtml" />
+								<ui:include src="step7ViewAddnlApproverDecision.xhtml" />
 							</c:if>
 						</c:when>
 						<c:otherwise>
