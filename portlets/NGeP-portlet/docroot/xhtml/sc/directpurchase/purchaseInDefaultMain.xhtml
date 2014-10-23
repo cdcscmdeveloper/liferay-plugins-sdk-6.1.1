@@ -39,10 +39,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 			  icon="ui-icon-submit" update="mailPanel" process="@all" 
 			  rendered="#{purchaseInDefaultBackingBean.managedBean.pidBtnFlag}"/>
 	    </c:if>
-	    
-	     <table>
-			<tr>
-			<td align="right">
+	  </div>
+	   <div class="ppRightBtn">
 				<c:choose>
 				<c:when test="#{!empty purchaseInDefaultBackingBean.managedBean.taskId}">
 				  <ui:repeat var="bpmAction" value="#{purchaseInDefaultBackingBean.managedBean.outComes}">
@@ -58,11 +56,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				  </ui:repeat>
 				 </c:when>
 				 </c:choose>
-				</td>
-			</tr>
-		</table>
-     </div>
-	   
+	 </div>
+			 
 	  <p:spacer height="5px" />
 		<table style="border: 0px; align:center">
 			<tr>
