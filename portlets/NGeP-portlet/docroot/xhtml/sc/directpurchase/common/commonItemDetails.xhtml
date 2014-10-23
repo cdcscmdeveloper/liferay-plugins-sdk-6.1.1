@@ -256,7 +256,8 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
-					<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" 
+					   rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}"></h:outputText>
 					<p:spacer width="6px;"></p:spacer>
 					<p:outputPanel autoUpdate="true">
 						<p:selectOneMenu value="#{requestNoteBackingBean.managedBean.supplierId}" 
