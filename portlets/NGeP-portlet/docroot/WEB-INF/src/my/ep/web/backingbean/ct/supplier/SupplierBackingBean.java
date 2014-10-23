@@ -110,21 +110,14 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	
 	public SupplierBackingBean(){
-	
-	    	 if(getManagedBean().getAction() == null) 
-			     getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SUBMIT });
-	    	 
-	    	 if(getManagedBean().getUserMap().size()==0) {
-				  initializeApproverList();
-		     }
-	   	 
-	    	if(getManagedBean().getFactoring() == null) 
-			     initializeFactoring();
-		 
-		   if(ctBB == null) {
-			     ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		    	 ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-	    	}
+		if(getManagedBean().getAction() == null) 
+			getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SUBMIT });
+
+		if(getManagedBean().getUserMap().size()==0) {
+			initializeApproverList();
+		}
+		if(getManagedBean().getFactoring() == null) 
+			initializeFactoring();
 	}
 	
 	private void initializeApproverList() {
@@ -136,19 +129,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	private void initializeFactoring() {
-	    
-		    getManagedBean().setFactoring(new CtFactoring());
-		    PmStatus pmStatus = new PmStatus();
-		    pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
-		    getManagedBean().getFactoring().setStatus(pmStatus);
-		    getManagedBean().getFactoring().setCtContract(new CtContract());
-		    getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
-		    getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
-		    getManagedBean().setAccountNo(null);
-		    getManagedBean().setFactoringBankName(null);
-		    getManagedBean().setFinancialBankBranch(null);
-		    
-		    
+		getManagedBean().setFactoring(new CtFactoring());
+		PmStatus pmStatus = new PmStatus();
+		pmStatus.setStatusId(ContractStatusConst.RF_PENDING_SUBMISSION);
+		getManagedBean().getFactoring().setStatus(pmStatus);
+		getManagedBean().getFactoring().setCtContract(new CtContract());
+		getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
+		getManagedBean().getFactoring().setPmFinancialBranch(new PmFinancialBranch());
+		getManagedBean().setAccountNo(null);
+		getManagedBean().setFactoringBankName(null);
+		getManagedBean().setFinancialBankBranch(null);
+		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	}
 	
 	 private FacesScopes getFacesScopes(){
@@ -225,6 +217,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 					       
 					         getManagedBean().setAccountNoAndName(account);
 				      }
+				      getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
+				    		  (ModuleCodeConst.CONTRACT_MANAGEMENT, docType, getManagedBean().getCtContract().getContractNo()));
+				     
+				      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				      ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+				      
 		       }else if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME)) {
 			            
 			    	       ContractSupplierReqDTO csReqDTO = new ContractSupplierReqDTO();
@@ -259,16 +257,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 							   this.getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
 							   this.getManagedBean().getApproverModel().getSource().removeAll(csResDTO.getApproverList());
 							} 
+						      getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
+						    		  (ModuleCodeConst.CONTRACT_MANAGEMENT, docType, getManagedBean().getCtContract().getContractNo()));
+						     
+						      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+						      ctBB.initializeRemarkAndAttachement(getManagedBean().getFactoring().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());						   
 				 }
-			
-			      getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath
-			    		  (ModuleCodeConst.CONTRACT_MANAGEMENT, docType, getManagedBean().getCtContract().getContractNo()));
-			     
-			      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			      ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		   
 		    } finally {
-			
 		    	contractSupplierSO = null;
 			    contractSO = null;
 			    resDTO = null;
