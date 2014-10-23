@@ -9,24 +9,24 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 
 	<p:panel id="pPlanResult" header="#{lbl['lbl.pp.result.plan']}" toggleable="true">
-		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			 lazy="true">
+	
+		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem"
+			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{pPlanBackingBean.ppPlanDataModel}">
 			<ac:paginator for="dtPlanResult" />
 	        <p:column headerText="#{lbl['lbl.pp.plan.year']}">  
-		    	
+		    	#{plan.planYear}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.type']}">  
-	            
+	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.ministry']}">  
-	            
+	            TODO #{plan.orgProfile}
 	        </p:column>
-	        
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
-	            
+	            TODO 
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
-      		   <p:commandLink >
+      		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 	        </p:column>  

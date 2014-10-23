@@ -21,25 +21,34 @@
 					
 			<!-- Plan Header -->			
 			<p:panel id="pPlanHeader" header="#{lbl['lbl.pp.header']}" toggleable="true">
-				<ui:include src="planDetHeader.xhtml"/>
+				<ui:include src="planDetails/planDetHeader.xhtml"/>
 			</p:panel>	
 				
 			<!-- Plan Details -->
 			<p:panel id="pPlanDet" header="#{lbl['lbl.pp.plan.detail']}" toggleable="true">
-				<ui:include src="planDetPp.xhtml"/>
-				<ui:include src="planDetEp.xhtml"/>  
+				<c:choose>
+					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeExpenditure}">
+						<ui:include src="planDetails/planDetEpList.xhtml"/> 
+					</c:when>
+					<c:when test="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode eq ParameterConst.planTypeProcurement}">
+						<ui:include src="planDetails/planDetPpList.xhtml"/> 
+					</c:when>
+					<c:otherwise>
+						<p>#{lbl['lbl.pp.select.plan.type']}</p>	 
+					</c:otherwise>
+				</c:choose>
 			</p:panel>
 			
 			<!-- Plan Actors -->			
 			<p:panel id="pPlanActor" header="Approver Details" toggleable="true">
-				<ui:include src="planActors.xhtml"/> 	
+				<ui:include src="planDetails/planActors.xhtml"/> 	
 			</p:panel>	
 			
 			<!-- Plan Remarks -->			
 			<p:panel id="pPlanRemark" header="#{lbl['lbl.pp.remarks']}" toggleable="true">
-				<ui:include src="planRemarks.xhtml"/>  
+				<ui:include src="planDetails/planRemarks.xhtml"/> 
 			</p:panel>	
 		</p:outputPanel>
-		
+		<ui:include src="planDetails/planRejectReason.xhtml"/> 
 	</ui:define>
 </ui:composition>
