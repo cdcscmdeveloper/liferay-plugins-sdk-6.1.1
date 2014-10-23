@@ -67,13 +67,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	    private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	
 	    public SuspensionBackingBean(){
-	           if(this.getManagedBean().getAction() == null) 
-	        	   this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
-	           
-	           if(ctBB == null){
-	  			 ctBB = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-	  			 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-	  		}
+	    	if(this.getManagedBean().getAction() == null) 
+	    		this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		
 	    }
 	 
 	   private FacesScopes getFacesScopes(){
@@ -144,7 +139,7 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			    getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
 		    
 		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	    
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	  }
 	
 	 public String backAction() {
