@@ -1,0 +1,118 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<p:outputPanel id="opPlanPp">
+		<br/>
+	   	<p:dataTable id="dtProcurementPlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" 
+	   		 styleClass="ppTablePlanItem" var="ppItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppProcurementItems}"
+		     selection="#{pPlanBackingBean.managedBean.deletePpItems}" 
+		     rowIndexVar="index" rowKey="#{ppItem}">
+	     	<ac:paginator for="dtProcurementPlan"/>
+		    <p:ajax event="toggleSelect" update="@this" process="@this" />
+			<p:ajax event="rowSelectCheckbox" update="@this" />
+			
+			<p:column selectionMode="multiple"  style="width:2%" />
+	        <p:column width="10%">
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.procurement.title']}" />
+			    </f:facet>
+				<p:inputTextarea id="itaPpTitle" value="#{ppItem.procurementTitle}" 
+					label="#{lbl['lbl.pp.procurement.title']}" autoResize="false" 
+			 		cols="20" rows="2" maxlength="1000" required="#{!empty param['disableValidation']}"/>
+	            <p:message id="itPpTitleMsg" for="itaPpTitle" display="icon" />    
+	        </p:column>	 
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.category']}" />
+			    </f:facet>
+		  		<p:selectOneMenu styleClass="ppDropDownWidthS" id="somCategory" 
+					label="#{lbl['lbl.pp.category']}" value="#{ppItem.procurementCat.parameterId}">
+					<f:selectItems value="#{pPlanBackingBean.getCategoryOptions()}"/>
+				</p:selectOneMenu>
+	        </p:column>
+	         <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.procurement.type']}" />
+			    </f:facet>
+		  		<p:selectOneMenu styleClass="ppDropDownWidthS" id="somProcurementMethod" 
+					label="#{lbl['lbl.pp.procurement.type']}" value="#{ppItem.procurementCat.parameterId}">
+					<f:selectItems value="#{pPlanBackingBean.getProcurementTypeOptions()}"/>
+				</p:selectOneMenu>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.invitation.date']}" />
+			    </f:facet>
+	  			<p:calendar id="effDateId" value="#{ppItem.invitationDate}" styleClass="ppDisplayCalS" 
+			  		required="#{!empty param['disableValidation']}" navigator="true" 
+			  		label="#{lbl['lbl.pp.invitation.date']}" readonlyInput="true" yearRange="-99:-16"
+					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.estimated.amount']}" />
+			    </f:facet>
+		  		<p:inputText value="#{ppItem.estimatedAmt}"  styleClass="ppDisplayTextS" >
+		  			<p:ajax event="change" />
+		  		</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.cost.center.code']}" />
+			    </f:facet>
+		  		<p:inputText value="#{ppItem.costCenterCode}" styleClass="ppDisplayTextS"/>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.cost.center.name']}" />
+			    </f:facet>
+		  		<p:inputText value="#{ppItem.costCenterName}" />
+	        </p:column>
+	       <p:column  width="5%">
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
+			    </f:facet>
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{ppItem.rejected}">
+			    	<p:ajax event="change" update="clPpReason"/>
+			    </p:selectBooleanCheckbox>
+			    &#160;
+			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.initialRejectReasons()}"
+			    	disabled="#{!ppItem.rejected}" id="clPpReason">
+					<p:graphicImage value="/css/images/design/edit.png"/>
+				</p:commandLink>
+	        </p:column>
+	        <p:column width="10%">
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.remarks']}" />
+			    </f:facet>
+	  		  	<p:inputTextarea id="itaRemark" value="#{ppItem.remark}" 
+					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
+			 		cols="20" rows="2" maxlength="1000" required="#{!empty param['disableValidation']}"/>
+	        </p:column>
+		</p:dataTable>
+		<br/>
+       	<br/>
+		<div class="ppRightBtn">
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtProcurementPlan" 
+		 		process="@this" action="#{pPlanBackingBean.addPpItemDet()}"/>
+			&#160;
+			<p:commandButton id="cbPpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtProcurementPlan"
+				immediate="true" 
+			/> 
+		</div>
+	</p:outputPanel>
+</ui:composition>

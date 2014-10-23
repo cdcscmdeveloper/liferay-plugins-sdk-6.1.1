@@ -1,0 +1,108 @@
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
+>
+	
+	<p:outputPanel id="opPlanEp">
+	<br/>
+	   	<p:dataTable id="dtExpenditurePlan" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem"
+		     var="epItem" value="#{pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems}"
+		     selection="#{pPlanBackingBean.managedBean.deleteEpItems}" 
+		     rowIndexVar="index" rowKey="#{epItem}">
+		    <ac:paginator for="dtExpenditurePlan"/>
+		    <p:ajax event="toggleSelect" update="@this" process="@this" />
+			<p:ajax event="rowSelectCheckbox" update="@this" />
+			
+			<p:column selectionMode="multiple"  style="width:2%" />
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.object']}" />
+			     	<h:outputText value="* " styleClass="mandatory" />
+			    </f:facet>
+			    <ac:lov id="lovGOSO" lovId="PM_GOSO" size="20" update=":form:dtExpenditurePlan"
+	            	readonly="true"
+					headerText="#{lbl['lbl.pp.goso.code']}"
+					value="#{epItem.pmSo.soCode}" 
+					saveObject="pPlanBackingBean.managedBean.selectedPlan.ppExpenditureItems[#{index}].pmSo"
+					conditionField="recordStatus^1" 
+				/>
+	        </p:column>	 
+	        <p:column width="15%">
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.type.of.expenses']}" />
+			    </f:facet>
+		  		#{epItem.pmSo.soName}
+	        </p:column>
+	         <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.total.approved.budget']}" />
+			    </f:facet>
+		  		<p:inputText value="#{epItem.budgetAmt}">
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  				update="otNonAllocAmt" />
+		  		</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="* " styleClass="mandatory" />
+			     	<h:outputText value="#{lbl['lbl.pp.budget.spend.ep']}" />
+			    </f:facet>
+		  		<p:inputText value="#{epItem.planAmt}">
+		  			<p:ajax event="change" listener="#{pPlanBackingBean.calculateNonAllocationBudget(epItem)}"
+		  				update="otNonAllocAmt" />
+		  		</p:inputText>
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.non.ep.allocation']}" />
+			    </f:facet>
+			    <h:outputText id="otNonAllocAmt" value="#{epItem.nonAllocatedAmt}" />
+	        </p:column>
+	        <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.fulfillment.via.ep']}" />
+			    </f:facet>
+			    #{lbl['lbl.pp.no.available']}
+	        </p:column>
+	        <p:column  width="5%">
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.reject.and.reason']}" />
+			    </f:facet>
+			    <p:selectBooleanCheckbox id="chkRejected" value="#{epItem.rejected}">
+			    	<p:ajax event="change" update="clEpReason"/>
+			    </p:selectBooleanCheckbox>
+			    &#160;
+			    <p:commandLink oncomplete="dlRejectReason.show();" action="#{pPlanBackingBean.initialRejectReasons()}"
+			    	disabled="#{!epItem.rejected}" id="clEpReason">
+					<p:graphicImage value="/css/images/design/edit.png"/>
+				</p:commandLink>
+	        </p:column>
+	         <p:column>
+			    <f:facet name="header">
+			     	<h:outputText value="#{lbl['lbl.pp.justification']}" />
+			    </f:facet>
+			    <p:inputTextarea id="itaRemark" value="#{epItem.remark}" 
+					label="#{lbl['lbl.pp.remarks']}" autoResize="false" 
+			 		cols="30" rows="2" maxlength="1000" required="#{!empty param['disableValidation']}"/>
+	        </p:column>
+		</p:dataTable>
+		<br/>
+       	<br/>
+		<div class="ppRightBtn">
+		 	<p:commandButton value="#{lbl['lbl.btn.add']}" immediate="true" update="dtExpenditurePlan" 
+		 		process="@this" action="#{pPlanBackingBean.addEpItemDet()}"/>
+			&#160;
+			<p:commandButton id="cbEpItemDelete" value="#{lbl['lbl.btn.delete']}" update="dtExpenditurePlan"
+				immediate="true" 
+			/> 
+		</div>
+	</p:outputPanel>
+	<ac:lovPopup /> 	
+	<ui:include src="planDetEp.xhtml"/> 
+</ui:composition>

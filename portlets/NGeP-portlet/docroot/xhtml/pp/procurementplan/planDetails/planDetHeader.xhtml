@@ -19,10 +19,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</th>
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanType" 
-						required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.pp.plan.type']}"
-						>
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.pp.plan.type']}"
+					value="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterId}"
+					>
+					<f:selectItems value="#{pPlanBackingBean.getPlanTypeOptions()}"/>
+					<p:ajax event="change" listener="#{pPlanBackingBean.changePlanType(pPlanBackingBean.managedBean.selectedPlan.planType.parameterId)}" 
+						update=":form:pPlanDet, :form:pPlanActor, somVotType"/>
 				</p:selectOneMenu>
 				<p:message id="somPlanTypeMsg" for="somPlanType" display="icon" />
 			</td>
@@ -40,10 +42,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</th>
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPlanYear" 
-						required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.pp.plan.year']}"
-						>
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					required="#{!empty param['disableValidation']}"
+					label="#{lbl['lbl.pp.plan.year']}"
+					value="#{pPlanBackingBean.managedBean.selectedPlan.planYear}"
+					>
+					<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions()}"/>
 				</p:selectOneMenu>
 				<p:message id="somPlanYearMsg" for="somPlanYear" display="icon" />
 			</td>
@@ -61,9 +64,11 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			</th>
 			<td>
 				<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotType" 
+					disabled="#{pPlanBackingBean.managedBean.selectedPlan.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
 					label="#{lbl['lbl.pp.vot.amanah.type']}"
+					value="#{pPlanBackingBean.managedBean.selectedPlan.votFundType.parameterId}"
 				>
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+					<f:selectItems value="#{pPlanBackingBean.getVotTypeOptions()}"/>
 				</p:selectOneMenu>
 				<p:message id="somVotTypeMsg" for="somVotType" display="icon" />
 			</td>
