@@ -13,9 +13,8 @@
 	<ui:define name="contentSection">
 		
 		<p:treeTable id="ctListTree" var="contractTreeNode"
-			styleClass="chargeLineChange"
 			value="#{contractRequestBackingBean.managedBean.contractListTree}">
-			<p:column headerText="Contract No">
+			<p:column headerText="Contract No" >
 				<h:outputText
 					value="#{contractTreeNode.contractNo}" />
 			</p:column>

@@ -344,8 +344,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
-			//checkCeilingAmount(flRequest);
-			//checkCeilingQty(flRequest);
+			checkCeilingAmount(flRequest);
+			checkCeilingQty(flRequest);
 			if(isRequisitioner()){
 				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -1205,68 +1205,68 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
-		ctReqDTO.setOrgProfileId(flRequest.getIssuedOrgProfile().getOrgProfileId());
-		
+		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+
 		ContractItemResDTO ctResDTO = new ContractItemResDTO();
 		ctResDTO = contractItemSO.getAgencyCeilingAmount(ctReqDTO);
-		ctResDTO.getAgencyCeilingAmount();//TODO flRequest.deladdr loop then sum the flItemaddr orederAmt AND create SO get the ptj previous oredered amt , check contractId and issuePtj same then sum it and check with ceiling amt
-		BigDecimal sumOrderedAmt = new BigDecimal("0");
-		BigDecimal checkCeilingAmt = new BigDecimal("0");
-		for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
-			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
-				
-				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedQty());//TODO change back to getOrderedAmount
-				System.out.println("sumOrderedAmt: "+sumOrderedAmt);
-			}
-		}
-		IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
-		FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
-		reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-		reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		BigDecimal prevSumAmt = itemSummarySO.retrieveContractAgencyAccumulatedAmount(reqDTO);
-		checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
-		
-		System.out.println("checkCeilingAmt total: "+checkCeilingAmt);
-		System.out.println("getAgencyCeilingAmount: "+ctResDTO.getAgencyCeilingAmount().intValue());
-		if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
-			throw new EpException("This PTJ has exceed the limit of the celing amount.");
-		}
-	}
-	
-	public void checkCeilingQty(FlFulfilmentRequest flRequest){//TODO db change qt item change
-		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
-		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
-		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
-		ctReqDTO.setOrgProfileId(flRequest.getIssuedOrgProfile().getOrgProfileId());
+		if(ctResDTO.getAgencyCeilingAmount().doubleValue() > 0){
+			BigDecimal sumOrderedAmt = new BigDecimal("0");
+			BigDecimal checkCeilingAmt = new BigDecimal("0");
+			for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
 
-		ContractItemResDTO ctResDTO = new ContractItemResDTO();
-		
-		for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
-			BigDecimal sumOrderedQty = new BigDecimal("0");
-			BigDecimal checkCeilingQty = new BigDecimal("0");
-//			ctReqDTO.setItemId(item.getQtItem().getQtItemId());
-			ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
-			ctResDTO.getItemCeilingQuantity();//TODO loop flrequest.flitems loop again itemAddr and sum ordered qty AND create SO get the ptj previous ordered qty,check contracID and issuePTJ same then sum it and check with ceiling Qty
-
-			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				System.out.println("sumOrderedQty: "+sumOrderedQty);
+					sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+					System.out.println("sumOrderedAmt: "+sumOrderedAmt);
+				}
 			}
 			IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
 			FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
 			reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
-			checkCeilingQty = prevSumQty.add(sumOrderedQty);
+			BigDecimal prevSumAmt = itemSummarySO.retrieveContractAgencyAccumulatedAmount(reqDTO);
+			checkCeilingAmt = prevSumAmt.add(sumOrderedAmt);
 
-			System.out.println("checkCeilingQty total: "+checkCeilingQty);
-			System.out.println("getAgencyCeilingAmount: "+ctResDTO.getItemCeilingQuantity());
-			if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
-				throw new EpException("Item "+ item.getCmItem().getItemName() +"  has been exceeded the quantity limit.");
-//				throw new EpException("Item "+ item.getQtItem().getItemName() +"  has been exceeded the quantity limit.");
+			System.out.println("checkCeilingAmt total: "+checkCeilingAmt);
+			System.out.println("getAgencyCeilingAmount: "+ctResDTO.getAgencyCeilingAmount().intValue());
+			if(checkCeilingAmt.intValue() >  ctResDTO.getAgencyCeilingAmount().intValue()){
+				throw new EpException(MessageConst.ERROR_750014);
 			}
 		}
-		
+	}
+	
+	public void checkCeilingQty(FlFulfilmentRequest flRequest){//TODO db change qt item change
+		IContractItemSO contractItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+		ContractItemReqDTO ctReqDTO = new ContractItemReqDTO();
+		ContractItemResDTO ctResDTO = new ContractItemResDTO();
+		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
+		ctReqDTO.setOrgProfileId(flRequest.getPreparedOrgProfile().getOrgProfileId());
+		BigDecimal sumOrderedQty = new BigDecimal("0");
+		BigDecimal checkCeilingQty = new BigDecimal("0");
+		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				
+				ctReqDTO.setItemId(itemAddr.getScRequestItem().getRequestNoteItemId());
+				ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
+				if(ctResDTO.getItemCeilingQuantity().doubleValue() <= 0){
+					break;
+				}
+				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
+				System.out.println("sumOrderedQty: "+sumOrderedQty);
+				
+				IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFlItemSummarySO.class);
+				FlItemSummaryReqDTO reqDTO = new FlItemSummaryReqDTO();
+				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
+				reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+				BigDecimal prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+				checkCeilingQty = prevSumQty.add(sumOrderedQty);
+
+				System.out.println("checkCeilingQty total: "+checkCeilingQty);
+				System.out.println("getAgencyCeilingAmount: "+ctResDTO.getItemCeilingQuantity());
+				if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQuantity().intValue()){
+					throw new EpException(MessageConst.ERROR_750016,new String[]{itemAddr.getCmItem().getItemName()});
+				}
+			}
+		}
 	}
 	
 	
