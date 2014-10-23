@@ -183,22 +183,22 @@ public class LOADetailBackingBean extends
 							.getScLoa().getScLoiLoa().getDocType())) {
 				if (new FacesScopes()
 						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					awardDataType.setLetterCreator("D");
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 					awardDataType.setDeskOfficer(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				} else {
-					awardDataType.setLetterCreator("R");
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
 					awardDataType.setRequisitioner(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				}
 			} else {
 				if (new FacesScopes()
 						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					awardDataType.setLetterCreator("D");
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 					awardDataType.setDeskOfficer(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				} else {
-					awardDataType.setLetterCreator("S");
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
 					awardDataType.setDeskOfficer(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				}
