@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,7 +70,6 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
@@ -160,11 +158,11 @@ public class LOIDetailBackingBean extends
 			
 			
 			if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())){
-				awardDataType.setLetterCreator("D");
+				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 				awardDataType.setDeskOfficer(new FacesScopes().getUserSessionBean().getLoginId());
 			}
 			else if (new FacesScopes().hasRoleUser(RoleCode.SC_SECRETARY.value())){
-				awardDataType.setLetterCreator("S");
+				awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
 				awardDataType.setSecretary(new FacesScopes().getUserSessionBean().getLoginId());
 			}
 
