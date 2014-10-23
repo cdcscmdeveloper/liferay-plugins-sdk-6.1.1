@@ -252,7 +252,8 @@ public class SmApplicationBackingBean extends
 			SmAppl appl, SmSupplier supp) {
 		getManagedBean().setRedirectToPersonPage(false);
 		assignValReqdToFalse();
-		if (!applicationType.equalsIgnoreCase("C")) {
+		if (!applicationType
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
@@ -287,8 +288,11 @@ public class SmApplicationBackingBean extends
 				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 
 				boolean cannotProceedAlertMsg = false;
-				if (applicationType.equalsIgnoreCase("C")) {
-					log.info(">>>>>>>>>>>>>>>> Supp: " + currSupp);
+				cannotProceedAlertMsg = SmApplicationUtil
+						.checkPendingActivationPersonnelList(currSupp
+								.getSupplierId());
+				if (applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					boolean hasActiveTransactions = SmApplicationUtil
 							.hasActiveTransactions(currSupp);
 					if (hasActiveTransactions) {
@@ -297,20 +301,24 @@ public class SmApplicationBackingBean extends
 				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
-
 				if (cannotProceedAlertMsg) {
 					throw new EpException(MessageConst.ERROR_722542);
 				}
 
-				if (applicationType.equalsIgnoreCase("N")) {
+				if (applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
 					smAppl.setSupplierType(getManagedBean()
 							.getNewSupplierType());
 				}
 				// else if (applicationType.equalsIgnoreCase("B")) {}
-				else if (applicationType.equalsIgnoreCase("R")
-						|| applicationType.equalsIgnoreCase("A")
-						|| applicationType.equalsIgnoreCase("B")
-						|| applicationType.equalsIgnoreCase("U")) {
+				else if (applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)
+						|| applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
+						|| applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
+						|| applicationType
+								.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 					cannotProceedAlertMsg = SmApplicationUtil
 							.validateBeforeProceed(currSupp.getSupplierId(),
 									applicationType);
