@@ -63,6 +63,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean updateTypeDisable;
 	private boolean chkItemZone;
 	private boolean chkItemPrice;
+	private boolean chkCancelPage;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -313,6 +314,12 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+	public boolean isChkCancelPage() {
+		return chkCancelPage;
+	}
+	public void setChkCancelPage(boolean chkCancelPage) {
+		this.chkCancelPage = chkCancelPage;
 	}
 	public String getAction() {
 		return action;
