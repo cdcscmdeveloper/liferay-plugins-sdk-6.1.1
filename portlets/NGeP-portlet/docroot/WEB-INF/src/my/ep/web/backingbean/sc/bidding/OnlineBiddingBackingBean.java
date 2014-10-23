@@ -29,6 +29,7 @@ import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -62,6 +63,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private Long selectedBidScheduleId;
 	private String recommendTypeItem = ParameterConst.RECOMMEND_TYPE_ITEM;
 	private String recommendTypePackage = ParameterConst.RECOMMEND_TYPE_PACKAGE;
+	
+	private Long pendingBidding = BidStatusConst.BID_PENDING_BIDDING;
+	private Long bidInProgress = BidStatusConst.BID_IN_PROGRESS;
+	private Long bidPaused = BidStatusConst.BID_PAUSED;
+	private Long bidCancelled = BidStatusConst.BID_CANCELLED;
+	private Long bidCompleted = BidStatusConst.BID_COMPLETED;
 
 	private String itemStartPriceTotal;
 	private String itemLastBidPriceTotal;
@@ -253,6 +260,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				+ hashSupplierId + "&bidScheduleId=" + selectedBidScheduleId);
 	}
 
+	
 	public void pollListener() {
 		log.info("pollListener - start");
 		getOnlineBidScheduleDetails(getScBidSchedule().getBidScheduleId(),
@@ -264,13 +272,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 						.equals(BidStatusConst.BID_PAUSED)) {
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
-		}
-
-		if (!getScBidSchedule().getPmStatus().getStatusId()
-				.equals(BidStatusConst.BID_COMPLETED)) {
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "supplierOnlineBidding.xhtml");
 		}
 
 		log.info("pollListener - end");
@@ -290,7 +291,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 			BiddingResDTO resDTO = biddingSO.retrieveCurrentBidDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				setScBidSchedule(resDTO.getScBidSchedule());
+				if(scBidSchedule.getPmStatus().getStatusId().equals(resDTO.getScBidSchedule().getPmStatus().getStatusId())){
+					setScBidSchedule(resDTO.getScBidSchedule());
+				}else {
+					FacesContext fc = FacesContext.getCurrentInstance();
+					fc.getApplication()
+							.getNavigationHandler()
+							.handleNavigation(fc, null,
+									QTConstants.ONLINE_BIDDING_MAIN_PAGE);
+				}
 				setPackageRanking(resDTO.getPackageRanking());
 				setScBidAction(resDTO.getScBidAction());
 				List<ScBidPrice> fetchedBidPrices = resDTO.getBidPrices();
@@ -847,6 +856,43 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	
+	
+	
+	/**
+	 * @return the pendingBidding
+	 */
+	public Long getPendingBidding() {
+		return pendingBidding;
+	}
+
+	/**
+	 * @return the bidInProgress
+	 */
+	public Long getBidInProgress() {
+		return bidInProgress;
+	}
+
+	/**
+	 * @return the bidPaused
+	 */
+	public Long getBidPaused() {
+		return bidPaused;
+	}
+
+	/**
+	 * @return the bidCancelled
+	 */
+	public Long getBidCancelled() {
+		return bidCancelled;
+	}
+
+	/**
+	 * @return the bidCompleted
+	 */
+	public Long getBidCompleted() {
+		return bidCompleted;
+	}
+
 	private Long durationCalculator(Date startDate, Date endDate) {
 
 		long durationInMills = endDate.getTime() - startDate.getTime();
@@ -856,5 +902,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		return time;
 	}
-
+	
+	
 }
