@@ -144,11 +144,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
-
-		if (ctBB == null) {
-			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		}
 	}
 
 	private FacesScopes getFacesScopes() {
@@ -302,7 +297,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		  ModuleCodeConst.CONTRACT_MANAGEMENT, docType,getManagedBean().getCtContract().getContractNo()));
 		initializeRemarks();
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(),
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getCtAgreement().getCtWorkflowStatus(), getManagedBean().getRemarkList(),
 				getManagedBean().getAttachmentList());
 	}
 
@@ -1083,7 +1078,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	private void initiateRemark(List<CtRemark> remarks) {
-		if (remarks.size() == 0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+		boolean ctWorkflowStatusMatch = false;
+		if(getManagedBean().getCtAgreement().getCtWorkflowStatus()!=null) {
+			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
+				if(getManagedBean().getCtAgreement().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if (remarks.size() == 0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));

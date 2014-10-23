@@ -193,11 +193,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	public AmendmentBackingBean(){
 		  if(this.getManagedBean().getAction() == null) 
 			   this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
-		  
-		  if(ctBackingBean == null){
-			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		  }
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -422,7 +417,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			  getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			  getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
 			  ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
-			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			  ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			  
 			  reqDTO = new ContractReqDTO();
 			  contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -842,7 +837,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	}
 	
 	private void initiateRemark(List<CtRemark> remarks) {
-		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+		
+		boolean ctWorkflowStatusMatch = false;
+		if(getManagedBean().getContractVer().getCtWorkflowStatus()!=null) {
+			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
+				if(getManagedBean().getContractVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}		
+		
+		if(remarks.size()==0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
