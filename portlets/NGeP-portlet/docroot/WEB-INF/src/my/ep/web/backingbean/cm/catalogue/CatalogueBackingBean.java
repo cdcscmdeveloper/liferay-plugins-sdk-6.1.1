@@ -1792,7 +1792,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		String tempDir = FacesContext.getCurrentInstance().getExternalContext()
 				.getRealPath("/excelUpload");
-		System.out.println("tempDir" + tempDir);
+		log.debug("tempDir" + tempDir);
 		// Read Excel document first
 		FileInputStream input_document = new FileInputStream(new File(tempDir
 				+ "/Catalogue-offline-template.xlsx"));
