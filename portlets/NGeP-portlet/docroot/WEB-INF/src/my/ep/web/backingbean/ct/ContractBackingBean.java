@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
@@ -64,10 +65,40 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		}
 	}
 	
+	@Deprecated
 	public void initializeRemarkAndAttachement(List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
 		
 		if(remarkList.size()==0 || !compareUserName(remarkList.get(0).getCreatedUser().getLoginId())) {
+			CtRemark remark = new CtRemark();
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
+			getManagedBean().setRemarkList(remarkList);
+			getManagedBean().getRemarkList().add(0, remark);
+		} else {
+			getManagedBean().setRemarkList(remarkList);
+		}
+		getManagedBean().setAttachmentList(attachmentList);
+	}
+	
+	public void initializeRemarkAndAttachement(CtWorkflowStatus ctWorkflowStatus, List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
+		FacesScopes facesScopes = new FacesScopes();
+		
+		boolean ctWorkflowStatusMatch = false;
+		if(ctWorkflowStatus!=null) {
+			if(remarkList.size()>0 && remarkList.get(0).getCtWorkflowStatus()!=null) {
+				if(ctWorkflowStatus.getWorkflowStatusId()==remarkList.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(remarkList.size()==0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
