@@ -92,7 +92,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
-
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
 public class RegistrationBackingBean extends BaseBackingBean<RegistrationManagedBean>{
@@ -327,7 +326,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.validateIDFormat(smPersonnel.getIdentificationNo(), personnelIDType.getParameterCode());
 		
 		//validate IC with MyIdentity
-		this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
+		if(personnelIDType.getParameterCode().equals(SupplierManagementConst.BASIC_IND_IDENT_TYPE)){
+			this.verifyWithMyIdentity(smPersonnel.getName(), smPersonnel.getIdentificationNo(), this.getManagedBean().getSmPermenantAdd().getPostcode());
+		}
 		
 		if(isExistEmailInPmUser(this.getManagedBean().getSmPersonnel().getEmail())){
 			System.out.println("In Pm User....");
@@ -1350,46 +1351,59 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 	public void pmStateDropdownValues() {
-		//List<SelectItem> itemList = new ArrayList<SelectItem>();
-		log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
+		List<PmState> stateLs = retrievePmStateList(countryId);
+		this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
 		
-		if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
-			if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
-					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-				
-				List<PmState> stateLs = retrievePmStateList(countryId);
-				this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
-				
-				for(PmState state : stateLs){
-					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-						if(state.getStateName().equalsIgnoreCase("SARAWAK")){
-							this.getManagedBean().getBusinessStateLs().add(state);
-							this.getManagedBean().getSmBusinessAdd().setPmState(state);
-							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
-							System.out.println("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
-						}
-					}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-						if(state.getStateName().equalsIgnoreCase("SABAH")){
-							this.getManagedBean().getBusinessStateLs().add(state);
-							this.getManagedBean().getSmBusinessAdd().setPmState(state);
-							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
-							System.out.println("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
+		if(this.getManagedBean().getSmSupp().getBusinessType() != null && !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase("")){
+			log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+
+//			if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+					
+					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+					this.getManagedBean().getSmBusinessAdd().setPmCountry(defaultCountry);
+					//this.getManagedBean().getSmBusinessAdd().set
+					
+					for(PmState state : stateLs){
+						if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+								this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+							if(state.getStateName().equalsIgnoreCase("SARAWAK")){
+								this.getManagedBean().getBusinessStateLs().add(state);
+								this.getManagedBean().getSmBusinessAdd().setPmState(state);
+								this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+								System.out.println("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
+							}
+						}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+								this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+							if(state.getStateName().equalsIgnoreCase("SABAH")){
+								this.getManagedBean().getBusinessStateLs().add(state);
+								this.getManagedBean().getSmBusinessAdd().setPmState(state);
+								this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+								System.out.println("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
+							}
 						}
 					}
+				}else{	
+					if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+						for(PmState state : stateLs){
+							if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
+								this.getManagedBean().getBusinessStateLs().add(state);
+							}
+						}
+					}else{
+						this.getManagedBean().setBusinessStateLs(stateLs);
+					}
 				}
-			}else{
-				this.getManagedBean().setBusinessStateLs(retrievePmStateList(countryId));
 			}
-		}
-			
-/*		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+
+
+		/*		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
 				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-			
+
 		}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
 				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
 
