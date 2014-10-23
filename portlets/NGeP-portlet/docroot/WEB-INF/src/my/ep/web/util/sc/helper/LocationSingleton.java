@@ -2242,4 +2242,238 @@ public class LocationSingleton {
 
 		return mainNode;
 	}
+	
+	/**
+	 * 
+	 * 
+	 * @param zone
+	 * @param listStates
+	 * @param listDistricts
+	 * @param listDivisions
+	 * @param listCities
+	 * @param boolean
+	 * @param locClass
+	 * @return
+	 */
+	public <LOCATION_CLASS extends TplSpecLoc> TreeNode buildTreeWithDisabledChilds(
+			TplSpecZoneDtl zone, List<PmState> listStates,
+			List<PmDistrict> listDistricts, List<PmDivision> listDivisions,
+			List<PmCity> listCities, boolean disable, Class<LOCATION_CLASS> locClass) {
+		TreeNode rootLocationTree = new DefaultTreeNode(QTConstants.NODE_ROOT,
+				null);
+		try {
+			Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(
+					listDistricts, listCities);
+
+			Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = getUniqueStatesDivisionsDistrictsCities(
+					listDistricts, listCities);
+			Map<PmState, List<PmDivision>> mapStatesDivision = getUniqueStatesDivision(listDivisions);
+
+			TreeNode zoneNode = null;
+			if (zone != null) {
+				zoneNode = new DefaultTreeNode("zone", zone, rootLocationTree);
+			}
+
+			if (listStates != null && listStates.size() > 0) {
+				for (PmState state : listStates) {
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+
+					TreeNode stateNode = null;
+					if (zoneNode != null) {
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation)
+									.setTplSpecZoneDtl(zone);
+						}
+
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, zoneNode);
+						stateNode.setSelectable(disable);
+					} else {
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, rootLocationTree);
+						stateNode.setSelectable(disable);
+					}
+				}
+			}
+			Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+			if (statesDivisionKeySet != null && !statesDivisionKeySet.isEmpty()) {
+				for (PmState state : statesDivisionKeySet) {
+					// LocationDTO stateLocation = new LocationDTO(state);
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					TreeNode stateNode = null;
+					if (zoneNode != null) {
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation)
+									.setTplSpecZoneDtl(zone);
+						}
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, zoneNode);
+						stateNode.setSelectable(disable);
+					} else {
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, rootLocationTree);
+						stateNode.setSelectable(disable);
+					}
+					
+					List<PmDivision> divisions = mapStatesDivision.get(state);
+					if (divisions != null && !divisions.isEmpty()) {
+						for (PmDivision division : divisions) {
+							LOCATION_CLASS divisionLocation = locClass
+									.newInstance();
+							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
+
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) divisionLocation)
+										.setTplSpecZoneDtl(zone);
+							}
+
+							TreeNode divisionNode = new DefaultTreeNode(
+									QTConstants.NODE_DIVISION,
+									divisionLocation, stateNode);
+							divisionNode.setSelectable(disable);
+						}
+					}
+				}
+			}
+			// build zone - state - district - city
+			Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
+					.keySet();
+			if (statesDistrictsCitiesKeySet != null
+					&& !statesDistrictsCitiesKeySet.isEmpty()) {
+				for (PmState state : statesDistrictsCitiesKeySet) {
+					// LocationDTO stateLocation = new LocationDTO(state);
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					TreeNode stateNode = null;
+					if (zoneNode != null) {
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation)
+									.setTplSpecZoneDtl(zone);
+						}
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, zoneNode);
+						stateNode.setSelectable(disable);
+					} else {
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, rootLocationTree);
+						stateNode.setSelectable(disable);
+					}
+
+					// TreeNode stateNode = new
+					// DefaultTreeNode(QTConstants.NODE_STATE,stateLocation,
+					// zoneNode);
+					Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
+							.get(state);
+					Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+							.keySet();
+					if (districtsCitiesKeySet != null
+							&& !districtsCitiesKeySet.isEmpty()) {
+						for (PmDistrict district : districtsCitiesKeySet) {
+							// LocationDTO districtLocation = new
+							// LocationDTO(district);
+							LOCATION_CLASS districtLocation = locClass
+									.newInstance();
+							districtLocation.setPmDistrict(district);
+							districtLocation.setPmState(state);
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) districtLocation)
+										.setTplSpecZoneDtl(zone);
+							}
+							TreeNode districtNode = new DefaultTreeNode(
+									QTConstants.NODE_DISTRICT,
+									districtLocation, stateNode);
+							districtNode.setSelectable(disable);
+						}
+					}
+				}
+			}
+			// build zone - state - division - city
+			Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
+					.keySet();
+			if (statesDivisionsDistrictsCitiesKeySet != null
+					&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+				for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+					// LocationDTO stateLocation = new LocationDTO(state);
+					LOCATION_CLASS stateLocation = locClass.newInstance();
+					stateLocation.setPmState(state);
+					TreeNode stateNode = null;
+					if (zoneNode != null) {
+						if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+							((TplSpecZoneLoc) stateLocation)
+									.setTplSpecZoneDtl(zone);
+						}
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, zoneNode);
+						stateNode.setSelectable(disable);
+					} else {
+						stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+								stateLocation, rootLocationTree);
+						stateNode.setSelectable(disable);
+					}
+					
+					Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+							.get(state);
+					Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+							.keySet();
+					if (divisionsDistrictsCitiesKeySet != null
+							&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
+						for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+							LOCATION_CLASS divisionLocation = locClass
+									.newInstance();
+							divisionLocation.setPmDivision(division);
+							divisionLocation.setPmState(state);
+							if (locClass.isAssignableFrom(TplSpecZoneLoc.class)) {
+								((TplSpecZoneLoc) divisionLocation)
+										.setTplSpecZoneDtl(zone);
+							}
+							TreeNode divisionNode = new DefaultTreeNode(
+									QTConstants.NODE_DIVISION,
+									divisionLocation, stateNode);
+							divisionNode.setSelectable(disable);
+							Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
+									.get(division);
+							Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+									.keySet();
+							if (districtsCitiesKeySet != null
+									&& !districtsCitiesKeySet.isEmpty()) {
+								for (PmDistrict district : districtsCitiesKeySet) {
+									LOCATION_CLASS districtLocation = locClass
+											.newInstance();
+									districtLocation.setPmDistrict(district);
+									districtLocation.setPmState(state);
+									districtLocation.setPmDivision(division);
+									if (locClass
+											.isAssignableFrom(TplSpecZoneLoc.class)) {
+										((TplSpecZoneLoc) districtLocation)
+												.setTplSpecZoneDtl(zone);
+									}
+									TreeNode districtNode = new DefaultTreeNode(
+											QTConstants.NODE_DISTRICT,
+											districtLocation, divisionNode);
+									districtNode.setSelectable(disable);
+									
+								}
+							}
+						}
+					}
+				}
+			}
+		} catch (InstantiationException e) {
+			throw new EpException(e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new EpException(e.getMessage());
+		}
+
+		return rootLocationTree;
+	}
+	
+	
+	
+	
+	
+	
+	
 }
