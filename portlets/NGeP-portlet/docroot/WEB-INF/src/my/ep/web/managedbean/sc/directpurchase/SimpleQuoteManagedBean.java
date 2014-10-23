@@ -211,6 +211,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 				if(getScQuote().isPanel()) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("panel",SearchOperator.OPERATOR_EQUALS.value(),1));
 				}
+				else {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("panel",SearchOperator.OPERATOR_NOT_EQUALS.value(),1));
+				}
 
 				if (getSearchFromCreatedDate() != null
 						&& getSearchToCreatedDate() != null) {
