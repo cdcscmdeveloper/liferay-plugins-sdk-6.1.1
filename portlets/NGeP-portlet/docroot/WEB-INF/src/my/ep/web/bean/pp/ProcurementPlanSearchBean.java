@@ -1,133 +1,124 @@
 package my.ep.web.bean.pp;
 
-import java.util.Date;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmParameter;
 
+/**
+ * Search Bean for Procurement Plan 
+ * 
+ * @author RAIN POH
+ * @since 20/10/2013
+ *
+ */
 public class ProcurementPlanSearchBean {
 	
-	private String status;
+	private Long status;
 	
-	private String planNo;
+	private String year;
 	
-	private String planDesc;
+	private String ptj;
 	
-	private String planType;
+	private PmOrgProfile ministry;
 	
-	private String procurementMode;
+	private PmParameter planType;
 	
-	private Date fromDate;
-	
-	private Date toDate;
-
-	
-	/**
-	 * @return the planType
-	 */
-	public String getPlanType() {
-		return planType;
-	}
-
-	/**
-	 * @param planType the planType to set
-	 */
-	public void setPlanType(String planType) {
-		this.planType = planType;
-	}
+	private PmParameter votType;
 
 	/**
 	 * @return the status
 	 */
-	public String getStatus() {
+	public Long getStatus() {
 		return status;
 	}
 
 	/**
 	 * @param status the status to set
 	 */
-	public void setStatus(String status) {
+	public void setStatus(Long status) {
 		this.status = status;
 	}
 
 	/**
-	 * @return the planNo
+	 * @return the year
 	 */
-	public String getPlanNo() {
-		return planNo;
+	public String getYear() {
+		return year;
 	}
 
 	/**
-	 * @param planNo the planNo to set
+	 * @param year the year to set
 	 */
-	public void setPlanNo(String planNo) {
-		this.planNo = planNo;
+	public void setYear(String year) {
+		this.year = year;
 	}
 
 	/**
-	 * @return the fromDate
+	 * @return the ptj
 	 */
-	public Date getFromDate() {
-		return fromDate;
+	public String getPtj() {
+		return ptj;
 	}
 
 	/**
-	 * @param fromDate the fromDate to set
+	 * @param ptj the ptj to set
 	 */
-	public void setFromDate(Date fromDate) {
-		this.fromDate = fromDate;
+	public void setPtj(String ptj) {
+		this.ptj = ptj;
 	}
 
 	/**
-	 * @return the toDate
+	 * @return the ministry
 	 */
-	public Date getToDate() {
-		return toDate;
+	public PmOrgProfile getMinistry() {
+		if(ministry==null)
+			ministry = new PmOrgProfile();
+		return ministry;
 	}
 
 	/**
-	 * @param toDate the toDate to set
+	 * @param ministry the ministry to set
 	 */
-	public void setToDate(Date toDate) {
-		this.toDate = toDate;
+	public void setMinistry(PmOrgProfile ministry) {
+		this.ministry = ministry;
 	}
 
 	/**
-	 * @return the planDesc
+	 * @return the planType
 	 */
-	public String getPlanDesc() {
-		return planDesc;
+	public PmParameter getPlanType() {
+		if(planType==null)
+			planType = new PmParameter();
+		return planType;
 	}
 
 	/**
-	 * @param planDesc the planDesc to set
+	 * @param planType the planType to set
 	 */
-	public void setPlanDesc(String planDesc) {
-		this.planDesc = planDesc;
+	public void setPlanType(PmParameter planType) {
+		this.planType = planType;
 	}
 
 	/**
-	 * @return the procurementMode
+	 * @return the votType
 	 */
-	public String getProcurementMode() {
-		return procurementMode;
+	public PmParameter getVotType() {
+		if(votType==null)
+			votType = new PmParameter();
+		return votType;
 	}
 
 	/**
-	 * @param procurementMode the procurementMode to set
+	 * @param votType the votType to set
 	 */
-	public void setProcurementMode(String procurementMode) {
-		this.procurementMode = procurementMode;
+	public void setVotType(PmParameter votType) {
+		this.votType = votType;
 	}
 	
-	/**
-	 * clear the bean values
-	 */
-	public void clear(){
-		status = null;
-		planNo = null;
-		planDesc = null;
-		procurementMode = null;
-		fromDate = null;
-		toDate = null;
-	}
+	
+	
+
+
+
 	
 	
 }
