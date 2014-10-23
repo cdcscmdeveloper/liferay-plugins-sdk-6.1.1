@@ -1780,6 +1780,20 @@ table.ppRmkTable td {
 	padding: 2px;
 }
 
+table.ppRmkTable th {
+	vertical-align: top;
+	padding: 2px;
+	text-align: right;
+}
+
+table.ppRmkTable td {
+	border: medium none;
+	vertical-align: top;
+	padding: 2px;
+}
+
+
+
 table.ppOneTable,.ppTwoTable,.ppRmkTable {
 	width: 100%;
 }
