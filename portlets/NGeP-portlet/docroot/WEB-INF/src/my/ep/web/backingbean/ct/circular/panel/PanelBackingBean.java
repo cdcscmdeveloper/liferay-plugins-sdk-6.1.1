@@ -268,6 +268,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
 		     initializeRemarks();
 		     ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+		     ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 		     ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	    }
 	

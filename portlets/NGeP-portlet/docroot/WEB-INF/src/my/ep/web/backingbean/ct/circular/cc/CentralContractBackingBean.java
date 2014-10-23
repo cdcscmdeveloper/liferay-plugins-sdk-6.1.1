@@ -262,6 +262,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	}
 	
@@ -535,16 +536,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 			}
-			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
-				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
-			}
-			else {
-				for (CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()) {
-					if(circularContract.getCtCircularItems().size() == 0) {
-						throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract Item List"});
-					}
-				}
-			}
 			
 			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE))
 			       validateCircular(action);
@@ -628,6 +619,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 			}*/
+		
+			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+				throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract List"});
+			}
+			else {
+				for (CtCircularContract circularContract: getManagedBean().getCircularVer().getCtCircularContracts()) {
+					if(circularContract.getCtCircularItems().size() == 0) {
+						throw new EpException(MessageConst.ERROR_100023, new String[]{"Contract Item List"});
+					}
+				}
+			}
 			
 			if(getManagedBean().getApproverModel().getTarget().size()==0) {
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Selected approver(s)"});
@@ -718,9 +720,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
+				getManagedBean().setViewContract(true);
 				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(false);
-				getManagedBean().setViewContract(true);
 				getManagedBean().setOutComes(new String[]{});
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
