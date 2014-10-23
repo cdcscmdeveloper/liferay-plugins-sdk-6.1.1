@@ -1163,7 +1163,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
     		procurementMode.append(getParameterDesc(qt.getProcurementMode()));
     	}
     	context.put("procurementMode", procurementMode);
-    	context.put("title", qt.getQtTitle());
+    	String title = qt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+    	context.put("title", title.replaceAll("&", "&#38;"));
     	
     	String estimatedPrice = "";
     	if (qt.getEstimatedAmount() != null) {
@@ -1181,7 +1185,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		//CommonUtils commonUtils = new CommonUtils();
     	VelocityContext context = new VelocityContext();
     	
-    	context.put("title", qt.getQtTitle());
+    	String title = qt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+    	context.put("title", title.replaceAll("&", "&#38;"));
     	context.put("qtNo", qt.getQtNo());
 
     	DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_INTEGRITY_PACT_SAMPLE, context, new FileOutputStream(getActualFilePath(attachment)));
@@ -1197,7 +1205,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
     	context.put("ministry", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
     	context.put("agency", qt.getPmOrgProfile().getOrgName());
-    	context.put("qtTitle", qt.getQtTitle());
+    	String title = qt.getQtTitle();
+		if (title == null) {
+			title = "";
+		}
+    	context.put("qtTitle", title.replaceAll("&", "&#38;"));
     	
     	StringBuilder openType = new StringBuilder();
     	if (openType != null) {
