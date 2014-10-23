@@ -271,7 +271,8 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
-		}
+			
+		}  
 		getManagedBean()
 				.setDefPmCountry(
 						SmCommonUtil
@@ -286,7 +287,15 @@ public class SmApplicationBackingBean extends
 				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 
 				boolean cannotProceedAlertMsg = false;
-
+				if (applicationType.equalsIgnoreCase("C")) {
+					
+					System.out.println(">>>>>>>>>>>>>>>> Supp: " + currSupp);
+					boolean hasActiveTransactions = SmApplicationUtil.hasActiveTransactions(currSupp);
+					
+					if(hasActiveTransactions) {
+						throw new EpException(MessageConst.ERROR_722542);
+					}
+				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 
