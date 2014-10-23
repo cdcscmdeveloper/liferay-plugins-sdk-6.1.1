@@ -2306,7 +2306,7 @@ public void ConstructSideTabMenu(){
 	}
 	
 	public String gotoTerminateHistoryPage() {
-		Long contractVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractVerId"));
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 		
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
