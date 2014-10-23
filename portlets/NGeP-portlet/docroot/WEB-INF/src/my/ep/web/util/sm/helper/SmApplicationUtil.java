@@ -245,6 +245,9 @@ public class SmApplicationUtil {
 				log.debug("**** No valid supplier record found for this user ******");
 				throw new EpException(MessageConst.ERROR_721018);
 			}
+			if (smSupp.getSupplierId() == null) {
+				throw new EpException(MessageConst.ERROR_721018);
+			}
 			return smSupp;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1524,6 +1527,23 @@ public class SmApplicationUtil {
 		return poLogin;
 	}
 
+	public static boolean checkPendingActivationPersonnelList(Long supplierId) {
+		boolean result = false;
+		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IPersonnelSO.class);
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmSupplierId(supplierId);
+		PersonnelResDTO resDTO = new PersonnelResDTO();
+		resDTO = smPersonnelSO
+				.retrievePersonnelPendingActivationBySupplierId(reqDTO);
+		List<SmPersonnel> smPersonnelList = resDTO.getSmPersonnelList();
+		if (smPersonnelList != null && !smPersonnelList.isEmpty()) {
+			result = true;
+			throw new EpException(MessageConst.ERROR_722567);
+		}
+		return result;
+	}
+
 	public static boolean validateBeforeProceed(Long supplierId,
 			String applicationType) {
 		boolean result = false;
@@ -1535,6 +1555,17 @@ public class SmApplicationUtil {
 		resDto = mofRegistrationSO.retrieveSupplierProfile(reqDto);
 		if (resDto.getSmSupplier() != null) {
 			SmSupplier smSupplier = resDto.getSmSupplier();
+			if (smSupplier.getSmAppl() != null
+					&& smSupplier
+							.getSmAppl()
+							.getSupplierType()
+							.equalsIgnoreCase(
+									SupplierManagementConst.STYPE_CONSULTANT)
+					&& applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+				result = true;
+				throw new EpException(MessageConst.ERROR_722566);
+			}
 			List<SmMofAccount> accounts = smSupplier.getSmMofAccounts();
 			for (SmMofAccount account : accounts) {
 				if (account.getSupplierType().equalsIgnoreCase(
@@ -1546,14 +1577,16 @@ public class SmApplicationUtil {
 					long diff = account.getExpDate().getTime()
 							- currentDate.getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
-					if (!applicationType.equalsIgnoreCase("R")) {
+					if (!applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 						Date today = new Date();
 						if (!(today.compareTo(account.getExpDate()) < 0)) {
 							result = true;
 							throw new EpException(MessageConst.ERROR_722564);
 						}
 					}
-					if (applicationType.equalsIgnoreCase("R")) {
+					if (applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
 						if (diffDays > 90) {
 							result = true;
 							throw new EpException(MessageConst.ERROR_722501);
@@ -1561,7 +1594,8 @@ public class SmApplicationUtil {
 							result = true;
 							throw new EpException(MessageConst.ERROR_722502);
 						}
-					} else if (applicationType.equalsIgnoreCase("A")
+					} else if (applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_APPLCATCODES)
 							&& (diffDays >= 0 && diffDays < 90)) {
 						result = true;
 						log.debug("***************MOF Account Expiry near for Ac No.: "
@@ -1571,7 +1605,8 @@ public class SmApplicationUtil {
 								+ "\nDiff Days:"
 								+ diffDays);
 						throw new EpException(MessageConst.ERROR_722503);
-					} else if (applicationType.equalsIgnoreCase("B")
+					} else if (applicationType
+							.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)
 							&& smSupplier.isBumi()) {
 						result = true;
 						throw new EpException(MessageConst.ERROR_722504);
@@ -1583,18 +1618,19 @@ public class SmApplicationUtil {
 	}
 
 	public static boolean hasActiveTransactions(SmSupplier smSupplier) {
-		
+
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
-		
+
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		
-		MofRegistrationResDTO resDTO = mofRegistrationSO.hasActiveTransactionsForSupplier(reqDTO);
-		
+
+		MofRegistrationResDTO resDTO = mofRegistrationSO
+				.hasActiveTransactionsForSupplier(reqDTO);
+
 		return resDTO.isHasActiveTransaction();
 	}
-	
+
 	public static boolean checkActiveSmApplForSupp(SmSupplier smSupplier) {
 		boolean activeSmAppl = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
