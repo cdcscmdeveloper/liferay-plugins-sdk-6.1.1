@@ -752,5 +752,27 @@
 			</list>
 		</property>
 	</bean>
-	
+	<bean id="PM_GOSO" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="soId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.object.PmSoDAO" />
+		<property name="searchMethod" value="retrieveGOSOList" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="pmGo.goCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.go.code" />
+				</bean>
+		
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="soCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.so.code" />
+				</bean>
+			</list>
+		</property>
+	</bean>
 </beans>
