@@ -1582,6 +1582,19 @@ public class SmApplicationUtil {
 		return result;
 	}
 
+	public static boolean hasActiveTransactions(SmSupplier smSupplier) {
+		
+		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(smSupplier.getSupplierId());
+		
+		MofRegistrationResDTO resDTO = mofRegistrationSO.hasActiveTransactionsForSupplier(reqDTO);
+		
+		return resDTO.isHasActiveTransaction();
+	}
+	
 	public static boolean checkActiveSmApplForSupp(SmSupplier smSupplier) {
 		boolean activeSmAppl = false;
 		IMofRegistrationSO mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
