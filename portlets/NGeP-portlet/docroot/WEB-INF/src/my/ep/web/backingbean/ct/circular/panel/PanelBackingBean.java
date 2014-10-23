@@ -100,6 +100,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -286,7 +287,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			         HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			         String taskId = originalServletRequest.getParameter("taskId");
 			         if(taskId==null) {
-				           if(isPanelAdmin() || isCentralContractAdmin()) {
+				           if((isPanelAdmin() || isCentralContractAdmin()) && !getManagedBean().isChkCancelPage()) {
 					            getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SUBMIT});	
 				           }
 				        return;
@@ -348,11 +349,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	   }
 	
 	   public String backAction() {
-		   if(getManagedBean().isChkCancelPage()){
-			     getManagedBean().setChkCancelPage(false);
-			     return "cancelCircularBase.xhtml?faces-redirect=true";
-	       } else {
-		         return "search.xhtml?faces-redirect=true";
+		   if(getManagedBean().isChkCancelPage()) {
+			   getManagedBean().setChkCancelPage(false);
+			   return "cancelCircularBase.xhtml?faces-redirect=true";
+		   }
+		   else {
+			   return "search.xhtml?faces-redirect=true";
 		   }
 	   }
 	
@@ -1173,21 +1175,39 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
-			
+			String docType = this.getManagedBean().getCircularDocType();
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircularVerId(circularVerId);
 			CircularResDTO resDTO = null;
-			getManagedBean().setSelectionOfZone(false);
-			getManagedBean().setSelectedPanelItems(null);
-			getManagedBean().setSelectedPanelZone(null);
-			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setAction(action);
-	       getManagedBean().setUpdateAction(false);
-	       getManagedBean().setChkCancelPage(true);
-			resDTO = circularSO.retrieveCircularVerById(reqDTO);					
-			setPanelCircularVar(resDTO);
-			return "circularBase.xhtml?faces-redirect=true";
-		
+			
+			if(docType.equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+				CentralContractBackingBean ccBB = new CentralContractBackingBean();
+				
+				ccBB.getManagedBean().setSelectedTabIndex(0);
+				ccBB.getManagedBean().setAction(action);
+				ccBB.getManagedBean().setUpdateAction(false);
+				ccBB.getManagedBean().setViewContract(true);
+				ccBB.getManagedBean().setOutComes(new String[]{});
+				ccBB.getManagedBean().setChkCancelPage(true);
+				resDTO = circularSO.retrieveCircularVerById(reqDTO);				
+				ccBB.setContractCircularVar(resDTO);
+				return "/xhtml/ct/circular/centralcontract/circularBase.xhtmll?faces-redirect=true";
+			}
+			else {
+				PanelBackingBean panelBB = new PanelBackingBean();
+				
+				panelBB.getManagedBean().setSelectionOfZone(false);
+				panelBB.getManagedBean().setSelectedPanelItems(null);
+				panelBB.getManagedBean().setSelectedPanelZone(null);
+				panelBB.getManagedBean().setSelectedTabIndex(0);
+				panelBB.getManagedBean().setAction(action);				
+				panelBB.getManagedBean().setUpdateAction(false);
+				panelBB.getManagedBean().setViewContract(true);
+				panelBB. getManagedBean().setOutComes(new String[]{});	
+				panelBB.getManagedBean().setChkCancelPage(true);
+				panelBB.setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+				return "/xhtml/ct/circular/panel/circularBase.xhtml?faces-redirect=true";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

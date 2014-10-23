@@ -936,7 +936,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	  }
    
    public String backAction() {
-		return "search.xhtml?faces-redirect=true";
+	   if(getManagedBean().isChkCancelPage()) {
+		   getManagedBean().setChkCancelPage(false);
+		   return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
+	   }
+	   else {
+		   return "search.xhtml?faces-redirect=true";
+	   }
 	}
    
    public void searchReset(){
