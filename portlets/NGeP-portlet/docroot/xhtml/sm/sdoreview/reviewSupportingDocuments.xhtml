@@ -257,14 +257,16 @@
 			
 			<p:dataTable var="suppDoc" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="dtSuppDoc">
 				<p:column style="width:85%; white-space:normal" headerText="Document Name">  
-		            
-		            <h:outputText value="#{suppDoc.pmDocument.docName}" rendered="#{empty suppDoc.smApplDocFiles}" /> 
-		            <p:commandLink value="#{suppDoc.pmDocument.docName}" rendered="#{!empty suppDoc.smApplDocFiles}"  ajax="false"
+		            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
+		        </p:column>
+				
+				<p:column>
+				<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{!empty suppDoc.smApplDocFiles}"  ajax="false"
 		            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
 		           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
-		            </p:commandLink> 
-		        </p:column>
-
+		        </p:commandLink> 
+		       </p:column>
+				
 				<p:column headerText="#{lbl['lbl.sm.supportingdoc.isreceive']}">
 					<p:selectBooleanCheckbox value="#{suppDoc.received}" disabled="#{!empty suppDoc.smApplDocFiles}">
 						<p:ajax event="change" update=":form:btnInquiryId,:form:btnSubmitId" listener="#{sdoReviewBackingBean.receiveStatusChange(suppDoc)}"/>
