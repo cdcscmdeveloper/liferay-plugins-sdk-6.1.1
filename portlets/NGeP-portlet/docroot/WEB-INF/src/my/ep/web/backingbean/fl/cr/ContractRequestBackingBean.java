@@ -1127,8 +1127,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(new BigDecimal(0));
 					ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);//get zoneId
-					newItem.setZoneId(itemResDTO.getContractZoneId());
-					newItem.setUnitPrice(itemResDTO.getItemPrice());
+					if(itemResDTO.getContractZoneId() == null){
+						newItem.setZoneId(itemResDTO.getContractZoneId());
+						newItem.setUnitPrice(new BigDecimal(0));
+						throw new EpException("This address is not within the zone.");
+					}else{
+						newItem.setZoneId(itemResDTO.getContractZoneId());
+						newItem.setUnitPrice(itemResDTO.getItemPrice());
+					}
+					
 				}
 				itemsList.add(newItem);
 			}
@@ -1644,7 +1651,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						if(flItemAddr.getZoneId() == null){
 							oriItemAddr.setOrderedQty(new BigDecimal(0));
 							flItemAddr.setOrderedQty(new BigDecimal(0));
-							throw new EpException("this item is not within the zone.");
+							throw new EpException("This address is not within the zone.");
 						}
 					}
 				}
