@@ -257,8 +257,8 @@ public class SmApplicationBackingBean extends
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
-			getManagedBean().setCertBodyLs(
-					SmApplicationUtil.retrievePmCertBodyList());
+			// getManagedBean().setCertBodyLs(
+			// SmApplicationUtil.retrievePmCertBodyList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
 			getManagedBean().setSupplierParentCatList(
@@ -1210,7 +1210,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignDocVerified(AjaxBehaviorEvent e) {
-		System.out.println(" *******Docs verified******88");
+		log.info(" *******Docs verified******88");
 	}
 
 	public void assignApplnCategoryType() {
@@ -1489,6 +1489,7 @@ public class SmApplicationBackingBean extends
 
 	public void assignSelCert(SmSupplierCert certBean) {
 		getManagedBean().setSelectedCert(certBean);
+		assignCertBodyList();
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
 	}
@@ -1505,8 +1506,25 @@ public class SmApplicationBackingBean extends
 		cert.setRevNo(1);
 		getManagedBean().setSelectedCert(cert);
 		cert.setSmAppl(getManagedBean().getSmAppl());
+		getManagedBean().setCertBodyLs(new ArrayList<PmCertBody>());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("certDialog.show()");
+	}
+
+	public void assignCertBodyList() {
+		if (getManagedBean().getSelectedCert() != null
+				&& getManagedBean().getSelectedCert().getCertTypeId() != null) {
+			PmParameter param = SmApplicationUtil
+					.retrievePmParameterById(getManagedBean().getSelectedCert()
+							.getCertTypeId().longValue());
+			if (param != null) {
+				getManagedBean().setCertBodyLs(
+						SmApplicationUtil.retrievePmCertBodyList(param
+								.getParameterCode()));
+
+			}
+
+		}
 	}
 
 	public void deleteSelectedCerts() {
@@ -3322,7 +3340,7 @@ public class SmApplicationBackingBean extends
 	public void assignPersonNationality(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSelectedShareHolder().getPmCountry()
 				.getCountryId() != null) {
-			System.out.println(" **** Selected Country Id ***** "
+			log.info(" **** Selected Country Id ***** "
 					+ getManagedBean().getSelectedShareHolder().getPmCountry()
 							.getCountryId());
 			PmCountry cntry = new PmCountry();
@@ -3333,7 +3351,7 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setPmCountry(cntry);
 			}
 
-			System.out.println(" **** Selected Country Id ***** "
+			log.info(" **** Selected Country Id ***** "
 					+ getManagedBean().getSelectedShareHolder().getPmCountry()
 							.getCountryCode());
 		}

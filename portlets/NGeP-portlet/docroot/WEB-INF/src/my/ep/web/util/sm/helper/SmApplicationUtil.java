@@ -37,6 +37,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
@@ -1655,10 +1656,15 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static List<PmCertBody> retrievePmCertBodyList() {
+	public static List<PmCertBody> retrievePmCertBodyList(String certType) {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
-		CertBodyResDTO resDTO = reqSO.retrieveCertifiedBodyList();
+		CertBodyResDTO resDTO = null;
+		if (certType.equalsIgnoreCase("GLP")) {
+			resDTO = reqSO.retrieveGlpBodyList(new CertBodyReqDTO());
+		} else {
+			resDTO = reqSO.retrieveNonGlpBodyList(new CertBodyReqDTO());
+		}
 		if (resDTO != null) {
 			return resDTO.getCertBodyList();
 		} else {
