@@ -1,0 +1,187 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+ 		
+		         		
+ 
+  <div>						 
+					 <table style="width: 100%;">
+						  <tr>
+						    <td width="100%">
+							    <h:panelGrid id="flReportCriteria" columns="4" style="width:85%;">
+							    		
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flItemTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.itemType']}" style="margin-top:5px;width:160px;margin-left:-100px;"/>									
+									<p:selectOneMenu value="#{reportBackingBean.flItmType}" style="margin-top:5px;width:150px;">
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>																					
+									</p:selectOneMenu>
+									</c:if>	
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flItemNameView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flItemName}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>											
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPtjView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />
+									<p:inputText value="#{reportBackingBean.flPtj}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.contractNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flContractNo}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSstView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flSst}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flJabatanView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.jabatan']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flJabatan}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMinistryView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flMinistry}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flSupplier}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flStatus}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDurationView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.duration']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flDuration}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRecievingOfficerView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.recievingOfficer']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flRecievingOfficer}" style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryAddressView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.deliveryAddress']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flDeliveryAddress}"  style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRecNoteNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.flRecNoteNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flRecNoteNo}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.contractType']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flContractType}" style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRequisitionerView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flRequisitioner}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flMtoContractView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.mtoContract']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flMtoContract}"  style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flInvoiceNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.invoiceNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flInvoiceNo}" style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeductionTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.deductionType']}" style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flDeductionType}"  style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flCrNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.crNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flCrNo}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flApproverNameView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flApproverName}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDocumentTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.documentType']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flDocumentType}"  style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flCriteriaView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.criteria']}" style="margin-top:5px;width:160px;" />
+									<p:inputText value="#{reportBackingBean.flCriteria}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flScoringView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.scoring']}" style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flScoring}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>
+									
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractOrderView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.flContractOrder']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flContractOrder}" style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flContractRequestView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.flContractRequest']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flContractRequest}"  style="margin-top:5px;width:290px;" >									
+									</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPurchaseOrderNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.flPurchaseOrderNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPurchaseOrderNo}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPkpNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPkpNo}" style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeliveryOrderNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.deliveryOrderNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flDeliveryOrderNo}" style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flItemCodeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.itemCode']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flItemCode}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPoAmountView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.poAmount']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPoAmount}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPrNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.prNo']}" style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPrNo}"  style="margin-top:5px;width:290px;" >									
+					 				</p:inputText>
+									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPmoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.pmo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPmo}"  style="margin-top:5px;width:290px;">									
+					 				</p:inputText>
+									</c:if>																								 			
+							    </h:panelGrid>							    
+						    </td>
+						  </tr>						   
+					</table>
+					 </div>	      
+</ui:composition>

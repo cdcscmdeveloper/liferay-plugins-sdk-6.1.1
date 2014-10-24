@@ -1,16 +1,40 @@
 package my.ep.web.bean.report;
 
 
-import java.util.Date;
-
+import java.util.ArrayList;
+import java.util.List;
+import javax.faces.model.SelectItem;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.constant.report.ReportConst;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * @Author Jangari Kondal Reddy
  */
 public class ReportsGenerateBean {
 	
-		private boolean itemTypeView = false;
+	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
+	
+	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
+	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
+	private boolean fromDateView = false;
+	private boolean toDateView = false;
+		/*private boolean itemTypeView = false;
 		private boolean itemStatusView = false;
 		private boolean unspscCodeView = false;
 		private boolean unspscTitleView = false;
@@ -24,92 +48,123 @@ public class ReportsGenerateBean {
 		private boolean itemCategoryView = false;
 		private boolean itemNameView = false;
 		private boolean basicRegView = false;
-		private boolean mofRegView = false;	
-		/*FL Start*/
-		private boolean ptjView = false;
-		private boolean contractNoView = false;
-		private boolean sstView = false;
-		private boolean jabatanView = false;
-		private boolean ministryView = false;
-		private boolean supplierView = false;	
-		private boolean statusView = false;
-		private boolean durationView = false;
-		private boolean recievingOfficerView = false;
-		private boolean deliveryAddressView = false;
-		private boolean flRecNoteNoView = false;
-		private boolean contractTypeView = false;
-		private boolean requisitionerView = false;
-		private boolean mtoContractView = false;
-		private boolean invoiceNoView = false;
-		private boolean deductionTypeView = false;
-		private boolean crNoView = false;
-		private boolean approverNameView = false;
-		private boolean documentTypeView = false;
-		private boolean criteriaView = false;
-		private boolean scoringView = false;
-		private boolean pkpNoView = false;
-		private boolean deliveryOrderNoView = false;	
-		private boolean itemCodeView = false;
-		private boolean poAmountView = false;
-		private boolean prNoView = false;
-		private boolean pmoView = false;
-		/*FL end*/
-		/*SM start*/
-		private boolean supportingDocumentView = false;	
-		private boolean docStatusView = false;
-		private boolean SuppDocStatusView = false;
-		private boolean registrationNoView = false;
-		private boolean ePNoView = false;
-		private boolean applicationNoView = false;
-		private boolean zoneView = false;
-		private boolean supplierTypeView = false;
-		private boolean mofRegNoView = false;
-		private boolean mofRegNoFromView = false;
-		private boolean mofRegNoToView = false;
-		private boolean registrationStatusView = false;
-		private boolean capitalNaccumView = false;
-		private boolean paidUpCapitalNaccumShareView = false;
-		private boolean categoryView = false;
-		private boolean noOfCategoryView = false;
-		private boolean mainCategoryView = false;
-		private boolean subCategoryView = false;
-		private boolean subCategoryDivisionView = false;
-		private boolean roleView = false;
-		private boolean applicationStatusView = false;
-		private boolean cancelledByView = false;
-		private boolean paymentTypeView = false;
-		private boolean applicationTypeView = false;
-		private boolean stateView = false;
-		private boolean districtView = false;
-		private boolean supplierNameView = false;
-		private boolean reportTypeView = false;
-		private boolean organizationTypeView = false;
-		private boolean kementerianView = false;
-		private boolean namAgensiView = false;
-		private boolean complaintNoView = false;
-		private boolean proofIdentityView = false;
-		private boolean mofNoView = false;	
-		private boolean companyStatusView = false;
-		private boolean caseNoView = false;
-		private boolean extraTwoColumnView = false;	
-		private boolean compApplStatusView = false;		
+		private boolean mofRegView = false;*/		
+		//sc module
+		private boolean extraTwoColumnView = false;		
+		private boolean scQuotationNoView = false;
+		//cm module
+		private boolean cmItemTypeView = false;
+		private boolean cmItemStatusView = false;
+		private boolean cmUnspscCodeView = false;
+		private boolean cmUnspscTitleView = false;	
+		private boolean cmCompanyNameView = false;
+		private boolean cmRegistrationTypeView = false;	
+		private boolean cmItemCategoryView = false;
+		private boolean cmItemNameView = false;	
+		private boolean cmEpNumberView = false;
+		private boolean cmBusinessRegNoView = false;
+		private boolean cmIcNumberView = false;
+		private boolean cmMofNumberView = false;	
+		private boolean cmExtentionCodeView = false;
+		private boolean cmExtentionTypeView = false;	
+		private boolean cmExtentionBrandView = false;
+		private boolean cmExtentionMeasurmentView = false;
+		private boolean cmExtentionColourView = false;
+		private boolean cmProofIdentityView = false;
+		private boolean cmBasicRegView = false;
+		private boolean cmMofRegView = false;		
+		//SM module
+		private boolean smSupportingDocumentView = false;	
+		private boolean smDocStatusView = false;
+		private boolean smSuppDocStatusView = false;
+		private boolean smRegistrationNoView = false;
+		private boolean smEpNoView = false;
+		private boolean smApplicationNoView = false;
+		private boolean smZoneView = false;
+		private boolean smSupplierTypeView = false;
+		private boolean smMofRegNoView = false;
+		private boolean smMofRegNoFromView = false;
+		private boolean smMofRegNoToView = false;
+		private boolean smRegistrationStatusView = false;
+		private boolean smCapitalNaccumView = false;
+		private boolean smPaidUpCapitalNaccumShareView = false;
+		private boolean smCategoryView = false;
+		private boolean smNoOfCategoryView = false;
+		private boolean smMainCategoryView = false;
+		private boolean smSubCategoryView = false;
+		private boolean smSubCategoryDivisionView = false;
+		private boolean smRoleView = false;
+		private boolean smApplicationStatusView = false;
+		private boolean smCancelledByView = false;
+		private boolean smPaymentTypeView = false;
+		private boolean smApplicationTypeView = false;
+		private boolean smStateView = false;
+		private boolean smDistrictView = false;
+		private boolean smSupplierNameView = false;
+		private boolean smReportTypeView = false;
+		private boolean smOrganizationTypeView = false;
+		private boolean smKementerianView = false;
+		private boolean smNamaAgensiView = false;
+		private boolean smComplaintNoView = false;
+		private boolean smProofIdentityView = false;
+		private boolean smMofNoView = false;	
+		private boolean smCompanyStatusView = false;
+		private boolean smCaseNoView = false;
+		private boolean smExtraTwoColumnView = false;	
+		private boolean smCompApplStatusView = false;		
 		private boolean smCompanyNameView = false;	
-		private boolean categoryCodeView = false;
-		private boolean siteVisitOfficerView = false;
-		private boolean releaseDateView = false;
-		private boolean applicationDateView = false;
-		private boolean receiveDateView = false;
-		private boolean expiryDateView = false;
-		private boolean printedDateView = false;
-		private boolean mandatoryZoneView = false;
-		private boolean mandatorySupplierTypeView = false;
-		private boolean mandatoryApplicationDateView = false;
-		private boolean mandatoryApplicationStatusView = false;
-		private boolean mandatoryMofRegNoView = false;
-		private boolean mandatoryExpiryDateView = false;
-		private boolean mandatoryPrintedDateView = false;
-		
-		/*SM end*/
+		private boolean smcategoryCodeView = false;
+		private boolean smSiteVisitOfficerView = false;
+		private boolean smReleaseDateView = false;
+		private boolean smApplicationDateView = false;
+		private boolean smReceiveDateView = false;
+		private boolean smExpiryDateView = false;
+		private boolean smPrintedDateView = false;
+		private boolean smMandatoryZoneView = false;
+		private boolean smRegistrationTypeView = false;
+		private boolean smSupplierView = false;
+		private boolean smCategoryCodeView = false;
+		private boolean smBasicRegView = false;
+		private boolean smMofRegView = false;
+		private boolean smMandatorySupplierTypeView = false;
+		private boolean smMandatoryApplicationDateView = false;
+		private boolean smMandatoryApplicationStatusView = false;
+		private boolean smMandatoryMofRegNoView = false;
+		private boolean smMandatoryExpiryDateView = false;
+		private boolean smMandatoryPrintedDateView = false;		
+		// FL module
+		private boolean flPtjView = false;
+		private boolean flContractNoView = false;
+		private boolean flSstView = false;
+		private boolean flJabatanView = false;
+		private boolean flMinistryView = false;
+		private boolean flSupplierView = false;	
+		private boolean flStatusView = false;
+		private boolean flDurationView = false;
+		private boolean flRecievingOfficerView = false;
+		private boolean flDeliveryAddressView = false;
+		private boolean flRecNoteNoView = false;
+		private boolean flContractTypeView = false;
+		private boolean flRequisitionerView = false;
+		private boolean flMtoContractView = false;
+		private boolean flInvoiceNoView = false;
+		private boolean flDeductionTypeView = false;
+		private boolean flCrNoView = false;
+		private boolean flApproverNameView = false;
+		private boolean flDocumentTypeView = false;
+		private boolean flCriteriaView = false;
+		private boolean flScoringView = false;
+		private boolean flPkpNoView = false;
+		private boolean flDeliveryOrderNoView = false;	
+		private boolean flItemCodeView = false;
+		private boolean flPoAmountView = false;
+		private boolean flPrNoView = false;
+		private boolean flPmoView = false;		
+		private boolean flItemNameView = false;
+		private boolean flItemTypeView = false;
+		private boolean flContractOrderView = false;
+		private boolean flContractRequestView = false;
+		private boolean flPurchaseOrderNoView = false;
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -208,10 +263,720 @@ public class ReportsGenerateBean {
 		private String expiryFromDateTotVar=ReportConst.EMPTY_VAL;		
 		private String expiryToDateTotVar=ReportConst.EMPTY_VAL;	
 		private String printedFromDateTotVar=ReportConst.EMPTY_VAL;		
-		private String printedToDateTotVar=ReportConst.EMPTY_VAL;	
-
+		private String printedToDateTotVar=ReportConst.EMPTY_VAL;
+		private String flContractOrderVar=ReportConst.EMPTY_VAL;		
+		private String flContractRequestVar=ReportConst.EMPTY_VAL;
+		private String flPurchaseOrderNoVar=ReportConst.EMPTY_VAL;
+		private String reportValueIdVar=ReportConst.EMPTY_VAL;
+		private String userIdVar=ReportConst.EMPTY_VAL;
+				
+		public String getReportValueIdVar() {
+			return reportValueIdVar;
+		}
+		public void setReportValueIdVar(String reportValueIdVar) {
+			this.reportValueIdVar = reportValueIdVar;
+		}
+		public String getUserIdVar() {
+			return userIdVar;
+		}
+		public void setUserIdVar(String userIdVar) {
+			this.userIdVar = userIdVar;
+		}
+		public boolean isFlPurchaseOrderNoView() {
+			return flPurchaseOrderNoView;
+		}
+		public void setFlPurchaseOrderNoView(boolean flPurchaseOrderNoView) {
+			this.flPurchaseOrderNoView = flPurchaseOrderNoView;
+		}
+		public String getFlPurchaseOrderNoVar() {
+			return flPurchaseOrderNoVar;
+		}
+		public void setFlPurchaseOrderNoVar(String flPurchaseOrderNoVar) {
+			this.flPurchaseOrderNoVar = flPurchaseOrderNoVar;
+		}
+		public boolean isFlContractOrderView() {
+			return flContractOrderView;
+		}
+		public void setFlContractOrderView(boolean flContractOrderView) {
+			this.flContractOrderView = flContractOrderView;
+		}
+		public boolean isFlContractRequestView() {
+			return flContractRequestView;
+		}
+		public void setFlContractRequestView(boolean flContractRequestView) {
+			this.flContractRequestView = flContractRequestView;
+		}
+		public String getFlContractOrderVar() {
+			return flContractOrderVar;
+		}
+		public void setFlContractOrderVar(String flContractOrderVar) {
+			this.flContractOrderVar = flContractOrderVar;
+		}
+		public String getFlContractRequestVar() {
+			return flContractRequestVar;
+		}
+		public void setFlContractRequestVar(String flContractRequestVar) {
+			this.flContractRequestVar = flContractRequestVar;
+		}
+		public boolean isFlItemNameView() {
+			return flItemNameView;
+		}
+		public void setFlItemNameView(boolean flItemNameView) {
+			this.flItemNameView = flItemNameView;
+		}
+		public boolean isFlItemTypeView() {
+			return flItemTypeView;
+		}
+		public void setFlItemTypeView(boolean flItemTypeView) {
+			this.flItemTypeView = flItemTypeView;
+		}
 		
+		public boolean isFlPtjView() {
+			return flPtjView;
+		}
+		public void setFlPtjView(boolean flPtjView) {
+			this.flPtjView = flPtjView;
+		}
+		public boolean isFlContractNoView() {
+			return flContractNoView;
+		}
+		public void setFlContractNoView(boolean flContractNoView) {
+			this.flContractNoView = flContractNoView;
+		}
+		public boolean isFlSstView() {
+			return flSstView;
+		}
+		public void setFlSstView(boolean flSstView) {
+			this.flSstView = flSstView;
+		}
+		public boolean isFlJabatanView() {
+			return flJabatanView;
+		}
+		public void setFlJabatanView(boolean flJabatanView) {
+			this.flJabatanView = flJabatanView;
+		}
+		public boolean isFlMinistryView() {
+			return flMinistryView;
+		}
+		public void setFlMinistryView(boolean flMinistryView) {
+			this.flMinistryView = flMinistryView;
+		}
+		public boolean isFlSupplierView() {
+			return flSupplierView;
+		}
+		public void setFlSupplierView(boolean flSupplierView) {
+			this.flSupplierView = flSupplierView;
+		}
+		public boolean isFlStatusView() {
+			return flStatusView;
+		}
+		public void setFlStatusView(boolean flStatusView) {
+			this.flStatusView = flStatusView;
+		}
+		public boolean isFlDurationView() {
+			return flDurationView;
+		}
+		public void setFlDurationView(boolean flDurationView) {
+			this.flDurationView = flDurationView;
+		}
+		public boolean isFlRecievingOfficerView() {
+			return flRecievingOfficerView;
+		}
+		public void setFlRecievingOfficerView(boolean flRecievingOfficerView) {
+			this.flRecievingOfficerView = flRecievingOfficerView;
+		}
+		public boolean isFlDeliveryAddressView() {
+			return flDeliveryAddressView;
+		}
+		public void setFlDeliveryAddressView(boolean flDeliveryAddressView) {
+			this.flDeliveryAddressView = flDeliveryAddressView;
+		}
+		public boolean isFlRecNoteNoView() {
+			return flRecNoteNoView;
+		}
+		public void setFlRecNoteNoView(boolean flRecNoteNoView) {
+			this.flRecNoteNoView = flRecNoteNoView;
+		}
+		public boolean isFlContractTypeView() {
+			return flContractTypeView;
+		}
+		public void setFlContractTypeView(boolean flContractTypeView) {
+			this.flContractTypeView = flContractTypeView;
+		}
+		public boolean isFlRequisitionerView() {
+			return flRequisitionerView;
+		}
+		public void setFlRequisitionerView(boolean flRequisitionerView) {
+			this.flRequisitionerView = flRequisitionerView;
+		}
+		public boolean isFlMtoContractView() {
+			return flMtoContractView;
+		}
+		public void setFlMtoContractView(boolean flMtoContractView) {
+			this.flMtoContractView = flMtoContractView;
+		}
+		public boolean isFlInvoiceNoView() {
+			return flInvoiceNoView;
+		}
+		public void setFlInvoiceNoView(boolean flInvoiceNoView) {
+			this.flInvoiceNoView = flInvoiceNoView;
+		}
+		public boolean isFlDeductionTypeView() {
+			return flDeductionTypeView;
+		}
+		public void setFlDeductionTypeView(boolean flDeductionTypeView) {
+			this.flDeductionTypeView = flDeductionTypeView;
+		}
+		public boolean isFlCrNoView() {
+			return flCrNoView;
+		}
+		public void setFlCrNoView(boolean flCrNoView) {
+			this.flCrNoView = flCrNoView;
+		}
+		public boolean isFlApproverNameView() {
+			return flApproverNameView;
+		}
+		public void setFlApproverNameView(boolean flApproverNameView) {
+			this.flApproverNameView = flApproverNameView;
+		}
+		public boolean isFlDocumentTypeView() {
+			return flDocumentTypeView;
+		}
+		public void setFlDocumentTypeView(boolean flDocumentTypeView) {
+			this.flDocumentTypeView = flDocumentTypeView;
+		}
+		public boolean isFlCriteriaView() {
+			return flCriteriaView;
+		}
+		public void setFlCriteriaView(boolean flCriteriaView) {
+			this.flCriteriaView = flCriteriaView;
+		}
+		public boolean isFlScoringView() {
+			return flScoringView;
+		}
+		public void setFlScoringView(boolean flScoringView) {
+			this.flScoringView = flScoringView;
+		}
+		public boolean isFlPkpNoView() {
+			return flPkpNoView;
+		}
+		public void setFlPkpNoView(boolean flPkpNoView) {
+			this.flPkpNoView = flPkpNoView;
+		}
+		public boolean isFlDeliveryOrderNoView() {
+			return flDeliveryOrderNoView;
+		}
+		public void setFlDeliveryOrderNoView(boolean flDeliveryOrderNoView) {
+			this.flDeliveryOrderNoView = flDeliveryOrderNoView;
+		}
+		public boolean isFlItemCodeView() {
+			return flItemCodeView;
+		}
+		public void setFlItemCodeView(boolean flItemCodeView) {
+			this.flItemCodeView = flItemCodeView;
+		}
+		public boolean isFlPoAmountView() {
+			return flPoAmountView;
+		}
+		public void setFlPoAmountView(boolean flPoAmountView) {
+			this.flPoAmountView = flPoAmountView;
+		}
+		public boolean isFlPrNoView() {
+			return flPrNoView;
+		}
+		public void setFlPrNoView(boolean flPrNoView) {
+			this.flPrNoView = flPrNoView;
+		}
+		public boolean isFlPmoView() {
+			return flPmoView;
+		}
+		public void setFlPmoView(boolean flPmoView) {
+			this.flPmoView = flPmoView;
+		}
+		public boolean isSmMofRegView() {
+			return smMofRegView;
+		}
+		public void setSmMofRegView(boolean smMofRegView) {
+			this.smMofRegView = smMofRegView;
+		}
+		public boolean isSmBasicRegView() {
+			return smBasicRegView;
+		}
+		public void setSmBasicRegView(boolean smBasicRegView) {
+			this.smBasicRegView = smBasicRegView;
+		}
+		public boolean isExtraTwoColumnView() {
+			return extraTwoColumnView;
+		}
+		public void setExtraTwoColumnView(boolean extraTwoColumnView) {
+			this.extraTwoColumnView = extraTwoColumnView;
+		}
+		public boolean isSmCategoryCodeView() {
+			return smCategoryCodeView;
+		}
+		public void setSmCategoryCodeView(boolean smCategoryCodeView) {
+			this.smCategoryCodeView = smCategoryCodeView;
+		}
+		public boolean isSmRegistrationTypeView() {
+			return smRegistrationTypeView;
+		}
+		public void setSmRegistrationTypeView(boolean smRegistrationTypeView) {
+			this.smRegistrationTypeView = smRegistrationTypeView;
+		}
+		public boolean isSmSupplierView() {
+			return smSupplierView;
+		}
+		public void setSmSupplierView(boolean smSupplierView) {
+			this.smSupplierView = smSupplierView;
+		}
 		
+		public boolean isSmSupportingDocumentView() {
+			return smSupportingDocumentView;
+		}
+		public void setSmSupportingDocumentView(boolean smSupportingDocumentView) {
+			this.smSupportingDocumentView = smSupportingDocumentView;
+		}
+		public boolean isSmDocStatusView() {
+			return smDocStatusView;
+		}
+		public void setSmDocStatusView(boolean smDocStatusView) {
+			this.smDocStatusView = smDocStatusView;
+		}
+		public boolean isSmSuppDocStatusView() {
+			return smSuppDocStatusView;
+		}
+		public void setSmSuppDocStatusView(boolean smSuppDocStatusView) {
+			this.smSuppDocStatusView = smSuppDocStatusView;
+		}
+		public boolean isSmRegistrationNoView() {
+			return smRegistrationNoView;
+		}
+		public void setSmRegistrationNoView(boolean smRegistrationNoView) {
+			this.smRegistrationNoView = smRegistrationNoView;
+		}
+		public boolean isSmEpNoView() {
+			return smEpNoView;
+		}
+		public void setSmEpNoView(boolean smEpNoView) {
+			this.smEpNoView = smEpNoView;
+		}
+		public boolean isSmApplicationNoView() {
+			return smApplicationNoView;
+		}
+		public void setSmApplicationNoView(boolean smApplicationNoView) {
+			this.smApplicationNoView = smApplicationNoView;
+		}
+		public boolean isSmZoneView() {
+			return smZoneView;
+		}
+		public void setSmZoneView(boolean smZoneView) {
+			this.smZoneView = smZoneView;
+		}
+		public boolean isSmSupplierTypeView() {
+			return smSupplierTypeView;
+		}
+		public void setSmSupplierTypeView(boolean smSupplierTypeView) {
+			this.smSupplierTypeView = smSupplierTypeView;
+		}
+		public boolean isSmMofRegNoView() {
+			return smMofRegNoView;
+		}
+		public void setSmMofRegNoView(boolean smMofRegNoView) {
+			this.smMofRegNoView = smMofRegNoView;
+		}
+		public boolean isSmMofRegNoFromView() {
+			return smMofRegNoFromView;
+		}
+		public void setSmMofRegNoFromView(boolean smMofRegNoFromView) {
+			this.smMofRegNoFromView = smMofRegNoFromView;
+		}
+		public boolean isSmMofRegNoToView() {
+			return smMofRegNoToView;
+		}
+		public void setSmMofRegNoToView(boolean smMofRegNoToView) {
+			this.smMofRegNoToView = smMofRegNoToView;
+		}
+		public boolean isSmRegistrationStatusView() {
+			return smRegistrationStatusView;
+		}
+		public void setSmRegistrationStatusView(boolean smRegistrationStatusView) {
+			this.smRegistrationStatusView = smRegistrationStatusView;
+		}
+		public boolean isSmCapitalNaccumView() {
+			return smCapitalNaccumView;
+		}
+		public void setSmCapitalNaccumView(boolean smCapitalNaccumView) {
+			this.smCapitalNaccumView = smCapitalNaccumView;
+		}
+		public boolean isSmPaidUpCapitalNaccumShareView() {
+			return smPaidUpCapitalNaccumShareView;
+		}
+		public void setSmPaidUpCapitalNaccumShareView(
+				boolean smPaidUpCapitalNaccumShareView) {
+			this.smPaidUpCapitalNaccumShareView = smPaidUpCapitalNaccumShareView;
+		}
+		public boolean isSmCategoryView() {
+			return smCategoryView;
+		}
+		public void setSmCategoryView(boolean smCategoryView) {
+			this.smCategoryView = smCategoryView;
+		}
+		public boolean isSmNoOfCategoryView() {
+			return smNoOfCategoryView;
+		}
+		public void setSmNoOfCategoryView(boolean smNoOfCategoryView) {
+			this.smNoOfCategoryView = smNoOfCategoryView;
+		}
+		public boolean isSmMainCategoryView() {
+			return smMainCategoryView;
+		}
+		public void setSmMainCategoryView(boolean smMainCategoryView) {
+			this.smMainCategoryView = smMainCategoryView;
+		}
+		public boolean isSmSubCategoryView() {
+			return smSubCategoryView;
+		}
+		public void setSmSubCategoryView(boolean smSubCategoryView) {
+			this.smSubCategoryView = smSubCategoryView;
+		}
+		public boolean isSmSubCategoryDivisionView() {
+			return smSubCategoryDivisionView;
+		}
+		public void setSmSubCategoryDivisionView(boolean smSubCategoryDivisionView) {
+			this.smSubCategoryDivisionView = smSubCategoryDivisionView;
+		}
+		public boolean isSmRoleView() {
+			return smRoleView;
+		}
+		public void setSmRoleView(boolean smRoleView) {
+			this.smRoleView = smRoleView;
+		}
+		public boolean isSmApplicationStatusView() {
+			return smApplicationStatusView;
+		}
+		public void setSmApplicationStatusView(boolean smApplicationStatusView) {
+			this.smApplicationStatusView = smApplicationStatusView;
+		}
+		public boolean isSmCancelledByView() {
+			return smCancelledByView;
+		}
+		public void setSmCancelledByView(boolean smCancelledByView) {
+			this.smCancelledByView = smCancelledByView;
+		}
+		public boolean isSmPaymentTypeView() {
+			return smPaymentTypeView;
+		}
+		public void setSmPaymentTypeView(boolean smPaymentTypeView) {
+			this.smPaymentTypeView = smPaymentTypeView;
+		}
+		public boolean isSmApplicationTypeView() {
+			return smApplicationTypeView;
+		}
+		public void setSmApplicationTypeView(boolean smApplicationTypeView) {
+			this.smApplicationTypeView = smApplicationTypeView;
+		}
+		public boolean isSmStateView() {
+			return smStateView;
+		}
+		public void setSmStateView(boolean smStateView) {
+			this.smStateView = smStateView;
+		}
+		public boolean isSmDistrictView() {
+			return smDistrictView;
+		}
+		public void setSmDistrictView(boolean smDistrictView) {
+			this.smDistrictView = smDistrictView;
+		}
+		public boolean isSmSupplierNameView() {
+			return smSupplierNameView;
+		}
+		public void setSmSupplierNameView(boolean smSupplierNameView) {
+			this.smSupplierNameView = smSupplierNameView;
+		}
+		public boolean isSmReportTypeView() {
+			return smReportTypeView;
+		}
+		public void setSmReportTypeView(boolean smReportTypeView) {
+			this.smReportTypeView = smReportTypeView;
+		}
+		public boolean isSmOrganizationTypeView() {
+			return smOrganizationTypeView;
+		}
+		public void setSmOrganizationTypeView(boolean smOrganizationTypeView) {
+			this.smOrganizationTypeView = smOrganizationTypeView;
+		}
+		public boolean isSmKementerianView() {
+			return smKementerianView;
+		}
+		public void setSmKementerianView(boolean smKementerianView) {
+			this.smKementerianView = smKementerianView;
+		}
+		public boolean isSmNamaAgensiView() {
+			return smNamaAgensiView;
+		}
+		public void setSmNamaAgensiView(boolean smNamaAgensiView) {
+			this.smNamaAgensiView = smNamaAgensiView;
+		}
+		public boolean isSmComplaintNoView() {
+			return smComplaintNoView;
+		}
+		public void setSmComplaintNoView(boolean smComplaintNoView) {
+			this.smComplaintNoView = smComplaintNoView;
+		}
+		public boolean isSmProofIdentityView() {
+			return smProofIdentityView;
+		}
+		public void setSmProofIdentityView(boolean smProofIdentityView) {
+			this.smProofIdentityView = smProofIdentityView;
+		}
+		public boolean isSmMofNoView() {
+			return smMofNoView;
+		}
+		public void setSmMofNoView(boolean smMofNoView) {
+			this.smMofNoView = smMofNoView;
+		}
+		public boolean isSmCompanyStatusView() {
+			return smCompanyStatusView;
+		}
+		public void setSmCompanyStatusView(boolean smCompanyStatusView) {
+			this.smCompanyStatusView = smCompanyStatusView;
+		}
+		public boolean isSmCaseNoView() {
+			return smCaseNoView;
+		}
+		public void setSmCaseNoView(boolean smCaseNoView) {
+			this.smCaseNoView = smCaseNoView;
+		}
+		public boolean isSmExtraTwoColumnView() {
+			return smExtraTwoColumnView;
+		}
+		public void setSmExtraTwoColumnView(boolean smExtraTwoColumnView) {
+			this.smExtraTwoColumnView = smExtraTwoColumnView;
+		}
+		public boolean isSmCompApplStatusView() {
+			return smCompApplStatusView;
+		}
+		public void setSmCompApplStatusView(boolean smCompApplStatusView) {
+			this.smCompApplStatusView = smCompApplStatusView;
+		}
+		public boolean isSmCompanyNameView() {
+			return smCompanyNameView;
+		}
+		public void setSmCompanyNameView(boolean smCompanyNameView) {
+			this.smCompanyNameView = smCompanyNameView;
+		}
+		public boolean isSmcategoryCodeView() {
+			return smcategoryCodeView;
+		}
+		public void setSmcategoryCodeView(boolean smcategoryCodeView) {
+			this.smcategoryCodeView = smcategoryCodeView;
+		}
+		public boolean isSmSiteVisitOfficerView() {
+			return smSiteVisitOfficerView;
+		}
+		public void setSmSiteVisitOfficerView(boolean smSiteVisitOfficerView) {
+			this.smSiteVisitOfficerView = smSiteVisitOfficerView;
+		}
+		public boolean isSmReleaseDateView() {
+			return smReleaseDateView;
+		}
+		public void setSmReleaseDateView(boolean smReleaseDateView) {
+			this.smReleaseDateView = smReleaseDateView;
+		}
+		public boolean isSmApplicationDateView() {
+			return smApplicationDateView;
+		}
+		public void setSmApplicationDateView(boolean smApplicationDateView) {
+			this.smApplicationDateView = smApplicationDateView;
+		}
+		public boolean isSmReceiveDateView() {
+			return smReceiveDateView;
+		}
+		public void setSmReceiveDateView(boolean smReceiveDateView) {
+			this.smReceiveDateView = smReceiveDateView;
+		}
+		public boolean isSmExpiryDateView() {
+			return smExpiryDateView;
+		}
+		public void setSmExpiryDateView(boolean smExpiryDateView) {
+			this.smExpiryDateView = smExpiryDateView;
+		}
+		public boolean isSmPrintedDateView() {
+			return smPrintedDateView;
+		}
+		public void setSmPrintedDateView(boolean smPrintedDateView) {
+			this.smPrintedDateView = smPrintedDateView;
+		}
+		public boolean isSmMandatoryZoneView() {
+			return smMandatoryZoneView;
+		}
+		public void setSmMandatoryZoneView(boolean smMandatoryZoneView) {
+			this.smMandatoryZoneView = smMandatoryZoneView;
+		}
+		public boolean isSmMandatorySupplierTypeView() {
+			return smMandatorySupplierTypeView;
+		}
+		public void setSmMandatorySupplierTypeView(boolean smMandatorySupplierTypeView) {
+			this.smMandatorySupplierTypeView = smMandatorySupplierTypeView;
+		}
+		public boolean isSmMandatoryApplicationDateView() {
+			return smMandatoryApplicationDateView;
+		}
+		public void setSmMandatoryApplicationDateView(
+				boolean smMandatoryApplicationDateView) {
+			this.smMandatoryApplicationDateView = smMandatoryApplicationDateView;
+		}
+		public boolean isSmMandatoryApplicationStatusView() {
+			return smMandatoryApplicationStatusView;
+		}
+		public void setSmMandatoryApplicationStatusView(
+				boolean smMandatoryApplicationStatusView) {
+			this.smMandatoryApplicationStatusView = smMandatoryApplicationStatusView;
+		}
+		public boolean isSmMandatoryMofRegNoView() {
+			return smMandatoryMofRegNoView;
+		}
+		public void setSmMandatoryMofRegNoView(boolean smMandatoryMofRegNoView) {
+			this.smMandatoryMofRegNoView = smMandatoryMofRegNoView;
+		}
+		public boolean isSmMandatoryExpiryDateView() {
+			return smMandatoryExpiryDateView;
+		}
+		public void setSmMandatoryExpiryDateView(boolean smMandatoryExpiryDateView) {
+			this.smMandatoryExpiryDateView = smMandatoryExpiryDateView;
+		}
+		public boolean isSmMandatoryPrintedDateView() {
+			return smMandatoryPrintedDateView;
+		}
+		public void setSmMandatoryPrintedDateView(boolean smMandatoryPrintedDateView) {
+			this.smMandatoryPrintedDateView = smMandatoryPrintedDateView;
+		}
+		public boolean isCmBasicRegView() {
+			return cmBasicRegView;
+		}
+		public void setCmBasicRegView(boolean cmBasicRegView) {
+			this.cmBasicRegView = cmBasicRegView;
+		}
+		public boolean isCmMofRegView() {
+			return cmMofRegView;
+		}
+		public void setCmMofRegView(boolean cmMofRegView) {
+			this.cmMofRegView = cmMofRegView;
+		}
+		public boolean isCmProofIdentityView() {
+			return cmProofIdentityView;
+		}
+		public void setCmProofIdentityView(boolean cmProofIdentityView) {
+			this.cmProofIdentityView = cmProofIdentityView;
+		}
+		public boolean isCmItemTypeView() {
+			return cmItemTypeView;
+		}
+		public void setCmItemTypeView(boolean cmItemTypeView) {
+			this.cmItemTypeView = cmItemTypeView;
+		}
+		public boolean isCmItemStatusView() {
+			return cmItemStatusView;
+		}
+		public void setCmItemStatusView(boolean cmItemStatusView) {
+			this.cmItemStatusView = cmItemStatusView;
+		}
+		public boolean isCmUnspscCodeView() {
+			return cmUnspscCodeView;
+		}
+		public void setCmUnspscCodeView(boolean cmUnspscCodeView) {
+			this.cmUnspscCodeView = cmUnspscCodeView;
+		}
+		public boolean isCmUnspscTitleView() {
+			return cmUnspscTitleView;
+		}
+		public void setCmUnspscTitleView(boolean cmUnspscTitleView) {
+			this.cmUnspscTitleView = cmUnspscTitleView;
+		}
+		public boolean isCmCompanyNameView() {
+			return cmCompanyNameView;
+		}
+		public void setCmCompanyNameView(boolean cmCompanyNameView) {
+			this.cmCompanyNameView = cmCompanyNameView;
+		}
+		public boolean isCmRegistrationTypeView() {
+			return cmRegistrationTypeView;
+		}
+		public void setCmRegistrationTypeView(boolean cmRegistrationTypeView) {
+			this.cmRegistrationTypeView = cmRegistrationTypeView;
+		}
+		public boolean isCmItemCategoryView() {
+			return cmItemCategoryView;
+		}
+		public void setCmItemCategoryView(boolean cmItemCategoryView) {
+			this.cmItemCategoryView = cmItemCategoryView;
+		}
+		public boolean isCmItemNameView() {
+			return cmItemNameView;
+		}
+		public void setCmItemNameView(boolean cmItemNameView) {
+			this.cmItemNameView = cmItemNameView;
+		}
+		public boolean isCmEpNumberView() {
+			return cmEpNumberView;
+		}
+		public void setCmEpNumberView(boolean cmEpNumberView) {
+			this.cmEpNumberView = cmEpNumberView;
+		}
+		public boolean isCmBusinessRegNoView() {
+			return cmBusinessRegNoView;
+		}
+		public void setCmBusinessRegNoView(boolean cmBusinessRegNoView) {
+			this.cmBusinessRegNoView = cmBusinessRegNoView;
+		}
+		public boolean isCmIcNumberView() {
+			return cmIcNumberView;
+		}
+		public void setCmIcNumberView(boolean cmIcNumberView) {
+			this.cmIcNumberView = cmIcNumberView;
+		}
+		public boolean isCmMofNumberView() {
+			return cmMofNumberView;
+		}
+		public void setCmMofNumberView(boolean cmMofNumberView) {
+			this.cmMofNumberView = cmMofNumberView;
+		}
+		public boolean isCmExtentionCodeView() {
+			return cmExtentionCodeView;
+		}
+		public void setCmExtentionCodeView(boolean cmExtentionCodeView) {
+			this.cmExtentionCodeView = cmExtentionCodeView;
+		}
+		public boolean isCmExtentionTypeView() {
+			return cmExtentionTypeView;
+		}
+		public void setCmExtentionTypeView(boolean cmExtentionTypeView) {
+			this.cmExtentionTypeView = cmExtentionTypeView;
+		}
+		public boolean isCmExtentionBrandView() {
+			return cmExtentionBrandView;
+		}
+		public void setCmExtentionBrandView(boolean cmExtentionBrandView) {
+			this.cmExtentionBrandView = cmExtentionBrandView;
+		}
+		public boolean isCmExtentionMeasurmentView() {
+			return cmExtentionMeasurmentView;
+		}
+		public void setCmExtentionMeasurmentView(boolean cmExtentionMeasurmentView) {
+			this.cmExtentionMeasurmentView = cmExtentionMeasurmentView;
+		}
+		public boolean isCmExtentionColourView() {
+			return cmExtentionColourView;
+		}
+		public void setCmExtentionColourView(boolean cmExtentionColourView) {
+			this.cmExtentionColourView = cmExtentionColourView;
+		}	
+		public boolean isScQuotationNoView() {
+			return scQuotationNoView;
+		}
+		public void setScQuotationNoView(boolean scQuotationNoView) {
+			this.scQuotationNoView = scQuotationNoView;
+		}	
 		
 		public String getSupportingDocumentTotVar() {
 			return supportingDocumentTotVar;
@@ -503,319 +1268,7 @@ public class ReportsGenerateBean {
 		public void setPrintedToDateTotVar(String printedToDateTotVar) {
 			this.printedToDateTotVar = printedToDateTotVar;
 		}
-		public boolean isMandatoryExpiryDateView() {
-			return mandatoryExpiryDateView;
-		}
-		public void setMandatoryExpiryDateView(boolean mandatoryExpiryDateView) {
-			this.mandatoryExpiryDateView = mandatoryExpiryDateView;
-		}
-		public boolean isMandatoryPrintedDateView() {
-			return mandatoryPrintedDateView;
-		}
-		public void setMandatoryPrintedDateView(boolean mandatoryPrintedDateView) {
-			this.mandatoryPrintedDateView = mandatoryPrintedDateView;
-		}
-		public boolean isMandatoryMofRegNoView() {
-			return mandatoryMofRegNoView;
-		}
-		public void setMandatoryMofRegNoView(boolean mandatoryMofRegNoView) {
-			this.mandatoryMofRegNoView = mandatoryMofRegNoView;
-		}
-		public boolean isMandatoryApplicationDateView() {
-			return mandatoryApplicationDateView;
-		}
-		public void setMandatoryApplicationDateView(boolean mandatoryApplicationDateView) {
-			this.mandatoryApplicationDateView = mandatoryApplicationDateView;
-		}
-		public boolean isMandatoryApplicationStatusView() {
-			return mandatoryApplicationStatusView;
-		}
-		public void setMandatoryApplicationStatusView(
-				boolean mandatoryApplicationStatusView) {
-			this.mandatoryApplicationStatusView = mandatoryApplicationStatusView;
-		}
-		public boolean isMandatorySupplierTypeView() {
-			return mandatorySupplierTypeView;
-		}
-		public void setMandatorySupplierTypeView(boolean mandatorySupplierTypeView) {
-			this.mandatorySupplierTypeView = mandatorySupplierTypeView;
-		}
-		public boolean isMandatoryZoneView() {
-			return mandatoryZoneView;
-		}
-		public void setMandatoryZoneView(boolean mandatoryZoneView) {
-			this.mandatoryZoneView = mandatoryZoneView;
-		}
-		public boolean isPrintedDateView() {
-			return printedDateView;
-		}
-		public void setPrintedDateView(boolean printedDateView) {
-			this.printedDateView = printedDateView;
-		}
-		public boolean isExpiryDateView() {
-			return expiryDateView;
-		}
-		public void setExpiryDateView(boolean expiryDateView) {
-			this.expiryDateView = expiryDateView;
-		}
-		public boolean isReceiveDateView() {
-			return receiveDateView;
-		}
-		public void setReceiveDateView(boolean receiveDateView) {
-			this.receiveDateView = receiveDateView;
-		}
-		public boolean isApplicationDateView() {
-			return applicationDateView;
-		}
-		public void setApplicationDateView(boolean applicationDateView) {
-			this.applicationDateView = applicationDateView;
-		}
-		public boolean isReleaseDateView() {
-			return releaseDateView;
-		}
-		public void setReleaseDateView(boolean releaseDateView) {
-			this.releaseDateView = releaseDateView;
-		}
-		public boolean isSiteVisitOfficerView() {
-			return siteVisitOfficerView;
-		}
-		public void setSiteVisitOfficerView(boolean siteVisitOfficerView) {
-			this.siteVisitOfficerView = siteVisitOfficerView;
-		}
-		public boolean isCategoryCodeView() {
-			return categoryCodeView;
-		}
-		public void setCategoryCodeView(boolean categoryCodeView) {
-			this.categoryCodeView = categoryCodeView;
-		}
-		public boolean isSmCompanyNameView() {
-			return smCompanyNameView;
-		}
-		public void setSmCompanyNameView(boolean smCompanyNameView) {
-			this.smCompanyNameView = smCompanyNameView;
-		}
-		public boolean isCompApplStatusView() {
-			return compApplStatusView;
-		}
-		public void setCompApplStatusView(boolean compApplStatusView) {
-			this.compApplStatusView = compApplStatusView;
-		}
-		public boolean isExtraTwoColumnView() {
-			return extraTwoColumnView;
-		}
-		public void setExtraTwoColumnView(boolean extraTwoColumnView) {
-			this.extraTwoColumnView = extraTwoColumnView;
-		}
-		public boolean isCaseNoView() {
-			return caseNoView;
-		}
-		public void setCaseNoView(boolean caseNoView) {
-			this.caseNoView = caseNoView;
-		}
-		public boolean isCompanyStatusView() {
-			return companyStatusView;
-		}
-		public void setCompanyStatusView(boolean companyStatusView) {
-			this.companyStatusView = companyStatusView;
-		}
-		public boolean isMofNoView() {
-			return mofNoView;
-		}
-		public void setMofNoView(boolean mofNoView) {
-			this.mofNoView = mofNoView;
-		}	
-		public boolean isSupportingDocumentView() {
-			return supportingDocumentView;
-		}
-		public void setSupportingDocumentView(boolean supportingDocumentView) {
-			this.supportingDocumentView = supportingDocumentView;
-		}
-		public boolean isDocStatusView() {
-			return docStatusView;
-		}
-		public void setDocStatusView(boolean docStatusView) {
-			this.docStatusView = docStatusView;
-		}
-		public boolean isSuppDocStatusView() {
-			return SuppDocStatusView;
-		}
-		public void setSuppDocStatusView(boolean suppDocStatusView) {
-			SuppDocStatusView = suppDocStatusView;
-		}
-		public boolean isRegistrationNoView() {
-			return registrationNoView;
-		}
-		public void setRegistrationNoView(boolean registrationNoView) {
-			this.registrationNoView = registrationNoView;
-		}
-		public boolean isePNoView() {
-			return ePNoView;
-		}
-		public void setePNoView(boolean ePNoView) {
-			this.ePNoView = ePNoView;
-		}
-		public boolean isApplicationNoView() {
-			return applicationNoView;
-		}
-		public void setApplicationNoView(boolean applicationNoView) {
-			this.applicationNoView = applicationNoView;
-		}
-		public boolean isZoneView() {
-			return zoneView;
-		}
-		public void setZoneView(boolean zoneView) {
-			this.zoneView = zoneView;
-		}
-		public boolean isSupplierTypeView() {
-			return supplierTypeView;
-		}
-		public void setSupplierTypeView(boolean supplierTypeView) {
-			this.supplierTypeView = supplierTypeView;
-		}
-		public boolean isMofRegNoView() {
-			return mofRegNoView;
-		}
-		public void setMofRegNoView(boolean mofRegNoView) {
-			this.mofRegNoView = mofRegNoView;
-		}
-		public boolean isMofRegNoFromView() {
-			return mofRegNoFromView;
-		}
-		public void setMofRegNoFromView(boolean mofRegNoFromView) {
-			this.mofRegNoFromView = mofRegNoFromView;
-		}
-		public boolean isMofRegNoToView() {
-			return mofRegNoToView;
-		}
-		public void setMofRegNoToView(boolean mofRegNoToView) {
-			this.mofRegNoToView = mofRegNoToView;
-		}
-		public boolean isRegistrationStatusView() {
-			return registrationStatusView;
-		}
-		public void setRegistrationStatusView(boolean registrationStatusView) {
-			this.registrationStatusView = registrationStatusView;
-		}
-		public boolean isCapitalNaccumView() {
-			return capitalNaccumView;
-		}
-		public void setCapitalNaccumView(boolean capitalNaccumView) {
-			this.capitalNaccumView = capitalNaccumView;
-		}
-		public boolean isPaidUpCapitalNaccumShareView() {
-			return paidUpCapitalNaccumShareView;
-		}
-		public void setPaidUpCapitalNaccumShareView(boolean paidUpCapitalNaccumShareView) {
-			this.paidUpCapitalNaccumShareView = paidUpCapitalNaccumShareView;
-		}
-		public boolean isCategoryView() {
-			return categoryView;
-		}
-		public void setCategoryView(boolean categoryView) {
-			this.categoryView = categoryView;
-		}
-		public boolean isNoOfCategoryView() {
-			return noOfCategoryView;
-		}
-		public void setNoOfCategoryView(boolean noOfCategoryView) {
-			this.noOfCategoryView = noOfCategoryView;
-		}
-		public boolean isMainCategoryView() {
-			return mainCategoryView;
-		}
-		public void setMainCategoryView(boolean mainCategoryView) {
-			this.mainCategoryView = mainCategoryView;
-		}
-		public boolean isSubCategoryView() {
-			return subCategoryView;
-		}
-		public void setSubCategoryView(boolean subCategoryView) {
-			this.subCategoryView = subCategoryView;
-		}
-		public boolean isSubCategoryDivisionView() {
-			return subCategoryDivisionView;
-		}
-		public void setSubCategoryDivisionView(boolean subCategoryDivisionView) {
-			this.subCategoryDivisionView = subCategoryDivisionView;
-		}
-		public boolean isRoleView() {
-			return roleView;
-		}
-		public void setRoleView(boolean roleView) {
-			this.roleView = roleView;
-		}
-		public boolean isApplicationStatusView() {
-			return applicationStatusView;
-		}
-		public void setApplicationStatusView(boolean applicationStatusView) {
-			this.applicationStatusView = applicationStatusView;
-		}
-		public boolean isCancelledByView() {
-			return cancelledByView;
-		}
-		public void setCancelledByView(boolean cancelledByView) {
-			this.cancelledByView = cancelledByView;
-		}
-		public boolean isPaymentTypeView() {
-			return paymentTypeView;
-		}
-		public void setPaymentTypeView(boolean paymentTypeView) {
-			this.paymentTypeView = paymentTypeView;
-		}
-		public boolean isApplicationTypeView() {
-			return applicationTypeView;
-		}
-		public void setApplicationTypeView(boolean applicationTypeView) {
-			this.applicationTypeView = applicationTypeView;
-		}
-		public boolean isStateView() {
-			return stateView;
-		}
-		public void setStateView(boolean stateView) {
-			this.stateView = stateView;
-		}
-		public boolean isDistrictView() {
-			return districtView;
-		}
-		public void setDistrictView(boolean districtView) {
-			this.districtView = districtView;
-		}
-		public boolean isSupplierNameView() {
-			return supplierNameView;
-		}
-		public void setSupplierNameView(boolean supplierNameView) {
-			this.supplierNameView = supplierNameView;
-		}
-		public boolean isReportTypeView() {
-			return reportTypeView;
-		}
-		public void setReportTypeView(boolean reportTypeView) {
-			this.reportTypeView = reportTypeView;
-		}
-		public boolean isOrganizationTypeView() {
-			return organizationTypeView;
-		}
-		public void setOrganizationTypeView(boolean organizationTypeView) {
-			this.organizationTypeView = organizationTypeView;
-		}
-		public boolean isKementerianView() {
-			return kementerianView;
-		}
-		public void setKementerianView(boolean kementerianView) {
-			this.kementerianView = kementerianView;
-		}
-		public boolean isNamAgensiView() {
-			return namAgensiView;
-		}
-		public void setNamAgensiView(boolean namAgensiView) {
-			this.namAgensiView = namAgensiView;
-		}
-		public boolean isComplaintNoView() {
-			return complaintNoView;
-		}
-		public void setComplaintNoView(boolean complaintNoView) {
-			this.complaintNoView = complaintNoView;
-		}		
+		
 		
 		public String getEpNumberTotVar() {
 			return epNumberTotVar;
@@ -841,18 +1294,7 @@ public class ReportsGenerateBean {
 		public void setMofNumberTotVar(String mofNumberTotVar) {
 			this.mofNumberTotVar = mofNumberTotVar;
 		}
-		public boolean isBasicRegView() {
-			return basicRegView;
-		}
-		public void setBasicRegView(boolean basicRegView) {
-			this.basicRegView = basicRegView;
-		}
-		public boolean isMofRegView() {
-			return mofRegView;
-		}
-		public void setMofRegView(boolean mofRegView) {
-			this.mofRegView = mofRegView;
-		}
+		
 		public String getExtentionTypeTotVar() {
 			return extentionTypeTotVar;
 		}
@@ -1125,244 +1567,8 @@ public class ReportsGenerateBean {
 		}
 		public void setPmoTotVar(String pmoTotVar) {
 			this.pmoTotVar = pmoTotVar;
-		}
-		
-		public boolean isPmoView() {
-			return pmoView;
-		}
-		public void setPmoView(boolean pmoView) {
-			this.pmoView = pmoView;
 		}	
-		public boolean isPtjView() {
-			return ptjView;
-		}
-		public void setPtjView(boolean ptjView) {
-			this.ptjView = ptjView;
-		}
-		public boolean isContractNoView() {
-			return contractNoView;
-		}
-		public void setContractNoView(boolean contractNoView) {
-			this.contractNoView = contractNoView;
-		}
-		public boolean isSstView() {
-			return sstView;
-		}
-		public void setSstView(boolean sstView) {
-			this.sstView = sstView;
-		}
-		public boolean isJabatanView() {
-			return jabatanView;
-		}
-		public void setJabatanView(boolean jabatanView) {
-			this.jabatanView = jabatanView;
-		}
-		public boolean isMinistryView() {
-			return ministryView;
-		}
-		public void setMinistryView(boolean ministryView) {
-			this.ministryView = ministryView;
-		}
-		public boolean isSupplierView() {
-			return supplierView;
-		}
-		public void setSupplierView(boolean supplierView) {
-			this.supplierView = supplierView;
-		}
-		public boolean isStatusView() {
-			return statusView;
-		}
-		public void setStatusView(boolean statusView) {
-			this.statusView = statusView;
-		}
-		public boolean isDurationView() {
-			return durationView;
-		}
-		public void setDurationView(boolean durationView) {
-			this.durationView = durationView;
-		}
-		public boolean isRecievingOfficerView() {
-			return recievingOfficerView;
-		}
-		public void setRecievingOfficerView(boolean recievingOfficerView) {
-			this.recievingOfficerView = recievingOfficerView;
-		}
-		public boolean isDeliveryAddressView() {
-			return deliveryAddressView;
-		}
-		public void setDeliveryAddressView(boolean deliveryAddressView) {
-			this.deliveryAddressView = deliveryAddressView;
-		}
-		public boolean isFlRecNoteNoView() {
-			return flRecNoteNoView;
-		}
-		public void setFlRecNoteNoView(boolean flRecNoteNoView) {
-			this.flRecNoteNoView = flRecNoteNoView;
-		}
-		public boolean isContractTypeView() {
-			return contractTypeView;
-		}
-		public void setContractTypeView(boolean contractTypeView) {
-			this.contractTypeView = contractTypeView;
-		}
-		public boolean isRequisitionerView() {
-			return requisitionerView;
-		}
-		public void setRequisitionerView(boolean requisitionerView) {
-			this.requisitionerView = requisitionerView;
-		}
-		public boolean isMtoContractView() {
-			return mtoContractView;
-		}
-		public void setMtoContractView(boolean mtoContractView) {
-			this.mtoContractView = mtoContractView;
-		}
-		public boolean isInvoiceNoView() {
-			return invoiceNoView;
-		}
-		public void setInvoiceNoView(boolean invoiceNoView) {
-			this.invoiceNoView = invoiceNoView;
-		}
-		public boolean isDeductionTypeView() {
-			return deductionTypeView;
-		}
-		public void setDeductionTypeView(boolean deductionTypeView) {
-			this.deductionTypeView = deductionTypeView;
-		}
-		public boolean isCrNoView() {
-			return crNoView;
-		}
-		public void setCrNoView(boolean crNoView) {
-			this.crNoView = crNoView;
-		}
-		public boolean isApproverNameView() {
-			return approverNameView;
-		}
-		public void setApproverNameView(boolean approverNameView) {
-			this.approverNameView = approverNameView;
-		}
-		public boolean isDocumentTypeView() {
-			return documentTypeView;
-		}
-		public void setDocumentTypeView(boolean documentTypeView) {
-			this.documentTypeView = documentTypeView;
-		}
-		public boolean isCriteriaView() {
-			return criteriaView;
-		}
-		public void setCriteriaView(boolean criteriaView) {
-			this.criteriaView = criteriaView;
-		}
-		public boolean isScoringView() {
-			return scoringView;
-		}
-		public void setScoringView(boolean scoringView) {
-			this.scoringView = scoringView;
-		}
-		public boolean isPkpNoView() {
-			return pkpNoView;
-		}
-		public void setPkpNoView(boolean pkpNoView) {
-			this.pkpNoView = pkpNoView;
-		}
-		public boolean isDeliveryOrderNoView() {
-			return deliveryOrderNoView;
-		}
-		public void setDeliveryOrderNoView(boolean deliveryOrderNoView) {
-			this.deliveryOrderNoView = deliveryOrderNoView;
-		}	
-		public boolean isItemCodeView() {
-			return itemCodeView;
-		}
-		public void setItemCodeView(boolean itemCodeView) {
-			this.itemCodeView = itemCodeView;
-		}
-		public boolean isPoAmountView() {
-			return poAmountView;
-		}
-		public void setPoAmountView(boolean poAmountView) {
-			this.poAmountView = poAmountView;
-		}
-		public boolean isPrNoView() {
-			return prNoView;
-		}
-		public void setPrNoView(boolean prNoView) {
-			this.prNoView = prNoView;
-		}
 		
-		
-		public boolean isProofIdentityView() {
-			return proofIdentityView;
-		}
-		public void setProofIdentityView(boolean proofIdentityView) {
-			this.proofIdentityView = proofIdentityView;
-		}
-		public boolean isItemCategoryView() {
-			return itemCategoryView;
-		}
-		public void setItemCategoryView(boolean itemCategoryView) {
-			this.itemCategoryView = itemCategoryView;
-		}
-		public boolean isItemNameView() {
-			return itemNameView;
-		}
-		public void setItemNameView(boolean itemNameView) {
-			this.itemNameView = itemNameView;
-		}		
-		public boolean isQuotationNoView() {
-			return quotationNoView;
-		}
-		public void setQuotationNoView(boolean quotationNoView) {
-			this.quotationNoView = quotationNoView;
-		}
-		public boolean isPaymentIdView() {
-			return paymentIdView;
-		}
-		public void setPaymentIdView(boolean paymentIdIdView) {
-			this.paymentIdView = paymentIdIdView;
-		}	
-		public boolean isItemTypeView() {
-			return itemTypeView;
-		}
-		public void setItemTypeView(boolean itemTypeView) {
-			this.itemTypeView = itemTypeView;
-		}
-		public boolean isItemStatusView() {
-			return itemStatusView;
-		}
-		public void setItemStatusView(boolean itemStatusView) {
-			this.itemStatusView = itemStatusView;
-		}
-		public boolean isUnspscCodeView() {
-			return unspscCodeView;
-		}
-		public void setUnspscCodeView(boolean unspscCodeView) {
-			this.unspscCodeView = unspscCodeView;
-		}
-		public boolean isUnspscTitleView() {
-			return unspscTitleView;
-		}
-		public void setUnspscTitleView(boolean unspscTitleView) {
-			this.unspscTitleView = unspscTitleView;
-		}
-		public boolean isExtentionCodeView() {
-			return extentionCodeView;
-		}
-		public void setExtentionCodeView(boolean extentionCodeView) {
-			this.extentionCodeView = extentionCodeView;
-		}
-		public boolean isCompanyNameView() {
-			return companyNameView;
-		}
-		public void setCompanyNameView(boolean companyNameView) {
-			this.companyNameView = companyNameView;
-		}
-		public boolean isRegistrationTypeView() {
-			return registrationTypeView;
-		}
-		public void setRegistrationTypeView(boolean registrationTypeView) {
-			this.registrationTypeView = registrationTypeView;
-		}
 		public boolean isFromDateView() {
 			return fromDateView;
 		}
@@ -1374,5 +1580,109 @@ public class ReportsGenerateBean {
 		}
 		public void setToDateView(boolean toDateView) {
 			this.toDateView = toDateView;
+		}
+				
+		
+		public List<SelectItem> getStateLst() {
+			return stateLst;
+		}
+		public void setStateLst(List<SelectItem> stateLst) {
+			this.stateLst = stateLst;
+		}
+		public List<SelectItem> getDistrictLst() {
+			return districtLst;
+		}
+		public void setDistrictLst(List<SelectItem> districtLst) {
+			this.districtLst = districtLst;
+		}
+		public List<SelectItem> getLevOneCatLst() {
+			return levOneCatLst;
+		}
+		public void setLevOneCatLst(List<SelectItem> levOneCatLst) {
+			this.levOneCatLst = levOneCatLst;
+		}
+		public List<SelectItem> getLevTwoCatLst() {
+			return levTwoCatLst;
+		}
+		public void setLevTwoCatLst(List<SelectItem> levTwoCatLst) {
+			this.levTwoCatLst = levTwoCatLst;
+		}
+		public List<SelectItem> getLevThreeCatLst() {
+			return levThreeCatLst;
+		}
+		public void setLevThreeCatLst(List<SelectItem> levThreeCatLst) {
+			this.levThreeCatLst = levThreeCatLst;
+		}
+		
+		public void retrieveState(){
+			stateLst = new ArrayList<SelectItem>();		
+			IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
+			StateReqDTO	stateReqDTO	=	new StateReqDTO();
+			stateReqDTO.setCountryId(1L);//TODO malaysia		
+			StateResDTO resStateDTO	=	stateSO.retriveStatesListByCountryID(stateReqDTO);		
+			for(PmState state: resStateDTO.getStateList()){			
+				SelectItem selectItem= new SelectItem();
+				selectItem.setLabel(state.getStateName());
+				selectItem.setValue(state.getStateId());
+				stateLst.add(selectItem);			
+			}
+		}
+		public void retrieveDistrict(String state){		
+			districtLst = new ArrayList<SelectItem>();		
+			IDistrictSO	districtSO	=	(IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
+			DistrictReqDTO	districtReqDTO	=	new DistrictReqDTO();
+			if(state!=null&&state!=""){			
+				districtReqDTO.setStateId( Long.parseLong(state));
+				DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);			
+				for(PmDistrict pmDistrict: districtResDTO.getDistrictList()){				
+					SelectItem selectItem= new SelectItem();
+					selectItem.setLabel(pmDistrict.getDistrictName());
+					selectItem.setValue(pmDistrict.getDistrictCode());
+					districtLst.add(selectItem);
+				}
+			}
+		}
+		public void retrieveCategoryLevOne(){
+			levOneCatLst = new ArrayList<SelectItem>();		
+			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
+			//CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
+			//CategoryCodeResDTO	catCodeResDTO	=	new CategoryCodeResDTO();
+			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
+			for(PmCategoryL1 catOne: catCodeResDTO.getCategoryL1List()){			
+				SelectItem selectItem= new SelectItem();
+				selectItem.setLabel(catOne.getCategoryName());
+				selectItem.setValue(catOne.getCategoryL1Id());
+				levOneCatLst.add(selectItem);			
+			}
+		}
+		public void retrieveCategoryLevTwo(String mainCategory){
+			levTwoCatLst = new ArrayList<SelectItem>();		
+			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
+			CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
+			if(mainCategory!=null&&mainCategory!=""){	
+				catCodeReqDTO.setCategoryL1Id(Long.parseLong(mainCategory));
+				CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
+				for(PmCategoryL2 catTwo: catCodeResDTO.getCategoryL2List()){			
+					SelectItem selectItem= new SelectItem();
+					selectItem.setLabel(catTwo.getCategoryName());
+					selectItem.setValue(catTwo.getCategoryL2Id());
+					levTwoCatLst.add(selectItem);			
+				}
+			}
+		}
+		public void retrieveCategoryLevThree(String subCategory){
+			levThreeCatLst = new ArrayList<SelectItem>();		
+			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
+			CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
+			if(subCategory!=null&&subCategory!=""){	
+				catCodeReqDTO.setCategoryL2Id(Long.parseLong(subCategory));
+				CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
+				for(PmCategoryL3 catThree: catCodeResDTO.getCategoryL3List()){			
+					SelectItem selectItem= new SelectItem();
+					selectItem.setLabel(catThree.getCategoryName());
+					selectItem.setValue(catThree.getCategoryL3Id());
+					levThreeCatLst.add(selectItem);			
+				}
+			}
 		}
 }
