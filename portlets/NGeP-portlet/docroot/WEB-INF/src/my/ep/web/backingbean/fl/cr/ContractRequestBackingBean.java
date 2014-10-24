@@ -233,16 +233,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
-		if(getManagedBean().getActiveContractList()==null && isRequisitioner()) {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
-			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
-			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
-			populateContractListTree();
-		}
+		
 		if(null == getManagedBean().getFlManulaAddress()){
 			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -1015,13 +1006,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				
 			}
-			IUserSO profileSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-//			UserReqDTO userReqDTO = new UserReqDTO();
-//			userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-//			UserResDTO userResDTO = profileSO.retrieveUserOrgListByUserId(userReqDTO);
-			getManagedBean().getFlRequest().setPreparedOrgProfile(getManagedBean().getPmOrgProfile());
-			getManagedBean().getFlRequest().setChargeOrgProfile(getManagedBean().getPmOrgProfile());
-			getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getPmOrgProfile());
+			IFulfilmentRequestSO fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			resDTO = fulfilmentRequestSO.retrievePmOrgProfileDtls(reqDTO);
+			getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getPmOrgProfile());
+			getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getPmOrgProfile());
+			getManagedBean().getFlRequest().setIssuedOrgProfile(resDTO.getPmOrgProfile());
 			getAgAccount();
 			getLoginUserOrg();
 			String[] outcome = new String[2];
@@ -3105,10 +3097,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void preRenderContractList() {
-		renewSesionObject();
+		
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+		FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
+		getManagedBean().setActiveContractList(resDTO.getActiveContractList());
+		getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
+		populateContractListTree();
+		
 		FacesContext fc=FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "crList?faces-redirect=true");
+		
 	}
 
 }
