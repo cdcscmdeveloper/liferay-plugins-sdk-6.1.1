@@ -2659,6 +2659,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
 							return "editCatalogItem";
+					}else if(tierPricing.getEndDate().before(new Date())){
+						log.info("---------------------------------------------------- Tier ERROR_715021");
+						FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715021,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
 					}
 				groupPrevious = tierPricing.getStand_group_id();
 			}
@@ -2686,6 +2695,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
 							return "editCatalogItem";
+					}else if(tierPromotionPricing.getEndDate().before(new Date())){
+						log.info("---------------------------------------------------- Tier Promotion ERROR_715021");
+						FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715021,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
 					}
 				groupPrevious = tierPromotionPricing.getStand_group_id();
 			}
@@ -2703,6 +2721,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 						return "editCatalogItem";
+				}else if(zStdPrice.getEndDate().before(new Date())){
+					log.info("---------------------------------------------------- Zonal ERROR_715021");
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715021,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
 				}
 			}
 			//Zonal Promotion Pricing
@@ -2719,6 +2746,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 											MessageUtils.BUNDLE_COMMON_MESSAGES,
 											new FacesScopes().getUserLocale())));
 						return "editCatalogItem";
+				}else if(zonalPromotion.getEndDate().before(new Date())){
+					log.info("---------------------------------------------------- Zonal Promotion ERROR_715021");
+					FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715021,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+					return "editCatalogItem";
 				}
 			}
 			//Zonal Tier Pricing
@@ -2752,6 +2788,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
 							return "editCatalogItem";
+					}else if(zonalTier.getEndDate().before(new Date())){
+						log.info("---------------------------------------------------- Zonal Tier ERROR_715021");
+						FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715021,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
 					}
 				groupPrevious = zonalTier.getStand_group_id();
 			}
@@ -2779,6 +2824,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 												MessageUtils.BUNDLE_COMMON_MESSAGES,
 												new FacesScopes().getUserLocale())));
 							return "editCatalogItem";
+					}else if(zonalPromotionTier.getEndDate().before(new Date())){
+						log.info("---------------------------------------------------- Zonal Tier Promotion ERROR_715021");
+						FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+									MessageUtils.getMessage(MessageConst.ERROR_715021,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())));
+						return "editCatalogItem";
 					}
 				groupPrevious = zonalPromotionTier.getStand_group_id();
 			}
