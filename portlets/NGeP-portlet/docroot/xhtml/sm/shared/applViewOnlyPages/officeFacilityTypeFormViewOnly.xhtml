@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.panHdr.offFacility']}" id="ofp"
 		toggleable="true">
 		<p:panel id="offInfPan">
-			<table style="width: 50%">
+			<table style="width: 50%;table-layout:fixed">
 
 				<tr>
 					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.facility.ownerType']}" /></td>
@@ -49,7 +49,7 @@
 							<p:outputLabel	value="#{lbl['lbl.sm.companyaddress']}"	style="padding-top :5px;" />
 						</td>
 						<td>
-							<table style="width: 100%">
+							<table style="width: 100%;table-layout:fixed">
 								<tr>
 									<td>
 										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.address1}" />
@@ -73,7 +73,7 @@
 							</table>
 						</td>
 						<td>
-							<TABLE style="width: 100%; height: 100px;">
+							<TABLE style="width: 100%; height: 100px;;table-layout:fixed">
 								<tr>
 									<td>
 										<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.country']}" />
@@ -98,7 +98,7 @@
 							</TABLE>
 						</td>
 						<td>
-							<TABLE style="width: 100%">
+							<TABLE style="width: 100%;table-layout:fixed">
 								<tr>
 									<td>
 										<p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.smAddress.pmCountry.countryName}"/>

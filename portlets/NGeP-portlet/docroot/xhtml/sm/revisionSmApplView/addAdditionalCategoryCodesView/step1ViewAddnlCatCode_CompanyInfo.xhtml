@@ -8,22 +8,15 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include
-					src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
-			<td><ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
-				<ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/staffInfoFormViewOnly.xhtml" />
-				<ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/officeFacilityTypeFormViewOnly.xhtml" />
-				<ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/certificateInfoFormViewOnly.xhtml" />
-				<ui:fragment
-					rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq '2'}">
-					<ui:include
-						src="/xhtml/sm/shared/applViewOnlyPages/proffesionalBodyInfoFormViewOnly.xhtml" />
-				</ui:fragment> <ui:include
-					src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
+			<td style="width: 20%; vertical-align: baseline;" class="sidemenutd"><ui:include src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
+			<td><ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/staffInfoFormViewOnly.xhtml" />
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/officeFacilityTypeFormViewOnly.xhtml" />
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/certificateInfoFormViewOnly.xhtml" />
+				<ui:fragment rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq '2'}">
+					<ui:include src="/xhtml/sm/shared/applViewOnlyPages/proffesionalBodyInfoFormViewOnly.xhtml" />
+				</ui:fragment> 
+				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/transactionNetworksFormViewOnly.xhtml" />
 			</td>
 		</tr>
 	</table>
