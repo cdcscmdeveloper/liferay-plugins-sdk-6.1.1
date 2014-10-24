@@ -318,8 +318,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));	
 			
 			}if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
-			
+				SearchFilterBean filterBean = new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+												getManagedBean().getSearchContractName());
+				filterBean.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(filterBean);
 			}if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
 				List<Long> circularContractIdList = new ArrayList<Long>();
 				for(CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
