@@ -18,14 +18,14 @@
 			severity="error, info" />
 		<div>
 			<p:commandButton value="#{lbl['lbl.sc.spec.back']}"
-				style="float:left;" icon="ui-icon-back"
+				style="float:left;" icon="ui-icon-back" immediate="true"
 				action="#{specificationBackingBean.backAction}" />
 
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
-				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"
-				action="#{specificationBackingBean.cancelSpecAction('BO')}"></p:commandButton>
+				onclick="createTechnicalDialog.show();"
+				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 				style="float:right;" icon="ui-icon-check" update="@all"
@@ -113,7 +113,24 @@
 
 			</table>
 
-
+			<p:dialog id="bocreateEditTechnicalDialog"
+				widgetVar="createTechnicalDialog" header="Cancel Confirmation"
+				resizable="false" width="325" height="75" closable="false">
+				<table>
+					<tr>
+						<td align="center"><p:outputLabel
+								value="All data will be Cancel, are you sure to Cancel?" /></td>
+					</tr>
+				</table>
+				<p:spacer height="1" />
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+						icon="ui-icon-accept" oncomplete="createTechnicalDialog.hide();"
+						action="#{specificationBackingBean.cancelSpecAction('BO')}" />
+					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+						onclick="createTechnicalDialog.hide();" type="button" />
+				</div>
+			</p:dialog>
 
 		</p:panel>
 

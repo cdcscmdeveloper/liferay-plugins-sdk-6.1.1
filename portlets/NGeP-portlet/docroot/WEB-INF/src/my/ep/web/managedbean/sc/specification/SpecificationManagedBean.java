@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreOfferPrice;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreSetting;
 import my.ep.persistence.entity.sc.quationtender.ScQtScoreWeightage;
+import my.ep.persistence.entity.sc.quationtender.ScQtSpecificationRemark;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScRemark;
 import my.ep.persistence.entity.sm.SmAddress;
@@ -310,6 +311,16 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean isFinStandaraChecklist;
 	private String localOutCome;
 	private boolean isZoneLocation;
+	private List<ScQtSpecificationRemark> specificationRemarks;
+
+	public List<ScQtSpecificationRemark> getSpecificationRemarks() {
+		return specificationRemarks;
+	}
+
+	public void setSpecificationRemarks(
+			List<ScQtSpecificationRemark> specificationRemarks) {
+		this.specificationRemarks = specificationRemarks;
+	}
 
 	public boolean isZoneLocation() {
 		return isZoneLocation;

@@ -16,15 +16,16 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" update="@all"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
-						icon="ui-icon-save">
-						<f:setPropertyActionListener
-							target="#{specificationBackingBean.managedBean.buttonOutCome}"
-							value="save" />
-					</p:commandButton>
-
+					<ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						<p:commandButton value="Save" update="@all"
+							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
+							icon="ui-icon-save">
+							<f:setPropertyActionListener
+								target="#{specificationBackingBean.managedBean.buttonOutCome}"
+								value="save" />
+						</p:commandButton>
+					</ui:fragment>
 
 					<ui:repeat var="bpmAction"
 						value="#{specificationBackingBean.managedBean.outComes}">
@@ -42,6 +43,25 @@
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+
+		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
+			header="Revice Confirmation" resizable="false" width="325"
+			height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="Are you sure to send for Revise?" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					oncomplete="reviceApprovalDlgs.hide();"
+					action="#{specificationBackingBean.reviseSpecificationCommittee}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					onclick="reviceApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
 
 	</p:panel>
 

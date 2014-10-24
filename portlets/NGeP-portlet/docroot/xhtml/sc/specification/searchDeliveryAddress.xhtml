@@ -127,7 +127,7 @@
 			icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			onclick="deliveryAddress.hide();" icon="ui-icon-accept"
+			 icon="ui-icon-accept"
 			update="@(.deliveryUpdate)"
 			oncomplete="deliveryService.paginator.endLink.click();"
 			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
