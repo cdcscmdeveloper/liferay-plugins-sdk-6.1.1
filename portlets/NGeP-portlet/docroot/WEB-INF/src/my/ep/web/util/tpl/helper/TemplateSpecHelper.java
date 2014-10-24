@@ -168,6 +168,7 @@ public class TemplateSpecHelper {
 									}
 									
 									resetEstimations(newSpecQuestion);
+									resetPriceType(newSpecMaster, newSpecQuestion);
 								}
 								newSpecQuestion.setScoreTypeCode(null);
 								newSpecQuestion.setMaxScore(null);
@@ -188,8 +189,6 @@ public class TemplateSpecHelper {
 								} else {
 									newSpecQuestion.setParentSpecQuestion(null);
 								}
-								
-								resetPriceType(newSpecMaster, newSpecQuestion);
 								
 								// clone spec quantities
 								cloneTplSpecTierQty(newSpecQuestion, specQuestion.getTplSpecTierQties());	
