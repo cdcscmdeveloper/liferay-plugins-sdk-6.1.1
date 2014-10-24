@@ -139,6 +139,8 @@
 						value="#{backingBean.managedBean.selectedCert.certTypeId}"
 						id="certTypeId" rendered="true">
 						<f:selectItems value="#{backingBean.getDropdownValues('CRT')}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="certBody" listener="#{backingBean.assignCertBodyList}" />
 					</p:selectOneMenu> <p:message id="certTypeMsg" for="certTypeId" showSummary="true"
 						showDetail="false" display="icon" /></td>
 			</tr>
