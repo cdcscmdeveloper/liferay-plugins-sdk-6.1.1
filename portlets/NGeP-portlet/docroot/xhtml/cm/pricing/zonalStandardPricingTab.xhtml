@@ -25,6 +25,10 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.zm.name']}
 				</f:facet>
+				
+				<p:inputText value="#{standard.cmSupplierZone.suppZoneName}" disabled="true"></p:inputText>
+				
+				<ui:remove>
 				<p:selectOneMenu value="#{standard.cmSupplierZone.suppZoneId}" disabled="true" style="width: 128px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItems
@@ -32,6 +36,7 @@
 						var="zone" itemLabel="#{zone.suppZoneName}"
 						itemValue="#{zone.suppZoneId}"></f:selectItems>
 				</p:selectOneMenu>
+				</ui:remove>
 
 			</p:column>
 
