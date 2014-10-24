@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<table style="width: 100%;">
 		<tr>
@@ -24,50 +25,55 @@
 		</tr>
 	</table>
 
-	<p:panel header="AGENCY DETAILS" toggleable="true" id="flDetails">
+	<p:panel header="#{lbl['lbl.fl.agency.details']}" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="50" id="ministry"
+				<td><p:inputText size="65" id="ministry"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="50" id="issuedJabatan"
+				<td><p:inputText size="65" id="issuedJabatan"
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.ptj']}" /></td>
-				<td><p:inputText size="5" id="preparedOrgProfileId" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" /></td>
+				<td><p:inputText size="8" id="preparedOrgProfileId" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
+					<p:spacer width="5" /> <p:inputText size="50" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/></td>
+						
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="5" id="issuedOrgProfileId" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" /></td>
+				<td><p:inputText size="8" id="issuedOrgProfileId" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
+					<p:spacer width="5" /> <p:inputText size="50" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="5" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgProfileId}" />
-					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39"
-						disabled="true" value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"></p:inputText></td>
+				<td><p:inputText size="8" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
+					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="50"
+						disabled="true" value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"></p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="5" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
-						width="5" /> <p:inputText size="39" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}" /></td>
+				<td><p:inputText size="8" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeCode}"/> <p:spacer
+						width="5" /> <p:inputText size="50" disabled="true" value="#{flOrderBB.managedBean.flRequest.agOffice.officeName}" />
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.acc.office']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="REQUEST DETAIL" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
@@ -91,7 +97,7 @@
 				<td><p:inputText size="20" disabled="true" value="#{flOrderBB.managedBean.fulfilmentOrder.createdDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.date']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
@@ -109,13 +115,14 @@
 					<p:spacer width="5" /> <h:outputText
 						value="#{lbl['lbl.fl.zonal']}" /> <p:selectBooleanCheckbox
 						value="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
-						disabled="true" /></td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approver.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
 					value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/>
 					</td>
 			</tr>
 			<tr>
@@ -130,7 +137,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
 						value="#{flOrderBB.managedBean.flRequest.ctContract.mto}"
-						disabled="true" /></td>
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.end.delivery.date']}" /></td>
@@ -140,11 +147,11 @@
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
 				<td><p:selectBooleanCheckbox disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /></td>
+						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="SUPPLIER DETAIL" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
@@ -153,11 +160,13 @@
 						<tr>
 							<td style="width: 25px;"><p:inputText size="15"
 									disabled="true"
-									value="#{flOrderBB.managedBean.flRequest.ctContract.smSupplier.regNo}" /></td>
+									value="#{flOrderBB.managedBean.flRequest.ctContract.smSupplier.regNo}" />
+									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
 							<td style="width: 65px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="20" disabled="true" 
-							value="#{flOrderBB.retrieveMofNo(flOrderBB.managedBean.flRequest.smSupplier)}"/></td>
+							value="#{flOrderBB.retrieveMofNo(flOrderBB.managedBean.flRequest.smSupplier)}"/>
+							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/></td>
 						</tr>
 					</table></td>
 			</tr>
@@ -168,8 +177,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}"
-						/></td>
+				<td><p:inputText disabled="true" size="50" value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}"/>
+				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
@@ -213,7 +222,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="FACTORING DETAILS" toggleable="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.factored}">
+	<p:panel header="#{lbl['lbl.fl.factoring.details']}" toggleable="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.factored}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
