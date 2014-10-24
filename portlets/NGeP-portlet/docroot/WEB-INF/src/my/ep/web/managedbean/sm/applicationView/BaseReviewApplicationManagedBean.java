@@ -89,6 +89,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean approverUser;
 	private boolean reviewSiteVisit;
 	private boolean reviewApplicationExist;
+	private boolean hasPreviousApplication;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -777,6 +778,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRevTypeParam(String revTypeParam) {
 		this.revTypeParam = revTypeParam;
+	}
+
+	public boolean isHasPreviousApplication() {
+		return hasPreviousApplication;
+	}
+
+	public void setHasPreviousApplication(boolean hasPreviousApplication) {
+		this.hasPreviousApplication = hasPreviousApplication;
 	}
 
 }
