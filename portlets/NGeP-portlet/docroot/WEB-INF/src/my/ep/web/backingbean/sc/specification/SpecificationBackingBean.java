@@ -104,6 +104,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -2838,11 +2839,9 @@ public class SpecificationBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
+			this.getManagedBean().setPtjtList(new ArrayList<PmOrgProfile>());
 
-			if (resDTO.getOrgProfileList() != null) {
-				this.getManagedBean().setDepartmentList(
-						resDTO.getOrgProfileList());
-			}
+			this.getManagedBean().setDepartmentList(resDTO.getOrgProfileList());
 
 		} finally {
 			orgProfileSO = null;
@@ -2863,9 +2862,7 @@ public class SpecificationBackingBean extends
 			OrgProfileResDTO resDTO = orgProfileSO
 					.retrieveOrgProfileListByOrgType(reqDTO);
 
-			if (resDTO.getOrgProfileList() != null) {
-				this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
-			}
+			this.getManagedBean().setPtjtList(resDTO.getOrgProfileList());
 
 		} finally {
 			orgProfileSO = null;
@@ -5776,7 +5773,7 @@ public class SpecificationBackingBean extends
 					.getStageTwoTechComplianceSelect();
 
 			if (null == selectList || selectList.isEmpty()) {
-				throw new EpException("Please Select At least One record");
+				throw new EpException(MessageConst.ERROR_760147);
 			}
 
 			for (int i = 0; i < selectList.size(); i++) {
@@ -5890,7 +5887,7 @@ public class SpecificationBackingBean extends
 				compilance = new ArrayList<ScQtCheckList>();
 			}
 			if (null == selectList || selectList.isEmpty()) {
-				throw new EpException("Please Select At least One record");
+				throw new EpException(MessageConst.ERROR_760147);
 			}
 
 			for (int i = 0; i < selectList.size(); i++) {
@@ -6005,7 +6002,7 @@ public class SpecificationBackingBean extends
 			List<PmAddressType> SelectdeliveryList = this.getManagedBean()
 					.getDeliveryAddressSelect();
 			if (null == SelectdeliveryList || SelectdeliveryList.isEmpty()) {
-				throw new EpException("Please select record to proceed.");
+				throw new EpException(MessageConst.ERROR_760145);
 
 			}
 			List<PmAddressType> deliveryList = new ArrayList<PmAddressType>();
@@ -6188,6 +6185,10 @@ public class SpecificationBackingBean extends
 
 					List<ScQtDeliveryLoc> selectdeliveryList = this
 							.getManagedBean().getSelectDeliveryList();
+					if (null == selectdeliveryList
+							|| selectdeliveryList.isEmpty()) {
+						throw new EpException(MessageConst.ERROR_760146);
+					}
 					locationRemoveList.addAll(selectdeliveryList);
 					if (deliveryList.size() == selectdeliveryList.size()) {
 
@@ -6215,6 +6216,10 @@ public class SpecificationBackingBean extends
 
 					List<ScQtDeliveryLoc> selectdeliveryList = this
 							.getManagedBean().getSelectDeliveryList();
+					if (null == selectdeliveryList
+							|| selectdeliveryList.isEmpty()) {
+						throw new EpException(MessageConst.ERROR_760146);
+					}
 					locationRemoveList.addAll(selectdeliveryList);
 					if (deliveryList.size() == selectdeliveryList.size()) {
 
@@ -6249,6 +6254,9 @@ public class SpecificationBackingBean extends
 			}
 			List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean()
 					.getSelectDeliveryList();
+			if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
+				throw new EpException(MessageConst.ERROR_760146);
+			}
 			locationRemoveList.addAll(selectdeliveryList);
 
 			if (nonzone.size() == selectdeliveryList.size()) {
@@ -6749,9 +6757,13 @@ public class SpecificationBackingBean extends
 					if (null == scoreYears) {
 						scoreYears = new ArrayList<ScQtCheckListScore>();
 					}
-					if (scoreYears.size() < 2) {
-						throw new EpException(MessageConst.ERROR_760140);
+					if (scoreYears.size() >= 1) {
+
+						if (scoreYears.size() < 2) {
+							throw new EpException(MessageConst.ERROR_760140);
+						}
 					}
+
 					for (int i = 0; i < scoreYears.size(); i++) {
 						ScQtCheckListScore Score = scoreYears.get(i);
 						if (null == Score.getScore()
@@ -7592,12 +7604,15 @@ public class SpecificationBackingBean extends
 				total = total
 						+ weight.getQtScoreWeightage().getWeightage()
 								.intValue();
-				BigDecimal b1 = new BigDecimal(total);
-				BigDecimal techWeightage = new BigDecimal(100);
-				MathContext mc = new MathContext(4);
-				BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				this.getManagedBean()
-						.setTechnicalWeightageScore(techWeightage1);
+				if (total > 100) {
+					throw new EpException(MessageConst.ERROR_760141);
+				}
+				// BigDecimal b1 = new BigDecimal(total);
+				// BigDecimal techWeightage = new BigDecimal(100);
+				// MathContext mc = new MathContext(4);
+				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+				this.getManagedBean().setTechnicalWeightageScore(
+						new BigDecimal(total));
 			}
 		} finally {
 
@@ -7689,12 +7704,16 @@ public class SpecificationBackingBean extends
 				total = total
 						+ weight.getQtScoreWeightage().getWeightage()
 								.intValue();
-				BigDecimal b1 = new BigDecimal(total);
-				BigDecimal techWeightage = new BigDecimal(100);
-				MathContext mc = new MathContext(4);
-				BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
-				this.getManagedBean()
-						.setFinancialWeightageScore(techWeightage1);
+
+				if (total > 100) {
+					throw new EpException(MessageConst.ERROR_760141);
+				}
+				// BigDecimal b1 = new BigDecimal(total);
+				// BigDecimal techWeightage = new BigDecimal(100);
+				// MathContext mc = new MathContext(4);
+				// BigDecimal techWeightage1 = b1.divide(techWeightage, mc);
+				this.getManagedBean().setFinancialWeightageScore(
+						new BigDecimal(total));
 			}
 		} finally {
 
@@ -8487,8 +8506,7 @@ public class SpecificationBackingBean extends
 				&& technicalScoreSetting.getSettingType() == 1) {
 			if (null != technicalScoreSetting.getPassingScore()
 					&& technicalScoreSetting.getPassingScore().intValue() > 100) {
-				throw new EpException(
-						"Technical Passing Score Should be less than 100.");
+				throw new EpException(MessageConst.ERROR_760142);
 			}
 			scoreSetting.add(technicalScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
@@ -8499,8 +8517,7 @@ public class SpecificationBackingBean extends
 				&& financialScoreSetting.getSettingType() == 2) {
 			if (null != financialScoreSetting.getPassingScore()
 					&& financialScoreSetting.getPassingScore().intValue() > 100) {
-				throw new EpException(
-						"Financial Passing Score Should be less than 100.");
+				throw new EpException(MessageConst.ERROR_760143);
 			}
 			scoreSetting.add(financialScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
@@ -8510,8 +8527,7 @@ public class SpecificationBackingBean extends
 		if (null != demoScoreSetting && demoScoreSetting.getSettingType() == 3) {
 			if (null != demoScoreSetting.getPassingScore()
 					&& demoScoreSetting.getPassingScore().intValue() > 100) {
-				throw new EpException(
-						"Demo Passing Score Should be less than 100.");
+				throw new EpException(MessageConst.ERROR_760144);
 			}
 			scoreSetting.add(demoScoreSetting);
 			scQt.setScQtScoreSettings(scoreSetting);
