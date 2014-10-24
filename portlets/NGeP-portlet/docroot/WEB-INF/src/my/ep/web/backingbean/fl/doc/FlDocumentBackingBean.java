@@ -378,9 +378,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			FulfilmentOrderBackingBean flOrderBB=new FulfilmentOrderBackingBean();
+			
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setSelectedTabIndex(0);
 			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			flOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
