@@ -864,7 +864,7 @@ public class SpecificationBackingBean extends
 		switch (previousIndex) {
 		case 0:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
-			specSo.validateBoGeneralInfo(specReqDTO);
+			//specSo.validateBoGeneralInfo(specReqDTO);
 
 			break;
 		case 1:
@@ -1745,7 +1745,7 @@ public class SpecificationBackingBean extends
 			// specMaster.setDurationMonth(12);
 			specMaster
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
-			specMaster.setScQtDoc(scqtDocDest);
+			specMaster.setScQtDoc(null);
 			specMaster.setScQuoteDocs(null);
 			specMaster.setBrandNew(false);
 			specMaster.setRecordStatus(true);
@@ -7605,7 +7605,7 @@ public class SpecificationBackingBean extends
 						+ weight.getQtScoreWeightage().getWeightage()
 								.intValue();
 				if (total > 100) {
-					throw new EpException(MessageConst.ERROR_760141);
+					throw new EpException(MessageConst.ERROR_760148);
 				}
 				// BigDecimal b1 = new BigDecimal(total);
 				// BigDecimal techWeightage = new BigDecimal(100);
@@ -7706,7 +7706,7 @@ public class SpecificationBackingBean extends
 								.intValue();
 
 				if (total > 100) {
-					throw new EpException(MessageConst.ERROR_760141);
+					throw new EpException(MessageConst.ERROR_760148);
 				}
 				// BigDecimal b1 = new BigDecimal(total);
 				// BigDecimal techWeightage = new BigDecimal(100);
