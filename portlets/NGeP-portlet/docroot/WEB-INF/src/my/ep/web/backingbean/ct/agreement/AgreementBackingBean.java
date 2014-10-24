@@ -215,11 +215,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					     getManagedBean().setContractVer(conResDTO.getCtContractVer());
 				
 				  } else {
-					       resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+					          resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
 			      }
 			 } else {
-				       ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
-				       resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				            ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
+				            resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 			 }
 
 			setCtAgreementDetails(resDTO);
@@ -245,7 +245,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
                  getManagedBean().setCtAgreement(resDTO.getAgreement());
 			     getManagedBean().setCtContract(resDTO.getAgreement().getCtContract());
                  if (getManagedBean().getContractVer() == null)
-				         getManagedBean().setContractVer(resDTO.getAgreement().getCtContract().getCurrentContractVer());
+				         getManagedBean().setContractVer(getManagedBean().getCtContract().getCurrentContractVer());
                  
                  if(getManagedBean().getCtContract().getFulfillmentType() == null)
 				     getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
@@ -545,7 +545,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			    items = new SelectItem[resDTO.getPersonnels().size() + 1];
 			    items[0] = new SelectItem(null, "- Select One -");
 			    for (SmPersonnel personnel : resDTO.getPersonnels()) {
-				    items[i++] = new SelectItem(personnel.getName(),personnel.getName());
+				    items[i++] = new SelectItem(personnel.getPersonnelId(),personnel.getName());
 				    getManagedBean().getSupplierUserMap().put(personnel.getName(),personnel);
 			   }
 		 } finally {
@@ -1052,8 +1052,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 
 	public void setUserValueAgency(CtAgreementParty ctParty) {
-		for (CtAgreementParty party : this.getManagedBean().getCtAgencySigner()) {
-			 if (party.equals(ctParty)) {
+		int counter = 0;
+		for (CtAgreementParty party : getManagedBean().getCtAgencySigner()) {
+	
+			if (party.equals(ctParty)) {
 				   IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IUserSO.class);
 				   UserReqDTO reqDTO = new UserReqDTO();
 				   reqDTO.setUserId(ctParty.getOfficer().getUserId());
@@ -1062,14 +1064,28 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
 				   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 			 }
-		}
+			if(party.getOfficer().getUserId().intValue() == ctParty.getOfficer().getUserId().intValue()){
+				counter++;
+				if(counter == 2)
+				throw new EpException(MessageConst.WARN_754000);
+			}
+		 }
 	}
 
-	public void setSupplierUserValue(CtAgreementParty ctParty, String officerName) {
-		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(officerName);
+	public void setSupplierUserValue(CtAgreementParty ctParty) {
+		
+		SmPersonnel personnel = getManagedBean().getSupplierUserMap().get(ctParty.getOfficerName());
 		if (personnel != null) {
 			ctParty.setOfficerIc(personnel.getIdentificationNo());
 			ctParty.setOfficerPosition(personnel.getDesignation());
+		 }
+		int counter = 0;
+		for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
+			if(party.getOfficerName().equalsIgnoreCase(ctParty.getOfficerName())){
+				counter++;
+				if(counter == 2)
+				throw new EpException(MessageConst.WARN_754000);
+			}
 		}
 	}
 
@@ -1227,8 +1243,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return selectedSupplierWitnes;
 	}
 
-	public void setSelectedSupplierWitnes(
-			CtAgreementParty[] selectedSupplierWitnes) {
+	public void setSelectedSupplierWitnes(CtAgreementParty[] selectedSupplierWitnes) {
 		this.selectedSupplierWitnes = selectedSupplierWitnes;
 	}
 
@@ -1236,8 +1251,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return selectedSupplierSigner;
 	}
 
-	public void setSelectedSupplierSigner(
-			CtAgreementParty[] selectedSupplierSigner) {
+	public void setSelectedSupplierSigner(CtAgreementParty[] selectedSupplierSigner) {
 		this.selectedSupplierSigner = selectedSupplierSigner;
 	}
 }

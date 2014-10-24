@@ -45,7 +45,7 @@
                              value="#{agSignerVar.officer.userId}"   label="#{lbl['lbl.ct.contract.signer']}">
                              <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
                              <p:ajax event="change" update="@([id$=agOfId],[id$=agOfPosition])" 
-                                 process="@this" listener="#{agreementBackingBean.setUserValueAgency(agSignerVar)}"/> 
+                                 process="@all" listener="#{agreementBackingBean.setUserValueAgency(agSignerVar)}"/> 
                          </p:selectOneMenu>
                       </p:column>  
         

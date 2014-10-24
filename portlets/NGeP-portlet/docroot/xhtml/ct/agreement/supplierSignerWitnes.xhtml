@@ -28,7 +28,8 @@
 				  </f:facet>
                   <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
                    <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown()}"/>
-                     <p:ajax event="change" update="suOfId,suOfPosition" process="@this" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar,signSupplierVar.officerName)}"/> 
+                     <p:ajax event="change" update="suOfId,suOfPosition"
+                         process="@all" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar)}"/> 
                    </p:selectOneMenu>
                 </p:column>  
                 <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
