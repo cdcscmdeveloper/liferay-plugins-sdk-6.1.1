@@ -495,8 +495,8 @@ public class SmApplicationBackingBean extends
 					// fac.setOwnerName("Sample");
 					fac.setFacilityType("H");
 				}
-				SmAddress addr = SmApplicationUtil
-						.setDefaultAddr(getManagedBean().getDefPmCountry());
+				SmAddress addr = new SmAddress();
+				addr = setDefaultBaseOfficeAddress(addr);
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
 				fac.setPurchasePrice(new BigDecimal(0));
@@ -517,6 +517,28 @@ public class SmApplicationBackingBean extends
 		} finally {
 			// mofRegistrationSO = null;
 		}
+	}
+
+	private SmAddress setDefaultBaseOfficeAddress(SmAddress addr) {
+		if (getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses() != null
+				&& !getManagedBean().getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().isEmpty()) {
+			SmAddress baseAddr = getManagedBean().getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses().get(0)
+					.getSmAddress();
+			if (baseAddr != null) {
+				addr = SmApplicationUtil.setDefaultBaseOfficeAddr(baseAddr,
+						addr);
+			} else {
+				addr = SmApplicationUtil.setDefaultAddr(getManagedBean()
+						.getDefPmCountry());
+			}
+		} else {
+			addr = SmApplicationUtil.setDefaultAddr(getManagedBean()
+					.getDefPmCountry());
+		}
+		return addr;
 	}
 
 	private void setSupplierCancellationRemarks(String docType, Long docId) {
@@ -1074,30 +1096,23 @@ public class SmApplicationBackingBean extends
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {
 		if (getManagedBean().getBasicCompanyFacility().getOwnershipType()
 				.equalsIgnoreCase("O")) {
-			if (!(getManagedBean().getBasicCompanyFacility().getSmAddress() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmCountry() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmCountry().getCountryId() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmState() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmState().getStateId() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmDistrict() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmDistrict().getDistrictId() != null
-					&& getManagedBean().getBasicCompanyFacility()
-							.getSmAddress().getPmCity() != null && getManagedBean()
-					.getBasicCompanyFacility().getSmAddress().getPmCity()
-					.getCityId() != null)) {
-				getManagedBean().getBasicCompanyFacility().setSmAddress(null);
-			}
+			getManagedBean().getBasicCompanyFacility().setSmAddress(
+					setDefaultBaseOfficeAddress(getManagedBean()
+							.getBasicCompanyFacility().getSmAddress()));
 		} else {
 			SmAddress addr = SmApplicationUtil.setDefaultAddr(getManagedBean()
 					.getDefPmCountry());
 			if (getManagedBean().getBasicCompanyFacility().getSmAddress() == null) {
 				getManagedBean().getBasicCompanyFacility().setSmAddress(addr);
+			} else if (getManagedBean().getBasicCompanyFacility()
+					.getSmAddress() != null
+					&& getManagedBean().getBasicCompanyFacility()
+							.getSmAddress().getAddressId() != null) {
+				getManagedBean().getBasicCompanyFacility().setSmAddress(
+						SmApplicationUtil.setDefaultAddrWithSameId(
+								getManagedBean().getDefPmCountry(),
+								getManagedBean().getBasicCompanyFacility()
+										.getSmAddress()));
 			}
 			if (getManagedBean().getBasicCompanyFacility().getSmAddress()
 					.getPmCountry() != null
@@ -5197,6 +5212,15 @@ public class SmApplicationBackingBean extends
 							retrievePmStateList(smFac.getSmAddress()
 									.getPmCountry().getCountryId()));
 				}
+				// else {
+				// if (smFac.getSmAddress() != null) {
+				// smFac.setSmAddress(setDefaultBaseOfficeAddress(smFac
+				// .getSmAddress()));
+				// } else {
+				// smFac.setSmAddress(setDefaultBaseOfficeAddress(new
+				// SmAddress()));
+				// }
+				// }
 				log.info("*********Setting Basic company value **********");
 				this.getManagedBean().setBasicCompanyFacility(smFac);
 				if (smFac.getSmAddress() != null
