@@ -14,22 +14,30 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+
+		<h:panelGroup
+			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
+
+			<p:poll interval="#{onlineBiddingBB.interval}"
+				listener="#{onlineBiddingBB.pollListener}"
+				update="itemWiseBidListOB" onstart="blockWidget.show()"
+				oncomplete="blockWidget.hide()" />
+		</h:panelGroup>
 		
-		<p:poll interval="#{onlineBiddingBB.interval}" listener="#{onlineBiddingBB.pollListener}" update="itemWiseBidListOB" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" /> 
-	
 		
+
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
-		
-		
+
+
 
 		<p:panel id="onLineBiddingPanel" header="#{lbl['lbl.sc.bid.price']}"
 			toggleable="true">
 
 			<p:spacer height="5" />
 
-			
-				<ui:include src="/xhtml/sc/bidding/onlineBiddingTimers.xhtml" />
-			
+
+			<ui:include src="/xhtml/sc/bidding/onlineBiddingTimers.xhtml" />
+
 
 			<p:spacer height="5" />
 
