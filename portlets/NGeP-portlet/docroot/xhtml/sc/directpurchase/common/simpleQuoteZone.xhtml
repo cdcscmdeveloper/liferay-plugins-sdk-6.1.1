@@ -97,12 +97,13 @@
 				<p:dataTable id="panelzoneDataTable"
 					value="#{simpleQuoteBackingBean.managedBean.zoneTrees}"
 					var="zoneTree"
-				    rowIndexVar="index" rowKey="#{zoneTree}">
+				    rowIndexVar="index">
 				  <p:column headerText="Location">
-				   <p:tree value="#{zoneTree}" var="location" selectionMode="single">
-						<p:ajax event="select" 
-							listener="#{simpleQuoteBackingBean.onSelectZoneItemZone}" />
-						
+				   <p:tree value="#{zoneTree}" var="location" selectionMode="checkbox" dyanmic="true"
+                                              cache="false">
+						<p:ajax event="select" listener="#{simpleQuoteBackingBean.selectPanelItemZone}" />
+					    <p:ajax event="unselect"  listener="#{simpleQuoteBackingBean.unSelectPanelItemZone}" />
+					    
 							<p:treeNode type="zone">
 								<h:outputText value="#{location.zoneName}" />
 							</p:treeNode>
