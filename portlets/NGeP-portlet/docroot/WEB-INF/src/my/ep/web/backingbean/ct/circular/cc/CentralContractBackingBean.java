@@ -1044,6 +1044,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().setSearchContractName(null);
 			getManagedBean().setContractList(new ArrayList<CtContract>());
 			getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
+			getManagedBean().setContractList(new ArrayList<CtContract>());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
