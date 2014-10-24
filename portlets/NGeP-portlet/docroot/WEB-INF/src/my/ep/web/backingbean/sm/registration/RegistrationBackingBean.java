@@ -497,6 +497,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					FacesMessage.SEVERITY_INFO,
 					null,
 					MessageUtils.getMessage(MessageConst.INFO_721012, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
 			return "/xhtml/sm/onlinereg/outputMsg";
@@ -798,31 +799,42 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().setCountryLs(resDTO.getCountryList());
 	}
 
-	private List<PmState> retrievePmStateList(long countryId) {
-		StateReqDTO reqDTO = new StateReqDTO();
-		reqDTO.setCountryId(countryId);
-		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStateSO.class);
-		StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
-		return resDTO.getStateList();
+	private List<PmState> retrievePmStateList(Long countryId) {
+		if(countryId != null){
+			StateReqDTO reqDTO = new StateReqDTO();
+			reqDTO.setCountryId(countryId);
+			IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStateSO.class);
+			StateResDTO resDTO = reqSO.retriveStatesListByCountryID(reqDTO);
+			return resDTO.getStateList();
+		}
+
+		return null;
 	}
 
-	private List<PmDistrict> retrievePmDistrictList(long stateId) {
-		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		reqDTO.setStateId(stateId);
-		IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
-		DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
-		return resDTO.getDistrictList();
+	private List<PmDistrict> retrievePmDistrictList(Long stateId) {
+		if(stateId != null){
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setStateId(stateId);
+			IDistrictSO reqSO = (IDistrictSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IDistrictSO.class);
+			DistrictResDTO resDTO = reqSO.retriveDistrictListByStateID(reqDTO);
+			return resDTO.getDistrictList();
+		}
+		
+		return null;
 	}
 
-	private List<PmCity> retrievePmCityList(long districtId) {
-		CityReqDTO reqDTO = new CityReqDTO();
-		reqDTO.setDistrictId(districtId);
-		ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICitySO.class);
-		CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
-		return resDTO.getCityList();
+	private List<PmCity> retrievePmCityList(Long districtId) {
+		if(districtId != null){
+			CityReqDTO reqDTO = new CityReqDTO();
+			reqDTO.setDistrictId(districtId);
+			ICitySO reqSO = (ICitySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICitySO.class);
+			CityResDTO resDTO = reqSO.retriveCityListByDistrictId(reqDTO);
+			return resDTO.getCityList();
+		}
+		return null;
 	}
 
 	private void retrieveFinancialOrgList() {
@@ -903,8 +915,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	
 	public void populateStateByAddType(String typeAdd) {
 		if (typeAdd.equals("business")) {
-			List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
-			this.getManagedBean().setBusinessStateLs(stateLs);
+			//List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
+			//this.getManagedBean().setBusinessStateLs(stateLs);
+			pmStateDropdownValues();
 		} else if (typeAdd.equals("residential")) {
 			List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setResidentialStateLs(stateLs);
@@ -985,10 +998,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());	
 			//this.getManagedBean().getSuppBusinessNature().setPmBusinessNature(new PmBusinessNature());
 
-			log.info("---------Supplier Type-----------"
-					+ this.getManagedBean().getSmAppl().getSupplierType());
-
-			//		log.info("**********************BUSINESS_TYPE_LS*****************" + this.getManagedBean().getBusinessTypeLs().size());
+			log.info("---------Supplier Type-----------" + this.getManagedBean().getSmAppl().getSupplierType());
 			if(resDTO.getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 				getIndividualServiceType();
 				this.getManagedBean().setSmPermenantAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
@@ -1001,6 +1011,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				this.populateDistrictByAddType("business");
 				this.populateCityByAddType("business");
 			}else{
+				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+					this.getManagedBean().setSabahSarawakType(true);
+				}
+				
 				this.getManagedBean().setSmBusinessAdd(resDTO.getSmSupp().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress());
 				this.populateStateByAddType("business");
 				this.populateDistrictByAddType("business");
@@ -1353,63 +1370,76 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void pmStateDropdownValues() {
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		List<PmState> stateLs = retrievePmStateList(countryId);
-		this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+		
+		if(this.getManagedBean().getBusinessStateLs() == null){
+			this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+		}
 		
 		if(this.getManagedBean().getSmSupp().getBusinessType() != null && !this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase("")){
 			log.info("------pmStateDropdownValues------" + this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 
-//			if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
-				if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
-						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-						this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-					
-					PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
-					this.getManagedBean().getSmBusinessAdd().setPmCountry(defaultCountry);
-					//this.getManagedBean().getSmBusinessAdd().set
-					
-					for(PmState state : stateLs){
-						if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-								this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-							if(state.getStateName().equalsIgnoreCase("SARAWAK")){
-								this.getManagedBean().getBusinessStateLs().add(state);
-								this.getManagedBean().getSmBusinessAdd().setPmState(state);
-								this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
-								System.out.println("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
-							}
-						}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-								this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-							if(state.getStateName().equalsIgnoreCase("SABAH")){
-								this.getManagedBean().getBusinessStateLs().add(state);
-								this.getManagedBean().getSmBusinessAdd().setPmState(state);
-								this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
-								System.out.println("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
-							}
+			if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK) ||
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+
+				PmCountry defaultCountry = SmCommonUtil.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+				this.getManagedBean().getSmBusinessAdd().setPmCountry(defaultCountry);
+				this.getManagedBean().setSabahSarawakType(true);
+				this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+				
+				if(this.getManagedBean().getSmBusinessAdd().isBrandNew()){
+					this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+					this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+				}
+
+				for(PmState state : stateLs){
+					if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
+						if(state.getStateName().equalsIgnoreCase("SARAWAK")){
+							this.getManagedBean().getBusinessStateLs().add(state);
+							this.getManagedBean().getSmBusinessAdd().setPmState(state);
+							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+							this.getManagedBean().setBusinessCityLs(null);
+							
+							System.out.println("----SAEAWAK BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
 						}
-					}
-				}else{	
-					if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
-						for(PmState state : stateLs){
-							if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
-								this.getManagedBean().getBusinessStateLs().add(state);
-							}
+					}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
+							this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
+						if(state.getStateName().equalsIgnoreCase("SABAH")){
+							this.getManagedBean().getBusinessStateLs().add(state);
+							this.getManagedBean().getSmBusinessAdd().setPmState(state);
+							this.getManagedBean().setBusinessDistrictLs(retrievePmDistrictList(state.getStateId()));
+							this.getManagedBean().setBusinessCityLs(null);
+							System.out.println("----SABAH BusinessDistric----" + this.getManagedBean().getBusinessDistrictLs());
 						}
-					}else{
-						this.getManagedBean().setBusinessStateLs(stateLs);
 					}
 				}
+			}else{		
+				if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
+					this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+					if(this.getManagedBean().isSabahSarawakType()){
+						this.getManagedBean().setSabahSarawakType(false);
+						if(this.getManagedBean().getSmBusinessAdd().isBrandNew()){
+							this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
+							this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
+							this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
+						}
+
+					}
+					
+					for(PmState state : stateLs){
+						if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
+							this.getManagedBean().getBusinessStateLs().add(state);
+						}
+					}
+				}else{
+					this.getManagedBean().setBusinessStateLs(stateLs);
+				}
 			}
-
-
-		/*		if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SARAWAK) || 
-				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SARAWAK)){
-
-		}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH) || 
-				this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SABAH)){
-
 		}else{
-
-		}*/
+			this.getManagedBean().setBusinessStateLs(stateLs);
+		}
 
 	}
 }
