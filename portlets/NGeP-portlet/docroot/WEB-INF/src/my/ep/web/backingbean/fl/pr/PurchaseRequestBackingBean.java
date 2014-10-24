@@ -627,10 +627,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		boolean delAddrSelected=(boolean) e.getComponent().getAttributes().get("value");
+		if(delAddrSelected){
 			getManagedBean().setDeleteButtonHide(false);
 		}else{
-			getManagedBean().setDeleteButtonHide(true);
+			//Code for check other delivery addresses selected.
+			boolean isAnyDelAddeSelected=isAnyAddrSelected();
+			if(!isAnyDelAddeSelected){
+				getManagedBean().setDeleteButtonHide(true);
+			} else {
+				getManagedBean().setDeleteButtonHide(false);
+			}
 		}
 		
 	}
@@ -643,6 +650,17 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}	
 	}*/
 	
+	private boolean isAnyAddrSelected() {
+		boolean isAnyAddrSelected=false;
+		for(FlDeliveryAddress delAddr:getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			if(delAddr.isSelectedAddressRowDelete()){
+				isAnyAddrSelected=true;
+				break;
+			}
+		}
+		return isAnyAddrSelected;
+	}
+
 	public void removeAddRow(){
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,	IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
@@ -1490,6 +1508,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void onNodeSelect() {
+		//reset the checkboxes already selected.
+		resetSelectedTreeNodes();
 		getManagedBean().setChargeLinePanel(false);
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
@@ -2494,6 +2514,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
 				deliveryAddress.setSelectedAddressRowDelete(false);
 			}
+		}
+	}
+	private void resetSelectedTreeNodes() {
+		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		for(TreeNode node:root.getChildren()){
+			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+			addr.setSelectedChargeItem(false);
 		}
 	}
 	

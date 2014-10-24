@@ -16,10 +16,10 @@
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select" onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				listener="#{purchaseRequestBackingBean.onNodeSelect()}"
-				update="@(.chargeLineSection)" />
+				update="chargeLineTbl,@(.chargeLineSection)" />
 			<p:ajax event="unselect"
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
-				update="@(.chargeLineSection)"></p:ajax>
+				update="chargeLineTbl,@(.chargeLineSection)"></p:ajax>
 			<p:column>
 				<p:selectBooleanCheckbox
 					value="#{chargeLineNode.selectedChargeItem}"
