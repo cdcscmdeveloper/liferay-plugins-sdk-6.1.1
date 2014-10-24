@@ -233,6 +233,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
+		if(getManagedBean().getActiveContractList()==null && isRequisitioner()) {
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
+			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
+			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
+			populateContractListTree();
+		}
 		if(null == getManagedBean().getFlManulaAddress()){
 			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -3099,17 +3109,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FacesContext fc=FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 		.handleNavigation(fc, null, "crList?faces-redirect=true");
-		
-		if(isRequisitioner()) {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
-			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
-			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
-			populateContractListTree();
-		}
 	}
 
 }
