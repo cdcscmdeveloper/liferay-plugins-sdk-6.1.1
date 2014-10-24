@@ -182,11 +182,23 @@
 							</td>
 						</tr>
 					</table></td>
+				<td style="width: 135px;"><p:outputLabel
+						value="#{lbl['lbl.pm.financialorg.paymentbankname']}" 
+						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"/></td>
+				<td><p:inputText disabled="true" size="53"
+						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.paymentBank.finOrgName}"  /></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.supplierName}" /></td>
+				<td style="width: 135px;"><p:outputLabel
+						value="#{lbl['lbl.pm.financialorg.acnumber']}" 
+						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"/></td>
+				<td><p:inputText disabled="true" size="53"
+						rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored eq 'false'}"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.accountNo}" /></td>			
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
