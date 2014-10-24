@@ -414,27 +414,52 @@ public class ReportConst {
 	public static final String SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP = "List_offline_Supportg_Doc_Pendg_Submission.jsp";
 	public static final String SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP = "Virtual_Certificate_Release_List_of_the_Day.jsp";
 	//SM Module report end
+	//sm
+	public static final String AMP_EP_NO_EQ = "&epno=";
+	public static final String AMP_TO_DATE_EQ = "&todt=";
+	public static final String AMP_FROM_DATE_EQ = "&frdt=";
 	public static final String AMP_SUPP_DOC_EQ = "&supportingdocci=";
 	public static final String AMP_REG_NO_EQ = "&registrationno=";
 	public static final String AMP_SUPP_DOC_STATUS_MODE_EQ = "&supportingdocmode=";
 	public static final String AMP_DOC_STS_NAME_EQ = "&statusname=";
 	public static final String AMP_APPLICATION_NO_EQ = "&applicationno=";
-	public static final String AMP_FROM_RELEASE_DATE_EQ = "&releasedate=";
+	public static final String AMP_USER_PRINTED_BY_EQ  = "&printedby=";
 	public static final String AMP_ZONE_NAME_EQ = "&zonename=";
 	public static final String AMP_SUPPLIER_TYPE_EQ = "&suppliertype=";
 	public static final String AMP_REG_MOF_FROM_EQ = "&frmofno=";
 	public static final String AMP_REG_MOF_TO_EQ = "&tomofno=";
+	public static final String AMP_COMP_NAME_EQ = "&companyname=";
+	public static final String AMP_REG_TYPE_EQ = "&registrationtype=";
 	public static final String AMP_REG_STATUS_EQ = "&registrationstatus=";
 	public static final String AMP_PUC_N_AS_EQ = "&puc_or_as=";
 	public static final String AMP_FRM_PUC_EQ = "&frpaidupcapital=";
 	public static final String AMP_TO_PUC_EQ = "&topaidupcapital=";
+	public static final String AMP_ACMLTD_FRM_TOT_SHARE_EQ = "&frtotalshare=";
+	public static final String AMP_ACMLTD_TO_TOT_SHARE_EQ = "&tototalshare=";
 	public static final String AMP_MAIN_CATEGORY_EQ = "&maincategoryname=";
 	public static final String AMP_SUB_CATEGORY_EQ = "&subcategoryname=";
 	public static final String AMP_SUB_DIV_CATEGORY_EQ = "&subdivisioncategoryname=";
+	public static final String AMP_ROLE_EQ = "&role=";
 	public static final String AMP_FRM_EXPIRY_DT_EQ = "&frexpdt=";
 	public static final String AMP_TO_EXPIRY_DT_EQ = "&toexpdt=";
-	public static final String AMP_ROLE_EQ = "&role=";
-	
+	public static final String AMP_IC_NO_EQ = "&icno=";
+	public static final String AMP_PASSPORT_NO_EQ = "&ppno=";
+	public static final String AMP_FRM_ESTABLISH_DT_EQ = "&frestablishdt=";
+	public static final String AMP_TO_ESTABLISH_DT_EQ = "&toestablishdt=";
+	public static final String AMP_STATE_NAME_EQ = "&statename=";
+	public static final String AMP_FRM_APPL_DT_EQ = "&frapplicationdt=";
+	public static final String AMP_TO_APPL_DT_EQ = "&toapplicationdt=";
+	public static final String AMP_PAYMENT_TYPE_EQ = "&paymenttype=";
+	public static final String AMP_APPL_TYPE_EQ = "&applicationtype=";
+	public static final String AMP_APPL_STATUS_EQ = "&applicationstatus=";
+	public static final String AMP_MOF_NO_EQ = "&mofno=";
+	public static final String AMP_ZONE_ID_EQ = "zoneid=";
+	public static final String AMP_FRM_PRNTD_DT_EQ = "printeddatefrom=";
+	public static final String AMP_TO_PRNTD_DT_EQ = "printeddateto=";
+	public static final String AMP_REPORT_ID_EQ = "reportid=";
+	public static final String AMP_FROM_RELEASE_DATE_EQ = "&releasedate=";
+	//	
+
 	public static final String EMPTY_VAL = "";
 	public static final String AMP_REPORT_NAME = "&report=";
 	public static final String AMP_QUOTE_ID_EQ = "&qtid=";
@@ -445,14 +470,9 @@ public class ReportConst {
 	public static final String AMP_UNSPSC_CODE_EQ = "&unspsccode=";
 	public static final String AMP_UNSPSC_TIT_EQ = "&unspsctitle=";
 	public static final String AMP_EXT_CODE_EQ = "&extentioncode=";
-	public static final String AMP_COMP_NAME_EQ = "&companyname=";
-	public static final String AMP_REG_TYPE_EQ = "&registrationtype=";
 	public static final String AMP_ITM_CAT_EQ = "&itemcategory=";
 	public static final String AMP_PROOF_IDNT_EQ = "&proofidentity=";
-	public static final String AMP_IC_NO_EQ = "&icno=";
 	public static final String AMP_BUSI_REG_NO_EQ = "&businessregno=";
-	public static final String AMP_EP_NO_EQ = "&epno=";
-	public static final String AMP_MOF_NO_EQ = "&mofno=";
 	public static final String AMP_PTJ_EQ = "&ptj=";
 	public static final String AMP_CONTR_NO_EQ = "&contractno=";
 	public static final String AMP_SST_EQ = "&sst=";
@@ -481,13 +501,11 @@ public class ReportConst {
 	public static final String AMP_PO_AMT_EQ = "&poamount=";
 	public static final String AMP_PR_NO_EQ = "&prno=";
 	public static final String AMP_PMO_EQ = "&pmo=";
-	public static final String AMP_FROM_DATE_EQ = "&frdt=";
-	public static final String AMP_TO_DATE_EQ = "&todt=";
 	public static final String AMP_EXT_TYPE_EQ = "&typeid=";
 	public static final String AMP_EXT_BRAND_EQ = "&brandid=";
 	public static final String AMP_EXT_MEASURMENT_EQ = "&measurementid=";
 	public static final String AMP_EXT_COLOUR_EQ = "&colorid=";
-	
+	//fl
 	public static final String FL_AMP_FROM_DATE_EQ = "&PFROMDATE=";
 	public static final String FL_AMP_TO_DATE_EQ = "&PTODATE=";
 	public static final String FL_AMP_COTRACT_ORDER_EQ = "&PCONO=";
@@ -509,7 +527,7 @@ public class ReportConst {
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String FL_AMP_REPORT_ID_EQ = "&PREPORTID=";
 	public static final String FL_AMP_USER_ID_EQ = "&PUSER=";
-	
+	//
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "lbl.rpt.search.PLZ_SEL_ONE_RPT_SEARCH";
