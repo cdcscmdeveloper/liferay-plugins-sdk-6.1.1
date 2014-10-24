@@ -126,8 +126,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
-	private ContractBackingBean ctBB = null;
-	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -135,13 +133,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
+			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+			ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			initializeRemarks();
 		}
-		
-		  if(ctBB == null){
-	          initializeRemarks();
-		      ctBB = new ContractBackingBean(fileDirectory);
-		      ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		 }
 		
 		if(isCentralContractAdmin()) 
 			getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
@@ -149,7 +144,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		if(getManagedBean().getUserMap().size()==0) {
 			 initializeApproverList();
 			 this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-				
 	    }
 	}
 	
@@ -217,11 +211,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 	        this.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			this.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			
-			initializeRemarks();
-			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-		    ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		    
 						
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -263,7 +252,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
 			ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
+			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 	}
 	
 	private void initializeApproverList() {
@@ -591,26 +580,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			     if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
-					renewSesionObject();
+
+				renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}else{
-					reqDTO = new CircularReqDTO();
-					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
-					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
-					getManagedBean().setUpdateAction(false);
-					getManagedBean().setViewContract(false);
-					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
-					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-				}
+				
 			  }else {
 					throw new EpException("Failed.");
 			  }
 		  } finally {
 			  circularSO = null;
 		  }
-		return null;		
 	}
 	
 	private void validateCircular(String outcome) {
@@ -729,8 +708,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				getManagedBean().setCircular(resDTO.getCircular());
-				getManagedBean().setCircularVer(resDTO.getCircularVer());
+				setContractCircularVar(resDTO);
 				getManagedBean().setUpdateAction(true);
 				getManagedBean().setViewContract(false);
 				getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -813,7 +791,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	private void initiateRemark(List<CtRemark> remarks) {
-		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+		
+		boolean ctWorkflowStatusMatch = false;
+		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
+			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
+				if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(remarks.size()==0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
