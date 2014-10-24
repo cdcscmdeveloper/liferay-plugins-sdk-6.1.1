@@ -1130,7 +1130,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					if(itemResDTO.getContractZoneId() == null){
 						newItem.setZoneId(itemResDTO.getContractZoneId());
 						newItem.setUnitPrice(new BigDecimal(0));
-						throw new EpException("This address is not within the zone.");
 					}else{
 						newItem.setZoneId(itemResDTO.getContractZoneId());
 						newItem.setUnitPrice(itemResDTO.getItemPrice());
