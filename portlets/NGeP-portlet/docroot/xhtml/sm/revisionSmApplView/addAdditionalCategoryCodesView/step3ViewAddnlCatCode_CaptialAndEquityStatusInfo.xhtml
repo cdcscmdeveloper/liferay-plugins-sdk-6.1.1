@@ -8,9 +8,7 @@
 		<c:when test="#{viewSmApplBackingBean.managedBean.redirectToPersonPage}">
 			<table style="width: 100%">
 				<tr>
-					<td><ui:include
-							src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
-
+					<td><ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialShareHolderInfoRedirectFormViewOnly.xhtml" />
 					</td>
 				</tr>
 
@@ -20,17 +18,13 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 20%; vertical-align: baseline;"
-						class="sidemenutd"><ui:include
-							src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
-					<td><ui:include
-							src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityStatusInfoFormViewOnly.xhtml" />
+						class="sidemenutd"><ui:include src="smViewAddtnlCatApplnSideMenuItem.xhtml" /></td>
+					<td><ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityStatusInfoFormViewOnly.xhtml" />
 						<c:if
 							test="#{viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT and viewSmApplBackingBean.managedBean.businessTypeVal ne SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT}">
-							<ui:include
-								src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHolderInfoFormViewOnly.xhtml" />
-						</c:if> <ui:include
-							src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHoldingCompanyInfoFormViewOnly.xhtml" />
-						</td>
+							<ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHolderInfoFormViewOnly.xhtml" />
+						</c:if> <ui:include src="/xhtml/sm/shared/applViewOnlyPages/captialOrEquityShareHoldingCompanyInfoFormViewOnly.xhtml" />
+					</td>
 				</tr>
 			</table>
 		</c:otherwise>
