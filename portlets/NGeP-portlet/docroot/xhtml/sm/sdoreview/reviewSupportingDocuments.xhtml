@@ -256,11 +256,11 @@
 			</table><br />
 			
 			<p:dataTable var="suppDoc" value="#{sdoReviewBackingBean.managedBean.smAppl.smApplSupportDocs}" id="dtSuppDoc">
-				<p:column style="width:85%; white-space:normal" headerText="Document Name">  
+				<p:column style="width:75%; white-space:normal" headerText="#{lbl['lbl.sm.supportingdoc.docName']}">  
 		            <h:outputText value="#{suppDoc.pmDocument.docName}"  /> 
 		        </p:column>
 				
-				<p:column>
+				<p:column style="width:15%;">
 				<p:commandLink value="#{suppDoc.smApplDocFiles[0].fileName}" rendered="#{!empty suppDoc.smApplDocFiles}"  ajax="false"
 		            action="#{sdoReviewBackingBean.downloadSuppDoc(suppDoc.smApplDocFiles[0].fileName,suppDoc.smApplDocFiles[0].filePath)}">
 		           		<p:fileDownload value="#{sdoReviewBackingBean.file}" />
