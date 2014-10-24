@@ -87,6 +87,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private String confirmEmail;
 	
+	private boolean sabahSarawakType;
+	
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -468,6 +470,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setConfirmEmail(String confirmEmail) {
 		this.confirmEmail = confirmEmail;
+	}
+
+	public boolean isSabahSarawakType() {
+		return sabahSarawakType;
+	}
+
+	public void setSabahSarawakType(boolean sabahSarawakType) {
+		this.sabahSarawakType = sabahSarawakType;
 	}
 
 }
