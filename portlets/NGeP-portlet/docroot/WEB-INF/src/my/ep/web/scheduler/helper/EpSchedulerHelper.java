@@ -24,13 +24,13 @@ import org.quartz.impl.StdSchedulerFactory;
  */
 public class EpSchedulerHelper {
 	public static Logger log = EpLogger.getLogger(EpSchedulerHelper.class);
-	
+
 	private static Scheduler instance;
 
 	public static void scheduleJob(JobKey jobKey,
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
-		
+
 		try {
 
 			// specify the job' s details..
@@ -51,22 +51,26 @@ public class EpSchedulerHelper {
 			}
 
 			// schedule the job
-			EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
+			if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
+				EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
+			}
 
 		} catch (final SchedulerException | ParseException e) {
 			log.error(e.getMessage());
 		}
 
 	}
-	
-	public static void runBuildJobNow(JobKey jobKey){
+
+	public static void runBuildJobNow(JobKey jobKey) {
 		// specify trigger
 		Trigger trigger;
 		try {
-			trigger = TriggerBuilder.newTrigger().startNow()
-					.forJob(EpSchedulerHelper.getScheduler().getJobDetail(jobKey))
-					.build();
-			
+			trigger = TriggerBuilder
+					.newTrigger()
+					.startNow()
+					.forJob(EpSchedulerHelper.getScheduler().getJobDetail(
+							jobKey)).build();
+
 			// schedule the job
 			EpSchedulerHelper.getScheduler().scheduleJob(trigger);
 		} catch (SchedulerException e) {
@@ -74,41 +78,44 @@ public class EpSchedulerHelper {
 			log.error(e.getMessage());
 		}
 	}
-	
+
 	public static boolean isJobRunningNow(final JobKey jobKey) {
-        boolean retVal = false;
+		boolean retVal = false;
 
-        try {
-            for (final JobExecutionContext jobExecute : EpSchedulerHelper.getScheduler().getCurrentlyExecutingJobs()) {
-                if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
-                    retVal = true;
-                    break;
-                }
-            }
-        } catch (final SchedulerException e) {
-        	log.error(e.getMessage());
-        }
+		try {
+			for (final JobExecutionContext jobExecute : EpSchedulerHelper
+					.getScheduler().getCurrentlyExecutingJobs()) {
+				if (jobExecute.getJobDetail().getKey().equals(jobKey)) {
+					retVal = true;
+					break;
+				}
+			}
+		} catch (final SchedulerException e) {
+			log.error(e.getMessage());
+		}
 
-        return retVal;
-    }
+		return retVal;
+	}
 
-    public static Trigger getTriggerByJobKey(final JobKey jobKey) throws SchedulerException {
-        return EpSchedulerHelper.getScheduler().getTriggersOfJob(jobKey).get(0);
-    }
+	public static Trigger getTriggerByJobKey(final JobKey jobKey)
+			throws SchedulerException {
+		return EpSchedulerHelper.getScheduler().getTriggersOfJob(jobKey).get(0);
+	}
 
-    public static String getTriggerState(final Trigger trigger) {
-        String state = TriggerState.NONE.toString();
-        try {
-            state = EpSchedulerHelper.getScheduler().getTriggerState(trigger.getKey()).toString();
-        } catch (final SchedulerException e) {
-        	log.error(e.getMessage());
-        }
+	public static String getTriggerState(final Trigger trigger) {
+		String state = TriggerState.NONE.toString();
+		try {
+			state = EpSchedulerHelper.getScheduler()
+					.getTriggerState(trigger.getKey()).toString();
+		} catch (final SchedulerException e) {
+			log.error(e.getMessage());
+		}
 
-        return state;
-    }
-	
-	public static Scheduler getScheduler(){
-		if (instance == null){
+		return state;
+	}
+
+	public static Scheduler getScheduler() {
+		if (instance == null) {
 			try {
 				instance = new StdSchedulerFactory().getScheduler();
 			} catch (SchedulerException e) {
@@ -116,7 +123,7 @@ public class EpSchedulerHelper {
 			}
 		}
 		return instance;
-		
+
 	}
 
 }
