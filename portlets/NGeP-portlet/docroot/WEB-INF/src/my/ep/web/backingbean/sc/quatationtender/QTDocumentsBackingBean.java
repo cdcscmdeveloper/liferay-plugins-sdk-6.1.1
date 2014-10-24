@@ -29,6 +29,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -101,6 +102,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 
@@ -332,21 +334,26 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			reportList = new ArrayList<ScQtDocReport>();
 		}
 		List<ScQtDocReport> scQtDocReports = this.getManagedBean().getSelectedCloneScQtDocReports();
-		for (ScQtDocReport docReport : scQtDocReports) {
-			ScQtDocReport qtDocReport = null;
-			try {
-				qtDocReport = (ScQtDocReport) BeanUtils.cloneBean(docReport);
-			} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
-				e.printStackTrace();
+		if (!this.getManagedBean().getSelectedCloneScQtDocReports().isEmpty()) {
+			for (ScQtDocReport docReport : scQtDocReports) {
+				ScQtDocReport qtDocReport = null;
+				try {
+					qtDocReport = (ScQtDocReport) BeanUtils.cloneBean(docReport);
+				} catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+					e.printStackTrace();
+				}
+				if (null != qtDocReport) {
+					qtDocReport.setQtReportId(null);
+					qtDocReport.setDocId(null);
+					setUserDetails(qtDocReport);
+					qtDocReport.setChangedDate(null);
+					reportList.add(qtDocReport);
+				}
 			}
-			if (null != qtDocReport) {
-				qtDocReport.setQtReportId(null);
-				qtDocReport.setDocId(null);
-				setUserDetails(qtDocReport);
-				qtDocReport.setChangedDate(null);
-				reportList.add(qtDocReport);
-			}
+		} else {
+			throw new EpException(MessageConst.ERROR_760141);
 		}
+		RequestContext.getCurrentInstance().execute("screen2.hide()");
 	}
 
 	/**
@@ -631,9 +638,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					generateSpesifikasiPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_TECH_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
-				} else if (SourcingConstants.DOC_DEF_KEY_SAMPLE_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
+				/*} else if (SourcingConstants.DOC_DEF_KEY_SAMPLE_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					// TODO - 
-					generateSampleComplianceChecklistPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
+					generateSampleComplianceChecklistPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());*/
 				} else if (SourcingConstants.DOC_DEF_KEY_FIN_COMPLIANCE_CHECKLIST.equals(docDefinitionKey)) {
 					generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_LOA_SAMPLE.equals(docDefinitionKey)) {
@@ -643,6 +650,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					generateSamplesamplesalinankontrakPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DECLARION_SAMPLE.equals(docDefinitionKey)) {
 					generateSampleSuratPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
+				} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES.equals(docDefinitionKey)) {
+					// TODO -
+					generateSkopPerkhidmatanPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE.equals(docDefinitionKey)) {
 					// Frequency Schedule  - Jadual Kekerapan
 					generateFrequencySchedulePdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
@@ -651,10 +661,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					generateProgressivePaymentPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
 				} else if (SourcingConstants.DOC_DEF_KEY_DELIVERY_SERVICE_ADDRESS.equals(docDefinitionKey)) {
 					generateDeliveryAddressPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
-				} else if ("KP".equals(docDefinitionKey)) {
-					// TODO -
-					generateSkopPerkhidmatanPdfFromVelocity((ScAttachment)scQtDocReportAttachment, getManagedBean().getQt());
-				}
+				} 
 			/*} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
@@ -664,10 +671,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		return scQtDocReportAttachment;
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateSkopPerkhidmatanPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName("Skop_Perkhidmatan.pdf");
 		
@@ -701,11 +704,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		attachment.setFilePath(filePath.toString());
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
-	private void generateSampleComplianceChecklistPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
+/*	private void generateSampleComplianceChecklistPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName("Sample_Compliance_Checklist.pdf");
 		
 		Timestamp date = new Timestamp(System.currentTimeMillis());
@@ -737,11 +736,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		filePath.append(formatedFileName);
 		attachment.setFilePath(filePath.toString());
 	}
+*/
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateTermaKontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_CONTRACT_TERM);
 		populateAttachmentDetails(attachment); 
@@ -789,10 +785,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_CONTRACT_TERM, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateSenaraiSemakUntukPematuhanKewanganPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_FIN_COMPLIANCE_CHECKLIST);
 		populateAttachmentDetails(attachment);
@@ -825,10 +817,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_FIN_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateSenaraiSemakUntukPematuhanTeknikalPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_TECH_COMPLIANCE_CHECKLIST);
 		populateAttachmentDetails(attachment);
@@ -861,10 +849,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_TECH_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateDeliveryAddressPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_DELIVERY_SERVICE_ADDRESS);
 		populateAttachmentDetails(attachment);
@@ -903,10 +887,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_DELIVERY_ADDRESS, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 	
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateFrequencySchedulePdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_FREQUENCY_SCHEDULES);
 		populateAttachmentDetails(attachment);
@@ -938,10 +918,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_FREQUENCY_SCHEDULE, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateProgressivePaymentPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_PROGRESSIVE_PAYMENTS);
 		populateAttachmentDetails(attachment);
@@ -972,10 +948,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_PROGRASSIVE_PAYMENT, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateSpesifikasiPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_SPECIFICATION);
 		populateAttachmentDetails(attachment);
@@ -1113,10 +1085,6 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 	}
 
-	/**
-	 * @param scQtDocReportAttachment
-	 * @param qt
-	 */
 	private void generateSampleSuratSetujuTerimaPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
 		attachment.setFileName(SourcingConstants.DOCNAME_QT_LOA_SAMPLE);
 		populateAttachmentDetails(attachment);
