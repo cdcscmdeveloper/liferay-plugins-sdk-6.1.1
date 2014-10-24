@@ -136,8 +136,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
-	private ContractBackingBean ctBB = null;
-	
 	public PanelBackingBean(){
 		 
 		if(getManagedBean().getOutComes()==null) {
@@ -150,12 +148,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				status = new PmStatus();
 				status.setStatusId(ContractStatusConst.CR_PENDING_SUBMISSION);
 				getManagedBean().getCancelCircularReq().setStatus(status);
-		
-	    	}  if(ctBB == null){
-		          initializeRemarks();
-			      ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			      ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			 }
+				initializeRemarks();
+				ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+				ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+	    	}  
 	    	if(getManagedBean().getUserMap().size()==0) {
 			   initializeApproverList();
 			   this.getManagedBean().getApproverModel().setSource(getAvailableApproverList());	
@@ -269,7 +265,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		     initializeRemarks();
 		     ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		     ctBB.getManagedBean().setViewContract(this.getManagedBean().isViewContract());
-		     ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		     ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 	    }
 	
 	    public void preRenderCancelCircular() {
@@ -339,7 +335,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			        getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 			        initializeRemarks();
 			        ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-			        ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			        ctBB.initializeRemarkAndAttachement(resDTO.getCancelCircularReq().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 		     } catch (Exception e) {
 			     e.printStackTrace();
@@ -579,27 +575,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  	
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}else{
-					reqDTO = new CircularReqDTO();
-					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
-					setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
-					getManagedBean().setSelectionOfZone(false);
-					getManagedBean().setSelectedPanelItems(null);
-					getManagedBean().setSelectedPanelZone(null);
-					getManagedBean().setUpdateAction(false);
-					getManagedBean().setViewContract(false);
-					initializeRemarks();
-					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-					ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-				}
 			}
 		  }finally {
 			  circularSO = null;
 		  }
-		
 		return "circularBase.xhtml";
 	}
 	
@@ -622,11 +603,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
 				String remark = getManagedBean().getRemarkList().get(0).getRemark();
-	 			String contractRemark = getManagedBean().getCircularVer().getContractRemarks().get(0).getRemark();
-	 			String itemRemark = getManagedBean().getCircularVer().getItemRemarks().get(0).getRemark();
-	 			if((remark == null || remark.length() == 0) && (contractRemark == null || contractRemark.length() == 0) 
-	 					&& (itemRemark == null || itemRemark.length() == 0)) {
-	 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+	 			if((remark == null || remark.length() == 0)) {
+	 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 	 			}
 			}
 			
@@ -803,7 +781,18 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	private void initiateRemark(List<CtRemark> remarks) {
-		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
+		boolean ctWorkflowStatusMatch = false;
+		if(getManagedBean().getCircularVer().getCtWorkflowStatus()!=null) {
+			if(remarks.size()>0 && remarks.get(0).getCtWorkflowStatus()!=null) {
+				if(getManagedBean().getCircularVer().getCtWorkflowStatus().getWorkflowStatusId()==remarks.get(0).getCtWorkflowStatus().getWorkflowStatusId().longValue()) {
+					ctWorkflowStatusMatch = true;
+				}
+			}
+		} else { // both also null
+			ctWorkflowStatusMatch = true;
+		}
+		
+		if(remarks.size()==0 || !ctWorkflowStatusMatch) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
