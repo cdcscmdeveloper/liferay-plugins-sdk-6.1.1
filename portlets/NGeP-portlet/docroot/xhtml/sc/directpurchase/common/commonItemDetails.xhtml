@@ -256,24 +256,27 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
-					<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" 
-					   rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}"></h:outputText>
-					<p:spacer width="6px;"></p:spacer>
-					<p:outputPanel autoUpdate="true">
-						<p:selectOneMenu value="#{requestNoteBackingBean.managedBean.supplierId}" 
-						 rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}"
-							style="width:155px;">  
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-							<f:selectItems value="#{requestNoteBackingBean.suppliersBySelectedItems}" 
-								var="smSupplier" itemLabel="#{smSupplier.companyName}"
-								itemValue="#{smSupplier.supplierId}">
-							</f:selectItems>
-						</p:selectOneMenu>
-					</p:outputPanel>
-					
-					<p:spacer width="10px;"/>
-					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"></h:outputText>
-					<p:spacer width="6px;"></p:spacer>
+					<h:panelGroup
+						rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}">
+						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
+						<p:spacer width="6px;"/>
+						<p:outputPanel autoUpdate="true">
+							<p:selectOneMenu
+								value="#{requestNoteBackingBean.managedBean.supplierId}"
+								style="width:155px;">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="#{null}" />
+								<f:selectItems
+									value="#{requestNoteBackingBean.suppliersBySelectedItems}"
+									var="smSupplier" itemLabel="#{smSupplier.companyName}"
+									itemValue="#{smSupplier.supplierId}">
+								</f:selectItems>
+							</p:selectOneMenu>
+						</p:outputPanel>
+						<p:spacer width="10px;" />
+					</h:panelGroup>
+					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>
+					<p:spacer width="6px;"/>
 					<p:selectOneMenu style="width:155px;" 
 						value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
 					    disabled="false">
