@@ -1359,6 +1359,63 @@ public class SmApplicationUtil {
 		return addr;
 	}
 
+	public static SmAddress setDefaultAddrWithSameId(PmCountry defCntry,
+			SmAddress addr) {
+		PmCountry cntry = new PmCountry();
+		if (defCntry != null && defCntry.getCountryId() != null) {
+			cntry = defCntry;
+		} else {
+			cntry = SmCommonUtil
+					.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+			// cntry.setCountryId(1l);
+		}
+		addr.setPmCity(new PmCity());
+		addr.setPmCountry(cntry);
+		addr.setPmState(new PmState());
+		addr.setPmDistrict(new PmDistrict());
+		addr.setAddress1("");
+		addr.setAddress2("");
+		addr.setAddress3("");
+		addr.setAddress4("");
+		addr.setPostcode("");
+		return addr;
+	}
+
+	public static SmAddress setDefaultBaseOfficeAddr(SmAddress baseOffAddr,
+			SmAddress facAddr) {
+		// SmAddress addr = new SmAddress();
+		PmCountry cntry = new PmCountry();
+		cntry = SmCommonUtil
+				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE);
+		if (baseOffAddr.getPmCity() != null) {
+			facAddr.setPmCity(baseOffAddr.getPmCity());
+		} else {
+			facAddr.setPmCity(new PmCity());
+		}
+		if (baseOffAddr.getPmCountry() != null) {
+			facAddr.setPmCountry(baseOffAddr.getPmCountry());
+		} else {
+			facAddr.setPmCountry(cntry);
+		}
+		if (baseOffAddr.getPmState() != null) {
+			facAddr.setPmState(baseOffAddr.getPmState());
+		} else {
+			facAddr.setPmState(new PmState());
+		}
+		if (baseOffAddr.getPmDistrict() != null) {
+			facAddr.setPmDistrict(baseOffAddr.getPmDistrict());
+		} else {
+			facAddr.setPmDistrict(new PmDistrict());
+		}
+		facAddr.setAddress1(baseOffAddr.getAddress1());
+		facAddr.setAddress2(baseOffAddr.getAddress2());
+		facAddr.setAddress3(baseOffAddr.getAddress3());
+		facAddr.setAddress4(baseOffAddr.getAddress4());
+		facAddr.setPostcode(baseOffAddr.getPostcode());
+
+		return facAddr;
+	}
+
 	public static List<SmStaffTotal> getStaffList(SmAppl app) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
 		System.out.println("****  getStaffList *********"
@@ -2223,10 +2280,12 @@ public class SmApplicationUtil {
 		List<SmSvAddress> addrList = new ArrayList<SmSvAddress>();
 		List<SmSvCategory> smSvCategories = new ArrayList<SmSvCategory>();
 		svTask.setSmAppl(managedBean.getSmAppl());
-		log.info("** Basic Office ***"
-				+ managedBean.getBasicCompanyFacility().getSmAddress()
-						.getAddress1() + " -- Id -- "
-				+ managedBean.getBasicCompanyFacility().getFacilityId());
+		if (managedBean.getBasicCompanyFacility().getSmAddress() != null) {
+			log.info("** Basic Office ***"
+					+ managedBean.getBasicCompanyFacility().getSmAddress()
+							.getAddress1() + " -- Id -- "
+					+ managedBean.getBasicCompanyFacility().getFacilityId());
+		}
 		SmSvOffice svOff = new SmSvOffice();
 		svOff.setSmSvTask(svTask);
 		svOff.setSmFacility(managedBean.getBasicCompanyFacility());
