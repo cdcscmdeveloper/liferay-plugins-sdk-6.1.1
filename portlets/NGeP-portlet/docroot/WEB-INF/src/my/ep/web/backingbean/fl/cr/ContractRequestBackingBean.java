@@ -1127,14 +1127,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(new BigDecimal(0));
 					ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);//get zoneId
-					if(itemResDTO.getContractZoneId() == null){
-						newItem.setZoneId(itemResDTO.getContractZoneId());
-						newItem.setUnitPrice(new BigDecimal(0));
-					}else{
-						newItem.setZoneId(itemResDTO.getContractZoneId());
-						newItem.setUnitPrice(itemResDTO.getItemPrice());
-					}
-					
+					newItem.setZoneId(itemResDTO.getContractZoneId());
+					newItem.setUnitPrice(itemResDTO.getItemPrice());
 				}
 				itemsList.add(newItem);
 			}
@@ -2050,7 +2044,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
 	}
 	public void onNodeSelect() {
-
+		//reset the checkboxes already selected.
+		resetSelectedTreeNodes();
 		getManagedBean().setChargeLinePanel(false);
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
@@ -2514,12 +2509,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void selectOneCheckboxSelect(AjaxBehaviorEvent e){
 		
-		if((boolean) e.getComponent().getAttributes().get("value")){
+		boolean delAddrSelected=(boolean) e.getComponent().getAttributes().get("value");
+		if(delAddrSelected){
 			getManagedBean().setDeleteButtonHide(false);
 		}else{
-			getManagedBean().setDeleteButtonHide(true);
+			//Code for check other delivery addresses selected.
+			boolean isAnyDelAddeSelected=isAnyAddrSelected();
+			if(!isAnyDelAddeSelected){
+				getManagedBean().setDeleteButtonHide(true);
+			} else {
+				getManagedBean().setDeleteButtonHide(false);
+			}
 		}
 		
+	}
+	
+	private boolean isAnyAddrSelected() {
+		boolean isAnyAddrSelected=false;
+		for(FlDeliveryAddress delAddr:getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+			if(delAddr.isSelectedAddressRowDelete()){
+				isAnyAddrSelected=true;
+				break;
+			}
+		}
+		return isAnyAddrSelected;
 	}
 	private void populateContractListTree() {
 		Map<Long, TreeNode> contractTree = new HashMap<Long, TreeNode>();
@@ -3072,6 +3085,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				FlDeliveryAddress  deliveryAddress=delAddressIterator.next();
 				deliveryAddress.setSelectedAddressRowDelete(false);
 			}
+		}
+	}
+	private void resetSelectedTreeNodes() {
+		TreeNode root=getManagedBean().getChargeLineItemRoot();
+		for(TreeNode node:root.getChildren()){
+			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
+			addr.setSelectedChargeItem(false);
 		}
 	}
 
