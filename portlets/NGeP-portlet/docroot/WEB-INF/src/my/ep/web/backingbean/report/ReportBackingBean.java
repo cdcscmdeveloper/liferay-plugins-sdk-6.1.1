@@ -26,10 +26,14 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.portlet.ResourceResponse;
+
+import my.ep.biz.dto.rpt.PMReportReqDTO;
+import my.ep.biz.dto.rpt.PMReportResDTO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.rpt.IPMReportSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
@@ -51,6 +55,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -77,10 +82,36 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>{
 	private static final Logger log = EpLogger.getLogger(ReportBackingBean.class);
 
-	public ReportBackingBean() {
-		
+	public ReportBackingBean() {		
 	}	
-	//-------------
+	SCReportBackingBean scReportBackingBean;
+	CMReportBackingBean cmReportBackingBean;
+	FLReportBackingBean flReportBackingBean;
+	SMReportBackingBean smReportBackingBean;	 
+	public SCReportBackingBean getScReportBackingBean() {
+		return scReportBackingBean;
+	}
+	public void setScReportBackingBean(SCReportBackingBean scReportBackingBean) {
+		this.scReportBackingBean = scReportBackingBean;
+	}
+	public CMReportBackingBean getCmReportBackingBean() {
+		return cmReportBackingBean;
+	}
+	public void setCmReportBackingBean(CMReportBackingBean cmReportBackingBean) {
+		this.cmReportBackingBean = cmReportBackingBean;
+	}
+	public FLReportBackingBean getFlReportBackingBean() {
+		return flReportBackingBean;
+	}
+	public void setFlReportBackingBean(FLReportBackingBean flReportBackingBean) {
+		this.flReportBackingBean = flReportBackingBean;
+	}
+	public SMReportBackingBean getSmReportBackingBean() {
+		return smReportBackingBean;
+	}
+	public void setSmReportBackingBean(SMReportBackingBean smReportBackingBean) {
+		this.smReportBackingBean = smReportBackingBean;
+	}
 	List<SelectItem> reportList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> moduleList;
@@ -88,132 +119,791 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	List<String> authoriztionList;
 	private ScQt scqt;
 	private List<SelectItem> stateLst = new ArrayList<SelectItem>();	
-	private List<SelectItem> districtLst = new ArrayList<SelectItem>();
-	
-	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();;	
-	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();;
-	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();;
-	
+	private List<SelectItem> districtLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> levOneCatLst = new ArrayList<SelectItem>();	
+	private List<SelectItem> levTwoCatLst = new ArrayList<SelectItem>();
+	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();	
 	private String userId;
 	private String roleCode;	
 	private Date fromDate;
 	private Date toDate;
-	/*SS start*/
-	private String quotationId;
-	private String quotationNo;
-	
-	private String paymentId;
-	/*SS end*/
-	/*CM start*/
-	private String itemType;
-	private String itemStatus;
-	private String unspscCode;
-	private String unspscTitle;	
-	private String companyName;
-	private String registrationType;	
-	private String itemCategory;
-	private String itemName;
-	
-	private String epNumber;
-	private String businessRegNo;
-	private String icNumber;
-	private String mofNumber;	
-	private String extentionCode;
-	private String extentionType;	
-	private String extentionBrand;
-	private String extentionMeasurment;
-	private String extentionColour;
-	/*CM end*/	
-	/*FL start*/
-	private String ptj;
-	private String contractNo;
-	private String sst;
-	private String jabatan;
-	private String ministry;
-	private String supplier;
-	private String status;
-	private String duration;
-	private String recievingOfficer;
-	private String deliveryAddress;
+	//ss		
+	private String scQuotationId;
+	private String scQuotationNo;	
+	private String scPaymentId;
+	//cm
+	private String cmItemType;
+	private String cmItemStatus;
+	private String cmUnspscCode;
+	private String cmUnspscTitle;	
+	private String cmCompanyName;
+	private String cmRegistrationType;	
+	private String cmItemCategory;
+	private String cmItemName;	
+	private String cmEpNumber;
+	private String cmBusinessRegNo;
+	private String cmIcNumber;
+	private String cmMofNumber;	
+	private String cmExtentionCode;
+	private String cmExtentionType;	
+	private String cmExtentionBrand;
+	private String cmExtentionMeasurment;
+	private String cmExtentionColour;
+	private String cmProofIdentity;	
+	//fl	
+	private String flItmType;
+	private String flPtj;
+	private String flContractNo;
+	private String flSst;
+	private String flJabatan;
+	private String flMinistry;
+	private String flSupplier; 
+	private String flStatus;
+	private String flDuration;
+	private String flRecievingOfficer;
+	private String flDeliveryAddress;
 	private String flRecNoteNo;
-	private String contractType;
-	private String requisitioner;
-	private String mtoContract;
-	private String invoiceNo;
-	private String deductionType;
-	private String crNo;
-	private String approverName;
-	private String documentType;
-	private String criteria;
-	private String scoring;
-	private String pkpNo;
-	private String deliveryOrderNo;	
-	private String itemCode;
-	private String poAmount;
-	private String prNo;
-	private String pmo;
-   /*FL end*/
-   /*SM start*/
-	private String supportingDocument;	
-	private String docStatus;
-	private String suppDocStatus;	
-	private String registrationNo;
-	private String ePNo;
-	private String applicationNo;
-	private String zone;
-	private String supplierType;
-	private String mofRegNo;
-	private String mofRegNoFrom;
-	private String mofRegNoTo;
-	private String registrationStatus;
-	private String capitalNaccumFrm;
-	private String capitalNaccumTo;	
-	private String paidUpCapitalNaccumShare;
-	private String category;
-	private String noOfCategory;
-	private String mainCategory;
-	private String subCategory;
-	private String subCategoryDivision;
-	private String role;
-	private String applicationStatus;
-	private String cancelledBy;
-	private String paymentType;
-	private String applicationType;
-	private String state;
-	private String district;
-	private String supplierName;
-	private String reportType;
-	private String organizationType;
-	private String kementerian;
-	private String namAgensi;
-	private String complaintNo;
-	private String proofIdentity;
-	private String companyStatus;
-	private String caseNo;
-	private String compApplStatus;
-	private String categoryCode;
-	private String siteVisitOfficer;
-	private Date releaseFromDate;
-	private Date releaseToDate;
-	private Date applicationFromDate;
-	private Date applicationToDate;
-	private Date receiveFromDate;	
-	private Date receiveToDate;	
-	private Date expiryFromDate;	
-	private Date expiryToDate;
-	private Date printedFromDate;	
-	private Date printedToDate;
+	private String flContractType;
+	private String flRequisitioner;
+	private String flMtoContract;
+	private String flInvoiceNo;
+	private String flDeductionType;
+	private String flCrNo;
+	private String flApproverName;
+	private String flDocumentType;
+	private String flCriteria;
+	private String flScoring;
+	private String flPkpNo;
+	private String flDeliveryOrderNo;	
+	private String flItemCode;
+	private String flPoAmount;
+	private String flPrNo;
+	private String flPmo;	
+	private String flItemName;
+	private String flContractOrder;
+	private String flContractRequest;
+	private String flPurchaseOrderNo;
+   //sm
+	private String smSupportingDocument;	
+	private String smDocStatus;
+	private String smSuppDocStatus;	
+	private String smRegistrationNo;
+	private String smEpNo;
+	private String smApplicationNo;
+	private String smZone;
+	private String smSupplierType;
+	private String smMofRegNo;
+	private String smMofRegNoFrom;
+	private String smMofRegNoTo;
+	private String smRegistrationStatus;
+	private String smCapitalNaccumFrm;
+	private String smCapitalNaccumTo;	
+	private String smPaidUpCapitalNaccumShare;
+	private String smcategory;
+	private String smNoOfCategory;
+	private String smMainCategory;
+	private String smSubCategory;
+	private String smSubCategoryDivision;
+	private String smRole;
+	private String smApplicationStatus;
+	private String smCancelledBy;
+	private String smPaymentType;
+	private String smApplicationType;
+	private String smState;
+	private String smDistrict;
+	private String smSupplierName;
+	private String smReportType;
+	private String smOrganizationType;
+	private String smKementerian;
+	private String smNamaAgensi;
+	private String smComplaintNo;
+	private String smProofIdentity;
+	private String smCompanyStatus;
+	private String smCaseNo;
+	private String smCompApplStatus;
+	private String smCategoryCode;
+	private String smSiteVisitOfficer;
+	private Date smReleaseFromDate;
+	private Date smReleaseToDate;
+	private Date smApplicationFromDate;
+	private Date smApplicationToDate;
+	private Date smReceiveFromDate;	
+	private Date smReceiveToDate;	
+	private Date smExpiryFromDate;	
+	private Date smExpiryToDate;
+	private Date smPrintedFromDate;	
+	private Date smPrintedToDate;	
+	private String smCompanyName;
+	private String smSupplier;
+	private String smEpNumber;
+	private String smMofNumber;
+	private String smRegistrationType;
+	private String smBusinessRegNo;
+	private String smIcNumber;
 	
 	private String generatedURL;
-	private String reportURL;
-	
+	private String reportURL;	
 	private StreamedContent pdfFile;
 	private String constructedParamString;
-	/*SM end*/
+	private String reportFileNameJSP;
 	
 	
+	public String getFlContractOrder() {
+		return flContractOrder;
+	}
+	public void setFlContractOrder(String flContractOrder) {
+		this.flContractOrder = flContractOrder;
+	}
+	public String getFlContractRequest() {
+		return flContractRequest;
+	}
+	public void setFlContractRequest(String flContractRequest) {
+		this.flContractRequest = flContractRequest;
+	}
+	public String getFlPurchaseOrderNo() {
+		return flPurchaseOrderNo;
+	}
+	public void setFlPurchaseOrderNo(String flPurchaseOrderNo) {
+		this.flPurchaseOrderNo = flPurchaseOrderNo;
+	}
+	public String getReportFileNameJSP() {
+		return reportFileNameJSP;
+	}
+	public void setReportFileNameJSP(String reportFileNameJSP) {
+		this.reportFileNameJSP = reportFileNameJSP;
+	}
 	public StreamedContent getPdfFile() {
 		return pdfFile;
+	}
+	public String getFlItmType() {
+		return flItmType;
+	}
+	public void setFlItmType(String flItmType) {
+		this.flItmType = flItmType;
+	}
+	public String getFlPtj() {
+		return flPtj;
+	}
+	public void setFlPtj(String flPtj) {
+		this.flPtj = flPtj;
+	}
+	public String getFlContractNo() {
+		return flContractNo;
+	}
+	public void setFlContractNo(String flContractNo) {
+		this.flContractNo = flContractNo;
+	}
+	public String getFlSst() {
+		return flSst;
+	}
+	public void setFlSst(String flSst) {
+		this.flSst = flSst;
+	}
+	public String getFlJabatan() {
+		return flJabatan;
+	}
+	public void setFlJabatan(String flJabatan) {
+		this.flJabatan = flJabatan;
+	}
+	public String getFlMinistry() {
+		return flMinistry;
+	}
+	public void setFlMinistry(String flMinistry) {
+		this.flMinistry = flMinistry;
+	}
+	public String getFlSupplier() {
+		return flSupplier;
+	}
+	public void setFlSupplier(String flSupplier) {
+		this.flSupplier = flSupplier;
+	}
+	public String getFlStatus() {
+		return flStatus;
+	}
+	public void setFlStatus(String flStatus) {
+		this.flStatus = flStatus;
+	}
+	public String getFlDuration() {
+		return flDuration;
+	}
+	public void setFlDuration(String flDuration) {
+		this.flDuration = flDuration;
+	}
+	public String getFlRecievingOfficer() {
+		return flRecievingOfficer;
+	}
+	public void setFlRecievingOfficer(String flRecievingOfficer) {
+		this.flRecievingOfficer = flRecievingOfficer;
+	}
+	public String getFlDeliveryAddress() {
+		return flDeliveryAddress;
+	}
+	public void setFlDeliveryAddress(String flDeliveryAddress) {
+		this.flDeliveryAddress = flDeliveryAddress;
+	}
+	public String getFlContractType() {
+		return flContractType;
+	}
+	public void setFlContractType(String flContractType) {
+		this.flContractType = flContractType;
+	}
+	public String getFlRequisitioner() {
+		return flRequisitioner;
+	}
+	public void setFlRequisitioner(String flRequisitioner) {
+		this.flRequisitioner = flRequisitioner;
+	}
+	public String getFlMtoContract() {
+		return flMtoContract;
+	}
+	public void setFlMtoContract(String flMtoContract) {
+		this.flMtoContract = flMtoContract;
+	}
+	public String getFlInvoiceNo() {
+		return flInvoiceNo;
+	}
+	public void setFlInvoiceNo(String flInvoiceNo) {
+		this.flInvoiceNo = flInvoiceNo;
+	}
+	public String getFlDeductionType() {
+		return flDeductionType;
+	}
+	public void setFlDeductionType(String flDeductionType) {
+		this.flDeductionType = flDeductionType;
+	}
+	public String getFlCrNo() {
+		return flCrNo;
+	}
+	public void setFlCrNo(String flCrNo) {
+		this.flCrNo = flCrNo;
+	}
+	public String getFlApproverName() {
+		return flApproverName;
+	}
+	public void setFlApproverName(String flApproverName) {
+		this.flApproverName = flApproverName;
+	}
+	public String getFlDocumentType() {
+		return flDocumentType;
+	}
+	public void setFlDocumentType(String flDocumentType) {
+		this.flDocumentType = flDocumentType;
+	}
+	public String getFlCriteria() {
+		return flCriteria;
+	}
+	public void setFlCriteria(String flCriteria) {
+		this.flCriteria = flCriteria;
+	}
+	public String getFlScoring() {
+		return flScoring;
+	}
+	public void setFlScoring(String flScoring) {
+		this.flScoring = flScoring;
+	}
+	public String getFlPkpNo() {
+		return flPkpNo;
+	}
+	public void setFlPkpNo(String flPkpNo) {
+		this.flPkpNo = flPkpNo;
+	}
+	public String getFlDeliveryOrderNo() {
+		return flDeliveryOrderNo;
+	}
+	public void setFlDeliveryOrderNo(String flDeliveryOrderNo) {
+		this.flDeliveryOrderNo = flDeliveryOrderNo;
+	}
+	public String getFlItemCode() {
+		return flItemCode;
+	}
+	public void setFlItemCode(String flItemCode) {
+		this.flItemCode = flItemCode;
+	}
+	public String getFlPoAmount() {
+		return flPoAmount;
+	}
+	public void setFlPoAmount(String flPoAmount) {
+		this.flPoAmount = flPoAmount;
+	}
+	public String getFlPrNo() {
+		return flPrNo;
+	}
+	public void setFlPrNo(String flPrNo) {
+		this.flPrNo = flPrNo;
+	}
+	public String getFlPmo() {
+		return flPmo;
+	}
+	public void setFlPmo(String flPmo) {
+		this.flPmo = flPmo;
+	}	
+	public String getFlItemName() {
+		return flItemName;
+	}
+	public void setFlItemName(String flItemName) {
+		this.flItemName = flItemName;
+	}
+	public String getSmSupportingDocument() {
+		return smSupportingDocument;
+	}
+	public void setSmSupportingDocument(String smSupportingDocument) {
+		this.smSupportingDocument = smSupportingDocument;
+	}
+	public String getSmDocStatus() {
+		return smDocStatus;
+	}
+	public void setSmDocStatus(String smDocStatus) {
+		this.smDocStatus = smDocStatus;
+	}
+	public String getSmSuppDocStatus() {
+		return smSuppDocStatus;
+	}
+	public void setSmSuppDocStatus(String smSuppDocStatus) {
+		this.smSuppDocStatus = smSuppDocStatus;
+	}
+	public String getSmRegistrationNo() {
+		return smRegistrationNo;
+	}
+	public void setSmRegistrationNo(String smRegistrationNo) {
+		this.smRegistrationNo = smRegistrationNo;
+	}
+	public String getSmEpNo() {
+		return smEpNo;
+	}
+	public void setSmEpNo(String smEpNo) {
+		this.smEpNo = smEpNo;
+	}
+	public String getSmApplicationNo() {
+		return smApplicationNo;
+	}
+	public void setSmApplicationNo(String smApplicationNo) {
+		this.smApplicationNo = smApplicationNo;
+	}
+	public String getSmZone() {
+		return smZone;
+	}
+	public void setSmZone(String smZone) {
+		this.smZone = smZone;
+	}
+	public String getSmSupplierType() {
+		return smSupplierType;
+	}
+	public void setSmSupplierType(String smSupplierType) {
+		this.smSupplierType = smSupplierType;
+	}
+	public String getSmMofRegNo() {
+		return smMofRegNo;
+	}
+	public void setSmMofRegNo(String smMofRegNo) {
+		this.smMofRegNo = smMofRegNo;
+	}
+	public String getSmMofRegNoFrom() {
+		return smMofRegNoFrom;
+	}
+	public void setSmMofRegNoFrom(String smMofRegNoFrom) {
+		this.smMofRegNoFrom = smMofRegNoFrom;
+	}
+	public String getSmMofRegNoTo() {
+		return smMofRegNoTo;
+	}
+	public void setSmMofRegNoTo(String smMofRegNoTo) {
+		this.smMofRegNoTo = smMofRegNoTo;
+	}
+	public String getSmRegistrationStatus() {
+		return smRegistrationStatus;
+	}
+	public void setSmRegistrationStatus(String smRegistrationStatus) {
+		this.smRegistrationStatus = smRegistrationStatus;
+	}
+	public String getSmCapitalNaccumFrm() {
+		return smCapitalNaccumFrm;
+	}
+	public void setSmCapitalNaccumFrm(String smCapitalNaccumFrm) {
+		this.smCapitalNaccumFrm = smCapitalNaccumFrm;
+	}
+	public String getSmCapitalNaccumTo() {
+		return smCapitalNaccumTo;
+	}
+	public void setSmCapitalNaccumTo(String smCapitalNaccumTo) {
+		this.smCapitalNaccumTo = smCapitalNaccumTo;
+	}
+	public String getSmPaidUpCapitalNaccumShare() {
+		return smPaidUpCapitalNaccumShare;
+	}
+	public void setSmPaidUpCapitalNaccumShare(String smPaidUpCapitalNaccumShare) {
+		this.smPaidUpCapitalNaccumShare = smPaidUpCapitalNaccumShare;
+	}
+	public String getSmcategory() {
+		return smcategory;
+	}
+	public void setSmcategory(String smcategory) {
+		this.smcategory = smcategory;
+	}
+	public String getSmNoOfCategory() {
+		return smNoOfCategory;
+	}
+	public void setSmNoOfCategory(String smNoOfCategory) {
+		this.smNoOfCategory = smNoOfCategory;
+	}
+	public String getSmMainCategory() {
+		return smMainCategory;
+	}
+	public void setSmMainCategory(String smMainCategory) {
+		this.smMainCategory = smMainCategory;
+	}
+	public String getSmSubCategory() {
+		return smSubCategory;
+	}
+	public void setSmSubCategory(String smSubCategory) {
+		this.smSubCategory = smSubCategory;
+	}
+	public String getSmSubCategoryDivision() {
+		return smSubCategoryDivision;
+	}
+	public void setSmSubCategoryDivision(String smSubCategoryDivision) {
+		this.smSubCategoryDivision = smSubCategoryDivision;
+	}
+	public String getSmRole() {
+		return smRole;
+	}
+	public void setSmRole(String smRole) {
+		this.smRole = smRole;
+	}
+	public String getSmApplicationStatus() {
+		return smApplicationStatus;
+	}
+	public void setSmApplicationStatus(String smApplicationStatus) {
+		this.smApplicationStatus = smApplicationStatus;
+	}
+	public String getSmCancelledBy() {
+		return smCancelledBy;
+	}
+	public void setSmCancelledBy(String smCancelledBy) {
+		this.smCancelledBy = smCancelledBy;
+	}
+	public String getSmPaymentType() {
+		return smPaymentType;
+	}
+	public void setSmPaymentType(String smPaymentType) {
+		this.smPaymentType = smPaymentType;
+	}
+	public String getSmApplicationType() {
+		return smApplicationType;
+	}
+	public void setSmApplicationType(String smApplicationType) {
+		this.smApplicationType = smApplicationType;
+	}
+	public String getSmState() {
+		return smState;
+	}
+	public void setSmState(String smState) {
+		this.smState = smState;
+	}
+	public String getSmDistrict() {
+		return smDistrict;
+	}
+	public void setSmDistrict(String smDistrict) {
+		this.smDistrict = smDistrict;
+	}
+	public String getSmSupplierName() {
+		return smSupplierName;
+	}
+	public void setSmSupplierName(String smSupplierName) {
+		this.smSupplierName = smSupplierName;
+	}
+	public String getSmReportType() {
+		return smReportType;
+	}
+	public void setSmReportType(String smReportType) {
+		this.smReportType = smReportType;
+	}
+	public String getSmOrganizationType() {
+		return smOrganizationType;
+	}
+	public void setSmOrganizationType(String smOrganizationType) {
+		this.smOrganizationType = smOrganizationType;
+	}
+	public String getSmKementerian() {
+		return smKementerian;
+	}
+	public void setSmKementerian(String smKementerian) {
+		this.smKementerian = smKementerian;
+	}
+	public String getSmNamaAgensi() {
+		return smNamaAgensi;
+	}
+	public void setSmNamaAgensi(String smNamaAgensi) {
+		this.smNamaAgensi = smNamaAgensi;
+	}
+	public String getSmComplaintNo() {
+		return smComplaintNo;
+	}
+	public void setSmComplaintNo(String smComplaintNo) {
+		this.smComplaintNo = smComplaintNo;
+	}
+	public String getSmProofIdentity() {
+		return smProofIdentity;
+	}
+	public void setSmProofIdentity(String smProofIdentity) {
+		this.smProofIdentity = smProofIdentity;
+	}
+	public String getSmCompanyStatus() {
+		return smCompanyStatus;
+	}
+	public void setSmCompanyStatus(String smCompanyStatus) {
+		this.smCompanyStatus = smCompanyStatus;
+	}
+	public String getSmCaseNo() {
+		return smCaseNo;
+	}
+	public void setSmCaseNo(String smCaseNo) {
+		this.smCaseNo = smCaseNo;
+	}
+	public String getSmCompApplStatus() {
+		return smCompApplStatus;
+	}
+	public void setSmCompApplStatus(String smCompApplStatus) {
+		this.smCompApplStatus = smCompApplStatus;
+	}
+	public String getSmCategoryCode() {
+		return smCategoryCode;
+	}
+	public void setSmCategoryCode(String smCategoryCode) {
+		this.smCategoryCode = smCategoryCode;
+	}
+	public String getSmSiteVisitOfficer() {
+		return smSiteVisitOfficer;
+	}
+	public void setSmSiteVisitOfficer(String smSiteVisitOfficer) {
+		this.smSiteVisitOfficer = smSiteVisitOfficer;
+	}
+	public Date getSmReleaseFromDate() {
+		return smReleaseFromDate;
+	}
+	public void setSmReleaseFromDate(Date smReleaseFromDate) {
+		this.smReleaseFromDate = smReleaseFromDate;
+	}
+	public Date getSmReleaseToDate() {
+		return smReleaseToDate;
+	}
+	public void setSmReleaseToDate(Date smReleaseToDate) {
+		this.smReleaseToDate = smReleaseToDate;
+	}
+	public Date getSmApplicationFromDate() {
+		return smApplicationFromDate;
+	}
+	public void setSmApplicationFromDate(Date smApplicationFromDate) {
+		this.smApplicationFromDate = smApplicationFromDate;
+	}
+	public Date getSmApplicationToDate() {
+		return smApplicationToDate;
+	}
+	public void setSmApplicationToDate(Date smApplicationToDate) {
+		this.smApplicationToDate = smApplicationToDate;
+	}
+	public Date getSmReceiveFromDate() {
+		return smReceiveFromDate;
+	}
+	public void setSmReceiveFromDate(Date smReceiveFromDate) {
+		this.smReceiveFromDate = smReceiveFromDate;
+	}
+	public Date getSmReceiveToDate() {
+		return smReceiveToDate;
+	}
+	public void setSmReceiveToDate(Date smReceiveToDate) {
+		this.smReceiveToDate = smReceiveToDate;
+	}
+	public Date getSmExpiryFromDate() {
+		return smExpiryFromDate;
+	}
+	public void setSmExpiryFromDate(Date smExpiryFromDate) {
+		this.smExpiryFromDate = smExpiryFromDate;
+	}
+	public Date getSmExpiryToDate() {
+		return smExpiryToDate;
+	}
+	public void setSmExpiryToDate(Date smExpiryToDate) {
+		this.smExpiryToDate = smExpiryToDate;
+	}
+	public Date getSmPrintedFromDate() {
+		return smPrintedFromDate;
+	}
+	public void setSmPrintedFromDate(Date smPrintedFromDate) {
+		this.smPrintedFromDate = smPrintedFromDate;
+	}
+	public Date getSmPrintedToDate() {
+		return smPrintedToDate;
+	}
+	public void setSmPrintedToDate(Date smPrintedToDate) {
+		this.smPrintedToDate = smPrintedToDate;
+	}	
+	public String getSmCompanyName() {
+		return smCompanyName;
+	}
+	public void setSmCompanyName(String smCompanyName) {
+		this.smCompanyName = smCompanyName;
+	}
+	public String getSmSupplier() {
+		return smSupplier;
+	}
+	public void setSmSupplier(String smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+	public String getSmEpNumber() {
+		return smEpNumber;
+	}
+	public void setSmEpNumber(String smEpNumber) {
+		this.smEpNumber = smEpNumber;
+	}
+	public String getSmMofNumber() {
+		return smMofNumber;
+	}
+	public void setSmMofNumber(String smMofNumber) {
+		this.smMofNumber = smMofNumber;
+	}
+	public String getSmRegistrationType() {
+		return smRegistrationType;
+	}
+	public void setSmRegistrationType(String smRegistrationType) {
+		this.smRegistrationType = smRegistrationType;
+	}
+	public String getSmBusinessRegNo() {
+		return smBusinessRegNo;
+	}
+	public void setSmBusinessRegNo(String smBusinessRegNo) {
+		this.smBusinessRegNo = smBusinessRegNo;
+	}
+	public String getSmIcNumber() {
+		return smIcNumber;
+	}
+	public void setSmIcNumber(String smIcNumber) {
+		this.smIcNumber = smIcNumber;
+	}
+	public String getCmItemType() {
+		return cmItemType;
+	}
+	public void setCmItemType(String cmItemType) {
+		this.cmItemType = cmItemType;
+	}
+	public String getCmItemStatus() {
+		return cmItemStatus;
+	}
+	public void setCmItemStatus(String cmItemStatus) {
+		this.cmItemStatus = cmItemStatus;
+	}
+	public String getCmUnspscCode() {
+		return cmUnspscCode;
+	}
+	public void setCmUnspscCode(String cmUnspscCode) {
+		this.cmUnspscCode = cmUnspscCode;
+	}
+	public String getCmUnspscTitle() {
+		return cmUnspscTitle;
+	}
+	public void setCmUnspscTitle(String cmUnspscTitle) {
+		this.cmUnspscTitle = cmUnspscTitle;
+	}
+	public String getCmCompanyName() {
+		return cmCompanyName;
+	}
+	public void setCmCompanyName(String cmCompanyName) {
+		this.cmCompanyName = cmCompanyName;
+	}
+	public String getCmRegistrationType() {
+		return cmRegistrationType;
+	}
+	public void setCmRegistrationType(String cmRegistrationType) {
+		this.cmRegistrationType = cmRegistrationType;
+	}
+	public String getCmItemCategory() {
+		return cmItemCategory;
+	}
+	public void setCmItemCategory(String cmItemCategory) {
+		this.cmItemCategory = cmItemCategory;
+	}
+	public String getCmItemName() {
+		return cmItemName;
+	}
+	public void setCmItemName(String cmItemName) {
+		this.cmItemName = cmItemName;
+	}
+	public String getCmEpNumber() {
+		return cmEpNumber;
+	}
+	public void setCmEpNumber(String cmEpNumber) {
+		this.cmEpNumber = cmEpNumber;
+	}
+	public String getCmBusinessRegNo() {
+		return cmBusinessRegNo;
+	}
+	public void setCmBusinessRegNo(String cmBusinessRegNo) {
+		this.cmBusinessRegNo = cmBusinessRegNo;
+	}
+	public String getCmIcNumber() {
+		return cmIcNumber;
+	}
+	public void setCmIcNumber(String cmIcNumber) {
+		this.cmIcNumber = cmIcNumber;
+	}
+	public String getCmMofNumber() {
+		return cmMofNumber;
+	}
+	public void setCmMofNumber(String cmMofNumber) {
+		this.cmMofNumber = cmMofNumber;
+	}
+	public String getCmExtentionCode() {
+		return cmExtentionCode;
+	}
+	public void setCmExtentionCode(String cmExtentionCode) {
+		this.cmExtentionCode = cmExtentionCode;
+	}
+	public String getCmExtentionType() {
+		return cmExtentionType;
+	}
+	public void setCmExtentionType(String cmExtentionType) {
+		this.cmExtentionType = cmExtentionType;
+	}
+	public String getCmExtentionBrand() {
+		return cmExtentionBrand;
+	}
+	public void setCmExtentionBrand(String cmExtentionBrand) {
+		this.cmExtentionBrand = cmExtentionBrand;
+	}
+	public String getCmExtentionMeasurment() {
+		return cmExtentionMeasurment;
+	}
+	public void setCmExtentionMeasurment(String cmExtentionMeasurment) {
+		this.cmExtentionMeasurment = cmExtentionMeasurment;
+	}
+	public String getCmExtentionColour() {
+		return cmExtentionColour;
+	}
+	public void setCmExtentionColour(String cmExtentionColour) {
+		this.cmExtentionColour = cmExtentionColour;
+	}
+	public String getCmProofIdentity() {
+		return cmProofIdentity;
+	}
+	public void setCmProofIdentity(String cmProofIdentity) {
+		this.cmProofIdentity = cmProofIdentity;
+	}	
+	public String getScQuotationId() {
+		return scQuotationId;
+	}
+	public void setScQuotationId(String scQuotationId) {
+		this.scQuotationId = scQuotationId;
+	}
+	public String getScQuotationNo() {
+		return scQuotationNo;
+	}
+	public void setScQuotationNo(String scQuotationNo) {
+		this.scQuotationNo = scQuotationNo;
+	}
+	public String getScPaymentId() {
+		return scPaymentId;
+	}
+	public void setScPaymentId(String scPaymentId) {
+		this.scPaymentId = scPaymentId;
 	}
 	public void setPdfFile(StreamedContent pdfFile) {
 		this.pdfFile = pdfFile;
@@ -223,68 +913,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setConstructedParamString(String constructedParamString) {
 		this.constructedParamString = constructedParamString;
-	}
-	
-	public Date getPrintedFromDate() {
-		return printedFromDate;
-	}
-	public void setPrintedFromDate(Date printedFromDate) {
-		this.printedFromDate = printedFromDate;
-	}
-	public Date getPrintedToDate() {
-		return printedToDate;
-	}
-	public void setPrintedToDate(Date printedToDate) {
-		this.printedToDate = printedToDate;
 	}	
-	public Date getExpiryFromDate() {
-		return expiryFromDate;
-	}
-	public void setExpiryFromDate(Date expiryFromDate) {
-		this.expiryFromDate = expiryFromDate;
-	}
-	public Date getExpiryToDate() {
-		return expiryToDate;
-	}
-	public void setExpiryToDate(Date expiryToDate) {
-		this.expiryToDate = expiryToDate;
-	}
-	public Date getReceiveFromDate() {
-		return receiveFromDate;
-	}
-	public void setReceiveFromDate(Date receiveFromDate) {
-		this.receiveFromDate = receiveFromDate;
-	}
-	public Date getReceiveToDate() {
-		return receiveToDate;
-	}
-	public void setReceiveToDate(Date receiveToDate) {
-		this.receiveToDate = receiveToDate;
-	}
-	public Date getApplicationFromDate() {
-		return applicationFromDate;
-	}	
-	public void setApplicationFromDate(Date applicationFromDate) {
-		this.applicationFromDate = applicationFromDate;
-	}
-	public Date getApplicationToDate() {
-		return applicationToDate;
-	}
-	public void setApplicationToDate(Date applicationToDate) {
-		this.applicationToDate = applicationToDate;
-	}
-	public Date getReleaseFromDate() {
-		return releaseFromDate;
-	}
-	public void setReleaseFromDate(Date releaseFromDate) {
-		this.releaseFromDate = releaseFromDate;
-	}
-	public Date getReleaseToDate() {
-		return releaseToDate;
-	}
-	public void setReleaseToDate(Date releaseToDate) {
-		this.releaseToDate = releaseToDate;
-	}
 	public List<SelectItem> getLevOneCatLst() {
 		return levOneCatLst;
 	}
@@ -315,248 +944,20 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void setDistrictLst(List<SelectItem> districtLst) {
 		this.districtLst = districtLst;
 	}
-	public String getSiteVisitOfficer() {
-		return siteVisitOfficer;
-	}
-	public void setSiteVisitOfficer(String siteVisitOfficer) {
-		this.siteVisitOfficer = siteVisitOfficer;
-	}
-	public String getCategoryCode() {
-		return categoryCode;
-	}
-	public void setCategoryCode(String categoryCode) {
-		this.categoryCode = categoryCode;
-	}
-	public String getSuppDocStatus() {
-		return suppDocStatus;
-	}
-	public void setSuppDocStatus(String suppDocStatus) {
-		this.suppDocStatus = suppDocStatus;
-	}
+	
 	public String getGeneratedURL() {
 		return generatedURL;
 	}
 	public void setGeneratedURL(String generatedURL) {
 		this.generatedURL = generatedURL;
-	}
-	public String getCompApplStatus() {
-		return compApplStatus;
-	}
-	public void setCompApplStatus(String compApplStatus) {
-		this.compApplStatus = compApplStatus;
-	}
-	public String getCaseNo() {
-		return caseNo;
-	}
-	
+	}	
 	public String getReportURL() {
 		return reportURL;
 	}
 	public void setReportURL(String reportURL) {
 		this.reportURL = reportURL;
 	}
-	public void setCaseNo(String caseNo) {
-		this.caseNo = caseNo;
-	}
-	public String getCompanyStatus() {
-		return companyStatus;
-	}
-	public void setCompanyStatus(String companyStatus) {
-		this.companyStatus = companyStatus;
-	}
-	public String getZone() {
-		return zone;
-	}
-	public void setZone(String zone) {
-		this.zone = zone;
-	}
-	public String getSupplierType() {
-		return supplierType;
-	}
-	public void setSupplierType(String supplierType) {
-		this.supplierType = supplierType;
-	}
-	public String getMofRegNo() {
-		return mofRegNo;
-	}
-	public void setMofRegNo(String mofRegNo) {
-		this.mofRegNo = mofRegNo;
-	}
-	public String getMofRegNoFrom() {
-		return mofRegNoFrom;
-	}
-	public void setMofRegNoFrom(String mofRegNoFrom) {
-		this.mofRegNoFrom = mofRegNoFrom;
-	}
-	public String getMofRegNoTo() {
-		return mofRegNoTo;
-	}
-	public void setMofRegNoTo(String mofRegNoTo) {
-		this.mofRegNoTo = mofRegNoTo;
-	}
-	public String getRegistrationStatus() {
-		return registrationStatus;
-	}
-	public void setRegistrationStatus(String registrationStatus) {
-		this.registrationStatus = registrationStatus;
-	}
-	public String getCapitalNaccumFrm() {
-		return capitalNaccumFrm;
-	}
-	public void setCapitalNaccumFrm(String capitalNaccumFrm) {
-		this.capitalNaccumFrm = capitalNaccumFrm;
-	}
-	public String getCapitalNaccumTo() {
-		return capitalNaccumTo;
-	}
-	public void setCapitalNaccumTo(String capitalNaccumTo) {
-		this.capitalNaccumTo = capitalNaccumTo;
-	}
-	public String getPaidUpCapitalNaccumShare() {
-		return paidUpCapitalNaccumShare;
-	}
-	public void setPaidUpCapitalNaccumShare(String paidUpCapitalNaccumShare) {
-		this.paidUpCapitalNaccumShare = paidUpCapitalNaccumShare;
-	}
-	public String getCategory() {
-		return category;
-	}
-	public void setCategory(String category) {
-		this.category = category;
-	}
-	public String getNoOfCategory() {
-		return noOfCategory;
-	}
-	public void setNoOfCategory(String noOfCategory) {
-		this.noOfCategory = noOfCategory;
-	}
-	public String getMainCategory() {
-		return mainCategory;
-	}
-	public void setMainCategory(String mainCategory) {
-		this.mainCategory = mainCategory;
-	}
-	public String getSubCategory() {
-		return subCategory;
-	}
-	public void setSubCategory(String subCategory) {
-		this.subCategory = subCategory;
-	}
-	public String getSubCategoryDivision() {
-		return subCategoryDivision;
-	}
-	public void setSubCategoryDivision(String subCategoryDivision) {
-		this.subCategoryDivision = subCategoryDivision;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public String getApplicationStatus() {
-		return applicationStatus;
-	}
-	public void setApplicationStatus(String applicationStatus) {
-		this.applicationStatus = applicationStatus;
-	}
-	public String getCancelledBy() {
-		return cancelledBy;
-	}
-	public void setCancelledBy(String cancelledBy) {
-		this.cancelledBy = cancelledBy;
-	}
-	public String getPaymentType() {
-		return paymentType;
-	}
-	public void setPaymentType(String paymentType) {
-		this.paymentType = paymentType;
-	}
-	public String getApplicationType() {
-		return applicationType;
-	}
-	public void setApplicationType(String applicationType) {
-		this.applicationType = applicationType;
-	}
-	public String getState() {
-		return state;
-	}
-	public void setState(String state) {
-		this.state = state;
-	}
-	public String getDistrict() {
-		return district;
-	}
-	public void setDistrict(String district) {
-		this.district = district;
-	}
-	public String getSupplierName() {
-		return supplierName;
-	}
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
-	}
-	public String getReportType() {
-		return reportType;
-	}
-	public void setReportType(String reportType) {
-		this.reportType = reportType;
-	}
-	public String getOrganizationType() {
-		return organizationType;
-	}
-	public void setOrganizationType(String organizationType) {
-		this.organizationType = organizationType;
-	}
-	public String getKementerian() {
-		return kementerian;
-	}
-	public void setKementerian(String kementerian) {
-		this.kementerian = kementerian;
-	}
-	public String getNamAgensi() {
-		return namAgensi;
-	}
-	public void setNamAgensi(String namAgensi) {
-		this.namAgensi = namAgensi;
-	}
-	public String getComplaintNo() {
-		return complaintNo;
-	}
-	public void setComplaintNo(String complaintNo) {
-		this.complaintNo = complaintNo;
-	}	
-	public String getSupportingDocument() {
-		return supportingDocument;
-	}
-	public void setSupportingDocument(String supportingDocument) {
-		this.supportingDocument = supportingDocument;
-	}
-	public String getDocStatus() {
-		return docStatus;
-	}
-	public void setDocStatus(String docStatus) {
-		this.docStatus = docStatus;
-	}
 	
-	public String getRegistrationNo() {
-		return registrationNo;
-	}
-	public void setRegistrationNo(String registrationNo) {
-		this.registrationNo = registrationNo;
-	}
-	public String getePNo() {
-		return ePNo;
-	}
-	public void setePNo(String ePNo) {
-		this.ePNo = ePNo;
-	}
-	public String getApplicationNo() {
-		return applicationNo;
-	}
-	public void setApplicationNo(String applicationNo) {
-		this.applicationNo = applicationNo;
-	}	
 	public String getUserId() {
 		return userId;
 	}
@@ -580,296 +981,13 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setToDate(Date toDate) {
 		this.toDate = toDate;
-	}
-	public String getQuotationId() {
-		return quotationId;
-	}
-	public void setQuotationId(String quotationId) {
-		this.quotationId = quotationId;
-	}
-	public String getQuotationNo() {
-		return quotationNo;
-	}
-	public void setQuotationNo(String quotationNo) {
-		this.quotationNo = quotationNo;
-	}
-	public String getPaymentId() {
-		return paymentId;
-	}
-	public void setPaymentId(String paymentId) {
-		this.paymentId = paymentId;
-	}
-	public String getItemType() {
-		return itemType;
-	}
-	public void setItemType(String itemType) {
-		this.itemType = itemType;
-	}
-	public String getItemStatus() {
-		return itemStatus;
-	}
-	public void setItemStatus(String itemStatus) {
-		this.itemStatus = itemStatus;
-	}
-	public String getUnspscCode() {
-		return unspscCode;
-	}
-	public void setUnspscCode(String unspscCode) {
-		this.unspscCode = unspscCode;
-	}
-	public String getUnspscTitle() {
-		return unspscTitle;
-	}
-	public void setUnspscTitle(String unspscTitle) {
-		this.unspscTitle = unspscTitle;
-	}
-	public String getCompanyName() {
-		return companyName;
-	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-	public String getRegistrationType() {
-		return registrationType;
-	}
-	public void setRegistrationType(String registrationType) {
-		this.registrationType = registrationType;
-	}
-	public String getItemCategory() {
-		return itemCategory;
-	}
-	public void setItemCategory(String itemCategory) {
-		this.itemCategory = itemCategory;
-	}
-	public String getItemName() {
-		return itemName;
-	}
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-	public String getProofIdentity() {
-		return proofIdentity;
-	}
-	public void setProofIdentity(String proofIdentity) {
-		this.proofIdentity = proofIdentity;
-	}
-	public String getEpNumber() {
-		return epNumber;
-	}
-	public void setEpNumber(String epNumber) {
-		this.epNumber = epNumber;
-	}
-	public String getBusinessRegNo() {
-		return businessRegNo;
-	}
-	public void setBusinessRegNo(String businessRegNo) {
-		this.businessRegNo = businessRegNo;
-	}
-	public String getIcNumber() {
-		return icNumber;
-	}
-	public void setIcNumber(String icNumber) {
-		this.icNumber = icNumber;
-	}
-	public String getMofNumber() {
-		return mofNumber;
-	}
-	public void setMofNumber(String mofNumber) {
-		this.mofNumber = mofNumber;
-	}
-	public String getExtentionCode() {
-		return extentionCode;
-	}
-	public void setExtentionCode(String extentionCode) {
-		this.extentionCode = extentionCode;
-	}
-	public String getExtentionType() {
-		return extentionType;
-	}
-	public void setExtentionType(String extentionType) {
-		this.extentionType = extentionType;
-	}
-	public String getExtentionBrand() {
-		return extentionBrand;
-	}
-	public void setExtentionBrand(String extentionBrand) {
-		this.extentionBrand = extentionBrand;
-	}
-	public String getExtentionMeasurment() {
-		return extentionMeasurment;
-	}
-	public void setExtentionMeasurment(String extentionMeasurment) {
-		this.extentionMeasurment = extentionMeasurment;
-	}
-	public String getExtentionColour() {
-		return extentionColour;
-	}
-	public void setExtentionColour(String extentionColour) {
-		this.extentionColour = extentionColour;
-	}
-	public String getPtj() {
-		return ptj;
-	}
-	public void setPtj(String ptj) {
-		this.ptj = ptj;
-	}
-	public String getContractNo() {
-		return contractNo;
-	}
-	public void setContractNo(String contractNo) {
-		this.contractNo = contractNo;
-	}
-	public String getSst() {
-		return sst;
-	}
-	public void setSst(String sst) {
-		this.sst = sst;
-	}
-	public String getJabatan() {
-		return jabatan;
-	}
-	public void setJabatan(String jabatan) {
-		this.jabatan = jabatan;
-	}
-	public String getMinistry() {
-		return ministry;
-	}
-	public void setMinistry(String ministry) {
-		this.ministry = ministry;
-	}
-	public String getSupplier() {
-		return supplier;
-	}
-	public void setSupplier(String supplier) {
-		this.supplier = supplier;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getDuration() {
-		return duration;
-	}
-	public void setDuration(String duration) {
-		this.duration = duration;
-	}
-	public String getRecievingOfficer() {
-		return recievingOfficer;
-	}
-	public void setRecievingOfficer(String recievingOfficer) {
-		this.recievingOfficer = recievingOfficer;
-	}
-	public String getDeliveryAddress() {
-		return deliveryAddress;
-	}
-	public void setDeliveryAddress(String deliveryAddress) {
-		this.deliveryAddress = deliveryAddress;
-	}
+	}	
 	public String getFlRecNoteNo() {
 		return flRecNoteNo;
 	}
 	public void setFlRecNoteNo(String flRecNoteNo) {
 		this.flRecNoteNo = flRecNoteNo;
-	}
-	public String getContractType() {
-		return contractType;
-	}
-	public void setContractType(String contractType) {
-		this.contractType = contractType;
-	}
-	public String getRequisitioner() {
-		return requisitioner;
-	}
-	public void setRequisitioner(String requisitioner) {
-		this.requisitioner = requisitioner;
-	}
-	public String getMtoContract() {
-		return mtoContract;
-	}
-	public void setMtoContract(String mtoContract) {
-		this.mtoContract = mtoContract;
-	}
-	public String getInvoiceNo() {
-		return invoiceNo;
-	}
-	public void setInvoiceNo(String invoiceNo) {
-		this.invoiceNo = invoiceNo;
-	}
-	public String getDeductionType() {
-		return deductionType;
-	}
-	public void setDeductionType(String deductionType) {
-		this.deductionType = deductionType;
-	}
-	public String getCrNo() {
-		return crNo;
-	}
-	public void setCrNo(String crNo) {
-		this.crNo = crNo;
-	}
-	public String getApproverName() {
-		return approverName;
-	}
-	public void setApproverName(String approverName) {
-		this.approverName = approverName;
-	}
-	public String getDocumentType() {
-		return documentType;
-	}
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
-	public String getCriteria() {
-		return criteria;
-	}
-	public void setCriteria(String criteria) {
-		this.criteria = criteria;
-	}
-	public String getScoring() {
-		return scoring;
-	}
-	public void setScoring(String scoring) {
-		this.scoring = scoring;
-	}
-	public String getPkpNo() {
-		return pkpNo;
-	}
-	public void setPkpNo(String pkpNo) {
-		this.pkpNo = pkpNo;
-	}
-	public String getDeliveryOrderNo() {
-		return deliveryOrderNo;
-	}
-	public void setDeliveryOrderNo(String deliveryOrderNo) {
-		this.deliveryOrderNo = deliveryOrderNo;
-	}
-	public String getItemCode() {
-		return itemCode;
-	}
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode;
-	}
-	public String getPoAmount() {
-		return poAmount;
-	}
-	public void setPoAmount(String poAmount) {
-		this.poAmount = poAmount;
-	}
-	public String getPrNo() {
-		return prNo;
-	}
-	public void setPrNo(String prNo) {
-		this.prNo = prNo;
-	}
-	public String getPmo() {
-		return pmo;
-	}
-	public void setPmo(String pmo) {
-		this.pmo = pmo;
 	}	
-	
 	public List<String> getAuthoriztionList() {
 		return authoriztionList;
 	}
@@ -908,8 +1026,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
-	}
-	
+	}	
 	/*
 	 *Retrieve module list 
 	 */
@@ -917,19 +1034,19 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		moduleList = new ArrayList<SelectItem>();		
 		SelectItem selectItem= new SelectItem();
 		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SC_TTL));
-		selectItem.setValue(ModuleCodeConst.SUPPLIER_SELECTION);
+		selectItem.setValue("SC");
 		moduleList.add(selectItem);			
 		SelectItem selectItem1= new SelectItem();
 		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_CM_TTL));
-		selectItem1.setValue(ModuleCodeConst.CATALOGUE_MANAGEMENT);
+		selectItem1.setValue("CM");
 		moduleList.add(selectItem1);			
 		SelectItem selectItem2= new SelectItem();
 		selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_FL_TTL));
-		selectItem2.setValue(ModuleCodeConst.ORDER_FULFILLMENT);
+		selectItem2.setValue("FL");
 		moduleList.add(selectItem2);
 		SelectItem selectItem3= new SelectItem();
 		selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.MOD_SM_TTL));
-		selectItem3.setValue(ModuleCodeConst.SUPPLIER_MANAGEMENT);
+		selectItem3.setValue("SM");
 		moduleList.add(selectItem3);
 		//checkVariableValueExist();
 		return moduleList;
@@ -940,24 +1057,50 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public void retriveReportListBymoduleName() {
 		rptGenBean = new ReportsGenerateBean();		
 		getManagedBean().setReportName(null);
-		getManagedBean().setReportNameValue(null);
+		getManagedBean().setReportValue(null);
 		setRoleCode(null);
-		getManagedBean().setReportList(new ArrayList<SelectItem>());		
-		if(getManagedBean().getModuleName()!=null){
-			//retriveUserrloeByUserId(getManagedBean().getModuleName());
-			if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		getManagedBean().setRptGenBean(null);
+		if(getManagedBean().getModuleValue()!=null){
+			retriveReportListByModule(getManagedBean().getModuleValue());
+			//retriveUserrloeByUserId(getManagedBean().getModuleValue());
+			/*if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
 				retriveReportListBySCModule();			
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
 				retriveReportListByCMModule();			
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
 				retriveReportListByFLModule();
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
 				retriveReportListBySMModule();
-			}
+			}*/
 		}		
 		getManagedBean().setReportList(reportList);		
 		getManagedBean().setRptGenBean(rptGenBean);		
 		resetReportForm();		
+	}
+	public List<SelectItem> retriveReportListByModule(String module){
+		reportList=new ArrayList<SelectItem>();		
+		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject("rpt", IPMReportSO.class);
+		PMReportReqDTO reqDTO = new PMReportReqDTO();
+		reqDTO.setModuleCode(module);
+		PMReportResDTO rptResDTO = reportSO.retriveReportByModule(reqDTO);
+		List<PMReport> rptLst = rptResDTO.getPmReportList();
+		if (null != rptLst) {
+				
+			for (PMReport pmReport : rptLst) {
+				SelectItem selectItem= new SelectItem();
+				String label = ReportConst.EMPTY_VAL;
+				if((null != pmReport.getSubModule())&&(ReportConst.EMPTY_VAL != pmReport.getSubModule())){
+				  label = pmReport.getReportTitle()+" - "+ pmReport.getSubModule();
+				}else{
+					label = pmReport.getReportTitle();
+				}
+				selectItem.setValue(pmReport.getReportId());
+				selectItem.setLabel(label);
+				reportList.add(selectItem);
+			}
+		}		
+		return reportList;
 	}
 	/*
 	 *Retrieve Role code by User id 
@@ -965,7 +1108,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	public List<String> retriveUserrloeByUserId(String moduleName) {
 		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(moduleName, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
-		authoriztionList=new ArrayList<String>();   
+		authoriztionList=new ArrayList<String>();
+		userId = new FacesScopes().getUserSessionBean().getUserId().toString();
 		reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 		reqDTO.setLanguageCode("en");
 		UserResDTO userResDTO = userSO.retrieveUserRoleDescListByUserId(reqDTO);
@@ -1341,306 +1485,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			selectItem46.setLabel(CommonMethod.getMessageCommon(ReportConst.SM_DETAILS_OF_APPLICATION_RPT_NAME));
 			selectItem46.setValue(ReportConst.SM_DETAILS_OF_APPLICATION_RPT_VAL);
 			reportList.add(selectItem46);
-		//}
-			
-	}
-	/*
-	 *Retrieve report list by SC module 
-	 */
-	public void retriveReportListBySCModule() {
-		reportList=new ArrayList<SelectItem>();
-		
-		SelectItem selectItem= new SelectItem();
-		selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPPP_PEMATUHAN_OC_RPT_NAME));
-		selectItem.setValue(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL);
-		reportList.add(selectItem);
-		
-		SelectItem selectItem1= new SelectItem();
-		selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.KPPP1_PEMATUHAN_OC_RPT_NAME));
-		selectItem1.setValue(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL);
-		reportList.add(selectItem1);
-		
-		SelectItem selectItem2= new SelectItem();
-		selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.PDDW_OC_RPT_NAME));
-		selectItem2.setValue(ReportConst.PDDW_OC_RPT_VAL);
-		reportList.add(selectItem2);
-		
-		SelectItem selectItem28= new SelectItem();
-		selectItem28.setLabel(CommonMethod.getMessageCommon(ReportConst.AKPP_PEMATUHAN_OC_RPT_NAME));
-		selectItem28.setValue(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL);
-		reportList.add(selectItem28);
-		
-		SelectItem selectItem3= new SelectItem();
-		selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_TEC_RPT_NAME));
-		selectItem3.setValue(ReportConst.SPPSAP2_TEC_RPT_VAL);
-		reportList.add(selectItem3);			
-		
-		SelectItem selectItem4= new SelectItem();
-		selectItem4.setLabel(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_NAME));
-		selectItem4.setValue(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL);
-		reportList.add(selectItem4);
-		
-		SelectItem selectItem5= new SelectItem();
-		selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.AKPT_TEC_RPT_NAME));
-		selectItem5.setValue(ReportConst.AKPT_TEC_RPT_VAL);
-		reportList.add(selectItem5);
-		
-		SelectItem selectItem6= new SelectItem();
-		selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.TECSPEC_TEC_RPT_NAME));
-		selectItem6.setValue(ReportConst.TECSPEC_TEC_RPT_VAL);
-		reportList.add(selectItem6);
-		
-		SelectItem selectItem23= new SelectItem();
-		selectItem23.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_TEC_RPT_NAME));
-		selectItem23.setValue(ReportConst.PSDAK_TEC_RPT_VAL);
-		reportList.add(selectItem23);
-		
-		SelectItem selectItem24= new SelectItem();
-		selectItem24.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_TEC_RPT_NAME));
-		selectItem24.setValue(ReportConst.PSDABK_TEC_RPT_VAL);
-		reportList.add(selectItem24);
-		
-		SelectItem selectItem7= new SelectItem();
-		selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_NAME));
-		selectItem7.setValue(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL);
-		reportList.add(selectItem7);
-		SelectItem selectItem21= new SelectItem();
-		selectItem21.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_NAME));
-		selectItem21.setValue(ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_VAL);
-		reportList.add(selectItem21);
-		
-		SelectItem selectItem8= new SelectItem();
-		selectItem8.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_FEC_RPT_NAME));
-		selectItem8.setValue(ReportConst.SPPSAP2_FEC_RPT_VAL);
-		reportList.add(selectItem8);
-		
-		SelectItem selectItem9= new SelectItem();
-		selectItem9.setLabel(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_NAME));
-		selectItem9.setValue(ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL);
-		reportList.add(selectItem9);
-		
-		SelectItem selectItem10= new SelectItem();
-		selectItem10.setLabel(CommonMethod.getMessageCommon(ReportConst.AKPT_FEC_RPT_NAME));
-		selectItem10.setValue(ReportConst.AKPT_FEC_RPT_VAL);
-		reportList.add(selectItem10);
-		
-		SelectItem selectItem11= new SelectItem();
-		selectItem11.setLabel(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_FEC_RPT_NAME));
-		selectItem11.setValue(ReportConst.HARGA_TAWARAN_FEC_RPT_VAL);
-		reportList.add(selectItem11);
-		
-		SelectItem selectItem27= new SelectItem();
-		selectItem27.setLabel(CommonMethod.getMessageCommon(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_NAME));
-		selectItem27.setValue(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL);
-		reportList.add(selectItem27);
-		
-		SelectItem selectItem25= new SelectItem();
-		selectItem25.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME));
-		selectItem25.setValue(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL);
-		reportList.add(selectItem25);
-		
-		SelectItem selectItem26= new SelectItem();
-		selectItem26.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME));
-		selectItem26.setValue(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL);
-		reportList.add(selectItem26);
-		
-		SelectItem selectItem12= new SelectItem();
-		selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_FEC_RPT_NAME));
-		selectItem12.setValue(ReportConst.OVRL_FINRS_FEC_RPT_VAL);
-		reportList.add(selectItem12);
-		
-		SelectItem selectItem13= new SelectItem();
-		selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPP1_PEMATUHAN_EC_RPT_NAME));
-		selectItem13.setValue(ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL);
-		reportList.add(selectItem13);
-		
-		SelectItem selectItem14= new SelectItem();
-		selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.KPP1_PEMATUHAN_EC_RPT_NAME));
-		selectItem14.setValue(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL);
-		reportList.add(selectItem14);
-		
-		SelectItem selectItem29 = new SelectItem();
-		selectItem29.setLabel(CommonMethod.getMessageCommon(ReportConst.PDW_EC_RPT_NAME));
-		selectItem29.setValue(ReportConst.PDW_EC_RPT_VAL);
-		reportList.add(selectItem29);
-		
-		SelectItem selectItem15= new SelectItem();
-		selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_EC_RPT_NAME));
-		selectItem15.setValue(ReportConst.SPPSAP2_EC_RPT_VAL);
-		reportList.add(selectItem15);
-		
-		SelectItem selectItem16= new SelectItem();
-		selectItem16.setLabel(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_NAME));
-		selectItem16.setValue(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL);
-		reportList.add(selectItem16);
-		
-		SelectItem selectItem17= new SelectItem();
-		selectItem17.setLabel(CommonMethod.getMessageCommon(ReportConst.AKPTPH_EC_RPT_NAME));
-		selectItem17.setValue(ReportConst.AKPTPH_EC_RPT_VAL);
-		reportList.add(selectItem17);
-		
-		SelectItem selectItem18= new SelectItem();
-		selectItem18.setLabel(CommonMethod.getMessageCommon(ReportConst.TECSPEC_EC_RPT_NAME));
-		selectItem18.setValue(ReportConst.TECSPEC_EC_RPT_VAL);
-		reportList.add(selectItem18);
-		
-		SelectItem selectItem30= new SelectItem();
-		selectItem30.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME));
-		selectItem30.setValue(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL);
-		reportList.add(selectItem30);
-		
-		SelectItem selectItem31= new SelectItem();
-		selectItem31.setLabel(CommonMethod.getMessageCommon(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME));
-		selectItem31.setValue(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL);
-		reportList.add(selectItem31);
-		
-		SelectItem selectItem32= new SelectItem();
-		selectItem32.setLabel(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_EC_RPT_NAME));
-		selectItem32.setValue(ReportConst.HARGA_TAWARAN_EC_RPT_VAL);
-		reportList.add(selectItem32);
-		
-		SelectItem selectItem33= new SelectItem();
-		selectItem33.setLabel(CommonMethod.getMessageCommon(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_NAME));
-		selectItem33.setValue(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL);
-		reportList.add(selectItem33);
-		
-		SelectItem selectItem34= new SelectItem();
-		selectItem34.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME));
-		selectItem34.setValue(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL);
-		reportList.add(selectItem34);
-		
-		SelectItem selectItem35= new SelectItem();
-		selectItem35.setLabel(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME));
-		selectItem35.setValue(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL);
-		reportList.add(selectItem35);
-		
-		SelectItem selectItem19= new SelectItem();
-		selectItem19.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_NAME));
-		selectItem19.setValue(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL);
-		reportList.add(selectItem19);
-		
-		SelectItem selectItem22= new SelectItem();
-		selectItem22.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_NAME));
-		selectItem22.setValue(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL);
-		reportList.add(selectItem22);
-		
-		SelectItem selectItem20= new SelectItem();
-		selectItem20.setLabel(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_EC_RPT_NAME));
-		selectItem20.setValue(ReportConst.OVRL_FINRS_EC_RPT_VAL);
-		reportList.add(selectItem20);
-		
-		
-		
-				
-		
-	}
-	/*
-	 *Retrieve report list by CM module 
-	 */
-	public void retriveReportListByCMModule() {
-		reportList=new ArrayList<SelectItem>();		
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem= new SelectItem();		
-				selectItem.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PUB_CAT_ITM_RPT_NAME));
-				selectItem.setValue(ReportConst.LST_PUB_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem1= new SelectItem();
-				selectItem1.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_APPR_CAT_ITM_RPT_NAME));
-				selectItem1.setValue(ReportConst.LST_APPR_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem1);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem2= new SelectItem();
-				selectItem2.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_REJ_CAT_ITM_RPT_NAME));
-				selectItem2.setValue(ReportConst.LST_REJ_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem2);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem3= new SelectItem();
-				selectItem3.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_NAME));
-				selectItem3.setValue(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem3);			
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem4= new SelectItem();
-				selectItem4.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_EXP_CAT_ITM_RPT_NAME));
-				selectItem4.setValue(ReportConst.LST_EXP_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem4);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem5= new SelectItem();
-				selectItem5.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_STS_RPT_NAME));
-				selectItem5.setValue(ReportConst.TOT_CAT_ITM_STS_RPT_VAL);
-				reportList.add(selectItem5);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem6= new SelectItem();
-				selectItem6.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_NAME));
-				selectItem6.setValue(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL);
-				reportList.add(selectItem6);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem7= new SelectItem();
-				selectItem7.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_STD_PRC_RPT_NAME));
-				selectItem7.setValue(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL);
-				reportList.add(selectItem7);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem8= new SelectItem();
-				selectItem8.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_NAME));
-				selectItem8.setValue(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL);
-				reportList.add(selectItem8);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem9= new SelectItem();
-				selectItem9.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_NAME));
-				selectItem9.setValue(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL);
-				reportList.add(selectItem9);
-			//}
-			//if((authoriztionList.contains(ReportConst.SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(ReportConst.SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_USER.toString()))||(authoriztionList.contains(RoleCode.MOF_SUPPLIER_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem10= new SelectItem();
-				selectItem10.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_NAME));
-				selectItem10.setValue(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL);
-				reportList.add(selectItem10);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem11= new SelectItem();
-				selectItem11.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_NAME));
-				selectItem11.setValue(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL);
-				reportList.add(selectItem11);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem12= new SelectItem();
-				selectItem12.setLabel(CommonMethod.getMessageCommon(ReportConst.SUM_REJ_CAT_ITM_RPT_NAME));
-				selectItem12.setValue(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL);
-				reportList.add(selectItem12);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-				SelectItem selectItem13= new SelectItem();
-				selectItem13.setLabel(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_NAME));
-				selectItem13.setValue(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL);
-				reportList.add(selectItem13);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
-				SelectItem selectItem14= new SelectItem();
-				selectItem14.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME));
-				selectItem14.setValue(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL);
-				reportList.add(selectItem14);
-			//}
-			//if((authoriztionList.contains(RoleCode.CM_ADMIN.toString()))||(authoriztionList.contains(RoleCode.CD_OFFICER.toString()))||(authoriztionList.contains(RoleCode.CD_COMMITTEE.toString()))){
-				SelectItem selectItem15= new SelectItem();
-				selectItem15.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_NAME));
-				selectItem15.setValue(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL);
-				reportList.add(selectItem15);
-			//}
-			//if((authoriztionList.contains(RoleCode.CD_OFFICER.toString()))){
-				SelectItem selectItem16= new SelectItem();
-				selectItem16.setLabel(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
-				selectItem16.setValue(ReportConst.LST_ITM_CODE_RPT_VAL);
-				reportList.add(selectItem16);
-			//}	 
+		//}			
 	}	
 	/*
 	 * Retrieve report list by FL module
@@ -2018,6 +1863,11 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	 *Enable  criteria variables by report name 
 	 */
 	public void criteriaVariablesByReport() {
+		scReportBackingBean = new SCReportBackingBean();
+		cmReportBackingBean = new CMReportBackingBean();
+		flReportBackingBean = new FLReportBackingBean();
+		smReportBackingBean = new SMReportBackingBean();
+		rptGenBean = new ReportsGenerateBean();	
 		getManagedBean().setRptGenBean(null);
 		getManagedBean().setReportName(ReportConst.EMPTY_VAL);
 		stateLst = new ArrayList<SelectItem>();
@@ -2025,1507 +1875,53 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		levOneCatLst = new ArrayList<SelectItem>();
 		levTwoCatLst = new ArrayList<SelectItem>();
 		levThreeCatLst = new ArrayList<SelectItem>();		
-		if((getManagedBean().getModuleName())!=null && (getManagedBean().getReportNameValue())!=null){
-			rptGenBean = new ReportsGenerateBean();					
-			if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){ 
-				criteriaVariablesByReportByCM();					
-			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){ 
-				criteriaVariablesByReportBySC();				
-			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){ 
-				criteriaVariablesByReportByFL();
-			}else if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){ 
-				criteriaVariablesByReportBySM();
+		if((getManagedBean().getModuleValue())!=null && (getManagedBean().getReportValue())!=null){
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance().getServiceObject("rpt", IPMReportSO.class);
+			PMReportReqDTO reqDTO = new PMReportReqDTO();
+			reqDTO.setReportId(getManagedBean().getReportValue());
+			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
+			List<PMReport> rptLst = rptResDTO.getPmReportList();
+			if (null != rptLst) {					
+				for (PMReport pmReport : rptLst) {
+					String label = ReportConst.EMPTY_VAL;
+					if((null != pmReport.getSubModule())&&(ReportConst.EMPTY_VAL != pmReport.getSubModule())){
+					  label = pmReport.getReportTitle()+" - "+ pmReport.getSubModule();
+					}else{
+						label = pmReport.getReportTitle();
+					}	
+				getManagedBean().setReportName(label);
+				reportFileNameJSP = pmReport.getReportFilename();
+				}
+			}				
+			if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT))){				
+				cmReportBackingBean.criteriaVariablesByReportByCM(rptGenBean);
+			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))){				
+				scReportBackingBean.criteriaVariablesByReportBySC(rptGenBean);
+			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT))){				
+				flReportBackingBean.criteriaVariablesByReportByFL(rptGenBean);
+			}else if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))){				
+				smReportBackingBean.criteriaVariablesByReportBySM(rptGenBean);
 			}
 			resetReportForm();
 			retrieveDates();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();
 		}
-	}
-	/*
-	 *Enable SM module criteria by report name 
-	 */
-	public void criteriaVariablesByReportBySM(){
-		switch (getManagedBean().getReportNameValue()) {		
-	        case ReportConst.SM_LST_OF_APP_RPT_VAL:
-	        	rptGenBean.setSupportingDocumentView(true);
-				rptGenBean.setDocStatusView(true);
-				rptGenBean.setSuppDocStatusView(true);
-				rptGenBean.setRegistrationNoView(true);
-				rptGenBean.setePNoView(true);
-				rptGenBean.setApplicationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_APP_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL:	        	
-	        	rptGenBean.setRegistrationNoView(true);
-				rptGenBean.setePNoView(true);
-				rptGenBean.setApplicationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_NAME));
-				
-	            break;
-	        case ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL:			
-				rptGenBean.setReleaseDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL:
-	        	rptGenBean.setMandatoryZoneView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-	        	rptGenBean.setMandatoryMofRegNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL:
-	        	//rptGenBean.setZoneView(true);
-	        	rptGenBean.setMandatoryZoneView(true);
-	        	//rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-	        	//rptGenBean.setMofRegNoFromView(true);
-	        	//rptGenBean.setMofRegNoToView(true);
-	        	rptGenBean.setMandatoryMofRegNoView(true);
-	        	rptGenBean.setCompanyNameView(true);
-	        	rptGenBean.setRegistrationTypeView(true);
-	        	rptGenBean.setRegistrationStatusView(true);
-	        	rptGenBean.setPaidUpCapitalNaccumShareView(true);
-	        	rptGenBean.setCapitalNaccumView(true);
-	        	rptGenBean.setCategoryView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveCategoryLevOne();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMofRegNoFromView(true);
-	        	rptGenBean.setMofRegNoToView(true);
-	        	rptGenBean.setCompanyNameView(true);	        	
-	        	rptGenBean.setRoleView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_VAL:
-	        	
-	        	//rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-	        	rptGenBean.setMofRegNoFromView(true);
-	        	rptGenBean.setMofRegNoToView(true);
-	        	rptGenBean.setCompanyNameView(true);	        	
-	        	rptGenBean.setProofIdentityView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMofRegNoFromView(true);
-	        	rptGenBean.setMofRegNoToView(true);
-	        	rptGenBean.setCompanyNameView(true);
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL:
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setSupplierTypeView(true);	        	
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL:	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setProofIdentityView(true);	        	
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL:	        	
-	        	//rptGenBean.setZoneView(true);
-	        	rptGenBean.setMandatoryZoneView(true);
-	        	//rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-	        	//rptGenBean.setApplicationStatusView(true);
-	        	rptGenBean.setMandatoryApplicationStatusView(true);
-	        	rptGenBean.setCancelledByView(true);
-	        	//rptGenBean.setApplicationDateView(true);
-	        	rptGenBean.setMandatoryApplicationDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL:	        	
-	        	rptGenBean.setPaymentTypeView(true);
-	        	rptGenBean.setSupplierView(true);
-	        	rptGenBean.setApplicationTypeView(true);	  
-	        	rptGenBean.setApplicationDateView(true);		
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_CAT_STATIC_RPT_VAL:	        	
-	        	rptGenBean.setStateView(true);
-	        	rptGenBean.setDistrictView(true);
-	        	rptGenBean.setCategoryView(true);
-	        	rptGenBean.setRegistrationStatusView(true);
-	        	rptGenBean.setNoOfCategoryView(true);
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveCategoryLevOne();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_RPT_NAME));	
-				retrieveState();
-	            break;
-	        case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:		        	
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
-	        	rptGenBean.setStateView(true);	        	
-	        	rptGenBean.setCategoryView(true);
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveState();
-				retrieveCategoryLevOne();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_APPL_VERIFY_RPT_VAL:		        	
-	        	rptGenBean.setReceiveDateView(true);						
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERIFY_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_APPL_APPROVED_RPT_VAL:		        	
-	        	rptGenBean.setSupplierNameView(true);
-				rptGenBean.setMofNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_APPROVED_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_APPL_REJECTED_RPT_VAL:		        	
-	        	rptGenBean.setSupplierNameView(true);
-				rptGenBean.setMofNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_REJECTED_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_VAL:		        	
-	        	rptGenBean.setCompanyNameView(true);
-				rptGenBean.setCategoryView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveCategoryLevOne();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:
-	        	rptGenBean.setExtraTwoColumnView(true);
-				rptGenBean.setReportTypeView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setApplicationDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL:	        	
-				//rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-				rptGenBean.setCompanyNameView(true);
-				//rptGenBean.setExpiryDateView(true);
-				rptGenBean.setMandatoryExpiryDateView(true);
-				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_PRE_EXP_COMP_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:				
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_MONTH_WISE_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_VAL:	
-	        	rptGenBean.setApplicationTypeView(true);
-	        	rptGenBean.setSupplierTypeView(true);
-				rptGenBean.setReceiveDateView(true);				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL:	
-	        	rptGenBean.setRegistrationTypeView(true);
-	        	rptGenBean.setSupplierNameView(true);
-	        	rptGenBean.setMofNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_COMP_ADDR_RPT_VAL:	
-	        	//rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setMandatorySupplierTypeView(true);
-	        	rptGenBean.setCompApplStatusView(true);
-				//rptGenBean.setPrintedDateView(true);	
-	        	rptGenBean.setMandatoryPrintedDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMP_ADDR_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL:
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setReportTypeView(true);
-				rptGenBean.setApplicationDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_SUPPL_STAT_RPT_VAL:	
-	        	rptGenBean.setZoneView(true);
-	        	rptGenBean.setStateView(true);
-	        	rptGenBean.setDistrictView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveState();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPPL_STAT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_BPK_USER_PROF_RPT_VAL:
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setZoneView(true);	        	
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_BPK_USER_PROF_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_BPK_ADMIN_PROF_RPT_VAL:	
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setZoneView(true);	        	
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_BPK_ADMIN_PROF_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_VAL:	
-	        	//rptGenBean.setZoneView(true);
-	        	rptGenBean.setMandatoryZoneView(true);
-	        	rptGenBean.setOrganizationTypeView(true);
-	        	rptGenBean.setKementerianView(true);
-	        	rptGenBean.setNamAgensiView(true);
-	        	//rptGenBean.setCompApplStatusView(true);
-	        	rptGenBean.setMandatoryApplicationStatusView(true);
-	        	rptGenBean.setCompanyStatusView(true);
-				rptGenBean.setMandatoryApplicationDateView(true);
-				
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_AGENCY_STAT_SUMM_RPT_VAL:		        	
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_AGENCY_STAT_SUMM_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_QUESTIONAIRE_RPT_VAL:	
-	        	rptGenBean.setZoneView(true);	        	
-	        	rptGenBean.setSupplierTypeView(true);
-	        	rptGenBean.setReportTypeView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_QUESTIONAIRE_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_VAL:	        	
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL:	        	
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL:
-	           	rptGenBean.setExtraTwoColumnView(true);
-	        	//rptGenBean.setZoneView(true);
-	           	rptGenBean.setMandatoryZoneView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL:
-	        	rptGenBean.setRegistrationTypeView(true);
-	        	rptGenBean.setStateView(true);
-	        	rptGenBean.setDocStatusView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveState();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL:
-	        	rptGenBean.setSupplierNameView(true);
-	        	rptGenBean.setCaseNoView(true);
-	        	rptGenBean.setRegistrationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL:
-	        	rptGenBean.setSupplierNameView(true);
-	        	rptGenBean.setComplaintNoView(true);	        	
-	        	rptGenBean.setRegistrationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL:
-	        	rptGenBean.setExtraTwoColumnView(true);
-	        	rptGenBean.setProofIdentityView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_VAL:	        		        	
-	        	rptGenBean.setePNoView(true);
-	        	rptGenBean.setMofNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_THRESHLD_SUPP_TRNS_VAL_RPT_VAL:	        		        	
-	        	rptGenBean.setRegistrationTypeView(true);
-	        	rptGenBean.setSupplierNameView(true);
-	        	rptGenBean.setCategoryCodeView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_THRESHLD_SUPP_TRNS_VAL_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_SUPP_PEROFRM_RPT_VAL:	        		        	
-	        	rptGenBean.setRegistrationTypeView(true);
-	        	rptGenBean.setSupplierNameView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_SUPP_PEROFRM_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_VAL:	        		        	
-	        	rptGenBean.setApplicationStatusView(true);
-	        	rptGenBean.setSupplierNameView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_VAL:	        		        	
-	        	rptGenBean.setSiteVisitOfficerView(true);
-	        	rptGenBean.setSupplierNameView(true);
-	         	rptGenBean.setStateView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				retrieveState();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL:	        		        	
-	        	rptGenBean.setSupplierNameView(true);
-	         	rptGenBean.setStateView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				retrieveState();
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_NAME));			
-	            break;
-	        case ReportConst.SM_DETAILS_OF_APPLICATION_RPT_VAL:	        	
-	        	rptGenBean.setApplicationNoView(true);
-	        	rptGenBean.setExtraTwoColumnView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);	
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SM_DETAILS_OF_APPLICATION_RPT_NAME));			
-	            break;
-	        default:            
-	            break;
-		}
-	}
-	/*
-	 *Enable CM module criteria by report name 
-	 */
-	public void criteriaVariablesByReportByCM(){
-		
-		switch (getManagedBean().getReportNameValue()) {		
-	        case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);
-				rptGenBean.setItemStatusView(true);
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_PUB_CAT_ITM_RPT_NAME));
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					rptGenBean.setCompanyNameView(true);
-					rptGenBean.setRegistrationTypeView(true);
-					rptGenBean.setProofIdentityView(true);
-				//};
-	            break;
-	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemCategoryView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_APPR_CAT_ITM_RPT_NAME));
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					rptGenBean.setItemTypeView(true);
-					rptGenBean.setCompanyNameView(true);
-					rptGenBean.setRegistrationTypeView(true);
-					rptGenBean.setProofIdentityView(true);
-					rptGenBean.setItemCategoryView(false);
-				//};
-	            break;
-	        case ReportConst.LST_REJ_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_REJ_CAT_ITM_RPT_NAME));
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					rptGenBean.setCompanyNameView(true);
-					rptGenBean.setRegistrationTypeView(true);
-					rptGenBean.setProofIdentityView(true);						
-				//};
-	            break;
-	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_NAME));	
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){					
-					rptGenBean.setCompanyNameView(true);
-					rptGenBean.setRegistrationTypeView(true);
-					rptGenBean.setProofIdentityView(true);
-				//};
-	            break;
-	        case ReportConst.LST_EXP_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_EXP_CAT_ITM_RPT_NAME));
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){					
-					rptGenBean.setCompanyNameView(true);
-					rptGenBean.setRegistrationTypeView(true);
-					rptGenBean.setProofIdentityView(true);
-				//};
-	            break;
-	        case ReportConst.TOT_CAT_ITM_STS_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);							
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_STS_RPT_NAME));	
-	            break;
-	        case ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);					
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_NAME));
-	            break;
-	        case ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);
-				rptGenBean.setItemStatusView(false);
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);					
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_STD_PRC_RPT_NAME));
-	            break;
-	        case ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);						
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_NAME));	
-	            break;
-	        case ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);							
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_NAME));
-	            break;
-	        case ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);					
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_NAME));
-	            break;
-	        case ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_NAME));	
-	            break;
-	        case ReportConst.SUM_REJ_CAT_ITM_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);							
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUM_REJ_CAT_ITM_RPT_NAME));
-	            break;
-	        case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);							
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_NAME));
-	            break;
-	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
-	        	rptGenBean.setItemTypeView(true);						
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME));
-	            break;
-	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
-	        	rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);							
-				rptGenBean.setCompanyNameView(true);
-				rptGenBean.setRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setProofIdentityView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_NAME));	
-	            break;
-	        case ReportConst.LST_ITM_CODE_RPT_VAL:
-	        	rptGenBean.setItemNameView(true);			
-				rptGenBean.setUnspscCodeView(true);
-				rptGenBean.setUnspscTitleView(true);
-				rptGenBean.setExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
-	            break;	       
-	        default:            
-	            break;
-		}		
-	}
-	/*
-	 *Enable SC module criteria by report name 
-	 */
-	public void criteriaVariablesByReportBySC(){
-		switch (getManagedBean().getReportNameValue()) {
-		 	case ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL:
-		 		rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPPP_PEMATUHAN_OC_RPT_NAME));
-	            break; 
-	        case ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL:
-	        	/*rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);*/
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPPP1_PEMATUHAN_OC_RPT_NAME));
-	            break;
-	        case ReportConst.PDDW_OC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PDDW_OC_RPT_NAME));
-	            break;
-	        case ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPP_PEMATUHAN_OC_RPT_NAME));
-	            break;
-	        case ReportConst.SPPSAP2_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.AKPT_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPT_TEC_RPT_NAME));	
-	            break;
-	        case ReportConst.TECSPEC_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TECSPEC_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.SPPSAP2_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_NAME));	
-	            break;
-	        case ReportConst.AKPT_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPT_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.HARGA_TAWARAN_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_FINRS_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPP1_PEMATUHAN_EC_RPT_NAME));
-	            break;
-	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:
-	        	/*rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);*/
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPP1_PEMATUHAN_EC_RPT_NAME));		
-	            break;
-	        case ReportConst.PDW_EC_RPT_VAL:
-	        	/*rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);*/
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PDW_EC_RPT_NAME));		
-	            break;
-	        case ReportConst.SPPSAP2_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SPPSAP2_EC_RPT_NAME));
-	            break;
-	        case ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_NAME));
-	            break;
-	        case ReportConst.AKPTPH_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.AKPTPH_EC_RPT_NAME));	
-	            break;
-	        case ReportConst.TECSPEC_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TECSPEC_EC_RPT_NAME));
-	            break;
-	        case ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_NAME));
-	            break;
-	        case ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_NAME));
-	            break;
-	        case ReportConst.HARGA_TAWARAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.HARGA_TAWARAN_EC_RPT_NAME));
-	            break;
-	        case ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_NAME));
-	            break;
-	        case ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_NAME));
-	            break;
-	        case ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_NAME));
-	            break;
-	        case ReportConst.OVRL_FINRS_EC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.OVRL_FINRS_EC_RPT_NAME));			
-	            break;	        	 
-	        case ReportConst.PSDAK_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.PSDABK_TEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_TEC_RPT_NAME));
-	            break;
-	        case ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_NAME));
-	            break;
-	        case ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL:
-	        	rptGenBean.setQuotationNoView(true);
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_NAME));
-	            break;
-	        default:            
-	            break;
-		}		
-	}
-	/*
-	 * Enable FL module criteria by report name
-	 */
-	public void criteriaVariablesByReportByFL(){
-		
-	switch (getManagedBean().getReportNameValue()) {
-		case ReportConst.CON_REQ_RPT_MIN_VAL:	
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_MIN_NAME));		
-			 break;
-	 	case ReportConst.CON_ORD_RPT_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);			
-			rptGenBean.setPtjView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_RPT_MIN_NAME));
-			 break;
-		case ReportConst.DEL_ORD_RPT_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setDeliveryOrderNoView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_MIN_NAME));
-			 break;
-		case ReportConst.FL_REC_NOTE_RPT_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setFlRecNoteNoView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_MIN_NAME));
-			 break;
-		case ReportConst.LATE_DEL_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setItemTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_MIN_NAME));
-			 break;
-		case ReportConst.DEL_ORD_REJ_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_MIN_NAME));
-			 break;
-		case ReportConst.SHP_INSTR_RPT_MIN_VAL:
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setMtoContractView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SHP_INSTR_RPT_MIN_NAME));	
-			 break;
-		case ReportConst.STP_INSTR_DEL_RPT_MIN_VAL:
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setItemTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_MIN_NAME));		
-			 break;
-		case ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_MIN_NAME));	
-			 break;
-		case ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_MIN_NAME));	
-			 break;
-		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setInvoiceNoView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setPmoView(true);
-			rptGenBean.setStatusView(true);	
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_MIN_NAME));	
-			 break;
-		case ReportConst.DED_RPT_MIN_VAL:
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setDeductionTypeView(true);
-			rptGenBean.setPmoView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DED_RPT_MIN_NAME));
-			 break;
-		case ReportConst.CON_REQ_CANC_RPT_MIN_VAL:
-			rptGenBean.setCrNoView(true);
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setContractNoView(true);	
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_CANC_RPT_MIN_NAME));	
-			 break;
-		case ReportConst.CON_ORD_CANC_RPT_MIN_VAL:
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_CANC_RPT_MIN_NAME));		
-			 break;
-		case ReportConst.DEL_ORD_CANC_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_MIN_NAME));
-			 break;
-		case ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setContractNoView(true);	
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_NAME));	
-			 break;
-		case ReportConst.INV_CANC_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setContractNoView(true);	
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_MIN_NAME));
-			break;
-		case ReportConst.YEP_RPT_MIN_VAL:
-			rptGenBean.setDocumentTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_MIN_NAME));	
-			break;
-		case ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_MIN_VAL:
-			rptGenBean.setDocumentTypeView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_MIN_NAME));	
-			break;
-		case ReportConst.SUP_PERF_RPT_MIN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setCriteriaView(true);
-			rptGenBean.setScoringView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_MIN_NAME));	
-			break;
-		case ReportConst.CON_REQ_RPT_CEN_PEN_VAL:	
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setSupplierView(true);		
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.CON_ORD_RPT_CEN_PEN_VAL:			
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setStatusView(true);		
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.DEL_ORD_RPT_CEN_PEN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setDeliveryOrderNoView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setFlRecNoteNoView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.LATE_DEL_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setItemTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.DEL_ORD_REJ_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_CEN_PEN_NAME));
-			break;
-		case ReportConst.SHP_INSTR_RPT_CEN_PEN_VAL:
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setMtoContractView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SHP_INSTR_RPT_CEN_PEN_NAME));
-			break;
-		case ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_VAL:
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setItemTypeView(true);
-			rptGenBean.setContractTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_NAME));		
-			break;
-		case ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_NAME));	
-			break;
-		case ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_NAME));	
-			break;
-		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setInvoiceNoView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setContractNoView(true);
-			rptGenBean.setSstView(true);
-			rptGenBean.setPmoView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_CEN_PEN_NAME));
-			break;
-		case ReportConst.DED_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setContractNoView(true);	
-			rptGenBean.setSstView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setDeductionTypeView(true);
-			rptGenBean.setPmoView(true);
-			rptGenBean.setPkpNoView(true);			
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DED_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL:
-			rptGenBean.setCrNoView(true);
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.CON_ORD_CANC_RPT_CEN_PEN_VAL:
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_NAME));		
-			break;
-		case ReportConst.INV_CANC_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_CEN_PEN_NAME));	
-			break;
-		case ReportConst.YEP_RPT_CEN_PEN_VAL:
-			rptGenBean.setDocumentTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_CEN_PEN_NAME));
-			break;
-		case ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_VAL:
-			rptGenBean.setPtjView(true);
-			rptGenBean.setDocumentTypeView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_NAME));
-			break;
-		case ReportConst.SUP_PERF_RPT_CEN_PEN_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setCriteriaView(true);
-			rptGenBean.setScoringView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_CEN_PEN_NAME));		
-			break;
-		case ReportConst.PUR_REQ_RPT_PO_VAL:	
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setStatusView(true);			
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_RPT_PO_NAME));	
-			break;
-		case ReportConst.PUR_ORD_RPT_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);			
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_RPT_PO_NAME));
-			break;
-		case ReportConst.EMR_PROCUR_RPT_PO_VAL:
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPoAmountView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.EMR_PROCUR_RPT_PO_NAME));
-			break;
-		case ReportConst.PUR_ORD_REJ_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setFromDateView(true);
-			rptGenBean.setToDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_REJ_RPT_PO_NAME));	
-			break;
-		case ReportConst.DEL_ORD_RPT_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setDeliveryOrderNoView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_RPT_PO_NAME));
-			break;
-		case ReportConst.FL_REC_NOTE_RPT_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setFlRecNoteNoView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_RPT_PO_NAME));
-			break;
-		case ReportConst.LATE_DEL_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LATE_DEL_RPT_PO_NAME));
-			break;
-		case ReportConst.DEL_ORD_REJ_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_REJ_RPT_PO_NAME));	
-			break;
-		case ReportConst.STP_INSTR_DEL_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);			
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.STP_INSTR_DEL_RPT_PO_NAME));
-			break;
-		case ReportConst.INV_RPT_VIEW_SUPL_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setStatusView(true);			
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_SUPL_PO_NAME));		
-			break;
-		case ReportConst.INV_RPT_VIEW_PTJ_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_RPT_VIEW_PTJ_PO_NAME));	
-			break;
-		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
-			rptGenBean.setDurationView(true);
-			rptGenBean.setInvoiceNoView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPmoView(true);
-			rptGenBean.setStatusView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PYMT_MATCH_RPT_PO_NAME));		
-			break;
-		case ReportConst.PUR_REQ_CANC_RPT_PO_VAL:
-			rptGenBean.setPrNoView(true);
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setRequisitionerView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			rptGenBean.setToDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_REQ_CANC_RPT_PO_NAME));
-			break;
-		case ReportConst.PUR_ORD_CANC_RPT_PO_VAL:
-			rptGenBean.setApproverNameView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			rptGenBean.setToDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.PUR_ORD_CANC_RPT_PO_NAME));
-			break;
-		case ReportConst.DEL_ORD_CANC_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setRecievingOfficerView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.DEL_ORD_CANC_RPT_PO_NAME));	
-			break;
-		case ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setDeliveryAddressView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.FL_REC_NOTE_CANC_RPT_PO_NAME));
-			break;
-		case ReportConst.INV_CANC_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);			
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.INV_CANC_RPT_PO_NAME));	
-			break;
-		case ReportConst.YEP_RPT_PO_VAL:
-			rptGenBean.setDocumentTypeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_RPT_PO_NAME));	
-			break;
-		case ReportConst.YEP_AP58A_RPT_PO_VAL:
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.YEP_AP58A_RPT_PO_NAME));	
-			break;
-		case ReportConst.SUP_PERF_RPT_PO_VAL:
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setCriteriaView(true);
-			rptGenBean.setScoringView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUP_PERF_RPT_PO_NAME));	
-			break;
-		case ReportConst.SUMM_RPT_PAN_ITM_VAL:
-			rptGenBean.setItemNameView(true);
-			rptGenBean.setItemCodeView(true);
-			rptGenBean.setDurationView(true);
-			rptGenBean.setPtjView(true);
-			rptGenBean.setPkpNoView(true);
-			rptGenBean.setSupplierView(true);
-			rptGenBean.setMinistryView(true);
-			rptGenBean.setJabatanView(true);
-			rptGenBean.setFromDateView(true);
-			getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.SUMM_RPT_PAN_ITM_NAME));	
-			break;
-		default:            
-            break;
-		}		
 	}	
 	public void retrieveDates(){
-		if((getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportNameValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
+		if((getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))&&((getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL))||(getManagedBean().getReportValue().equalsIgnoreCase(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL)))){
 			log.info("inside retrieveDates");
 			Date currentDate= new Date();
 			this.setToDate(currentDate);
-			this.setExpiryToDate(currentDate);
+			this.setSmExpiryToDate(currentDate);
 			Date newDate= new Date();
 			newDate.setMonth(0);
 			newDate.setDate(1);
 			this.setFromDate(newDate);
-			this.setExpiryFromDate(newDate);
+			this.setSmExpiryFromDate(newDate);
 			//SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);	
 		}
-	}
+	}	
 	public void retrieveState(){
 		stateLst = new ArrayList<SelectItem>();		
 		IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
@@ -3543,8 +1939,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		districtLst = new ArrayList<SelectItem>();		
 		IDistrictSO	districtSO	=	(IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
 		DistrictReqDTO	districtReqDTO	=	new DistrictReqDTO();
-		if(this.getState()!=null&&this.getState()!=""){			
-			districtReqDTO.setStateId( Long.parseLong(this.getState()));
+		if(this.getSmState()!=null&&this.getSmState()!=""){			
+			districtReqDTO.setStateId( Long.parseLong(this.getSmState()));
 			DistrictResDTO districtResDTO = districtSO.retriveDistrictListByStateID(districtReqDTO);			
 			for(PmDistrict pmDistrict: districtResDTO.getDistrictList()){				
 				SelectItem selectItem= new SelectItem();
@@ -3556,9 +1952,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	}
 	public void retrieveCategoryLevOne(){
 		levOneCatLst = new ArrayList<SelectItem>();		
-		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
-		//CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
-		//CategoryCodeResDTO	catCodeResDTO	=	new CategoryCodeResDTO();
+		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
 		CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
 		for(PmCategoryL1 catOne: catCodeResDTO.getCategoryL1List()){			
 			SelectItem selectItem= new SelectItem();
@@ -3571,8 +1965,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		levTwoCatLst = new ArrayList<SelectItem>();		
 		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
 		CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
-		if(this.getMainCategory()!=null&&this.getMainCategory()!=""){	
-			catCodeReqDTO.setCategoryL1Id(Long.parseLong(this.getMainCategory()));
+		if(this.getSmMainCategory()!=null&&this.getSmMainCategory()!=""){	
+			catCodeReqDTO.setCategoryL1Id(Long.parseLong(this.getSmMainCategory()));
 			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL2ListByL1Id(catCodeReqDTO);
 			for(PmCategoryL2 catTwo: catCodeResDTO.getCategoryL2List()){			
 				SelectItem selectItem= new SelectItem();
@@ -3586,8 +1980,8 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		levThreeCatLst = new ArrayList<SelectItem>();		
 		ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
 		CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
-		if(this.getSubCategory()!=null&&this.getSubCategory()!=""){	
-			catCodeReqDTO.setCategoryL2Id(Long.parseLong(this.getSubCategory()));
+		if(this.getSmSubCategory()!=null&&this.getSmSubCategory()!=""){	
+			catCodeReqDTO.setCategoryL2Id(Long.parseLong(this.getSmSubCategory()));
 			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL3ListByL2Id(catCodeReqDTO);
 			for(PmCategoryL3 catThree: catCodeResDTO.getCategoryL3List()){			
 				SelectItem selectItem= new SelectItem();
@@ -3596,39 +1990,61 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 				levThreeCatLst.add(selectItem);			
 			}
 		}
-	}	
+	}
 	public void enableRegistrationType(){
-		this.setEpNumber(null);
-		this.setIcNumber(null);
-		this.setBusinessRegNo(null);
-		this.setMofNumber(null);
-		getManagedBean().getRptGenBean().setMofRegView(false);
-		getManagedBean().getRptGenBean().setBasicRegView(false);
-		if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){			
-			if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)){
-				getManagedBean().getRptGenBean().setBasicRegView(true);
-				getManagedBean().getRptGenBean().setMofRegView(false);
-				this.setMofNumber(null);
-				this.setEpNumber(null);				
-				this.setIcNumber(null);
-				this.setBusinessRegNo(null);
-			}else if(this.getRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_MOF)){
-				getManagedBean().getRptGenBean().setMofRegView(true);
-				getManagedBean().getRptGenBean().setBasicRegView(false);
-				this.setMofNumber(null);
-				this.setEpNumber(null);				
-				this.setIcNumber(null);
-				this.setBusinessRegNo(null);
+		this.setCmEpNumber(null);
+		this.setCmIcNumber(null);
+		this.setCmBusinessRegNo(null);
+		this.setCmMofNumber(null);		
+		this.setSmEpNumber(null);
+		this.setSmIcNumber(null);
+		this.setSmBusinessRegNo(null);
+		this.setSmMofNumber(null);
+		getManagedBean().getRptGenBean().setCmMofRegView(false);
+		getManagedBean().getRptGenBean().setCmBasicRegView(false);
+		getManagedBean().getRptGenBean().setSmMofRegView(false);
+		getManagedBean().getRptGenBean().setSmBasicRegView(false);
+		if((this.getCmRegistrationType()!=null)&&(this.getCmRegistrationType()!=ReportConst.EMPTY_VAL)){			
+			if(this.getCmRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)){
+				getManagedBean().getRptGenBean().setCmBasicRegView(true);
+				getManagedBean().getRptGenBean().setCmMofRegView(false);
+				this.setCmMofNumber(null);
+				this.setCmEpNumber(null);				
+				this.setCmIcNumber(null);
+				this.setCmBusinessRegNo(null);
+			}else if(this.getCmRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_MOF)){
+				getManagedBean().getRptGenBean().setCmMofRegView(true);
+				getManagedBean().getRptGenBean().setCmBasicRegView(false);
+				this.setCmMofNumber(null);
+				this.setCmEpNumber(null);				
+				this.setCmIcNumber(null);
+				this.setCmBusinessRegNo(null);
 			}			
-		}		
+		}else if((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType()!=ReportConst.EMPTY_VAL)){			
+			if(this.getSmRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_BASIC)){
+				getManagedBean().getRptGenBean().setSmBasicRegView(true);
+				getManagedBean().getRptGenBean().setSmMofRegView(false);
+				this.setSmMofNumber(null);
+				this.setSmEpNumber(null);				
+				this.setSmIcNumber(null);
+				this.setSmBusinessRegNo(null);
+			}else if(this.getSmRegistrationType().equalsIgnoreCase(ReportConst.RPT_REG_MOF)){
+				getManagedBean().getRptGenBean().setSmMofRegView(true);
+				getManagedBean().getRptGenBean().setSmBasicRegView(false);
+				this.setSmMofNumber(null);
+				this.setSmEpNumber(null);				
+				this.setSmIcNumber(null);
+				this.setSmBusinessRegNo(null);
+			}			
+		}
 	}
 	/*
 	 *Generate all modules reports 
 	 */
 	public void generateReport(){		
-		if((getManagedBean().getModuleName()!=null)&&(getManagedBean().getReportNameValue()!=null)){
-			if(!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportNameValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
-				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getApplicationFromDate()==null)&&(this.getApplicationToDate()!=null))||((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()==null)))||(((this.getReceiveFromDate()==null)&&(this.getReceiveToDate()!=null))||((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()==null)))||(((this.getPrintedFromDate()==null)&&(this.getPrintedToDate()!=null))||((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()==null)))||(((this.getExpiryFromDate()==null)&&(this.getExpiryToDate()!=null))||((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()==null)))){
+		if((getManagedBean().getModuleValue()!=null)&&(getManagedBean().getReportValue()!=null)){
+			if(!(getManagedBean().getReportValue().toString().equals(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))&&!(getManagedBean().getReportValue().toString().equals(ReportConst.PDW_EC_RPT_VAL))){
+				if((((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null)))||(((this.getSmApplicationFromDate()==null)&&(this.getSmApplicationToDate()!=null))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()==null)))||(((this.getSmReceiveFromDate()==null)&&(this.getSmReceiveToDate()!=null))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()==null)))||(((this.getSmPrintedFromDate()==null)&&(this.getSmPrintedToDate()!=null))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()==null)))||(((this.getSmExpiryFromDate()==null)&&(this.getSmExpiryToDate()!=null))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()==null)))){
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
 				}
 			}
@@ -3637,39 +2053,34 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}				
 			}
-			if((this.getApplicationFromDate()!=null)&&(this.getApplicationToDate()!=null)){
-				if(this.getApplicationFromDate().after(this.getApplicationToDate())){					 
+			if((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationToDate()!=null)){
+				if(this.getSmApplicationFromDate().after(this.getSmApplicationToDate())){					 
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
-			if((this.getReceiveFromDate()!=null)&&(this.getReceiveToDate()!=null)){
-				if(this.getReceiveFromDate().after(this.getReceiveToDate())){					  
-					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
-				}
-			}
-			/*if((this.getReleaseFromDate()!=null)&&(this.getReleaseToDate()!=null)){
-				if(this.getReleaseFromDate().after(this.getReleaseToDate())){					
-					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
-				}
-			}*/
-			if((this.getPrintedFromDate()!=null)&&(this.getPrintedToDate()!=null)){
-				if(this.getPrintedFromDate().after(this.getPrintedToDate())){					
-					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
-				}
-			}
-			if((this.getExpiryFromDate()!=null)&&(this.getExpiryToDate()!=null)){
-				if(this.getExpiryFromDate().after(this.getExpiryToDate())){					
+			if((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveToDate()!=null)){
+				if(this.getSmReceiveFromDate().after(this.getSmReceiveToDate())){					  
 					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}			
-			if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
-				generateSCReport();			
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
-				generateCMReport();			
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
-				generateFLReport();
-			}else if(getManagedBean().getModuleName().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
-				generateSMReport();
+			if((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedToDate()!=null)){
+				if(this.getSmPrintedFromDate().after(this.getSmPrintedToDate())){					
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}
+			if((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryToDate()!=null)){
+				if(this.getSmExpiryFromDate().after(this.getSmExpiryToDate())){					
+					throw new EpException(CommonMethod.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+				}
+			}		
+			if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION)){			
+				generateSCReport();				
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.CATALOGUE_MANAGEMENT)){
+				generateCMReport();				
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)){
+				generateFLReport();				
+			}else if(getManagedBean().getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT)){
+				generateSMReport();			
 			}			
 			if(null!=constructedParamString && !"".equals(constructedParamString)){
 				//loadReport(generatedURL);	
@@ -3819,63 +2230,58 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 	/*
 	 *Generate SM module report  
 	 */	
-	public void generateSMReport(){	
-		//String url="";																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																	
-		if(((this.getSiteVisitOfficer()!=null)&&(this.getSiteVisitOfficer()!=ReportConst.EMPTY_VAL))||((this.getCategoryCode()!=null)&&(this.getCategoryCode()!=ReportConst.EMPTY_VAL))||((this.getApplicationType()!=null)&&(this.getApplicationType()!=ReportConst.EMPTY_VAL))||((this.getPaymentType()!=null)&&(this.getPaymentType()!=ReportConst.EMPTY_VAL))||((this.getCancelledBy()!=null)&&(this.getCancelledBy()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getSupportingDocument()!=null)&&(this.getSupportingDocument()!=ReportConst.EMPTY_VAL))||((this.getDocStatus()!=null)&&(this.getDocStatus()!=ReportConst.EMPTY_VAL))||((this.getSuppDocStatus()!=null)&&(this.getSuppDocStatus()!=ReportConst.EMPTY_VAL))||((this.getRegistrationNo()!=null)&&(this.getRegistrationNo()!=ReportConst.EMPTY_VAL))||((this.getePNo()!=null)&&(this.getePNo()!=ReportConst.EMPTY_VAL))||((this.getApplicationNo()!=null)&&(this.getApplicationNo()!=ReportConst.EMPTY_VAL))||
-				((this.getZone()!=null)&&(this.getZone()!=ReportConst.EMPTY_VAL))||((this.getSupplierType()!=null)&&(this.getSupplierType()!=ReportConst.EMPTY_VAL))||((this.getMofRegNo()!=null)&&(this.getMofRegNo()!=ReportConst.EMPTY_VAL))||((this.getMofRegNoFrom()!=null)&&(this.getMofRegNoFrom()!=ReportConst.EMPTY_VAL))||((this.getMofRegNoTo()!=null)&&(this.getMofRegNoTo()!=ReportConst.EMPTY_VAL))||((this.getRegistrationStatus()!=null)&&(this.getRegistrationStatus()!=ReportConst.EMPTY_VAL))||((this.getCapitalNaccumFrm()!=null)&&(this.getCapitalNaccumFrm()!=ReportConst.EMPTY_VAL))||((this.getCapitalNaccumTo()!=null)&&(this.getCapitalNaccumTo().toString()!=ReportConst.EMPTY_VAL))||((this.getPaidUpCapitalNaccumShare()!=null)&&(this.getPaidUpCapitalNaccumShare().toString()!=ReportConst.EMPTY_VAL))||((this.getCategory()!=null)&&(this.getCategory()!=ReportConst.EMPTY_VAL))||((this.getNoOfCategory()!=null)&&(this.getNoOfCategory()!=ReportConst.EMPTY_VAL))||((this.getMainCategory()!=null)&&(this.getMainCategory()!=ReportConst.EMPTY_VAL))||((this.getSubCategory()!=null)&&(this.getSubCategory()!=ReportConst.EMPTY_VAL))||
-				((this.getSubCategoryDivision()!=null)&&(this.getSubCategoryDivision()!=ReportConst.EMPTY_VAL))||((this.getRole()!=null)&&(this.getRole()!=ReportConst.EMPTY_VAL))||((this.getApplicationStatus()!=null)&&(this.getApplicationStatus()!=ReportConst.EMPTY_VAL))||((this.getState()!=null)&&(this.getState()!=ReportConst.EMPTY_VAL))||((this.getDistrict()!=null)&&(this.getDistrict()!=ReportConst.EMPTY_VAL))||((this.getSupplierName()!=null)&&(this.getSupplierName()!=ReportConst.EMPTY_VAL))||((this.getReportType()!=null)&&(this.getReportType()!=ReportConst.EMPTY_VAL))||((this.getOrganizationType()!=null)&&(this.getOrganizationType()!=ReportConst.EMPTY_VAL))||((this.getKementerian()!=null)&&(this.getKementerian()!=ReportConst.EMPTY_VAL))||((this.getNamAgensi()!=null)&&(this.getNamAgensi()!=ReportConst.EMPTY_VAL))||((this.getComplaintNo()!=null)&&(this.getComplaintNo()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getCompanyStatus()!=null)&&(this.getCompanyStatus()!=ReportConst.EMPTY_VAL))||((this.getCaseNo()!=null)&&(this.getCaseNo()!=ReportConst.EMPTY_VAL))||
-				((this.getCompApplStatus()!=null)&&(this.getCompApplStatus()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getApplicationFromDate()!=null)&&(this.getApplicationFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getApplicationToDate()!=null)&&(this.getApplicationToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getReceiveFromDate()!=null)&&(this.getReceiveFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getReceiveToDate()!=null)&&(this.getReceiveToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getReleaseFromDate()!=null)&&(this.getReleaseFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getExpiryFromDate()!=null)&&(this.getExpiryFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getExpiryToDate()!=null)&&(this.getExpiryToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getPrintedFromDate()!=null)&&(this.getPrintedFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getPrintedToDate()!=null)&&(this.getPrintedToDate().toString()!=ReportConst.EMPTY_VAL))){
-			
-			if((this.getApplicationType()!=null)&&(this.getApplicationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApplicationTypeTotVar(""+this.getApplicationType());
+	public void generateSMReport(){		
+		if(((this.getSmSiteVisitOfficer()!=null)&&(this.getSmSiteVisitOfficer()!=ReportConst.EMPTY_VAL))||((this.getSmCategoryCode()!=null)&&(this.getSmCategoryCode()!=ReportConst.EMPTY_VAL))||((this.getSmApplicationType()!=null)&&(this.getSmApplicationType()!=ReportConst.EMPTY_VAL))||((this.getSmPaymentType()!=null)&&(this.getSmPaymentType()!=ReportConst.EMPTY_VAL))||((this.getSmCancelledBy()!=null)&&(this.getSmCancelledBy()!=ReportConst.EMPTY_VAL))||((this.getSmCompanyName()!=null)&&(this.getSmCompanyName()!=ReportConst.EMPTY_VAL))||((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getSmSupportingDocument()!=null)&&(this.getSmSupportingDocument()!=ReportConst.EMPTY_VAL))||((this.getSmDocStatus()!=null)&&(this.getSmDocStatus()!=ReportConst.EMPTY_VAL))||((this.getSmSuppDocStatus()!=null)&&(this.getSmSuppDocStatus()!=ReportConst.EMPTY_VAL))||((this.getSmRegistrationNo()!=null)&&(this.getSmRegistrationNo()!=ReportConst.EMPTY_VAL))||((this.getSmApplicationNo()!=null)&&(this.getSmApplicationNo()!=ReportConst.EMPTY_VAL))||
+				((this.getSmNamaAgensi()!=null)&&(this.getSmNamaAgensi()!=ReportConst.EMPTY_VAL))||((this.getSmZone()!=null)&&(this.getSmZone()!=ReportConst.EMPTY_VAL))||((this.getSmSupplierType()!=null)&&(this.getSmSupplierType()!=ReportConst.EMPTY_VAL))||((this.getSmMofRegNo()!=null)&&(this.getSmMofRegNo()!=ReportConst.EMPTY_VAL))||((this.getSmMofRegNoFrom()!=null)&&(this.getSmMofRegNoFrom()!=ReportConst.EMPTY_VAL))||((this.getSmMofRegNoTo()!=null)&&(this.getSmMofRegNoTo()!=ReportConst.EMPTY_VAL))||((this.getSmRegistrationStatus()!=null)&&(this.getSmRegistrationStatus()!=ReportConst.EMPTY_VAL))||((this.getSmCapitalNaccumFrm()!=null)&&(this.getSmCapitalNaccumFrm()!=ReportConst.EMPTY_VAL))||((this.getSmCapitalNaccumTo()!=null)&&(this.getSmCapitalNaccumTo().toString()!=ReportConst.EMPTY_VAL))||((this.getSmPaidUpCapitalNaccumShare()!=null)&&(this.getSmPaidUpCapitalNaccumShare().toString()!=ReportConst.EMPTY_VAL))||((this.getSmNoOfCategory()!=null)&&(this.getSmNoOfCategory()!=ReportConst.EMPTY_VAL))||((this.getSmMainCategory()!=null)&&(this.getSmMainCategory()!=ReportConst.EMPTY_VAL))||((this.getSmSubCategory()!=null)&&(this.getSmSubCategory()!=ReportConst.EMPTY_VAL))||
+				((this.getSmSubCategoryDivision()!=null)&&(this.getSmSubCategoryDivision()!=ReportConst.EMPTY_VAL))||((this.getSmRole()!=null)&&(this.getSmRole()!=ReportConst.EMPTY_VAL))||((this.getSmApplicationStatus()!=null)&&(this.getSmApplicationStatus()!=ReportConst.EMPTY_VAL))||((this.getSmState()!=null)&&(this.getSmState()!=ReportConst.EMPTY_VAL))||((this.getSmDistrict()!=null)&&(this.getSmDistrict()!=ReportConst.EMPTY_VAL))||((this.getSmSupplierName()!=null)&&(this.getSmSupplierName()!=ReportConst.EMPTY_VAL))||((this.getSmReportType()!=null)&&(this.getSmReportType()!=ReportConst.EMPTY_VAL))||((this.getSmOrganizationType()!=null)&&(this.getSmOrganizationType()!=ReportConst.EMPTY_VAL))||((this.getSmKementerian()!=null)&&(this.getSmKementerian()!=ReportConst.EMPTY_VAL))||((this.getSmComplaintNo()!=null)&&(this.getSmComplaintNo()!=ReportConst.EMPTY_VAL))||((this.getSmProofIdentity()!=null)&&(this.getSmProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getSmCompanyStatus()!=null)&&(this.getSmCompanyStatus()!=ReportConst.EMPTY_VAL))||((this.getSmCaseNo()!=null)&&(this.getSmCaseNo()!=ReportConst.EMPTY_VAL))||
+				((this.getSmCompApplStatus()!=null)&&(this.getSmCompApplStatus()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmApplicationFromDate()!=null)&&(this.getSmApplicationFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmApplicationToDate()!=null)&&(this.getSmApplicationToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmReceiveFromDate()!=null)&&(this.getSmReceiveFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmReceiveToDate()!=null)&&(this.getSmReceiveToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmReleaseFromDate()!=null)&&(this.getSmReleaseFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmExpiryToDate()!=null)&&(this.getSmExpiryToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmPrintedFromDate()!=null)&&(this.getSmPrintedFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getSmPrintedToDate()!=null)&&(this.getSmPrintedToDate().toString()!=ReportConst.EMPTY_VAL))){			
+			if((this.getSmApplicationType()!=null)&&(this.getSmApplicationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setApplicationTypeTotVar(""+this.getSmApplicationType());
 			}
-			if((this.getPaymentType()!=null)&&(this.getPaymentType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaymentTypeTotVar(""+this.getPaymentType());
+			if((this.getSmPaymentType()!=null)&&(this.getSmPaymentType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPaymentTypeTotVar(""+this.getSmPaymentType());
 			}
-			if((this.getCancelledBy()!=null)&&(this.getCancelledBy()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCancelledByTotVar(""+this.getCancelledBy());
+			if((this.getSmCancelledBy()!=null)&&(this.getSmCancelledBy()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCancelledByTotVar(""+this.getSmCancelledBy());
 			}
-			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
+			if((this.getSmCompanyName()!=null)&&(this.getSmCompanyName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getSmCompanyName());
 			}
-			if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getRegistrationType());
+			if((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getSmRegistrationType());
 			}
-			if((this.getSupportingDocument()!=null)&&(this.getSupportingDocument()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSupportingDocumentTotVar(ReportConst.AMP_SUPP_DOC_EQ+this.getSupportingDocument());
+			if((this.getSmSupportingDocument()!=null)&&(this.getSmSupportingDocument()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSupportingDocumentTotVar(ReportConst.AMP_SUPP_DOC_EQ+this.getSmSupportingDocument());
 			}
-			if((this.getDocStatus()!=null)&&(this.getDocStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDocStatusTotVar(ReportConst.AMP_DOC_STS_NAME_EQ+this.getDocStatus());
+			if((this.getSmDocStatus()!=null)&&(this.getSmDocStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setDocStatusTotVar(ReportConst.AMP_DOC_STS_NAME_EQ+this.getSmDocStatus());
 			}
-			if((this.getSuppDocStatus()!=null)&&(this.getSuppDocStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSuppDocStatusTotVar(ReportConst.AMP_SUPP_DOC_STATUS_MODE_EQ+this.getSuppDocStatus());
+			if((this.getSmSuppDocStatus()!=null)&&(this.getSmSuppDocStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSuppDocStatusTotVar(ReportConst.AMP_SUPP_DOC_STATUS_MODE_EQ+this.getSmSuppDocStatus());
 			}
-			if((this.getRegistrationNo()!=null)&&(this.getRegistrationNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationNoTotVar(ReportConst.AMP_REG_NO_EQ+this.getRegistrationNo());
+			if((this.getSmRegistrationNo()!=null)&&(this.getSmRegistrationNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationNoTotVar(ReportConst.AMP_REG_NO_EQ+this.getSmRegistrationNo());
+			}					
+			if((this.getSmApplicationNo()!=null)&&(this.getSmApplicationNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setApplicationNoTotVar(ReportConst.AMP_APPLICATION_NO_EQ+this.getSmApplicationNo());
 			}
-			if((this.getePNo()!=null)&&(this.getePNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setePNoTotVar(ReportConst.AMP_EP_NO_EQ+this.getePNo());
-			}			
-			if((this.getApplicationNo()!=null)&&(this.getApplicationNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApplicationNoTotVar(ReportConst.AMP_APPLICATION_NO_EQ+this.getApplicationNo());
+			if((this.getSmZone()!=null)&&(this.getSmZone()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setZoneTotVar(ReportConst.AMP_ZONE_NAME_EQ+this.getSmZone());
 			}
-			if((this.getZone()!=null)&&(this.getZone()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setZoneTotVar(ReportConst.AMP_ZONE_NAME_EQ+this.getZone());
+			if((this.getSmSupplierType()!=null)&&(this.getSmSupplierType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSupplierTypeTotVar(ReportConst.AMP_SUPPLIER_TYPE_EQ+this.getSmSupplierType());
 			}
-			if((this.getSupplierType()!=null)&&(this.getSupplierType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSupplierTypeTotVar(ReportConst.AMP_SUPPLIER_TYPE_EQ+this.getSupplierType());
-			}
-			if((this.getMofRegNo()!=null)&&(this.getMofRegNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofRegNoTotVar(""+this.getMofRegNo());
+			if((this.getSmMofRegNo()!=null)&&(this.getSmMofRegNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofRegNoTotVar(""+this.getSmMofRegNo());
 			}				
-			if((this.getMofRegNoFrom()!=null)&&(this.getMofRegNoFrom()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofRegNoFromTotVar(ReportConst.AMP_REG_MOF_FROM_EQ+this.getMofRegNoFrom());
+			if((this.getSmMofRegNoFrom()!=null)&&(this.getSmMofRegNoFrom()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofRegNoFromTotVar(ReportConst.AMP_REG_MOF_FROM_EQ+this.getSmMofRegNoFrom());
 			}
-			if((this.getMofRegNoTo()!=null)&&(this.getMofRegNoTo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofRegNoToTotVar(ReportConst.AMP_REG_MOF_TO_EQ+this.getMofRegNoTo());
+			if((this.getSmMofRegNoTo()!=null)&&(this.getSmMofRegNoTo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofRegNoToTotVar(ReportConst.AMP_REG_MOF_TO_EQ+this.getSmMofRegNoTo());
 			}			
-			if((this.getRegistrationStatus()!=null)&&(this.getRegistrationStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationStatusTotVar(ReportConst.AMP_REG_STATUS_EQ+this.getRegistrationStatus());
+			if((this.getSmRegistrationStatus()!=null)&&(this.getSmRegistrationStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationStatusTotVar(ReportConst.AMP_REG_STATUS_EQ+this.getSmRegistrationStatus());
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
@@ -3884,271 +2290,166 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
 			}
-			if((this.getReleaseFromDate()!=null)&&(this.getReleaseFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_RELEASE_DATE_EQ+outputDateFormat.format(this.getReleaseFromDate()));
+			if((this.getSmReleaseFromDate()!=null)&&(this.getSmReleaseFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_RELEASE_DATE_EQ+outputDateFormat.format(this.getSmReleaseFromDate()));
 			}
-			if((this.getExpiryFromDate()!=null)&&(this.getExpiryFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setExpiryFromDateTotVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getExpiryFromDate()));
+			if((this.getSmExpiryFromDate()!=null)&&(this.getSmExpiryFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setExpiryFromDateTotVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getSmExpiryFromDate()));
 			}
-			if((this.getExpiryToDate()!=null)&&(this.getExpiryToDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setExpiryToDateTotVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getExpiryToDate()));
+			if((this.getSmExpiryToDate()!=null)&&(this.getSmExpiryToDate().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setExpiryToDateTotVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getSmExpiryToDate()));
 			}
-			if((this.getCapitalNaccumFrm()!=null)&&(this.getCapitalNaccumFrm()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCapitalNaccumFrmTotVar(ReportConst.AMP_FRM_PUC_EQ+this.getCapitalNaccumFrm());
+			if((this.getSmCapitalNaccumFrm()!=null)&&(this.getSmCapitalNaccumFrm()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCapitalNaccumFrmTotVar(ReportConst.AMP_FRM_PUC_EQ+this.getSmCapitalNaccumFrm());
 			}
-			if((this.getCapitalNaccumTo()!=null)&&(this.getCapitalNaccumTo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCapitalNaccumToTotVar(ReportConst.AMP_TO_PUC_EQ+this.getCapitalNaccumTo());
+			if((this.getSmCapitalNaccumTo()!=null)&&(this.getSmCapitalNaccumTo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCapitalNaccumToTotVar(ReportConst.AMP_TO_PUC_EQ+this.getSmCapitalNaccumTo());
 			}
-			if((this.getPaidUpCapitalNaccumShare()!=null)&&(this.getPaidUpCapitalNaccumShare()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPaidUpCapitalNaccumShareTotVar(ReportConst.AMP_PUC_N_AS_EQ+this.getPaidUpCapitalNaccumShare());
-			}
-			
-			if((this.getNoOfCategory()!=null)&&(this.getNoOfCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setNoOfCategoryTotVar(""+this.getNoOfCategory());
-			}
-			if((this.getMainCategory()!=null)&&(this.getMainCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMainCategoryTotVar(ReportConst.AMP_MAIN_CATEGORY_EQ+this.getMainCategory());
-			}
-			if((this.getSubCategory()!=null)&&(this.getSubCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSubCategoryTotVar(ReportConst.AMP_SUB_CATEGORY_EQ+this.getSubCategory());
-			}
-			if((this.getSubCategoryDivision()!=null)&&(this.getSubCategoryDivision()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSubCategoryDivisionTotVar(ReportConst.AMP_SUB_DIV_CATEGORY_EQ+this.getSubCategoryDivision());
-			}
-			if((this.getRole()!=null)&&(this.getRole()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRoleTotVar(ReportConst.AMP_ROLE_EQ+this.getRole());
-			}
-			if((this.getApplicationStatus()!=null)&&(this.getApplicationStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApplicationStatusTotVar(""+this.getApplicationStatus());
-			}
-			if((this.getState()!=null)&&(this.getState()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofNumberTotVar(""+this.getState());
-			}
-			if((this.getDistrict()!=null)&&(this.getDistrict()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setStateTotVar(""+this.getDistrict());
-			}
-			if((this.getSupplierName()!=null)&&(this.getSupplierName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSupplierNameTotVar(""+this.getSupplierName());
-			}
-			if((this.getReportType()!=null)&&(this.getReportType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setReportTypeTotVar(""+this.getReportType());
-			}
-			if((this.getOrganizationType()!=null)&&(this.getOrganizationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setOrganizationTypeTotVar(""+this.getOrganizationType());
-			}
-			if((this.getKementerian()!=null)&&(this.getKementerian()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setKementerianTotVar(""+this.getKementerian());
-			}
-			if((this.getNamAgensi()!=null)&&(this.getNamAgensi()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setNamAgensiTotVar(""+this.getNamAgensi());
+			if((this.getSmPaidUpCapitalNaccumShare()!=null)&&(this.getSmPaidUpCapitalNaccumShare()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPaidUpCapitalNaccumShareTotVar(ReportConst.AMP_PUC_N_AS_EQ+this.getSmPaidUpCapitalNaccumShare());
 			}			
-			if((this.getComplaintNo()!=null)&&(this.getComplaintNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setComplaintNoTotVar(""+this.getComplaintNo());
+			if((this.getSmNoOfCategory()!=null)&&(this.getSmNoOfCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setNoOfCategoryTotVar(""+this.getSmNoOfCategory());
 			}
-			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_IC_NO_EQ+this.getProofIdentity());
+			if((this.getSmMainCategory()!=null)&&(this.getSmMainCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMainCategoryTotVar(ReportConst.AMP_MAIN_CATEGORY_EQ+this.getSmMainCategory());
 			}
-			if((this.getCompanyStatus()!=null)&&(this.getCompanyStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyStatusTotVar(""+this.getCompanyStatus());
+			if((this.getSmSubCategory()!=null)&&(this.getSmSubCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSubCategoryTotVar(ReportConst.AMP_SUB_CATEGORY_EQ+this.getSmSubCategory());
 			}
-			if((this.getCaseNo()!=null)&&(this.getCaseNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCaseNoTotVar(""+this.getCaseNo());
+			if((this.getSmSubCategoryDivision()!=null)&&(this.getSmSubCategoryDivision()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSubCategoryDivisionTotVar(ReportConst.AMP_SUB_DIV_CATEGORY_EQ+this.getSmSubCategoryDivision());
 			}
-			if((this.getCompApplStatus()!=null)&&(this.getCompApplStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompApplStatusTotVar(""+this.getCompApplStatus());
+			if((this.getSmRole()!=null)&&(this.getSmRole()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRoleTotVar(ReportConst.AMP_ROLE_EQ+this.getSmRole());
 			}
-			if((this.getCategoryCode()!=null)&&(this.getCategoryCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCategoryCodeTotVar(""+this.getCategoryCode());
+			if((this.getSmApplicationStatus()!=null)&&(this.getSmApplicationStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setApplicationStatusTotVar(""+this.getSmApplicationStatus());
 			}
-			if((this.getSiteVisitOfficer()!=null)&&(this.getSiteVisitOfficer()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSiteVisitOfficerTotVar(""+this.getSiteVisitOfficer());
+			if((this.getSmState()!=null)&&(this.getSmState()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(""+this.getSmState());
 			}
-			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
+			if((this.getSmDistrict()!=null)&&(this.getSmDistrict()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setStateTotVar(""+this.getSmDistrict());
+			}
+			if((this.getSmSupplierName()!=null)&&(this.getSmSupplierName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSupplierNameTotVar(""+this.getSmSupplierName());
+			}
+			if((this.getSmReportType()!=null)&&(this.getSmReportType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setReportTypeTotVar(""+this.getSmReportType());
+			}
+			if((this.getSmOrganizationType()!=null)&&(this.getSmOrganizationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setOrganizationTypeTotVar(""+this.getSmOrganizationType());
+			}
+			if((this.getSmKementerian()!=null)&&(this.getSmKementerian()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setKementerianTotVar(""+this.getSmKementerian());
+			}
+			if((this.getSmNamaAgensi()!=null)&&(this.getSmNamaAgensi()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setNamAgensiTotVar(""+this.getSmNamaAgensi());
 			}			
-			Map<String, String> urlCMReportNameJsps = new HashMap<String, String>();
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_APP_RPT_VAL, ReportConst.SM_LST_OF_APP_RPT_JSP);
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_VAL, ReportConst.SM_LST_OF_SUPP_DOC_PEND_SUB_NO_DAYS_LAPS_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_VAL, ReportConst.SM_LST_OF_VIRT_CERT_RLSD_ON_DAY_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_PRFL_OF_REG_COMP_MIN_FIN_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_VAL, ReportConst.SM_LST_OF_COMP_SUPP_TYPE_BUMI_PUT_STS_CAT_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_VAL, ReportConst.SM_LST_OF_COMP_DIRS_OWNS_CEO_OR_EQU_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_VAL, ReportConst.SM_LST_OF_DIRS_OWNS_CEO_OR_EQU_BELONG_MOR_THAN_ONE_COMP_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_VAL, ReportConst.SM_LST_OF_COMP_SORT_ALPHABETIC_RPT_JSP);				
-			urlCMReportNameJsps.put(ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_VAL, ReportConst.SM_LST_STATISTIC_COMP_BASE_COMP_TYPE_CAPITAL_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_VAL, ReportConst.SM_LST_PERSON_OR_STAFF_MORE_ONE_COMP_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_VAL, ReportConst.SM_LST_MOF_REG_CANCEL_REQ_SUPP_AUTO_CANC_STM_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_VAL, ReportConst.SM_LST_OF_PAYMENT_PROCESS_REG_FEE_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_CAT_STATIC_RPT_VAL, ReportConst.EMPTY_VAL);				
-			urlCMReportNameJsps.put(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_APPL_VERIFY_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_APPL_APPROVED_RPT_VAL, ReportConst.EMPTY_VAL);			//-----
-			urlCMReportNameJsps.put(ReportConst.SM_APPL_REJECTED_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.SM_LST_APPL_PEND_SITE_VISIT_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_PRE_EXP_COMP_RPT_VAL, ReportConst.SM_LST_PRE_EXP_COMP_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_MONTH_WISE_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_APPL_VERI_PERFORM_CLNT_CHARTER_ACHIVE_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_COMP_ADDR_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_TOT_NUM_DAILY_APPL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_SUPPL_STAT_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_BPK_USER_PROF_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_BPK_ADMIN_PROF_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_ONLN_APPL_COMP_INFO_ACCESS_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_AGENCY_STAT_SUMM_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_QUESTIONAIRE_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_PAYMNT_RECPT_UPN_PAYMNT_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_SUPP_STAT_BY_CAT_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_VAL, ReportConst.SM_LST_DAILY_APPL_SUBM_BASIC_ACC_MOF_REG_RPT_JSP);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_DISCPLNRY_ACTN_IMPOS_AGAINST_SUPPL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_COMPLAINTS_AGAINST_SUPPL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_BLACKLLSTD_DIRECTOR_OWNER_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_CONTACT_PERSON_BNK_AC_BRNCH_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_THRESHLD_SUPP_TRNS_VAL_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_SUPP_PEROFRM_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_STAT_APPL_REQ_SITE_VISIT_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_SITE_VISIT_OFFCR_SITE_VISIT_LOCATION_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SM_LST_OR_STAT_PENDING_SITE_VISIT_PERFRM_SITE_VISIT_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.SM_DETAILS_OF_APPLICATION_RPT_VAL, ReportConst.EMPTY_VAL);			
-			//-----------			
-			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
+			if((this.getSmComplaintNo()!=null)&&(this.getSmComplaintNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setComplaintNoTotVar(""+this.getSmComplaintNo());
+			}
+			if((this.getSmProofIdentity()!=null)&&(this.getSmProofIdentity()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_IC_NO_EQ+this.getSmProofIdentity());
+			}
+			if((this.getSmCompanyStatus()!=null)&&(this.getSmCompanyStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompanyStatusTotVar(""+this.getSmCompanyStatus());
+			}
+			if((this.getSmCaseNo()!=null)&&(this.getSmCaseNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCaseNoTotVar(""+this.getSmCaseNo());
+			}
+			if((this.getSmCompApplStatus()!=null)&&(this.getSmCompApplStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompApplStatusTotVar(""+this.getSmCompApplStatus());
+			}
+			if((this.getSmCategoryCode()!=null)&&(this.getSmCategoryCode()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCategoryCodeTotVar(""+this.getSmCategoryCode());
+			}
+			if((this.getSmSiteVisitOfficer()!=null)&&(this.getSmSiteVisitOfficer()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSiteVisitOfficerTotVar(""+this.getSmSiteVisitOfficer());
+			}
+			if((this.getSmMofNumber()!=null)&&(this.getSmMofNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getSmMofNumber());
+			}		
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				//url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getSupportingDocumentTotVar()+rptGenBean.getDocStatusTotVar()+rptGenBean.getSuppDocStatusTotVar()+rptGenBean.getRegistrationNoTotVar()+rptGenBean.getePNoTotVar()+rptGenBean.getApplicationNoTotVar()+rptGenBean.getZoneTotVar()+rptGenBean.getSupplierTypeTotVar()+rptGenBean.getMofRegNoTotVar()+rptGenBean.getMofRegNoFromTotVar()+rptGenBean.getMofRegNoToTotVar()+rptGenBean.getRegistrationStatusTotVar()+rptGenBean.getCapitalNaccumFrmTotVar()+rptGenBean.getCapitalNaccumToTotVar()+	rptGenBean.getPaidUpCapitalNaccumShareTotVar()+rptGenBean.getCategoryTotVar()+rptGenBean.getNoOfCategoryTotVar()+rptGenBean.getMainCategoryTotVar()+rptGenBean.getSubCategoryTotVar()+rptGenBean.getSubCategoryDivisionTotVar()+rptGenBean.getRoleTotVar()+rptGenBean.getApplicationStatusTotVar()+rptGenBean.getCancelledByTotVar()+rptGenBean.getPaymentTypeTotVar()+rptGenBean.getApplicationTypeTotVar()+rptGenBean.getStateTotVar()+rptGenBean.getDistrictTotVar()+rptGenBean.getSupplierNameTotVar()+rptGenBean.getReportTypeTotVar()+rptGenBean.getOrganizationTypeTotVar()+rptGenBean.getKementerianTotVar()+rptGenBean.getNamAgensiTotVar()+rptGenBean.getComplaintNoTotVar()+	
-						rptGenBean.getCompanyStatusTotVar()+rptGenBean.getCaseNoTotVar()+rptGenBean.getCompApplStatusTotVar()+rptGenBean.getCategoryCodeTotVar()+rptGenBean.getSiteVisitOfficerTotVar()+rptGenBean.getReleaseFromDateTotVar()+rptGenBean.getApplicationFromDateTotVar()+rptGenBean.getApplicationToDateTotVar()+rptGenBean.getReceiveFromDateTotVar()+rptGenBean.getReceiveToDateTotVar()+rptGenBean.getExpiryFromDateTotVar()+rptGenBean.getExpiryToDateTotVar()+rptGenBean.getPrintedFromDateTotVar()+rptGenBean.getPrintedToDateTotVar());
+				rptGenBean.getCompanyStatusTotVar()+rptGenBean.getCaseNoTotVar()+rptGenBean.getCompApplStatusTotVar()+rptGenBean.getCategoryCodeTotVar()+rptGenBean.getSiteVisitOfficerTotVar()+rptGenBean.getReleaseFromDateTotVar()+rptGenBean.getApplicationFromDateTotVar()+rptGenBean.getApplicationToDateTotVar()+rptGenBean.getReceiveFromDateTotVar()+rptGenBean.getReceiveToDateTotVar()+rptGenBean.getExpiryFromDateTotVar()+rptGenBean.getExpiryToDateTotVar()+rptGenBean.getPrintedFromDateTotVar()+rptGenBean.getPrintedToDateTotVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
 		}else{
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
-		}
-	}
+		}		
+	}	
 	/*
 	 *Generate SC module report  
 	 */
 	public void generateSCReport(){
-		if((getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))||(getManagedBean().getReportNameValue()!=null)&&(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL))){
-			if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL)){
-				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP);	
-			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL)){
-				rptGenBean.setUrlReportJSPName(ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);	
-			}else if(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL)){
-				rptGenBean.setUrlReportJSPName(ReportConst.SC_PDW_EC_RPT_JSP);	
-			}			
+		if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))||(getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.PDW_EC_RPT_VAL))){
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);	
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				//String url =ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+ReportConst.EXC_NEXT_URL;				
-				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName());
 			}else{				
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}
-		}else if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){	
-			if((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getQuotationId());
-			}
-			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
-			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
-			}
-			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
-			}
-			Map<String, String> urlSCReportJsps = new HashMap<String, String>();
-			urlSCReportJsps.put(ReportConst.SPPPP_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_SPPPP_PEMATUHAN_OC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_KPPP1_PEMATUHAN_OC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PDDW_OC_RPT_VAL, ReportConst.SC_PDDW_OC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.AKPP_PEMATUHAN_OC_RPT_VAL, ReportConst.SC_AKPP_PEMATUHAN_OC_RPT_JSP);			
-			urlSCReportJsps.put(ReportConst.SPPSAP2_TEC_RPT_VAL, ReportConst.SC_SPPSAP2_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_TEC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.AKPT_TEC_RPT_VAL, ReportConst.SC_AKPT_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.TECSPEC_TEC_RPT_VAL, ReportConst.SC_TECSPEC_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_VAL, ReportConst.SC_OVRL_TECRES_WITH_OUT_WEI_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.OVRL_TECRES_WITH_WEI_TEC_RPT_VAL, ReportConst.SC_OVRL_TECRES_WITH_WEI_TEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.SPPSAP2_FEC_RPT_VAL, ReportConst.SC_SPPSAP2_FEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_FEC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_FEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.AKPT_FEC_RPT_VAL, ReportConst.SC_AKPT_FEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.HARGA_TAWARAN_FEC_RPT_VAL, ReportConst.SC_HARGA_TAWARAN_FEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.OVRL_FINRS_FEC_RPT_VAL, ReportConst.SC_OVRL_FINRS_FEC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.SPPP1_PEMATUHAN_EC_RPT_VAL, ReportConst.SC_SPPP1_PEMATUHAN_EC_RPT_JSP);
-			//urlSCReportJsps.put(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL, ReportConst.SC_KPP1_PEMATUHAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.SPPSAP2_EC_RPT_VAL, ReportConst.SC_SPPSAP2_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KPSAP2_PEMARKAHAN_EC_RPT_VAL, ReportConst.SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.AKPTPH_EC_RPT_VAL, ReportConst.SC_AKPTPH_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.TECSPEC_EC_RPT_VAL, ReportConst.SC_TECSPEC_EC_RPT_JSP);			
-			urlSCReportJsps.put(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL, ReportConst.SC_PSDAK_BILANGAN_KONTRAK_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL, ReportConst.SC_PSDABK_BILANGAN_KONTRAK_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.HARGA_TAWARAN_EC_RPT_VAL, ReportConst.SC_HARGA_TAWARAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KEMUDAHAN_KEWANGAN_EC_RPT_VAL, ReportConst.SC_KEMUDAHAN_KEWANGAN_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_EC_RPT_JSP);			
-			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_WEI_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.OVRL_TECRS_WITH_OUT_WEI_EC_RPT_VAL, ReportConst.SC_OVRL_TECRS_WITH_OUT_WEI_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.OVRL_FINRS_EC_RPT_VAL, ReportConst.SC_OVRL_FINRS_EC_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PSDAK_TEC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PSDABK_TEC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_NO_OF_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PSDAK_JUMLAH_KONTRAK_FEC_RPT_VAL, ReportConst.SC_COMP_EXP_GOVT_AGEN_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.PSDABK_JUMLAH_KONTRAK_FEC_RPT_VAL, ReportConst.SC_COMP_EXP_NON_GOVT_AGEN_CONTR_RPT_JSP);
-			urlSCReportJsps.put(ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL, ReportConst.SC_FINANCE_POSITION_RPT_JSP);			
-			rptGenBean.setUrlReportJSPName(urlSCReportJsps.get(getManagedBean().getReportNameValue().trim()));						
+		}else if(((getScQuotationNo()!=null)&&(getScQuotationNo()!=ReportConst.EMPTY_VAL))||((getFromDate()!=null)&&(getFromDate().toString()!=ReportConst.EMPTY_VAL))||((getToDate()!=null)&&(getToDate().toString()!=ReportConst.EMPTY_VAL))){	
+			if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setQuotationIdTotVar(ReportConst.AMP_QUOTE_ID_EQ+this.getScQuotationId());
+			}			
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				//String url =ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;
-				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getQuotationIdTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());				
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
 		}else{			
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
-		}
-	}
+		}		
+	}	
 	/*
 	 *Generate CM module report  
-	 */	
+	 */
 	public void generateCMReport(){	
-		//String url="";
-		if(((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL))||((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL))||((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL))||((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL))||((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL))){			
-			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
+		if(((this.getCmItemType()!=null)&&(this.getCmItemType()!=ReportConst.EMPTY_VAL))||((this.getCmItemName()!=null)&&(this.getCmItemName()!=ReportConst.EMPTY_VAL))||((this.getCmItemType()!=null)&&(this.getCmItemType()!=ReportConst.EMPTY_VAL))||((this.getCmItemStatus()!=null)&&(this.getCmItemStatus()!=ReportConst.EMPTY_VAL))||((this.getCmUnspscCode()!=null)&&(this.getCmUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getCmUnspscTitle()!=null)&&(this.getCmUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getCmExtentionType()!=null)&&(this.getCmExtentionType()!=ReportConst.EMPTY_VAL))||((this.getCmExtentionBrand()!=null)&&(this.getCmExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getCmExtentionMeasurment()!=null)&&(this.getCmExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getCmExtentionColour()!=null)&&(this.getCmExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCmCompanyName()!=null)&&(this.getCmCompanyName()!=ReportConst.EMPTY_VAL))||((this.getCmRegistrationType()!=null)&&(this.getCmRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getCmItemCategory()!=null)&&(this.getCmItemCategory()!=ReportConst.EMPTY_VAL))||((this.getCmProofIdentity()!=null)&&(this.getCmProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))||((this.getCmEpNumber()!=null)&&(this.getCmEpNumber()!=ReportConst.EMPTY_VAL))||((this.getCmBusinessRegNo()!=null)&&(this.getCmBusinessRegNo()!=ReportConst.EMPTY_VAL))||((this.getCmIcNumber()!=null)&&(this.getCmIcNumber()!=ReportConst.EMPTY_VAL))||((this.getCmMofNumber()!=null)&&(this.getCmMofNumber()!=ReportConst.EMPTY_VAL))){			
+			if((this.getCmItemName()!=null)&&(this.getCmItemName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getCmItemName());
 			}
-			if((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getItemType());
+			if((this.getCmItemType()!=null)&&(this.getCmItemType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getCmItemType());
 			}
-			if((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getItemStatus());
+			if((this.getCmItemStatus()!=null)&&(this.getCmItemStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getCmItemStatus());
 			}
-			if((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getUnspscCode());
+			if((this.getCmUnspscCode()!=null)&&(this.getCmUnspscCode()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getCmUnspscCode());
 			}
-			if((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getUnspscTitle());
+			if((this.getCmUnspscTitle()!=null)&&(this.getCmUnspscTitle()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getCmUnspscTitle());
 			}			
-			if((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getExtentionType());
+			if((this.getCmExtentionType()!=null)&&(this.getCmExtentionType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionTypeTotVar(ReportConst.AMP_EXT_TYPE_EQ+this.getCmExtentionType());
 			}
-			if((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ+this.getExtentionBrand());
+			if((this.getCmExtentionBrand()!=null)&&(this.getCmExtentionBrand()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionBrandTotVar(ReportConst.AMP_EXT_BRAND_EQ+this.getCmExtentionBrand());
 			}
-			if((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ+this.getExtentionMeasurment());
+			if((this.getCmExtentionMeasurment()!=null)&&(this.getCmExtentionMeasurment()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionMeasurmentTotVar(ReportConst.AMP_EXT_MEASURMENT_EQ+this.getCmExtentionMeasurment());
 			}
-			if((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ+this.getExtentionColour());
+			if((this.getCmExtentionColour()!=null)&&(this.getCmExtentionColour()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setExtentionColourTotVar(ReportConst.AMP_EXT_COLOUR_EQ+this.getCmExtentionColour());
 			}				
-			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
+			if((this.getCmCompanyName()!=null)&&(this.getCmCompanyName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCmCompanyName());
 			}
-			if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getRegistrationType());
+			if((this.getCmRegistrationType()!=null)&&(this.getCmRegistrationType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getCmRegistrationType());
 			}
-			if((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getItemCategory());
+			if((this.getCmItemCategory()!=null)&&(this.getCmItemCategory()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getCmItemCategory());
 			}
-			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
+			if((this.getCmProofIdentity()!=null)&&(this.getCmProofIdentity()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getCmProofIdentity());
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
@@ -4157,245 +2458,139 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
 				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
 			}
-			if((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setEpNumberTotVar(ReportConst.AMP_EP_NO_EQ+this.getEpNumber());
+			if((this.getCmEpNumber()!=null)&&(this.getCmEpNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setEpNumberTotVar(ReportConst.AMP_EP_NO_EQ+this.getCmEpNumber());
 			}
-			if((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setBusinessRegNoTotVar(ReportConst.AMP_BUSI_REG_NO_EQ+this.getBusinessRegNo());
+			if((this.getCmBusinessRegNo()!=null)&&(this.getCmBusinessRegNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setBusinessRegNoTotVar(ReportConst.AMP_BUSI_REG_NO_EQ+this.getCmBusinessRegNo());
 			}
-			if((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setIcNumberTotVar(ReportConst.AMP_IC_NO_EQ+this.getIcNumber());
+			if((this.getCmIcNumber()!=null)&&(this.getCmIcNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setIcNumberTotVar(ReportConst.AMP_IC_NO_EQ+this.getCmIcNumber());
 			}
-			if((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getMofNumber());
-			}
-			//-----------
-			Map<String, String> urlCMReportNameJsps = new HashMap<String, String>();
-			urlCMReportNameJsps.put(ReportConst.LST_PUB_CAT_ITM_RPT_VAL, ReportConst.CM_PUB_CAT_ITM_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_REJ_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL, ReportConst.EMPTY_VAL);
-			urlCMReportNameJsps.put(ReportConst.LST_EXP_CAT_ITM_RPT_VAL, ReportConst.CM_EXP_CAT_ITM_JSP);			
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_STS_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_STWISE_JSP);			
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL, ReportConst.CM_TOT_CAT_ITM_UNSPSCWISE_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_STD_PRC_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITM_TIER_PRC_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_PRC_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL, ReportConst.CM_CAT_ITEM_ZONAL_TIER_PRC_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL, ReportConst.EMPTY_VAL);			
-			urlCMReportNameJsps.put(ReportConst.SUM_REJ_CAT_ITM_RPT_VAL, ReportConst.CM_REJ_CAT_ITM_SMRY_JSP);			
-			urlCMReportNameJsps.put(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL, ReportConst.CM_APPR_N_REJ_CAT_ITM_JSP);			
-			urlCMReportNameJsps.put(ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL, ReportConst.CM_UNSPSC_CODE_REQ_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL, ReportConst.CM_NEW_EXT_CODE_CREAT_JSP);
-			urlCMReportNameJsps.put(ReportConst.LST_ITM_CODE_RPT_VAL, ReportConst.CM_LST_ITEM_CODE_JSP);
-			//-----------			
-			rptGenBean.setUrlReportJSPName(urlCMReportNameJsps.get(getManagedBean().getReportNameValue().trim()));
+			if((this.getCmMofNumber()!=null)&&(this.getCmMofNumber()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMofNumberTotVar(ReportConst.AMP_MOF_NO_EQ+this.getCmMofNumber());
+			}			
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				//url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;				
-				//setGeneratedURL(url);
 				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionTypeTotVar()+rptGenBean.getExtentionBrandTotVar()+rptGenBean.getExtentionMeasurmentTotVar()+rptGenBean.getExtentionColourTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getEpNumberTotVar()+rptGenBean.getBusinessRegNoTotVar()+rptGenBean.getIcNumberTotVar()+rptGenBean.getMofNumberTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
 		}else{
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
-		}
+		}		
 	}	
 	/*
 	 *Generate FL module report 
 	 */
-	public void generateFLReport(){	
-		
-		if(((this.getPtj()!=null)&&(this.getPtj()!=ReportConst.EMPTY_VAL))||((this.getContractNo()!=null)&&(this.getContractNo()!=ReportConst.EMPTY_VAL))||((this.getSst()!=null)&&(this.getSst()!=ReportConst.EMPTY_VAL))||((this.getJabatan()!=null)&&(this.getJabatan()!=ReportConst.EMPTY_VAL))||((this.getMinistry()!=null)&&(this.getMinistry()!=ReportConst.EMPTY_VAL))||((this.getSupplier()!=null)&&(this.getSupplier()!=ReportConst.EMPTY_VAL))||((this.getStatus()!=null)&&(this.getStatus()!=ReportConst.EMPTY_VAL))||((this.getDuration()!=null)&&(this.getDuration()!=ReportConst.EMPTY_VAL))||((this.getRecievingOfficer()!=null)&&(this.getRecievingOfficer()!=ReportConst.EMPTY_VAL))||((this.getDeliveryAddress()!=null)&&(this.getDeliveryAddress()!=ReportConst.EMPTY_VAL))
-			||((this.getFlRecNoteNo()!=null)&&(this.getFlRecNoteNo()!=ReportConst.EMPTY_VAL))||((this.getContractType()!=null)&&(this.getContractType()!=ReportConst.EMPTY_VAL))||((this.getRequisitioner()!=null)&&(this.getRequisitioner()!=ReportConst.EMPTY_VAL))||((this.getMtoContract()!=null)&&(this.getMtoContract()!=ReportConst.EMPTY_VAL))||((this.getInvoiceNo()!=null)&&(this.getInvoiceNo()!=ReportConst.EMPTY_VAL))||((this.getDeductionType()!=null)&&(this.getDeductionType()!=ReportConst.EMPTY_VAL))||((this.getCrNo()!=null)&&(this.getCrNo()!=ReportConst.EMPTY_VAL))||((this.getApproverName()!=null)&&(this.getApproverName()!=ReportConst.EMPTY_VAL))||((this.getDocumentType()!=null)&&(this.getDocumentType()!=ReportConst.EMPTY_VAL))||((this.getCriteria()!=null)&&(this.getCriteria()!=ReportConst.EMPTY_VAL))||((this.getScoring()!=null)&&(this.getScoring()!=ReportConst.EMPTY_VAL))||((this.getPkpNo()!=null)&&(this.getPkpNo()!=ReportConst.EMPTY_VAL))||((this.getDeliveryOrderNo()!=null)&&(this.getDeliveryOrderNo()!=ReportConst.EMPTY_VAL))||((this.getItemCode()!=null)&&(this.getItemCode()!=ReportConst.EMPTY_VAL))||((this.getPoAmount()!=null)&&(this.getPoAmount()!=ReportConst.EMPTY_VAL))||((this.getPrNo()!=null)&&(this.getPrNo()!=ReportConst.EMPTY_VAL))||((this.getPmo()!=null)&&(this.getPmo()!=ReportConst.EMPTY_VAL))
-			||((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionCode()!=null)&&(this.getExtentionCode()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))){		
-			if((this.getPtj()!=null)&&(this.getPtj()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPtjTotVar(ReportConst.AMP_PTJ_EQ+this.getPtj());
+  public void generateFLReport(){		
+		if(((this.getFlPtj()!=null)&&(this.getFlPtj()!=ReportConst.EMPTY_VAL))||((this.getFlContractNo()!=null)&&(this.getFlContractNo()!=ReportConst.EMPTY_VAL))||((this.getFlSst()!=null)&&(this.getFlSst()!=ReportConst.EMPTY_VAL))||((this.getFlJabatan()!=null)&&(this.getFlJabatan()!=ReportConst.EMPTY_VAL))||((this.getFlMinistry()!=null)&&(this.getFlMinistry()!=ReportConst.EMPTY_VAL))||((this.getFlSupplier()!=null)&&(this.getFlSupplier()!=ReportConst.EMPTY_VAL))||((this.getFlStatus()!=null)&&(this.getFlStatus()!=ReportConst.EMPTY_VAL))||((this.getFlDuration()!=null)&&(this.getFlDuration()!=ReportConst.EMPTY_VAL))||((this.getFlRecievingOfficer()!=null)&&(this.getFlRecievingOfficer()!=ReportConst.EMPTY_VAL))||((this.getFlDeliveryAddress()!=null)&&(this.getFlDeliveryAddress()!=ReportConst.EMPTY_VAL))
+			||((this.getFlRecNoteNo()!=null)&&(this.getFlRecNoteNo()!=ReportConst.EMPTY_VAL))||((this.getFlContractType()!=null)&&(this.getFlContractType()!=ReportConst.EMPTY_VAL))||((this.getFlRequisitioner()!=null)&&(this.getFlRequisitioner()!=ReportConst.EMPTY_VAL))||((this.getFlMtoContract()!=null)&&(this.getFlMtoContract()!=ReportConst.EMPTY_VAL))||((this.getFlInvoiceNo()!=null)&&(this.getFlInvoiceNo()!=ReportConst.EMPTY_VAL))||((this.getFlDeductionType()!=null)&&(this.getFlDeductionType()!=ReportConst.EMPTY_VAL))||((this.getFlCrNo()!=null)&&(this.getFlCrNo()!=ReportConst.EMPTY_VAL))||((this.getFlApproverName()!=null)&&(this.getFlApproverName()!=ReportConst.EMPTY_VAL))||((this.getFlDocumentType()!=null)&&(this.getFlDocumentType()!=ReportConst.EMPTY_VAL))||((this.getFlCriteria()!=null)&&(this.getFlCriteria()!=ReportConst.EMPTY_VAL))||((this.getFlScoring()!=null)&&(this.getFlScoring()!=ReportConst.EMPTY_VAL))||((this.getFlPkpNo()!=null)&&(this.getFlPkpNo()!=ReportConst.EMPTY_VAL))||((this.getFlDeliveryOrderNo()!=null)&&(this.getFlDeliveryOrderNo()!=ReportConst.EMPTY_VAL))||((this.getFlItemCode()!=null)&&(this.getFlItemCode()!=ReportConst.EMPTY_VAL))||((this.getFlPoAmount()!=null)&&(this.getFlPoAmount()!=ReportConst.EMPTY_VAL))||((this.getFlPrNo()!=null)&&(this.getFlPrNo()!=ReportConst.EMPTY_VAL))||((this.getFlPmo()!=null)&&(this.getFlPmo()!=ReportConst.EMPTY_VAL))
+			||((this.getFlItemName()!=null)&&(this.getFlItemName()!=ReportConst.EMPTY_VAL))||((this.getFlItmType()!=null)&&(this.getFlItmType()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL))||((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL))		||((this.getFlContractOrder()!=null)&&(this.getFlContractOrder()!=ReportConst.EMPTY_VAL))||((this.getFlContractRequest()!=null)&&(this.getFlContractRequest()!=ReportConst.EMPTY_VAL))||((this.getFlPurchaseOrderNo()!=null)&&(this.getFlPurchaseOrderNo()!=ReportConst.EMPTY_VAL))){
+			
+			if((this.getFlPtj()!=null)&&(this.getFlPtj()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPtjTotVar(ReportConst.FL_AMP_PTJ_NAME_EQ+this.getFlPtj());
 			}
-			if((this.getContractNo()!=null)&&(this.getContractNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setContractNoTotVar(ReportConst.AMP_CONTR_NO_EQ+this.getContractNo());
+			if((this.getFlContractNo()!=null)&&(this.getFlContractNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setContractNoTotVar(ReportConst.FL_AMP_CONTRACT_NO_EQ+this.getFlContractNo());
 			}
-			if((this.getSst()!=null)&&(this.getSst()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSstTotVar(ReportConst.AMP_SST_EQ+this.getSst());
+			if((this.getFlSst()!=null)&&(this.getFlSst()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSstTotVar(ReportConst.FL_AMP_SST_NO_EQ+this.getFlSst());
+			}			
+			if((this.getFlMinistry()!=null)&&(this.getFlMinistry()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ+this.getFlMinistry());
 			}
-			if((this.getJabatan()!=null)&&(this.getJabatan()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setJabatanTotVar(ReportConst.AMP_JABATAN_EQ+this.getJabatan());
+			if((this.getFlSupplier()!=null)&&(this.getFlSupplier()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setSupplierTotVar(ReportConst.FL_AMP_SUPPL_NAME_EQ+this.getFlSupplier());
 			}
-			if((this.getMinistry()!=null)&&(this.getMinistry()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMinistryTotVar(ReportConst.AMP_MINISTRY_EQ+this.getMinistry());
+			if((this.getFlStatus()!=null)&&(this.getFlStatus()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setStatusTotVar(ReportConst.FL_AMP_STATUS_EQ+this.getFlStatus());
+			}			
+			if((this.getFlRecievingOfficer()!=null)&&(this.getFlRecievingOfficer()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRecievingOfficerTotVar(ReportConst.FL_AMP_FL_REC_OFF_EQ+this.getFlRecievingOfficer());
 			}
-			if((this.getSupplier()!=null)&&(this.getSupplier()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setSupplierTotVar(ReportConst.AMP_SUPPLIER_EQ+this.getSupplier());
-			}
-			if((this.getStatus()!=null)&&(this.getStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setStatusTotVar(ReportConst.AMP_STATUS_EQ+this.getStatus());
-			}
-			if((this.getDuration()!=null)&&(this.getDuration()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDurationTotVar(ReportConst.AMP_DURATION_EQ+this.getDuration());
-			}
-			if((this.getRecievingOfficer()!=null)&&(this.getRecievingOfficer()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRecievingOfficerTotVar(ReportConst.AMP_REC_OFFCR_EQ+this.getRecievingOfficer());
-			}
-			if((this.getDeliveryAddress()!=null)&&(this.getDeliveryAddress()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDeliveryAddressTotVar(ReportConst.AMP_DEL_ADDR_EQ+this.getDeliveryAddress());
+			if((this.getFlDeliveryAddress()!=null)&&(this.getFlDeliveryAddress()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setDeliveryAddressTotVar(ReportConst.FL_AMP_DELI_ADDR_EQ+this.getFlDeliveryAddress());
 			}
 			if((this.getFlRecNoteNo()!=null)&&(this.getFlRecNoteNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setFlRecNoteNoTotVar(ReportConst.AMP_FL_REC_NOTE_NO_EQ+this.getFlRecNoteNo());
+				rptGenBean.setFlRecNoteNoTotVar(ReportConst.FL_AMP_FL_REC_NOTE_EQ+this.getFlRecNoteNo());
 			}
-			if((this.getContractType()!=null)&&(this.getContractType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setContractTypeTotVar(ReportConst.AMP_CONTR_TYPE_EQ+this.getContractType());
+			if((this.getFlContractType()!=null)&&(this.getFlContractType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setContractTypeTotVar(ReportConst.FL_AMP_COTRACT_TYPE_EQ+this.getFlContractType());
 			}
-			if((this.getRequisitioner()!=null)&&(this.getRequisitioner()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRequisitionerTotVar(ReportConst.AMP_REQSNR_EQ+this.getRequisitioner());
+			if((this.getFlRequisitioner()!=null)&&(this.getFlRequisitioner()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setRequisitionerTotVar(ReportConst.FL_AMP_REQUI_NAME_EQ+this.getFlRequisitioner());
 			}
-			if((this.getMtoContract()!=null)&&(this.getMtoContract()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setMtoContractTotVar(ReportConst.AMP_MTO_CONTR_EQ+this.getMtoContract());
+			if((this.getFlMtoContract()!=null)&&(this.getFlMtoContract()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setMtoContractTotVar(ReportConst.AMP_MTO_CONTR_EQ+this.getFlMtoContract());
 			}
-			if((this.getInvoiceNo()!=null)&&(this.getInvoiceNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setInvoiceNoTotVar(ReportConst.AMP_INVOICE_NO_EQ+this.getInvoiceNo());
+			if((this.getFlInvoiceNo()!=null)&&(this.getFlInvoiceNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setInvoiceNoTotVar(ReportConst.AMP_INVOICE_NO_EQ+this.getFlInvoiceNo());
 			}
-			if((this.getDeductionType()!=null)&&(this.getDeductionType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDeductionTypeTotVar(ReportConst.AMP_DEDUCT_TYPE_EQ+this.getDeductionType());
+			if((this.getFlDeductionType()!=null)&&(this.getFlDeductionType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setDeductionTypeTotVar(ReportConst.AMP_DEDUCT_TYPE_EQ+this.getFlDeductionType());
 			}
-			if((this.getCrNo()!=null)&&(this.getCrNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCrNoTotVar(ReportConst.AMP_CR_NO_EQ+this.getCrNo());
+			if((this.getFlCrNo()!=null)&&(this.getFlCrNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCrNoTotVar(ReportConst.AMP_CR_NO_EQ+this.getFlCrNo());
 			}
-			if((this.getApproverName()!=null)&&(this.getApproverName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setApproverNameTotVar(ReportConst.AMP_APPROVER_NAME_EQ+this.getApproverName());
+			if((this.getFlApproverName()!=null)&&(this.getFlApproverName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setApproverNameTotVar(ReportConst.FL_AMP_APPROVER_NAME_EQ+this.getFlApproverName());
 			}
-			if((this.getDocumentType()!=null)&&(this.getDocumentType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDocumentTypeTotVar(ReportConst.AMP_DOC_TYPE_EQ+this.getDocumentType());
+			if((this.getFlDocumentType()!=null)&&(this.getFlDocumentType()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setDocumentTypeTotVar(ReportConst.AMP_DOC_TYPE_EQ+this.getFlDocumentType());
 			}
-			if((this.getCriteria()!=null)&&(this.getCriteria()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCriteriaTotVar(ReportConst.AMP_CRITERIA_EQ+this.getCriteria());
+			if((this.getFlCriteria()!=null)&&(this.getFlCriteria()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setCriteriaTotVar(ReportConst.AMP_CRITERIA_EQ+this.getFlCriteria());
 			}
-			if((this.getScoring()!=null)&&(this.getScoring()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setScoringTotVar(ReportConst.AMP_SCORING_EQ+this.getScoring());
+			if((this.getFlScoring()!=null)&&(this.getFlScoring()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setScoringTotVar(ReportConst.AMP_SCORING_EQ+this.getFlScoring());
 			}
-			if((this.getPkpNo()!=null)&&(this.getPkpNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPkpNoTotVar(ReportConst.AMP_PKP_NO_EQ+this.getPkpNo());
+			if((this.getFlPkpNo()!=null)&&(this.getFlPkpNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPkpNoTotVar(ReportConst.FL_AMP_PKP_NO_EQ+this.getFlPkpNo());
 			}
-			if((this.getDeliveryOrderNo()!=null)&&(this.getDeliveryOrderNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setDeliveryOrderNoTotVar(ReportConst.AMP_DEL_ORDER_NO_EQ+this.getDeliveryOrderNo());
+			if((this.getFlDeliveryOrderNo()!=null)&&(this.getFlDeliveryOrderNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setDeliveryOrderNoTotVar(ReportConst.FL_AMP_DELI_ORD_NO_EQ+this.getFlDeliveryOrderNo());
 			}
-			if((this.getItemCode()!=null)&&(this.getItemCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemCodeTotVar(ReportConst.AMP_ITM_CODE_EQ+this.getItemCode());
+			if((this.getFlItemCode()!=null)&&(this.getFlItemCode()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemCodeTotVar(ReportConst.AMP_ITM_CODE_EQ+this.getFlItemCode());
 			}
-			if((this.getPoAmount()!=null)&&(this.getPoAmount()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPoAmountTotVar(ReportConst.AMP_PO_AMT_EQ+this.getPoAmount());
+			if((this.getFlPoAmount()!=null)&&(this.getFlPoAmount()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPoAmountTotVar(ReportConst.AMP_PO_AMT_EQ+this.getFlPoAmount());
 			}
-			if((this.getPrNo()!=null)&&(this.getPrNo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPrNoTotVar(ReportConst.AMP_PR_NO_EQ+this.getPrNo());
+			if((this.getFlPrNo()!=null)&&(this.getFlPrNo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPrNoTotVar(ReportConst.AMP_PR_NO_EQ+this.getFlPrNo());
 			}
-			if((this.getPmo()!=null)&&(this.getPmo()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setPmoTotVar(ReportConst.AMP_PMO_EQ+this.getPmo());
-			}
-			//-----			
-			if((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getItemName());
-			}
-			if((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemTypeTotVar(ReportConst.AMP_ITM_TYPE_EQ+this.getItemType());
-			}
-			if((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemStatusTotVar(ReportConst.AMP_ITM_STATUS_EQ+this.getItemStatus());
-			}
-			if((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscCodeTotVar(ReportConst.AMP_UNSPSC_CODE_EQ+this.getUnspscCode());
-			}
-			if((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setUnspscTitleTotVar(ReportConst.AMP_UNSPSC_TIT_EQ+this.getUnspscTitle());
-			}
-			if((this.getExtentionCode()!=null)&&(this.getExtentionCode()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setExtentionCodeTotVar(ReportConst.AMP_EXT_CODE_EQ+this.getExtentionCode());
-			}
-			if((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setCompanyNameTotVar(ReportConst.AMP_COMP_NAME_EQ+this.getCompanyName());
-			}
-			if((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setRegistrationTypeTotVar(ReportConst.AMP_REG_TYPE_EQ+this.getRegistrationType());
-			}
-			if((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setItemCategoryTotVar(ReportConst.AMP_ITM_CAT_EQ+this.getItemCategory());
-			}
-			if((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL)){
-				rptGenBean.setProofIdentityTotVar(ReportConst.AMP_PROOF_IDNT_EQ+this.getProofIdentity());
-			}
+			if((this.getFlPmo()!=null)&&(this.getFlPmo()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setPmoTotVar(ReportConst.AMP_PMO_EQ+this.getFlPmo());
+			}	
+			if((this.getFlItemName()!=null)&&(this.getFlItemName()!=ReportConst.EMPTY_VAL)){
+				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ+this.getFlItemName());
+			}			
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(ReportConst.URL_RPT_DATE_FORMAT);
 			if((this.getFromDate()!=null)&&(this.getFromDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setFromDateVar(ReportConst.AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
+				rptGenBean.setFromDateVar(ReportConst.FL_AMP_FROM_DATE_EQ+outputDateFormat.format(this.getFromDate()));
 			}
 			if((this.getToDate()!=null)&&(this.getToDate().toString()!=ReportConst.EMPTY_VAL)){				 
-				rptGenBean.setToDateVar(ReportConst.AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
-			}			
-			//--
-			Map<String, String> urlFLReportNameJsps = new HashMap<String, String>();
-			urlFLReportNameJsps.put(ReportConst.CON_REQ_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_ORD_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.LATE_DEL_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_REJ_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SHP_INSTR_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.STP_INSTR_DEL_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_SUPL_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PYMT_MATCH_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DED_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_REQ_CANC_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_ORD_CANC_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_CANC_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_CANC_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_CANC_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SUP_PERF_RPT_MIN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_REQ_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_ORD_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_REJ_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SHP_INSTR_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.STP_INSTR_DEL_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_SUPL_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DED_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_REQ_CANC_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.CON_ORD_CANC_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_CANC_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_CANC_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_CANC_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_AUTO_CMT_CON_ORD_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SUP_PERF_RPT_CEN_PEN_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PUR_REQ_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PUR_ORD_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.EMR_PROCUR_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PUR_ORD_REJ_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.LATE_DEL_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_REJ_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.STP_INSTR_DEL_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_SUPL_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_RPT_VIEW_PTJ_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PYMT_MATCH_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PUR_REQ_CANC_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.PUR_ORD_CANC_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.DEL_ORD_CANC_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.INV_CANC_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.YEP_AP58A_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SUP_PERF_RPT_PO_VAL, ReportConst.EMPTY_VAL);
-			urlFLReportNameJsps.put(ReportConst.SUMM_RPT_PAN_ITM_VAL, ReportConst.EMPTY_VAL);			
-			rptGenBean.setUrlReportJSPName(urlFLReportNameJsps.get(getManagedBean().getReportNameValue().trim()));			
+				rptGenBean.setToDateVar(ReportConst.FL_AMP_TO_DATE_EQ+outputDateFormat.format(this.getToDate()));
+			}
+			if((this.getFlContractOrder()!=null)&&(this.getFlContractOrder()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlContractOrderVar(ReportConst.FL_AMP_COTRACT_ORDER_EQ+this.getFlContractOrder());
+			}
+			if((this.getFlContractRequest()!=null)&&(this.getFlContractRequest()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlContractRequestVar(ReportConst.FL_AMP_COTRACT_REQUEST_EQ+this.getFlContractRequest());
+			}
+			if((this.getFlPurchaseOrderNo()!=null)&&(this.getFlPurchaseOrderNo()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setFlPurchaseOrderNoVar(ReportConst.FL_AMP_PURCHASE_ORDER_EQ+this.getFlPurchaseOrderNo());
+			}
+			if((getManagedBean().getReportValue()!=null)&&(getManagedBean().getReportValue()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ+getManagedBean().getReportValue());
+			}
+			if((new FacesScopes().getUserSessionBean().getUserId()!=null)&&(new FacesScopes().getUserSessionBean().getUserId().toString()!=ReportConst.EMPTY_VAL)){				 
+				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ+new FacesScopes().getUserSessionBean().getUserId().toString());
+			}
+			rptGenBean.setUrlReportJSPName(reportFileNameJSP);			
 			if((rptGenBean.getUrlReportJSPName()!=null)&&(rptGenBean.getUrlReportJSPName()!=ReportConst.EMPTY_VAL)){
-				//String url=ReportConst.EXC_PREV_URL+ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+ReportConst.EXC_NEXT_URL;				
-				//setGeneratedURL(url);
-				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar());				
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME+rptGenBean.getUrlReportJSPName()+rptGenBean.getItemNameTotVar()+rptGenBean.getItemTypeTotVar()+rptGenBean.getItemStatusTotVar()+rptGenBean.getUnspscCodeTotVar()+rptGenBean.getUnspscTitleTotVar()+rptGenBean.getExtentionCodeTotVar()+rptGenBean.getCompanyNameTotVar()+rptGenBean.getRegistrationTypeTotVar()+rptGenBean.getItemCategoryTotVar()+rptGenBean.getProofIdentityTotVar()+rptGenBean.getPtjTotVar()+rptGenBean.getContractNoTotVar()+rptGenBean.getSstTotVar()+rptGenBean.getJabatanTotVar()+rptGenBean.getMinistryTotVar()+rptGenBean.getSupplierTotVar()+rptGenBean.getStatusTotVar()+rptGenBean.getDurationTotVar()+rptGenBean.getRecievingOfficerTotVar()+rptGenBean.getDeliveryAddressTotVar()+rptGenBean.getFlRecNoteNoTotVar()+rptGenBean.getContractTypeTotVar()+rptGenBean.getRequisitionerTotVar()+rptGenBean.getMtoContractTotVar()+rptGenBean.getInvoiceNoTotVar()+rptGenBean.getDeductionTypeTotVar()+rptGenBean.getCrNoTotVar()+rptGenBean.getApproverNameTotVar()+rptGenBean.getDocumentTypeTotVar()+rptGenBean.getCriteriaTotVar()+rptGenBean.getScoringTotVar()+rptGenBean.getPkpNoTotVar()+rptGenBean.getDeliveryOrderNoTotVar()+rptGenBean.getItemCodeTotVar()+rptGenBean.getPoAmountTotVar()+rptGenBean.getPrNoTotVar()+rptGenBean.getPmoTotVar()+rptGenBean.getFromDateVar()+rptGenBean.getToDateVar()+rptGenBean.getFlContractOrderVar()+rptGenBean.getFlContractRequestVar()+rptGenBean.getFlPurchaseOrderNoVar()+rptGenBean.getReportValueIdVar()+rptGenBean.getUserIdVar());				
 			}else{
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
 			}			
@@ -4407,60 +2602,34 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 			}*/			
 		}else{
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
-		}
-	}
-	public void checkVariableValueExist(){		
-		getManagedBean().setSelfView(true);
-		getManagedBean().setNotSelfView(false);
-		if((getManagedBean().getReportNameValue()!=null)){
-			if((getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL))||(getManagedBean().getReportNameValue().trim().equalsIgnoreCase(ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL))){
-				getManagedBean().setSelfView(false);
-				getManagedBean().setNotSelfView(true);
-			}else{
-				if(((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL))||((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionType()!=null)&&(this.getExtentionType()!=ReportConst.EMPTY_VAL))||((this.getExtentionBrand()!=null)&&(this.getExtentionBrand()!=ReportConst.EMPTY_VAL))||((this.getExtentionMeasurment()!=null)&&(this.getExtentionMeasurment()!=ReportConst.EMPTY_VAL))||((this.getExtentionColour()!=null)&&(this.getExtentionColour()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))
-						||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getEpNumber()!=null)&&(this.getEpNumber()!=ReportConst.EMPTY_VAL))||((this.getBusinessRegNo()!=null)&&(this.getBusinessRegNo()!=ReportConst.EMPTY_VAL))||((this.getIcNumber()!=null)&&(this.getIcNumber()!=ReportConst.EMPTY_VAL))||((this.getMofNumber()!=null)&&(this.getMofNumber()!=ReportConst.EMPTY_VAL))||((this.getPtj()!=null)&&(this.getPtj()!=ReportConst.EMPTY_VAL))||((this.getContractNo()!=null)&&(this.getContractNo()!=ReportConst.EMPTY_VAL))||((this.getSst()!=null)&&(this.getSst()!=ReportConst.EMPTY_VAL))||((this.getJabatan()!=null)&&(this.getJabatan()!=ReportConst.EMPTY_VAL))||((this.getMinistry()!=null)&&(this.getMinistry()!=ReportConst.EMPTY_VAL))||((this.getSupplier()!=null)&&(this.getSupplier()!=ReportConst.EMPTY_VAL))||((this.getStatus()!=null)&&(this.getStatus()!=ReportConst.EMPTY_VAL))||((this.getDuration()!=null)&&(this.getDuration()!=ReportConst.EMPTY_VAL))||((this.getRecievingOfficer()!=null)&&(this.getRecievingOfficer()!=ReportConst.EMPTY_VAL))
-						||((this.getDeliveryAddress()!=null)&&(this.getDeliveryAddress()!=ReportConst.EMPTY_VAL))||((this.getFlRecNoteNo()!=null)&&(this.getFlRecNoteNo()!=ReportConst.EMPTY_VAL))||((this.getContractType()!=null)&&(this.getContractType()!=ReportConst.EMPTY_VAL))||((this.getRequisitioner()!=null)&&(this.getRequisitioner()!=ReportConst.EMPTY_VAL))||((this.getMtoContract()!=null)&&(this.getMtoContract()!=ReportConst.EMPTY_VAL))||((this.getInvoiceNo()!=null)&&(this.getInvoiceNo()!=ReportConst.EMPTY_VAL))||((this.getDeductionType()!=null)&&(this.getDeductionType()!=ReportConst.EMPTY_VAL))||((this.getCrNo()!=null)&&(this.getCrNo()!=ReportConst.EMPTY_VAL))||((this.getApproverName()!=null)&&(this.getApproverName()!=ReportConst.EMPTY_VAL))||((this.getDocumentType()!=null)&&(this.getDocumentType()!=ReportConst.EMPTY_VAL))||((this.getCriteria()!=null)&&(this.getCriteria()!=ReportConst.EMPTY_VAL))||((this.getScoring()!=null)&&(this.getScoring()!=ReportConst.EMPTY_VAL))||((this.getPkpNo()!=null)&&(this.getPkpNo()!=ReportConst.EMPTY_VAL))||((this.getDeliveryOrderNo()!=null)&&(this.getDeliveryOrderNo()!=ReportConst.EMPTY_VAL))
-						||((this.getItemCode()!=null)&&(this.getItemCode()!=ReportConst.EMPTY_VAL))||((this.getPoAmount()!=null)&&(this.getPoAmount()!=ReportConst.EMPTY_VAL))||((this.getPrNo()!=null)&&(this.getPrNo()!=ReportConst.EMPTY_VAL))||((this.getPmo()!=null)&&(this.getPmo()!=ReportConst.EMPTY_VAL))||((this.getItemName()!=null)&&(this.getItemName()!=ReportConst.EMPTY_VAL))||((this.getItemType()!=null)&&(this.getItemType()!=ReportConst.EMPTY_VAL))||((this.getItemStatus()!=null)&&(this.getItemStatus()!=ReportConst.EMPTY_VAL))||((this.getUnspscCode()!=null)&&(this.getUnspscCode()!=ReportConst.EMPTY_VAL))||((this.getUnspscTitle()!=null)&&(this.getUnspscTitle()!=ReportConst.EMPTY_VAL))||((this.getExtentionCode()!=null)&&(this.getExtentionCode()!=ReportConst.EMPTY_VAL))||((this.getCompanyName()!=null)&&(this.getCompanyName()!=ReportConst.EMPTY_VAL))||((this.getRegistrationType()!=null)&&(this.getRegistrationType()!=ReportConst.EMPTY_VAL))||((this.getItemCategory()!=null)&&(this.getItemCategory()!=ReportConst.EMPTY_VAL))||((this.getProofIdentity()!=null)&&(this.getProofIdentity()!=ReportConst.EMPTY_VAL))||((this.getFromDate()!=null)&&(this.getToDate()!=null))){
-					if(((this.getFromDate()==null)&&(this.getToDate()!=null))||((this.getFromDate()!=null)&&(this.getToDate()==null))){				
-						getManagedBean().setNotSelfView(false);
-						getManagedBean().setSelfView(true);
-					}else{
-						getManagedBean().setNotSelfView(true);
-						getManagedBean().setSelfView(false);
-					}			
-				}else{
-					getManagedBean().setNotSelfView(false);
-					getManagedBean().setSelfView(true);
-				}
-			}
-		}
-	}
+		}		
+	}	
 	/*
-	 *validate quotNo 
+	 *validate quotNo	 
 	 */
 	public void quotationNumberValidation() {
-		if((this.getQuotationNo()!=null)&&(this.getQuotationNo()!=ReportConst.EMPTY_VAL)){
+		if((this.getScQuotationNo()!=null)&&(this.getScQuotationNo()!=ReportConst.EMPTY_VAL)){
 			specialCharValidation();			
 		}		
 	}
 	public void specialCharValidation() {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
-	    Matcher match = pattern.matcher(this.getQuotationNo());
+	    Matcher match = pattern.matcher(this.getScQuotationNo());
 	    if(match.matches()){
 	    	getQuotationNumber();
 	    }else{
-	    	this.setQuotationNo(null);
+	    	this.setScQuotationNo(null);
 	    	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
 	    }	  
 	}
 	/*
-	 *retrieve qtid based on qtno 
+	 *retrieve qtid based on qtno 	 
 	 */
 	public void getQuotationNumber() {
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		log.info("QtNo="+this.getQuotationNo()); 
-		tenderReqDTO.setQtTndrNo(this.getQuotationNo());
+		log.info("QtNo="+this.getScQuotationNo()); 
+		tenderReqDTO.setQtTndrNo(this.getScQuotationNo());
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTDetailSO.class);
@@ -4470,120 +2639,132 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		if(scqt!=null){
 			if(scqt.getQtId()!=null){
 				log.info("QtId="+scqt.getQtId());
-				this.setQuotationId(scqt.getQtId().toString());			
+				this.setScQuotationId(scqt.getQtId().toString());			
 			}else {
-				this.setQuotationNo(null);
+				this.setScQuotationNo(null);
 				throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
 			}
 		}else{
-			this.setQuotationNo(null);
+			this.setScQuotationNo(null);
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
 		}
-	}	
+	}
 	/*
 	 *Clear report criteria 
 	 */
 	public void resetReportForm(){		
-		retriveModuleList();		
-		this.setPmo(null);
-		this.setPrNo(null);
-		this.setPoAmount(null);
-		this.setItemCode(null);
-		this.setDeliveryOrderNo(null);
-		this.setPkpNo(null);
-		this.setScoring(null);
-		this.setCriteria(null);
-		this.setDocumentType(null);
-		this.setApproverName(null);
-		this.setCrNo(null);
-		this.setDeductionType(null);
-		this.setInvoiceNo(null);
-		this.setMtoContract(null);
-		this.setRequisitioner(null);
-		this.setContractType(null);
-		this.setFlRecNoteNo(null);
-		this.setDeliveryAddress(null);
-		this.setRecievingOfficer(null);
-		this.setDuration(null);
-		this.setStatus(null);
-		this.setSupplier(null);
-		this.setMinistry(null);
-		this.setJabatan(null);
-		this.setSst(null);
-		this.setContractNo(null);
-		this.setPtj(null);
-		this.setItemType(null);
-		this.setItemStatus(null);
-		this.setUnspscCode(null);
-		this.setUnspscTitle(null);
-		this.setExtentionCode(null);
-		this.setCompanyName(null);
-		this.setRegistrationType(null);
+		retriveModuleList();
 		this.setFromDate(null);
-		this.setToDate(null);
-		this.setQuotationId(null);
-		this.setQuotationNo(null);
-		this.setPaymentId(null);
-		this.setItemCategory(null);
-		this.setItemName(null);
-		this.setProofIdentity(null);
-		this.setExtentionType(null);
-		this.setExtentionBrand(null);
-		this.setExtentionMeasurment(null);
-		this.setExtentionColour(null);
-		this.setEpNumber(null);
-		this.setIcNumber(null);
-		this.setBusinessRegNo(null);
-		this.setMofNumber(null);
-		this.setSupportingDocument(null);	
-		this.setDocStatus(null);
-		this.setSuppDocStatus(null);
-		this.setRegistrationNo(null);
-		this.setePNo(null);
-		this.setApplicationNo(null);
-		this.setZone(null);
-		this.setSupplierType(null);
-		this.setMofRegNo(null);
-		this.setMofRegNoFrom(null);
-		this.setMofRegNoTo(null);
-		this.setRegistrationStatus(null);
-		this.setCapitalNaccumFrm(null);
-		this.setCapitalNaccumTo(null);	
-		this.setPaidUpCapitalNaccumShare(null);
-		this.setCategory(null);
-		this.setNoOfCategory(null);
-		this.setMainCategory(null);
-		this.setSubCategory(null);
-		this.setSubCategoryDivision(null);
-		this.setRole(null);
-		this.setApplicationStatus(null);
-		this.setCancelledBy(null);
-		this.setPaymentType(null);
-		this.setApplicationType(null);
-		this.setState(null);
-		this.setDistrict(null);
-		this.setSupplierName(null);
-		this.setReportType(null);
-		this.setOrganizationType(null);
-		this.setKementerian(null);
-		this.setNamAgensi(null);
-		this.setComplaintNo(null);
-		this.setProofIdentity(null);
-		this.setCompanyStatus(null);
-		this.setCaseNo(null);
-		this.setCompApplStatus(null);
-		this.setCategoryCode(null);
-		this.setSiteVisitOfficer(null);
-		this.setReleaseFromDate(null);
-		this.setReleaseToDate(null);
-		this.setApplicationFromDate(null);
-		this.setApplicationToDate(null);
-		this.setReceiveFromDate(null);	
-		this.setReceiveToDate(null);	
-		this.setExpiryFromDate(null);	
-		this.setExpiryToDate(null);
-		this.setPrintedFromDate(null);	
-		this.setPrintedToDate(null);		
+		this.setToDate(null);	
+		this.setScQuotationId(null);
+		this.setScQuotationNo(null);	
+		this.setScPaymentId(null);
+		this.setCmItemType(null);
+		this.setCmItemStatus(null);
+		this.setCmUnspscCode(null);
+		this.setCmUnspscTitle(null);	
+		this.setCmCompanyName(null);
+		this.setCmRegistrationType(null);	
+		this.setCmItemCategory(null);
+		this.setCmItemName(null);	
+		this.setCmEpNumber(null);
+		this.setCmBusinessRegNo(null);
+		this.setCmIcNumber(null);
+		this.setCmMofNumber(null);	
+		this.setCmExtentionCode(null);
+		this.setCmExtentionType(null);	
+		this.setCmExtentionBrand(null);
+		this.setCmExtentionMeasurment(null);
+		this.setCmExtentionColour(null);
+		this.setCmProofIdentity(null);
+		this.setFlItmType(null);
+		this.setFlPtj(null);
+		this.setFlContractNo(null);
+		this.setFlSst(null);
+		this.setFlJabatan(null);
+		this.setFlMinistry(null);
+		this.setFlSupplier(null); 
+		this.setFlStatus(null);
+		this.setFlDuration(null);
+		this.setFlRecievingOfficer(null);
+		this.setFlDeliveryAddress(null);
+		this.setFlRecNoteNo(null);
+		this.setFlContractType(null);
+		this.setFlRequisitioner(null);
+		this.setFlMtoContract(null);
+		this.setFlInvoiceNo(null);
+		this.setFlDeductionType(null);
+		this.setFlCrNo(null);
+		this.setFlApproverName(null);
+		this.setFlDocumentType(null);
+		this.setFlCriteria(null);
+		this.setFlScoring(null);
+		this.setFlPkpNo(null);
+		this.setFlDeliveryOrderNo(null);	
+		this.setFlItemCode(null);
+		this.setFlPoAmount(null);
+		this.setFlPrNo(null);
+		this.setFlPmo(null);	
+		this.setFlItemName(null);
+		this.setSmSupportingDocument(null);	
+		this.setSmDocStatus(null);
+		this.setSmSuppDocStatus(null);	
+		this.setSmRegistrationNo(null);
+		this.setSmEpNo(null);
+		this.setSmApplicationNo(null);
+		this.setSmZone(null);
+		this.setSmSupplierType(null);
+		this.setSmMofRegNo(null);
+		this.setSmMofRegNoFrom(null);
+		this.setSmMofRegNoTo(null);
+		this.setSmRegistrationStatus(null);
+		this.setSmCapitalNaccumFrm(null);
+		this.setSmCapitalNaccumTo(null);	
+		this.setSmPaidUpCapitalNaccumShare(null);
+		this.setSmcategory(null);
+		this.setSmNoOfCategory(null);
+		this.setSmMainCategory(null);
+		this.setSmSubCategory(null);
+		this.setSmSubCategoryDivision(null);
+		this.setSmRole(null);
+		this.setSmApplicationStatus(null);
+		this.setSmCancelledBy(null);
+		this.setSmPaymentType(null);
+		this.setSmApplicationType(null);
+		this.setSmState(null);
+		this.setSmDistrict(null);
+		this.setSmSupplierName(null);
+		this.setSmReportType(null);
+		this.setSmOrganizationType(null);
+		this.setSmKementerian(null);
+		this.setSmNamaAgensi(null);
+		this.setSmComplaintNo(null);
+		this.setSmProofIdentity(null);
+		this.setSmCompanyStatus(null);
+		this.setSmCaseNo(null);
+		this.setSmCompApplStatus(null);
+		this.setSmCategoryCode(null);
+		this.setSmSiteVisitOfficer(null);
+		this.setSmReleaseFromDate(null);
+		this.setSmReleaseToDate(null);
+		this.setSmApplicationFromDate(null);
+		this.setSmApplicationToDate(null);
+		this.setSmReceiveFromDate(null);	
+		this.setSmReceiveToDate(null);	
+		this.setSmExpiryFromDate(null);	
+		this.setSmExpiryToDate(null);
+		this.setSmPrintedFromDate(null);	
+		this.setSmPrintedToDate(null);	
+		this.setSmCompanyName(null);
+		this.setSmSupplier(null);
+		this.setSmEpNumber(null);
+		this.setSmMofNumber(null);
+		this.setSmRegistrationType(null);
+		this.setSmBusinessRegNo(null);
+		this.setSmIcNumber(null);
+		this.setFlContractOrder(null);
+		this.setFlContractRequest(null);
+		this.setFlPurchaseOrderNo(null);
 	}	
 	public File newDownloadingFile(String url) throws IOException {		
 		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
@@ -4624,8 +2805,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		out.close(); 		
 		return localFile;
 	}	
-	/*
-	public StreamedContent getStreamedContentPDFFile(String url) {		  
+	/*public StreamedContent getStreamedContentPDFFile(String url) {		  
 		  PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 		  HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		  HttpURLConnection urlConnection = null;
@@ -4677,8 +2857,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		          //render.layout();  
 		  }
 		  return pdfFile;
-		 }
-	*/	
+		 }*/		
 	public StreamedContent getReportPdf() {		
 		String reportUrl = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2&report=Total_Catalog_Item_Unspscwise.jsp&frdt=26/09/2014&todt=30/09/2014&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 		HttpURLConnection urlConnection = null;
@@ -4687,7 +2866,7 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		    urlConnection = (HttpURLConnection) obj.openConnection();	    
 		    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
 		    ResourceResponse portletResponse = (ResourceResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();            
-     /*       PortletResponse portletResponse = (PortletResponse) FacesContext
+            /*PortletResponse portletResponse = (PortletResponse) FacesContext
             	      .getCurrentInstance().getExternalContext().getResponse();*/
             HttpServletResponse res = PortalUtil.getHttpServletResponse(portletResponse);
             res.setHeader("Content-Disposition", "attachment; filename=\""

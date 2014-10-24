@@ -15,22 +15,27 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class ReportMangedBean extends BaseManagedBean{
 	
 	private static final long serialVersionUID = 1L;
-	
+	private ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
 	private List<SelectItem> reportList=new ArrayList<SelectItem>();
-	private String moduleName;
+	//private String moduleName;
 	private String reportName;
-	private String reportNameValue;
+	private String reportValue;
+	private String moduleValue;
 	private boolean notSelfView = false;
 	private boolean selfView = true;
-	
-	public String getReportNameValue() {
-		return reportNameValue;
+			
+	public String getReportValue() {
+		return reportValue;
 	}
-	public void setReportNameValue(String reportNameValue) {
-		this.reportNameValue = reportNameValue;
+	public void setReportValue(String reportValue) {
+		this.reportValue = reportValue;
 	}
-	private ReportsGenerateBean rptGenBean ;
-	
+	public String getModuleValue() {
+		return moduleValue;
+	}
+	public void setModuleValue(String moduleValue) {
+		this.moduleValue = moduleValue;
+	}
 	public boolean isNotSelfView() {
 		return notSelfView;
 	}
@@ -43,18 +48,18 @@ public class ReportMangedBean extends BaseManagedBean{
 	public void setSelfView(boolean selfView) {
 		this.selfView = selfView;
 	}
-	public String getModuleName() {
+	/*public String getModuleName() {
 		return moduleName;
 	}
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}*/
 	public ReportsGenerateBean getRptGenBean() {
 		return rptGenBean;
 	}
 	public void setRptGenBean(ReportsGenerateBean rptGenBean) {
 		this.rptGenBean = rptGenBean;
-	}
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}
+	}	
 	public String getReportName() {
 		return reportName;
 	}
