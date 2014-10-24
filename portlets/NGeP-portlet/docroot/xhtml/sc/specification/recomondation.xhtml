@@ -176,6 +176,7 @@
 						<td><h:outputLabel
 								value="#{lbl['lbl.sc.spec.recommendation.passing.score']}"></h:outputLabel></td>
 						<td><p:inputText style="text-align:right" maxlength="5"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.recommendationScore.passingScore}">
 
 							</p:inputText> <p:spacer width="5" /> <h:outputLabel value="/100%"></h:outputLabel></td>

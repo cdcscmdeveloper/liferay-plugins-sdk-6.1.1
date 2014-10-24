@@ -145,6 +145,21 @@
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 					<ac:paginator for="createList"></ac:paginator>
 
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}"
+						style="width:10%;white-space: normal;"
+						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
+
+						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtNo}" />
+
+					</p:column>
+					<p:column headerText="#{lbl['lbl.so.title']}"
+						style="width:15%;white-space: normal;"
+						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
+
+						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtTitle}" />
+
+					</p:column>
+
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.title']}"
 						style="width:20%;white-space: normal;">
 						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
@@ -165,20 +180,7 @@
 							value="#{specificationBackingBean.getParameterDesc(tplSpecMaster.procurementCategory)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}"
-						style="width:10%;white-space: normal;"
-						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 
-						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtNo}" />
-
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.title']}"
-						style="width:15%;white-space: normal;"
-						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
-
-						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtTitle}" />
-
-					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}"
 						style="width:10%;">

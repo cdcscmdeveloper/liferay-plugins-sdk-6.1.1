@@ -230,7 +230,11 @@
 					var="zoneTree" style="width:100%" rowIndexVar="index"
 					rowKey="#{zoneTree}">
 
-					<p:column headerText="Location" style="width:90%">
+					<p:column style="width:90%">
+						<f:facet name="header">
+							<h:outputText value="* " styleClass="mandatory" />
+							<h:outputText value="Location" />
+						</f:facet>
 						<p:tree value="#{zoneTree}" var="location"
 							selectionMode="checkbox">
 							<p:ajax event="select"

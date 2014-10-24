@@ -189,7 +189,11 @@
 						value="#{specificationBackingBean.managedBean.zoneTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index"
 						rowKey="#{zoneTree}">
-						<p:column headerText="Location" style="width:90%">
+						<p:column style="width:90%">
+							<f:facet name="header">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="Location" />
+							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
 								<p:ajax event="select"
@@ -254,7 +258,8 @@
 
 					<tr>
 						<td style="width: 94px"><p:outputLabel
-								value="#{lbl['lbl.sc.spec.zone.location.level']}" /></td>
+								value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
@@ -272,11 +277,16 @@
 
 			<p:panel
 				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
 						var="zoneTree" style="width:100%" rowIndexVar="index">
-						<p:column headerText="Location" style="width:90%">
+						<p:column style="width:90%">
+							<f:facet name="header">
+								<h:outputText value="* " styleClass="mandatory" />
+								<h:outputText value="Location" />
+							</f:facet>
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
 								<p:ajax event="select"
@@ -388,7 +398,7 @@
 				widgetVar="ZoneGeneral" modal="true" width="600" position="top"
 				height="500">
 				<p:messages id="specSupplierCriteriaZonemessages" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true" />
+					showSummary="false" autoUpdate="true" closable="true" />
 				<p:panel id="zonePopupGeneral">
 					<table styleClass="noBorders tr,noBorders td" border="0">
 
