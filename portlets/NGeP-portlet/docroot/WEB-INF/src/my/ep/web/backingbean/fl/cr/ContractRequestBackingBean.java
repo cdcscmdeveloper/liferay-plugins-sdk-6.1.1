@@ -233,16 +233,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
-		if(getManagedBean().getActiveContractList()==null && isRequisitioner()) {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
-			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
-			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
-			populateContractListTree();
-		}
 		if(null == getManagedBean().getFlManulaAddress()){
 			getManagedBean().setFlManulaAddress(new FlDeliveryAddress());
 			getManagedBean().getFlManulaAddress().setDeliveryAddressId(1L);
@@ -1127,8 +1117,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					reqDTO.setItemId(newItem.getScRequestItem().getRequestNoteItemId());
 					reqDTO.setOrderedQty(new BigDecimal(0));
 					ContractItemResDTO itemResDTO = contractItemSO.getItemPrice(reqDTO);//get zoneId
-					newItem.setZoneId(itemResDTO.getContractZoneId());
-					newItem.setUnitPrice(itemResDTO.getItemPrice());
+					if(itemResDTO.getContractZoneId() == null){
+						newItem.setZoneId(itemResDTO.getContractZoneId());
+						newItem.setUnitPrice(new BigDecimal(0));
+					}else{
+						newItem.setZoneId(itemResDTO.getContractZoneId());
+						if(itemResDTO.getItemPrice().doubleValue() == -1){
+							newItem.setUnitPrice(new BigDecimal(0));
+						}else{
+							newItem.setUnitPrice(itemResDTO.getItemPrice());
+						}
+					}
 				}
 				itemsList.add(newItem);
 			}
@@ -3092,6 +3091,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		for(TreeNode node:root.getChildren()){
 			FlFulfilmentItemAddr addr=(FlFulfilmentItemAddr) node.getData();
 			addr.setSelectedChargeItem(false);
+		}
+	}
+	
+	public void preRenderContractList() {
+		renewSesionObject();
+		FacesContext fc=FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "crList?faces-redirect=true");
+		
+		if(isRequisitioner()) {
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
+			getManagedBean().setActiveContractList(resDTO.getActiveContractList());
+			getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
+			populateContractListTree();
 		}
 	}
 
