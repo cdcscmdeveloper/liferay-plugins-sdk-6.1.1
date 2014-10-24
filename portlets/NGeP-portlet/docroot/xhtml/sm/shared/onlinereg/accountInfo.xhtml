@@ -58,7 +58,7 @@
 						disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}"
 						readonly="#{!registrationBackingBean.managedBean.smAppl.brandNew}" style="width:200px">
 						<f:selectItems value="#{registrationBackingBean.pmBusinessTypeDropDown()}" />
-						<p:ajax event="change" update="outPnlRegForm" process="@form"></p:ajax>
+						<p:ajax event="change" listener="#{registrationBackingBean.pmStateDropdownValues}" update="outPnlRegForm" process="@form"></p:ajax>
 					</p:selectOneMenu><p:message id="busTypeIdMsg" for="busTypeId" display="icon" /></td>
 				<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">
