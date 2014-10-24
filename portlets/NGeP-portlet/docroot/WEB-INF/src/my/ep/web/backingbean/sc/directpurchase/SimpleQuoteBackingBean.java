@@ -331,7 +331,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 
 			// WorkFlow Status should be set In the save
-			if(scQuote.getWorkflowStatuses() == null || scQuote.getWorkflowStatuses().isEmpty()){
+			if(scQuote.getCurrentStatus() == null){
 				List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
 				ScSQWorkFlowStatus  scWorkFlowStatus = new ScSQWorkFlowStatus();
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
@@ -1846,12 +1846,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 	}
 	
-	public void onSelectZoneItemZone(NodeSelectEvent event) {
-		log.info("onSelectZoneItemZone");
+	public void selectPanelItemZone(NodeSelectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
 		if(selectedNode.getChildren() != null && selectedNode.getChildCount()>0){
 			getManagedBean().setSelectedTreeNode(selectedNode);
 		}
+	}
+	
+	public void unSelectPanelItemZone(NodeUnselectEvent event) {
+		TreeNode selectedNode = (TreeNode) event.getTreeNode();
+		System.out.println("un select :"+event.getTreeNode().isSelected());
+		selectedNode.setSelected(false);
 	}
 
 	/**
