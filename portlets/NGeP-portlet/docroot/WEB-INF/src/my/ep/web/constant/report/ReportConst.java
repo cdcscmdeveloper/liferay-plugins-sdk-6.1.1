@@ -510,7 +510,7 @@ public class ReportConst {
 	public static final String FL_AMP_TO_DATE_EQ = "&PTODATE=";
 	public static final String FL_AMP_COTRACT_ORDER_EQ = "&PCONO=";
 	public static final String FL_AMP_COTRACT_REQUEST_EQ = "&PCRNO=";
-	public static final String FL_AMP_PURCHASE_ORDER_EQ = "&PCONO=";
+	public static final String FL_AMP_PURCHASE_ORDER_EQ = "&PPONO=";
 	public static final String FL_AMP_COTRACT_TYPE_EQ = "&PCONTYPE=";
 	public static final String FL_AMP_DELI_ADDR_EQ = "&PDONO=";
 	public static final String FL_AMP_DELI_ORD_NO_EQ = "&PDOADD=";
@@ -586,4 +586,5 @@ public class ReportConst {
 	public static final String PARAM_KEY_ITEM_ID = "itemid";
 	public static final String PARAM_KEY_SUPPLIER_ID = "supplierid";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
+	public static final String NO_REPORT_ID = "This Report, still not developed...";
 }
