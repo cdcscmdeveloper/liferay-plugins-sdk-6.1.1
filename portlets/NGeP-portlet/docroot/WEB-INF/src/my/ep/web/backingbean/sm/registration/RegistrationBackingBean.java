@@ -1044,6 +1044,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			}
 			this.retrievePmCountryList();
 			this.retrieveFinancialOrgList();
+			
+			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+				this.retrieveProfBody();
+			}
 			//this.retrieveBusinessNatureL5Map();
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
