@@ -2993,6 +2993,7 @@ public class SmApplicationBackingBean extends
 
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
+			shr.setEquityOwner(true);
 			validatePaidCaptialAmt(false);
 			manageEquityLimit(shr);
 			if (!getManagedBean().isValidEquityLimit()) {
@@ -5441,7 +5442,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setPersonCalc(calcVO);
 		getManagedBean().setValidSmUserLimit(
 				SmApplicationUtil.validatePersonLimit(getManagedBean()
-						.getSmAppl().getSmSupplier().getSupplierId()));
+						.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean().getSmAppl().getApplType()));
 	}
 
 	private void calculateBumiPercentageTotals() {

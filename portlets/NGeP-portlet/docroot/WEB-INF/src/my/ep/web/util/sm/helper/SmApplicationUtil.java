@@ -133,16 +133,21 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
 
-	public static boolean validatePersonLimit(Long supplierId) {
+	public static boolean validatePersonLimit(Long supplierId, String applType) {
 		boolean validPerCount = true;
+		int count = 5;
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmSupplierId(supplierId);
 		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO
 				.retrievePersonnelCountForSuppUserMaint(reqDTO);
+		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+			count = 10;
+		}
+		
 		if (resDTO.getSmPersonnelList() != null
-				&& resDTO.getSmPersonnelList().size() < 5) {
+				&& resDTO.getSmPersonnelList().size() < count) {
 			validPerCount = true;
 		} else {
 			validPerCount = false;
