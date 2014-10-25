@@ -1713,6 +1713,20 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static String generateApplicationNum(String applType, String suppType) {
+		IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setAppType(applType);
+		reqDTO.setSupplierType(suppType);
+		MofRegistrationResDTO resDTO = reqSO.generateApplicaitonNumber(reqDTO);
+		if (resDTO != null && resDTO.getApplNum() != null) {
+			return resDTO.getApplNum();
+		} else {
+			return null;
+		}
+	}
+
 	public static List<PmCertBody> retrievePmCertBodyList(String certType) {
 		ICertBodySO reqSO = (ICertBodySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICertBodySO.class);
