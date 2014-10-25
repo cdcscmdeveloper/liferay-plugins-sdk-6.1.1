@@ -127,7 +127,8 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.circular.list.selection']}"
-				selectionMode="single" style="width:5%"></p:column>
+				selectionMode="single" style="width:5%"
+				disabledSelection="#{specificationBackingBean.circularDateComparision(circular.endDate)}"></p:column>
 		</p:dataTable>
 
 	</p:panel>
