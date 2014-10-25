@@ -29,6 +29,7 @@ import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTTemplateSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -82,6 +83,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.tpl.doc.TemplateDocBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1031,7 +1033,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 	}
 
 	private void generateSamplesamplesalinankontrakPdfFromVelocity(ScAttachment attachment, ScQt qt) throws Exception {
-		attachment.setFileName("Sample_Contract.pdf");
+		attachment.setFileName("Sampel_Kontrak_Umum.docx");
 		
 		Timestamp date = new Timestamp(System.currentTimeMillis());
 		PmUser createdUser = new FacesScopes().getUserSessionBean();
@@ -1041,7 +1043,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		attachment.setChangedBy(createdUser.getUserId());
 		attachment.setCreatedUser(createdUser);
 
-		StringBuilder filePath = new StringBuilder();
+		/*StringBuilder filePath = new StringBuilder();
 		filePath.append(DateUtils.getLast2DigitOfYear());
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
@@ -1060,16 +1062,25 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 
 		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
 		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());*/
+		
+		String docRepoSharedDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_SHARED_DIR);
+		
+		StringBuilder filePath = new StringBuilder(docRepoSharedDir);
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase());
 		attachment.setFilePath(filePath.toString());
 		
-		//populateAttachmentDetails(attachment);
+		File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();
 		
-		//VelocityContext context = new VelocityContext();
+		AttachmentFormat scFormat =getAttachFormat(attachment);
+		String formatedFileName = scFormat.format(attachment.getFileName(), attachment.getPrefixFileName());
 		
-		//context.put("agency", "");
-		
-		/*DocumentGenerator.getInstance().generatePdfFromVelocity("/sc/qtDoc/qtDoc-sample-surat-setuju-terima.vm", 
-    			context, new FileOutputStream(attachment.getFilePath()));*/
+		filePath.append(CommonConstants.DOC_REPO_PATH_SEPARATOR);
+		filePath.append(formatedFileName);
+		attachment.setFilePath(filePath.toString());
 	}
 
 	private AttachmentFormat getAttachFormat(ScAttachment scAttachment) {
