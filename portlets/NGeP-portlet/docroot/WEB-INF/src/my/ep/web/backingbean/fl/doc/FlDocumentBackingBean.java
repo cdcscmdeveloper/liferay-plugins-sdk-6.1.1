@@ -503,10 +503,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			flReqDTO.setStopRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveStopInstruction(flReqDTO);
-			
 			StopInstrBackingBean siBB = new StopInstrBackingBean();
 			siBB.getManagedBean().setSelectedTabIndex(0);
 			siBB.getManagedBean().setStopInstr(resDTO.getFlStopInstr());
+			siBB.getManagedBean().setButtonVal(buttonVal);
 			siBB.populateChargeLineData();
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);

@@ -34,6 +34,8 @@ public class StopInstrManagedBean extends BaseManagedBean {
 	
 	private List<PmReasonDesc> reasonDescs;
 	
+	private String buttonVal;
+	
 	public List<PmReasonDesc> getReasonDescs() {
 		if(reasonDescs==null) {
 			reasonDescs = new ArrayList<PmReasonDesc>();
@@ -67,5 +69,19 @@ public class StopInstrManagedBean extends BaseManagedBean {
 
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 }

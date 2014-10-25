@@ -131,9 +131,10 @@
 						value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" />
 						<p:outputLabel value="*" styleClass="mandatory"/>
 					</td>
-					<td style="width: 295px;">
+					<td style="width: 295px;">#{stopInstrBB.managedBean.buttonVal}
 						<p:selectOneMenu id="reasonId" label="Reason" required="true"
 							style="width:365px;margin-bottom: 5px;"
+							disabled="#{stopInstrBB.managedBean.buttonVal=='View'}"
 							value="#{stopInstrBB.managedBean.stopInstr.pmReason.reasonCode}">
 							<f:selectItem itemLabel="-Select One-" itemValue="#{null}" />
 							<f:selectItems value="#{stopInstrBB.populateReasonList}" var="reason"

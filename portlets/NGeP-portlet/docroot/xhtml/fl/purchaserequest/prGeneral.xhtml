@@ -84,6 +84,7 @@
 				<td rowspan="3" style="width:290px"><p:inputTextarea cols="50" rows="4" id="title"
 						maxlength="500" style=" margin-bottom:5px;" label="#{lbl['lbl.fl.title']}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}"
+						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						/></td>
 						<td><p:message for="title" display="icon" />
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.title']}"/>
