@@ -965,13 +965,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			CmSupplierZone CmSupplierZone = resDTO.getSelectedCmSupplierZone();
 
 			if(CmSupplierZone.getCmSupplierZoneDtls() != null && CmSupplierZone.getCmSupplierZoneDtls().size()>0) {	
-				supplierZone.setCmSupplierZoneDtls(CmSupplierZone.getCmSupplierZoneDtls());	
+				
 				Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
 				StringBuilder zoneKey = new StringBuilder();
-				String suppZoneName = supplierZone.getSuppZoneName();
+				String suppZoneName = CmSupplierZone.getSuppZoneName();
 				ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 
-				zoneKey.append(supplierZone.getSuppZoneId());
+				zoneKey.append(CmSupplierZone.getSuppZoneId());
 				zoneKey.append(ZONE_SEPARATOR);
 				zoneKey.append(suppZoneName);
 				
@@ -990,7 +990,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if (specZoneDtl == null) {
 					specZoneDtl = new TplSpecZoneDtl();
 					specZoneDtl.setZoneName(suppZoneName);
-					specZoneDtl.setSupplierZone(supplierZone);
+					specZoneDtl.setSupplierZone(CmSupplierZone);
 					
 					ScRNZone zone = getManagedBean().getScRNZone(); 
 					
@@ -999,7 +999,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					specZoneDtl.setTplSpecZone(zone);
 					
 					List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
-					for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {						
+					for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {						
 						TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
 						specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
 						specZoneLoc.setPmState(zoneDtl.getPmState());

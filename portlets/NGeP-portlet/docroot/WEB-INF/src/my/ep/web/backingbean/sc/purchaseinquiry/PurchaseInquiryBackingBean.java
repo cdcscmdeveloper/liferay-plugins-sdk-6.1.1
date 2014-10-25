@@ -973,14 +973,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				CmSupplierZone CmSupplierZone = resDTO.getSelectedCmSupplierZone();
 
 				if(CmSupplierZone.getCmSupplierZoneDtls() != null && CmSupplierZone.getCmSupplierZoneDtls().size()>0) {	
-					supplierZone.setCmSupplierZoneDtls(CmSupplierZone.getCmSupplierZoneDtls());	
-
+					
 					Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
 					StringBuilder zoneKey = new StringBuilder();
-					String suppZoneName = supplierZone.getSuppZoneName();
+					String suppZoneName = CmSupplierZone.getSuppZoneName();
 					ScPrInquiry scPrInquiry = getManagedBean().getScPrInquiry();
 
-					zoneKey.append(supplierZone.getSuppZoneId());
+					zoneKey.append(CmSupplierZone.getSuppZoneId());
 					zoneKey.append(ZONE_SEPARATOR);
 					zoneKey.append(suppZoneName);
 					
@@ -999,7 +998,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 					if (specZoneDtl == null) {
 						specZoneDtl = new TplSpecZoneDtl();
 						specZoneDtl.setZoneName(suppZoneName);
-						specZoneDtl.setSupplierZone(supplierZone);
+						specZoneDtl.setSupplierZone(CmSupplierZone);
 						
 						ScPIZone zone = getManagedBean().getScPIZone(); 
 						
@@ -1008,7 +1007,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						specZoneDtl.setTplSpecZone(zone);
 						
 						List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
-						for(CmSupplierZoneDTL zoneDtl : supplierZone.getCmSupplierZoneDtls()) {						
+						for(CmSupplierZoneDTL zoneDtl : CmSupplierZone.getCmSupplierZoneDtls()) {						
 							TplSpecZoneLoc specZoneLoc = new TplSpecZoneLoc();
 							specZoneLoc.setPmDistrict(zoneDtl.getPmDistrict());
 							specZoneLoc.setPmState(zoneDtl.getPmState());
