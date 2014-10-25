@@ -997,7 +997,7 @@ public class SpecificationBackingBean extends
 									.getEvaluationType()) && scQtTechChecklist
 							.isTechEvaluationReq())) {
 				specReqDTO.setScQt(constructSpecCommitteDtls().getScQt());
-				//specSo.validateCheckList(specReqDTO);
+				// specSo.validateCheckList(specReqDTO);
 
 			}
 
@@ -6317,6 +6317,20 @@ public class SpecificationBackingBean extends
 
 	}
 
+	public boolean circularDateComparision(Date enddate) {
+		boolean isDate = false;
+		Date d1 = new Date();
+		DateUtils dateUtil = new DateUtils();
+
+		long days = dateUtil.getDaysDifference(enddate, d1);
+		int day = (int) days;
+		if (day >= 0) {
+			isDate = true;
+		}
+
+		return isDate;
+	}
+
 	public ScQtCheckListScore createCheckList() {
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 		ScQtCheckListScore score = new ScQtCheckListScore();
@@ -8737,7 +8751,7 @@ public class SpecificationBackingBean extends
 								.isTechEvaluationReq())) {
 
 					specReqDTO.setScQt(scQtTechChecklist);
-					//specSO.validateCheckList(specReqDTO);
+					// specSO.validateCheckList(specReqDTO);
 					resDTO = specSO.saveQTDtl(specReqDTO);
 					renewSesionObject();
 					this.getManagedBean().setScQt(resDTO.getScQt());
@@ -9045,9 +9059,9 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setOutComes(outComes);
-		} /*catch (Exception e) {
-			e.printStackTrace();
-		}*/
+		} /*
+		 * catch (Exception e) { e.printStackTrace(); }
+		 */
 
 		finally {
 
