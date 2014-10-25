@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -223,6 +224,16 @@ public class SmApplicationBackingBean extends
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
 					supplierProfile);
 			getManagedBean().getSmAppl().setResubmit(true);
+			Calendar c = new GregorianCalendar();
+			c.add(Calendar.DATE, 60);
+			Date d = c.getTime();
+			getManagedBean().getSmAppl().setDraftExpiryDate(d);
+			String newApplNum = SmApplicationUtil.generateApplicationNum(
+					getManagedBean().getSmAppl().getApplType(),
+					getManagedBean().getSmAppl().getSupplierType());
+			if (newApplNum != null) {
+				getManagedBean().getSmAppl().setApplNo(newApplNum);
+			}
 			setNavigationForResubmitAppln(appl.getApplType());
 		} else {
 			// redirect & display resubmit expired

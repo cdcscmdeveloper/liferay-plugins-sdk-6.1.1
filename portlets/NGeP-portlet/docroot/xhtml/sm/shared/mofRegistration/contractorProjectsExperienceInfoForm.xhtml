@@ -51,7 +51,8 @@
 				<p:column selectionMode="multiple" width="5%" />
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.projTitle']}">
-					<h:outputText value="#{contrBean.title}" />
+					<p:outputLabel value="#{contrBean.title}"
+						style="float: left;white-space: normal;" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.projDtls.contrVal']}">
@@ -133,7 +134,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.projDtls.projTitle']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputText maxlength="100"
+				<td><p:inputText maxlength="500"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.projTitle']}" id="supCntrPrjTtl"
 						value="#{backingBean.managedBean.selectedCompanyExperience.title}"
@@ -171,8 +172,10 @@
 				<td><p:outputLabel value=" #{lbl['lbl.sm.projDtls.doneFor']}" /></td>
 				<td><p:selectOneRadio
 						value="#{backingBean.managedBean.selectedCompanyExperience.clientType}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}" itemValue="F" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}" itemValue="O" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.fdrGov']}"
+							itemValue="F" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.busNtw.nonfdrGov']}"
+							itemValue="O" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
@@ -193,9 +196,12 @@
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.projDtls.workProgress']}" id="supCntrPrgSts"
 						value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}" itemValue="P" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}" itemValue="S" />
-						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}" itemValue="F" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.inProgress']}"
+							itemValue="P" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.success']}"
+							itemValue="S" />
+						<f:selectItem itemLabel="#{lbl['lbl.sm.projDtls.fail']}"
+							itemValue="F" />
 					</p:selectOneRadio> <p:message id="supCntrPrgStsMsg" for="supCntrPrgSts"
 						showSummary="true" showDetail="false" display="icon" /></td>
 			</tr>
