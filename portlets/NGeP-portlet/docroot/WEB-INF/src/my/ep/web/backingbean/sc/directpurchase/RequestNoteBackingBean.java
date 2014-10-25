@@ -958,13 +958,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IZoneMaintenanceSO.class);
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		TplSpecZoneDtl specZoneDtl = null;
-		if(supplierZone != null) {
+		if(supplierZone != null && supplierZone.getSuppZoneId() >0) {
 
 			reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
 			ZoneMaintenanceResDTO resDTO  = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
+			CmSupplierZone CmSupplierZone = resDTO.getSelectedCmSupplierZone();
 
-			if(resDTO.getCmSupplierZoneDTLs() != null && resDTO.getCmSupplierZoneDTLs().size()>0) {	
-				supplierZone.setCmSupplierZoneDtls(resDTO.getCmSupplierZoneDTLs());	
+			if(CmSupplierZone.getCmSupplierZoneDtls() != null && CmSupplierZone.getCmSupplierZoneDtls().size()>0) {	
+				supplierZone.setCmSupplierZoneDtls(CmSupplierZone.getCmSupplierZoneDtls());	
 				Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
 				StringBuilder zoneKey = new StringBuilder();
 				String suppZoneName = supplierZone.getSuppZoneName();
