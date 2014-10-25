@@ -233,6 +233,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		
 //		getManagedBean().setDisableRole(false);
 		SmPersonnel smPersonnel = new SmPersonnel();
+		getManagedBean().setAccountStatus(1);
 		smPersonnel.setPmCountry(resDTO.getPmCountry());
 
 		resDTO = reqSO.retrieveCountryById(reqDTO);
@@ -289,6 +290,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().getRoleList().add(role);
 		
 		getPersonnelInfoById(personnelId);
+		validateAccountStatus();
 		if(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress() != null)
 			getManagedBean().setTempAddress(getManagedBean().getBasicSmPersonnelMailingAddress().getSmAddress());
 		return "basicUserProfile.xhtml";
@@ -849,14 +851,14 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 	
-	public String save(){
+	public String save() throws Exception{
 		
 		String returnValue = null;
 //		if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
 			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(1);
 //		else if(getManagedBean().getBasicSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value()))
 //			getManagedBean().getBasicSmPersonnel().setAuthorizedFlg(0);
-		
+//		updateAccountStatus();
 		if(getManagedBean().getBasicSmPersonnel().getPersonnelId() == null){
 			returnValue = saveNewUser(getManagedBean().getBasicSmPersonnel());
 		} else {
@@ -865,7 +867,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 			return returnValue;
 	}
 
-	public String saveUser(SmPersonnel smPersonnel){
+	public String saveUser(SmPersonnel smPersonnel) throws Exception{
 //		validatePersonnelBeforeSave(smPersonnel);
 //		setPersonnelAddress(smPersonnel);
 		if(getManagedBean().getBasicSmPersonnelMailingAddress().isSameAsPerm()){
@@ -877,7 +879,12 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setSmPersonnel(smPersonnel);
-		PersonnelResDTO resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
+		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
+		PersonnelResDTO resDTO = new PersonnelResDTO();
+		resDTO = smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
+		reqDTO = new PersonnelReqDTO();
+		reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
+		resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 		System.out.println("Result:" + resDTO.isSuccessful());
 		if(resDTO.isSuccessful()){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
@@ -1229,5 +1236,134 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		return resDTO.getPmParameter();
 	}
 
-
+	public void validateAccountStatus(){
+		if (getManagedBean().getBasicSmPersonnel().getPmUser() != null
+				&& getManagedBean().getBasicSmPersonnel().getPmUser()
+						.getRecordStatusFlg() == 1) {
+			getManagedBean().setAccountStatus(1);
+		} else {
+			getManagedBean().setAccountStatus(0);
+		}
+	}
+	
+//	public void updateAccountStatus(){
+//		
+//		PmUser pmUser = getManagedBean().getBasicSmPersonnel().getPmUser();
+//		if (pmUser.getUserId() != null){
+//			
+//			if(getManagedBean().getAccountStatus() == 1 && pmUser.getRecordStatusFlg() == 0){
+//				//Existing OrgProfile
+//				List<PmUserOrg> pmUserOrgs = user.getPmUserOrgs();
+//				PmUserOrg userOrg = new PmUserOrg();
+//				for(PmUserOrg org : pmUserOrgs){
+//					if(org.getPmOrgProfile().getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)){
+//						userOrg = org;
+//					}
+//				}
+//				ISearchBean<PmUser> userSearchBean = new SearchBean<PmUser>();
+//				userSearchBean.getDataFilterBeans().add(
+//						new SearchFilterBean("userId", SearchOperator.OPERATOR_EQUALS
+//								.value(), user.getUserId().toString(), true));
+//				userSearchBean.getDataFilterBeans().add(
+//						new SearchFilterBean(
+//								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
+//								SearchOperator.OPERATOR_LIKE.value(),
+//								smPersonnel.getEpRole(), true));
+//				if(userOrg.getPmOrgProfile() != null){
+//					userSearchBean.getDataFilterBeans().add(
+//							new SearchFilterBean(
+//									"pmUserOrgs.pmOrgProfile.orgProfileId",
+//									SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId().toString(), true));
+//				}
+//				userReqDTO.setUserSearchBean(userSearchBean);
+//				
+////				String langCode = reqDTO.getLanguageCode() == null || reqDTO.getLanguageCode().isEmpty() ? "en" : reqDTO.getLanguageCode();
+////				userReqDTO.setLanguageCode(langCode);
+////				//userReqDTO.setLanguageCode(reqDTO.getLanguageCode());
+////				userResDTO = userSO.retrieveUserRoleDescListByUserId(userReqDTO);
+////				List<PmRoleDesc> descList = userResDTO.getRoleDescList();
+//				
+//				userResDTO = userSO.searchUserProfileDtl(userReqDTO);
+//				boolean roleExists = false;
+//
+//				ISearchResultBean<PmUser> searchResultBean = userResDTO.getUserResultBean();
+//				if(searchResultBean.getResultList().size() > 0)
+//					roleExists = true;
+//				
+////				for(PmRoleDesc roleDesc : descList){
+////					String roleCode = roleDesc.getPmRole().getRoleCode();
+////					if(roleCode.equalsIgnoreCase(smPersonnel.getEpRole())){
+////						roleExists = true;
+////					}
+////				}
+//
+//				if(!roleExists){
+//					log.info("*******role not exist*******");
+//					List<PmUserRole> pmUserRoles = userOrg.getPmUserRoles();
+//					PmUserRole pmUserRole = new PmUserRole();
+//					//pmUserRole.setPmUser(user);
+//					PmRole pmRole = new PmRole();
+//					pmRole.setRoleCode(smPersonnel.getEpRole());
+//					pmUserRole.setPmRole(pmRole);
+//					updateRecordStatus(pmUserRole);
+//					pmUserRoles.add(pmUserRole);
+//					pmUserRole.setPmUserOrg(userOrg);
+//					userOrg.setPmUserRoles(pmUserRoles);
+//					pmUserOrgs.add(userOrg);
+//					user.setPmUserOrgs(pmUserOrgs);
+//					user.setOrgTypeCode(userOrg.getPmOrgProfile().getOrgTypeCode());
+//					updateRecordStatus(userOrg);
+//
+//					newRoleList.add(pmUserRole);
+//
+//					if(reqDTO.getPreviousPersonnelInfo() != null){
+//						log.info("*******PreviousPersonnelInfo not null*******");
+//						SmPersonnel prevPersonnelInfo = reqDTO.getPreviousPersonnelInfo();
+//						for(PmUserRole pmURole : pmUserRoles){
+//							if(pmURole.getPmRole().getRoleCode().equals(prevPersonnelInfo.getEpRole())){
+//								log.info("*******PreviousPersonnelInfo equal*******");
+//								log.info("*******prevPersonnelInfo.getEpRole()*******" + prevPersonnelInfo.getEpRole());
+//								log.info("*******EXIST getEpRole()*******" +pmURole.getPmRole().getRoleCode());
+//								pmURole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+//								removeRoleList.add(pmURole);
+//							}
+//						}
+//					}
+//				}
+//			}					
+//			updateRecordStatus(user);
+//
+//			if(reqDTO.getPreviousPersonnelInfo() != null){
+//				log.info("*******userReqDTO PreviousPersonnelInfo not null*******");
+//				log.info("*******newRoleList size()*******" + newRoleList.size());
+//				log.info("*******removeRoleList size()*******" + removeRoleList.size());
+//				userReqDTO.setNewRoleList(newRoleList);
+//				userReqDTO.setRemoveRoleList(removeRoleList);
+//				
+//			}
+//			userReqDTO.setSupplierUser(true);
+//			log.info("*******Personnel Email*******" + user.getEmail());
+//			userReqDTO.setPmUser(user);
+//			try{
+//				userResDTO = userSO.saveUser(userReqDTO);
+//			}catch(Exception ex){
+//				log.info("updatePmProfileForPersonnel ex>>>>" + ex.getMessage());
+//				log.info("Personnel ID>>>>" + smPersonnel.getPersonnelId());
+//				throw new EpException(ex.getMessage());
+//			}
+//
+//			} else {
+//				
+//			}
+//			
+//		}
+//		if (getManagedBean().getBasicSmPersonnel().getPmUser() != null
+//				&& getManagedBean().getBasicSmPersonnel().getPmUser()
+//						.getRecordStatusFlg() == 1) {
+//			getManagedBean().setAccountStatus(1);
+//		} else {
+//			getManagedBean().setAccountStatus(0);
+//		}
+//	}
+	
 }

@@ -57,7 +57,7 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 								style="width: 207px;margin-bottom: 5px;" required="true" 
-								disabled="#{smPersonnelBackingBean.managedBean.editMode}">
+								disabled="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}">
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
 							</p:selectOneMenu>
@@ -80,6 +80,19 @@
 							<p:message id="basicBUCountryMsg" for="basicBUCountry"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.dob']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" disabled="#{smPersonnelBackingBean.managedBean.editMode}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
+							<p:message id="dobDateMsg" for="dobDate"
+									showSummary="true" showDetail="false" display="icon" /></td>
+
+						
 						<!-- <td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
 						<td><p:selectOneRadio id="accountstatus" required="false"
@@ -144,29 +157,6 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.dob']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:calendar showOn="button" navigator="true"
-								display="inline" required="true" readonlyInput="true"
-								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0" disabled="#{smPersonnelBackingBean.managedBean.editMode}"
-								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
-							<p:message id="dobDateMsg" for="dobDate"
-									showSummary="true" showDetail="false" display="icon" /></td>
-
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:inputText id="basicBUDes"
-								label="#{lbl['lbl.sm.userprofile.designation']}"
-								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.designation}"
-								size="35" required="true" />
-								<p:message id="basicBUDesMsg" for="basicBUDes"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.email']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
 						<td><p:inputText id="basicBUEmail"
@@ -177,6 +167,16 @@
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 								</p:inputText>
 							<p:message id="basicBUEmailMsg" for="basicBUEmail"
+								showSummary="true" showDetail="false" display="icon" /></td>
+
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.designation']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:inputText id="basicBUDes"
+								label="#{lbl['lbl.sm.userprofile.designation']}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.designation}"
+								size="35" required="true" />
+								<p:message id="basicBUDesMsg" for="basicBUDes"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
 					<tr>
@@ -206,6 +206,37 @@
 							<p:message id="basicBUMobileMsg" for="basicBUMobile"
 								showSummary="true" showDetail="false" display="icon" /></td>
 					</tr>
+					
+					<tr>
+						<td><p:outputLabel rendered="#{smPersonnelBackingBean.managedBean.editMode}"
+								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
+						<td><p:selectOneRadio id="accountstatus" required="false"
+								value="1" disabled="false" rendered="#{smPersonnelBackingBean.managedBean.editMode}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
+							</p:selectOneRadio></td>
+					
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
+						<td style="float: left;"><p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
+							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" /></td>
+						<td><p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
+								disabled="#{!(smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '1')}">
+								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
+							</p:selectOneRadio>	
+							<p:graphicImage id="uidti"
+								value="/css/images/design/tooltips.png"  />
+							<p:tooltip id="uidtt" for="uidti">
+								<p:outputLabel escape="false"
+									value="#{lbl['lbl.sm.userprofile.privileges.tooltip']}" />
+							</p:tooltip></td>
+					</tr>
 				</table>
 			</p:panel>
 		</p:panelGrid>
@@ -213,8 +244,8 @@
 		
 		<p:panel toggleable="true">
 			<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sm.userprofile.addr.info']}"/>
-				</f:facet>
+				<h:outputText value="#{lbl['lbl.sm.userprofile.addr.info']}"/>
+			</f:facet>
 					
 		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 					<p:panel id="PermanentAddressInfo" 
