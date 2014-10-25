@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -5664,4 +5665,17 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setRevisionBaseUrl(url);
 	}
 
+	public void unSelectAdmin(AjaxBehaviorEvent e) {
+		if(getManagedBean().getSelectedShareHolders() != null){
+			Iterator<SmPersonnel> iterator = getManagedBean().getSelectedShareHolders().iterator();
+			while(iterator.hasNext()){
+				SmPersonnel personnel = iterator.next();
+				if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+					iterator.remove();
+				}
+			}
+		}
+	}
+
+	
 }
