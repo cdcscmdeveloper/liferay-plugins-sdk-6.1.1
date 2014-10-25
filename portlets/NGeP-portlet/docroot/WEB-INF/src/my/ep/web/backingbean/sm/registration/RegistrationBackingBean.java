@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -70,7 +71,6 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.RoleCode;
@@ -222,8 +222,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 		}
 		
+		
 		if(!validateBankInfo()){
 			return null;
+		}
+		
+		//check the professional body if supplier type is consultant
+		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
+				throw new EpException(MessageConst.ERROR_721033);
+			}else{
+				checkDuplicatedProfessionalBody();
+			}
 		}
 
 		SmSupplierOwner suppOwner = this.getManagedBean().getSmSuppOwner();
@@ -247,25 +257,27 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public String returnToCompanyInfo() {
 		return accountRegistration;
 	}
-
-	public void addProfessionalCert() {
-		log.info("-------------------addProfessionalCert-----------");
-		if(this.getManagedBean().getSmAppl().getSmSupplierCerts() == null){
-			this.getManagedBean().getSmAppl().setSmSupplierCerts(new ArrayList<SmSupplierCert>());
-			this.retrieveCertBody();
+	
+	public void addProfessionalBody(){
+		log.info("-------------------addProfessionalBody-----------");
+		if(this.getManagedBean().getSmAppl().getSmAssociationBodies() == null){
+			this.getManagedBean().getSmAppl().setSmAssociationBodies(new ArrayList<SmAssociationBody>());
+			this.retrieveProfBody();
 		}
-		SmSupplierCert newSuppCert = new SmSupplierCert();
-		newSuppCert.setPmCertBody(new PmCertBody());
-		this.getManagedBean().getSmAppl().getSmSupplierCerts().add(newSuppCert);
+		SmAssociationBody assocBody = new SmAssociationBody();
+		assocBody.setPmCertBody(new PmCertBody());
+		this.getManagedBean().getSmAppl().getSmAssociationBodies().add(assocBody);
 	}
-
-	public void removeProfessionalCert() {
-		log.info("-------------------removeProfessionalCert-----------");
-		for (SmSupplierCert suppCert : this.getManagedBean().getSelectedSuppCerts()) {
-			//this.getManagedBean().getSmSuppCerts().remove(suppCert);
-			this.getManagedBean().getSmAppl().getSmSupplierCerts().remove(suppCert);
-			log.info("---removeSupplierCert---" + suppCert);
-			// suppBank.getPmFinancialOrg().getFinancialOrgId()
+	
+	public void removeProfessionalBody(){
+		log.info("------------------removeProfessionalBodyProfessionalBody-----------");
+		if(this.getManagedBean().getSelectedAssociationBodies() != null && this.getManagedBean().getSelectedAssociationBodies().length > 0){
+			for (SmAssociationBody suppAssocBody : this.getManagedBean().getSelectedAssociationBodies()) {
+				//this.getManagedBean().getSmSuppCerts().remove(suppCert);
+				this.getManagedBean().getSmAppl().getSmAssociationBodies().remove(suppAssocBody);
+				log.info("---removeSupplierCert---" + suppAssocBody);
+				// suppBank.getPmFinancialOrg().getFinancialOrgId()
+			}
 		}
 	}
 
@@ -458,14 +470,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 //				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
 //				smSupp.getServiceCategory() != null)){
 			log.info("*****IS PROF********");
-			for(SmSupplierCert suppCert : smAppl.getSmSupplierCerts()){
-				log.info("**Cert Body****" + suppCert.getPmCertBody().getCertBodyId());
-				suppCert.setSmAppl(smAppl);
-				suppCert.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+			for(SmAssociationBody suppAssocBody : smAppl.getSmAssociationBodies()){
+				suppAssocBody.setSmAppl(smAppl);
+				suppAssocBody.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
 			}
 		}else{
 			log.info("*****NOT PROF********");
-			smAppl.setSmSupplierCerts(null);
+			smAppl.setSmAssociationBodies(null);
 		}
 
 		/*
@@ -521,6 +532,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		if(!validateBankInfo()){
 			return null;
+		}
+		
+		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
+				throw new EpException(MessageConst.ERROR_721033);
+			}else{
+				checkDuplicatedProfessionalBody();
+			}
 		}
 
 		log.info("--------------------updateOnlineAccount----------------");
@@ -848,7 +867,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	}
 	
 
-	private void retrieveCertBody() {
+	private void retrieveProfBody() {
 		// PmCertBodyReqDTO = new PmCertBodyReqDTO();
 		log.info("*********retrieveCertBody************");
 
@@ -1367,6 +1386,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	public boolean checkDuplicatedProfessionalBody(){
+		List<String> assocBodyList = new ArrayList<String>();
+		for(SmAssociationBody assocBody : this.getManagedBean().getSmAppl().getSmAssociationBodies()){
+			System.out.println("*********assocBody.getPmCertBody.getCertBodyId****" + assocBody.getPmCertBody().getCertBodyId());
+
+			String uniqAssocBody = assocBody.getPmCertBody().getCertBodyId().toString() + assocBody.getRegNo();
+			if(assocBodyList.contains(uniqAssocBody)){
+				throw new EpException(MessageConst.ERROR_721034);
+			}
+			assocBodyList.add(uniqAssocBody);
+		}
+		return true;
+	}
+	
 	public void pmStateDropdownValues() {
 		Long countryId = this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId();
 		List<PmState> stateLs = retrievePmStateList(countryId);
@@ -1429,9 +1462,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 					
 					for(PmState state : stateLs){
-						if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
-							this.getManagedBean().getBusinessStateLs().add(state);
-						}
+							if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
+								this.getManagedBean().getBusinessStateLs().add(state);
+							}
 					}
 				}else{
 					this.getManagedBean().setBusinessStateLs(stateLs);

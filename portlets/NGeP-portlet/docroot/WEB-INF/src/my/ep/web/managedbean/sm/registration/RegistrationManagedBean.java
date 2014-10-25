@@ -15,12 +15,12 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
-import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -64,9 +64,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmFinancialOrg> financialOrgLs;
 	private List<PmCertBody> profCertBodyLs;
 
-	private SmSupplierCert[] selectedSuppCerts;
-//	private List<SmSupplierCert> smSuppCerts;
-//	private Map<String, String> serviceLs;
 	private List<PmParameterDesc> serviceLs;
 
 	private List<PmBusinessNature> businessNatureL1;
@@ -74,7 +71,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmBusinessNature> businessNatureL3;
 	private List<PmBusinessNature> businessNatureL4;
 	private List<PmBusinessNature> businessNatureL5;
-	//private List<SmSupplierBusiness> suppBusinessNatureLs;
+
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplierBusiness selectedBusinessNature;
 	
@@ -88,6 +85,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private String confirmEmail;
 	
 	private boolean sabahSarawakType;
+	
+	private SmAssociationBody[] selectedAssociationBodies;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -310,14 +309,6 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.financialOrgLs = financialOrgLs;
 	}
 
-	public SmSupplierCert[] getSelectedSuppCerts() {
-		return selectedSuppCerts;
-	}
-
-	public void setSelectedSuppCerts(SmSupplierCert[] selectedSuppCerts) {
-		this.selectedSuppCerts = selectedSuppCerts;
-	}
-
 	public List<PmCertBody> getProfCertBodyLs() {
 		return profCertBodyLs;
 	}
@@ -478,6 +469,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSabahSarawakType(boolean sabahSarawakType) {
 		this.sabahSarawakType = sabahSarawakType;
+	}
+
+	public SmAssociationBody[] getSelectedAssociationBodies() {
+		return selectedAssociationBodies;
+	}
+
+	public void setSelectedAssociationBodies(SmAssociationBody[] selectedAssociationBodies) {
+		this.selectedAssociationBodies = selectedAssociationBodies;
 	}
 
 }
