@@ -397,7 +397,7 @@
 						selection="#{backingBean.managedBean.selectedShareHolders}"
 						rowKey="#{person}" rowIndexVar="index" id="personDt">
 						<ac:paginator for="personDt" />
-						<p:column selectionMode="multiple" width="5%" />
+						<p:column selectionMode="multiple" width="5%" disabledSelection="#{person.epRole eq 'MOF_SUPPLIER_ADMIN' or person.epRole eq 'BASIC_SUPPLIER_ADMIN'}"/>
 
 						<p:column headerText="#{lbl['lbl.sm.person.composition.name']}">
 							<h:outputText value="#{person.name}" />

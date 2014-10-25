@@ -91,6 +91,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	private boolean disableAddNewUser;
 	
+	private int accountStatus;
+	
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -398,6 +400,12 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 		this.disableAddNewUser = disableAddNewUser;
 	}
 
-	
-	
+	public int getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(int accountStatus) {
+		this.accountStatus = accountStatus;
+	}
+
 }
