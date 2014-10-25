@@ -9,15 +9,19 @@
 	<p:panel header="#{lbl['lbl.sc.spec.delivery.service.address']}"
 		toggleable="true" styleClass="deliveryUpdate">
 
-		<p:dataTable id="pjtDelivered" var="delivery" editable="true" rows="10"
-			style="width:100%" widgetVar="deliveryService" rowIndexVar="index"
-			value="#{deliveryList}" selection="#{selectDeliveryList}"
-			rowKey="#{delivery}">
+		<p:dataTable id="pjtDelivered" var="delivery" editable="true"
+			rows="10" style="width:100%" widgetVar="deliveryService"
+			rowIndexVar="index" value="#{deliveryList}"
+			selection="#{selectDeliveryList}" rowKey="#{delivery}">
 			<ac:paginator for="pjtDelivered"></ac:paginator>
 			<p:column selectionMode="multiple" style="width:2%"></p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.delivery.ptj']}"
 				style="width:25%;white-space: normal;">
-				<h:outputText value="#{delivery.pmAddressType.pmOrgProfile.orgName}"></h:outputText>
+				<ui:fragment
+					rendered="#{delivery.pmAddressType.pmOrgProfile ne null}">
+					<h:outputText
+						value="#{delivery.pmAddressType.pmOrgProfile.orgName}"></h:outputText>
+				</ui:fragment>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.delivery.service.address']}"
