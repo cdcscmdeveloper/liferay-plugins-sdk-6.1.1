@@ -28,7 +28,7 @@
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
 								itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="departMent"
+								update="departMent,ptj"
 								listener="#{specificationBackingBean.dePartMentByMinistry}"></p:ajax>
 						</p:selectOneMenu></td>
 				</tr>
