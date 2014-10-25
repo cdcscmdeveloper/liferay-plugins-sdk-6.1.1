@@ -15,31 +15,35 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column>
-
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
 					#{lbl['lbl.sm.profBody.profBody']}
 				</f:facet>
-				<p:selectOneMenu id="profBodyId" value="#{suppAssocBody.pmCertBody.certBodyId}" required="true">
+				
+				<ac:smPanel>
+				<p:selectOneMenu id="profBodyId" value="#{suppAssocBody.pmCertBody.certBodyId}" 
+					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.profBody.profBody']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />	
 					<f:selectItems value="#{registrationBackingBean.managedBean.profCertBodyLs}"
 						var="profBody" itemLabel="#{profBody.bodyName}" itemValue="#{profBody.certBodyId}" />
 				</p:selectOneMenu>
-
+				<p:message id="profBodyIdMsg" for="profBodyId" display="icon" />
+				</ac:smPanel>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.profBody.others']}">
 				<p:inputText id="otherAssocId"  value="#{suppAssocBody.otherAssociation}" maxlength="200"></p:inputText>
 			</p:column>
 			
-			<p:column headerText="Registration No.">
-				<p:inputText value="#{suppAssocBody.regNo}" id="assocBodyRegNoId" required="#{!empty param['disableValidation']}" maxlength="30"/>
+			<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
+				<p:inputText value="#{suppAssocBody.regNo}" id="assocBodyRegNoId" label="#{lbl['lbl.sm.profBody.regNo']}"
+				required="#{!empty param['disableValidation']}" maxlength="30" />
 				<p:message id="assocBodyRegNoMsg" for="assocBodyRegNoId" display="icon" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.prof.enddate']}">
 				<p:calendar value="#{suppAssocBody.expDate}" id="assocBodyExpDateId" required="#{!empty param['disableValidation']}"
-					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+				label="#{lbl['lbl.sm.profBody.expDate']}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				<p:message id="assocBodyExpDateMsg" for="assocBodyExpDateId" display="icon" />
 			</p:column>
 		</p:dataTable>
