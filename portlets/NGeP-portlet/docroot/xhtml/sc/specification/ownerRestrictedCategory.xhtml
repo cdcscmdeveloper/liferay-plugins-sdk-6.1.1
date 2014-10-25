@@ -44,7 +44,7 @@
 					headerText="Category Lov"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
 					saveObject="specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3"
-					postUpdateListener="specificationBackingBean.categoryCodesUpdate(index,specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
+					postUpdateListener="specificationBackingBean.categoryCodesUpdate(#{index},specificationBackingBean.managedBean.suppCriteriaopenList,specificationBackingBean.managedBean.suppCriteriaopenList[#{index}].pmCategoryL3)"
 					value="#{cateGory.pmCategoryL3.categoryL3Code}"
 					update=":form:restrictedtabView:restrictedPnlId">
 
