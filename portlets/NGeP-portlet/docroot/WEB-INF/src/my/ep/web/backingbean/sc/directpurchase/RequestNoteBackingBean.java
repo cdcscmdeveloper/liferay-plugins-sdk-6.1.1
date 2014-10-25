@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -51,6 +52,8 @@ import my.ep.constant.sc.DPStatusConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.catalogue.ZoneMaintenanceReqDTO;
+import my.ep.dto.cm.catalogue.ZoneMaintenanceResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -951,10 +954,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	private TplSpecZoneDtl createSpecZone(CmSupplierZone supplierZone) {
+		IZoneMaintenanceSO zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IZoneMaintenanceSO.class);
+		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		TplSpecZoneDtl specZoneDtl = null;
-		
 		if(supplierZone != null) {
-			if(supplierZone.getCmSupplierZoneDtls() != null && supplierZone.getCmSupplierZoneDtls().size()>0) {
+
+			reqDTO.setCmSupplierZoneId(supplierZone.getSuppZoneId());
+			ZoneMaintenanceResDTO resDTO  = zoneMaintenanceSO.getSupplierZoneById(reqDTO);
+
+			if(resDTO.getCmSupplierZoneDTLs() != null && resDTO.getCmSupplierZoneDTLs().size()>0) {	
+				supplierZone.setCmSupplierZoneDtls(resDTO.getCmSupplierZoneDTLs());	
 				Map<String, TplSpecZoneDtl> zoneDtlMap = getManagedBean().getZoneDtlMap();
 				StringBuilder zoneKey = new StringBuilder();
 				String suppZoneName = supplierZone.getSuppZoneName();
