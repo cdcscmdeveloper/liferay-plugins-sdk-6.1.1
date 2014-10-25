@@ -49,7 +49,7 @@
 		</p:inputText>
 		<p:message id="estimatedCostMsg" for="estimatedCost" display="icon" />
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-			action="#{templateSpecBackingBean.estimationPopupAction(question)}"
+			action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
 			oncomplete="#{estimationPopup}.show();"
 			partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
 			rendered="#{!isPriceTypeStandard}">

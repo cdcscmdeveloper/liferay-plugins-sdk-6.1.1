@@ -72,7 +72,7 @@
 					required="true" size="15" maxlength="19"
 					disabled="#{!editable}"
 					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="14" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="2" />
 				</p:inputText>
 				#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.percentage']}
 				<p:message id="weightageMsg" for="weightage" display="icon" />
@@ -117,7 +117,8 @@
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"
 					disabled="#{!editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
+					<f:attribute name="min" value="0" />
 				</p:inputText>
 				<p:message id="rangeFromMsg" for="rangeFrom" display="icon" />
 			</p:column>
@@ -131,7 +132,7 @@
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"
 					disabled="#{!editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" integerOnly="true" />
 				</p:inputText>
 				<p:message id="rangeToMsg" for="rangeTo" display="icon" />
 			</p:column>
@@ -147,11 +148,12 @@
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"/>
 				</f:facet>
 				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:65%;" styleClass="ppNumericAlign" 
-					maxlength="19"
+					maxlength="3"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.score']}"
 					disabled="#{!editable}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />
-					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="14" />
+					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="3" integerOnly="true" />
+					<f:attribute name="min" value="0" />
 				</p:inputText>
 				<p:message id="scoreMsg" for="score" display="icon" />
 			</p:column>
