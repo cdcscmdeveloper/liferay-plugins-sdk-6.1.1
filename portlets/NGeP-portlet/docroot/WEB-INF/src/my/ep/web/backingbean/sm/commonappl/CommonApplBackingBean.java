@@ -420,6 +420,10 @@ public class CommonApplBackingBean extends
 			// smApplBB.getManagedBean().getSmAppl()
 			// .setApplId(new Long(smObj.getDocumentId()));
 			// smApplBB.getManagedBean().setSmAppl(appl);
+			if (srcObj.getSupplierList() != null) {
+				smApplBB.getManagedBean().setSupplierToPOList(
+						srcObj.getSupplierList());
+			}
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();

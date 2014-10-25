@@ -2748,6 +2748,15 @@ public class SmApplicationBackingBean extends
 				getManagedBean().getSelectedShareHolder().setEpRole(
 						per.getEpRole());
 			}
+			if (per.getPmRace() != null && per.getPmRace().getRaceId() != null) {
+				System.out.println(" *** Not null race ******");
+				getManagedBean().getSelectedShareHolder().setPmRace(
+						per.getPmRace());
+			} else {
+				System.out.println(" ***Empty race value  ******");
+				getManagedBean().getSelectedShareHolder().setPmRace(null);
+
+			}
 			getManagedBean().getSelectedShareHolder().setAuthorizedFlg(
 					per.getAuthorizedFlg());
 			getManagedBean().getSelectedShareHolder().setContractSignerFlg(
@@ -2824,6 +2833,9 @@ public class SmApplicationBackingBean extends
 		per.setSmPersonnelAddresses(shareHolderBean.getSmPersonnelAddresses());
 		if (shareHolderBean.getEpRole() != null) {
 			per.setEpRole(shareHolderBean.getEpRole());
+		}
+		if (shareHolderBean.getPmRace() != null) {
+			per.setPmRace(shareHolderBean.getPmRace());
 		}
 		per.setAuthorizedFlg(shareHolderBean.getAuthorizedFlg());
 		per.setContractSignerFlg(shareHolderBean.getContractSignerFlg());
@@ -3043,8 +3055,10 @@ public class SmApplicationBackingBean extends
 		// }
 		// }
 		for (SmPersonnel shr : getManagedBean().getSelectedShareHolders()) {
-			if (shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN")
-					|| shr.getEpRole().equalsIgnoreCase("BASIC_SUPPLIER_ADMIN")) {
+			if (shr.getEpRole() != null
+					&& (shr.getEpRole().equalsIgnoreCase("MOF_SUPPLIER_ADMIN") || shr
+							.getEpRole().equalsIgnoreCase(
+									"BASIC_SUPPLIER_ADMIN"))) {
 				throw new EpException(MessageConst.ERROR_722553);
 			}
 		}
@@ -3751,7 +3765,9 @@ public class SmApplicationBackingBean extends
 					|| getManagedBean().getSmAppl().getApplType()
 							.equalsIgnoreCase("U")
 					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("R")) {
+							.equalsIgnoreCase("R")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("C")) {
 				reqDTO.setUserList(new ArrayList<String>());
 				log.info("User List Size for pass to BPM:"
 						+ reqDTO.getUserList().size());
