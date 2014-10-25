@@ -864,7 +864,7 @@ public class SpecificationBackingBean extends
 		switch (previousIndex) {
 		case 0:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
-			//specSo.validateBoGeneralInfo(specReqDTO);
+			// specSo.validateBoGeneralInfo(specReqDTO);
 
 			break;
 		case 1:
@@ -3129,6 +3129,7 @@ public class SpecificationBackingBean extends
 
 	public void closeListener() {
 		getManagedBean().setRequired(Boolean.FALSE);
+		this.getManagedBean().setZoneLocation(Boolean.FALSE);
 	}
 
 	public void technicalSpecBoValidate() {
@@ -3900,6 +3901,9 @@ public class SpecificationBackingBean extends
 				} else {
 					scQt.setFulfilmentType(new PmParameter());
 				}
+				if (null == scQt.getPmProcurementCategory()) {
+					scQt.setPmProcurementCategory(new PmParameter());
+				}
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				if (scQt.isZonal()
 						&& !scQt.isPanel()
@@ -4243,10 +4247,11 @@ public class SpecificationBackingBean extends
 						.retrieveParameterByTypeAndCode(tenderReqDTO);
 				this.getManagedBean().getScQt()
 						.setProcurementMode(tenderResDTO.getPmParameter());
-				scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+				// scQt.setQtType(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 				scQt.setOpenFor(SourcingConstants.OPERN_FOR_ALL);
 				this.getManagedBean().setScQt(scQt);
 			}
+			getQuotationTendervalues(ParameterTypeConst.QUOTATION_TENDER_TYPE);
 		} finally {
 			parameterSo = null;
 		}
@@ -4515,6 +4520,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecStatusId(
 						checkList.getPmStatus().getStatusId());
 				this.getManagedBean().setIndex(index);
+				this.getManagedBean().setScQtChecklist(checkList);
 				this.getManagedBean().setCheckListTitle(checkList.getTitle());
 
 				ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
@@ -4537,7 +4543,13 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/main/committeeTechnicalEditAction.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
+				this.getManagedBean().setChecklistScoreType(null);
 
+				this.getManagedBean().setCompanyScoreType(null);
+				this.getManagedBean().setCheckListScore(
+						new ArrayList<ScQtCheckListScore>());
+				this.getManagedBean().setScoringForYears(
+						new ArrayList<ScQtCheckListScore>());
 				if (QTConstants.TECHNICAL_GOV_CODE.equalsIgnoreCase(checkList
 						.getPmDocument().getDocDefinitionKey())) {
 
@@ -4979,7 +4991,9 @@ public class SpecificationBackingBean extends
 				return "/xhtml/sc/main/financialCommitteeTemplate.xhtml?faces-redirect=true";
 			} else {
 				setUserDetails(checkList);
-
+				this.getManagedBean().setCheckListScore(
+						new ArrayList<ScQtCheckListScore>());
+				this.getManagedBean().setChecklistScoreType(null);
 				if (QTConstants.FINANCIAL_GOV_CODE.equalsIgnoreCase(checkList
 						.getPmDocument().getDocDefinitionKey())) {
 					reqDTO.setScQtCheckList(checkList);
@@ -9452,6 +9466,43 @@ public class SpecificationBackingBean extends
 
 		SelectItem[] items = getDropdownValuesBySearchBean(
 				ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+		return items;
+	}
+
+	// Spec Item Type DropDOwn Values method
+	public SelectItem[] getQuotationTendervalues(String itemType) {
+
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getEstimatedAmount()
+				&& this.getManagedBean().getScQt().getEstimatedAmount()
+						.intValue() > 500000) {
+			recommendList
+					.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
+		}
+		recommendList.add("I");
+
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[recommendList.size()];
+			int i = 0;
+			for (String location : recommendList) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
+
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(location)) {
+
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterCode(), paramDesc.getCodeName());
+
+					}
+				}
+			}
+		} finally {
+		}
 		return items;
 	}
 
