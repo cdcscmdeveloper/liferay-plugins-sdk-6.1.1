@@ -88,9 +88,7 @@
 							value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
 							<f:selectItems
-								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
-								var="parameter" itemLabel="#{parameter.codeName}"
-								itemValue="#{parameter.pmParameter.parameterCode}" />
+								value="#{specificationBackingBean.getQuotationTendervalues(ParameterTypeConst.quotationTenderType)}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@form"
 								listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
@@ -206,7 +204,7 @@
 					<td style="width: 150px"><p:outputLabel
 							value="#{lbl['lbl.sc.spec.zone.location.level']}" /> <p:outputLabel
 							value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><p:selectOneMenu id="locationLevels" required="true"
+					<td><p:selectOneMenu id="locationLevels"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							label="#{lbl['lbl.sc.spec.zone.location.level']}"
 							value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
@@ -291,7 +289,7 @@
 		</p:panel>
 	</h:panelGroup>
 	<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
-		widgetVar="ZoneGeneral" modal="true" width="600" position="top"
+		widgetVar="ZoneGeneral" modal="true" width="630" position="top"
 		height="500">
 		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true" />
@@ -299,20 +297,32 @@
 			<table styleClass="noBorders tr,noBorders td" border="0">
 
 				<TR>
-					<TD width="30%" valign="top"><p:outputLabel value="*"
-							styleClass="mandatory" /> <p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel></TD>
-					<TD width="70%"><p:inputText size="70" id="zoneNameId"
-							label="#{lbl['lbl.sc.spec.zone.zoneName']}"
-							required="#{specificationBackingBean.managedBean.zoneLocation}"
-							value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText>
-						<p:message id="zoneNameMsg" for="zoneNameId" display="icon" /></TD>
+					<TD width="30%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.zone.zoneName']}"></p:outputLabel> <p:outputLabel
+							value="*" styleClass="mandatory" /></TD>
+
+
+					<td width="70%">
+						<table>
+							<tr>
+								<td><p:inputText size="50" id="zoneNameId"
+										label="#{lbl['lbl.sc.spec.zone.zoneName']}" maxlength="50"
+										required="#{specificationBackingBean.managedBean.zoneLocation}"
+										value="#{specificationBackingBean.managedBean.zoneName}"></p:inputText></td>
+								<td><p:message id="zoneNameMsg" for="zoneNameId"
+										display="icon" /></td>
+							</tr>
+						</table>
+					</td>
+
+
 				</TR>
 
 
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.zone.location']}" /></TD>
+							value="#{lbl['lbl.sc.spec.zone.location']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></TD>
 					<TD width="80%"><p:panel></p:panel>
 						<div style="height: 500px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"
@@ -350,7 +360,8 @@
 			icon="ui-icon-accept"
 			action="#{specificationBackingBean.updateZoneGeneralLocation}">
 		</p:commandButton>
-
+		<p:ajax event="close"
+			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 
 
