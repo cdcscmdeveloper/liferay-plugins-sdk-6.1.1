@@ -37,11 +37,11 @@
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.application.ref.no']}" /></td>
-					<td><p:inputText disabled="true" value="#{questionnaireBackingBean.managedBean.smSupp.smAppl.applNo}"/></td>
+					<td><p:inputText disabled="true" value="#{questionnaireBackingBean.managedBean.smAppl.applNo}"/></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.questionaire.type.application']}" /></td>
 					<td><p:inputText
-							value="#{questionnaireBackingBean.managedBean.smSupp.smAppl.applType}"
+							value="#{lbl[questionnaireBackingBean.getsupplierApplTypeDesc(questionnaireBackingBean.managedBean.smAppl.applType)]}"
 							disabled="true" /></td>
 				</tr>
 
