@@ -3,17 +3,21 @@
  */
 package my.ep.web.common.converter;
 
+import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 import javax.faces.convert.NumberConverter;
 
-import my.ep.constant.MessageConst;
-import my.ep.exception.EpException;
 import my.ep.web.constant.CommonUIConst;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.sun.faces.util.MessageFactory;
 
 /**
  * @author VidyaSagarReddy
@@ -21,18 +25,26 @@ import my.ep.web.constant.CommonUIConst;
  */
 @FacesConverter(value = "decimalConverter")
 public class DecimalConverter extends NumberConverter {
+	
+	public static final String INTEGER_ID =
+	         "my.ep.converter.IntegerConverter.INTEGER";
+	public static final String DECIMAL_ID =
+	         "my.ep.converter.BigDecimalConverter.DECIMAL";
 
 	public Object getAsObject(FacesContext context, UIComponent component,
 			String value) {
 		if (value != null &&  value.trim().length() > 0) {
+			int integralValue = 0;
+			int decimalValue = 0;
+			int maxIntegerDigits = getMaxIntegerDigits();
+			int maxFractionDigits = getMaxFractionDigits();
+			boolean isIntegerOnly = isIntegerOnly();
 
 			// To Remove the , if exist while doing the conversion...
 			if (value.contains(",")) {
 				value = value.replace(",", "");
 
 			}
-			int integralValue = 0;
-			int decimalValue = 0;
 
 			if (value.contains(".")) {
 				String[] digits = value.split("\\.");
@@ -41,61 +53,92 @@ public class DecimalConverter extends NumberConverter {
 			} else {
 				integralValue = value.length();
 			}
-			Integer maxFractionDegits = getMaxFractionDigits();
-			if (getPattern() != null && 0 == maxFractionDegits.intValue()) {
+			
+			if (getPattern() != null && 0 == maxFractionDigits) {
 				String pattern = getPattern();
 				if (pattern.contains(".")) {
 					String[] digits = pattern.split("\\.");
-					maxFractionDegits = digits[1].length();
+					maxFractionDigits = digits[1].length();
 				}
 			}
+			
+			BigDecimal minValue = getMinValue(component, isIntegerOnly, maxFractionDigits);
+			BigDecimal maxValue = getMaxValue(component, isIntegerOnly, maxIntegerDigits, maxFractionDigits);
 
-			if (getMaxIntegerDigits() < integralValue) {
-				throw new EpException(
-						MessageConst.ERROR_700050,
-						new String[]{new Integer(getMaxIntegerDigits()).toString()});
+			if (maxIntegerDigits < integralValue) {
+				throw getDecimalConverterException(
+						context,
+						component,
+						value,
+						minValue,
+						maxValue,
+						isIntegerOnly);
 
-			} else if (maxFractionDegits < decimalValue) {
-
-				throw new EpException(
-						MessageConst.ERROR_700051,
-						new String[]{maxFractionDegits.toString()});
+			} else if (maxFractionDigits < decimalValue) {
+				throw getDecimalConverterException(
+						context,
+						component,
+						value,
+						minValue,
+						maxValue,
+						isIntegerOnly);
 
 			}
-			// Code to allow only digits and one dot. dot should be inbetween
+			// Code to allow only digits and one dot. dot should be in between
 			// digits
-			if (isIntegerOnly()) {
-				Pattern pattern = Pattern
-						.compile(CommonUIConst.NUMBER_REG_EX_PATTERN);
-				Matcher matcher = pattern.matcher(value);
-				if (matcher.find()) {
-					try {
-						return super.getAsObject(context, component, value);
-					} catch (Exception ex) {
-						throw new EpException(
-								MessageConst.ERROR_700050,
-								new String[]{ex.getMessage()});
+			Pattern pattern = null;
+			
+			if (isIntegerOnly) {
+				pattern = Pattern.compile(CommonUIConst.NUMBER_REG_EX_PATTERN);
+				
+			} else {
+				pattern = Pattern.compile(CommonUIConst.DECIMAL_REG_EX_PATTERN);
+			}
+			
+			Matcher matcher = pattern.matcher(value);
+			if (matcher.find()) {
+				try {
+					BigDecimal decValue = (BigDecimal)super.getAsObject(context, component, value);
+					
+					if (decValue.compareTo(minValue) < 0) {
+						throw getDecimalConverterException(
+								context,
+								component,
+								value,
+								minValue,
+								maxValue,
+								isIntegerOnly);
 					}
-				} else {
-					throw new EpException(
-							MessageConst.ERROR_700051);
+					
+					if (decValue.compareTo(maxValue) > 0) {
+						throw getDecimalConverterException(
+								context,
+								component,
+								value,
+								minValue,
+								maxValue,
+								isIntegerOnly);
+					}
+					
+					return decValue;
+					
+				} catch (Exception ex) {
+					throw getDecimalConverterException(
+							context,
+							component,
+							value,
+							minValue,
+							maxValue,
+							isIntegerOnly);
 				}
 			} else {
-				Pattern pattern = Pattern
-						.compile(CommonUIConst.DECIMAL_REG_EX_PATTERN);
-				Matcher matcher = pattern.matcher(value);
-				if (matcher.find()) {
-					try {
-						return super.getAsObject(context, component, value);
-					} catch (Exception ex) {
-						throw new EpException(
-								MessageConst.ERROR_700050,
-								new String[]{ex.getMessage()});
-					}
-				} else {
-					throw new EpException(
-							MessageConst.ERROR_700052);
-				}
+				throw getDecimalConverterException(
+						context,
+						component,
+						value,
+						minValue,
+						maxValue,
+						isIntegerOnly);
 			}
 		}else{
 			return super.getAsObject(context, component, value);
@@ -111,5 +154,59 @@ public class DecimalConverter extends NumberConverter {
 
 	}
 	
-
+	private ConverterException getDecimalConverterException(FacesContext context, UIComponent component, 
+			Object value, BigDecimal minValue, BigDecimal maxValue, boolean isIntegerOnly) {
+	
+		String msgId = null;
+		
+		if (isIntegerOnly) {
+			msgId = INTEGER_ID;
+			
+		} else {
+			msgId = DECIMAL_ID;
+		}
+		
+		return new ConverterException(
+                MessageFactory.getMessage(context,
+                		msgId,
+               		 	value,
+               		 	minValue.toString(),
+               		 	maxValue.toString(),
+               		 	MessageFactory.getLabel(context, component)));
+	}
+	
+	private BigDecimal getMinValue(UIComponent component, boolean isIntegerOnly, int maxFractionDigits) {
+		String min = (String)component.getAttributes().get("min");
+		BigDecimal minValue = null;
+		
+		if (StringUtils.isNotBlank(min)) {
+			minValue = new BigDecimal(min);
+		} else {
+			if (isIntegerOnly || maxFractionDigits == 0) {
+				minValue = BigDecimal.valueOf(1);
+			} else {
+				minValue = new BigDecimal("0." 
+						+ String.format("%1$0" + maxFractionDigits + "d", 1));	
+			}
+		}
+		
+		return minValue;
+	}
+	
+	private BigDecimal getMaxValue(UIComponent component, boolean isIntegerOnly, int maxIntegerDigits, int maxFractionDigits) {
+		String max = (String)component.getAttributes().get("max");
+		BigDecimal maxValue = null;
+		
+		if (StringUtils.isNotBlank(max)) {
+			maxValue = new BigDecimal(max);
+		} else {
+			maxValue = BigDecimal.valueOf(Double.valueOf((Math.pow(10, maxIntegerDigits)-1)).longValue());
+			
+			if (!isIntegerOnly && maxFractionDigits > 0) {						
+				maxValue = maxValue.add(BigDecimal.valueOf(1 - (1 /(Math.pow(10, maxFractionDigits)))));
+			}
+		}
+		
+		return maxValue;
+	}
 }

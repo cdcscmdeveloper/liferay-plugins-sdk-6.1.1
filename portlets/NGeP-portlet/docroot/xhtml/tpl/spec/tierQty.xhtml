@@ -65,7 +65,7 @@
 				label="#{lbl['lbl.tpl.spec.content.tier.sub.sequence']}"
 				disabled="#{!editable}">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
-				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="6" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" maxIntegerDigits="6" integerOnly="true" />
 			</p:inputText>
 			<p:message id="subSeqMsg" for="subSeq" display="icon" />
 		</p:column>

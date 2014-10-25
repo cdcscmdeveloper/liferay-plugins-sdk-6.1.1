@@ -678,7 +678,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
 		
 		List<TplSpecTierQty> oriSpecTierQties = TemplateSpecHelper.getInstance().cloneTplSpecTierQty(
-				oriSpecQuestion, templateSpecBean.getSelectedSpecQuestion().getTplSpecTierQties());
+				oriSpecQuestion, tplSpecQuestion.getTplSpecTierQties());
 		
 		if (oriSpecTierQties != null) {
 			for (TplSpecTierQty oriSpecTierQty : oriSpecTierQties) {
@@ -752,12 +752,25 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
-	public void estimationPopupAction(TplSpecQuestion tplSpecQuestion) {
+	public void estimationPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estimationPopupAction");
 		
+		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
 		List<TplSpecEstimation> specEstimations = tplSpecQuestion.getTplSpecEstimations();
 		TplSpecZone specZone = tplSpecQuestion.getTplSpecMaster().getTplSpecZone();
 		List<TplSpecZoneDtl> specZoneDtls = null;
+		/*TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
+		
+		List<TplSpecEstimation> oriSpecEstimations = TemplateSpecHelper.getInstance().cloneTplSpecEstimation(
+				oriSpecQuestion, specEstimations);
+		
+		if (oriSpecEstimations != null) {
+			for (TplSpecEstimation oriSpecEstimation : oriSpecEstimations) {
+				oriSpecEstimation.setTplSpecQuestion(tplSpecQuestion);
+			}
+		}
+		
+		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);*/
 		
 		if (specZone != null) {
 			if (specZone.isBrandNew()) {
@@ -953,6 +966,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		RequestContext.getCurrentInstance().execute(
 				templateSpecBean.getSpecComponentId() + "estimationPopup.hide()");
+	}
+	
+	public void estCostCancelAction(TemplateSpecBean templateSpecBean) {
+		debugLogger("estCostCancelAction");
+		
+		/*TplSpecQuestion oriSpecQuestion = templateSpecBean.getOriSpecQuestion();
+		TplSpecQuestion selectedSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
+		
+		selectedSpecQuestion.setTplSpecEstimations(oriSpecQuestion.getTplSpecEstimations());*/
+		
+		templateSpecBean.setSelectedSpecQuestion(null);
 	}
 	
 	public BigDecimal calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {

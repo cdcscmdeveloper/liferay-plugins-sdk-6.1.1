@@ -330,9 +330,9 @@ public class TemplateSpecHelper {
 						if (newSpecEstimation != null) {
 							newSpecEstimation.setSpecEstimationId(null);
 							newSpecEstimation.setTplSpecQuestion(newSpecQuestion);
-							newSpecEstimation.setTplSpecZoneDtl(null);
-							newSpecEstimation.setTplSpecTierQty(null);
-							newSpecEstimation.setEstimatedCost(null);
+							//newSpecEstimation.setTplSpecZoneDtl(null);
+							//newSpecEstimation.setTplSpecTierQty(null);
+							//newSpecEstimation.setEstimatedCost(null);
 							setUserDetails(newSpecEstimation);
 							newSpecEstimations.add(newSpecEstimation);
 						}
