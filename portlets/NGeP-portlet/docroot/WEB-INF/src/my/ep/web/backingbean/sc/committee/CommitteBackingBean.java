@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -466,6 +468,7 @@ public class CommitteBackingBean extends
 				commMembers.add(comMember);
 			}
 		}
+		sortMemberList(commMembers);
 		committee.setScCommitteeMembers(commMembers);
 		// Need to change this status based on qt status
 		// committee.setStatusId(1);
@@ -1074,7 +1077,7 @@ public class CommitteBackingBean extends
 			member.setPmUser(resDTO.getPmUser());
 			setUserDetails(member);
 			memberList.add(member);
-			this.getManagedBean().setScCommitteeMemberList(memberList);
+			
 		} else {
 			for (PmUser user : getManagedBean().getSelectedPmUser()) {
 				ScCommitteeMember committeeMember = new ScCommitteeMember();
@@ -1106,24 +1109,50 @@ public class CommitteBackingBean extends
 				committeeMember.setScCommittee(scCommittee);
 				memberList.add(committeeMember);
 			}
-			//memberList = sortByRole(memberList); 
-			this.getManagedBean().setScCommitteeMemberList(memberList);
 		}
+		sortMemberList(memberList);
+		this.getManagedBean().setScCommitteeMemberList(memberList);
+		
 		scCommittee.setScCommitteeMembers(memberList);
 		this.getManagedBean().getQtCommittee().setScCommittee(scCommittee);
 	}
 	
-	public List<ScCommitteeMember> sortByRole(List<ScCommitteeMember> memberList){
-		Map<Integer, ScCommitteeMember> tree = new TreeMap<Integer, ScCommitteeMember>();
-	    List<String> listOrdre = Arrays.asList(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON, ParameterConst.COMMITTEE_ROLE_SECRETARY, ParameterConst.COMMITTEE_ROLE_MEMBER);
+	public void sortMemberList(List<ScCommitteeMember> memberList) {
+		Comparator<ScCommitteeMember> comparator = new Comparator<ScCommitteeMember>() {
+			@Override
+			public int compare(ScCommitteeMember o1, ScCommitteeMember o2){
+				
+				String memberRole1 = o1.getMemberRole().getParameterCode();
+				Integer memberRole1Int = roleValue(memberRole1);
 
-	    for (ScCommitteeMember scCommitteeMember : memberList) {
-	    	String code = scCommitteeMember.getMemberRole().getParameterCode();
-	        tree.put(listOrdre.indexOf(code), scCommitteeMember);
-	    }
-	    List<ScCommitteeMember> sortedList = new ArrayList<ScCommitteeMember>(tree.values());
-	    return sortedList;
+				String memberRole2 = o2.getMemberRole().getParameterCode();
+				Integer memberRole2Int = roleValue(memberRole2);
+				
+				if(memberRole1Int <  memberRole2Int) return -1;//Return a negative value if object1 is smaller than object2
+				if(memberRole1Int ==  memberRole2Int) return 0;//Return 0 (zero) if objec1 is equal to object2.
+				return 1; //Return a positive value if object1 is larger than object2.
+		    }
+			
+			private int roleValue(String memberRole){
+				Integer value = null;
+				
+				if(memberRole == null){
+					value = 4;
+				}else{
+					if(memberRole.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON)){
+						value = 1;
+					}else if(memberRole.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)){
+						value = 2;
+					}else if(memberRole.equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_MEMBER)){
+						value = 3;
+					}
+				}
+				return value;
+			}
+		};
+		Collections.sort(memberList, comparator);
 	}
+
 	
 	
 	public void okQCCommitteeAction() {

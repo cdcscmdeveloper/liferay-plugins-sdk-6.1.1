@@ -117,6 +117,7 @@ import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.sc.committee.CommitteBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -651,6 +652,9 @@ public class QTDetailBackingBean extends
 					List<ScCommitteeMember> committeMembers = tabBean
 							.getScQtCommittee().getScCommittee()
 							.getScCommitteeMembers();
+					
+					CommitteBackingBean committeBackingBean = new CommitteBackingBean();
+					committeBackingBean.sortMemberList(committeMembers);
 
 					if (!"BO".equals(tabBean.getScQtCommittee()
 							.getScCommittee().getCommitteeType()
