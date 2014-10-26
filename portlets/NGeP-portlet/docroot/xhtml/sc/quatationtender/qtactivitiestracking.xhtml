@@ -7,10 +7,19 @@
 
 	<p:panel header="Activities Tracking" style="width: 100%"
 		toggleable="true">
-		<p:dataTable id="activitiestrackingidid">
-			<p:column headerText="Activities" />
-			<p:column headerText="Assigned To" />
-			<p:column headerText="Status" />
+		<p:dataTable id="activitiestrackingidid"
+			var="qtActivityBean"
+			value="#{qTDetailBB.managedBean.qtActivityBeans}">
+			
+			<p:column headerText="Activities">
+				#{qtActivityBean.activityCode.codeName}
+			</p:column>
+			<p:column headerText="Assigned To">
+				#{qtActivityBean.assignedTo}
+			</p:column>
+			<p:column headerText="Status">
+				#{qTDetailBB.getStatusDescById(qtActivityBean.statusId)}
+			</p:column>
 		</p:dataTable>
 	</p:panel>
 </ui:composition>

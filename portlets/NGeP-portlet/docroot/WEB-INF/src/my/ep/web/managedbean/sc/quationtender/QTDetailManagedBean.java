@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
@@ -459,6 +460,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private String action;
 	private boolean isSaveFlow;
+	private List<QTActivityBean> qtActivityBeans;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -2731,6 +2733,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setBsvDate(Date bsvDate) {
 		this.bsvDate = bsvDate;
+	}
+
+	/**
+	 * @return the qtActivityBeans
+	 */
+	public List<QTActivityBean> getQtActivityBeans() {
+		return qtActivityBeans;
+	}
+
+	/**
+	 * @param qtActivityBeans the qtActivityBeans to set
+	 */
+	public void setQtActivityBeans(List<QTActivityBean> qtActivityBeans) {
+		this.qtActivityBeans = qtActivityBeans;
 	}
 
 }

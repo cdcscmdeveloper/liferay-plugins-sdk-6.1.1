@@ -2140,10 +2140,22 @@ public class QTDetailBackingBean extends
 
 	public void retrieveActivitiesTabDtl() {
 		debugLogger("retrieveActivitiesTabDtl");
-		/*
-		 * if (getManagedBean().getQt().getQtStatus().getStatusId() > 60002) {
-		 * this.getManagedBean().setActiveIndex(8); }
-		 */
+		
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			
+			QuationTenderResDTO resDTO = detailSO
+					.retrieveQTActivities(reqDTO);
+			if (resDTO.isSuccessful()) {
+				this.getManagedBean().setQtActivityBeans(resDTO.getQtActivityBeans());	
+			}
+		} finally {
+			detailSO = null;
+		}
 	}
 
 	public void retrievePublicationApprovalTabDtl() {
