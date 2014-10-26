@@ -3041,6 +3041,7 @@ public class QTDetailBackingBean extends
 				retrieveActivitiesTabDtl();
 			} else {
 				retrieveDeductionPaymentTabDtl();
+				retrieveActivitiesTabDtl();	// Kenny - temporary
 			}
 			break;
 		case 7:
