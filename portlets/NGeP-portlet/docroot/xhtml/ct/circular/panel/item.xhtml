@@ -112,8 +112,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.ct.bulk.update']}" process="@this" update="bulkUpdateDlg" icon="ui-icon-add" action="#{panelBackingBean.bulkUpdateItem}" 
 			rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-		   <p:commandButton value="#{lbl['lbl.btn.add']}" process="@this" icon="ui-icon-add"
-		      update="@([id$=panelItemDt])" action="#{panelBackingBean.addPanelItem()}"
+		   <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
+		      update=":form:panelItemDt" action="#{panelBackingBean.addPanelItem()}"
 		      rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 		   <p:commandButton id="deleteItemBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  process="@this"
 			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" 
