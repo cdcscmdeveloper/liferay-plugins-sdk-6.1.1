@@ -575,8 +575,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 						MessageUtils.getMessage(messageId, new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, this.getManagedBean().getCircularVer().getDocType()), 
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			    if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  	
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}else{
+					reqDTO = new CircularReqDTO();
+					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
+					setPanelCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+					getManagedBean().setSelectionOfZone(false);
+					getManagedBean().setSelectedPanelItems(null);
+					getManagedBean().setSelectedPanelZone(null);
+					getManagedBean().setUpdateAction(false);
+					getManagedBean().setViewContract(false);
+					initializeRemarks();
+					ContractBackingBean ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+					ctBB.initializeRemarkAndAttachement(getManagedBean().getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+				}
 			}
 		  }finally {
 			  circularSO = null;
