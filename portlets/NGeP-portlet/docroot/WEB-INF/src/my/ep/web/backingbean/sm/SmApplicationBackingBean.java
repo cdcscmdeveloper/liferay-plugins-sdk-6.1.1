@@ -741,7 +741,11 @@ public class SmApplicationBackingBean extends
 
 			mofRegistrationSO = null;
 			if (getManagedBean().getCurrentPageType() != null) {
-
+				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
+						SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
+					SmApplicationUtil
+							.assignNonPersonnelProfBodyList(getManagedBean());
+				}
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 						SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
 					if (getManagedBean().isSupplierUser()) {
@@ -1581,6 +1585,7 @@ public class SmApplicationBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"suppProfBodyDtWidVar.paginator.endLink.click()");
 		}
+		SmApplicationUtil.assignNonPersonnelProfBodyList(getManagedBean());
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("profDialog.hide()");
 	}
@@ -5459,7 +5464,8 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setPersonCalc(calcVO);
 		getManagedBean().setValidSmUserLimit(
 				SmApplicationUtil.validatePersonLimit(getManagedBean()
-						.getSmAppl().getSmSupplier().getSupplierId(), getManagedBean().getSmAppl().getApplType()));
+						.getSmAppl().getSmSupplier().getSupplierId(),
+						getManagedBean().getSmAppl().getApplType()));
 	}
 
 	private void calculateBumiPercentageTotals() {
@@ -5666,16 +5672,19 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void unSelectAdmin(AjaxBehaviorEvent e) {
-		if(getManagedBean().getSelectedShareHolders() != null){
-			Iterator<SmPersonnel> iterator = getManagedBean().getSelectedShareHolders().iterator();
-			while(iterator.hasNext()){
+		if (getManagedBean().getSelectedShareHolders() != null) {
+			Iterator<SmPersonnel> iterator = getManagedBean()
+					.getSelectedShareHolders().iterator();
+			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
-				if(personnel.getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel.getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value())){
+				if (personnel.getEpRole().equalsIgnoreCase(
+						RoleCode.MOF_SUPPLIER_ADMIN.value())
+						|| personnel.getEpRole().equalsIgnoreCase(
+								RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 					iterator.remove();
 				}
 			}
 		}
 	}
 
-	
 }

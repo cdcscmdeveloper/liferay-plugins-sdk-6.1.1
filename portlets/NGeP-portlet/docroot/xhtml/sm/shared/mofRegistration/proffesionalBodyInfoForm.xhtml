@@ -46,7 +46,7 @@
 
 
 			<p:dataTable var="profBean" widgetVar="suppProfBodyDtWidVar"
-				value="#{backingBean.managedBean.smAppl.smAssociationBodies}"
+				value="#{backingBean.managedBean.nonPersonnelProfBodyList}"
 				selection="#{backingBean.managedBean.selectedAssocBodyList}"
 				rowKey="#{profBean}" rowIndexVar="index" id="profDt">
 				<ac:paginator for="profDt" />
