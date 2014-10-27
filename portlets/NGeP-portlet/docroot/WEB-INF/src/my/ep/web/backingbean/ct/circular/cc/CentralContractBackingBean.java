@@ -581,8 +581,19 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 								this.getManagedBean().getCircularVer().getCircularNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 
-				renewSesionObject();
+			     if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
+					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}else{
+					reqDTO = new CircularReqDTO();
+					reqDTO.setCircularVerId(resDTO.getCircularVer().getCircularVerId());
+					setContractCircularVar(circularSO.retrieveCircularVerById(reqDTO));
+					getManagedBean().setUpdateAction(false);
+					getManagedBean().setViewContract(false);
+					initializeRemarks();
+					ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+					ctBB.initializeRemarkAndAttachement(getManagedBean().getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+				}
 				
 			  }else {
 					throw new EpException("Failed.");
@@ -590,6 +601,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		  } finally {
 			  circularSO = null;
 		  }
+		return null;
 	}
 	
 	private void validateCircular(String outcome) {
