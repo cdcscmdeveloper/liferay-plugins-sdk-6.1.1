@@ -258,10 +258,13 @@ public class LOADetailBackingBean extends
 				scLoaWitnesses.add(loaSupplierWitness);
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
-
+			ScQt scQt = resDTO.getScQt();
+			if(scQt != null){
+				getManagedBean().setScQt(resDTO.getScQt());
+			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 
-			generateDeclarationFromVelocity(scLoa);
+			generateDeclarationFromVelocity(scLoa,scQt);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -1177,20 +1180,20 @@ public class LOADetailBackingBean extends
 		String procurementMode = null;
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
-			procurementMode = "Tawaran Pelawaan Sebut Harga";
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
 			if (scQt != null) {
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
-					procurementMode = "Sebut Harga";
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
 				} else {
-					procurementMode = "Tender";
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
 				}
 			}
 		}
 
-		context.put("procurementMode", procurementMode); // TODO
+		context.put("procurementMode", procurementMode); 
 		context.put("title", scLoiLoa.getTitle());
 		context.put("hasLoi", false); // TODO
 		context.put("bondReq", scLoa.isBondReq());
@@ -1318,7 +1321,7 @@ public class LOADetailBackingBean extends
 
 	public void generateDeclarationPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa) throws Exception {
-		String termsConditions = generateDeclarationFromVelocity(scLoa);
+		String termsConditions = generateDeclarationFromVelocity(scLoa,getManagedBean().getScQt());
 
 		populateAttachmentDetails(attachment);
 
@@ -1327,13 +1330,30 @@ public class LOADetailBackingBean extends
 				termsConditions);
 	}
 
-	private String generateDeclarationFromVelocity(ScLoa scLoa)
+	private String generateDeclarationFromVelocity(ScLoa scLoa,ScQt scQt)
 			throws Exception {
 		PmUser pmUser = scLoa.getAckBy();
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
+		String procurementMode = null;
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+				} else {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+				}
+			}
+		}
 
+		context.put("procurementMode", procurementMode);
+		
 		context.put("title", scLoiLoa.getTitle());
 
 		String userName = "&#60;supplier user name&#62;";
