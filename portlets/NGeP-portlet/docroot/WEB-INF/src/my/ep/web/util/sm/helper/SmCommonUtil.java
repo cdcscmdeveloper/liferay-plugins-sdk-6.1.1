@@ -6,6 +6,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
@@ -31,6 +32,8 @@ import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.type.sm.ApplType;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.SmPersonnelSummaryCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -207,6 +210,7 @@ public class SmCommonUtil {
 
 	private static SmPersonnleCalcVO calcSumUpByPersonnel(SmPersonnel per,
 			SmPersonnleCalcVO persCalcVo, String supplierType) {
+		Locale locale = new FacesScopes().getUserLocale();
 		per.setRoleName("");
 		if (per.getPmCountry() != null
 				&& per.getPmCountry().getCountryId() != null) {
@@ -221,7 +225,11 @@ public class SmCommonUtil {
 
 		StringBuffer sb = new StringBuffer();
 		if (per.isEquityOwner()) {
-			sb.append(SupplierManagementConst.PERSONNEL_EQUI_OWNER).append(",");
+			sb.append(
+					ResourceBundleUtils.getMessage(
+							SupplierManagementConst.PERSONNEL_EQUI_OWNER,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
+					.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getEquiOwnrBumiCnt(),
 					persCalcVo.getEquiOwnrNonBumiCnt(),
 					persCalcVo.getEquiOwnrFrgCnt(), persCalcVo);
@@ -234,8 +242,11 @@ public class SmCommonUtil {
 		}
 		if (per.isDirector()) {
 			// setDirectorCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_DIR_ROLENAME).append(
-					",");
+			sb.append(
+					ResourceBundleUtils.getMessage(
+							SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
+					.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getBodBumiCnt(),
 					persCalcVo.getBodNonBumiCnt(), persCalcVo.getBodFrgCnt(),
 					persCalcVo);
@@ -248,8 +259,11 @@ public class SmCommonUtil {
 		}
 		if (per.isHigherManagement()) {
 			// setHigherMngmtCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_HGHR_ROLENAME).append(
-					",");
+			sb.append(
+					ResourceBundleUtils.getMessage(
+							SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
+					.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getHghMngBumiCnt(),
 					persCalcVo.getHghMngNonBumiCnt(),
 					persCalcVo.getHghMngFrgCnt(), persCalcVo);
@@ -266,11 +280,18 @@ public class SmCommonUtil {
 			if (supplierType
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				sb.append(
-						SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME)
-						.append(",");
+						ResourceBundleUtils
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale)).append(",");
 			} else {
-				sb.append(SupplierManagementConst.PERSONNEL_STAFF_ROLENAME)
-						.append(",");
+				sb.append(
+						ResourceBundleUtils
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale)).append(",");
 			}
 
 			setPersonnelCountSummary(per, persCalcVo.getStfBumiEnterCnt(),
@@ -286,8 +307,12 @@ public class SmCommonUtil {
 		if (per.isManagement()) {
 			// management
 			// setManagementCount(per);
-			sb.append(SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME)
-					.append(",");
+			sb.append(
+					ResourceBundleUtils
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+									locale)).append(",");
 			setPersonnelCountSummary(per, persCalcVo.getMngtBumiCnt(),
 					persCalcVo.getMngtNonBumiCnt(), persCalcVo.getMngtFrgCnt(),
 					persCalcVo);
@@ -303,8 +328,12 @@ public class SmCommonUtil {
 			if (per.isProf()) {
 				// prof
 				// setProfEnteredCount(per);
-				sb.append(SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME)
-						.append(",");
+				sb.append(
+						ResourceBundleUtils
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale)).append(",");
 				setPersonnelCountSummary(per, persCalcVo.getProfBumiEnterCnt(),
 						persCalcVo.getProfNonBumiEnterCnt(),
 						persCalcVo.getProfFrgEnterCnt(), persCalcVo);
@@ -320,8 +349,11 @@ public class SmCommonUtil {
 				// semi
 				// setSemiProfEnteredCount(per);
 				sb.append(
-						SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME)
-						.append(",");
+						ResourceBundleUtils
+								.getMessage(
+										SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										locale)).append(",");
 				setPersonnelCountSummary(per, persCalcVo.getSemiBumiEnterCnt(),
 						persCalcVo.getSemiNonBumiEnterCnt(),
 						persCalcVo.getSemiFrgEnterCnt(), persCalcVo);
