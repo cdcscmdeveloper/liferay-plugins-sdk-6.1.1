@@ -6,7 +6,9 @@ package my.ep.web.backingbean.fl.frn;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -48,11 +50,14 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -159,6 +164,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 					renewSesionObject();
+					if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+						Map<String, String> paramMap = new HashMap<String, String>();
+						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFulfilmentNoteNo());
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						CommonBackingBean commonBackingBean = new CommonBackingBean();
+						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_FRN);
+						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.frn",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+						commonBackingBean.getManagedBean().setParamMap(paramMap);
+						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+					}
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setFulfilmentNoteId(resDTO.getFulfilmentNoteId());
