@@ -74,6 +74,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -842,11 +843,9 @@ public class OrganisationBackingBean extends
 		addr.setPmDistrict(new PmDistrict());
 		return addr;
 	}
-	public SelectItem[] getStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+	
+	public static SelectItem[] getStatusOptions() {
+		return PmCommonUtil.getStatusOptions();
 	}
 
 	/**

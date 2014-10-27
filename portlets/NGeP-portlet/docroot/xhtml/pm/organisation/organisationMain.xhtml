@@ -10,7 +10,7 @@
 		<p:panel>
 			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.pm.header.general.org.search']}"
+		<p:panel id="orgSearch" header="#{lbl['lbl.pm.header.general.org.search']}"
 			toggleable="true">
 			<h:panelGrid id="organisationSearchr"  columns="2">
 				<h:column>
@@ -22,15 +22,15 @@
 			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
 				width="100%">
 				<h:column>
-					<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
-						style="float:right;"
-						action="#{organisationBackingBean.resetOrganisation}"
-						update="organisationSearchr" icon="ui-icon-reset"
-						resetValues="true" partialSubmit="true" process="@this" />
-					<p:commandButton value="#{lbl['lbl.pm.organisation.search']}"
-						style="float:right;" icon="ui-icon-search"
-						action="#{organisationBackingBean.searchOrg}"
-						update="organisationSearch" />
+				<div align="right">
+						<p:commandButton  value="#{lbl['lbl.pm.organisation.search']}"
+							icon="ui-icon-search" action="#{organisationBackingBean.searchOrg}"
+							update="organisationSearch" process="orgSearch" />
+						<p:commandButton value="#{lbl['lbl.pm.organisation.reset']}"
+							icon="ui-icon-reset" type="reset"
+							actionListener="#{organisationBackingBean.resetOrganisation}" process="@this"
+							update="orgSearch" />
+					</div>					
 				</h:column>
 			</h:panelGrid>
 		</p:panel>

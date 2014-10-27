@@ -31,6 +31,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.zone.ZoneManagedBean;
 import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
@@ -39,6 +40,8 @@ import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 @ViewScoped
 public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 	private static Logger log = Logger.getLogger(ZoneBackingBean.class);
+	public static final String NAV_TO_ADD = "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
+	public static final String NAV_TO_MAIN = "/xhtml/pm/zonesearch/zoneSearchMain.xhtml";
 	private IPagingDataModel<PmZone> searchZone = new SearchZonePagingDataModel();
 	boolean result = false;
 	private boolean flag;
@@ -54,7 +57,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 
 	public String backToSearch() {
 
-		return "/xhtml/pm/zonesearch/zoneSearchMain.xhtml";
+		return NAV_TO_MAIN;
 	}
 
 	public String addZone() {
@@ -64,7 +67,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		getManagedBean().getPmZone().setRecordStatusFlg(null);
 
 		getSelectionTypes();
-		return "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
+		return NAV_TO_ADD;
 	}
 
 	public void reset() {
@@ -129,7 +132,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		this.getManagedBean().setZoneStateList(
 				resDTO.getPmZone().getPmZoneStates());
 
-		return "/xhtml/pm/zonesearch/zoneMaintenance.xhtml";
+		return NAV_TO_ADD;
 
 	}
 
@@ -276,11 +279,9 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		}
 		this.getManagedBean().setSelections(selectionTypes);
 	}
-	public SelectItem[] getStatusOptions() {
-		SelectItem[] items = new SelectItem[2];
-		items[0] = new SelectItem(1, "Active");
-		items[1] = new SelectItem(0, "Inactive");
-		return items;
+
+	public static SelectItem[] getStatusOptions() {
+		return PmCommonUtil.getStatusOptions();
 	}
 
 	public IPagingDataModel<PmZone> getSearchZone() {

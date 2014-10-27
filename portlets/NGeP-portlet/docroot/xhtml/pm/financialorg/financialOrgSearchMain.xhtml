@@ -25,17 +25,17 @@
 			<h:panelGrid border="0" columns="1" cellpadding="0" cellspacing="0"
 				width="100%">
 				<p:column>
-					<div style="float: right;">
-						<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
-							style="float:right;" action="#{financialOrgBackingBean.reset}"
-							update="financialOrgSearch" icon="ui-icon-reset"
-							resetValues="true" partialSubmit="true" />
+				<div align="right">
 						<p:commandButton value="#{lbl['lbl.pm.search.location']}"
-							style="float:right;" icon="ui-icon-search"
+							icon="ui-icon-search"
 							action="#{financialOrgBackingBean.searchFinancialOrg}"
-							update="searchFinancialId" />
-
+							update="searchFinancialId" process="financialOrgSearch" />
+						<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
+							icon="ui-icon-reset" type="reset"
+							actionListener="#{financialOrgBackingBean.searchFinancialOrg}" process="@this"
+							update="financialOrgSearch" />
 					</div>
+					
 				</p:column>
 
 			</h:panelGrid>
