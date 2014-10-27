@@ -1853,7 +1853,7 @@ public class LOADetailBackingBean extends
 				} else if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
 					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
-						messageCode = MessageConst.INFO_700013;
+						messageCode = MessageConst.INFO_700011;
 					} else if (BpmOutcomeConst.BPM_REJECT
 							.equalsIgnoreCase(outcome)) {
 						messageCode = MessageConst.INFO_700008;
@@ -2439,17 +2439,15 @@ public class LOADetailBackingBean extends
 		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
 		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
 		JadualHargaBean jadualHarga = null;
-
+		String itemType = null;
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
 			jadualHarga = mappingJadualHarga(item);
-			if (getParameterDesc(item.getScRequestItem().getItemType())
-					.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT_STRING)) {
+			itemType = item.getScRequestItem().getItemType().getParameterCode();
+			if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
 				productJadualHargaList.add(jadualHarga);
-			} else if (getParameterDesc(item.getScRequestItem().getItemType())
-					.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE_STRING)) {
+			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
 				serviceJadualHargaList.add(jadualHarga);
 			}
-
 		}
 
 		generateJadualHarga(attachment, productJadualHargaList,

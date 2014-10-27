@@ -2198,7 +2198,7 @@ public class LOIDetailBackingBean extends
 
 		if (startMonth != null && endMonth != null && startYear != null
 				&& endYear != null && endYear >= startYear) {
-			if (endYear != startYear) {
+			if (!endYear.equals(startYear)) {
 				diffYear = endYear - startYear;
 			}
 			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {

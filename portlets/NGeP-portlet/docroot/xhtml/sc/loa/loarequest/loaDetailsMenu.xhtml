@@ -503,12 +503,10 @@
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
 				<p:inputText id="mobileNo" size="30"
-					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"
-					required="true"
+					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"			
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
 					label="#{lbl['lbl.sc.loiloa.mobile.no']}"
@@ -519,12 +517,10 @@
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
-					required="true"
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
 					label="#{lbl['lbl.sc.loiloa.email']}"
