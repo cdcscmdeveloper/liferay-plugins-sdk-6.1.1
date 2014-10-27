@@ -291,7 +291,6 @@
 				<!-- Panel Supplier   -->
 				<p:tab title="#{lbl['lbl.sc.sq.supp.tab.panel.supplier']}"
 					rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel}">
-					<p:panel>
 					<p:dataTable id="bypanelItemId" var="data" rowKey="#{data}"
 						rowIndexVar="index"
 						selection="#{simpleQuoteBackingBean.managedBean.selectedPanelSuppliers}"
@@ -315,7 +314,12 @@
 							style="width:30%">
 							<h:outputText value="#{data.smSupplier.companyName}" />
 						</p:column>
-
+						<c:if test="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}">
+						<p:column headerText="#{lbl['lbl.sc.sq.supp.criteria.Zone']}"
+							style="width:20%">
+							<h:outputText value="#{data.tplSpecZoneDtl.zoneName}" />
+						</p:column>
+                       </c:if>
 					</p:dataTable>
 
                     <div>
@@ -347,7 +351,6 @@
 						    </tr>
 						</table></c:if>
 					 </div>
-					 </p:panel>
 				</p:tab>
 
 			</p:tabView>
