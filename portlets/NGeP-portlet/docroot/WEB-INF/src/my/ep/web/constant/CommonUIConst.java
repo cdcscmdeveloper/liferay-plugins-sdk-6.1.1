@@ -11,7 +11,7 @@ package my.ep.web.constant;
  *
  */
 public class CommonUIConst {
-	public static String ACKNOWLEDGE_PAGE = "/xhtml/common/acknowledge.xhtml";
+	public static String ACKNOWLEDGE_PAGE = "acknowledge";
 	public static String ACKNOWLEDGE_REPORT_PAGE = "/xhtml/common/acknowledgeReport.xhtml";
 	public static final String DECIMAL_REG_EX_PATTERN="^\\-{0,1}\\d+(.\\d+){0,1}$";
 	public static final String NUMBER_REG_EX_PATTERN="^[0-9]*$";
