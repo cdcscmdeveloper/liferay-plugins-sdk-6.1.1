@@ -2063,9 +2063,16 @@ public class SmApplicationBackingBean extends
 					.getDeleteCategoryList();
 
 			for (SmSupplierCategory category : categories) {
-				getManagedBean().getSmAppl().getSmSupplierCategories()
-						.remove(category);
+				if(category.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.PENDING_ACT_STATUS) == 0){
+					getManagedBean().getSmAppl().getSmSupplierCategories()
+							.remove(category);
+				} else if(category.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0){
+					category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+				}
 			}
+			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category Code" });
