@@ -87,6 +87,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> selectedCategories;
 	private List<SmSupplierCategory> deleteCategoryList;
 	private List<SmSupplierCategory> activeCategoryList;
+	private List<SmAssociationBody> nonPersonnelProfBodyList;
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
@@ -2111,6 +2112,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setResubmitWithActiveDraft(boolean resubmitWithActiveDraft) {
 		this.resubmitWithActiveDraft = resubmitWithActiveDraft;
+	}
+
+	public List<SmAssociationBody> getNonPersonnelProfBodyList() {
+		return nonPersonnelProfBodyList;
+	}
+
+	public void setNonPersonnelProfBodyList(
+			List<SmAssociationBody> nonPersonnelProfBodyList) {
+		this.nonPersonnelProfBodyList = nonPersonnelProfBodyList;
 	}
 
 

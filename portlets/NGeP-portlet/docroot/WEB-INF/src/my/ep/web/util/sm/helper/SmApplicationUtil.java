@@ -142,10 +142,10 @@ public class SmApplicationUtil {
 				.getInstance().getServiceObject("sm", IPersonnelSO.class);
 		PersonnelResDTO resDTO = smPersonnelSO
 				.retrievePersonnelCountForSuppUserMaint(reqDTO);
-		if(applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)){
+		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_UPDATE)) {
 			count = 10;
 		}
-		
+
 		if (resDTO.getSmPersonnelList() != null
 				&& resDTO.getSmPersonnelList().size() < count) {
 			validPerCount = true;
@@ -1548,6 +1548,24 @@ public class SmApplicationUtil {
 			managedBean.getActiveCategoryList().clear();
 		}
 		managedBean.setActiveCategoryList(catList);
+	}
+
+	public static void assignNonPersonnelProfBodyList(
+			SmApplicationManagedBean managedBean) {
+		List<SmAssociationBody> assocBodyList = new ArrayList<SmAssociationBody>();
+		for (SmAssociationBody profBdy : managedBean.getSmAppl()
+				.getSmAssociationBodies()) {
+			if (profBdy.getSmPersonnel() == null
+					|| profBdy.getSmPersonnel() != null
+					&& profBdy.getSmPersonnel().getPersonnelId() == null) {
+				assocBodyList.add(profBdy);
+			}
+		}
+		if (managedBean.getNonPersonnelProfBodyList() != null
+				&& !managedBean.getNonPersonnelProfBodyList().isEmpty()) {
+			managedBean.getNonPersonnelProfBodyList().clear();
+		}
+		managedBean.setNonPersonnelProfBodyList(assocBodyList);
 	}
 
 	private static SmStaffTotal setDefaultStaffValues(SmStaffTotal stf,
