@@ -6,16 +6,20 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -61,14 +65,29 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	}	
 	
 	/**
+	 * reset search for Business Nature
+	 * 
+	 */
+	public void resetBusinessNatureSearch(){
+		debugLogger("resetBusinessNatureSeatch");
+		
+		this.getManagedBean().setSecLevelCode(new String());
+		this.getManagedBean().setSecLevelName(new String());
+		
+		
+	}
+	
+	
+	/**
 	 * reload to business nature maintain page
 	 * 
 	 */	
 	public String createBusinessNature() {
 		debugLogger("createBusinessNature");
 		PmBusinessNature pmBusinessNature = new PmBusinessNature();
+
 		this.getManagedBean().setPmBusinessNature(pmBusinessNature);
-		
+
 		return "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml";
 
 	}	
@@ -105,9 +124,48 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 * on codes and names search
 	 */
 	private ISearchBean<PmBusinessNature> getSearchBeanData(ISearchBean<PmBusinessNature> searchBean){		
+		
+		if (getManagedBean().getCategoryLvl() != null
+				&& !"".equals(getManagedBean().getCategoryLvl())) {
+			
+			SearchFilterBean codesSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			codesSearchBean
+					.setSearchField("businessLevel");
+			codesSearchBean.setSearchValue(getManagedBean()
+					.getCategoryLvl());
+			searchBean.getDataFilterBeans().add(codesSearchBean);
+		
+		}
+		
+		if (getManagedBean().getSecLevelCode() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getSecLevelCode())) {
+		SearchFilterBean codesSearchBean = new SearchFilterBean(
+				SearchOperator.OPERATOR_LIKE.value());
+		codesSearchBean
+				.setSearchField("levelCode");
+		codesSearchBean
+				.setCaseInsensitive(true);
+		codesSearchBean.setSearchValue(getManagedBean()
+				.getSecLevelCode());
+		searchBean.getDataFilterBeans().add(codesSearchBean);
+	}
 
-		return searchBean;
-	}		
+	if (getManagedBean().getSecLevelName() != null
+			&& !"".equalsIgnoreCase(getManagedBean().getSecLevelName())) {
+		SearchFilterBean codesSearchBean = new SearchFilterBean(
+				SearchOperator.OPERATOR_LIKE.value());
+		codesSearchBean
+				.setSearchField("levelName");
+		codesSearchBean
+				.setCaseInsensitive(true);
+		codesSearchBean.setSearchValue(getManagedBean()
+				.getSecLevelName());
+		searchBean.getDataFilterBeans().add(codesSearchBean);
+	}	
+
+	return searchBean;
+}	 		
 	
 	public void retrieveBusinessNature(){
 		debugLogger("retrieveBusinessNature");
@@ -165,12 +223,28 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	}	
 	
 	/**
+	 * Validation message for business nature details
+	 * 
+	 */
+	private void validationMessage(PmBusinessNature businessNature){
+		debugLogger("validationMessage");
+		if(StringUtils.isBlank(businessNature.getLevelCode())){
+			throw new EpException("Business Nature Code is Mandatory");
+		}
+		
+		if(StringUtils.isBlank(businessNature.getLevelName())){
+			throw new EpException("Business Nature Name is Mandatory");
+		}		
+	}	
+	
+	/**
 	 * save and update business nature detail
 	 * 
 	 */	
-	public void saveBusinessNatureDtls(){
+	public String saveBusinessNatureDtls(){
 		
 		PmBusinessNature businessnature = getManagedBean().getPmBusinessNature();
+		validationMessage(businessnature);
 		
 		BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 		reqDTO.setBusinessNature(businessnature);
@@ -188,6 +262,8 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 						new FacesMessage(
 								FacesMessage.SEVERITY_INFO,"","Saved Successfully"));
 			}
+		
+			return "/xhtml/pm/businessnature/businessNatureMain.xhtml";
 	 }
 	
 }
