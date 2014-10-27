@@ -6347,11 +6347,12 @@ public class SpecificationBackingBean extends
 		boolean isDate = false;
 		Date d1 = new Date();
 		DateUtils dateUtil = new DateUtils();
-
-		long days = dateUtil.getDaysDifference(enddate, d1);
-		int day = (int) days;
-		if (day >= 0) {
-			isDate = true;
+		if (null != enddate) {
+			long days = dateUtil.getDaysDifference(enddate, d1);
+			int day = (int) days;
+			if (day >= 0) {
+				isDate = true;
+			}
 		}
 
 		return isDate;
@@ -7262,9 +7263,9 @@ public class SpecificationBackingBean extends
 	}
 
 	public void paneltabChange(TabChangeEvent event) {
-		if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) {
+		/*if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) {
 			// retriveZonesByCircularNo();
-		}
+		}*/
 
 	}
 
@@ -7347,6 +7348,12 @@ public class SpecificationBackingBean extends
 				}
 
 			}
+			List<CtPanelItem> itemList = this.getManagedBean()
+					.getSelectpanelItem();
+			itemList = new ArrayList<CtPanelItem>();
+			itemList.add(this.getManagedBean().getCtPanelItem());
+
+			this.getManagedBean().setSelectpanelItem(itemList);
 
 		} finally {
 
@@ -7425,7 +7432,9 @@ public class SpecificationBackingBean extends
 	}
 
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
 
+		selectedTreeNode.setSelected(true);
 		TplSpecZoneDtl ctPanelzone = (TplSpecZoneDtl) event.getTreeNode()
 				.getData();
 
@@ -7449,8 +7458,25 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setCtZoneSupplierList(
 					resDTO.getPanelSuppliers());
+			List<CtPanelItem> itemList = this.getManagedBean()
+					.getSelectpanelItem();
+			itemList = new ArrayList<CtPanelItem>();
+			itemList.add(this.getManagedBean().getCtPanelItem());
+
+			this.getManagedBean().setSelectpanelItem(itemList);
 		}
 
+	}
+
+	public void unSelectPanelYesTreenode(NodeUnselectEvent event) {
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		itemList = new ArrayList<CtPanelItem>();
+		itemList.add(this.getManagedBean().getCtPanelItem());
+
+		this.getManagedBean().setSelectpanelItem(itemList);
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(false);
 	}
 
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
@@ -7595,26 +7621,28 @@ public class SpecificationBackingBean extends
 					.getInstance().getServiceObject(
 							ModuleCodeConst.CONTRACT_MANAGEMENT,
 							ICircularDetailSO.class);
+			if (null != circular) {
+				reqDTO.setCircularVerId(circular.getCircularVerId());
+				reqDTO.setQuotationTender(true);
+				CircularDetailResDTO resDTO = circularDetailSO
+						.getPanelItemsByCircularVerId(reqDTO);
+				/*
+				 * for (CtPanelItem panelItem : resDTO.getPanelItemList()) {
+				 * System.out.println(panelItem.getItemName());
+				 * this.getManagedBean().setCtPanelItem(panelItem); }
+				 */
+				this.getManagedBean().setCircularExpDate(circular.getEndDate());
+				this.getManagedBean().setCirCularNo(circular.getCircularNo());
+				this.getManagedBean().setCircularName(circular.getName());
+				this.getManagedBean().setCircularType(circular.getDocType());
 
-			reqDTO.setCircularVerId(circular.getCircularVerId());
-			reqDTO.setQuotationTender(true);
-			CircularDetailResDTO resDTO = circularDetailSO
-					.getPanelItemsByCircularVerId(reqDTO);
-			/*
-			 * for (CtPanelItem panelItem : resDTO.getPanelItemList()) {
-			 * System.out.println(panelItem.getItemName());
-			 * this.getManagedBean().setCtPanelItem(panelItem); }
-			 */
-			this.getManagedBean().setCircularExpDate(circular.getEndDate());
-			this.getManagedBean().setCirCularNo(circular.getCircularNo());
-			this.getManagedBean().setCircularName(circular.getName());
-			this.getManagedBean().setCircularType(circular.getDocType());
+				// this.getManagedBean().setCircularType(getParameterDesc(circular.getCtPanelItems().get(0).getItemCategoryId()));
+				// System.out.println("=======circular type==="+
+				// this.getManagedBean().getCircularType());
 
-			// this.getManagedBean().setCircularType(getParameterDesc(circular.getCtPanelItems().get(0).getItemCategoryId()));
-			// System.out.println("=======circular type==="+
-			// this.getManagedBean().getCircularType());
-
-			this.getManagedBean().setPanelItemList(resDTO.getPanelItemList());
+				this.getManagedBean().setPanelItemList(
+						resDTO.getPanelItemList());
+			}
 
 		} finally {
 
@@ -7793,6 +7821,7 @@ public class SpecificationBackingBean extends
 	// Search circular Details Method.
 	public void searchCircularList() {
 		searchCircular.reloadData();
+		this.getManagedBean().setCircularVer(null);
 		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 		this.getManagedBean().setCtPanelItem(null);
 		this.getManagedBean().setCircularExpDate(new Date());
@@ -7854,6 +7883,14 @@ public class SpecificationBackingBean extends
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getCtSearchBean()
 											.getItemName(), true));
+				}
+				if (null != getManagedBean().getCtSearchBean().getItemName()
+						&& !"".equalsIgnoreCase(getManagedBean()
+								.getCtSearchBean().getItemName())) {
+
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("ctPanelItems.qt",
+									SearchOperator.OPERATOR_LIKE.value(), 1));
 				}
 
 				circularReqDTO.setCircularVerSearchBean(searchBean);
@@ -9487,6 +9524,9 @@ public class SpecificationBackingBean extends
 
 	// View Circular Attachmnets Download Method
 	public void downloadCircularDtls() {
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		itemList = new ArrayList<CtPanelItem>();
+		itemList.add(this.getManagedBean().getCtPanelItem());
 
 		try {
 			downloadFile(this.getManagedBean().getCtCircularVer()
@@ -9495,6 +9535,7 @@ public class SpecificationBackingBean extends
 		} catch (IOException e) {
 			log.debug(e.getMessage());
 		}
+		this.getManagedBean().setSelectpanelItem(itemList);
 	}
 
 	// Spec Item Type DropDOwn Values method

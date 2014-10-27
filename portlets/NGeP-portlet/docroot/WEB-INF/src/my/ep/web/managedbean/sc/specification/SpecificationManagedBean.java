@@ -138,7 +138,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private TreeNode rootLocationTree;
 	private TreeNode rootZoanlTree;
 	private String zoneName;
-	private CtPanelZone panelZoneSelect;
+	private TreeNode panelZoneSelect;
 
 	private List<TreeNode> zoneTrees = new ArrayList<TreeNode>();
 	private List<TreeNode> zoneGeneralTrees = new ArrayList<TreeNode>();
@@ -2567,18 +2567,13 @@ public class SpecificationManagedBean extends BaseManagedBean {
 		this.ctZoneSuppliers = ctZoneSuppliers;
 	}
 
-	/**
-	 * @return the panelZoneSelect
-	 */
-	public CtPanelZone getPanelZoneSelect() {
+
+
+	public TreeNode getPanelZoneSelect() {
 		return panelZoneSelect;
 	}
 
-	/**
-	 * @param panelZoneSelect
-	 *            the panelZoneSelect to set
-	 */
-	public void setPanelZoneSelect(CtPanelZone panelZoneSelect) {
+	public void setPanelZoneSelect(TreeNode panelZoneSelect) {
 		this.panelZoneSelect = panelZoneSelect;
 	}
 
