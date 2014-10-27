@@ -8,9 +8,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc">
 <p:panel id="itemId" header="#{lbl['lbl.ct.panel.item']}" toggleable="true" toggleSpeed="500">
 	 <h:panelGrid style="width:100%">
-	 	  <h:outputText value="#{lbl['lbl.ct.direct.nego']}" />
-	 	  <h:outputText value="#{lbl['lbl.ct.direct.purchase']}" />
-	 	  <h:outputText value="#{lbl['lbl.ct.quotation.tender']}" />
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
 		      rowIndexVar="index">
@@ -75,16 +72,28 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			       </p:inputText>
 			  </p:column>
 			  
-			  <p:column headerText="DN" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
+			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
+			  	<f:facet name="header">
+					<h:outputText value="DN"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.nego']}"/>
+               	</f:facet>
 			    <p:selectBooleanCheckbox value="#{panelItemsVar.directNego}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			  </p:column>		
 			  	
-			  <p:column headerText="DP" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
-			       <p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
+			  <p:column styleClass="column-align-center"  style="white-space:normal;width:2%;">
+			  	<f:facet name="header">
+					<h:outputText value="DP"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.direct.purchase']}"/>
+               	</f:facet>
+			  	<p:selectBooleanCheckbox value="#{panelItemsVar.directPurchase}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			  </p:column>	
 			  
-			  <p:column headerText="QT" styleClass="column-align-center"  style="white-space:pre-line;width:2%;">
-			       <p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
+			  <p:column headerText="QT" styleClass="column-align-center"  style="white-space:normal;width:2%;">
+			    <f:facet name="header">
+					<h:outputText value="QT"/>
+               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.quotation.tender']}"/>
+               	</f:facet>   
+			  	<p:selectBooleanCheckbox value="#{panelItemsVar.qt}" disabled="#{panelBackingBean.managedBean.viewContract}"/>
 			  </p:column>
 			  
 			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;">
