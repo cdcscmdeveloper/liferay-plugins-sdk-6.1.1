@@ -285,16 +285,17 @@ public class SpecificationBackingBean extends
 
 		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
 		List<TplSpecZoneLoc> results = null;
+		TplSpecZoneDtl tplSpecZoneDtl = null;
 		if (null != treeNodes && !treeNodes.isEmpty()) {
 			for (TreeNode treeNode : treeNodes) {
-
+				results = new ArrayList<TplSpecZoneLoc>();
 				List<TreeNode> zoneNodes = treeNode.getChildren();
 				// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
 				// zoneDtl = (TplSpecZoneDtl) zoneNodes.getData();
 				// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
 				zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
 				for (TreeNode treeNode1 : zoneNodes) {
-					results = new ArrayList<TplSpecZoneLoc>();
+
 					List<TreeNode> stateNodes = treeNode1.getChildren();
 
 					for (TreeNode treeNode2 : stateNodes) {
@@ -318,11 +319,16 @@ public class SpecificationBackingBean extends
 												.getData()).getPmState());
 										criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
 												.getData()));
+										tplSpecZoneDtl = criteria
+												.getTplSpecZoneDtl();
 										// criteria.setScQtSupplierCriteria(supplierCriteria);
 										setUserDetails(criteria);
 										results.add(criteria);
+										// tplSpecZoneDtl
+										// .setTplSpecZoneLocs(results);
 
 									}
+
 								} else {
 
 									TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
@@ -334,13 +340,19 @@ public class SpecificationBackingBean extends
 
 									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
 											.getData()));
+									tplSpecZoneDtl = criteria
+											.getTplSpecZoneDtl();
 									// criteria.setScQtSupplierCriteria(supplierCriteria);
 									setUserDetails(criteria);
 									results.add(criteria);
+									// tplSpecZoneDtl.setTplSpecZoneLocs(results);
 
 								}
 
 								// zoneDtl.setTplSpecZoneLocs(results);
+								// setUserDetails(tplSpecZoneDtl);
+
+								// zoneList.add(tplSpecZoneDtl);
 
 							}
 						} else {
@@ -352,20 +364,30 @@ public class SpecificationBackingBean extends
 
 							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
 									.getData()));
+							tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
 							// criteria.setScQtSupplierCriteria(supplierCriteria);
-							// setUserDetails(criteria);
 							setUserDetails(criteria);
 							results.add(criteria);
+							// tplSpecZoneDtl.setTplSpecZoneLocs(results);
 						}
+
+					}
+					if (tplSpecZoneDtl != null) {
+						tplSpecZoneDtl.setTplSpecZoneLocs(results);
+						setUserDetails(tplSpecZoneDtl);
+						zoneList.add(tplSpecZoneDtl);
+						// tplSpecDtls.add(tplSpecZoneDtl);
+						// scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
 					}
 
 				}
-			}
-			zoneDtl.setTplSpecZoneLocs(results);
-			// zoneDtl.setTplSpecZone(new ScQtZoneCriteria());
-			setUserDetails(zoneDtl);
 
-			zoneList.add(zoneDtl);
+			}
+
+			// zoneDtl.setTplSpecZone(new ScQtZoneCriteria());
+			// setUserDetails(zoneDtl);
+
+			// zoneList.add(zoneDtl);
 
 		}
 
@@ -498,7 +520,11 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setCtCircularVer(circularVer);
 			this.getManagedBean().setSelectpanelItem(panelList);
 			this.getManagedBean().setCurrentStatusId(statusId);
-		} finally {
+		} /*
+		 * catch(Exception e){ e.printStackTrace(); }
+		 */
+
+		finally {
 
 		}
 
@@ -10043,6 +10069,7 @@ public class SpecificationBackingBean extends
 					.getSpecName());
 			qtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_DRAFT);
+			qtCheckList.getScQtDoc().getTplSpecMaster().setWeightageReq(false);
 
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
