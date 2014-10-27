@@ -176,10 +176,11 @@
 				<p:outputLabel value="#{lbl['lbl.ct.effective.date']}" style="float:left;" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(2)}" >
-				<p:calendar style="float:left;width:100px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
+				<p:calendar style="float:left;width:200px;" id="edateCal1" showOn="button"  readonlyInput="true" navigator="true"
 			    	required="true" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 				    label="#{lbl['lbl.ct.effective.date']}" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
-				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" mindate="#{amendmentBackingBean.currentDate}">
+				    maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+				    mindate="#{amendmentBackingBean.currentDate}" >
 				        <p:ajax event="dateSelect" listener="#{amendmentBackingBean.changeAmendmentEffDate}" process="@this" update=":form:itemId,:form:serviceId"/> 
 				</p:calendar>
 				<p:spacer width="1"/>

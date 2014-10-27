@@ -149,12 +149,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private SmSupplierBank smSupplierBanks;
 	private Map<String,Object> radioButtonSchedule;
 	private List<String> finalListOfSideMenu;
+	private List<String> yearList;
 	private String fileDirectory;
 	private CtAgency selectedAgency;
 	
 	private List<SelectItem> monthList;
 	private boolean codeNameSearchValues = false;
 	private int attachFileIndex;
+	private boolean percentExceeded;
+	private boolean progressiveButtonDeactive;
 	
 	public String[] getAction() {
 		return action;
@@ -945,5 +948,29 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setAttachFileIndex(int attachFileIndex) {
 		this.attachFileIndex = attachFileIndex;
+	}
+
+	public boolean isPercentExceeded() {
+		return percentExceeded;
+	}
+
+	public void setPercentExceeded(boolean percentExceeded) {
+		this.percentExceeded = percentExceeded;
+	}
+
+	public boolean isProgressiveButtonDeactive() {
+		return progressiveButtonDeactive;
+	}
+
+	public void setProgressiveButtonDeactive(boolean progressiveButtonDeactive) {
+		this.progressiveButtonDeactive = progressiveButtonDeactive;
+	}
+
+	public List<String> getYearList() {
+		return yearList;
+	}
+
+	public void setYearList(List<String> yearList) {
+		this.yearList = yearList;
 	}
 }
