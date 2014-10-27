@@ -115,7 +115,7 @@
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationTypeId}"
 								style="width:200px" disabled="#{smPersonnelBackingBean.managedBean.editMode}">
 								<f:selectItems
-									value="#{smPersonnelBackingBean.getDropdownValues('ID')}" />
+									value="#{smPersonnelBackingBean.managedBean.idTypes}" />
 								<p:ajax event="change" partialSubmit="true" process="@this"
 									listener="#{smPersonnelBackingBean.assignPersonIdentType}"
 									update="basicBUIdTypePan,basicBUIdTypeLblPan" />

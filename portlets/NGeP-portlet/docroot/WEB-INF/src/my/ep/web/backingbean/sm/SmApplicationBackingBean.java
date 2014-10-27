@@ -10,8 +10,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -78,6 +80,7 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -121,6 +124,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -2629,6 +2633,7 @@ public class SmApplicationBackingBean extends
 			calculateShareHolderPercent();
 		}
 
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
 				&& getManagedBean().getSelectedShareHolder()
@@ -2795,7 +2800,8 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
-
+		
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
 						RoleCode.MOF_SUPPLIER_USER.value())
@@ -5687,4 +5693,35 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getPmIdTypeDropdownValues() {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		Map<Long, Object> identityType = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			identityType.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+		
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		for(SelectItem selectItem : items) {
+			
+			if(selectItem.getValue() == null){
+				itemList.add(selectItem);
+			}else{
+				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
+				if(!pmParameter.getParameterCode().equals("A")){
+					itemList.add(selectItem);
+				}
+			}
+			
+		}
+		
+		return itemList.toArray(new SelectItem[itemList.size()]);
+		
+	}
 }

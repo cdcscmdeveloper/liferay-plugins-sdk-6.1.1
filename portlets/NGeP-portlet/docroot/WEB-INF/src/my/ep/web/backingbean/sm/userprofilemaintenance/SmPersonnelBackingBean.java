@@ -1,7 +1,9 @@
 package my.ep.web.backingbean.sm.userprofilemaintenance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +22,7 @@ import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -42,6 +45,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -54,6 +58,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.userprofilemaintenance.SmPersonnelManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
 
@@ -101,7 +106,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		initUserPersonnelInfo();
 		buildRoleList();
-		
+		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		SelectItem role = new SelectItem();
 		role.setLabel("Supplier Admin");
 		role.setValue(RoleCode.BASIC_SUPPLIER_ADMIN.value());
@@ -221,8 +226,8 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToAddNewUserPage(){  
 		System.out.println("********************SmPersonnelBackingBean navigateToAddNewUserPage***************");
 		
-		
 		getManagedBean().setEditMode(false);
+		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		removeEPRole();
 		buildRoleList();
 		
@@ -282,6 +287,7 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 	public String navigateToUpdateUserPage(String personnelId){
 		System.out.println("********************SmPersonnelBackingBean navigateToUpdateUserPage***************");
 		getManagedBean().setEditMode(true);
+		getManagedBean().setIdTypes(getPmIdTypeDropdownValues());
 		buildRoleList();
 		
 		SelectItem role = new SelectItem();
@@ -1246,124 +1252,36 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		}
 	}
 	
-//	public void updateAccountStatus(){
-//		
-//		PmUser pmUser = getManagedBean().getBasicSmPersonnel().getPmUser();
-//		if (pmUser.getUserId() != null){
-//			
-//			if(getManagedBean().getAccountStatus() == 1 && pmUser.getRecordStatusFlg() == 0){
-//				//Existing OrgProfile
-//				List<PmUserOrg> pmUserOrgs = user.getPmUserOrgs();
-//				PmUserOrg userOrg = new PmUserOrg();
-//				for(PmUserOrg org : pmUserOrgs){
-//					if(org.getPmOrgProfile().getOrgTypeCode().getParameterCode().equals(ParameterConst.ORG_TYPE_SUPPLIER)){
-//						userOrg = org;
-//					}
-//				}
-//				ISearchBean<PmUser> userSearchBean = new SearchBean<PmUser>();
-//				userSearchBean.getDataFilterBeans().add(
-//						new SearchFilterBean("userId", SearchOperator.OPERATOR_EQUALS
-//								.value(), user.getUserId().toString(), true));
-//				userSearchBean.getDataFilterBeans().add(
-//						new SearchFilterBean(
-//								"pmUserOrgs.pmUserRoles.pmRole.roleCode",
-//								SearchOperator.OPERATOR_LIKE.value(),
-//								smPersonnel.getEpRole(), true));
-//				if(userOrg.getPmOrgProfile() != null){
-//					userSearchBean.getDataFilterBeans().add(
-//							new SearchFilterBean(
-//									"pmUserOrgs.pmOrgProfile.orgProfileId",
-//									SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId().toString(), true));
-//				}
-//				userReqDTO.setUserSearchBean(userSearchBean);
-//				
-////				String langCode = reqDTO.getLanguageCode() == null || reqDTO.getLanguageCode().isEmpty() ? "en" : reqDTO.getLanguageCode();
-////				userReqDTO.setLanguageCode(langCode);
-////				//userReqDTO.setLanguageCode(reqDTO.getLanguageCode());
-////				userResDTO = userSO.retrieveUserRoleDescListByUserId(userReqDTO);
-////				List<PmRoleDesc> descList = userResDTO.getRoleDescList();
-//				
-//				userResDTO = userSO.searchUserProfileDtl(userReqDTO);
-//				boolean roleExists = false;
-//
-//				ISearchResultBean<PmUser> searchResultBean = userResDTO.getUserResultBean();
-//				if(searchResultBean.getResultList().size() > 0)
-//					roleExists = true;
-//				
-////				for(PmRoleDesc roleDesc : descList){
-////					String roleCode = roleDesc.getPmRole().getRoleCode();
-////					if(roleCode.equalsIgnoreCase(smPersonnel.getEpRole())){
-////						roleExists = true;
-////					}
-////				}
-//
-//				if(!roleExists){
-//					log.info("*******role not exist*******");
-//					List<PmUserRole> pmUserRoles = userOrg.getPmUserRoles();
-//					PmUserRole pmUserRole = new PmUserRole();
-//					//pmUserRole.setPmUser(user);
-//					PmRole pmRole = new PmRole();
-//					pmRole.setRoleCode(smPersonnel.getEpRole());
-//					pmUserRole.setPmRole(pmRole);
-//					updateRecordStatus(pmUserRole);
-//					pmUserRoles.add(pmUserRole);
-//					pmUserRole.setPmUserOrg(userOrg);
-//					userOrg.setPmUserRoles(pmUserRoles);
-//					pmUserOrgs.add(userOrg);
-//					user.setPmUserOrgs(pmUserOrgs);
-//					user.setOrgTypeCode(userOrg.getPmOrgProfile().getOrgTypeCode());
-//					updateRecordStatus(userOrg);
-//
-//					newRoleList.add(pmUserRole);
-//
-//					if(reqDTO.getPreviousPersonnelInfo() != null){
-//						log.info("*******PreviousPersonnelInfo not null*******");
-//						SmPersonnel prevPersonnelInfo = reqDTO.getPreviousPersonnelInfo();
-//						for(PmUserRole pmURole : pmUserRoles){
-//							if(pmURole.getPmRole().getRoleCode().equals(prevPersonnelInfo.getEpRole())){
-//								log.info("*******PreviousPersonnelInfo equal*******");
-//								log.info("*******prevPersonnelInfo.getEpRole()*******" + prevPersonnelInfo.getEpRole());
-//								log.info("*******EXIST getEpRole()*******" +pmURole.getPmRole().getRoleCode());
-//								pmURole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
-//								removeRoleList.add(pmURole);
-//							}
-//						}
-//					}
-//				}
-//			}					
-//			updateRecordStatus(user);
-//
-//			if(reqDTO.getPreviousPersonnelInfo() != null){
-//				log.info("*******userReqDTO PreviousPersonnelInfo not null*******");
-//				log.info("*******newRoleList size()*******" + newRoleList.size());
-//				log.info("*******removeRoleList size()*******" + removeRoleList.size());
-//				userReqDTO.setNewRoleList(newRoleList);
-//				userReqDTO.setRemoveRoleList(removeRoleList);
-//				
-//			}
-//			userReqDTO.setSupplierUser(true);
-//			log.info("*******Personnel Email*******" + user.getEmail());
-//			userReqDTO.setPmUser(user);
-//			try{
-//				userResDTO = userSO.saveUser(userReqDTO);
-//			}catch(Exception ex){
-//				log.info("updatePmProfileForPersonnel ex>>>>" + ex.getMessage());
-//				log.info("Personnel ID>>>>" + smPersonnel.getPersonnelId());
-//				throw new EpException(ex.getMessage());
-//			}
-//
-//			} else {
-//				
-//			}
-//			
-//		}
-//		if (getManagedBean().getBasicSmPersonnel().getPmUser() != null
-//				&& getManagedBean().getBasicSmPersonnel().getPmUser()
-//						.getRecordStatusFlg() == 1) {
-//			getManagedBean().setAccountStatus(1);
-//		} else {
-//			getManagedBean().setAccountStatus(0);
-//		}
-//	}
-	
+	/**
+	 * retrieve identity type from PM
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] getPmIdTypeDropdownValues() {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
+		Map<Long, Object> identityType = new HashMap<Long,Object>();
+		for(PmParameterDesc pmDesc: parameterDescs){
+			identityType.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		}
+		
+		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
+		
+		for(SelectItem selectItem : items) {
+			
+			if(selectItem.getValue() == null){
+				itemList.add(selectItem);
+			}else{
+				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
+				if(!pmParameter.getParameterCode().equals("A")){
+					itemList.add(selectItem);
+				}
+			}
+			
+		}
+		
+		return itemList.toArray(new SelectItem[itemList.size()]);
+		
+	}
+
 }

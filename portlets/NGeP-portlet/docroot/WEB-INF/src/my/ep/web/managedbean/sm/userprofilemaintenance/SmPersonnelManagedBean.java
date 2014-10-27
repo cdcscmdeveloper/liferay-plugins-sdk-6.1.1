@@ -93,6 +93,8 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 	
 	private int accountStatus;
 	
+	private SelectItem[] idTypes;
+
 	public SmPersonnelManagedBean() {
 		// TODO Auto-generated constructor stub
 		super();
@@ -406,6 +408,14 @@ public class SmPersonnelManagedBean extends BaseManagedBean {
 
 	public void setAccountStatus(int accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+
+	public SelectItem[] getIdTypes() {
+		return idTypes;
+	}
+
+	public void setIdTypes(SelectItem[] idTypes) {
+		this.idTypes = idTypes;
 	}
 
 }

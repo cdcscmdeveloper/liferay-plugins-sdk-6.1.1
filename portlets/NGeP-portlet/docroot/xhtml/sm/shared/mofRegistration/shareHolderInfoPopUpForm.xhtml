@@ -42,7 +42,7 @@
 						label="#{lbl['lbl.sm.identificationtype']}"
 						value="#{backingBean.managedBean.selectedShareHolder.identificationTypeId}"
 						style="width:200px">
-						<f:selectItems value="#{backingBean.getDropdownValues('ID')}" />
+						<f:selectItems value="#{backingBean.managedBean.identificationTypes}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
 							listener="#{backingBean.assignPersonIdentType}"
 							update="equiPerDtlIdenTypePan,equiPerDtlIdenTypeLblPan" />
