@@ -7,38 +7,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel id="businessNaturePanel">
-
-		<h:panelGrid columns="4" style="width:100%;">
 	
-	        <h:outputLabel value="#{lbl['lbl.pm.bn.seccode']}"></h:outputLabel>
-            <p:inputText size="30"  />
+		<h:panelGrid columns="2">
+		
+		    <h:outputLabel value="Category Level"></h:outputLabel>
+		      <p:selectOneMenu style="width:205px;margin-bottom:5px;" value="#{businessNatureBackingBean.managedBean.categoryLvl}">    
+			 	 <f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}" />
+              </p:selectOneMenu>
+	
+	        <h:outputLabel value="#{lbl['lbl.pm.search.codes']}"></h:outputLabel>
+            <p:inputText value="#{businessNatureBackingBean.managedBean.secLevelCode}" size="30"  />
 			
-			<h:outputLabel value="#{lbl['lbl.pm.bn.secname']}"></h:outputLabel>
-			<p:inputText size="50" />
-			
-	        <h:outputLabel value="#{lbl['lbl.pm.bn.divcode']}"></h:outputLabel>
-            <p:inputText size="30"  />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.bn.divname']}"></h:outputLabel>
-			<p:inputText size="50" />
-			
-	        <h:outputLabel value="#{lbl['lbl.pm.bn.groupcode']}"></h:outputLabel>
-            <p:inputText size="30"  />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.bn.groupname']}"></h:outputLabel>
-			<p:inputText size="50" />
-			
-	        <h:outputLabel value="#{lbl['lbl.pm.bn.classcode']}"></h:outputLabel>
-            <p:inputText size="30"  />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.bn.classname']}"></h:outputLabel>
-			<p:inputText size="50" />
-			
-	        <h:outputLabel value="#{lbl['lbl.pm.bn.itemcode']}"></h:outputLabel>
-            <p:inputText size="30"  />
-			
-			<h:outputLabel value="#{lbl['lbl.pm.bn.itemname']}"></h:outputLabel>
-			<p:inputText size="50" />																
+			<h:outputLabel value="#{lbl['lbl.pm.search.name']}"></h:outputLabel>
+			<p:inputText value="#{businessNatureBackingBean.managedBean.secLevelName}" size="50" />																
 	
 		</h:panelGrid>
  </p:panel>
