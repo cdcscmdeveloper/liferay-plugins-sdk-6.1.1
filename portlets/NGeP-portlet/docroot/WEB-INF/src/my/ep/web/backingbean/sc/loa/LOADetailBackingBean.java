@@ -1351,10 +1351,9 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
-
-		context.put("procurementMode", procurementMode);
-		
-		context.put("title", scLoiLoa.getTitle());
+		String title = procurementMode !=null ? procurementMode + " " + scLoiLoa.getTitle() 
+				: scLoiLoa.getTitle();
+		context.put("title", title);
 
 		String userName = "&#60;supplier user name&#62;";
 		String icNo = "&#60;ic no&#62;";
