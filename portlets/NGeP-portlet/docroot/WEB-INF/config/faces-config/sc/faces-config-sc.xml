@@ -79,13 +79,6 @@
 		</navigation-case>
 	</navigation-rule>
 	
-   <navigation-rule>
-		<from-view-id>*</from-view-id>
-		<navigation-case>
-			<from-outcome>acknowledge</from-outcome>
-			<to-view-id>/xhtml/shared/acknowledge.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
 	 <navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
