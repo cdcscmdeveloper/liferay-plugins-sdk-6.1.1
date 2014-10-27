@@ -10,9 +10,18 @@
 		<c:if
 			test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
 			<div align="right">
-				<table>
+				<!-- <table>
 					<tr>
-						<td align="right"><p:commandButton
+						<td align="right"> -->
+						<ui:fragment
+							rendered="#{qTDetailBB.managedBean.processName ne 'Quotation Tender Creation'}">
+							<p:commandButton value="#{lbl['lbl.btn.back']}"
+								style="float:left;" icon="ui-icon-back"
+								action="#{qTDetailBB.gotoQtSearchPage}" />
+	
+						</ui:fragment>
+				
+						<p:commandButton
 								value="#{lbl['lbl.so.save']}"
 								action="#{qTDetailBB.saveQtDetailsAction}" process="@all"
 								icon="ui-icon-save" update="@all" /> <p:commandButton
@@ -34,9 +43,10 @@
 								</ui:repeat>
 							</c:if> <p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 								process="@all" style="float:right;margin-right: 12px;"
-								icon="ui-icon-cancel" onclick="cancelQTDlg.show()" /></td>
+								icon="ui-icon-cancel" onclick="cancelQTDlg.show()" />
+							<!-- </td>
 					</tr>
-				</table>
+				</table> -->
 			</div>
 		</c:if>
 		<p:dialog id="cancelQTDlg" widgetVar="cancelQTDlg"
