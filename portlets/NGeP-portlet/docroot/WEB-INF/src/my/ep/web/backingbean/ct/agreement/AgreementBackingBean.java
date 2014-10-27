@@ -1064,7 +1064,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				   party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
 				   party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 			 }
-			if(party.getOfficer().getUserId().intValue() == ctParty.getOfficer().getUserId().intValue()){
+			if(party.getOfficer().getUserId() != null && party.getOfficer().getUserId().intValue() == ctParty.getOfficer().getUserId().intValue()){
 				counter++;
 				if(counter == 2)
 				throw new EpException(MessageConst.WARN_754000);
@@ -1081,7 +1081,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 }
 		int counter = 0;
 		for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
-			if(party.getOfficerName().equalsIgnoreCase(ctParty.getOfficerName())){
+			if(party.getOfficerName() != null && party.getOfficerName().equalsIgnoreCase(ctParty.getOfficerName())){
 				counter++;
 				if(counter == 2)
 				throw new EpException(MessageConst.WARN_754000);
