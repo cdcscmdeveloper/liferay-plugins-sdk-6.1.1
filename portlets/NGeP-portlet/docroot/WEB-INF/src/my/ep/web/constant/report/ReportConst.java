@@ -305,6 +305,8 @@ public class ReportConst {
 	public static final String SUP_PERF_RPT_PO_VAL = "FL_050";
 	public static final String SUMM_RPT_PAN_ITM_NAME = "lbl.rpt.fl.SUMM_RPT_PAN_ITM_NAME";
 	public static final String SUMM_RPT_PAN_ITM_VAL = "FL_033";
+	//JSP
+	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
 	//FL Module reports end
 	//SM Module report start
 	public static final String SM_LST_OF_APP_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_APP_RPT_NAME";
@@ -586,5 +588,7 @@ public class ReportConst {
 	public static final String PARAM_KEY_ITEM_ID = "itemid";
 	public static final String PARAM_KEY_SUPPLIER_ID = "supplierid";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
+	public static final String PARAM_DOC_NO = "PNO";
+	public static final String PARAM_USER_ID = "PUSER";
 	public static final String NO_REPORT_ID = "This Report, still not developed...";
 }
