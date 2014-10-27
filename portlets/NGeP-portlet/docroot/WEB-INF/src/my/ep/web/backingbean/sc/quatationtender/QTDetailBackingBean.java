@@ -2110,6 +2110,29 @@ public class QTDetailBackingBean extends
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 				reqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
+				
+				ScQt scQt = this.getManagedBean().getQt();
+				List<String> list = new ArrayList<String>();
+				if (scQt.getScQtDeliveryLocs().isEmpty()) {
+					list.add(SourcingConstants.DOC_TITLE_DELIVERY_SERVICE_ADDRESS);
+				}
+				if (scQt.getFulfilmentType().getParameterCode()
+						.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF)
+						&& scQt.getScheduleType().equals(
+								SourcingConstants.FREQUENCY_SCHEDULE)) {
+					//frequency schedule - Jadual Kekerapan, Progressive Payment - Jadual Pembayaran Berperingkat
+					list.add(SourcingConstants.DOC_TITLE_FREQUENCY_SCHEDULE);
+					list.add(SourcingConstants.DOC_TITLE_PROGRESSIVE_PAYMENT);
+				}
+				if (scQt.getPmProcurementCategory().getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)
+						|| scQt.getPmProcurementCategory().getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA)
+						|| scQt.getPmProcurementCategory().getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_ICT)
+						|| scQt.getPmProcurementCategory().getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_PEJABAT)
+						|| scQt.getPmProcurementCategory().getParameterCode().equals(ParameterConst.PROCUREMENT_CATEGORY_PERALATAN_MAKMAL)) {
+					list.add(SourcingConstants.DOC_TITLE_SCOPE_SERVICES);
+				}
+				reqDTO.setExcludedDocNames(list);
+				
 				List<ScQtDocReport> scQtDocReports = new ArrayList<ScQtDocReport>();
 				if (this.getManagedBean().getScQtDocReportList() == null) {
 					resDTO = detailSO.retriveQTDocDetails(reqDTO);
@@ -3027,25 +3050,25 @@ public class QTDetailBackingBean extends
 			break;
 
 		case 4:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
 				retriveTechnicalSpecification();
 			} else {
 				retrieveBriefingSitevisitTabDtl();
 			}
 			break;
 		case 5:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
 				retriveFinancialSpecification();
 			} else {
 				retrieveScheduleTabDtl();
 			}
 			break;
 		case 6:
-			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_QT_SUBMISSION) {
+			if (getManagedBean().getQt().getQtStatus().getStatusId() <= QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING) {
 				retrieveActivitiesTabDtl();
 			} else {
 				retrieveDeductionPaymentTabDtl();
-				retrieveActivitiesTabDtl();	// Kenny - temporary
+				//retrieveActivitiesTabDtl();	// Kenny - temporary
 			}
 			break;
 		case 7:
