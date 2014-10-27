@@ -1805,7 +1805,11 @@ public void ConstructSideTabMenu(){
 			 reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
 			 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			 ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
-			 ctAgency.setAp178(true);
+			 
+			 if(this.getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() !=  ctAgency.getOrgProfile().getParentOrgProfile().getOrgProfileId())
+				 ctAgency.setAp178(true);
+			 else
+				 ctAgency.setAp178(false);
 		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
