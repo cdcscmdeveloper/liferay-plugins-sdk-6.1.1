@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -48,10 +48,13 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
@@ -263,6 +266,24 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+					Map<String, String> paramMap = new HashMap<String, String>();
+					String deliveryOrderNoList = "";
+					for(String deliveryOrderNo : resDTO.getDeliveryOrderNoList()) {
+						if(deliveryOrderNo.length()==0) {
+							deliveryOrderNoList = deliveryOrderNo;
+						} else {
+							deliveryOrderNoList = deliveryOrderNoList + "," + deliveryOrderNo;
+						}
+					}
+					paramMap.put(ReportConst.PARAM_DOC_NO, deliveryOrderNoList);
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					CommonBackingBean commonBackingBean = new CommonBackingBean();
+					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DELIVERY);
+					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+					commonBackingBean.getManagedBean().setParamMap(paramMap);
+					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+				}								
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
 				reqDTO.setFlOrderId(resDTO.getFulfilmentOrderId());
@@ -397,13 +418,19 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		delQtyCal= itemAddress.getDeliveredQty();
 		remainingQty = itemAddress.getOrderedQty().subtract(itemAddress.getSumDeliveredQty()).add(itemAddress.getRejectedQty());
 		
+		if(delQtyCal.doubleValue()<0) {		
+			itemAddress.setDeliveredQty(new BigDecimal(0));
+			throw new EpException(MessageConst.ERROR_100033, new String[]{"Delivery Quantity","0"});
+		}
+		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
 			itemAddress.setDeliveredAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 		}
 		
-		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) && itemAddress.getDeliveredAmt().doubleValue()>0) {
+		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) 
+			&& itemAddress.getDeliveredAmt().doubleValue()>0 && itemAddress.getDeliveredQty().doubleValue()>0) {
 			delAmtCal = itemAddress.getDeliveredAmt();
 		} else {
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
