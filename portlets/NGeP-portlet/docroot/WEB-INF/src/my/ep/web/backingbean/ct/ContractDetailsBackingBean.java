@@ -56,6 +56,7 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -615,18 +616,12 @@ public void ConstructSideTabMenu(){
 		 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
 			      }
 		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-		          if (getManagedBean().isDirectPurchase()) {
-		        	    if(getManagedBean().getCtContract(). getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-				    	         getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
-		        	    }
-			      } else{
-			    	  	  if (getManagedBean().getContractVer().getCtDeductions().size() > 0) {
-			    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction);
-			    	  	  }
-		            	  if (getManagedBean().getCtContract().
-				        		getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
-		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);
-		            	  }
+		          if (!getManagedBean().isDirectPurchase()) {
+		    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction); 
+			      } 
+		         
+		          if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+		            	        getManagedBean().getFinalListOfSideMenu().addAll(menu.menuSchedule);  
 			       }
 	 		          
 		           if(getManagedBean().getCtContract().isFactored()) {
@@ -1568,39 +1563,43 @@ public void ConstructSideTabMenu(){
 		
 	public List<SelectItem> getMonthList(){
 		
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		if(getManagedBean().getMonthList() == null) {
+		     List<SelectItem> selectItems = new ArrayList<SelectItem>();
 
-		try {
-
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			selectItems.add(new SelectItem(0, "January"));
-			selectItems.add(new SelectItem(1, "February"));
-			selectItems.add(new SelectItem(2, "March"));
-			selectItems.add(new SelectItem(3, "April"));
-			selectItems.add(new SelectItem(4, "May"));
-			selectItems.add(new SelectItem(5, "June"));
-			selectItems.add(new SelectItem(6, "July"));
-			selectItems.add(new SelectItem(7, "August"));
-			selectItems.add(new SelectItem(8, "September"));
-			selectItems.add(new SelectItem(9, "October"));
-			selectItems.add(new SelectItem(10, "November"));
-			selectItems.add(new SelectItem(11, "December"));
-
-			this.getManagedBean().setMonthList(selectItems);
-		} finally {
-
+		    try {
+		    	    selectItems.add(new SelectItem(null, "--Select One--"));
+					selectItems.add(new SelectItem(0, "January"));
+					selectItems.add(new SelectItem(1, "February"));
+					selectItems.add(new SelectItem(2, "March"));
+					selectItems.add(new SelectItem(3, "April"));
+					selectItems.add(new SelectItem(4, "May"));
+					selectItems.add(new SelectItem(5, "June"));
+					selectItems.add(new SelectItem(6, "July"));
+					selectItems.add(new SelectItem(7, "August"));
+					selectItems.add(new SelectItem(8, "September"));
+					selectItems.add(new SelectItem(9, "October"));
+					selectItems.add(new SelectItem(10, "November"));
+					selectItems.add(new SelectItem(11, "December"));
+			   getManagedBean().setMonthList(selectItems);
+		   } finally {
+			   selectItems = null;
+		   }
 		}
-		return getManagedBean().getMonthList();
+		 return getManagedBean().getMonthList();
 	 }
 
 	public List<String> getYearList() {
-		List<String> yearList = new ArrayList<String>();
-		for(int i = 2014; i<= 2070; i++) {
-		   if(String.valueOf(i) == null)
-		   break;
-		   yearList.add(String.valueOf(i));
+	 
+		if(getManagedBean().getYearList() == null) {
+			getManagedBean().setYearList(new ArrayList<String>());
+		    SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		    int startDate = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+		    int endDate = Integer.valueOf(df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+		    for(int i = startDate; i <= endDate; i++) {
+		    	getManagedBean().getYearList().add(String.valueOf(i));
+		    }
 		}
-      return yearList;
+      return getManagedBean().getYearList();
 	}
 	
 	public SelectItem[] getScheduleTypeDropDown() {
@@ -1805,13 +1804,7 @@ public void ConstructSideTabMenu(){
 			 reqDTO.setOrgProfileId(selectedPmOrgProfile[i].getOrgProfileId());
 			 OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			 ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
-						 
-			 if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() !=null && ctAgency.getOrgProfile().getParentOrgProfile() !=null)  {
-				 if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() !=  ctAgency.getOrgProfile().getParentOrgProfile().getOrgProfileId())
-					 ctAgency.setAp178(true);
-				 else 
-					 ctAgency.setAp178(false);
-			 }
+			 ctAgency.setAp178(true);
 		  	
 		  	ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 		  	ctAgencyList.add(ctAgency);
@@ -2014,39 +2007,35 @@ public void ConstructSideTabMenu(){
 	 }
 		 
      public void validateDate(CtSchedule ctSchedule){
-    	 if(ctSchedule.getStartYear() == null || ctSchedule.getEndYear() == null || ctSchedule.getEndMonth() == null) {
-    		 for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
- 			    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
- 			        dataList.setValidateScheduleDate(false);
- 			    }
- 			 }
-    	 }
-    	 else {    	 
-	    	 int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
-			 int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
-			 int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
-			 int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
+    	 if(ctSchedule.getEndMonth() == null || ctSchedule.getStartMonth() == null) {
+    		  for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+ 			
+    			   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
+ 			          dataList.setValidateScheduleDate(false);
+ 			   }
+    	  } else {    	 
+	    	           int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
+			            int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
+			            int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
+			            int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
 			 
-			 if((startMonth > endMonth && startYear >= endYear)||
-			     (startMonth <= endMonth && startYear > endYear)){
-			     for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-			    	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
-			    		dataList.setValidateScheduleDate(true);
+			            if((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear)) {
+			                for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {			            
+			                	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
+			    	             	dataList.setValidateScheduleDate(true);
+			                }
+			          } else {
+			            for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+				                if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
+				                     dataList.setValidateScheduleDate(false);
+				                }
+				          }
 			         }
-			     }
-			  }
-			 else{
-			     for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-				    if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
-				        dataList.setValidateScheduleDate(false);
-				    }
-				 }
-			 }
-    	 }
-	}
+    	       }
+	    }
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
-    	if(ctProgressivePayment.getStartYear() == null || ctProgressivePayment.getEndYear() == null || ctProgressivePayment.getEndMonth() == null) {
+    	if(ctProgressivePayment.getEndMonth() == null || ctProgressivePayment.getStartMonth() == null) {
     		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
 			        dataList.setValidateProgressiveDate(false);
@@ -2144,19 +2133,29 @@ public void ConstructSideTabMenu(){
 	public void onRowSelect(SelectEvent event) {}/*End*//*End Item Details*/
     public void onEdit(RowEditEvent event){}
 	public void onCancel(RowEditEvent event){}/*End Deduction*/
-			    
-    /*public void userGroupChangeListener() {
-				
-	PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getContractVer().getPmUserGroup().getUserGroupId());
-	List<String> source = new ArrayList<String>(); 
-	List<String> target = new ArrayList<String>();  
-	for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
-		source.add(userGroupUser.getPmUser().getUserName());
+	
+	public void calculatePercentage(CtProgressivePayment progPayment){
+		float addValue = 0.0f;
+  	    getManagedBean().setProgressiveButtonDeactive(false);
+ 		for(CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
+				  addValue = addValue +progressivePayment.getPercentage();
+			      if(progressivePayment.equals(progPayment)) {
+		  
+			    	  if(Math.abs(addValue) > 100) {
+		    	             getManagedBean().setProgressiveButtonDeactive(true);
+		    	             progressivePayment.setPercentageExceeded(true);
+		              
+			    	  } else if(Math.abs(addValue) == 100) {
+		    	           getManagedBean().setProgressiveButtonDeactive(true);
+		    	           progressivePayment.setPercentageExceeded(false);
+		            
+			    	  } else {
+		            	  progressivePayment.setPercentageExceeded(false);
+		              }
+			      }
+ 		   }  
 	}
-	 getManagedBean().getApproverModel().setSource(source);
-	 getManagedBean().getApproverModel().setTarget(target);
-	}*/
-	 
+			    
 	public String chkContractStatusType(int status){
 		if(status==ContractConst.STATUS_COMPLETE) {
 			return ContractConst.CONTRACT_STATUS_COMPLETE;

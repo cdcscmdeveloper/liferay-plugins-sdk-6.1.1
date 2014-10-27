@@ -9,216 +9,222 @@
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.panel.schedule']}"  toggleable="true"  toggleSpeed="500">
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.schedule']}" escape="false"/><br/>
 	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.schedule']}" escape="false"/><br/><br/>
+	  
 	   <h:panelGrid columns="4">
            <p:selectOneRadio id="radiOptions"  required="true"
                value="#{contractDetailsBackingBean.managedBean.frequencySchedule}" 
-               disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio
-               		or contractDetailsBackingBean.managedBean.viewContract}">  
+               disabled="#{contractDetailsBackingBean.managedBean.disableScheduleRadio or contractDetailsBackingBean.managedBean.viewContract}">  
                <f:selectItems value="#{contractDetailsBackingBean.managedBean.radioButtonSchedule}" />
                <p:ajax event="change"  update=":form:paymentSchedule"
-                  process="@form" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
+                    process="@form" listener="#{contractDetailsBackingBean.progressivePayment}" /> 
             </p:selectOneRadio>
          </h:panelGrid>  
        
          <p:outputPanel id="paymentSchedule">   
-             <h:panelGroup  style="width:100%;" 
-                 rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}">    
-	                <p:dataTable id="tableSchedule" var="schedVar"
-	                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
-	                   rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
+             <h:panelGroup  style="width:100%;" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}">    
+	                <p:dataTable id="payScheduleTableId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
+	                     var="payScheduleObj" rowIndexVar="index" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{payScheduleObj}" >
 	                
-	                   <ac:paginator for="tableSchedule" />
-	                   <p:column selectionMode="multiple" style="width:1%;"
-	                   		rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+	                   <ac:paginator for="payScheduleTableId" />
+	                   <p:column selectionMode="multiple" style="width:1%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 		       
-		             <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
-		                <p:inputText value="#{schedVar.scheduleNo}"  style="width:60px;" 
-			                disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-			                maxlength="4" styleClass="ppRightBtn" />
-		             </p:column> 
+		               <p:column style="width:9%;" headerText="#{lbl['lbl.ct.schedule.no']}" >
+		                   <p:inputText value="#{payScheduleObj.scheduleNo}" styleClass="ppRightBtn" 
+		                       maxlength="4"  style="width:60px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+		                   </p:inputText>
+		               </p:column> 
 		      
-		             <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
-		                 <p:selectOneMenu id="fromMonth" value="#{schedVar.startMonth}" 
-		                 	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
-                             <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
-                             <p:ajax event="change" update=":form:tableSchedule" 
-                                process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
-                         </p:selectOneMenu> 
-                         <p:spacer width="1"/>
-                         <p:selectOneMenu id="fromYear" value="#{schedVar.startYear}" 
-                         	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
-                              <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                              <p:ajax event="change" update=":form:tableSchedule"
-                                 process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
-                         </p:selectOneMenu> 
-		            </p:column> 	
+		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
+		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" 
+		                 	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
+                               <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
+                               <p:ajax event="change" update=":form:payScheduleTableId" 
+                                  process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                           </p:selectOneMenu> 
+                           <p:spacer width="1"/>
+                           <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" 
+                           	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
+                               <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
+                               <p:ajax event="change" update=":form:payScheduleTableId"
+                                   process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                           </p:selectOneMenu> 
+		                </p:column> 	
 		       
-		            <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
-		                  <h:panelGroup>
-		                    <p:selectOneMenu id="toMonth" value="#{schedVar.endMonth}"
-		                    	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
-                                <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                                <p:ajax event="change" update=":form:tableSchedule"
-                                    process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}" />
-                            </p:selectOneMenu>
-                            <p:spacer width="1"/>
-                            <p:selectOneMenu id="toYear" value="#{schedVar.endYear}" 
-                            	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" >
-                                <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
-                                <p:ajax event="change" update=":form:tableSchedule" 
-                                   process="@form" listener="#{contractDetailsBackingBean.validateDate(schedVar)}"/> 
-                            </p:selectOneMenu>
-                            <p:spacer width="5"/>
-		                      <p:graphicImage id="schedValidation" library="ep/images/design"  value="/css/images/design/reject.png"  
-		                          name="reject.png"  rendered="#{schedVar.validateScheduleDate}" styleClass="ui-icon-reject" style="margin-bottom: -5px;" />
+		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
+		                    <h:panelGroup>
+		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}"
+		                    	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
+                                   <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                                   <p:ajax event="change" update=":form:payScheduleTableId"
+                                      process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
+                                </p:selectOneMenu>
+                                <p:spacer width="1"/>
+                                <p:selectOneMenu id="toYear" value="#{payScheduleObj.endYear}" 
+                            	    disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" >
+                                    <f:selectItems value="#{contractDetailsBackingBean.yearList}" />
+                                    <p:ajax event="change" update=":form:payScheduleTableId" 
+                                       process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                                </p:selectOneMenu>
+                                <p:spacer width="5"/>
+		                        <p:graphicImage id="schedValidation" library="ep/images/design"  value="/css/images/design/reject.png"  
+		                              name="reject.png"  rendered="#{payScheduleObj.validateScheduleDate}" styleClass="ui-icon-reject" style="margin-bottom: -5px;" />
 			                     <p:tooltip for="schedValidation" showEffect="fade" value="#{lbl['lbl.ct.validation.schedule.date']}"/> 
-		                 </h:panelGroup>
-		            </p:column> 
+		                     </h:panelGroup>
+		                 </p:column> 
 		            
-		            <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:10%;">
-		              <h:outputText id="totalMonth" style="float:right;"
-		                  value="#{contractDetailsBackingBean.calculateTotalMonth(schedVar, 'S')}"/>
-		           </p:column>
+		                 <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:10%;">
+		                     <h:outputText id="totalMonth" style="float:right;"
+		                         value="#{contractDetailsBackingBean.calculateTotalMonth(payScheduleObj, 'S')}">
+		                      </h:outputText>
+		                  </p:column>
 		           
-		            <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;white-space:normal;">
-		               <p:selectOneMenu id="scheduleTypeid" value="#{schedVar.scheduleType.parameterId}"
-		               		disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:130px;"> 
-                            <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
-                            <p:ajax process="@this"/>
-                       </p:selectOneMenu> 
-		           </p:column>
-		    
-		     </p:dataTable>  
-	         <p:spacer height="2"  />
-		        <div class="ppRightBtn"> 
-		            <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
-		               action="#{contractDetailsBackingBean.addScheduleDetails}" update=":form:tableSchedule"
-		               rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
-		               <p:tooltip for="addScheduleBtn">
-						    <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
-						</p:tooltip>
-		       		</p:commandButton>
-		 	        <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
-		 	        	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" onclick="dlgSchedule.show()" icon="ui-icon-delete">
-		 	        	<p:tooltip for="deleteScheduleBtn">
-						    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
-						</p:tooltip>
-		 	        </p:commandButton>  
-	           </div>
+		                  <p:column headerText="#{lbl['lbl.ct.fulfilment.type']}" style="width:15%;white-space:normal;">
+		                      <p:selectOneMenu  value="#{payScheduleObj.scheduleType.parameterId}"
+		               		       id="scheduleTypeid" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:130px;"> 
+                                   <f:selectItems value="#{contractDetailsBackingBean.getScheduleTypeDropDown()}"/>
+                                 <p:ajax process="@this"/>
+                               </p:selectOneMenu> 
+		                 </p:column>
+		            </p:dataTable>  
+	      
+	                <p:spacer height="2"  />
+		               <div class="ppRightBtn"> 
+		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" update=":form:payScheduleTableId"
+		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+		                      <p:tooltip for="addScheduleBtn">
+						         <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
+						      </p:tooltip>
+		       		       </p:commandButton>
+		 	               <p:commandButton id="deleteScheduleBtn" value="#{lbl['lbl.btn.delete']}" process="@form" 
+		 	        	       rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" onclick="dlgSchedule.show()" icon="ui-icon-delete">
+		 	        	       <p:tooltip for="deleteScheduleBtn">
+						            <h:outputText value="#{lbl['lbl.ct.tooltip.delete.schedule']}" escape="false" />
+						       </p:tooltip>
+		 	               </p:commandButton>  
+	                   </div>
 	         
-	          <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="330"
-	            	styleClass="screen-title" resizable="false">  
-                
-                   <h:panelGrid columns="3">
-                     <p:graphicImage library="ep/images/design" name="exclamation.png"
-			            value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			          <p:spacer width="10"/>
-                      <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-                  </h:panelGrid>
+	                 <p:dialog id="dlgSchedule" widgetVar="dlgSchedule" modal="true" width="330" styleClass="screen-title" resizable="false">  
+                          <h:panelGrid columns="3">
+                               <p:graphicImage library="ep/images/design"
+                                    name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			                    <p:spacer width="10"/>
+                                <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                          </h:panelGrid>
                  
-                  <div class="ppRightBtn">
-		            <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="tableSchedule" process="@form" 
-			           action="#{contractDetailsBackingBean.deleteScheduleDetails}" onclick="dlgSchedule.hide();"/>
-			        <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
-		         </div>
-               </p:dialog>
-           </h:panelGroup>
+                         <div class="ppRightBtn">
+		                     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
+		                         update="payScheduleTableId" action="#{contractDetailsBackingBean.deleteScheduleDetails}" onclick="dlgSchedule.hide();"/>
+			                 <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSchedule.hide();" type="button" />
+		                 </div>
+                      </p:dialog>
+            </h:panelGroup>
 		   
-		   <h:panelGroup style="width:100%"
-		        rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}" >
-	            <p:dataTable id="tableProgress" var="ProgVar" 
-	                value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
-	                selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
-		           <ac:paginator for="tableProgress" />
-		           <p:column selectionMode="multiple" style="width:1%;"
-		           	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/> 
+		   <h:panelGroup style="width:100%" rendered="#{!contractDetailsBackingBean.managedBean.contractVer.ctContract.frequencySchedule}" >
+	            <p:dataTable  value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
+	                  var="progPaymentObj"  id="progPaymentTableId"  selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{progPaymentObj}">
+		              <ac:paginator for="progPaymentTableId" />
+		              <p:column selectionMode="multiple" style="width:1%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/> 
                   
-                   <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}">
-                        <p:inputText value="#{ProgVar.phaseNo}" maxlength="4" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-                           style="width:25px;" label="#{lbl['lbl.ct.phase']}" styleClass="ppRightBtn" />
-                   </p:column>
+                      <p:column style="width:4%;" headerText="#{lbl['lbl.ct.phase']}">
+                           <p:inputText value="#{progPaymentObj.phaseNo}" maxlength="4" style="width:25px;" styleClass="ppRightBtn" 
+                                  disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.phase']}">
+                           </p:inputText>
+                      </p:column>
 		      
-		           <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}">
-		               <p:inputText value="#{ProgVar.phaseDesc}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-		                   maxlength="50" style="width:200px;" label="#{lbl['lbl.ct.description']}" />
-		           </p:column>
+		               <p:column style="width:25%;" headerText="#{lbl['lbl.ct.description']}">
+		                    <p:inputText value="#{progPaymentObj.phaseDesc}"  maxlength="50" style="width:200px;" 
+		                         disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.description']}">
+		                    </p:inputText>
+		                </p:column>
               
-                   <p:column style="width:25%;" headerText="#{lbl['lbl.ct.start.period']}" >
-		               <p:selectOneMenu id="fromProMonth" value="#{ProgVar.startMonth}" style="width:110px;"
-		               	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-                           <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                           <p:ajax event="change" update=":form:tableProgress"
-                              process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
-                      </p:selectOneMenu> 
-                      <p:spacer width="1"/>
-                      <p:selectOneMenu id="fromProYear" value="#{ProgVar.startYear}" style="width:100px;"
-                         disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-                         <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
-                         <p:ajax event="change" update=":form:tableProgress" 
-                            process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
-                      </p:selectOneMenu> 
-		          </p:column> 	
+                        <p:column style="width:21%;" headerText="#{lbl['lbl.ct.start.period']}" >
+		                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}" 
+		                        style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                                <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                               <p:ajax event="change" update=":form:progPaymentTableId"
+                                  process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                             </p:selectOneMenu> 
+                             <p:spacer width="1"/>
+                           
+                              <p:selectOneMenu id="fromProYear" value="#{progPaymentObj.startYear}" 
+                                  style="width:80px;"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                                   <f:selectItems value="#{contractDetailsBackingBean.yearList}"/>  
+                                 <p:ajax event="change" update=":form:progPaymentTableId" 
+                                    process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                              </p:selectOneMenu> 
+		                  </p:column> 	
 		        
-		          <p:column style="width:30%;" headerText="#{lbl['lbl.ct.end.period']}">
-		             <h:panelGroup columns="5">
-		                <p:selectOneMenu id="toProMonth" value="#{ProgVar.endMonth}"  style="width:110px;"
-		                	disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-                            <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                            <p:ajax event="change" update=":form:tableProgress"
-                               process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/>
-                        </p:selectOneMenu>
-                        <p:spacer width="1"/>
-                        <p:selectOneMenu id="toProYear" value="#{ProgVar.endYear}" style="width:100px;"
-                        	disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-                            <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
-                            <p:ajax event="change" update=":form:tableProgress" 
-                               process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(ProgVar)}"/> 
-                         </p:selectOneMenu>
-                         <p:spacer width="5"/>
-		                 <p:graphicImage id="validateProAction" library="ep/images/design" rendered="#{ProgVar.validateProgressiveDate}"
-		                     name="reject.png" value="/css/images/design/reject.png" style="margin-bottom: -5px;" styleClass="ui-icon-reject" />
-			              <p:tooltip for="validateProAction" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.date']}"/> 
-		            </h:panelGroup>
-		         </p:column>       
+		                  <p:column style="width:26%;" headerText="#{lbl['lbl.ct.end.period']}">
+		                      <h:panelGroup columns="5">
+		                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"  
+		                              style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                                      <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
+                                     <p:ajax event="change" update=":form:progPaymentTableId"
+                                         process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/>
+                                  </p:selectOneMenu>
+                                  <p:spacer width="1"/>
+                                
+                                  <p:selectOneMenu id="toProYear" value="#{progPaymentObj.endYear}" 
+                                       style="width:80px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+                                       <f:selectItems value="#{contractDetailsBackingBean.yearList}" />  
+                                      <p:ajax event="change" update=":form:progPaymentTableId" 
+                                          process="@form" listener="#{contractDetailsBackingBean.validateProgressiveDate(progPaymentObj)}"/> 
+                                   </p:selectOneMenu>
+                                   <p:spacer width="5"/>
+		                              <p:graphicImage id="validateProAction" library="ep/images/design" name="reject.png" styleClass="ui-icon-reject" 
+		                                  rendered="#{progPaymentObj.validateProgressiveDate}" value="/css/images/design/reject.png" style="margin-bottom: -5px;" />
+			                           <p:tooltip for="validateProAction" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.date']}"/> 
+		                        </h:panelGroup>
+		                     </p:column>       
 		         
-		          <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:8%;white-space:normal;">
-		              <h:outputText id="totalMonth" style="float:right;"
-		                 value="#{contractDetailsBackingBean.calculateTotalMonth(ProgVar,'P')}"/>
-		           </p:column>
+		                     <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:8%;white-space:normal;">
+		                           <h:outputText id="totalMonth" style="float:right;"
+		                               value="#{contractDetailsBackingBean.calculateTotalMonth(progPaymentObj,'P')}">
+		                           </h:outputText>
+		                      </p:column>
                
-                   <p:column style="width:7%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
-                       <p:inputText value="#{ProgVar.percentage}" style="width:60px;" styleClass="ppRightBtn" 
-                       	disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
-                       <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /></p:inputText> 
-                  </p:column>
-		       </p:dataTable>  
-			   
-			    <p:spacer height="2" />
+                              <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
+                                 <h:panelGroup>
+                                     <p:inputText value="#{progPaymentObj.percentage}" style="width:60px;" styleClass="ppRightBtn" 
+                         	            disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
+                                        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /> 
+                                       <p:ajax event="blur" update=":form:progPaymentTableId, :form:proAddButtionId" 
+                                           process="@this" listener="#{contractDetailsBackingBean.calculatePercentage(progPaymentObj)}"/>
+                                     </p:inputText>
+                                     <p:spacer width="5"/>
+		                             <p:graphicImage id="percentValidationId"  value="/css/images/design/reject.png"  name="reject.png" 
+		                                 library="ep/images/design"  styleClass="ui-icon-reject" style="margin-bottom: -5px;" rendered="#{progPaymentObj.percentageExceeded}" />
+		                             <p:tooltip for="percentValidationId" showEffect="fade" value="#{lbl['lbl.ct.validation.progressive.percentage']}"/> 
+		                        </h:panelGroup>
+                             </p:column>
+		             </p:dataTable>  
+			      <p:spacer height="2" />
 		       
 		        <div class="ppRightBtn"> 
-		           <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true"
-			            rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
-			            icon="ui-icon-add" update="tableProgress" action="#{contractDetailsBackingBean.addFrequencyDetails()}"/>
+		           <p:commandButton id="proAddButtionId" value="#{lbl['lbl.btn.add']}" 
+		                partialSubmit="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+			            process="@form"  disabled="#{contractDetailsBackingBean.managedBean.progressiveButtonDeactive}"
+			            icon="ui-icon-add" update="progPaymentTableId" action="#{contractDetailsBackingBean.addFrequencyDetails()}">
+			       </p:commandButton>
 		           <p:spacer width="2"/>
-		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" 
-			           rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
-			           process="@this" onclick="dlgProgressive.show()"  icon="ui-icon-delete"/>
+		           <p:commandButton value="#{lbl['lbl.btn.delete']}" partialSubmit="true" process="@this" icon="ui-icon-delete"
+			             rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"  onclick="progDlgObj.show()">
+			       </p:commandButton>
 		        </div>
 		       
-		       <p:dialog id="dlgProgressive" widgetVar="dlgProgressive" width="330"
-		            styleClass="screen-title"  resizable="false" modal="true">  
+		       <p:dialog id="progDlgId" widgetVar="progDlgObj" width="330" styleClass="screen-title"  resizable="false" modal="true">  
                     <h:panelGrid columns="3">
-                      <p:graphicImage library="ep/images/design" name="exclamation.png"
-			             value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-			           <p:spacer width="10"/>
-                       <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                       <p:graphicImage library="ep/images/design" 
+                            name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			            <p:spacer width="10"/>
+                        <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
                     </h:panelGrid>
-                   
                     <div class="ppRightBtn">
-		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update="tableProgress" process="@form" 
-				           action="#{contractDetailsBackingBean.deleteFrequencyDetails}" onclick="dlgProgressive.hide();"/>
-			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgProgressive.hide();" type="button" />
-		             </div>
+		               <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form"  
+		                   update="progPaymentTableId" action="#{contractDetailsBackingBean.deleteFrequencyDetails}" onclick="progDlgObj.hide();">
+		               </p:commandButton>
+			           <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="progDlgObj.hide();" type="button" />
+		            </div>
                </p:dialog>
 	       </h:panelGroup>    
 	</p:outputPanel>
