@@ -296,8 +296,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
 				for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
 					for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
-						if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
-							requestNoteDtl.setScRequestSupplierItem(supplierItem);
+						if(supplierItem.getSmSupplier() != null){
+							if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
+								requestNoteDtl.setScRequestSupplierItem(supplierItem);
+							}	
 						}
 					}
 					
@@ -381,6 +383,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * render the view base on the task id
 	 */
 	public void preRenderView() {
+		renewSesionObject();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
