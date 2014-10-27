@@ -5,6 +5,8 @@ package my.ep.web.backingbean.fl.dan;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -40,11 +42,14 @@ import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -99,6 +104,17 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 								new FacesScopes().getUserLocale())));
 			}
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+					Map<String, String> paramMap = new HashMap<String, String>();
+					paramMap.put(ReportConst.PARAM_DOC_NO, getManagedBean().getAdjustment().getDocNo());
+					paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+					CommonBackingBean commonBackingBean = new CommonBackingBean();
+					commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_DEBIT_NOTE);
+					commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.dan",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+					commonBackingBean.getManagedBean().setParamMap(paramMap);
+					renewSesionObject();
+					return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+				}		
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {

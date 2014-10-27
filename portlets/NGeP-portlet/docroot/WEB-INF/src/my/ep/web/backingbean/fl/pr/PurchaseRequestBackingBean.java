@@ -126,10 +126,13 @@ import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.common.CommonBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -272,7 +275,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	public String fulfillmentRequestAction(String action) throws Exception {
-
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
@@ -336,6 +338,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}	
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
+					if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+						Map<String, String> paramMap = new HashMap<String, String>();
+						paramMap.put(ReportConst.PARAM_DOC_NO, resDTO.getFlFulfilmentRequest().getFlFulfilmentOrder().getDocNo());
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						CommonBackingBean commonBackingBean = new CommonBackingBean();
+						commonBackingBean.getManagedBean().setReportName(ReportConst.FL_NGEP_PURCHASE_ORDER);
+						commonBackingBean.getManagedBean().setReportDisplayName(ResourceBundleUtils.getMessage("lbl.fl.do.poco",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()));
+						commonBackingBean.getManagedBean().setParamMap(paramMap);
+						return CommonUIConst.ACKNOWLEDGE_REPORT_PAGE;
+					}	
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
 					reqDTO.setFlRequestId(resDTO.getFlRequestId());
@@ -347,7 +359,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentRequestSO = null;
 		}
 		return null;
-	
 	}
 
 	public void setFulfilmentRequestField(FulfilmentResDTO resDTO) {
