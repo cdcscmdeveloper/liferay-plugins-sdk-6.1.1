@@ -281,6 +281,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String revisionBaseUrl;
 	private String revisionSupplierAppNoParam;
 	private String revisionApproverAppNoParam;
+	private SelectItem[] identificationTypes;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2123,5 +2124,11 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.nonPersonnelProfBodyList = nonPersonnelProfBodyList;
 	}
 
+	public SelectItem[] getIdentificationTypes() {
+		return identificationTypes;
+	}
 
+	public void setIdentificationTypes(SelectItem[] identificationTypes) {
+		this.identificationTypes = identificationTypes;
+	}
 }
