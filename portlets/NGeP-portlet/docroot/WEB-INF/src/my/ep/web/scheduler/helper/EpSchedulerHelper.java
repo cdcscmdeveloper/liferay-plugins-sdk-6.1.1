@@ -1,7 +1,5 @@
 package my.ep.web.scheduler.helper;
 
-import java.text.ParseException;
-
 import my.ep.factory.EpLogger;
 
 import org.apache.log4j.Logger;
@@ -55,7 +53,7 @@ public class EpSchedulerHelper {
 				EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
 			}
 
-		} catch (final SchedulerException | ParseException e) {
+		} catch (final SchedulerException e) {
 			log.error(e.getMessage());
 		}
 
