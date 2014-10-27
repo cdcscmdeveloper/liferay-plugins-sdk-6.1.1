@@ -9,17 +9,19 @@
 	
    
 	<p:panel header="DETAIL CATEGORY" toggleable="true">
-	<p:dataTable>
+	<p:dataTable id="detailCatId" var="detailCategory"
+		value="#{businessNatureBackingBean.managedBean.childNatures}"> 
 		  	  	         
        <p:column headerText="#{lbl['lbl.pm.bn.level']}" > 	
+         <h:outputText value="#{detailCategory.businessLevel}"/>
        </p:column>  
        
        <p:column headerText="#{lbl['lbl.pm.bn.code']}" > 
-	
+         <h:outputText value="#{detailCategory.levelCode}"/>	
        </p:column> 
 
        <p:column headerText="#{lbl['lbl.pm.bn.name']}" > 
-
+         <h:outputText value="#{detailCategory.levelName}"/>
        </p:column> 
        
         <p:column headerText="#{lbl['lbl.pm.search.status']}" style="width:10%">                     

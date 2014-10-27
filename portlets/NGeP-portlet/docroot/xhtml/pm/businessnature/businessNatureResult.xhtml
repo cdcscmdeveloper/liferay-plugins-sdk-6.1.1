@@ -16,7 +16,9 @@
 			<p:commandButton value="#{lbl['lbl.btn.search']}" icon="ui-icon-search" 
 							 action="#{businessNatureBackingBean.retrieveBusinessNature}"
 						     update="businessNatureSR" process="businessNatureSearch"/>
-            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" />
+            <p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" 
+            				 action="#{businessNatureBackingBean.resetBusinessNatureSearch}" 
+            				 process="@this" update="businessNaturePanel" />
 	  </div>
     <br/>
 	<br/>

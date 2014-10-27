@@ -13,13 +13,27 @@
 			
 	<table style="width:100%;">
 	  <tr>	  	
-		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" /></td>
-         <td><p:inputText size="30" /></td>
+		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /></td>
+         <td>
+         	<p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.businessLevel}"
+         	  size="30" disabled="true" />
+        </td>
 	  </tr>	
-	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.bn.name']}" /></td>
-		<td><p:inputText size="30" /></td>
-	  </tr>
+	  	  <tr>
+		<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
+			<p:outputLabel value="*" styleClass="mandatory" /></td>
+     	 <td><p:columnGroup> 		        
+      	 <p:inputText value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelCode}" size="5" />&#160;&#160;
+      	 <ac:lov id="bnLovId" lovId="PM_BUSINESS_NATURE" size="100"
+      	 			update="@form" 
+					headerText="Business Nature Lov" 			
+					value="#{businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature.levelName}" 
+					saveObject="businessNatureBackingBean.managedBean.pmBusinessNature.parentBusinessNature"
+					conditionField="recordStatus^1">
+		</ac:lov> 
+		<ac:lovPopup />                                          
+      	</p:columnGroup></td> 
+	   </tr>
 	</table>
    </p:panel>	
 </ui:composition>
