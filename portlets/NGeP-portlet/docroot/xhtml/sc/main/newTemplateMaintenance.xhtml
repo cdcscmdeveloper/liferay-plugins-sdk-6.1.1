@@ -21,12 +21,11 @@
 				style="float:left;" icon="ui-icon-back" immediate="true"
 				action="#{specificationBackingBean.backAction}" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
-				style="float:right;" icon="ui-icon-cancel"
+				style="float:right;" icon="ui-icon-cancel" immediate="true"
 				onclick="createTechnicalDialog.show();"></p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
 				style="float:right;" icon="ui-icon-check"
-				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}"
-				update="@all" />
+				action="#{specificationBackingBean.completeTemplateSpecDetails('BO',1)}" />
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
 				style="float:right;"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('BO',1)}"
@@ -75,7 +74,7 @@
 							value="#{lbl['lbl.sc.spec.template.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
-				<!-- 	<td><h:outputLabel
+					<!-- 	<td><h:outputLabel
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td><p:selectOneRadio
 							value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
@@ -102,7 +101,7 @@
 				</table>
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
 						icon="ui-icon-accept" oncomplete="createTechnicalDialog.hide();"
 						action="#{specificationBackingBean.backAction}" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"

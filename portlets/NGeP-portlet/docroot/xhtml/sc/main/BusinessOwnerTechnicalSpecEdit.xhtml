@@ -24,7 +24,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
 				style="float:right;" icon="ui-icon-cancel"
-				onclick="createTechnicalDialog.show();"
+				onclick="createTechnicalDialog.show();" immediate="true"
 				disabled="#{specificationBackingBean.managedBean.taskName eq 'Specification Approval'}"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.spec.btn.complete']}"
@@ -124,7 +124,7 @@
 				</table>
 				<p:spacer height="1" />
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					<p:commandButton value="#{lbl['lbl.btn.yes']}" immediate="true"
 						icon="ui-icon-accept" oncomplete="createTechnicalDialog.hide();"
 						action="#{specificationBackingBean.cancelSpecAction('BO')}" />
 					<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
