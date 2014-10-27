@@ -466,7 +466,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		/***
 		 * Professional Cert 
 		 */
-		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
+		if(this.getManagedBean().getSmAppl().getSupplierType() != null && this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 			if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && smAppl.getSupplierType() != null)){  
 				//				|| 
 				//				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
