@@ -12,7 +12,7 @@
 		<p:panel>
 			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 		</p:panel>
-		<p:panel header="SEARCH" toggleable="true">
+		<p:panel id="zoneSearch" header="SEARCH" toggleable="true">
 
 			<h:panelGrid id="zoneSerchState" style="width:100%;" columns="2">
 				<h:column>
@@ -22,14 +22,13 @@
 			<h:panelGrid style="width:100%;">
 				<p:column>
 					<div align="right">
-
-						<p:commandButton value="#{lbl['lbl.pm.reset.zone']}"
-							style="float:right;" action="#{zoneBackingBean.reset}"
-							update="zoneSerchState" icon="ui-icon-reset" resetValues="true"
-							partialSubmit="true" process="@this" />
 						<p:commandButton value="#{lbl['lbl.pm.search.zone']}"
-							style="float:right;" icon="ui-icon-search"
-							action="#{zoneBackingBean.searchZone}" update="searchZones" />
+							icon="ui-icon-search" action="#{zoneBackingBean.searchZone}"
+							update="searchZones" process="zoneSearch" />
+						<p:commandButton value="#{lbl['lbl.pm.reset.zone']}"
+							icon="ui-icon-reset" type="reset"
+							actionListener="#{zoneBackingBean.reset}" process="@this"
+							update="locationSearch" />
 					</div>
 				</p:column>
 
@@ -51,7 +50,7 @@
 				<p:column headerText="#{lbl['lbl.pm.zone.name']}" style="width :30%">
 					<h:outputText value="#{zone.zoneName}" />
 				</p:column>
-					
+
 
 				<p:column headerText="#{lbl['lbl.pm.action']}" style="width :5%">
 					<p:commandLink action="#{zoneBackingBean.editZone(zone)}">

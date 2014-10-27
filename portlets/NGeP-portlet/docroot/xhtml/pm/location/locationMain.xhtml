@@ -12,21 +12,24 @@
 		<p:panel>
 			<h:panelGrid styleClass="noBorders tr,noBorders td"></h:panelGrid>
 		</p:panel>
-		<p:panel header="SEARCH" toggleable="true">
+		<p:panel id="locDefSearch" header="SEARCH" toggleable="true">
 
 			<h:panelGrid id="locationSearch" style="width:100%;">
 				<h:column>
 					<ui:include src="/xhtml/pm/location/locationSearch.xhtml" />
 				</h:column>
 				<h:column>
-					<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
-						style="float:right;" action="#{locationBackingBean.reset}"
-						update="locationSearch" icon="ui-icon-reset" resetValues="true"
-						partialSubmit="true" process="@this" />
-					<p:commandButton value="#{lbl['lbl.pm.search.location']}"
-						style="float:right;" icon="ui-icon-search"
-						action="#{locationBackingBean.searchLocation}"
-						update="searchLocations" />
+
+					<div align="right">
+						<p:commandButton value="#{lbl['lbl.pm.search.location']}"
+							icon="ui-icon-search"
+							action="#{locationBackingBean.searchLocation}"
+							update="searchLocations" process="locDefSearch" />
+						<p:commandButton value="#{lbl['lbl.pm.reset.location']}"
+							icon="ui-icon-reset" type="reset"
+							actionListener="#{locationBackingBean.reset}" process="@this"
+							update="locationSearch" />
+					</div>
 				</h:column>
 			</h:panelGrid>
 		</p:panel>
