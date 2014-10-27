@@ -225,14 +225,14 @@ public class SupplierManagementConst {
 	public static final String PERSONNEL_SEMIPROF_STAFF_CONSULTANT_PARAMCODE = "3";
 	public static final String PERSONNEL_CLERICAL_STAFF_CONSULTANT_PARAMCODE = "4";
 
-	public static final String PERSONNEL_MANAGEMENT_ROLENAME = "Management";
-	public static final String PERSONNEL_PROF_STAFF_ROLENAME = "Professionl Staff";
-	public static final String PERSONNEL_SEMIPROF_STAFF_ROLENAME = "Semi-Professional Staff";
-	public static final String PERSONNEL_CLERICAL_STAFF_ROLENAME = "Clerical Staff";
-	public static final String PERSONNEL_STAFF_ROLENAME = "Staff";
-	public static final String PERSONNEL_HGHR_ROLENAME = "Higher Management";
-	public static final String PERSONNEL_DIR_ROLENAME = "Director";
-	public static final String PERSONNEL_EQUI_OWNER = "Share Holder";
+	public static final String PERSONNEL_MANAGEMENT_ROLENAME = "lbl.sm.personnel.comprole.mngmnt";
+	public static final String PERSONNEL_PROF_STAFF_ROLENAME = "lbl.sm.personnel.comprole.professional.staff";
+	public static final String PERSONNEL_SEMIPROF_STAFF_ROLENAME = "lbl.sm.personnel.comprole.semi.professional.staff";
+	public static final String PERSONNEL_CLERICAL_STAFF_ROLENAME = "lbl.sm.personnel.comprole.clerical.staff";
+	public static final String PERSONNEL_STAFF_ROLENAME = "lbl.sm.personnel.comprole.staff";
+	public static final String PERSONNEL_HGHR_ROLENAME = "lbl.sm.personnel.comprole.higher.mngmnt";
+	public static final String PERSONNEL_DIR_ROLENAME = "lbl.sm.personnel.comprole.director";
+	public static final String PERSONNEL_EQUI_OWNER = "lbl.sm.personnel.comprole.shareholder";
 	public static final String PERSONNEL_TYPE_FRGNR = "NON-MALAYSIAN";
 	public static final String PERSONNEL_TYPE_BUMI = "BUMI";
 	public static final String PERSONNEL_TYPE_NON_BUMI = "NON-BUMI";
