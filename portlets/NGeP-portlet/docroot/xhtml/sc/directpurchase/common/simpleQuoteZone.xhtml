@@ -99,8 +99,7 @@
 					var="zoneTree"
 				    rowIndexVar="index">
 				  <p:column headerText="Location">
-				   <p:tree value="#{zoneTree}" var="location" selectionMode="checkbox" dyanmic="true"
-                                              cache="false">
+				   <p:tree value="#{zoneTree}" var="location" selectionMode="checkbox">
 						<p:ajax event="select" listener="#{simpleQuoteBackingBean.selectPanelItemZone}" />
 					    <p:ajax event="unselect"  listener="#{simpleQuoteBackingBean.unSelectPanelItemZone}" />
 					    
@@ -118,16 +117,15 @@
 							</p:treeNode>
 				 </p:tree>
 			  </p:column>
-			  <p:column headerText="Action">
-			  </p:column>
-				</p:dataTable>
+			  
+			 </p:dataTable>
 			</h:panelGrid>
 			<div align="right" style="width: 100%">
 				<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 					<p:commandButton
 						value="#{lbl['lbl.sc.sq.supp.criteria.delete.btn']}"
 						process="@all,panelzoneDataTable" partialSubmit="true"
-						action="#{simpleQuoteBackingBean.deletePanelItemZoneTreeNode()}"
+						action="#{simpleQuoteBackingBean.deleteZoneTreeNode}"
 						update="@form" icon="ui-icon-delete" />
 
 				</c:if>

@@ -494,29 +494,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				scQuoteSupplier.setQuote(quote);
 				scQuoteSupplier.setTplSpecZoneDtl(tplSpecZoneDtl);
 
-				if(panelSuppliers.isEmpty()){
-					panelSuppliers.add(scQuoteSupplier);
-					getManagedBean().setPanelSuppliers(panelSuppliers);
-                   
-				} else {
-					List<Long> supplierIds = new ArrayList<Long>();
-					for (ScQuoteSupplier quoteSupplier :  getManagedBean().getPanelSuppliers()) {
-						supplierIds.add(quoteSupplier.getSmSupplier().getSupplierId());
-					}
-					if (supplierIds.size() > 0) {
-						if(!supplierIds.contains(scQuoteSupplier.getSmSupplier().getSupplierId())){
-							panelSuppliers.add(scQuoteSupplier);
-							getManagedBean().setPanelSuppliers(panelSuppliers);
+				panelSuppliers.add(scQuoteSupplier);
+				getManagedBean().setPanelSuppliers(panelSuppliers);
 
-						} else{
-							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in panel Supplier"});
-						}
-					}
-				}
 			}
-		}
+		}		
 	}
-	
+
 	private List<SmSupplier>  addSelectedSuppliers(List<CmSupplierItem> compareSupplierItems , CmSupplierItem selectedSupplierItem) {
 		List<SmSupplier> suppliers = getManagedBean().getCompareSuppliers();
 		for(CmSupplierItem supplierItem : compareSupplierItems){
@@ -1754,8 +1738,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
 						 tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
-						 deleteStateOrDivOrDist(tplSpecZoneDtl, null);
-						rootTrees.remove(row--);
+						 if(tplSpecZoneDtl.getPanelZone() != null){
+							 deletePanelItemSuppliers(tplSpecZoneDtl);
+							 
+						 } else{
+							 deleteStateOrDivOrDist(tplSpecZoneDtl, null);
+						 }
+
+						 rootTrees.remove(row--);
 					} else {
 						
 						removedList  = deleteChildTreeNodes(zoneTree.getChildren());
@@ -1808,54 +1798,31 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	/**
 	 * To delete the selected TreeNode from the panel item zone
 	 */
-	public void deletePanelItemZoneTreeNode() {
-		List<TreeNode>	zones = new ArrayList<TreeNode>();
+	public void deletePanelItemSuppliers(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
-		TreeNode selectedTreeNode = getManagedBean().getSelectedTreeNode();
-		
-		if(selectedTreeNode ==null){
-			throw new EpException("Please select At least one Zone Location");
-			
-		} else if (selectedTreeNode.getChildren() != null) {
-			TplSpecZoneDtl zoneDtl = (TplSpecZoneDtl) selectedTreeNode.getData();
-
-			for (TreeNode node : getManagedBean().getZoneTrees()) {
-
-				if (!zoneDtl.equals(((TplSpecZoneDtl) node.getChildren().get(0).getData()))) {
-					zones.add(node);
-				} else{
-
-					// delete suppliers by selected zone to be delete
-					if(zoneDtl.getPanelZone() !=null){
-						CtPanelZone panelZone = zoneDtl.getPanelZone();
-
-						if(getManagedBean().getPanelSuppliers() != null && getManagedBean().getPanelSuppliers().size()>0){
-							for (ScQuoteSupplier sqQuoteSupplier : getManagedBean().getPanelSuppliers()) {
-								if(sqQuoteSupplier.getTplSpecZoneDtl() != null && sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone() != null){
-									if(!sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
-										panelSuppliers.add(sqQuoteSupplier);
-									}
-								}
-							}
-						}	
+		// delete suppliers by selected zone to be delete
+		if(tplSpecZoneDtl.getPanelZone() !=null){
+			CtPanelZone panelZone = tplSpecZoneDtl.getPanelZone();
+			if(getManagedBean().getPanelSuppliers() != null && getManagedBean().getPanelSuppliers().size()>0){
+				for (ScQuoteSupplier sqQuoteSupplier : getManagedBean().getPanelSuppliers()) {
+					if(sqQuoteSupplier.getTplSpecZoneDtl() != null && sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone() != null){
+						if(!sqQuoteSupplier.getTplSpecZoneDtl().getPanelZone().getPanelZoneId().equals(panelZone.getPanelZoneId())){
+							panelSuppliers.add(sqQuoteSupplier);
+						}
 					}
 				}
-			}
-			this.getManagedBean().setZoneTrees(zones);
-			getManagedBean().setPanelSuppliers(panelSuppliers);
+			}	
 		}
+		getManagedBean().setPanelSuppliers(panelSuppliers);
 	}
-	
+
 	public void selectPanelItemZone(NodeSelectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
-		if(selectedNode.getChildren() != null && selectedNode.getChildCount()>0){
-			getManagedBean().setSelectedTreeNode(selectedNode);
-		}
+		selectedNode.setSelected(true);
 	}
 	
 	public void unSelectPanelItemZone(NodeUnselectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
-		System.out.println("un select :"+event.getTreeNode().isSelected());
 		selectedNode.setSelected(false);
 	}
 
