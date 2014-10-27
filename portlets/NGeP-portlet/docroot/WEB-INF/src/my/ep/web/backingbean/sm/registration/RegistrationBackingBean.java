@@ -228,11 +228,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		//check the professional body if supplier type is consultant
-		if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
-			if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
-				throw new EpException(MessageConst.ERROR_721033);
-			}else{
-				checkDuplicatedProfessionalBody();
+		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
+			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
+				if(this.getManagedBean().getSmAppl().getSmAssociationBodies().size() < 1){
+					throw new EpException(MessageConst.ERROR_721033);
+				}else{
+					checkDuplicatedProfessionalBody();
+				}
 			}
 		}
 
@@ -464,19 +466,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		/***
 		 * Professional Cert 
 		 */
-		if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && smAppl.getSupplierType() != null)){  
-//				|| 
-//				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
-//				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
-//				smSupp.getServiceCategory() != null)){
-			log.info("*****IS PROF********");
-			for(SmAssociationBody suppAssocBody : smAppl.getSmAssociationBodies()){
-				suppAssocBody.setSmAppl(smAppl);
-				suppAssocBody.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+		if(this.getManagedBean().getSmAppl().getSupplierType() != null){
+			if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && smAppl.getSupplierType() != null)){  
+				//				|| 
+				//				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
+				//				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
+				//				smSupp.getServiceCategory() != null)){
+				log.info("*****IS PROF********");
+				for(SmAssociationBody suppAssocBody : smAppl.getSmAssociationBodies()){
+					suppAssocBody.setSmAppl(smAppl);
+					suppAssocBody.setRevNo(SupplierManagementConst.DEFAULT_REV_NO);
+				}
+			}else{
+				log.info("*****NOT PROF********");
+				smAppl.setSmAssociationBodies(null);
 			}
-		}else{
-			log.info("*****NOT PROF********");
-			smAppl.setSmAssociationBodies(null);
 		}
 
 		/*
