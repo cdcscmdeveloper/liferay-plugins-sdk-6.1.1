@@ -217,10 +217,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		String tabParam = originalServletRequest.getParameter("currentTab");
 		try {
 			if (tabParam != null) {
-				getManagedBean().setTabActiveIndex(Integer.parseInt(tabParam));
+				setTabValue(Integer.parseInt(tabParam), "");
 			}
 		} catch (NumberFormatException ne) {
-			getManagedBean().setTabActiveIndex(0);
+			setTabValue(0, "");
 		}
 	}
 
@@ -264,9 +264,9 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		initStep8_9PoApproverDefaultDecision();
 
 		// testing by user
-//		getManagedBean().setApproverUser(true);
+//		getManagedBean().setApproverUser(false);
 //		getManagedBean().setSupplierUser(false);
-//		getManagedBean().setPoUser(false);
+//		getManagedBean().setPoUser(true);
 	}
 
 	private void initStep0BaseInfo(SmApplRevisionResDTO resDTO) {
