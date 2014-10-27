@@ -93,6 +93,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScSQWorkFlowStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
@@ -109,6 +110,7 @@ import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteManagedBean;
+import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -125,6 +127,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -2591,7 +2594,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							zonesBean.setTplSpecZoneDtl(tplSpecZoneDtl);
 							zonesBean.setTplSpecZoneLocs(tplSpecZoneDtl.getTplSpecZoneLocs());
 							beans.add(zonesBean);
-							zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+							if(tplSpecZoneDtl.getPanelZone() != null){
+								zoneTrees.add(constuctTreeNodeWithDisableChilds(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+							} else{
+								zoneTrees.add(LocationSingleton.getInstance().constuctTreeNode(tplSpecZoneDtl, tplSpecZoneDtl.getTplSpecZoneLocs()));
+							}
 						}
 					}
 					getManagedBean().setZoneTrees(zoneTrees);
@@ -3388,5 +3395,55 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
+	}
+	public TreeNode constuctTreeNodeWithDisableChilds(TplSpecZoneDtl tplSpecZoneDtl,
+			List<TplSpecZoneLoc> specLocs) {
+		TreeNode root = new DefaultTreeNode(QTConstants.NODE_ROOT, null);
+		if (tplSpecZoneDtl != null) {
+			TreeNode zoneNode = new DefaultTreeNode(QTConstants.NODE_ZONE,
+					tplSpecZoneDtl, root);
+			List<PmState> states = new ArrayList<PmState>();
+			List<PmDivision> divisions = new ArrayList<PmDivision>();
+			List<PmDistrict> districts = new ArrayList<PmDistrict>();
+			TreeNode stateNode = null;
+			TreeNode divisonNode = null;
+			for (TplSpecLoc locCriteria : specLocs) {
+				PmState pmState = locCriteria.getPmState();
+
+				if (null != pmState && !states.contains(pmState)) {
+					stateNode = new DefaultTreeNode(QTConstants.NODE_STATE,
+							locCriteria, zoneNode);
+					stateNode.setSelectable(false);
+				}
+				PmDivision division = locCriteria.getPmDivision();
+
+				if (null != division && !divisions.contains(pmState)) {
+					divisonNode = new DefaultTreeNode(
+							QTConstants.NODE_DIVISION, locCriteria, stateNode);
+					divisonNode.setSelectable(false);
+					divisions.add(division);
+				}
+				PmDistrict pmDistrict = locCriteria.getPmDistrict();
+
+				if (null != pmDistrict && !districts.contains(pmDistrict)) {
+					if (divisonNode == null) {
+						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+								locCriteria, stateNode)
+						.setSelectable(false);
+
+					} else {
+						new DefaultTreeNode(QTConstants.NODE_DISTRICT,
+								locCriteria, divisonNode)
+						.setSelectable(false);
+
+					}
+					districts.add(pmDistrict);
+				}
+				states.add(pmState);
+			}
+		} else {
+
+		}
+		return root;
 	}
 }
