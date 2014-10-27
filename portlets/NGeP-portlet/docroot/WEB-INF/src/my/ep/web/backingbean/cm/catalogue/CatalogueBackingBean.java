@@ -1811,6 +1811,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		// add the 1st title row
 
 		int no = 1;
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
+		
+		CodificationReqDTO reqDTO;
+		CatalogueReqDTO catalogueReqDTO;
 
 		for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {
 			List dataLs = new Vector();
@@ -1822,14 +1828,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			dataLs.add(catalog.getSupplierItemId());
 			dataLs.add(catalog.getCmItem().getExtensionCode());
 			dataLs.add(catalog.getCmItem().getItemName());
-			dataLs.add(catalog.getCmItem().getCmType().getTypeName());
-			dataLs.add(catalog.getCmItem().getCmBrand().getBrandName());
-			dataLs.add(catalog.getCmItem().getCmMeasurement()
-					.getMeasurementName());
-			dataLs.add(catalog.getCmItem().getCmColor().getColorName());
+			
+			reqDTO = new CodificationReqDTO();
+			reqDTO.setSupplierItemId(catalog.getSupplierItemId());
+			CodificationResDTO resDTO = codificationSO.getCmItemBySupplierItemId(reqDTO);
+			CmItem cmItem = resDTO.getCmItem();
+			dataLs.add(cmItem.getCmType().getTypeName());
+			dataLs.add(cmItem.getCmBrand().getBrandName());
+			dataLs.add(cmItem.getCmMeasurement().getMeasurementName());
+			dataLs.add(cmItem.getCmColor().getColorName());
+
+			catalogueReqDTO = new CatalogueReqDTO();
+			catalogueReqDTO.setSupplierItemId(catalog.getSupplierItemId());
+			CatalogueResDTO catalogueResDTO = catalogueSO.getAllPrice(catalogueReqDTO);
 
 			CmPricing cmPricing = new CmPricing();
-			for (CmPricing pricing : catalog.getCmPricings()) {
+			for (CmPricing pricing : catalogueResDTO.getSupplierItem().getCmPricings()) {
 
 				if (pricing.getPricingType().equalsIgnoreCase("01")) {
 					cmPricing = pricing;
@@ -5698,7 +5712,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(tier.getPrice() != null){
 			validatePriceValue(tier, pricings);
 			validateDateOverlap(index);
-		}	
+		}
+		
+		if(tier.getStartDate() != null && tier.getEndDate() != null){
+			//check for start and end date change will effect all child date also
+		}
 		
 	}
 	
