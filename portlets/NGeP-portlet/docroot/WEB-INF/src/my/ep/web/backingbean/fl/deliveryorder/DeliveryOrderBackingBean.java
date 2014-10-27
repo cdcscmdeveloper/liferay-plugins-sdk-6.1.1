@@ -285,6 +285,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 
 				if(itemAddr.getDeliveredQty().doubleValue()>remainingQty.doubleValue()) {
 					itemAddr.setDeliveredQty(new BigDecimal(0));
+					itemAddr.setDeliveredAmt(new BigDecimal(0));
 					throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 				}
 			}
@@ -398,6 +399,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		if(delQtyCal.doubleValue()>remainingQty.doubleValue()) {
 			itemAddress.setDeliveredQty(new BigDecimal(0));
+			itemAddress.setDeliveredAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100032, new String[]{"Delivery Quantity","Remaining Quantity"});
 		}
 		
