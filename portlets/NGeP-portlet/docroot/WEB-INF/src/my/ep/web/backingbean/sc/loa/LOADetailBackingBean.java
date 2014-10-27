@@ -265,6 +265,9 @@ public class LOADetailBackingBean extends
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 
 			generateDeclarationFromVelocity(scLoa,scQt);
+			
+			getManagedBean().setSelectedSupplierBranchName(
+					scLoa.getSupplierBranch());
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
