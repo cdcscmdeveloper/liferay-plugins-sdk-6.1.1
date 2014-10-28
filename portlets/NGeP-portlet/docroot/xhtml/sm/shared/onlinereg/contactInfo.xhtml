@@ -10,8 +10,8 @@
 		<table class="customTbl">
 			<tr>
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.correspondenceadd']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
@@ -31,8 +31,8 @@
 				</td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResState"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
@@ -58,8 +58,8 @@
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
@@ -85,8 +85,8 @@
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResCity"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
@@ -108,8 +108,8 @@
 						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.postcode']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:inputText size="40" maxlength="10"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
@@ -134,8 +134,8 @@
 
 
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.mobilenumber']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:inputText size="40" id="txtMobileNoId" maxlength="12"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.mobilenumber']}"
@@ -148,8 +148,8 @@
 
 			<tr>
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.email']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:inputText size="40" id="usrEmail"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.email']}" maxlength="80"
@@ -167,8 +167,8 @@
 
 			<tr>
 				<td class="tdTitle">
-					<p:outputLabel value="*" styleClass="mandatory" />
 					<p:outputLabel value="#{lbl['lbl.sm.confirmemail']}" />
+					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent">
 				<p:inputText size="40" id="conEmail" value="#{registrationBackingBean.managedBean.confirmEmail}" 
