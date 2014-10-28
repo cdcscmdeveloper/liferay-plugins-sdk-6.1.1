@@ -687,30 +687,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 	
 	protected void generateReport(String reportFile, Map<String, String> paramMap) throws IOException {
-		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
-		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
-		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
-		
-		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
-		reportUrl.append(ReportConst.PARAM_SEPARATOR);
-		reportUrl.append(ReportConst.PARAM_KEY_REPORT);
-		reportUrl.append(ReportConst.VALUE_SEPARATOR);
-		reportUrl.append(reportFile);
-		
-		for (Entry<String, String> params : paramMap.entrySet()) {
-			reportUrl.append(ReportConst.PARAM_SEPARATOR);
-			reportUrl.append(params.getKey());
-			reportUrl.append(ReportConst.VALUE_SEPARATOR);
-			reportUrl.append(params.getValue());
-		}
-		reportUrl.append(excNextUrl);
-		
-		if (log.isDebugEnabled()) {
-			log.debug("reportUrl: " + reportUrl);
-		}
+		String reportUrl = generateReportURL(reportFile, paramMap);
 		
 		HttpURLConnection urlConnection = null;
-		URL obj = new URL(reportUrl.toString());
+		URL obj = new URL(reportUrl);
 	    urlConnection = (HttpURLConnection) obj.openConnection();  
 	    
 	    BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());        
@@ -739,6 +719,31 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
         }
         buf.close();
         out.close();
+	}
+	
+	protected String generateReportURL(String reportFile, Map<String, String> paramMap) throws IOException {
+		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
+		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
+		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);
+		
+		StringBuilder reportUrl = new StringBuilder(excPrevUrl);
+		reportUrl.append(ReportConst.PARAM_SEPARATOR);
+		reportUrl.append(ReportConst.PARAM_KEY_REPORT);
+		reportUrl.append(ReportConst.VALUE_SEPARATOR);
+		reportUrl.append(reportFile);
+		
+		for (Entry<String, String> params : paramMap.entrySet()) {
+			reportUrl.append(ReportConst.PARAM_SEPARATOR);
+			reportUrl.append(params.getKey());
+			reportUrl.append(ReportConst.VALUE_SEPARATOR);
+			reportUrl.append(params.getValue());
+		}
+		reportUrl.append(excNextUrl);
+		
+		if (log.isDebugEnabled()) {
+			log.debug("reportUrl: " + reportUrl);
+		}
+		return reportUrl.toString();
 	}
 	
 	public String getFullAddress(SmAddress smAddress) {
