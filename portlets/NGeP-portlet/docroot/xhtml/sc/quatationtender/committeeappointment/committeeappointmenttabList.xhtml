@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
+	<p:panel id="committeMenus">
 
 		<ui:include src="addspecificationcommittee.xhtml" />
 
@@ -43,8 +43,8 @@
 					rendered="#{!qTDetailBB.managedBean.selectedTabBean.editable and qTDetailBB.managedBean.selectedTabBean.titleName ne 'Finalization Secretary'}" />
 
 				<p:commandButton value="#{lbl['lbl.so.clone.to.tec']}"
-					process="@this, specificationcommitteeid" update="@(.clonetecid)"
-					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTDetailBB.managedBean.selectedTabBean.editable}"
+					process="@this, specificationcommitteeid" update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
+					rendered="#{qTDetailBB.managedBean.selectedTabBean.titleName eq 'Specification Committee' and qTDetailBB.managedBean.qt.evaluationType eq 2}"
 					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
 					icon="ui-icon-clone" />
 			</div>

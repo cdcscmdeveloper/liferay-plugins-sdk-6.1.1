@@ -178,7 +178,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeNode.object.memberRole)}"
+							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.memberRole)}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					</p:column>
 
