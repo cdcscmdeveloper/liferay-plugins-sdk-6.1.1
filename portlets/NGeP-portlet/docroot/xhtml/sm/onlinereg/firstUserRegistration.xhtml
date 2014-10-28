@@ -50,7 +50,7 @@
 					</td>
 					<td class="tdContent">
 						<p:selectOneMenu id="nationalityId" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.nationality']}"
-							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}">
+							value="#{registrationBackingBean.managedBean.smPersonnel.pmCountry.countryId}" style="width:60%">
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
@@ -145,7 +145,7 @@
 					<td id="tdContent"><p:selectOneMenu required="#{!empty param['disableValidation']}"
 							label="#{lbl['lbl.sm.country']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId}"
-							id="cmbPermCounrty">
+							id="cmbPermCounrty" style="width:60%">
 							<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 							<f:selectItems var="counLs"
 								value="#{registrationBackingBean.managedBean.countryLs}"
@@ -168,7 +168,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent"><p:selectOneMenu id="cmbPermState" required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
-							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
+							value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}" style="width:60%">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems var="state"
 								value="#{registrationBackingBean.managedBean.permenantStateLs}"
