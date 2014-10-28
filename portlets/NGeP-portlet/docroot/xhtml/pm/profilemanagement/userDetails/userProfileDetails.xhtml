@@ -83,7 +83,10 @@
 							<p:inputText styleClass="ppDisplayTextL" id="itUserName" maxlength="50"
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.username']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}"/>
+								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
+								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
+								<f:validateRegex pattern="^([a-zA-Z]+[\sa-zA-Z]{1,50})?$" />
+							</p:inputText>
 							<p:message id="itUserNameMsg" for="itUserName" display="icon" />
 						</td>
 						<th></th>
