@@ -18,8 +18,10 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -213,13 +215,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<SmSupplier> panelSuppliers;
 
-	// For Circular Panel Search Criteria
-	private String circularNo;
-	private String circularName;
-	private String itemName;
-	private String circularCoverage;
-	private Date circularExpDate;
-
 	// For Restricted Tender Search Criteria
 	private String supplierName;
 	private String mofAccountNo;
@@ -280,6 +275,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private int totalSuppliers;
 
+	// Panel Information
+	private CtPanelItem ctPanelItem;
+	private CtCircularVer ctCircularVer;
+	private String panelItemCategory;
+	
+	private String circularNo;
+	private String circularName;
+	private String itemName;
+	private String circularCoverage;
+	private Date circularExpDate;
+	private String circularType;
+	
+	private List<CtPanelZone> ctPanelZones;
+	
+	private boolean readOnly;
+	private CtPanelSupplier ctpanelSupplier;
+	
 	// Business Owner
 	private List<ScCommitteeMember> scCommitteeMemberList;
 	private ScCommitteeMember selectScCommitteMember;
@@ -342,7 +354,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtSupplier scQtSupplier;
 	private CtContract ctContract = new CtContract();
 	private List<CtPanelItem> selectpanelItem;
-
+	
 	// Committee Appointment
 	private String tabTitle;
 	private ScCommittee scCommittee;
@@ -2755,6 +2767,62 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setQtActivityBeans(List<QTActivityBean> qtActivityBeans) {
 		this.qtActivityBeans = qtActivityBeans;
+	}
+
+	public CtPanelItem getCtPanelItem() {
+		return ctPanelItem;
+	}
+
+	public void setCtPanelItem(CtPanelItem ctPanelItem) {
+		this.ctPanelItem = ctPanelItem;
+	}
+
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
+	}
+
+	public String getPanelItemCategory() {
+		return panelItemCategory;
+	}
+
+	public void setPanelItemCategory(String panelItemCategory) {
+		this.panelItemCategory = panelItemCategory;
+	}
+
+	public String getCircularType() {
+		return circularType;
+	}
+
+	public void setCircularType(String circularType) {
+		this.circularType = circularType;
+	}
+
+	public List<CtPanelZone> getCtPanelZones() {
+		return ctPanelZones;
+	}
+
+	public void setCtPanelZones(List<CtPanelZone> ctPanelZones) {
+		this.ctPanelZones = ctPanelZones;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public CtPanelSupplier getCtpanelSupplier() {
+		return ctpanelSupplier;
+	}
+
+	public void setCtpanelSupplier(CtPanelSupplier ctpanelSupplier) {
+		this.ctpanelSupplier = ctpanelSupplier;
 	}
 
 }
