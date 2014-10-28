@@ -18,12 +18,12 @@
 			</tr>
 		</table>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.so.clonebtn']}"
+			<p:commandButton value="#{lbl['lbl.so.clonebtn']}" 
 				actionListener="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
 				oncomplete="screen2.show();" process="@this" icon="ui-icon-clone"
-				update="@(.cloneCommitteMember)" />
+				update="@(.cloneCommitteMember)"  />
 		</div>
-		<p:tabMenu activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}" 
+		<p:tabMenu id="committeTabMenu" activeIndex="#{qTDetailBB.managedBean.selectedTabIndex}" 
 			model="#{qTDetailBB.managedBean.menuModel}"  >
 			
 			</p:tabMenu>		
