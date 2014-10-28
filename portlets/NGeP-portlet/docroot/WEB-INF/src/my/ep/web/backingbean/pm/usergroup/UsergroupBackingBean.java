@@ -194,7 +194,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 *  reload back to user group search page
 	 */
 	public String backToMainPages() {
-		reset();
+
 		return "/xhtml/pm/usergroupsearch/userGroupSearchMain.xhtml";
 	}
 
