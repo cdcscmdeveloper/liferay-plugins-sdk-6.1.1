@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +50,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -1212,5 +1214,54 @@ public class QTSupplierQulCriteriaBackingBean extends
 			}
 		}
 		return categoryIds;
+	}
+	
+	// View Circular Attachmnets Download Method
+	public void downloadCircularDtls() {
+		debugLogger("downloadCircularDtls");
+		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+		itemList = new ArrayList<CtPanelItem>();
+		itemList.add(this.getManagedBean().getQt().getScQtSupplierCriteria().getCtPanelItem());
+		
+		try {
+			downloadFile(this.getManagedBean()
+					.getCtCircularVer().getCircularFilePath(), this.getManagedBean().getCtCircularVer()
+					.getCircularFileName());
+		} catch (IOException e) {
+			log.debug(e.getMessage());
+		}
+		this.getManagedBean().setSelectpanelItem(itemList);
+	}
+	
+	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
+		this.getManagedBean().setCtpanelSupplier(panelSupplier);
+		if (null != panelSupplier.getSupplier() && null != panelSupplier.getSupplier().getSmAppl() && null != panelSupplier.getSupplier().getSmAppl() .getSmPersonnels()) {
+			List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl().getSmPersonnels();
+			if (null != list) {
+				for (SmPersonnel smPersonnel : list) {
+					getManagedBean().setPersonnel(smPersonnel);
+				}
+				/*SmPersonnel supplierHQPersonnel = this.getManagedBean().getPersonnel();
+				if (null != supplierHQPersonnel) {
+					getManagedBean().setSupplierContact(supplierHQPersonnel.getName());
+					getManagedBean().setSupplierEmail(supplierHQPersonnel.getEmail());
+				}*/
+				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier().getSmAppl().getSmCompanyBasic();
+				if (null != smCompanyBasic) {
+					if (null != smCompanyBasic.getSmCompanyAddresses()) {
+						for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
+							if (null != smCompanyAddress)
+								if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+									getManagedBean().setSupplierBranch("HQ");
+									getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+									getManagedBean().setSupplierContact(getManagedBean().getPersonnel().getName());
+									getManagedBean().setSupplierEmail(getManagedBean().getPersonnel().getEmail());
+									break;
+								}
+						}
+					}
+				}
+			}
+		}
 	}
 }
