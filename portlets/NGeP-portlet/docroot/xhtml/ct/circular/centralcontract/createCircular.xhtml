@@ -16,8 +16,9 @@
 	</p:panel>
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
-		<p:dataTable id="contactPersonDt" var="contactPersonsVar" value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}"
-		 	rowKey="#{contactPersonsVar}" rowIndexVar="index" selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
+		<p:dataTable id="contactPersonDt" var="contactPersonsVar" widgetVar="contactPersonObj"
+		     value="#{centralContractBackingBean.managedBean.circularVer.ctContactPersons}" rowIndexVar="index"
+		 	rowKey="#{contactPersonsVar}"  selection="#{centralContractBackingBean.managedBean.selectedContactPersons}">
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:5%" 
 				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
@@ -43,12 +44,11 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt"
-				rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-			  partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"
-			  rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" 
+			    icon="ui-icon-add" action="#{centralContractBackingBean.addContactPerson()}" update="contactPersonDt"
+				oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" icon="ui-icon-delete"
+			    onsuccess="delCtPersonDlg.show()" rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>				
 		</div>
 		
 		<p:dialog id="delCtPersonDlg" resizable="false"

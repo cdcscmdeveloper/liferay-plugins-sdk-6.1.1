@@ -17,9 +17,9 @@
 		</p:selectOneMenu>		
 		<p:spacer height="10" />
 		<p:outputPanel id="cancelCircularList">
-		<p:dataTable id="cancelCcrDt" var="data" rowKey="#{data}"
+		<p:dataTable id="cancelCcrDt" var="data" 
 			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
-			selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
+			rowKey="#{data}" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.circular.no']}" >
