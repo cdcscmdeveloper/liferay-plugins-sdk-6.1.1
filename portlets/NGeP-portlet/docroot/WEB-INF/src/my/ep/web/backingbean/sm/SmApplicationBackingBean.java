@@ -13,6 +13,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -32,6 +33,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
@@ -56,6 +58,8 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -93,6 +97,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -123,6 +128,7 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
@@ -307,14 +313,14 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkPendingActivationPersonnelList(currSupp
 								.getSupplierId());
-				if (applicationType
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-					boolean hasActiveTransactions = SmApplicationUtil
-							.hasActiveTransactions(currSupp);
-					if (hasActiveTransactions) {
-						throw new EpException(MessageConst.ERROR_722565);
-					}
-				}
+				// if (applicationType
+				// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				// boolean hasActiveTransactions = SmApplicationUtil
+				// .hasActiveTransactions(currSupp);
+				// if (hasActiveTransactions) {
+				// throw new EpException(MessageConst.ERROR_722565);
+				// }
+				// }
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
@@ -510,6 +516,8 @@ public class SmApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					// fac.setOwnerName("Sample");
 					fac.setFacilityType("H");
+					SmApplicationUtil
+							.setCancellationSmAttachment(getManagedBean());
 				}
 				SmAddress addr = new SmAddress();
 				addr = setDefaultBaseOfficeAddress(addr);
@@ -528,6 +536,10 @@ public class SmApplicationBackingBean extends
 			} else {
 				setApplicationFailities(smAppl.getSmFacilities());
 				// TODO
+			}
+			if (smAppl.getApplType().equalsIgnoreCase(
+					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
 			}
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -637,9 +649,32 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = null;
 		}
 	}
-	
-	public void onDisplayConfirm(){
-		RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+
+	public void onDisplayConfirm() {
+		Locale locale = new FacesScopes().getUserLocale();
+		StringBuffer sb = new StringBuffer();
+		boolean valid = true;
+		if (getManagedBean().getSupplierRemarks() == null
+				|| getManagedBean().getSupplierRemarks().trim() == "") {
+			sb.append(ResourceBundleUtils.getMessage(
+					"lbl.sm.mof.reg.reason.delete",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			sb.append(" is mandatory </br>");
+			valid = false;
+		}
+		if (getManagedBean().getCancellationAttachment().getFileName() == null
+				|| getManagedBean().getCancellationAttachment().getFileName()
+						.trim() == "") {
+			sb.append(ResourceBundleUtils.getMessage("lbl.sm.suppdoc.attach",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+			sb.append(" is mandatory ");
+			valid = false;
+		}
+		if (!valid) {
+			throw new EpException(sb.toString());
+		} else {
+			RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+		}
 	}
 
 	public void updateSmAppl() throws Exception {
@@ -3908,6 +3943,8 @@ public class SmApplicationBackingBean extends
 			// TODO set the role
 			remark.setRemark(getManagedBean().getSupplierRemarks());
 			saveSmRemarks(remark);
+			saveSmCancellationAttachment(getManagedBean()
+					.getCancellationAttachment());
 			initiateSmApplicationTask();
 			FacesContext
 					.getCurrentInstance()
@@ -4620,6 +4657,15 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	private void saveSmCancellationAttachment(SmAttachment attach) {
+		SmAttachmentReqDTO reqDTO = new SmAttachmentReqDTO();
+		reqDTO.setAttachment(attach);
+		ISmAttachmentSO reqSO = (ISmAttachmentSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", ISmAttachmentSO.class);
+		SmAttachmentResDTO resDTO = reqSO.updateSmAttachment(reqDTO);
+
+	}
+
 	private DocumentResDTO retrieveSupportingDocumentList(DocumentReqDTO reqDTO) {
 		DocumentResDTO resDto = new DocumentResDTO();
 		IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance()
@@ -4707,6 +4753,23 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
+	}
+
+	public void handleCancelMofRegFileAttachment(FileUploadEvent event) {
+		log.info("********handleFileAttachment********");
+		if (event.getFile() != null) {
+			log.info("***** File attached *******"
+					+ event.getFile().getFileName());
+			getManagedBean().getCancellationAttachment().setFileName(
+					event.getFile().getFileName());
+
+			String filePath = Calendar.getInstance().get(Calendar.YEAR)
+					+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
+					+ "/SD/";
+			getManagedBean().getCancellationAttachment().setFilePath(filePath);
+			commonUploadFile(event, filePath);
+
+		}
 	}
 
 	private PmReasonDesc retrieveReasonDescriptionByReasonId(Long reasonId) {

@@ -9,9 +9,15 @@
 
 
 	<ui:define name="contentSection">
-	<p:messages id="messages" showDetail="true" showSummary="false"
-				autoUpdate="true"
-				closable="true" escape="false" />
+		<script type="text/javascript">
+			function clearInvalidFileMsg() {
+				fileUploadWidget.uploadContent.find("tr.ui-state-error")
+						.remove();
+			}
+		</script>
+
+		<p:messages id="messages" showDetail="true" showSummary="false"
+			autoUpdate="true" closable="true" escape="false" />
 		<p:panel
 			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
 
@@ -29,25 +35,47 @@
 			<table style="width: 100%; float: center">
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
 							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
-							value="#{backingBean.managedBean.supplierRemarks}"
-							required="true" /> 
-							<p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
+							value="#{backingBean.managedBean.supplierRemarks}" /> <p:message
+							id="cancelResonMsg" for="cancelReson" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:fileUpload mode="simple" required="true" id="attachment" label="#{lbl['lbl.sm.suppdoc.attach']}"/>
-						<p:message id="attachmentMsg" for="attachment" display="icon" />
-					</td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:commandLink style="float: left;padding-right: 10px;"
+							onclick="excelDialog.show(); clearInvalidFileMsg();">
+							<p:graphicImage library="ep/images/design" name="upload.png"
+								value="/resources/ep/images/design/upload.png"
+								style="margin-right:2px;" />
+						</p:commandLink> <p:outputLabel
+							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
+							style="float : left;"
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" /></td>
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{backingBean.onDisplayConfirm}" partialSubmit="true" update="@([id$=Msg])"/>
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{backingBean.onDisplayConfirm}" partialSubmit="true"
+					update="@([id$=Msg])" />
 			</div>
 		</p:panel>
-
+		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+			resizable="false" styleClass="pop_up_top">
+			<p:fileUpload
+				fileUploadListener="#{backingBean.handleCancelMofRegFileAttachment}"
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				uploadLabel="#{lbl['lbl.btn.upload']}" update="@form"
+				label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|pdf|doc|docx)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, PDF, DOC files are accepted">
+			</p:fileUpload>
+		</p:dialog>
+		<p:message id="uploadMsg" for="upload" display="icon" />
 		<p:confirmDialog id="canRegConfirm" width="350px"
 			message="#{lbl['lbl.sm.mof.reg.cancel.confirm']}"
 			header="#{lbl['lbl.sm.mof.reg.cancel']}" severity="alert"

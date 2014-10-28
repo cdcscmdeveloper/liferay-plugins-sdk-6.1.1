@@ -33,6 +33,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
@@ -283,6 +284,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String revisionSupplierAppNoParam;
 	private String revisionApproverAppNoParam;
 	private SelectItem[] identificationTypes;
+	private SmAttachment cancellationAttachment;
 
 	public List<String> getSupplierToPOList() {
 		return supplierToPOList;
@@ -2140,5 +2142,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDeleteNewApplCategoryList(
 			List<SmSupplierCategory> deleteNewApplCategoryList) {
 		this.deleteNewApplCategoryList = deleteNewApplCategoryList;
+	}
+
+	public SmAttachment getCancellationAttachment() {
+		return cancellationAttachment;
+	}
+
+	public void setCancellationAttachment(SmAttachment cancellationAttachment) {
+		this.cancellationAttachment = cancellationAttachment;
 	}
 }

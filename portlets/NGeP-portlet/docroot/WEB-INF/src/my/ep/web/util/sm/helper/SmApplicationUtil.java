@@ -96,6 +96,7 @@ import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -1529,6 +1530,13 @@ public class SmApplicationUtil {
 					new String[] { sb.toString() });
 		}
 		return validSave;
+	}
+
+	public static void setCancellationSmAttachment(SmApplicationManagedBean managedBean) {
+		SmAttachment attach = new SmAttachment();
+		attach.setDocId(managedBean.getSmAppl().getApplId());
+		attach.setDocType(managedBean.getSmAppl().getApplNo().substring(0, 2));
+		managedBean.setCancellationAttachment(attach);
 	}
 
 	public static void assignActiveCategoryList(

@@ -25,7 +25,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.suppname']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="30"
 							value="#{backingBean.managedBean.smAppl.smCompanyBasic.companyName}"
 							disabled="true" /></td>
 
@@ -33,7 +33,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.dateSubmitted']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="30"
 							value="#{backingBean.managedBean.smAppl.applSubmitDate}"
 							disabled="true">
 							<f:convertDateTime
@@ -44,7 +44,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.current.status']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true"
+					<td><p:inputText readonly="true" size="30"
 							value="#{backingBean.managedBean.currentStatus}" disabled="true" /></td>
 
 				</tr>
@@ -60,8 +60,16 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" /></td>
 					<td><p:outputLabel value="   : " /></td>
-					<td><p:commandButton value="#{lbl['lbl.btn.download']}"
-							icon="ui-icon-arrowthichk-s" /></td>
+					<td><p:commandButton value="#{lbl['lbl.cm.download']}"
+							style="float: left;"
+							action="#{backingBean.downloadSelectedSuppDoc(backingBean.managedBean.cancellationAttachment.fileName,backingBean.managedBean.cancellationAttachment.filePath)}"
+							update=":form" icon="ui-icon-download" ajax="false">
+							<p:fileDownload value="#{backingBean.file}" />
+						</p:commandButton> <p:outputLabel
+							value="#{backingBean.managedBean.cancellationAttachment.fileName}"
+							style="float: left;padding: 12px 0px 0px 10px;"
+							rendered="#{backingBean.managedBean.cancellationAttachment.fileName ne null}" />
+					</td>
 				</tr>
 
 			</table>
