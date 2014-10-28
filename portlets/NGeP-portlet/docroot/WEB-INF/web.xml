@@ -82,4 +82,40 @@
 	    <url-pattern>/filedownload/*</url-pattern>
 	</servlet-mapping>
 	
+	<!-- Quartz Startup Config -->
+	<!-- <context-param>
+		<param-name>quartz:shutdown-on-unload</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>quartz:wait-on-shutdown</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	<context-param>
+		<param-name>quartz:start-on-load</param-name>
+		<param-value>true</param-value>
+	</context-param> -->
+	
+	<!-- Used to initialize Quartz Scheduler Factory -->
+	<!-- <listener>
+		<listener-class>org.quartz.ee.servlet.QuartzInitializerListener</listener-class>
+	</listener> -->
+	
+	<!-- Use to initialize Quartz Jobs from Servlet -->
+	<!-- <servlet>
+		<servlet-name>ScBatchJobServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.sc.ebidding.servlet.EpJobServletInitializer</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>SmBatchJobServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.sm.SmSchedulerServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet> -->
+	
+	<!-- used to initialize Quartz Job Trigger from Context -->
+	<!-- <listener>
+		<listener-class>my.ep.sc.ebidding.scheduler.JobTaskListener.EPQuartzJobContextListener</listener-class>
+	</listener> -->
+	
 </web-app>
