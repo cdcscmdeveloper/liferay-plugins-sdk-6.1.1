@@ -44,7 +44,7 @@ import org.apache.log4j.Logger;
 public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	private static Logger log = Logger.getLogger(CategoryBackingBean.class);
 
-	private IPagingDataModel<Object[]> searchCategoryPagingDataModel = new SearchCategoryPagingDataModel();
+	private IPagingDataModel<Object[]> searchCategory = new SearchCategoryPagingDataModel();
 	private IPagingDataModel<PmCategoryL3> searchLOVPagingDataModel = new SearchLOVPagingDataModel();
 	private boolean flag;
 	boolean result = false;
@@ -58,7 +58,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchCategoryPagingDataModel() {
-			super("searchCategoryPagingDataModel");
+			super("searchCategory");
 		}
 
 		public ISearchResultBean<Object[]> pageChangeListener(ISearchBean<Object[]> searchBean) {
@@ -566,7 +566,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 	
 	public void search() {
-		searchCategoryPagingDataModel.reloadData();
+		searchCategory.reloadData();
 	}
 	
 	public void searchLOV() {
@@ -578,13 +578,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/search.xhtml";
 	}
 
-	public IPagingDataModel<Object[]> getSearchCategoryPagingDataModel() {
-		return searchCategoryPagingDataModel;
+	public IPagingDataModel<Object[]> getSearchCategory() {
+		return searchCategory;
 	}
 
 	public void setSearchCategoryPagingDataModel(
-			IPagingDataModel<Object[]> searchCategoryPagingDataModel) {
-		this.searchCategoryPagingDataModel = searchCategoryPagingDataModel;
+			IPagingDataModel<Object[]> searchCategory) {
+		this.searchCategory = searchCategory;
 	}
 	
 	public IPagingDataModel<PmCategoryL3> getSearchLOVPagingDataModel() {
