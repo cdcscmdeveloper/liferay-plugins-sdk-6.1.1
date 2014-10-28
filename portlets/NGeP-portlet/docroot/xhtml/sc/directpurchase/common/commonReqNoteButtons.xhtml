@@ -37,7 +37,7 @@
 						<td align="right">
 						      
 						  <c:if test="#{requestNoteBackingBean.managedBean.requestNoteStatus.statusId eq DPStatusConstants.rnPendingSubmission}">
-					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" icon="ui-icon-back" partialSubmit="true" 
+					           <p:commandButton value="#{lbl['lbl.sc.action.back.to.search.catalogue']}" process="@this" icon="ui-icon-back" partialSubmit="true" 
 						           style="float:left;"  immediate="true" 
 						           action="#{requestNoteBackingBean.backToPervious}"   
 						           rendered="#{requestNoteBackingBean.managedBean.sourceMethod eq 'Search Catalogue' and requestNoteBackingBean.managedBean.piRNChecker}"/>
@@ -81,4 +81,5 @@
 	 </table>
 	</c:if>
 	</div>
+	<p:spacer height="3px"></p:spacer>
 </ui:composition>
