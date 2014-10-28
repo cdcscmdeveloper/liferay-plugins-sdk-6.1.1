@@ -420,6 +420,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		if(delQtyCal.doubleValue()<0) {		
 			itemAddress.setDeliveredQty(new BigDecimal(0));
+			itemAddress.setDeliveredAmt(new BigDecimal(0));
 			throw new EpException(MessageConst.ERROR_100033, new String[]{"Delivery Quantity","0"});
 		}
 		
@@ -430,12 +431,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 		
 		if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE) 
-			&& itemAddress.getDeliveredAmt().doubleValue()>0 && itemAddress.getDeliveredQty().doubleValue()>0) {
-			delAmtCal = itemAddress.getDeliveredAmt();
-		} else {
+			&& itemAddress.getDeliveredQty().doubleValue() == 0) {
+			itemAddress.setDeliveredAmt(new BigDecimal(0));
+		} else if(itemAddress.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)){
 			delAmtCal = unitPriceCal.multiply(delQtyCal);
+			itemAddress.setDeliveredAmt(delAmtCal);
 		}
-		itemAddress.setDeliveredAmt(delAmtCal);
+		
 	}
 	
 	public void preRenderView() {
