@@ -6,12 +6,20 @@
 	xmlns:p="http://primefaces.org/ui" >
 	
     <ui:define name="contentSection">
+		<script type="text/javascript">
+			function handleLocalesDialogComplete(xhr, status, args) {
+				if (args) {
+					window.open(args.reportViewUrl, '_blank');
+				}
+			}
+		</script>
 		<p:panel id="acknowledge" header="#{lbl['lbl.acknowledgement.title']}">
-			<p:messages id="ackMsg" showDetail="true" autoUpdate="true" severity="info" />
+			<p:messages id="ackMsg" showDetail="true" autoUpdate="false" severity="info" />
 			<h:outputText value="#{lbl['lbl.txt.view']}" />
 			<p:spacer width="5px" />
-			<p:commandLink ajax="false" value="#{commonBackingBean.managedBean.reportDisplayName}" 
-				action="#{commonBackingBean.generateReport()}" />
+			<p:commandLink  value="#{commonBackingBean.managedBean.reportDisplayName}" 
+				oncomplete="handleLocalesDialogComplete(xhr, status, args)" 
+				actionListener="#{commonBackingBean.generateReport}" />
 		</p:panel>
 	</ui:define>
 		    
