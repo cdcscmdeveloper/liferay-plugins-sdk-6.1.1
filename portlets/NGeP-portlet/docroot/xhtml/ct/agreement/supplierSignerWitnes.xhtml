@@ -7,114 +7,131 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="signingWitness" header="#{lbl['lbl.ct.panel.supplier.signing']}" toggleable="true" toggleSpeed="500">
-      <h:panelGrid style="width:100%">
-        <h:panelGrid columns="3">
-   			<p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
-      		<p:spacer width="1"/>
-			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.signer']}" />
-		 </h:panelGrid>
-         <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
-            value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
-           selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
-            <ac:paginator for="agSupplierSigner"/>
-			   <p:column selectionMode="multiple" style="width:2%"/> 
+        
+         <h:panelGrid style="width:100%">
+              <h:panelGrid columns="3">
+   			      <p:outputLabel value="#{lbl['lbl.ct.signer']}" style="float:left;"/>
+      		      <p:spacer width="1"/>
+			      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.signer']}" />
+		      </h:panelGrid>
+        
+              <p:dataTable id="agSupplierSigner" var="signSupplierVar" 
+                   value="#{agreementBackingBean.managedBean.ctSupplierSigner}"
+                   selection="#{agreementBackingBean.selectedSupplierSigner}" rowKey="#{signSupplierVar}">
+                   <ac:paginator for="agSupplierSigner"/>
+			       <p:column selectionMode="multiple" style="width:2%"/> 
+                  
                    <p:column style="width:25%;" headerText="#{lbl['lbl.ct.business.name']}">
-                     <p:outputLabel value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" style="float:left;"/>
-                </p:column> 
-                <p:column style="width:25%;">
-                  <f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
-					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
-				  </f:facet>
-                  <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
-                   <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown()}"/>
-                     <p:ajax event="change" update="suOfId,suOfPosition"
-                         process="@all" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar)}"/> 
-                   </p:selectOneMenu>
-                </p:column>  
-                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-                   <p:outputLabel id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
-                </p:column> 	
-                <p:column style="width:25%;" headerText="#{lbl['lbl.ct.designation']}" >
-                   <p:outputLabel id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
-                </p:column>  	
-             </p:dataTable>
-		</h:panelGrid>
-		 <div class="ppRightBtn"> 
-		    <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" process="@form" action="#{agreementBackingBean.addSupplierSigner()}"
-		       	icon="ui-icon-add" update=":form:agSupplierSigner">
-		    	<p:tooltip for="addSupplierSignerBtn">
-				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
-				</p:tooltip>
-		    </p:commandButton>
-		    <p:commandButton id="delSupplierSignerBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgAgSupplierDel.show()">
-		    	<p:tooltip for="delSupplierSignerBtn">
-				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.signer']}" escape="false" />
-				</p:tooltip>
-		    </p:commandButton>
-        </div>
-         <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" styleClass="screen-title"  
-           resizable="false" modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			   <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:agSupplierSigner" process="@form" 
-				actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
-		   </div>
-        </p:dialog>  
-        <h:panelGrid style="width:100%">
-          <h:panelGrid columns="3">
-   			<p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
-      		<p:spacer width="1"/>
-			<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.witness']}" />
-		  </h:panelGrid>
-          <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
-            selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
-            <ac:paginator for="witnessSign"/>
-            <p:column selectionMode="multiple" style="width:2%"/> 
-            <p:column style="width:50%;" headerText="#{lbl['lbl.ct.name']}">
-               <p:inputText value="#{supplierWitnessVar.officerName}" style="width:95%;" maxlength="20"/>
-            </p:column>
-            <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
-               <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="20"/>
-            </p:column> 	       
-            <p:column style="width:20%;" headerText="#{lbl['lbl.ct.designation']}" >
-               <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255"/>
-            </p:column>  
-        </p:dataTable>
-       </h:panelGrid>
-        <div class="ppRightBtn"> 
-		    <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" process="@form" action="#{agreementBackingBean.addSupplierWitness()}"
-		    	icon="ui-icon-add" update=":form:supplierWitnesTable">
-		    	<p:tooltip for="addSupplierWitnessBtn">
-				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
-				</p:tooltip>
-		    </p:commandButton>
-		    <p:commandButton id="delSupplierWitnessBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()">
-		    	<p:tooltip for="delSupplierWitnessBtn">
-				    <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.witness']}" escape="false" />
-				</p:tooltip>
-		    </p:commandButton>
-        </div>
-         <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" styleClass="screen-title"  
-           resizable="false" modal="true" width="330">  
-            <h:panelGrid columns="3">
-              <p:graphicImage library="ep/images/design" name="exclamation.png"
-			   value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-			   <p:spacer width="10"/>
-              <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-           </h:panelGrid>
-           <div class="ppRightBtn">
-		     <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" process="@form" 
-				actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
-		   </div>
-        </p:dialog>  
+                       <p:outputLabel style="float:left;"
+                            value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
+                   </p:column> 
+                 
+                   <p:column style="width:25%;">
+                        <f:facet name="header">
+					        <h:outputText value="#{lbl['lbl.ct.contract.signer']}"/>
+					        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
+				        </f:facet>
+                 
+                       <p:selectOneMenu id="contractSigner" value="#{signSupplierVar.officerName}"  style="width:95%;">
+                          <f:selectItems value="#{agreementBackingBean.getSupplierSignerDropdown()}"/>
+                          <p:ajax event="change" update="suOfId,suOfPosition"
+                              process="@all" listener="#{agreementBackingBean.setSupplierUserValue(signSupplierVar)}"/> 
+                       </p:selectOneMenu>
+                     </p:column>  
+             
+                     <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
+                         <p:outputLabel id="suOfId" value="#{signSupplierVar.officerIc}" style="float:left;"/>
+                     </p:column> 	
+               
+                      <p:column style="width:25%;" headerText="#{lbl['lbl.ct.designation']}" >
+                          <p:outputLabel id="suOfPosition" value="#{signSupplierVar.officerPosition}" style="float:left;"/>
+                      </p:column>  	
+                </p:dataTable>
+		    </h:panelGrid>
+		    <div class="ppRightBtn"> 
+		       <p:commandButton id="addSupplierSignerBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add"
+		           process="@form" action="#{agreementBackingBean.addSupplierSigner()}"  update=":form:agSupplierSigner">
+		    	   <p:tooltip for="addSupplierSignerBtn">
+				      <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.signer']}" escape="false" />
+				   </p:tooltip>
+		        </p:commandButton>
+		        <p:commandButton id="delSupplierSignerBtn" process="@form" 
+		           value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete" onsuccess="dlgAgSupplierDel.show()">
+		    	   <p:tooltip for="delSupplierSignerBtn">
+				       <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.signer']}" escape="false" />
+			        </p:tooltip>
+		         </p:commandButton>
+              </div>
+        
+              <p:dialog id="dlgAgSupplierDel" widgetVar="dlgAgSupplierDel" 
+                   styleClass="screen-title"  resizable="false" modal="true" width="330">  
+                   <h:panelGrid columns="3">
+                       <p:graphicImage library="ep/images/design" name="exclamation.png"
+			               value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+			           <p:spacer width="10"/>
+                       <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                   </h:panelGrid>
+                   <div class="ppRightBtn">
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" process="@form" 
+				            update=":form:agSupplierSigner"  actionListener="#{agreementBackingBean.deleteSupplierSigner()}" onclick="dlgAgSupplierDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgAgSupplierDel.hide();" type="button" />
+		           </div>
+                </p:dialog>  
+      
+             <h:panelGrid style="width:100%">
+                  <h:panelGrid columns="3">
+   			          <p:outputLabel value="#{lbl['lbl.ct.witness']}" style="float:left;"/>
+      		          <p:spacer width="1"/>
+			         <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.witness']}" />
+		          </h:panelGrid>
+       
+                  <p:dataTable id="supplierWitnesTable" var="supplierWitnessVar" 
+                       value="#{agreementBackingBean.managedBean.ctSupplierWitness}"
+                       selection="#{agreementBackingBean.selectedSupplierWitnes}" rowKey="#{supplierWitnessVar}">
+                       <ac:paginator for="witnessSign"/>
+                       <p:column selectionMode="multiple" style="width:2%"/> 
+                     
+                       <p:column style="width:50%;" headerText="#{lbl['lbl.ct.name']}">
+                           <p:inputText value="#{supplierWitnessVar.officerName}" style="width:95%;" maxlength="20"/>
+                        </p:column>
+                       
+                        <p:column style="width:25%;" headerText="#{lbl['lbl.ct.ic.no']}"> 
+                            <p:inputText value="#{supplierWitnessVar.officerIc}" style="width:95%;" maxlength="20"/>
+                        </p:column> 	       
+          
+                         <p:column style="width:20%;" headerText="#{lbl['lbl.ct.designation']}" >
+                             <p:inputText value="#{supplierWitnessVar.officerPosition}" style="width:95%;" maxlength="255"/>
+                         </p:column>  
+                   </p:dataTable>
+              </h:panelGrid>
+              <div class="ppRightBtn"> 
+		            <p:commandButton id="addSupplierWitnessBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" 
+		                 process="@form" action="#{agreementBackingBean.addSupplierWitness()}" update=":form:supplierWitnesTable">
+		    	        <p:tooltip for="addSupplierWitnessBtn">
+				             <h:outputText value="#{lbl['lbl.ct.tooltip.add.supplier.witness']}" escape="false" />
+				        </p:tooltip>
+		            </p:commandButton>
+		            <p:commandButton id="delSupplierWitnessBtn" value="#{lbl['lbl.btn.delete']}" 
+		                 icon="ui-icon-delete" process="@form" onsuccess="dlgSupplierWitnesDel.show()">
+		         	     <p:tooltip for="delSupplierWitnessBtn">
+				             <h:outputText value="#{lbl['lbl.ct.tooltip.delete.supplier.witness']}" escape="false" />
+				         </p:tooltip>
+		             </p:commandButton>
+                </div>
+                <p:dialog id="dlgSupplierWitnesDel" widgetVar="dlgSupplierWitnesDel" 
+                    styleClass="screen-title" resizable="false" modal="true" width="330">  
+                    <h:panelGrid columns="3">
+                        <p:graphicImage library="ep/images/design" name="exclamation.png"
+			                value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+			             <p:spacer width="10"/>
+                         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+                    </h:panelGrid>
+                    <div class="ppRightBtn">
+		                <p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept" update=":form:supplierWitnesTable" 
+				             process="@form"   actionListener="#{agreementBackingBean.deleteSupplierWitness()}" onclick="dlgSupplierWitnesDel.hide();"/>
+			            <p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject" onclick="dlgSupplierWitnesDel.hide();" type="button" />
+		            </div>
+               </p:dialog>  
        </p:panel>
        <p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
