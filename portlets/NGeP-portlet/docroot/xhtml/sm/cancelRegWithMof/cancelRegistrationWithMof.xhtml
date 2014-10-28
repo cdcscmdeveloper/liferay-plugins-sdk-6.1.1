@@ -9,6 +9,9 @@
 
 
 	<ui:define name="contentSection">
+	<p:messages id="messages" showDetail="true" showSummary="false"
+				autoUpdate="true"
+				closable="true" escape="false" />
 		<p:panel
 			header="#{lbl['lbl.sm.mof.reg.cancel']} - #{backingBean.managedBean.smAppl.applNo}">
 
@@ -26,24 +29,22 @@
 			<table style="width: 100%; float: center">
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.mof.reg.reason.delete']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><p:inputTextarea cols="60" style="margin-bottom:8px;"
-							id="cancelReson"
+							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
 							value="#{backingBean.managedBean.supplierRemarks}"
-							required="true" /> <p:message for="cancelReson"
-							showDetail="false" showSummary="true" display="icon"
-							autoUpdate="true" /></td>
-
+							required="true" /> 
+							<p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.sm.suppdoc.attach']}" /></td>
-					<td><p:fileUpload mode="simple" /></td>
-
+					<td><p:outputLabel value="#{lbl['lbl.sm.suppdoc.attach']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:fileUpload mode="simple" required="true" id="attachment"/>
+						<p:message id="attachmentMsg" for="attachment" display="icon" />
+					</td>
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="canRegConfirm.show();" />
-
+				<p:commandButton value="#{lbl['lbl.btn.submit']}" action="#{backingBean.onDisplayConfirm}" partialSubmit="true" update="@([id$=Msg])"/>
 			</div>
 		</p:panel>
 
