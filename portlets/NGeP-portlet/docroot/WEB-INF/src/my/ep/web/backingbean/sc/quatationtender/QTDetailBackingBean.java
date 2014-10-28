@@ -71,6 +71,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1833,12 +1834,8 @@ public class QTDetailBackingBean extends
 
 	public void retrieveSuppQualificationTabDtl() {
 		debugLogger("retrieveSuppQualificationTabDtl");
-		IPanelSupplierSO panelSupplierSO;
 		IQTDetailSO QtDetailsSO;
 		try {
-			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,
-							IPanelSupplierSO.class);
 			QtDetailsSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -1903,7 +1900,7 @@ public class QTDetailBackingBean extends
 					}
 				}
 			} else {
-				if (scQt.isZonal() && scQt.isPanel()) {
+				/*if (scQt.isZonal() && scQt.isPanel()) {
 					this.getManagedBean().setSupplierCriteria(
 							tenderResDTO.getQtDetail()
 									.getScQtSupplierCriteria());
@@ -1960,10 +1957,93 @@ public class QTDetailBackingBean extends
 											.getCtPanelSuppliers());
 						}
 					}
+				}*/
+				this.getManagedBean().setCtPanelItem(scQt.getScQtSupplierCriteria().getCtPanelItem());
+				this.getManagedBean().setCtCircularVer(scQt.getScQtSupplierCriteria().getCtPanelItem().getCtCircularVer());
+				this.getManagedBean().setPanelItemCategory(getParameterDesc(scQt.getScQtSupplierCriteria().getCtPanelItem().getItemCategoryId()));
+				List<CtPanelItem> panelList = this.getManagedBean().getSelectpanelItem();
+				panelList = new ArrayList<CtPanelItem>();
+
+				panelList.add(this.getManagedBean().getQt().getScQtSupplierCriteria().getCtPanelItem());
+				this.getManagedBean().setSelectpanelItem(panelList);
+				
+				if (null != this.getManagedBean().getCtCircularVer()) {
+					this.getManagedBean().setCircularExpDate(this.getManagedBean().getCtCircularVer().getEndDate());
+					this.getManagedBean().setCircularNo(this.getManagedBean().getCtCircularVer().getCircularNo());
+					this.getManagedBean().setCircularName(this.getManagedBean().getCtCircularVer().getName());
+					this.getManagedBean().setCircularType(this.getManagedBean().getCtCircularVer().getDocType());
+				}
+				
+				if (null != this.getManagedBean().getZoneGeneralTrees()
+						&& this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
+
+					if (null != tenderResDTO.getZoneDetails() && !tenderResDTO.getZoneDetails().isEmpty()) {
+						this.getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+						for (TplSpecZoneDtl zoneDtl : tenderResDTO.getZoneDetails()) {
+							getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().constuctTreeNode(zoneDtl, zoneDtl.getTplSpecZoneLocs()));
+							this.getManagedBean().setCtzones(true);
+						}
+					} else {
+						retriveZonesByCircularNo();
+					}
+
 				}
 			}
 		} finally {
 			QtDetailsSO = null;
+		}
+	}
+
+	private void retriveZonesByCircularNo() {
+		debugLogger("retriveZonesByCircularNo");
+		IPanelSupplierSO panelSupplierSO;
+		PanelSupplierResDTO resDTO = null;
+		try {
+			PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+			panelSupplierSO = (IPanelSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
+			if (null != this.getManagedBean().getCtPanelItem() && null != this.getManagedBean().getCtPanelItem().getPanelItemId()) {
+				reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
+				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
+			}
+			this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
+			getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
+			this.getManagedBean().setCtPanelZones(new ArrayList<CtPanelZone>());
+			
+			if (null != resDTO && null != resDTO.getCtPanelZones() && !resDTO.getCtPanelZones().isEmpty()) {
+				if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
+					this.getManagedBean().setCtzones(true);
+					getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
+					getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
+					if (null != getManagedBean().getZoneGeneralTrees() && getManagedBean().getZoneGeneralTrees().size() == 0) {
+						this.getManagedBean().setCtPanelZones(resDTO.getCtPanelZones());
+						for (CtPanelZone panelZones : resDTO.getCtPanelZones()) {
+							getManagedBean().getZoneGeneralTrees().add(LocationSingleton.getInstance().constuctPanelTreeNodes(panelZones, panelZones .getPanelZoneDtls()));
+						}
+					}
+				}
+			} else {
+				if (null != this.getManagedBean().getCtPanelItem() && null != this.getManagedBean().getCtPanelItem().getPanelItemId()) {
+					this.getManagedBean().setCtzones(false);
+					PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
+					supplierreqDTO.setPanelItemId(this.getManagedBean().getCtPanelItem().getPanelItemId());
+					supplierreqDTO.setFetchSubEntity(true);
+					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO.retrievePanelItem(supplierreqDTO);
+					this.getManagedBean().setTotalSuppliers(0);
+					this.getManagedBean().setCtZoneSupplierList(new ArrayList<CtPanelSupplier>());
+					if (null != panelSupplierResDTO.getCtPanelItem()) {
+						CtPanelItem panelItem = panelSupplierResDTO.getCtPanelItem();
+						if (null != panelItem.getCtPanelSuppliers()) {
+							this.getManagedBean().setTotalSuppliers(panelItem.getCtPanelSuppliers().size());
+							this.getManagedBean().setCtZoneSupplierList(panelItem.getCtPanelSuppliers());
+						}
+					}
+				}
+			}
+			List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
+			itemList = new ArrayList<CtPanelItem>();
+			itemList.add(this.getManagedBean().getCtPanelItem());
+			this.getManagedBean().setSelectpanelItem(itemList);
+		} finally {
 		}
 	}
 
