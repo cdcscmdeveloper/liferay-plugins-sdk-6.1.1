@@ -460,8 +460,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private String action;
 	private boolean isSaveFlow;
+	private boolean cloneNeeded;
 	private List<QTActivityBean> qtActivityBeans;
-
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -2735,6 +2735,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.bsvDate = bsvDate;
 	}
 
+	public boolean isCloneNeeded() {
+		return cloneNeeded;
+	}
+
+	public void setCloneNeeded(boolean cloneNeeded) {
+		this.cloneNeeded = cloneNeeded;
+	}
+	
 	/**
 	 * @return the qtActivityBeans
 	 */

@@ -198,6 +198,7 @@ public class QTBriefingSiteVisitBackingBean extends
 					.getPmState().getStateId();
 			this.getManagedBean().setDivisionList(null);
 			this.getManagedBean().setDistrictList(null);
+			this.getManagedBean().setCitys(null);
 			if (stateId != null) {
 				PmState pmState = PmCommonUtil
 						.retrievePmStateByStateId(stateId);

@@ -28,6 +28,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
@@ -510,7 +511,7 @@ public class BSVAttendanceBackingBean extends
 		this.getManagedBean().setAddress(briefing.getAddress().getAddress1());
 	}
 
-	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
+		public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
 		log.debug("businessNatureListener");
 		List<ScQtBsvRegistration> bsvRegistrations = new ArrayList<ScQtBsvRegistration>();
 		if (mofAccounts != null) {
