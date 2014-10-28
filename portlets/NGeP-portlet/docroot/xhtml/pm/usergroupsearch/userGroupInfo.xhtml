@@ -62,15 +62,15 @@
  	  <ac:paginator /> 
 	   <p:column style="width:2%;text-align:center;" selectionMode="multiple" /> 
 		  	  	         
-       <p:column headerText="#{lbl['lbl.pm.ug.info.uname']}" > 
-          <h:outputText value="#{groupuser.pmUser.userName}"/>
+       <p:column style="width:68%" headerText="#{lbl['lbl.pm.ug.info.uname']}" > 
+          <h:outputText value="#{groupuser.pmUser.userName}" />
        </p:column>  
        
-       <p:column headerText="#{lbl['lbl.pm.ug.info.al']}" > 
+       <p:column style="width:20%" headerText="#{lbl['lbl.pm.ug.info.al']}" > 
           <h:outputText />
        </p:column> 
 
-       <p:column headerText="#{lbl['lbl.pm.ug.result.status']}" > 
+       <p:column style="width:10%" headerText="#{lbl['lbl.pm.ug.result.status']}" > 
          <p:selectOneMenu style="width:203px" value="#{groupuser.pmUser.recordStatusFlg}">    
 			 <f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
           </p:selectOneMenu> 
