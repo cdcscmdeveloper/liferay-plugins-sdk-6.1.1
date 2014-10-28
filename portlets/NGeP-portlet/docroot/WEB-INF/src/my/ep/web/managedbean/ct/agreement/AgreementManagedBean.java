@@ -40,6 +40,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean chkConceValue;
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
+	private boolean validateWitness;
 	
 	private PmUser userLogin;
 	private CtContract ctContract;
@@ -55,6 +56,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private Map<String, SmPersonnel> supplierUserMap;
 	private CtAgreement ctAgreement;
+	private List<String> icNo;
 	
 	public AgreementManagedBean(){
 		
@@ -278,5 +280,20 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
 	}
-	
+
+	public List<String> getIcNo() {
+		return icNo;
+	}
+
+	public void setIcNo(List<String> icNo) {
+		this.icNo = icNo;
+	}
+
+	public boolean isValidateWitness() {
+		return validateWitness;
+	}
+
+	public void setValidateWitness(boolean validateWitness) {
+		this.validateWitness = validateWitness;
+	}
 }
