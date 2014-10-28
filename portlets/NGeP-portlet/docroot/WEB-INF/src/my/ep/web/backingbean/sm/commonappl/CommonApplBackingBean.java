@@ -8,17 +8,21 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
+import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
 import my.ep.dto.sm.smRemarks.SmRemarksReqDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofappcandata.SMMOFAppCanDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
@@ -426,6 +430,14 @@ public class CommonApplBackingBean extends
 			}
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
+			SmAttachmentResDTO attResDto = new SmAttachmentResDTO();
+			attResDto = retriveSmAttachmentByDocIdAndType(smApplBB
+					.getManagedBean().getSmAppl().getApplId(), smApplBB
+					.getManagedBean().getSmAppl().getApplNo().substring(0, 2));
+			if (attResDto != null && attResDto.getAttachment() != null) {
+				smApplBB.getManagedBean().setCancellationAttachment(
+						attResDto.getAttachment());
+			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -716,6 +728,38 @@ public class CommonApplBackingBean extends
 			return resDTO;
 		} finally {
 			mofRegistrationSO = null;
+		}
+
+	}
+
+	private SmAttachmentResDTO retriveSmAttachmentByDocIdAndType(long applId,
+			String docType) {
+
+		ISmAttachmentSO attchSO = null;
+
+		try {
+			attchSO = (ISmAttachmentSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", ISmAttachmentSO.class);
+			SmAttachmentReqDTO reqDto = new SmAttachmentReqDTO();
+			reqDto.setDocId(applId);
+			reqDto.setDocType(docType);
+			SmAttachmentResDTO resDTO = attchSO
+					.retrieveSmAttachmentByDocIdAndType(reqDto);
+			if (resDTO == null
+					|| (resDTO != null && resDTO.getAttachment() == null)) {
+				throw new EpException(
+						"Invalid Application : No file uploaded for the application");
+			}
+			return resDTO;
+
+		} catch (Exception e) {
+			System.out
+					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			e.printStackTrace();
+			throw new EpException(
+					"Invalid Application : No file uploaded for the application");
+		} finally {
+			attchSO = null;
 		}
 
 	}
