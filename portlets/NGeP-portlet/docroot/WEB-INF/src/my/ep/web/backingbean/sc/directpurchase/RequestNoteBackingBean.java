@@ -1915,8 +1915,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				PrInquiryResDTO prInquiryResDTO = prInquirySO.getPrInquiry(prInquiryReqDTO);
 				ScPrInquiry  prInquiry  = prInquiryResDTO.getPrInquiryDetail();
 				// status
-				if(prInquiry.getWorkflowStatuses() != null && prInquiry.getWorkflowStatuses().size() >0){
-					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getWorkflowStatuses().get(0).getPmStatus());
+				if(prInquiry.getCurrentStatus() != null){
+					purchaseInquiryBackingBean.getCurrentStatus(prInquiry.getCurrentStatus().getPmStatus());
 				}
 				
 				if(prInquiry.getScRequestSupplierItems() != null && prInquiry.getScRequestSupplierItems().size()>0 ){
@@ -2078,8 +2078,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 
 					// status
-					if(scQuote.getWorkflowStatuses() != null && scQuote.getWorkflowStatuses().size() >0){
-						simpleQuoteBackingBean.getCurrentStatus(scQuote.getWorkflowStatuses().get(0).getPmStatus());
+					if(scQuote.getCurrentStatus() != null){
+						simpleQuoteBackingBean.getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
 					}
 
 					// remarks
