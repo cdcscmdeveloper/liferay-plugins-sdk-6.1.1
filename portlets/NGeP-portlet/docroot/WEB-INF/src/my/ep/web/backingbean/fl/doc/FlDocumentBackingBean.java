@@ -3,9 +3,12 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -13,6 +16,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
@@ -61,11 +66,13 @@ import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 //import my.ep.constant.BpmOutcomeConst;
 
 /**
@@ -958,4 +965,39 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 		return flDocTypes;
 	}
+	
+	public void generateReport(String docType, String docNo) throws IOException {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
+		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+		String reportName = null;
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+			reportName = ReportConst.FL_NGEP_PURCHASE_ORDER;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
+			reportName = ReportConst.FL_NGEP_DELIVERY;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_FULFILMENT_NOTE)) {
+			reportName = ReportConst.FL_NGEP_FRN;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_INVOICE)) {
+			reportName = ReportConst.FL_NGEP_INVOICE;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) {
+			reportName = ReportConst.FL_NGEP_CREDIT_NOTE;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE)) {
+			reportName = ReportConst.FL_NGEP_DEBIT_NOTE;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PAYMENT_ADVICE)) {
+			reportName = ReportConst.FL_NGEP_PAYMENT_MATCH;
+		}
+		
+		if(reportName!=null) {
+			String reportUrl = generateReportURL(reportName, paramMap);
+			String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+"/ReportViewServlet";		
+			
+			PortletRequest portalRequest = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+			HttpServletRequest req = com.liferay.portal.util.PortalUtil.getOriginalServletRequest(com.liferay.portal.util.PortalUtil.getHttpServletRequest(portalRequest));
+			req.getSession().setAttribute("generatedUrl", reportUrl);
+			RequestContext.getCurrentInstance().addCallbackParam("reportViewUrl", path);
+		} else {
+			throw new EpException("Report is not available for this document.");
+		}
+	}
+	
 }
