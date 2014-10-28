@@ -1626,6 +1626,7 @@ public class SmApplicationBackingBean extends
 						.remove(assoc);
 			}
 			getManagedBean().getSelectedAssocBodyList().clear();
+			SmApplicationUtil.assignNonPersonnelProfBodyList(getManagedBean());
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Professional Body" });
@@ -2058,21 +2059,37 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void deleteSelectedCategoryCodes() {
-		if (getManagedBean().getDeleteCategoryList().size() > 0) {
+		if (getManagedBean().getDeleteCategoryList() != null
+				&& getManagedBean().getDeleteCategoryList().size() > 0) {
 			List<SmSupplierCategory> categories = getManagedBean()
 					.getDeleteCategoryList();
+			deleteCatCodes(categories);
+		} else {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { "Category Code" });
+		}
+	}
 
-			for (SmSupplierCategory category : categories) {
-				if(category.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.PENDING_ACT_STATUS) == 0){
-					getManagedBean().getSmAppl().getSmSupplierCategories()
-							.remove(category);
-				} else if(category.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.APPROVED_RECORD_STATUS) == 0){
-					category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
-				}
+	private void deleteCatCodes(List<SmSupplierCategory> categories) {
+		for (SmSupplierCategory category : categories) {
+			if (category.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.remove(category);
+			} else if (category.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
 			}
-			SmApplicationUtil.assignActiveCategoryList(getManagedBean());
+		}
+		SmApplicationUtil.assignActiveCategoryList(getManagedBean());
+	}
+
+	public void deleteSelectedPendingApprovalCategoryCodes() {
+		if (getManagedBean().getDeleteNewApplCategoryList() != null
+				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
+			List<SmSupplierCategory> categories = getManagedBean()
+					.getDeleteNewApplCategoryList();
+			deleteCatCodes(categories);
 		} else {
 			throw new EpException(MessageConst.ERROR_722534,
 					new String[] { "Category Code" });
@@ -2807,7 +2824,7 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_PERSONNEL)) {
 			getManagedBean().setPersonnelInfoHeader("Personnel Information");
 		}
-		
+
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (shareHolderBean.getEpRole() != null
 				&& (shareHolderBean.getEpRole().equalsIgnoreCase(
@@ -5690,10 +5707,26 @@ public class SmApplicationBackingBean extends
 					.getSelectedShareHolders().iterator();
 			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
-				if (personnel.getEpRole().equalsIgnoreCase(
-						RoleCode.MOF_SUPPLIER_ADMIN.value())
-						|| personnel.getEpRole().equalsIgnoreCase(
-								RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
+				if (personnel.getEpRole() != null
+						&& (personnel.getEpRole().equalsIgnoreCase(
+								RoleCode.MOF_SUPPLIER_ADMIN.value()) || personnel
+								.getEpRole().equalsIgnoreCase(
+										RoleCode.BASIC_SUPPLIER_ADMIN.value()))) {
+					iterator.remove();
+				}
+			}
+		}
+	}
+
+	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
+		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
+			Iterator<SmSupplierCategory> iterator = getManagedBean()
+					.getDeleteNewApplCategoryList().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierCategory cat = iterator.next();
+				if (cat.getRecordStatusFlg() != null
+						&& cat.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 					iterator.remove();
 				}
 			}
@@ -5702,33 +5735,36 @@ public class SmApplicationBackingBean extends
 
 	/**
 	 * retrieve identity type from PM
+	 * 
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] getPmIdTypeDropdownValues() {
 		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
 				.getParameterDescList(ParameterTypeConst.IDENTIFICATION_TYPES);
-		Map<Long, Object> identityType = new HashMap<Long,Object>();
-		for(PmParameterDesc pmDesc: parameterDescs){
-			identityType.put(pmDesc.getPmParameter().getParameterId(), pmDesc.getPmParameter());
+		Map<Long, Object> identityType = new HashMap<Long, Object>();
+		for (PmParameterDesc pmDesc : parameterDescs) {
+			identityType.put(pmDesc.getPmParameter().getParameterId(),
+					pmDesc.getPmParameter());
 		}
-		
+
 		List<SelectItem> itemList = new ArrayList<SelectItem>();
 		SelectItem[] items = getDropdownValues(ParameterTypeConst.IDENTIFICATION_TYPES);
-		
-		for(SelectItem selectItem : items) {
-			
-			if(selectItem.getValue() == null){
+
+		for (SelectItem selectItem : items) {
+
+			if (selectItem.getValue() == null) {
 				itemList.add(selectItem);
-			}else{
-				PmParameter pmParameter = (PmParameter) identityType.get(selectItem.getValue());
-				if(!pmParameter.getParameterCode().equals("A")){
+			} else {
+				PmParameter pmParameter = (PmParameter) identityType
+						.get(selectItem.getValue());
+				if (!pmParameter.getParameterCode().equals("A")) {
 					itemList.add(selectItem);
 				}
 			}
-			
+
 		}
-		
+
 		return itemList.toArray(new SelectItem[itemList.size()]);
-		
+
 	}
 }
