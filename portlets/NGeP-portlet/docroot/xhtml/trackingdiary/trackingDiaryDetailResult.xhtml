@@ -9,58 +9,49 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 			
-		<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
+		<p:panel header="Trackng Diary Details" toggleable="true">
 
-			<p:dataTable id="unspscTableID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="unspsObj" width="100%" rows="10">
+			<p:dataTable id="trackingDiaryTableID" lazy="true" value="#{cdTrackingDiaryBackingBean.searchTrackingDiaryDataModel}" var="trackingDiaryObj" width="100%" rows="10">
 
-				<ac:paginator for="unspscTableID"></ac:paginator>
+				<ac:paginator for="trackingDiaryTableID"></ac:paginator>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					Creation Timestamp
 					</f:facet>
-				#{pmtrackingDiary.actionedDate}
+				#{trackingDiaryObj.actionedDate}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					Actioned By
 					</f:facet>
-				#{pmtrackingDiary.actionedBy}
+				#{trackingDiaryObj.actionedBy}
 				</p:column>
 				<p:column width="15%">
 					<f:facet name="header">
 					Role
 					</f:facet>
-				#{pmtrackingDiary.roleCode}
+				#{trackingDiaryObj.roleCode}
 				</p:column>
 				<p:column width="15%">
-					<f:facet name="header">
+				<f:facet name="header">
 					Document No.
 					</f:facet>
-				#{pmtrackingDiary.docId}
 				</p:column>
-				<p:column>
+				<p:column width="25%">
 					<f:facet name="header">
 					Description
 					</f:facet>
-				#{pmtrackingDiary.actionDesc}
+				#{trackingDiaryObj.actionDesc}
 				</p:column>
-				<p:column>
+				<p:column width="15%">
 					<f:facet name="header">
 					Document Status
 					</f:facet>
-				#{pmtrackingDiary.statusId}
+				#{trackingDiaryObj.statusId}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
-					Action
-					</f:facet>
-					<p:commandLink action="#{trackingDiaryBackingBean.goToExtensionSearch(pmtrackingDiary)}">
-						#{pmtrackingDiary.docId}
-					</p:commandLink>
-				</p:column>
+
 			</p:dataTable>
-			<div class="clear"></div>
 
 		</p:panel>			
 		
