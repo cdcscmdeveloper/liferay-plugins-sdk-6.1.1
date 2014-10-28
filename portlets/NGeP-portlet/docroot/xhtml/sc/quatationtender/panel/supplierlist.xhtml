@@ -16,7 +16,11 @@
 				<ac:paginator for="suppliersTbl" />
 
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<h:outputText value="#{qtSupplier.supplier.companyName}" />
+					<p:commandLink oncomplete="suppDetails.show();"
+						actionListener="#{qTSupplierQulCriteriaBackingBean.retriveSupplierDtls(qtSupplier)}"
+						update=":form:paneltabView:panelpopupSuppDtl" >
+						<h:outputText value="#{qtSupplier.supplier.companyName}" />
+					</p:commandLink>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
@@ -41,4 +45,5 @@
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSupplier}"
 			disabled="true" />
 	</h:panelGroup>
+	<ui:include src="/xhtml/sc/quatationtender/panel/supplierDetailsPopup.xhtml"/>
 </ui:composition>
