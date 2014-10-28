@@ -137,7 +137,7 @@
 		                    </p:inputText>
 		                </p:column>
               
-                        <p:column style="width:21%;" headerText="#{lbl['lbl.ct.start.period']}" >
+                        <p:column style="width:20%;" headerText="#{lbl['lbl.ct.start.period']}" >
 		                    <p:selectOneMenu id="fromProMonth" value="#{progPaymentObj.startMonth}" 
 		                        style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
                                 <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
@@ -154,7 +154,7 @@
                               </p:selectOneMenu> 
 		                  </p:column> 	
 		        
-		                  <p:column style="width:26%;" headerText="#{lbl['lbl.ct.end.period']}">
+		                  <p:column style="width:28%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                      <h:panelGroup columns="5">
 		                          <p:selectOneMenu id="toProMonth" value="#{progPaymentObj.endMonth}"  
 		                              style="width:110px;" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
@@ -177,7 +177,7 @@
 		                        </h:panelGroup>
 		                     </p:column>       
 		         
-		                     <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:8%;white-space:normal;">
+		                     <p:column headerText="#{lbl['lbl.ct.total.month']}" style="width:7%;white-space:normal;">
 		                           <h:outputText id="totalMonth" style="float:right;"
 		                               value="#{contractDetailsBackingBean.calculateTotalMonth(progPaymentObj,'P')}">
 		                           </h:outputText>
@@ -185,7 +185,7 @@
                
                               <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.percentage']}">
                                  <h:panelGroup>
-                                     <p:inputText value="#{progPaymentObj.percentage}" style="width:60px;" styleClass="ppRightBtn" 
+                                     <p:inputText value="#{progPaymentObj.percentage}" style="width:50px;" styleClass="ppRightBtn" 
                          	            disabled="#{contractDetailsBackingBean.managedBean.viewContract}" label="#{lbl['lbl.ct.percentage']}">
                                         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" /> 
                                        <p:ajax event="blur" update=":form:progPaymentTableId, :form:proAddButtionId" 
