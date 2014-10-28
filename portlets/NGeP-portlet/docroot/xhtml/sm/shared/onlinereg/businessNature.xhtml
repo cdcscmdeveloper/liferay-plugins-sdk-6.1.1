@@ -1,10 +1,11 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	
 	<p:panel header="#{lbl['lbl.sm.natureofbusiness']}" id="natureBusinessId">
 		<p:dataTable var="suppBizNature"
 			value="#{registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}"
@@ -66,7 +67,7 @@
 								<f:selectItems
 									value="#{registrationBackingBean.managedBean.businessNatureL1}"
 									var="bsNatureL1" itemValue="#{bsNatureL1.businessNatureId}"
-									itemLabel="#{bsNatureL1.levelName}" />
+									itemLabel="#{bsNatureL1.levelCode} - #{bsNatureL1.levelName}" />
 								<p:ajax event="change"
 									update="bizNatL2,bizNatL3,bizNatL4,bizNatL5,pnlBusinessNatureBtn"
 									listener="#{registrationBackingBean.businessLvlOnChange('20')}" />
@@ -81,7 +82,7 @@
 								<f:selectItems
 									value="#{registrationBackingBean.managedBean.businessNatureL2}"
 									var="bsNatureL2" itemValue="#{bsNatureL2.businessNatureId}"
-									itemLabel="#{bsNatureL2.levelName}" />
+									itemLabel="#{bsNatureL2.levelCode} - #{bsNatureL2.levelName}" />
 								<p:ajax event="change" update="bizNatL3,bizNatL4,bizNatL5,pnlBusinessNatureBtn"
 									listener="#{registrationBackingBean.businessLvlOnChange('30')}" />
 							</p:selectOneMenu></td>
@@ -95,7 +96,7 @@
 								<f:selectItems
 									value="#{registrationBackingBean.managedBean.businessNatureL3}"
 									var="bsNatureL3" itemValue="#{bsNatureL3.businessNatureId}"
-									itemLabel="#{bsNatureL3.levelName}" />
+									itemLabel="#{bsNatureL3.levelCode} - #{bsNatureL3.levelName}" />
 								<p:ajax event="change" update="bizNatL4,bizNatL5,pnlBusinessNatureBtn"
 									listener="#{registrationBackingBean.businessLvlOnChange('40')}" />
 							</p:selectOneMenu></td>
@@ -109,7 +110,7 @@
 								<f:selectItems
 									value="#{registrationBackingBean.managedBean.businessNatureL4}"
 									var="bsNatureL4" itemValue="#{bsNatureL4.businessNatureId}"
-									itemLabel="#{bsNatureL4.levelName}" />
+									itemLabel="#{bsNatureL4.levelCode} - #{bsNatureL4.levelName}" />
 								<p:ajax event="change" update="bizNatL5,pnlBusinessNatureBtn"
 									listener="#{registrationBackingBean.businessLvlOnChange('50')}" />
 							</p:selectOneMenu></td>
@@ -123,7 +124,7 @@
 								<f:selectItems
 									value="#{registrationBackingBean.managedBean.businessNatureL5}"
 									var="bsNatureL5" itemValue="#{bsNatureL5.businessNatureId}"
-									itemLabel="#{bsNatureL5.levelName}" />
+									itemLabel="#{bsNatureL5.levelCode} - #{bsNatureL5.levelName}" />
 								<p:ajax event="change" update="pnlBusinessNatureBtn" />
 								
 							</p:selectOneMenu></td>
