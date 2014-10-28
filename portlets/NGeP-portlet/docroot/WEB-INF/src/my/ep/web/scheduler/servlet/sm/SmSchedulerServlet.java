@@ -29,7 +29,7 @@ public class SmSchedulerServlet extends HttpServlet{
 				SmSchedulerConstants.SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB,
 				SmSchedulerConstants.SM_JOB_GROUP),
 				DeletePendingActivationJob.class,
-				SmSchedulerConstants.SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC, "0 11 16 * * ?");
+				SmSchedulerConstants.SM_DAILY_DEL_PEND_ACTV_PERSONEL_JOB_DESC, "0 59 23 * * ?");
 		
 		log.info("end init sm servlet....");
 	}
