@@ -687,7 +687,7 @@ public class SpecificationBackingBean extends
 	}
 
 	public String backAction() {
-
+		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 
 	}
@@ -695,6 +695,7 @@ public class SpecificationBackingBean extends
 	public String committeeBackAction() {
 		// this.getManagedBean().setScQtCheckSt2techProposal(null);
 		// retriveTechnicalCheckList();
+		this.getManagedBean().setIndex(-1);
 		return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 	}
@@ -7263,9 +7264,10 @@ public class SpecificationBackingBean extends
 	}
 
 	public void paneltabChange(TabChangeEvent event) {
-		/*if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) {
-			// retriveZonesByCircularNo();
-		}*/
+		/*
+		 * if ("Supplier List".equalsIgnoreCase(event.getTab().getTitle())) { //
+		 * retriveZonesByCircularNo(); }
+		 */
 
 	}
 
@@ -9872,6 +9874,7 @@ public class SpecificationBackingBean extends
 			if (resDTO.isSuccessful()) {
 				if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
 					retriveTechnicalSpecification();
+					this.getManagedBean().setIndex(-1);
 					return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 				} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 						.equalsIgnoreCase(flowType)) {
@@ -9891,6 +9894,7 @@ public class SpecificationBackingBean extends
 									.isTechEvaluationReq())) {
 						retriveTechnicalCheckList();
 					}
+					this.getManagedBean().setIndex(-1);
 					return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 				}
@@ -9898,6 +9902,7 @@ public class SpecificationBackingBean extends
 		} else {
 			this.getManagedBean().getScQtCheckSt2techProposal();
 		}
+		
 		return null;
 
 	}
@@ -9957,6 +9962,7 @@ public class SpecificationBackingBean extends
 		if (resDTO.isSuccessful()) {
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
 				retriveTechnicalSpecification();
+				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
@@ -9984,12 +9990,15 @@ public class SpecificationBackingBean extends
 								.getManagedBean().getScQt()
 								.isTechEvaluationReq())) {
 					settemplateSpecList(savedCheckLists);
+					
 
 				}
+				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
 		}
+		
 		return null;
 	}
 
@@ -10155,6 +10164,7 @@ public class SpecificationBackingBean extends
 		if (resDTO.isSuccessful()) {
 			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
 				retriveTechnicalSpecification();
+				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
@@ -10184,11 +10194,12 @@ public class SpecificationBackingBean extends
 					settemplateSpecList(savedCheckLists);
 
 				}
+				this.getManagedBean().setIndex(-1);
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
 		}
-
+		
 		return null;
 	}
 
@@ -10224,6 +10235,7 @@ public class SpecificationBackingBean extends
 			templateSpecBean.setSpecMaster(specMaster);
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
+			this.getManagedBean().setIndex(-1);
 			RequestContext.getCurrentInstance().execute(
 					"createOwnerSpec.hide()");
 			// RequestContext.getCurrentInstance().update("btnId");
@@ -10307,6 +10319,7 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setIndex(index);
 		this.getManagedBean().setScQtChecklist(checklist);
 		this.getManagedBean().setCheckListTitle(checklist.getTitle());
+		ScQt scQt = this.getManagedBean().getScQt();
 
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
@@ -10321,6 +10334,24 @@ public class SpecificationBackingBean extends
 				.getTemplateSpecBean();
 		templateSpecBean.setSpecMaster(checklist.getScQtDoc()
 				.getTplSpecMaster());
+		if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
+			if (scQt.isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				if (null != supplierCriteria
+						&& null != supplierCriteria.getQtZoneCriterias()) {
+
+					templateSpecBean.getSpecMaster().setTplSpecZone(
+							supplierCriteria.getQtZoneCriterias());
+
+					System.out.println("====display tplspeczonedtls size==="
+							+ templateSpecBean.getSpecMaster().getTplSpecZone()
+									.getTplSpecZoneDtls().size());
+
+				}
+			}
+		}
+
 		if (SourcingConstants.TECHINICAL_STAGE.equalsIgnoreCase(specType)) {
 			return "/xhtml/sc/main/BusinessOwnerTechnicalSpecEdit.xhtml?faces-redirect=true";
 		} else if (SourcingConstants.FINANCIAL_STAGE.equalsIgnoreCase(specType)) {
