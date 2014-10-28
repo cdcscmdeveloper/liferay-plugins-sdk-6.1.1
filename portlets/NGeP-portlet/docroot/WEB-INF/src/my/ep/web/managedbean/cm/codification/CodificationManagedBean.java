@@ -1,14 +1,11 @@
 package my.ep.web.managedbean.cm.codification;
 
 import java.util.ArrayList;
-
 import java.util.List;
-
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -25,7 +22,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pp.common.CommonMethod;
 import my.ep.web.vo.ExtensionCodeVO;
 
 @ManagedBean(name = "codificationMB")
