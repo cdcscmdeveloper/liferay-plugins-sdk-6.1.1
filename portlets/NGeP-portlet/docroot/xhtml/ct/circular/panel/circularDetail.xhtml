@@ -14,9 +14,9 @@
 		</h:panelGroup>	
 	</p:panel>
 	
-	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
+	<p:panel id="contactPerson" header="#{lbl['lbl.ct.panel.contact.person']}" toggleable="true" toggleSpeed="500" >
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
-			rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedContactPersons}">
+			rowKey="#{data}" rowIndexVar="index" selection="#{panelBackingBean.managedBean.selectedContactPersons}" widgetVar="contactPersonObj">
 			<ac:paginator for="contactPersonDt" />
 			<p:column selectionMode="multiple" style="width:3%" 
 				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
@@ -41,11 +41,11 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" 
-				rendered="#{!panelBackingBean.managedBean.viewContract}"/>
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" partialSubmit="true" icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()"
-				rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@form"   partialSubmit="true" 
+				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" icon="ui-icon-add"
+				oncomplete="contactPersonObj.paginator.endLink.click();" rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"  partialSubmit="true" 
+			   icon="ui-icon-delete" onsuccess="delCtPersonDlg.show()" rendered="#{!panelBackingBean.managedBean.viewContract}"/>						
 		</div>
 		
 		<p:dialog id="delCtPersonDlg" resizable="false"

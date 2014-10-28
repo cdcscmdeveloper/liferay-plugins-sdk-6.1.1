@@ -10,10 +10,10 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	 <h:panelGrid style="width:100%">
 		  <p:dataTable id="panelItemDt" var="panelItemsVar"  value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" 
 		      selectionMode="single" rowKey="#{panelItemsVar}" selection="#{panelBackingBean.managedBean.selectedPanelItems}"
-		      rowIndexVar="index">
+		      rowIndexVar="index" widgetVar="panelItemObj">
 		      <ac:paginator for="panelItemDt" />
               <p:ajax event="rowSelect"  listener="#{panelBackingBean.setPanelListner()}" 
-                  process="@this" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"   />	
+                  process="@this" update="@([id$=itemZone],[id$=itemSupplier],[id$=deleteItemBtn])"  />	
 		      
 		      <p:column style="width:2%;">
 		           <p:selectBooleanCheckbox value="#{panelItemsVar.selectedCheckBox}" styleClass="myCustomChekBox"
@@ -98,8 +98,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			  
 			  <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;">
 		           <p:selectOneMenu  value="#{panelItemsVar.recordStatusFlg}" 
-		           		disabled="#{!panelBackingBean.managedBean.updateAction 
-		           			or panelBackingBean.managedBean.viewContract}" style="width:95%;">
+		           		disabled="#{!panelBackingBean.managedBean.updateAction or panelBackingBean.managedBean.viewContract}" style="width:95%;">
 				       <f:selectItem itemValue="0" itemLabel="#{lbl['lbl.ct.inactive']}" />
 			           <f:selectItem itemValue="1" itemLabel="#{lbl['lbl.ct.active']}" />
 			       </p:selectOneMenu>
@@ -114,7 +113,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 		   <p:commandButton value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add"
 		      update=":form:panelItemDt" action="#{panelBackingBean.addPanelItem()}"
-		      rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+		      rendered="#{!panelBackingBean.managedBean.viewContract}" oncomplete="panelItemObj.paginator.endLink.click();"/>
 		   <p:commandButton id="deleteItemBtn" value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"  process="@this"
 			 onsuccess="delItemDlg.show()" disabled="#{panelBackingBean.managedBean.buttonHideActive}" 
 			 rendered="#{!panelBackingBean.managedBean.viewContract}"/>
@@ -172,7 +171,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		  
 		      <p:spacer height="20" />
 		     <p:dataTable id="zoneGeneralDataTable" value="#{panelBackingBean.managedBean.selectedPanelItems.ctPanelZones}" 
-		        var="panelZoneVar" selectionMode="single" 
+		        var="panelZoneVar" selectionMode="single" widgetVar="panelZoneObj"
 		        selection="#{panelBackingBean.managedBean.selectedPanelZone}" rowKey="#{panelZoneVar}" rowIndexVar="index" >
 			    <ac:paginator for="zoneGeneralDataTable" />
 			    <p:ajax event="rowSelect" update="@([id$=itemSupplier])" process="@this"  />	
@@ -271,9 +270,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		<div style="clear:both" />
 		<h:panelGroup rendered="#{(panelBackingBean.managedBean.selectedPanelZone != null and panelBackingBean.managedBean.selectionOfZone) or
 		       (panelBackingBean.managedBean.selectedPanelItems != null and !panelBackingBean.managedBean.selectionOfZone)}">
-		    	<p:dataTable id="itemSupplierDt" var="supVar" 
+		    	<p:dataTable id="itemSupplierDt" var="supVar" rowIndexVar="index"
 			          value="#{panelBackingBean.managedBean.selectionOfZone ? panelBackingBean.managedBean.selectedPanelZone.ctPanelSuppliers : panelBackingBean.managedBean.selectedPanelItems.ctPanelSuppliers}"
-		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" rowIndexVar="index">
+		              selection="#{panelBackingBean.managedBean.selectedPanelSuppliers}" rowKey="#{supVar}" >
 			          <ac:paginator for="itemSupplierDt" />
 				      <p:column selectionMode="multiple" style="width:3%" 
 				      		rendered="#{!panelBackingBean.managedBean.viewContract}"/>
@@ -321,8 +320,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					</td>
 					<td>
 				    <p:commandButton id="deleteSupplierBtn" value="#{lbl['lbl.btn.delete']}" 
-				     	icon="ui-icon-delete" process="@this" onclick="delSupplierDlg.show()"
-				     	rendered="#{!panelBackingBean.managedBean.viewContract}"/>
+				     	icon="ui-icon-delete" process="@this" onclick="delSupplierDlg.show()"	rendered="#{!panelBackingBean.managedBean.viewContract}"/>
 					</td>
 				</tr></table>
 				</td>
