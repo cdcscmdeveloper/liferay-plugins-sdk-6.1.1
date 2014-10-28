@@ -721,7 +721,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
         out.close();
 	}
 	
-	protected String generateReportURL(String reportFile, Map<String, String> paramMap) throws IOException {
+	protected String generateReportURL(String reportFile, Map<String, String> paramMap) {
 		EpPropertiesUtils propertiesUtils = EpPropertiesUtils.getInstance();
 		String excPrevUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_PREV_URL);
 		String excNextUrl = propertiesUtils.getProperty(EpPropertiesConst.EXC_NEXT_URL);

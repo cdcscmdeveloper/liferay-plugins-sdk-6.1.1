@@ -3,7 +3,6 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -966,7 +965,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		return flDocTypes;
 	}
 	
-	public void generateReport(String docType, String docNo) throws IOException {
+	public void generateReport(String docType, String docNo) {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
