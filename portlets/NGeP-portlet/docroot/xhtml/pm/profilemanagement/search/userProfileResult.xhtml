@@ -10,7 +10,7 @@
 
 	<p:panel id="pUserResult" header="#{lbl['lbl.pm.user.result']}" toggleable="true">
 		<p:dataTable id="dtUserResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			rowIndexVar="rowIndex"  lazy="true"
+			rowIndexVar="rowIndex"  lazy="true" rows="10"
 			value="#{profileManagementBackingBean.userProfileDataModel}"
 			var="userprofile">
 			<ac:paginator for="dtUserResult" />
