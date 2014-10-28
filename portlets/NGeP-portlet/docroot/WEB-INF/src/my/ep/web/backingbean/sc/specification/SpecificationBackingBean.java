@@ -2787,6 +2787,7 @@ public class SpecificationBackingBean extends
 			Long stateId = (Long) event.getComponent().getAttributes()
 					.get("value");
 			if (stateId != null) {
+				reqDTO.setStateId(stateId);
 				List<PmState> stateList = this.getManagedBean().getStateList();
 				for (PmState sate : stateList) {
 					if (sate.getStateId().equals(stateId)) {
@@ -2796,7 +2797,6 @@ public class SpecificationBackingBean extends
 				}
 			}
 
-			reqDTO.setStateId(stateId);
 			districtSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 			resDto = districtSo.retriveDistrictListByStateID(reqDTO);
@@ -2859,16 +2859,21 @@ public class SpecificationBackingBean extends
 		try {
 			Long ministryId = (Long) event.getComponent().getAttributes()
 					.get("value");
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-			reqDTO.setParentOrgProfileId(ministryId);
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			this.getManagedBean().setPtjtList(new ArrayList<PmOrgProfile>());
+			if (null != ministryId) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+				reqDTO.setParentOrgProfileId(ministryId);
+				orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+				this.getManagedBean()
+						.setPtjtList(new ArrayList<PmOrgProfile>());
 
-			this.getManagedBean().setDepartmentList(resDTO.getOrgProfileList());
+				this.getManagedBean().setDepartmentList(
+						resDTO.getOrgProfileList());
+			}
 
 		} finally {
 			orgProfileSO = null;
@@ -7330,6 +7335,7 @@ public class SpecificationBackingBean extends
 					PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
 					supplierreqDTO.setPanelItemId(this.getManagedBean()
 							.getCtPanelItem().getPanelItemId());
+					supplierreqDTO.setFetchSubEntity(true);
 					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
 							.retrievePanelItem(supplierreqDTO);
 					this.getManagedBean().setTotalSuppliers(0);
@@ -9532,8 +9538,8 @@ public class SpecificationBackingBean extends
 
 		try {
 			downloadFile(this.getManagedBean().getCtCircularVer()
-					.getCircularFileName(), this.getManagedBean()
-					.getCtCircularVer().getCircularFilePath());
+					.getCircularFilePath(), this.getManagedBean()
+					.getCtCircularVer().getCircularFileName());
 		} catch (IOException e) {
 			log.debug(e.getMessage());
 		}
@@ -9902,7 +9908,7 @@ public class SpecificationBackingBean extends
 		} else {
 			this.getManagedBean().getScQtCheckSt2techProposal();
 		}
-		
+
 		return null;
 
 	}
@@ -9990,7 +9996,6 @@ public class SpecificationBackingBean extends
 								.getManagedBean().getScQt()
 								.isTechEvaluationReq())) {
 					settemplateSpecList(savedCheckLists);
-					
 
 				}
 				this.getManagedBean().setIndex(-1);
@@ -9998,7 +10003,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -10199,7 +10204,7 @@ public class SpecificationBackingBean extends
 
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -10409,12 +10414,12 @@ public class SpecificationBackingBean extends
 		getStatesNDistrict(this.getManagedBean().getTotalSuppliersSpecLoc(),
 				states, districts, divisions, locLevel);
 
-		supplierSearchReqDTO
-				.setStateCodes(this.getManagedBean().getStateList());
+		supplierSearchReqDTO.setStateCodes(this.getManagedBean()
+				.getSupplierStateCode());
 		supplierSearchReqDTO.setDistrictCodes(this.getManagedBean()
-				.getDistrictList());
+				.getSupplierDistrictCode());
 		supplierSearchReqDTO.setDivisionCodes(this.getManagedBean()
-				.getDivisionList());
+				.getSupplierDivisionCode());
 		ISupplierSearchSO supplierSearchSO = EpEjbBusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -10446,8 +10451,12 @@ public class SpecificationBackingBean extends
 		divisions = new ArrayList<PmDivision>();
 
 		if (null != locations) {
+			List<String> stateCodes = new ArrayList<String>();
+			List<String> districtCodes = new ArrayList<String>();
+			List<String> divisionCodes = new ArrayList<String>();
 			if (null == this.getManagedBean().getStateList()) {
 				this.getManagedBean().setStateList(new ArrayList<PmState>());
+
 			}
 			if (null == this.getManagedBean().getDistrictList()) {
 				this.getManagedBean().setDistrictList(
@@ -10464,9 +10473,11 @@ public class SpecificationBackingBean extends
 					if (null != state) {
 						if (!states.contains(state)) {
 							states.add(state);
+							stateCodes.add(state.getStateCode());
 						}
 
 					}
+					this.getManagedBean().setSupplierStateCode(stateCodes);
 					this.getManagedBean().setStateList(states);
 				} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
 						.equalsIgnoreCase(locLevel)) {
@@ -10474,8 +10485,11 @@ public class SpecificationBackingBean extends
 					if (null != district) {
 						if (!districts.contains(district)) {
 							districts.add(district);
+							districtCodes.add(district.getDistrictCode());
 						}
 					}
+					this.getManagedBean()
+							.setSupplierDistrictCode(districtCodes);
 					this.getManagedBean().setDistrictList(districts);
 				} else if (ParameterConst.LOCATION_LEVEL_DIVISION
 						.equalsIgnoreCase(locLevel)) {
@@ -10483,8 +10497,11 @@ public class SpecificationBackingBean extends
 					if (null != divison) {
 						if (!divisions.contains(divison)) {
 							divisions.add(divison);
+							divisionCodes.add(divison.getDivisionCode());
 						}
 					}
+					this.getManagedBean()
+							.setSupplierDivisionCode(divisionCodes);
 					this.getManagedBean().setDivisionList(divisions);
 				}
 			}
