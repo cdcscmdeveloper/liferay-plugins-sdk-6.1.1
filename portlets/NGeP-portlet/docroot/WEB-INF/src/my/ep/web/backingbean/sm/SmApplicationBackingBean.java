@@ -637,6 +637,10 @@ public class SmApplicationBackingBean extends
 			mofRegistrationSO = null;
 		}
 	}
+	
+	public void onDisplayConfirm(){
+		RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
+	}
 
 	public void updateSmAppl() throws Exception {
 		try {
