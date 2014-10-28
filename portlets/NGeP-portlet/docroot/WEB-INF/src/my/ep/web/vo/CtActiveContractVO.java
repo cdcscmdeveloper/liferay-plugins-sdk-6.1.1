@@ -40,9 +40,12 @@ public class CtActiveContractVO  {
     
     private Long contractId;
     
-    public CtActiveContractVO(String contractNo, String scheduleNo, String circularNo,Date startEffective,Date endEffective,PmParameter fulfilmentType,PmParameter contractType,String BusinessRegNo,String mofNo, String supplierName,Long contractId) {
+    private String phaseNo;
+    
+    public CtActiveContractVO(String contractNo, String scheduleNo, String phaseNo, String circularNo,Date startEffective,Date endEffective,PmParameter fulfilmentType,PmParameter contractType,String BusinessRegNo,String mofNo, String supplierName,Long contractId) {
         this.contractNo = contractNo;
         this.scheduleNo = scheduleNo;
+        this.phaseNo = phaseNo;
         this.circularNo = circularNo;
         this.startEffective = startEffective;
         this.endEffective = endEffective;
@@ -206,6 +209,20 @@ public class CtActiveContractVO  {
 	 */
 	public void setContractId(Long contractId) {
 		this.contractId = contractId;
+	}
+
+	/**
+	 * @return the phaseNo
+	 */
+	public String getPhaseNo() {
+		return phaseNo;
+	}
+
+	/**
+	 * @param phaseNo the phaseNo to set
+	 */
+	public void setPhaseNo(String phaseNo) {
+		this.phaseNo = phaseNo;
 	}
     
 

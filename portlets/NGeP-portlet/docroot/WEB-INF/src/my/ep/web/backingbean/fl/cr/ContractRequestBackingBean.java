@@ -2547,13 +2547,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
 				parent = contractTree.get(vCtActiveContract.getContract().getContractId());
 				child = new DefaultTreeNode(
-						new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+						new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 			}else{
 				parent = new DefaultTreeNode(
-						new CtActiveContractVO(vCtActiveContract.getContractNo(),"",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
+						new CtActiveContractVO(vCtActiveContract.getContractNo(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
 				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
 					child = new DefaultTreeNode(
-							new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
+							new CtActiveContractVO("",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
 				}
 				
 				contractTree.put(vCtActiveContract.getContract().getContractId(),parent);

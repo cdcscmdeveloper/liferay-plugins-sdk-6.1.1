@@ -19,7 +19,7 @@
 					value="#{contractTreeNode.contractNo}" />
 			</p:column>
 			<p:column headerText="Schedule/Phase No">
-				<h:outputText value="#{contractTreeNode.scheduleNo}" />
+				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />
 			</p:column>
 			<p:column headerText="Circular">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
