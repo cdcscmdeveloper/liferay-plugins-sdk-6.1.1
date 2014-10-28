@@ -9,7 +9,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 
 	<p:panel id="pRejectReasonResult" header="#{lbl['lbl.pm.rejection.reason.result']}" toggleable="true">
-		<p:dataTable id="dtRejectReasonResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+		<p:dataTable id="dtRejectReasonResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" rows="10"
 			 rowIndexVar="rowIndex" value="#{rejectionReasonBackingBean.pmReasonDescDataModel}" var="reason"  lazy="true">
 			<ac:paginator for="dtRejectReasonResult" />
 	        <p:column headerText="#{lbl['lbl.pm.reason.code']}">  
