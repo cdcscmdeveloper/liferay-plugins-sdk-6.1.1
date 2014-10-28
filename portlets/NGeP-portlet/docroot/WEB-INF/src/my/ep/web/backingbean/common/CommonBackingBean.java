@@ -3,8 +3,6 @@
  */
 package my.ep.web.backingbean.common;
 
-import java.io.IOException;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -29,7 +27,7 @@ public class CommonBackingBean extends BaseBackingBean<CommonManagedBean> {
 
 	private static Logger log = Logger.getLogger(CommonBackingBean.class);
 	
-	public void generateReport() throws IOException {
+	public void generateReport() {
 		log.debug("generateReport() : "+getManagedBean().getReportDisplayName());
 		String reportUrl = generateReportURL(getManagedBean().getReportName(), getManagedBean().getParamMap());
 		String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath()+"/ReportViewServlet";		
