@@ -11,9 +11,13 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
+		</p:blockUI>
 		
 		<p:treeTable id="ctListTree" var="contractTreeNode"
 			value="#{contractRequestBackingBean.managedBean.contractListTree}">
+			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:column headerText="Contract No" >
 				<h:outputText
 					value="#{contractTreeNode.contractNo}" />
