@@ -313,14 +313,14 @@ public class SmApplicationBackingBean extends
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkPendingActivationPersonnelList(currSupp
 								.getSupplierId());
-				// if (applicationType
-				// .equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				// boolean hasActiveTransactions = SmApplicationUtil
-				// .hasActiveTransactions(currSupp);
-				// if (hasActiveTransactions) {
-				// throw new EpException(MessageConst.ERROR_722565);
-				// }
-				// }
+				if (applicationType
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+					boolean hasActiveTransactions = SmApplicationUtil
+							.hasActiveTransactions(currSupp);
+					if (hasActiveTransactions) {
+						throw new EpException(MessageConst.ERROR_722565);
+					}
+				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
 				if (cannotProceedAlertMsg) {
