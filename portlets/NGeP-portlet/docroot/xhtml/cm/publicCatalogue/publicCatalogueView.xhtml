@@ -11,8 +11,12 @@
 
 	<ui:define name="contentSection">
 
+            <p:blockUI block=":form" trigger="catalogueTabId:searchBtnId" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+		
 			
-			<style type="text/css">
+	<style type="text/css">
 
 		div.tbclass:hover { background-color: #EDF0AF; }
 
