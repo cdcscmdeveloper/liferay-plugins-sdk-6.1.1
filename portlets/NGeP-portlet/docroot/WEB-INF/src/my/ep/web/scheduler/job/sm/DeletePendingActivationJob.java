@@ -14,6 +14,7 @@ public class DeletePendingActivationJob implements Job {
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		log.info("start executing delete pending job...");
+		//TODO include business logic here
 		log.info("finish executing delete pending job...");
 	}
 
