@@ -69,6 +69,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				if (getManagedBean().getMainCatCode() != null) {
 					reqDTO.setMainCatCode(getManagedBean().getMainCatCode());
+					/*searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("orgTypeCode.parameterId",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getManagedBean().getMainCatCode()));*/
 				}
 				if (getManagedBean().getMainCatDesc() != null) {
 					reqDTO.setMainCatDesc(getManagedBean().getMainCatDesc());
@@ -88,6 +92,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					reqDTO.setSubDivDesc(getManagedBean().getSubDivDesc());
 				}
 				
+				reqDTO.setSearchBeanObject(searchBean);
 				CategoryCodeResDTO resDTO =categoryCodeSO.searchAllCategory(reqDTO);
 
 				if (resDTO.isSuccessful()) {
