@@ -219,11 +219,11 @@ public class RuleCatalogueBackingBean extends
 				String categoryL1Code = CategoryCodeResDTO.getCategoryL3()
 						.getPmCategoryL2().getPmCategoryL1()
 						.getCategoryL1Code();
-				log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
-						+ CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
-				log.info(".............categoryL3Code=" + categoryL3Code);
-				log.info(".............categoryL2Code=" + categoryL2Code);
-				log.info(".............categoryL1Code=" + categoryL1Code);
+//				log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
+//						+ CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
+//				log.info(".............categoryL3Code=" + categoryL3Code);
+//				log.info(".............categoryL2Code=" + categoryL2Code);
+//				log.info(".............categoryL1Code=" + categoryL1Code);
 				ruleValue.setRuleValue(categoryL3Code + categoryL2Code
 						+ categoryL1Code);
 				this.getManagedBean().getSelectedRuleType()
