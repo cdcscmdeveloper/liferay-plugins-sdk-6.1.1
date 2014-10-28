@@ -393,7 +393,7 @@
 					blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 				<p:panel id="persInfoDtPanel">
 					<p:dataTable var="person" widgetVar="suppPersonnelInfoDtWidVar" editable="false"
-						value="#{backingBean.managedBean.smAppl.smPersonnels}"   style="table-layout:fixed"
+						value="#{backingBean.managedBean.smAppl.smPersonnels}"
 						selection="#{backingBean.managedBean.selectedShareHolders}"
 						rowKey="#{person}" rowIndexVar="index" id="personDt">
 						<ac:paginator for="personDt" />
