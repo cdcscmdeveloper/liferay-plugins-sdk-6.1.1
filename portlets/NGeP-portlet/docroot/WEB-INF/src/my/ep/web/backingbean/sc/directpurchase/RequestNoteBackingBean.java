@@ -2682,15 +2682,20 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		debugLogger("viewRecentPrice");
 		
 		if (getManagedBean().getCmSupplierItem() != null) {
+			FacesScopes facesScopes = new FacesScopes();
 			long itemId = this.getManagedBean().getCmSupplierItem().getCmItem().getItemId();
 			long supplierId = this.getManagedBean().getCmSupplierItem().getSmSupplier().getSupplierId();
+			long cmSuppItemId = this.getManagedBean().getCmSupplierItem().getSupplierItemId();
+			long uomId = this.getManagedBean().getCmSupplierItem().getPmUom().getUomId();
 			String noDays = this.getManagedBean().getRecentPriceDuration();
 			String reportName = ReportConst.SC_RECENT_PRICE_RPT_JSP;
 			
 			Map<String, String> paramMap = new HashMap<String, String>();
-			paramMap.put(ReportConst.PARAM_KEY_ITEM_ID, itemId+"");
-			paramMap.put(ReportConst.PARAM_KEY_SUPPLIER_ID, supplierId+"");
-			paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays);
+			paramMap.put(ReportConst.PARAM_KEY_ITEM_ID, itemId + "");
+			paramMap.put(ReportConst.PARAM_KEY_CM_SUPPLIER_ITEM_ID, cmSuppItemId + "");
+			paramMap.put(ReportConst.PARAM_KEY_UOM_ID, uomId + "");
+			paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays + "");
+			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 			
 			generateReport(reportName, paramMap);
 		}
