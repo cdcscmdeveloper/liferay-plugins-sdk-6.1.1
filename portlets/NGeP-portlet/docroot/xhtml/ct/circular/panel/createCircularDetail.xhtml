@@ -142,10 +142,9 @@
 			<td> <h:panelGroup id="uploadCircularPg">
 				   <p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg, uploadCircularDlg" value="#{lbl['lbl.bpm.choose.file']}"
-					rendered="#{panelBackingBean.isPanelAdmin()}" 
 					disabled="#{panelBackingBean.managedBean.viewContract}"/>	
-					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
-					action="#{panelBackingBean.downloadFile(1)}" />				
+					<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
+					    styleClass="blue_font"  action="#{panelBackingBean.downloadFile(1)}" />				
 			</h:panelGroup>	</td>
 			<td></td>
 			<td></td>
