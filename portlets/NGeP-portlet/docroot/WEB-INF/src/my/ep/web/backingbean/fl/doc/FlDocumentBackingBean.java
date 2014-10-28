@@ -971,7 +971,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		paramMap.put(ReportConst.PARAM_DOC_NO, docNo);
 		paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
 		String reportName = null;
-		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+		if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER) || docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
 			reportName = ReportConst.FL_NGEP_PURCHASE_ORDER;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_DELIVERY_ORDER)) {
 			reportName = ReportConst.FL_NGEP_DELIVERY;
