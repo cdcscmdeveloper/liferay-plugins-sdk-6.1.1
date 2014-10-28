@@ -757,7 +757,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 		TplSpecQuestion tplSpecQuestion = templateSpecBean.getSelectedSpecQuestion();
 		List<TplSpecEstimation> specEstimations = tplSpecQuestion.getTplSpecEstimations();
-		TplSpecZone specZone = tplSpecQuestion.getTplSpecMaster().getTplSpecZone();
+		TplSpecZone specZone = templateSpecBean.getSpecMaster().getTplSpecZone();
 		List<TplSpecZoneDtl> specZoneDtls = null;
 		/*TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
 		
