@@ -312,6 +312,33 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private String localOutCome;
 	private boolean isZoneLocation;
 	private List<ScQtSpecificationRemark> specificationRemarks;
+	private List<String> supplierStateCode;
+	private List<String> supplierDistrictCode;
+	private List<String> supplierDivisionCode;
+
+	public List<String> getSupplierStateCode() {
+		return supplierStateCode;
+	}
+
+	public void setSupplierStateCode(List<String> supplierStateCode) {
+		this.supplierStateCode = supplierStateCode;
+	}
+
+	public List<String> getSupplierDistrictCode() {
+		return supplierDistrictCode;
+	}
+
+	public void setSupplierDistrictCode(List<String> supplierDistrictCode) {
+		this.supplierDistrictCode = supplierDistrictCode;
+	}
+
+	public List<String> getSupplierDivisionCode() {
+		return supplierDivisionCode;
+	}
+
+	public void setSupplierDivisionCode(List<String> supplierDivisionCode) {
+		this.supplierDivisionCode = supplierDivisionCode;
+	}
 
 	public List<ScQtSpecificationRemark> getSpecificationRemarks() {
 		return specificationRemarks;
