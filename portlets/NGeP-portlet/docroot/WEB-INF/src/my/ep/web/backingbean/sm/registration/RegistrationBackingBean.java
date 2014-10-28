@@ -299,6 +299,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
 			}
+		}else{
+			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
+			PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
+			
+			personneleqDTO.setIdentificationNo(this.getManagedBean().getSmSupp().getRegNo());
+			PersonnelResDTO personnelResDTO =  personnelSO.retrieveIsEquityOrIsDirectorByIdentNo(personneleqDTO);
+			
+			if(personnelResDTO.getSmPersonnelList().size() > 0){
+				throw new EpException(MessageConst.ERROR_721026);
+			}
 		}
 		
 		if(smAppl.getSmSupplierBanks().size() < 1){
