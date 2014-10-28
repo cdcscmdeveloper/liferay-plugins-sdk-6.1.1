@@ -167,17 +167,13 @@ public class SupplierUserActivationBackingBean extends
 					if(reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || reqDTO.getSmPersonnel().getEpRole().equalsIgnoreCase(RoleCode.CM_USER.value())){
 						try{
 							resDTO = reqSO.createPmProfileForPersonnel(reqDTO);
-						}catch(Exception ex){
-							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
-							log.info("Personnel ID>>>" + reqDTO.getSmPersonnel().getPersonnelId());
-							
-						}
-						if(resDTO.isSuccessful()){
+
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
 							return navigateToAck();
-						}else{
-							throw new EpException(MessageConst.ERROR_721001);
+
+						}catch(Exception ex){
+							throw new EpException(ex.getMessage());
 						}
 					}
 				} else {
@@ -195,19 +191,16 @@ public class SupplierUserActivationBackingBean extends
 						
 						try{
 							resDTO = reqSO.createPmProfile(reqDTO);
-						}catch(Exception ex){
-							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
-							log.info("Personnel ID>>>" + reqDTO.getSmPersonnel().getPersonnelId());
-							
-						}
-						
-						if(resDTO.isSuccessful()){
 							this.getManagedBean().setValidActivation(false);
 							this.getManagedBean().setSmPersonnel(null);
 							return navigateToAck();
-						}else{
-							throw new EpException(MessageConst.ERROR_721001);
+							
+						}catch(Exception ex){
+							log.info("activateSupplierUser>>>>>>" + ex.getMessage());
+							log.info("Personnel ID>>>" + reqDTO.getSmPersonnel().getPersonnelId());
+							throw new EpException(ex.getMessage());
 						}
+						
 					} else {
 						errorMsg("Invalid Password.");
 					}
