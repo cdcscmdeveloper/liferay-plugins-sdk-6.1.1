@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<h:panelGroup id="supplierItemViewID">
+	<h:panelGroup id="cmUNSPSCsearchID">
 	<script>
 	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
 	</script>
@@ -33,7 +33,7 @@
 								<td width="35%"><p:outputLabel
 										value="UNSPSC Title" /></td>
 								<td width="65%"><p:inputText size="50"
-										value="#{cdTrackingDiaryBackingBean.UNSPSCTitleFilterBean.searchValue}"></p:inputText></td>
+										value="#{codificationBackingBean.titleFilterBean.searchValue}"></p:inputText></td>
 							</tr>
 							<tr>
 								<td width="35%"><p:outputLabel
@@ -44,14 +44,14 @@
 							<tr>
 								<td width="35%"><p:outputLabel
 										value="Status" /></td>
-								<td width="35%"><p:selectOneMenu value="#{cdTrackingDiaryBackingBean.managedBean.autoCompleteUnspscCode}">
+								<td width="35%"><p:selectOneMenu value="#{codificationBackingBean.managedBean.autoCompleteUnspscCode}">
 										<f:selectItems value="#{cdTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
 									</p:selectOneMenu>
 								</td>						
 							</tr>
 						</table>
 						<div style="text-align: right;">
-							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{cdTrackingDiaryBackingBean.search}" id="searchButtonId">
+							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{codificationBackingBean.unspscSearch}" update="cmUNSPSCsearchID" >
 								<f:param name="unspscCode" value="aaaaaaaaaaa" />
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{cdTrackingDiaryBackingBean.reset}">
@@ -63,7 +63,7 @@
 	<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{cdTrackingDiaryBackingBean.searchDataModel}" var="unspscObj"
+				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
 				width="100%" rows="10">
 
 
@@ -75,11 +75,7 @@
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
-
-					<p:commandLink
-						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
 							#{unspscObj.unspscCode}
-							</p:commandLink>
 
 				</p:column>
 				<p:column>
@@ -88,7 +84,15 @@
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
-
+				<p:column>
+					<f:facet name="header">
+					Action
+				</f:facet>
+					<p:commandLink
+						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
+						Action
+							</p:commandLink>
+			</p:column>
 			</p:dataTable>
 
 
