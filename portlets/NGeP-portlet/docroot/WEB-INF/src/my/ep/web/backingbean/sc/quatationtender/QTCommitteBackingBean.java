@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -62,6 +63,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.CommitteType;
+import my.ep.util.MessageUtils;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -71,6 +73,7 @@ import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
 import my.ep.web.sc.quationtender.common.QTConstants;
 import my.ep.web.type.sc.quationtender.SelectionType;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -681,6 +684,19 @@ public class QTCommitteBackingBean extends
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
 					this.getManagedBean().setToBeDelCommitteMemebers(null);
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERROR_760150,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 					break;
 				}
 			}
@@ -1153,9 +1169,9 @@ public class QTCommitteBackingBean extends
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
 		List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
-		bean.getScQtCommittee()
-				.getScCommittee().getScCommitteeMembers().removeAll(selectedList);
-			
+		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
+				.removeAll(selectedList);
+
 		for (int i = 0; i < selectedList.size(); i++) {
 			if (null != selectedList.get(i).getCommitteeMemberId()) {
 				selectedList.get(i).setDeleted(true);
