@@ -86,6 +86,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierCategory selectedCategory;
 	private List<SmSupplierCategory> selectedCategories;
 	private List<SmSupplierCategory> deleteCategoryList;
+	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> activeCategoryList;
 	private List<SmAssociationBody> nonPersonnelProfBodyList;
 	private List<PmCategoryL1> supplierParentCatList;
@@ -2130,5 +2131,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setIdentificationTypes(SelectItem[] identificationTypes) {
 		this.identificationTypes = identificationTypes;
+	}
+
+	public List<SmSupplierCategory> getDeleteNewApplCategoryList() {
+		return deleteNewApplCategoryList;
+	}
+
+	public void setDeleteNewApplCategoryList(
+			List<SmSupplierCategory> deleteNewApplCategoryList) {
+		this.deleteNewApplCategoryList = deleteNewApplCategoryList;
 	}
 }
