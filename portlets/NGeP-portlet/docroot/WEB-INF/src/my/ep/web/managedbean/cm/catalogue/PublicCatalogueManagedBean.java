@@ -48,12 +48,26 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private Long brandId;
 	private boolean keyWord = true;
 	private String unspscTitle;
+	private long totalNumberOfCataloges;
+	private String lastSearchItemName;
 	
 	private List<String> cloneItemNames = new ArrayList<String>();
-	
-	
 
+	public String getLastSearchItemName() {
+		return lastSearchItemName;
+	}
 
+	public void setLastSearchItemName(String lastSearchItemName) {
+		this.lastSearchItemName = lastSearchItemName;
+	}
+
+	public long getTotalNumberOfCataloges() {
+		return totalNumberOfCataloges;
+	}
+
+	public void setTotalNumberOfCataloges(long totalNumberOfCataloges) {
+		this.totalNumberOfCataloges = totalNumberOfCataloges;
+	}
 
 	public String getItemName() {
 		return itemName;
