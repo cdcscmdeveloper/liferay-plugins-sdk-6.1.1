@@ -35,7 +35,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.qt.bsv.requestor']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.createdBy}"
+						value="#{approvalBackingBean.retriveUserName(approvalBackingBean.managedBean.qt.createdBy)}"
 						disabled="true" readonly="true" size="80" /></td>
 				<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
 				<td><p:inputText
@@ -59,7 +59,7 @@
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.so.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{approvalBackingBean.managedBean.qt.qtTitle}" cols="170"
-						rows="2" style=" margin-bottom:5px;" disabled="true" /></td>
+						rows="5" style=" margin-bottom:5px; width: 100%;" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
