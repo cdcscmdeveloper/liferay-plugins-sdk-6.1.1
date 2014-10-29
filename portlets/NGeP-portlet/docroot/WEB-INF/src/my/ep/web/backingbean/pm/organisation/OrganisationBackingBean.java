@@ -54,6 +54,7 @@ import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -61,6 +62,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPtjGroup;
@@ -488,6 +490,7 @@ public class OrganisationBackingBean extends
 			} else {
 				orgValidity.setEffDate(new Date());
 			}
+			
 
 			if (getManagedBean().getOrgType().equalsIgnoreCase(
 					OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
@@ -520,10 +523,40 @@ public class OrganisationBackingBean extends
 			orgProfile.setPmOrgValidity(orgValidity);
 
 		}
+		System.out.println("Name"+getManagedBean().getOfficeContactPerson().getContactName());
 
 		reqDTO.setPmOrgProfile(orgProfile);
 
 		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
+		if (getManagedBean().getOrgProfile().isGovtSeller()) {
+			
+			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IRegistrationSO.class);
+			RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
+			PmFinancialOrg bank = new PmFinancialOrg();
+			bank.setFinancialOrgId(1L);
+			regReqDTO.setOrgProfileId(71638L);
+			regReqDTO.setBank(bank);
+			regReqDTO.setBankAccountNo("1134567");
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(2144L);
+			IUserSO userSO = (IUserSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			userReqDTO.setOrgProfileId(71638L);
+
+			UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(userReqDTO);
+			
+			regReqDTO.setPmUsers(userResDTO.getUserList());
+
+			RegistrationResDTO regResDTO = registrationSO
+					.createPTJSupplier(regReqDTO);
+			regResDTO.setSuccessful(true);
+
+		}
 
 		if (resDTO.isSuccessful()) {
 			result = resDTO.isSuccessful();

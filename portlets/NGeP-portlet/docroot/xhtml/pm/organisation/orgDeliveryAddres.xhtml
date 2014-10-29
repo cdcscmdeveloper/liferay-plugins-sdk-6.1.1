@@ -195,11 +195,11 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.email']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:inputText id="deliveryEmail" required="true"
+					<td><p:inputText id="condeliveryEmail" required="true"
 							label="#{lbl['lbl.pm.address.email']}" maxlength="80"
 							value="#{organisationBackingBean.managedBean.deliveryAddress.email}"
 							size="35" /></td>
-					<td><p:message for="deliveryEmail" id="deliveryEmailMsg"
+					<td><p:message for="condeliveryEmail" id="condeliveryEmailMsg"
 							display="icon" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.pm.address.tel']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
@@ -233,22 +233,30 @@
 			<table>
 
 				<tr>
-					<td><p:outputLabel value="Name" /></td>
-					<td><p:inputText
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.name']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:inputText  id="deliveryName" label="#{lbl['lbl.pm.contact.name']}"
+							required="true"
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.contactName}"
 							size="50" /></td>
+							<td><p:message id="deliveryNameMsg" for="deliveryName"
+							display="icon" /></td>
 
-					<td><p:outputLabel value="Tel No." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.phone']}" /></td>
 					<td><p:inputText
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.phoneNo}"
 							size="20" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.email']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:inputText id="deliveryEmail" label="#{lbl['lbl.pm.contact.email']}"
+							required="true"
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.email}"
 							size="50" /></td>
-					<td><p:outputLabel value="Mobile No" /></td>
+							<td><p:message id="deliveryEmailMsg" for="deliveryEmail"
+							display="icon" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.pm.contact.mobile']}" /></td>
 					<td><p:inputText
 							value="#{organisationBackingBean.managedBean.deliveryContactPerson.mobileNo}"
 							size="20" /></td>

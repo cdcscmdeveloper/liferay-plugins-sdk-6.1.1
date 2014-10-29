@@ -60,7 +60,7 @@
 	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
 		toggleable="true">
 		<p:pickList id="approverpickList" var="data" itemValue="#{data}"
-			itemLabel="#{data}"
+			itemLabel="#{data.userName}"
 			value="#{organisationBackingBean.managedBean.supplierUsers}"
 			showTargetControls="true" filterMatchMode="contains">
 			<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}

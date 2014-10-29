@@ -36,7 +36,7 @@
 						value="#{lbl['lbl.pm.organisation.orgCode']}" /></td>
 				<c:choose>
 					<c:when
-						test="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">
+						test="#{!organisationBackingBean.managedBean.orgValidity.brandNew}">
 						<td><p:inputText
 								value="#{organisationBackingBean.managedBean.orgValidity.orgCode}"
 								size="40" disabled="true" /></td>
