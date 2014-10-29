@@ -476,6 +476,7 @@ public class QTCommitteBackingBean extends
 				}
 
 			}
+			
 		} else {
 			throw new EpException(MessageConst.ERROR_760103);
 		}
@@ -527,7 +528,21 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
-
+		FacesContext
+		.getCurrentInstance()
+		.addMessage(
+				null,
+				new FacesMessage(
+						FacesMessage.SEVERITY_INFO,
+						null,
+						MessageUtils
+								.getMessage(
+										MessageConst.ERROR_760155,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes()
+												.getUserLocale())));
+		
+		
 	}
 
 	/**
