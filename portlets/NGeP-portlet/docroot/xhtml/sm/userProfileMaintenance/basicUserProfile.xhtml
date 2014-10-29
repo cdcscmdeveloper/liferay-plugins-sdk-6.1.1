@@ -57,9 +57,10 @@
 								label="#{lbl['lbl.sm.userprofile.eprole']}"
 								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
 								style="width: 207px;margin-bottom: 5px;" required="true" 
-								disabled="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}">
+								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER'))}">
 								<f:selectItem itemLabel="- Select One -" itemValue="" />
 								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
+								<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId" />
 							</p:selectOneMenu>
 							<p:message id="basicBURoleMsg" for="basicBURole"
 								showSummary="true" showDetail="false" display="icon" /></td>
@@ -219,8 +220,11 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
-						<td style="float: left;"><p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
-							<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+						<td style="float: left;">
+							<p:outputPanel id="softCertId">
+								<p:outputLabel value="#{lbl['lbl.txt.yes']}" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}"/>
+								<p:outputLabel value="#{lbl['lbl.txt.no']}" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+							</p:outputPanel>
 						</td>
 					</tr>
 					<tr>
