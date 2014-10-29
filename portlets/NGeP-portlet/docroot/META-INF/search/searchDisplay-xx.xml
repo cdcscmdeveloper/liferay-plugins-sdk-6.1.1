@@ -776,7 +776,7 @@
 		</property>
 	</bean>
 	<bean id="V_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="supplierId" />
+		<property name="pk" value="docId" />
 		<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ViewSupplierItemDAO" />
 		<property name="columns">
 			<list>
