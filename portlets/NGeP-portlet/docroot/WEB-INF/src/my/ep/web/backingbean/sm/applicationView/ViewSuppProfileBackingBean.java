@@ -34,6 +34,7 @@ public class ViewSuppProfileBackingBean extends
 
 			String applNo = smResDTO.getSmAppl().getApplNo();
 			getManagedBean().setApplicationNoParam(applNo + "_APP");
+			getManagedBean().setViewSupplierProfile(true);
 			initApplication();
 			String applType = getManagedBean().getSmAppl().getApplType();
 			String redirectToAppl = SmApplicationUtil

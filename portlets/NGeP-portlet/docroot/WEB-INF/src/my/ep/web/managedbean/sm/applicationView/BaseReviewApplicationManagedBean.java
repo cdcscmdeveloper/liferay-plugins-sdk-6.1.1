@@ -90,6 +90,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean reviewSiteVisit;
 	private boolean reviewApplicationExist;
 	private boolean hasPreviousApplication;
+	private boolean viewSupplierProfile;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -786,6 +787,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setHasPreviousApplication(boolean hasPreviousApplication) {
 		this.hasPreviousApplication = hasPreviousApplication;
+	}
+
+	public boolean isViewSupplierProfile() {
+		return viewSupplierProfile;
+	}
+
+	public void setViewSupplierProfile(boolean viewSupplierProfile) {
+		this.viewSupplierProfile = viewSupplierProfile;
 	}
 
 }
