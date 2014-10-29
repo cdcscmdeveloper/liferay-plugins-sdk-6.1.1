@@ -31,28 +31,31 @@
 	<table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
         <td>
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Senarai Semak Pematuahan </span>
+            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Senarai Semak Pematuhan Teknikal</span>
             <br/> <br/>
         </td>
     </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-            	<table class="table2" width='100%'>
-					<tr>
-						<td>Title</td>
-						<td>Type</td>
-					</tr>
-					#foreach( $techList in $uploadTechSpecList )
-					<tr>
-            			<td>$techList.title</td>
-            			<td>$bean.getParameterDesc($techList.definationType)</td>
-            		</tr>
-					#end
-				</table>
-            </span>
-        </td>
-    </tr>
+    #if ($fulfilmentType == "true")
+    	<tr align='left'>
+	        <td>
+	            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+	            	<table class="table2" width='100%'>
+						<tr>
+							<td>Title</td>
+							<td>Type</td>
+						</tr>
+						#foreach( $techList in $uploadTechSpecList )
+						<tr>
+	            			<td>$techList.title</td>
+	            			<td>$bean.getParameterDesc($techList.definationType)</td>
+	            		</tr>
+						#end
+					</table>
+	            </span>
+	        </td>
+	    </tr>
+    #end
+    
     </table>
 </body>
 </html>
