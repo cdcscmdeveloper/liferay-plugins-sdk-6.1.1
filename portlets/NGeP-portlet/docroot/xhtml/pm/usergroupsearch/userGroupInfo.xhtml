@@ -24,20 +24,17 @@
 		<td><p:inputText size="30" value="#{usergroupBackingBean.managedBean.userGroup.groupName}" /></td>
 	  </tr>
 	  <tr>
-		<td><p:outputLabel value="#{lbl['lbl.pm.ug.search.role']}" />
-			<p:outputLabel value="*" styleClass="mandatory" /></td>
-		<td><p:inputText value="FL_APPROVER" disabled="true" size="30" /></td>
-	  </tr>
-	  <tr>
 		<td><p:outputLabel value="#{lbl['lbl.pm.ug.info.orgunit']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
      	 <td><p:columnGroup> 		        
-      	 <p:inputText value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}" size="10" />&#160;&#160;
-      	 <ac:lov id="uomLovId" lovId="PM_ORG_PROFILE" size="60"
+      	 <p:inputText value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgCode}" 
+      		 disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}" size="10" />&#160;&#160;
+      	 <ac:lov id="uomLovId" lovId="PM_ORG_PROFILE_FPJ" size="60"
       	 			update="@form" 
 					headerText="Org Profile Lov" 			
 					value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}" 
 					saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
+					disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 					conditionField="recordStatus^1">
 		</ac:lov> 
 		<ac:lovPopup />                                          
@@ -86,7 +83,7 @@
 						<td>
 							<table>
 								<tr>
-									<td class="TableFieldLeft"><ac:lov id="usergrouping"
+									<td class="TableFieldLeft" style="padding-bottom:5px"><ac:lov id="usergrouping"
 								 			lovId="PM_USER" headerText="User Selection" buttonLabel="#{lbl['lbl.btn.add']}"
 											buttonIcon="ui-icon-add" selectionMode="multiple"
 											saveObject="usergroupBackingBean.managedBean.users"

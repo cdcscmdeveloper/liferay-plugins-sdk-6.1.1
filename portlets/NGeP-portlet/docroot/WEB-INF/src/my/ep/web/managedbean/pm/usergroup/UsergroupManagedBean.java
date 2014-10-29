@@ -33,6 +33,8 @@ public class UsergroupManagedBean extends BaseManagedBean {
 	private String role;	
 	private String ptjCode;	
 	private String ptjName;	
+	private String groupName;
+	private String groupCode;
 	private String status;
 	
 	private String orgConditionField;	
@@ -100,6 +102,22 @@ public class UsergroupManagedBean extends BaseManagedBean {
 
 	public void setPtjName(String ptjName) {
 		this.ptjName = ptjName;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
 	}
 
 	public String getStatus() {
