@@ -48,6 +48,7 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" >
 				<p:calendar value="#{address.startDate}" id="calStartDate"   
 					mindate="#{address.startDate}"
+					readonlyInput="true"
 					disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
 					size="8" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -60,6 +61,7 @@
 			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" >
 				<p:calendar value="#{address.endDate}" id="calEndDate" 
 					mindate="#{address.startDate}"
+					readonlyInput="true"
 					disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
 					size="8"
 					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
