@@ -363,7 +363,7 @@
 		      rendered="#{contractDetailsBackingBean.managedBean.selectedItem !=null  and 
 		         contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty }">
 			     <p:dataTable id="ceilingTable" var="itemCeilingQtiesVar" rowKey="#{itemCeilingQtiesVar}"
-			         value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
+			         value="#{contractDetailsBackingBean.getActiveItemCeilingQty()}" >
 				     <ac:paginator for="ceilingTable"/>
 				
 				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;">
@@ -387,22 +387,6 @@
 					       </p:inputText>
 				     </p:column>            
 			  
-			       	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
-				         <h:outputText value="#{itemCeilingQtiesVar.effDate}" style="float:left;">
-                            <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                        </h:outputText>
-			         </p:column>       
-				
-				     <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
-				          <h:outputText value="#{itemCeilingQtiesVar.expDate}" style="float:left;">
-                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-                         </h:outputText>
-				     </p:column>    
-				     
-				      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
-		               <p:outputLabel value="#{itemCeilingQtiesVar.recordStatusFlg == 1 ?  lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
-		           </p:column>  
-		                  
 			  </p:dataTable>
 		  </h:panelGroup>
 	    </p:outputPanel> 
