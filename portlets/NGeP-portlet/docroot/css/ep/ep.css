@@ -1630,6 +1630,11 @@ important;
 	background: url('../images/design/icon_info.png') !important;
 }
 
+.ui-messages-error-detail {
+	font-size: 12px;
+	font-weight: bold;
+}
+
 /* --------------------------       Ends Error Messages       ------------------------------ */
 
 /* --------------------------       Menu Button       ------------------------------ */
