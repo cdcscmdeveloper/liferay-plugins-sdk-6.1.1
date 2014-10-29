@@ -134,17 +134,16 @@ public class PublicCatalogueBackingBean extends
 		this.getManagedBean().setFamilyCode(null);
 		try {
 			reqDTO.setItemName(this.getManagedBean().getItemName());
+			reqDTO.setRecordIndex(0);
+			reqDTO.setRecordSize(10);
 			CatalogueResDTO resDTO = catalogueSO
-					.searchPublicCatalogueBy(reqDTO);
-//			System.out
-//			.println("end calling method////");
-//			System.out
-//					.println("resDTO.getViewPublicSuppItemResultBean().getResultList():"
-//							+ resDTO.getViewPublicSuppItemResultBean()
-//									.getResultList());
+					.searchPublicCatalogueByItemName(reqDTO);
+			
+			this.getManagedBean().setLastSearchItemName(reqDTO.getItemName());
+			this.getManagedBean().setTotalNumberOfCataloges(resDTO.getTotalRecord());
+
 			List<String> itemNames = new ArrayList<String>();
-			for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultBean()
-					.getResultList()) {
+			for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultList()) {
 
 				if (itemNames != null && itemNames.size() > 0) {
 					if (!itemNames.contains(cat.getCommodityCode())) {
@@ -163,6 +162,7 @@ public class PublicCatalogueBackingBean extends
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 			for (String code : itemNames) {
 				log.debug("*******code***********" + code);
+//				if(this.getManagedBean().getFamilyList().size() < 10){
 				codeReqDTO.setUnspscCode(code);
 				CodificationResDTO codeResDTO = codificationSO
 						.searchUnspscObj(codeReqDTO);
@@ -172,6 +172,7 @@ public class PublicCatalogueBackingBean extends
 				if (code != null && code.trim().length() > 0) {
 					this.getManagedBean().getFamilyCodeList().add(code);
 				}
+//				}
 			}
 
 			if(this.getManagedBean().getFamilyCodeList().size() == 1){
@@ -187,8 +188,7 @@ public class PublicCatalogueBackingBean extends
 									.getBrandName()));
 				}
 			}
-			for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
-					.getResultList()) {
+			for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultList()) {
 //                System.out.println("................................view.getCmSupplierItem()="+view.getCmSupplierItem());
 				this.getManagedBean().getCatalogueList()
 						.add(view);
@@ -202,6 +202,73 @@ public class PublicCatalogueBackingBean extends
 		}
 		// return "publicCatalogueView";
 		return null;
+	}
+	
+	public void searchAllCatalogues(){
+		
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICodificationSO.class);
+			String classCode = "";
+			String familyCode = "";
+
+			try {
+				reqDTO.setItemName(this.getManagedBean().getLastSearchItemName());
+				reqDTO.setRecordIndex(10);// get the remained records
+				CatalogueResDTO resDTO = catalogueSO
+						.searchPublicCatalogueByItemName(reqDTO);
+			
+				this.getManagedBean().setTotalNumberOfCataloges(resDTO.getTotalRecord());
+
+				List<String> itemNames = new ArrayList<String>();
+				for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultList()) {
+
+					if (itemNames != null && itemNames.size() > 0) {
+						if (!itemNames.contains(cat.getCommodityCode())) {
+							itemNames.add(cat.getCommodityCode());
+						}
+					} else {
+						itemNames
+								.add(cat.getCommodityCode());
+					}
+				}
+                for(String itemName:itemNames){
+                	this.getManagedBean().getCloneItemNames().add(itemName);
+                }
+				
+				log.info("itemNames.size(): " + itemNames.size());
+
+				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+				for (String code : itemNames) {
+					log.debug("*******code***********" + code);
+					
+					codeReqDTO.setUnspscCode(code);
+					CodificationResDTO codeResDTO = codificationSO
+							.searchUnspscObj(codeReqDTO);
+					this.getManagedBean().getFamilyList()
+							.add(codeResDTO.getUnspscObj());
+
+					if (code != null && code.trim().length() > 0) {
+						this.getManagedBean().getFamilyCodeList().add(code);
+					}
+					
+				}
+
+				for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultList()) {
+//	                System.out.println("................................view.getCmSupplierItem()="+view.getCmSupplierItem());
+					this.getManagedBean().getCatalogueList()
+							.add(view);
+				}
+
+//			} catch (Exception ex) {
+
+			} finally {
+				catalogueSO = null;
+				codificationSO = null;
+			}
+			// return "publicCatalogueView";
 	}
 
 	public void clearSerach() {
