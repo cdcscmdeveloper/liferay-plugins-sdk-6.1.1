@@ -40,14 +40,16 @@
 				<h:outputText rendered="#{address.addressType eq null}"
 					value="#{contractRequestBackingBean.getFullAddress(address.pmAddress)}" />				
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="text-align:right">
-				<h:outputText
+			<p:column headerText="#{lbl['lbl.fl.delivery.period']}" style="white-space:normal;" >
+				<h:outputText style="text-align:right"
 					value="#{address.deliveryTerm} #{contractRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.start']}">
-				<p:calendar value="#{address.startDate}" id="calStartDate" disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"  
-					mindate="#{address.startDate}"  
+			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" >
+				<p:calendar value="#{address.startDate}" id="calStartDate"   
+					mindate="#{address.startDate}"
+					disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
+					size="8" 
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect"
 						listener="#{contractRequestBackingBean.updateDeliveryAddrDate}"
@@ -55,14 +57,16 @@
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.fl.delivery.end']}">
-				<p:calendar value="#{address.endDate}" id="calEndDate" disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"
-					mindate="#{address.startDate}" 
+			<p:column headerText="#{lbl['lbl.fl.delivery.end']}" >
+				<p:calendar value="#{address.endDate}" id="calEndDate" 
+					mindate="#{address.startDate}"
+					disabled="#{!contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" 
+					size="8"
 					maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 					showOn="button" pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:column>
-			<p:column>
-				<f:facet name="header" style="width:8%;">
+			<p:column style="white-space:normal;">
+				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.recv.officer']}"/>
 				</f:facet>
