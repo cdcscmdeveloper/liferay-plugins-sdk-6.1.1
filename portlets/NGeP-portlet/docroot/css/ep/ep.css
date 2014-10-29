@@ -3108,6 +3108,14 @@ input[type="submit"]:hover,input[type="button"]:hover,input[type="reset"]:hover,
 	font-size: 10px;
 	font-style: italic;
 }
+
+.ui-treetable {
+	overflow: auto;
+}
+
+.ui-treetable th, .ui-treetable td {
+	white-space: normal !important;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
