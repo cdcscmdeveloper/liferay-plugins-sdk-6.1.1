@@ -1464,6 +1464,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}
 				}
+			}else if(this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERSEORANGAN_SEMENANJUNG) ||
+					this.getManagedBean().getSmSupp().getBusinessType().equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SEMENANJUNG)){
+				
+				this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
+				for(PmState state : stateLs){
+					if(!state.getStateName().equalsIgnoreCase("SABAH") && !state.getStateName().equalsIgnoreCase("SARAWAK")){
+						this.getManagedBean().getBusinessStateLs().add(state);
+					}
+				}
+				this.getManagedBean().setSabahSarawakType(false);
 			}else{
 				this.getManagedBean().setSabahSarawakType(false);
 				this.getManagedBean().setBusinessStateLs(stateLs);
