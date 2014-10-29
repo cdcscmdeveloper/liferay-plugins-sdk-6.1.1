@@ -47,7 +47,8 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.bn.code']}" />
 				</h:panelGroup>
-				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2"/>
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2" rendered="#{categoryBackingBean.managedBean.newCategory}"/>
+				<p:inputText value="#{categoryBackingBean.managedBean.pmCategoryL1.categoryL1Code}" size="15" maxlength="2" rendered="#{!categoryBackingBean.managedBean.newCategory}" readonly="true" disabled="true"/>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
