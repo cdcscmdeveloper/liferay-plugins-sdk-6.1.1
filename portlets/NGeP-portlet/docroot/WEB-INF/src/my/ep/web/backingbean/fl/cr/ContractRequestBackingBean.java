@@ -2998,15 +2998,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				ContractItemResDTO resDTO = new ContractItemResDTO();
 				ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 				
-				if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
-						(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
-						(getManagedBean().getSearchItemType() == null)){
-//					getManagedBean().setAutoUpdateAddItemPopUp(true);
-//					getManagedBean().setAutoUpdate(false);
-					return null;
-//					throw new EpException(MessageConst.ERROR_740023);
-				}
-				
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContractVer.contractVerId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getContractVerId()));
 				if(getManagedBean().getSearchItemCode() != null && getManagedBean().getSearchItemCode() != ""){
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode(),true));
@@ -3034,7 +3025,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 
 		public void searchContractItemList(){
-			getContractItemPagingDataModel().reloadData();
+
+			if((getManagedBean().getSearchItemCode() == null || getManagedBean().getSearchItemCode().isEmpty()) && 
+					(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().isEmpty()) && 
+					(getManagedBean().getSearchItemType() == null)){
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils.getMessage(MessageConst.WARN_751000,
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}else{
+				getContractItemPagingDataModel().reloadData();
+			}
 		}
 		
 		public SelectItem[] getItemTypeValues(){
