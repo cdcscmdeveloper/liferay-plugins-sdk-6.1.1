@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
@@ -255,11 +254,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} else { // non contract item and non panel item
 				if(getManagedBean().getPanelItems() == null || getManagedBean().getPanelItems().isEmpty()){
 					CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
-					catalogueReqDTO.setDocId(docId);
-					CatalogueResDTO catalogueResDTO = catalogueSO.searchSupplierItem(catalogueReqDTO);
+					catalogueReqDTO.setSupplierItemId(docId);
+					CatalogueResDTO catalogueResDTO = catalogueSO.retrieveSupplierItemDtlsById(catalogueReqDTO);
+					CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItem();
 
-					if(catalogueResDTO.getSupplierItemList() != null && !catalogueResDTO.getSupplierItemList().isEmpty()){
-						CmSupplierItem selectedSupplierItem = catalogueResDTO.getSupplierItemList().get(0);
+					if(selectedSupplierItem != null){
 
 						// for checking govt.seller 
 						if(selectedSupplierItem.getSmSupplier() != null){
@@ -271,19 +270,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 						// copy all selected suppliers from the catalogue search
 						if(compareSupplierItems == null){
-							IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
 							catalogueReqDTO = new CatalogueReqDTO();
 							catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 							catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 							catalogueReqDTO.setExtensionCode(selectedSupplierItem.getCmItem().getExtensionCode());
 							catalogueReqDTO.setUomId(selectedSupplierItem.getPmUom().getUomId());
-							catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+							catalogueResDTO = catalogueSO.getSuppliersItemsByExtensionCode(catalogueReqDTO);
 							List<SmSupplier> selectedSuppliers = getManagedBean().getCompareSuppliers();
 							for (CmSupplierItem supplierItem : catalogueResDTO.getSupplierItemList()) {
-								if (supplierItem.getItemPricings() != null && supplierItem.getItemPricings().size() > 0) {
-									if(supplierItem.getSmSupplier() != null){
-										selectedSuppliers.add(supplierItem.getSmSupplier());
-									}
+								if(supplierItem.getSmSupplier() != null){
+									selectedSuppliers.add(supplierItem.getSmSupplier());
 								}
 							}
 							selectedSuppliers.add(selectedSupplierItem.getSmSupplier());
@@ -2295,7 +2291,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			for (SmSupplier supplier : suppliers) {
 				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
-				quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
+				//quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
 				quoteSupplier.setQuote(quote);
 
 				if(getManagedBean().getSupplierList().isEmpty()){
