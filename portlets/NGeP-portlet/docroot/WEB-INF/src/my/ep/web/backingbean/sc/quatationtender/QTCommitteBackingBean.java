@@ -1168,17 +1168,17 @@ public class QTCommitteBackingBean extends
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
-		List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
+		//List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
 		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
 				.removeAll(selectedList);
 
-		for (int i = 0; i < selectedList.size(); i++) {
+		/*for (int i = 0; i < selectedList.size(); i++) {
 			if (null != selectedList.get(i).getCommitteeMemberId()) {
 				selectedList.get(i).setDeleted(true);
 				members.add(selectedList.get(i));
 			}
 		}
-		bean.setMembers(members);
+		bean.setMembers(members);*/
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
