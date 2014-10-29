@@ -2540,4 +2540,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		return jadualHarga;
 		
 	}
+	
+	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
+		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
+		if(getManagedBean().getSelectedItem()!=null) {
+			for(CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				if(ctItemCeilingQty.getCtAgency().getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					activeList.add(ctItemCeilingQty);
+				}
+			}
+		}
+		return activeList;
+	}
+	
 }
