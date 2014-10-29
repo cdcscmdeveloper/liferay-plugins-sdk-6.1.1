@@ -145,6 +145,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						reqDTO.setDan(true);
 					} else if(adjustedAmt.doubleValue()<0) {
 						reqDTO.setCan(true);
+						Map<String, String> paramMap = new HashMap<String, String>();
+						paramMap.put(ReportConst.PARAM_DOC_NO, "TEMP_DOC_NO");
+						paramMap.put(ReportConst.PARAM_USER_ID, getFacesScopes().getUserSessionBean().getUserId()+"");
+						reqDTO.setReportUrl(generateReportURL(ReportConst.FL_NGEP_CREDIT_NOTE,paramMap));
 					}
 					if(reqDTO.isDan() && reqDTO.isCan()) {
 						break;
@@ -212,6 +216,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					resDTO.getInvoice().getAp59Status().getStatusId().longValue()==FulfilmentStatusConst.AP59_PENDING_AP59_DECISION) {
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 							MessageUtils.getMessage(MessageConst.INFO_745001, null, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
+				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && reqDTO.isCan()) {
+					reqDTO.setFlDocNo(resDTO.getFulfilmentNoteNo());
+					invoiceSO.sendCANNotification(reqDTO);
 				}
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
