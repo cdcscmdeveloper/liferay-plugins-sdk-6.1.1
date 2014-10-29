@@ -13,6 +13,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
 import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
@@ -118,14 +119,27 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 			
-			if (getManagedBean().getRole() != null
-					&& !"".equalsIgnoreCase(getManagedBean().getRole())) {
+			if (getManagedBean().getGroupCode() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getGroupCode())) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_LIKE.value());
 				codesSearchBean
-						.setSearchField("pmUserGroupUsers.pmUser.pmUserOrgs.pmUserRoles.pmRole.roleCode");
+						.setSearchField("groupCode");
 				codesSearchBean.setSearchValue(getManagedBean()
-						.getRole());
+						.getGroupCode());
+				codesSearchBean
+						.setCaseInsensitive(true);
+				searchBean.getDataFilterBeans().add(codesSearchBean);
+			}
+			
+			if (getManagedBean().getGroupName() != null
+					&& !"".equalsIgnoreCase(getManagedBean().getGroupName())) {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_LIKE.value());
+				codesSearchBean
+						.setSearchField("groupName");
+				codesSearchBean.setSearchValue(getManagedBean()
+						.getGroupName());
 				codesSearchBean
 						.setCaseInsensitive(true);
 				searchBean.getDataFilterBeans().add(codesSearchBean);
@@ -283,7 +297,11 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 		if(StringUtils.isBlank(userGroup.getGroupName())){
 			throw new EpException("Group Name is Mandatory");
-		}		
+		}	
+		
+		if(userGroup.getPmOrgProfile()==null){
+			throw new EpException("PTJ Code and Name is Mandatory");
+		}
 	}
 
 	/**
