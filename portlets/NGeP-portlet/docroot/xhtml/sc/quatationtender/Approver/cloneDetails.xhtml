@@ -183,7 +183,7 @@
 					<p:commandButton value="#{lbl['lbl.so.okbtn']}"
 						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs}"
 						oncomplete="screen2.hide();" icon="ui-icon-check"
-						update="@(.scmemberdtls)" />
+						update="@([id$=scMemberDtl])"/>
 					<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
 						icon="ui-icon-cancel" onclick="screen2.hide();" />
 				</div>
