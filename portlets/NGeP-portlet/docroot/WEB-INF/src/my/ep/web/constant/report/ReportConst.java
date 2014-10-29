@@ -595,7 +595,7 @@ public class ReportConst {
 	public static final String PARAM_KEY_SUPPLIER_ID = "supplierid";
 	public static final String PARAM_KEY_CM_SUPPLIER_ITEM_ID = "suppitemid";
 	public static final String PARAM_KEY_UOM_ID = "uomid";
-	public static final String PARAM_KEY_USER_ID = "userid";
+	public static final String PARAM_KEY_USER_ID = "puser";
 	public static final String PARAM_KEY_NO_OF_DAYS = "noofdays";
 	public static final String PARAM_DOC_NO = "PNO";
 	public static final String PARAM_USER_ID = "PUSER";
