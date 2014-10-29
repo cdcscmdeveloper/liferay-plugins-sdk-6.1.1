@@ -9,7 +9,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<h:panelGroup id="supplierItemViewID">
+	<h:panelGroup id="smSearchID">
 	<script>
 	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
 	</script>
@@ -20,14 +20,15 @@
 			<tr>
 				<td><p:panel style="width: 100%;" header="#{lbl['lbl.cm.define.search']}" toggleable="true" id="searchTabId">
 
-						<table style="margin-top: 10px; width: 60%;align:center">
+						<table style="margin-top: 10px; width: 100%;">
 							<tr>
 								<td width="25%"><p:outputLabel value="Business Reg. No." /></td>
 								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.businessRegNoFilterBean.searchValue}"></p:inputText></td>
+							</tr>
+							<tr>
 								<td width="25%"><p:outputLabel value="MOF No." /></td>
 								<td width="25%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.MOFFilterBean.searchValue}"></p:inputText></td>
 							</tr>
-
 							<tr>
 								<td width="35%"><p:outputLabel value="Supplier Name" /></td>
 								<td width="65%"><p:inputText size="50" value="#{smTrackingDiaryBackingBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
@@ -56,10 +57,13 @@
 
 
 						<div style="text-align: right;">
-							<p:commandButton value="#{lbl['lbl.cm.search']}" icon="ui-icon-search" action="#{smTrackingDiaryBackingBean.search}" id="searchButtonId">
-								<f:param name="unspscCode" value="Was" />
-							</p:commandButton>
-							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset" action="#{smTrackingDiaryBackingBean.reset}">
+							<p:commandButton icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
+								action="#{smTrackingDiaryBackingBean.search}"
+								update="smSearchID">
+							</p:commandButton>		
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" icon="ui-icon-reset"
+								action="#{smTrackingDiaryBackingBean.reset}"
+								update="smSearchID">
 							</p:commandButton>
 						</div>
 					</p:panel></td>
