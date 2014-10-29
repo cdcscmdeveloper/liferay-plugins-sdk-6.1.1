@@ -109,7 +109,6 @@
         </p:dialog>  
 	   </p:panel>  
 		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.add.agency']}" widgetVar="dlgAgency" modal="true" width="700" height="500">
-			<p:ajax event="close" listener="#{contractDetailsBackingBean.closeListener}" />
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
 		   <p:panel  id="agencyies">
@@ -127,7 +126,7 @@
             	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="Name"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
-                 <p:inputText id="ptjCodeVaue"  style="width:300px;" required="#{contractDetailsBackingBean.managedBean.codeNameSearchValues}"
+                 <p:inputText id="ptjCodeVaue"  style="width:300px;" 
                      label="Ptj code or name" value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" ></p:inputText>
                         <p:message id="ptjMsg" for="ptjCodeVaue" display="icon"/>
 			  </h:panelGrid>
@@ -135,7 +134,7 @@
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency" icon="ui-icon-search" 
        		            action="#{contractDetailsBackingBean.searchAgencyDetails}" 
        		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
-			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" immediate="true"
+			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" 
 			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
 			   <p:spacer height="2"/>

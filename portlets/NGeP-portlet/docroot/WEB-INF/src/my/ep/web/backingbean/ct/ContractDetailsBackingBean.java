@@ -1504,17 +1504,16 @@ public void ConstructSideTabMenu(){
 		
 		SelectItem[] items = null;     
 		try{
-		    int i = 1;
+		    int i = 0;
 		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 		    OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
-		    items = new SelectItem[list.size()+1];
-		    items[0] = new SelectItem(null, "- Select One -");
-		      
-			for(PmOrgProfile orgProfile : list) 
-			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());   
+		    items = new SelectItem[list.size()];
+			for(PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
 		 }catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -2398,7 +2397,7 @@ public void ConstructSideTabMenu(){
 	}
 	
 	public void resetAgencyDetails(){
-		getManagedBean().setMinistryProfileId(null);
+		setMinistryOwnerId();
 		getManagedBean().setPtjCodeName(null);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		agencyDataModel.resetData();
@@ -2506,11 +2505,6 @@ public void ConstructSideTabMenu(){
 	
 	public void setMinistryOwnerId(){
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
-        this.getManagedBean().setCodeNameSearchValues(true);
-	}
-	
-	public void closeListener() {
-		getManagedBean().setCodeNameSearchValues(false);
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
