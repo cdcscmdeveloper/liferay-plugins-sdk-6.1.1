@@ -452,11 +452,6 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setTabActiveIndex(0);
 			if (!fromBpm) {
 				setApplPmStatus(SupplierManagementConst.PM_STATUS_PENDING_APPLICATION_DECLARATION);
-				// if (getManagedBean()
-				// .getSmAppl()
-				// .getSupplierType()
-				// .equalsIgnoreCase(
-				// SupplierManagementConst.STYPE_CONTRACTOR)) {
 				getManagedBean().getSmAppl().getSmCompanyBasic()
 						.setWithFederal(true);
 				// }
@@ -525,11 +520,11 @@ public class SmApplicationBackingBean extends
 						ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					// fac.setOwnerName("Sample");
 					fac.setFacilityType("H");
-					SmApplicationUtil
-							.setCancellationSmAttachment(getManagedBean());
 				}
 				SmAddress addr = new SmAddress();
 				addr = setDefaultBaseOfficeAddress(addr);
+				fac.setFacilityName(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getCompanyName());
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
 				fac.setPurchasePrice(new BigDecimal(0));
@@ -3087,7 +3082,7 @@ public class SmApplicationBackingBean extends
 		shr.setSharePercentage(new BigDecimal(0));
 		setDefaultPersonnelValues(shr);
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
-		
+
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			shr.setEquityOwner(true);
@@ -5355,17 +5350,18 @@ public class SmApplicationBackingBean extends
 					getManagedBean().setBasicOffFacStates(
 							retrievePmStateList(smFac.getSmAddress()
 									.getPmCountry().getCountryId()));
+				} else {
+					if (smFac.getSmAddress() != null
+							&& smFac.getSmAddress().getAddressId() != null) {
+						smFac.setSmAddress(setDefaultBaseOfficeAddress(smFac
+								.getSmAddress()));
+					} else {
+						smFac.setSmAddress(setDefaultBaseOfficeAddress(new SmAddress()));
+					}
 				}
-				// else {
-				// if (smFac.getSmAddress() != null) {
-				// smFac.setSmAddress(setDefaultBaseOfficeAddress(smFac
-				// .getSmAddress()));
-				// } else {
-				// smFac.setSmAddress(setDefaultBaseOfficeAddress(new
-				// SmAddress()));
-				// }
-				// }
 				log.info("*********Setting Basic company value **********");
+				smFac.setFacilityName(getManagedBean().getSmAppl()
+						.getSmCompanyBasic().getCompanyName());
 				this.getManagedBean().setBasicCompanyFacility(smFac);
 				if (smFac.getSmAddress() != null
 						&& smFac.getSmAddress().getPmCountry() != null
