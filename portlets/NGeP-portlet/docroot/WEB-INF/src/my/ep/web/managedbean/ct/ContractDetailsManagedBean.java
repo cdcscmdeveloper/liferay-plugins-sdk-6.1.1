@@ -75,7 +75,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String contractType;
 	private String externalPageUrl;
 	private String ptjCodeName;
-	private String ptjSearchtype;
 	private String ptjCodeNameSearchValues;
 	private String frequencySchedule;
 	
@@ -860,14 +859,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setPtjCodeName(String ptjCodeName) {
 		this.ptjCodeName = ptjCodeName;
-	}
-
-	public String getPtjSearchtype() {
-		return ptjSearchtype;
-	}
-
-	public void setPtjSearchtype(String ptjSearchtype) {
-		this.ptjSearchtype = ptjSearchtype;
 	}
 
 	public String getPtjCodeNameSearchValues() {

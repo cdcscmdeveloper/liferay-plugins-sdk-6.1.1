@@ -2400,7 +2400,6 @@ public void ConstructSideTabMenu(){
 	public void resetAgencyDetails(){
 		getManagedBean().setMinistryProfileId(null);
 		getManagedBean().setPtjCodeName(null);		
-		getManagedBean().setPtjSearchtype("E");
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		agencyDataModel.resetData();
 	}
@@ -2477,25 +2476,13 @@ public void ConstructSideTabMenu(){
 				if(getManagedBean().getPtjCodeName() != null &&
 						(getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))){
 					   
-					if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
-								  						SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-				
-					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
+					if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Code")){
 						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode",
 								  						SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
 					    searchBean.getDataFilterBeans().add(filterBean);
 					
-					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("E")){
-						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
-														SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getPtjCodeNameSearchValues());
-						filterBean.setCaseInsensitive(true);
-					    searchBean.getDataFilterBeans().add(filterBean);
-					
-					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name") && getManagedBean().getPtjSearchtype().equalsIgnoreCase("L")){
+					}else if(getManagedBean().getPtjCodeName().equalsIgnoreCase("Name")){
 						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgName",
 														SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
@@ -2520,6 +2507,10 @@ public void ConstructSideTabMenu(){
 	public void setMinistryOwnerId(){
 		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
         this.getManagedBean().setCodeNameSearchValues(true);
+	}
+	
+	public void closeListener() {
+		getManagedBean().setCodeNameSearchValues(false);
 	}
 	
 	public BigDecimal getPaidAdvancePercentage() {
