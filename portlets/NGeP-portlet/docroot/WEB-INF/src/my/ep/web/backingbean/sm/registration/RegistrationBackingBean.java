@@ -1466,27 +1466,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}
 					}
 				}
-			}else{		
-				if(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryCode().equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE) ){
-					this.getManagedBean().setBusinessStateLs(new ArrayList<PmState>());
-					if(this.getManagedBean().isSabahSarawakType()){
-						this.getManagedBean().setSabahSarawakType(false);
-						if(this.getManagedBean().getSmBusinessAdd().isBrandNew()){
-							this.getManagedBean().getSmBusinessAdd().setPmState(new PmState());
-							this.getManagedBean().getSmBusinessAdd().setPmDistrict(new PmDistrict());
-							this.getManagedBean().getSmBusinessAdd().setPmCity(new PmCity());
-						}
-
-					}
-					
-					for(PmState state : stateLs){
-							if(!state.getStateName().equalsIgnoreCase("SARAWAK") && !state.getStateName().equalsIgnoreCase("SABAH")){
-								this.getManagedBean().getBusinessStateLs().add(state);
-							}
-					}
-				}else{
-					this.getManagedBean().setBusinessStateLs(stateLs);
-				}
+			}else{
+				this.getManagedBean().setSabahSarawakType(false);
+				this.getManagedBean().setBusinessStateLs(stateLs);
 			}
 		}else{
 			this.getManagedBean().setBusinessStateLs(stateLs);
