@@ -694,8 +694,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		filePath.append(attachment.getDocType());
 		attachment.setFilePath(filePath.toString());
 
-		File theDir = new File(getActualFilePath(attachment));
-		theDir.mkdirs();
+		/*File theDir = new File(getActualFilePath(attachment));
+		theDir.mkdirs();*/
 		
 		AttachmentFormat scFormat =getAttachFormat(attachment);
 		String formatedFileName = scFormat.format(attachment.getFileName(),
@@ -825,6 +825,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
 		VelocityContext context = new VelocityContext();
 		
+		boolean isTechOff = false;
 		List<ScQtCheckList> uploadTechSpecList = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
 		IQTSpecSO specSO;
@@ -842,11 +843,13 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			for (ScQtCheckList checkList : techSpecList) {
 				if (checkList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)) {
 					uploadTechSpecList.add(checkList);
+					isTechOff = true;
+					context.put("isTechOff", isTechOff);
+					context.put("uploadTechSpecList", uploadTechSpecList);
+					context.put("bean", this);
 				}
 			}
 		}
-		context.put("uploadTechSpecList", uploadTechSpecList);
-		context.put("bean", this);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_TECH_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
