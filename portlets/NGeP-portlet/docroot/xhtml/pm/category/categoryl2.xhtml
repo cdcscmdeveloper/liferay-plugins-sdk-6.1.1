@@ -10,7 +10,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<table style="width: 100%;">
 			<tr>
 				<td>
@@ -41,13 +45,13 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.bn.level']}" />
 				</h:panelGroup>
-				<h:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}" disabled="true"
+				<p:selectOneMenu value="#{categoryBackingBean.managedBean.catLevel}" disabled="true"
 					style="width: 108px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.main.category']}" itemValue="1" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.category']}" itemValue="2" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.sub.div']}" itemValue="3" />
-				</h:selectOneMenu>
+				</p:selectOneMenu>
 				
 				<h:panelGroup style="float: right">
 				<h:outputText value="* " styleClass="mandatory" />
