@@ -40,6 +40,17 @@
 				</f:facet>
 				<table style="width: 100%">
 					<tr>
+						<td><p:outputLabel rendered="#{smPersonnelBackingBean.managedBean.editMode}"
+								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
+						<td><p:selectOneRadio id="accountstatus" required="false"
+								value="1" disabled="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN'}" 
+								rendered="#{smPersonnelBackingBean.managedBean.editMode}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
+							</p:selectOneRadio></td>
+					
+					</tr>
+					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.name']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -50,22 +61,6 @@
 								<p:message id="basicBUNameMsg" for="basicBUName"
 								showSummary="true" showDetail="false" display="icon" /></td>
 
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="basicBURole"
-								label="#{lbl['lbl.sm.userprofile.eprole']}"
-								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
-								style="width: 207px;margin-bottom: 5px;" required="true" 
-								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER'))}">
-								<f:selectItem itemLabel="- Select One -" itemValue="" />
-								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
-								<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId" />
-							</p:selectOneMenu>
-							<p:message id="basicBURoleMsg" for="basicBURole"
-								showSummary="true" showDetail="false" display="icon" /></td>
-					</tr>
-					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.nationality']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></td>
@@ -80,28 +75,8 @@
 							</p:selectOneMenu>
 							<p:message id="basicBUCountryMsg" for="basicBUCountry"
 								showSummary="true" showDetail="false" display="icon" /></td>
-
-						<td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.dob']}" />
-							<p:outputLabel value="*" styleClass="mandatory" /></td>
-						<td><p:calendar showOn="button" navigator="true"
-								display="inline" required="true" readonlyInput="true"
-								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
-								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0" disabled="#{smPersonnelBackingBean.managedBean.editMode}"
-								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
-							<p:message id="dobDateMsg" for="dobDate"
-									showSummary="true" showDetail="false" display="icon" /></td>
-
-						
-						<!-- <td><p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
-						<td><p:selectOneRadio id="accountstatus" required="false"
-								value="1" disabled="false">
-								<f:selectItem itemLabel="Active" itemValue="1" />
-								<f:selectItem itemLabel="Inactive" itemValue="0" />
-							</p:selectOneRadio></td> -->
 					</tr>
+
 					<tr>
 						<!-- <td><p:outputLabel
 								value="#{lbl['lbl.sm.userprofile.oldicno']}" /></td>
@@ -209,15 +184,34 @@
 					</tr>
 					
 					<tr>
-						<td><p:outputLabel rendered="#{smPersonnelBackingBean.managedBean.editMode}"
-								value="#{lbl['lbl.sm.userprofile.accountstatus']}" /></td>
-						<td><p:selectOneRadio id="accountstatus" required="false"
-								value="1" disabled="false" rendered="#{smPersonnelBackingBean.managedBean.editMode}">
-								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.active']}" itemValue="1" />
-								<f:selectItem itemLabel="#{lbl['lbl.sm.accountstatus.deactivate']}" itemValue="0" />
-							</p:selectOneRadio></td>
-					
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.eprole']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="basicBURole"
+								label="#{lbl['lbl.sm.userprofile.eprole']}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole}"
+								style="width: 207px;margin-bottom: 5px;" required="true" 
+								disabled="#{(smPersonnelBackingBean.managedBean.editMode and (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER'))}">
+								<f:selectItem itemLabel="- Select One -" itemValue="" />
+								<f:selectItems value="#{smPersonnelBackingBean.managedBean.roleList}"/>
+								<p:ajax event="change" partialSubmit="true" process="basicBURole" update="softCertId" />
+							</p:selectOneMenu>
+							<p:message id="basicBURoleMsg" for="basicBURole"
+								showSummary="true" showDetail="false" display="icon" /></td>
+								
+						<td><p:outputLabel
+								value="#{lbl['lbl.sm.userprofile.dob']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:calendar showOn="button" navigator="true"
+								display="inline" required="true" readonlyInput="true"
+								label="#{lbl['lbl.sm.person.dob']}" id="dobDate"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								yearRange="-99:+0" disabled="#{smPersonnelBackingBean.managedBean.editMode}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.birthDate}" />
+							<p:message id="dobDateMsg" for="dobDate"
+									showSummary="true" showDetail="false" display="icon" /></td>		
 					</tr>
+					
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" /></td>
 						<td style="float: left;">
@@ -228,18 +222,13 @@
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}" 
+								rendered="#{#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}}"/></td>
 						<td><p:selectOneRadio value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.contractSignerFlg}"
-								disabled="#{!(smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '1')}">
+								rendered="#{#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER')}}">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 								<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-							</p:selectOneRadio>	
-							<p:graphicImage id="uidti"
-								value="/css/images/design/tooltips.png"  />
-							<p:tooltip id="uidtt" for="uidti">
-								<p:outputLabel escape="false"
-									value="#{lbl['lbl.sm.userprofile.privileges.tooltip']}" />
-							</p:tooltip></td>
+							</p:selectOneRadio></td>
 					</tr>
 				</table>
 			</p:panel>
