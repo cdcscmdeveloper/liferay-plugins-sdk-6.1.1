@@ -278,7 +278,7 @@
 			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
 			 		and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
 				<p:dataTable id="ceilingTable" var="itemCeilingQtiesVar"
-					value="#{amendmentBackingBean.managedBean.selectedItem.ctItemCeilingQties}" >
+					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
 					<ac:paginator for="ceilingTable" />
 					<p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:25%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.parentOrgProfile.orgName}" />
@@ -301,17 +301,17 @@
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;">
 						<h:outputText value="#{itemCeilingQtiesVar.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%; white-space:normal;">
 						<h:outputText value="#{itemCeilingQtiesVar.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}" style="width:5%; white-space:normal;" styleClass="column-align-center">
+					<p:column rendered="false" headerText="#{lbl['lbl.ct.action']}" style="width:5%; white-space:normal;" styleClass="column-align-center">
 						<p:commandLink update=":form:ceilingTable" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
