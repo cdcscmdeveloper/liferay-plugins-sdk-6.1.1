@@ -315,6 +315,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<String> supplierStateCode;
 	private List<String> supplierDistrictCode;
 	private List<String> supplierDivisionCode;
+	
+
+	
 
 	public List<String> getSupplierStateCode() {
 		return supplierStateCode;

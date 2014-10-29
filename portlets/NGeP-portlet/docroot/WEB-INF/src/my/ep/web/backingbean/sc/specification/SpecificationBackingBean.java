@@ -648,6 +648,8 @@ public class SpecificationBackingBean extends
 			if (null != this.getManagedBean().getCtPanelItem()
 					&& null != this.getManagedBean().getCtPanelItem()
 							.getPanelItemId()) {
+
+				this.getManagedBean().getScQt().setZonal(false);
 				retriveZonesByCircularNo();
 				if (null != this.getManagedBean().getZoneGeneralTrees()
 						&& !this.getManagedBean().getZoneGeneralTrees()
@@ -941,33 +943,106 @@ public class SpecificationBackingBean extends
 	public void checktemplateSpecStatus(ScQt scqt) {
 		List<ScQtCheckList> techCheckList = this.getManagedBean()
 				.getScQtCheckSt2techProposal();
-		if (techCheckList != null && !techCheckList.isEmpty()) {
-			for (ScQtCheckList checkList : techCheckList) {
+
+		if (null != techCheckList && !techCheckList.isEmpty()) {
+			isTemplateSpec(techCheckList, scqt);
+			isTemplateSpecStatus(techCheckList, scqt);
+
+		} else {
+			if (null == techCheckList || techCheckList.isEmpty()
+					|| techCheckList.isEmpty()) {
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+						.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
+
+					throw new EpException(MessageConst.ERROR_760137);
+
+				} else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(scqt.getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(scqt.getEvaluationType()) && scqt
+								.isTechEvaluationReq())) {
+
+					throw new EpException(MessageConst.ERROR_760138);
+
+				}
+
+			}
+		}
+
+	}
+
+	public void isTemplateSpec(List<ScQtCheckList> techCheckList, ScQt scqt) {
+		int count = 0;
+		for (ScQtCheckList checkList : techCheckList) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equalsIgnoreCase(checkList.getDefinationType()
+							.getParameterCode())) {
+				count++;
+			}
+
+		}
+		if (count == 0) {
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
+
+				throw new EpException(MessageConst.ERROR_760137);
+
+			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+							.getEvaluationType()) && scqt.isTechEvaluationReq())) {
+				throw new EpException(MessageConst.ERROR_760138);
+
+			}
+		}
+
+	}
+
+	public void isTemplateSpecStatus(List<ScQtCheckList> techCheckList,
+			ScQt scqt) {
+		int count = 0;
+		for (ScQtCheckList checkList : techCheckList) {
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+					.equalsIgnoreCase(checkList.getDefinationType()
+							.getParameterCode())) {
+				if (checkList.getPmStatus().getStatusId()
+						.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
+					count++;
+				}
+			}
+
+		}
+		if (count >= 1) {
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
+
+				throw new EpException(MessageConst.ERROR_760151);
+
+			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+							.getEvaluationType()) && scqt.isTechEvaluationReq())) {
+				throw new EpException(MessageConst.ERROR_760152);
+
+			}
+		}
+
+	}
+
+	public void checkFinancialSpecStatus(ScQt scqt) {
+		List<ScQtCheckList> financialCheckList = this.getManagedBean()
+				.getScQtCheckSt2financeProposalList();
+		if (null != financialCheckList && !financialCheckList.isEmpty()) {
+			for (ScQtCheckList checkList : financialCheckList) {
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
 					if (checkList.getPmStatus().getStatusId()
 							.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-						if (QTConstants.EVALUATION_ONE_TIER
-								.equalsIgnoreCase(scqt.getEvaluationType())
-								&& !scqt.isTechEvaluationReq()) {
-
-							throw new EpException(MessageConst.ERROR_760137);
-
-						} else if (QTConstants.EVALUATION_TWO_TIER
-								.equalsIgnoreCase(scqt.getEvaluationType())
-								|| (QTConstants.EVALUATION_ONE_TIER
-										.equalsIgnoreCase(scqt
-												.getEvaluationType()) && scqt
-										.isTechEvaluationReq())) {
-							throw new EpException(MessageConst.ERROR_760138);
-
-						}
-
+						throw new EpException(MessageConst.ERROR_760153);
 					}
 
 				}
-
 			}
 
 		}
@@ -1032,12 +1107,13 @@ public class SpecificationBackingBean extends
 		case 3:
 			ScQt scQtFinChecklist = constructSpecCommitteDtls().getScQt();
 			checktemplateSpecStatus(scQtFinChecklist);
+			checkFinancialSpecStatus(scQtFinChecklist);
 			break;
 
 		case 4:
 			ScQt scQtTechScore = constructSpecCommitteDtls().getScQt();
 			checktemplateSpecStatus(scQtTechScore);
-
+			checkFinancialSpecStatus(scQtTechScore);
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scQtTechScore
 					.getEvaluationType())
 					&& !scQtTechScore.isTechEvaluationReq()) {
@@ -1087,7 +1163,7 @@ public class SpecificationBackingBean extends
 
 			ScQt scQtFinScore = constructSpecCommitteDtls().getScQt();
 			checktemplateSpecStatus(scQtFinScore);
-
+			checkFinancialSpecStatus(scQtFinScore);
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scQtFinScore
 					.getEvaluationType())
 					&& !scQtFinScore.isTechEvaluationReq()) {
@@ -1137,7 +1213,8 @@ public class SpecificationBackingBean extends
 		case 6:
 
 			ScQt scQtRecommendation = constructSpecCommitteDtls().getScQt();
-
+			checktemplateSpecStatus(scQtRecommendation);
+			checkFinancialSpecStatus(scQtRecommendation);
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(scQtRecommendation.getEvaluationType())
 					&& !scQtRecommendation.isTechEvaluationReq()) {
@@ -1195,7 +1272,8 @@ public class SpecificationBackingBean extends
 
 		case 7:
 			ScQt deliveryAddress = constructSpecCommitteDtls().getScQt();
-
+			checktemplateSpecStatus(deliveryAddress);
+			checkFinancialSpecStatus(deliveryAddress);
 			if (QTConstants.EVALUATION_ONE_TIER
 					.equalsIgnoreCase(deliveryAddress.getEvaluationType())
 					&& !deliveryAddress.isTechEvaluationReq()) {
@@ -1244,7 +1322,8 @@ public class SpecificationBackingBean extends
 		case 8:
 
 			ScQt fulfilMentDtls = constructSpecCommitteDtls().getScQt();
-
+			checktemplateSpecStatus(fulfilMentDtls);
+			checkFinancialSpecStatus(fulfilMentDtls);
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(fulfilMentDtls
 					.getEvaluationType())
 					&& !fulfilMentDtls.isTechEvaluationReq()) {
@@ -1273,6 +1352,9 @@ public class SpecificationBackingBean extends
 			break;
 
 		case 9:
+			ScQt committeeEndorsment = constructSpecCommitteDtls().getScQt();
+			checktemplateSpecStatus(committeeEndorsment);
+			checkFinancialSpecStatus(committeeEndorsment);
 			break;
 
 		}
@@ -3667,6 +3749,13 @@ public class SpecificationBackingBean extends
 			getManagedBean().setZoneGeneralTrees(new ArrayList<TreeNode>());
 		}
 		if (null != allNodes && !allNodes.isEmpty()) {
+			if (null != this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria()
+					&& null != this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getQtZoneCriterias()) {
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.getQtZoneCriterias().setModified(true);
+			}
 			if (getManagedBean().getIndex() == -1) {
 
 				getManagedBean().getZoneGeneralTrees().add(
@@ -7294,35 +7383,57 @@ public class SpecificationBackingBean extends
 				reqDTO.setPanelItem(this.getManagedBean().getCtPanelItem());
 				resDTO = panelSupplierSO.retrievePanelZonesByPanelItem(reqDTO);
 			}
-			this.getManagedBean().setCtZoneSupplierList(
-					new ArrayList<CtPanelSupplier>());
-			getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
-			this.getManagedBean().setCtPanelZones(new ArrayList<CtPanelZone>());
+			/*
+			 * this.getManagedBean().setCtZoneSupplierList( new
+			 * ArrayList<CtPanelSupplier>());
+			 * getManagedBean().setCtZoneSuppliers(new ArrayList<TreeNode>());
+			 * this.getManagedBean().setCtPanelZones(new
+			 * ArrayList<CtPanelZone>());
+			 */
 
 			if (null != resDTO && null != resDTO.getCtPanelZones()
 					&& !resDTO.getCtPanelZones().isEmpty()) {
 
 				if (isNotNullOREmpty(resDTO.getCtPanelZones())) {
-					this.getManagedBean().setCtzones(true);
-					getManagedBean().setCtZoneSuppliers(
-							new ArrayList<TreeNode>());
+					/* this.getManagedBean().setCtzones(true); */
+					/*
+					 * getManagedBean().setCtZoneSuppliers( new
+					 * ArrayList<TreeNode>());
+					 */
 					this.getManagedBean().setCtzones(true);
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					if (null != getManagedBean().getZoneGeneralTrees()
 							&& getManagedBean().getZoneGeneralTrees().size() == 0) {
 
-						this.getManagedBean().setCtPanelZones(
-								resDTO.getCtPanelZones());
 						for (CtPanelZone panelZones : resDTO.getCtPanelZones()) {
+
+							TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
+							tplSpecZoneDtl.setZoneName(panelZones.getName());
+							tplSpecZoneDtl.setPanelZone(panelZones);
+							setUserDetails(tplSpecZoneDtl);
+
+							List<PmState> states = SourcingLocationHelper
+									.getStateFromCtPanelZone(panelZones
+											.getPanelZoneDtls());
+							List<PmDistrict> districts = SourcingLocationHelper
+									.getDistrictFromCtPanelZone(panelZones
+											.getPanelZoneDtls());
+
 							getManagedBean()
 									.getZoneGeneralTrees()
 									.add(LocationSingleton
 											.getInstance()
-											.constuctPanelTreeNodes(
-													panelZones,
-													panelZones
-															.getPanelZoneDtls()));
+											.buildTreeWithDisabledChilds(
+													tplSpecZoneDtl, states,
+													districts, null, null,
+													false, TplSpecZoneLoc.class));
+							/*
+							 * getManagedBean() .getZoneGeneralTrees()
+							 * .add(LocationSingleton .getInstance()
+							 * .constuctPanelTreeNodes( panelZones, panelZones
+							 * .getPanelZoneDtls()));
+							 */
 						}
 					}
 
@@ -8374,7 +8485,6 @@ public class SpecificationBackingBean extends
 		List<ScQtCheckList> financialCheckList = this.getManagedBean()
 				.getScQtCheckSt2financeProposalList();
 		if (financialCheckList != null && !financialCheckList.isEmpty()) {
-
 			localChecklist.addAll(financialCheckList);
 			scQt.setScQtChecklists(localChecklist);
 		}
@@ -8840,6 +8950,19 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(resDTO.getScQt());
 				getfulfilmentDtls(resDTO.getScQt());
 				retriveFinancialCheckList();
+				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(resDTO
+						.getScQt().getEvaluationType())
+						&& !resDTO.getScQt().isTechEvaluationReq()) {
+					retriveTechnicalSpecification();
+				} else if (QTConstants.EVALUATION_TWO_TIER
+						.equalsIgnoreCase(resDTO.getScQt().getEvaluationType())
+						|| (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(resDTO.getScQt()
+										.getEvaluationType()) && resDTO
+								.getScQt().isTechEvaluationReq())) {
+					retriveTechnicalCheckList();
+				}
+
 				break;
 			case 4:
 				ScQt scoring = constructSpecCommitteDtls().getScQt();
@@ -8865,6 +8988,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
+					retriveTechnicalSpecification();
 
 				}
 
@@ -8897,6 +9021,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveTechnicalScoring();
+					retriveTechnicalCheckList();
 
 				}
 				break;
@@ -8933,6 +9058,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
+					retriveTechnicalSpecification();
 
 				}
 
@@ -8962,6 +9088,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveFinancialScoring();
+					retriveTechnicalCheckList();
 
 				}
 				break;
@@ -8993,6 +9120,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
+					retriveTechnicalSpecification();
 
 				}
 
@@ -9027,6 +9155,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveRecommendationDetails();
+					retriveTechnicalCheckList();
 
 				}
 				break;
@@ -9049,6 +9178,7 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
+						retriveTechnicalSpecification();
 					}
 
 				}
@@ -9082,6 +9212,7 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().setScQt(resDTO.getScQt());
 					getfulfilmentDtls(resDTO.getScQt());
 					retriveDeliveryDetails();
+					retriveTechnicalCheckList();
 
 				}
 				break;
@@ -9091,7 +9222,12 @@ public class SpecificationBackingBean extends
 				if (QTConstants.EVALUATION_ONE_TIER
 						.equalsIgnoreCase(fulfilMentdtls.getEvaluationType())
 						&& !fulfilMentdtls.isTechEvaluationReq()) {
-
+					specReqDTO.setScQt(fulfilMentdtls);
+					resDTO = specSO.saveQTDtl(specReqDTO);
+					renewSesionObject();
+					this.getManagedBean().setScQt(resDTO.getScQt());
+					getfulfilmentDtls(resDTO.getScQt());
+					retriveTechnicalSpecification();
 				}
 
 				if (QTConstants.EVALUATION_TWO_TIER
@@ -9113,12 +9249,20 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setScQt(resDTO.getScQt());
 						getfulfilmentDtls(resDTO.getScQt());
 						retriveFulfilmentDtls();
+						retriveTechnicalCheckList();
 					}
 
 				}
 				break;
 
 			case 9:
+				ScQt endorsment = constructSpecCommitteDtls().getScQt();
+				specReqDTO.setScQt(endorsment);
+				resDTO = specSO.saveQTDtl(specReqDTO);
+				renewSesionObject();
+				this.getManagedBean().setScQt(resDTO.getScQt());
+				getfulfilmentDtls(resDTO.getScQt());
+				retriveTechnicalCheckList();
 				break;
 
 			}
@@ -9155,37 +9299,38 @@ public class SpecificationBackingBean extends
 
 		} else {
 			this.getManagedBean().setLocalOutCome(action);
-			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			/*
+			 * if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			 * 
+			 * RequestContext.getCurrentInstance().execute(
+			 * "reviceApprovalDlgs.show()"); } else if
+			 * (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+			 * RequestContext.getCurrentInstance().execute("gpki_dlg.show()"); }
+			 * else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
+			 */
+			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
+			if (resDTO.isSuccessful()) {
+				ScQt qt = resDTO.getScQt();
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														getMessgeConstant(action),
+														new String[] {
+																"Specification Preparation And Scoring For",
+																qt.getQtNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
 
-				RequestContext.getCurrentInstance().execute(
-						"reviceApprovalDlgs.show()");
-			} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-				SpecificationResDTO resDTO = updateSpecCommitteDtls(action,
-						null);
-				if (resDTO.isSuccessful()) {
-					ScQt qt = resDTO.getScQt();
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															getMessgeConstant(action),
-															new String[] {
-																	"Specification Preparation And Scoring For",
-																	qt.getQtNo() },
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				}
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
+			// }
 		}
 		return null;
 
@@ -9209,6 +9354,12 @@ public class SpecificationBackingBean extends
 	public void deleteTreeNode() {
 
 		List<TreeNode> rootTrees = this.getManagedBean().getZoneGeneralTrees();
+		if (null != this.getManagedBean().getScQt().getScQtSupplierCriteria()
+				&& null != this.getManagedBean().getScQt()
+						.getScQtSupplierCriteria().getQtZoneCriterias()) {
+			this.getManagedBean().getScQt().getScQtSupplierCriteria()
+					.getQtZoneCriterias().setModified(true);
+		}
 		LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
 		TplSpecZoneDtl zoneDtl = null;
 		// zone details
@@ -9666,8 +9817,7 @@ public class SpecificationBackingBean extends
 				for (int i = 0; i < remarks.size(); i++) {
 					String userRemark = remarks.get(i).getRemark();
 					if (null == userRemark || "".equals(userRemark)) {
-						throw new EpException(
-								"Revise remark is mandatory for secretary in committeeEndorsemnt.");
+						throw new EpException(MessageConst.ERROR_760154);
 					}
 				}
 			}
@@ -10348,10 +10498,6 @@ public class SpecificationBackingBean extends
 
 					templateSpecBean.getSpecMaster().setTplSpecZone(
 							supplierCriteria.getQtZoneCriterias());
-
-					System.out.println("====display tplspeczonedtls size==="
-							+ templateSpecBean.getSpecMaster().getTplSpecZone()
-									.getTplSpecZoneDtls().size());
 
 				}
 			}
