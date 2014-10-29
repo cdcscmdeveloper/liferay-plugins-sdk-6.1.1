@@ -78,14 +78,13 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.isauthorized']}">
-						<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.authorized}" />
-						<h:outputText value="#{lbl['lbl.txt.no']}" rendered="!#{personnel.authorized}" />
+						<h:outputText value="#{lbl['lbl.txt.yes']}" rendered="#{personnel.authorizedFlg eq '1'}" />
+						<h:outputText value="#{lbl['lbl.txt.no']}" rendered="#{personnel.authorizedFlg ne '1'}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.accountstatus']}">
-						<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatus}" />
-						<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}"
-							rendered="!#{personnel.recordStatus}" />
+						<h:outputText value="#{lbl['lbl.sm.userprofile.active']}" rendered="#{personnel.recordStatusFlg eq '1'}" />
+						<h:outputText value="#{lbl['lbl.sm.userprofile.inactive']}" rendered="#{personnel.recordStatusFlg ne '1'}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sm.userprofile.eprole']}">
