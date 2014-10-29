@@ -1416,13 +1416,18 @@ public class QTDetailBackingBean extends
 				&& spceMembers.isEmpty()) {
 
 			for (ScCommitteeMember committeeMember : boMembers) {
-				ScCommitteeMember specCommitteeMember = new ScCommitteeMember();
+
 				try {
-					BeanUtils.copyProperties(specCommitteeMember,
-							committeeMember);
+					ScCommitteeMember specCommitteeMember = (ScCommitteeMember) BeanUtils
+							.cloneBean(committeeMember);
+					specCommitteeMember.setCommitteeMemberId(null);
+					specCommitteeMember.setChangedDate(null);
+					specCommitteeMember.setScCommittee(specCommitte
+							.getScCommittee());
 					specCommitteeMember.setScCommittee(specCommitte
 							.getScCommittee());
 					spceMembers.add(specCommitteeMember);
+
 				} catch (IllegalAccessException e) {
 					throw new EpException(
 							"Error while copying the members into spec");
@@ -1430,6 +1435,12 @@ public class QTDetailBackingBean extends
 				} catch (InvocationTargetException e) {
 					throw new EpException(
 							"Error while copying the members into spec");
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchMethodException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		}
@@ -2966,8 +2977,7 @@ public class QTDetailBackingBean extends
 		if (log.isDebugEnabled()) {
 			log.debug("Committe Tab change Action");
 		}
-		this.getManagedBean().setToBeDelCommitteMemebers(
-				new ArrayList<ScCommitteeMember>());
+		this.getManagedBean().setToBeDelCommitteMemebers(null);
 		TabBean previousTabBean = this.getManagedBean().getSelectedTabBean();
 		int selectedTabIndx = this.getManagedBean().getSelectedTabIndex();
 		if (!QTConstants.FINALIZATION_SECRETARY_TAB
