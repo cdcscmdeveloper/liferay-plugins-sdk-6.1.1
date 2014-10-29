@@ -3077,7 +3077,8 @@ public class SmApplicationBackingBean extends
 		shr.setShareAmt(new BigDecimal(0));
 		shr.setSharePercentage(new BigDecimal(0));
 		setDefaultPersonnelValues(shr);
-
+		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
+		
 		if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 				SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)) {
 			shr.setEquityOwner(true);
