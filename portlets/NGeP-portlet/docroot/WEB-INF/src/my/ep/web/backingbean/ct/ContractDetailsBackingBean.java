@@ -2635,4 +2635,17 @@ public void ConstructSideTabMenu(){
     public Date getCurrentDate() {
         return new Date();
     }
+    
+    public boolean isAddAgencyButtonFlg() {
+    	if(getManagedBean().isDirectPurchase()) {
+    		return false;
+    	} else if(getManagedBean().isViewContract()) {
+    		return false;
+    	} else if(getManagedBean().getContractVer().getCtAgencies().size()>0) {
+    		if(getManagedBean().getContractVer().getCtAgencies().get(0).getCtAgencyAddresses().size()>0) {
+    			return false;
+    		}
+    	}
+    	return true;
+    }
 }
