@@ -998,8 +998,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		} else if (typeAdd.equals("permenant")) {
 			List<PmCity> cityLs = this.retrievePmCityList(this.getManagedBean().getSmPermenantAdd().getPmDistrict().getDistrictId());
 			this.getManagedBean().setPermenantCityLs(cityLs);
-			log.info("------permenant City LS-------------"
-					+ this.getManagedBean().getPermenantCityLs().size());
 		}
 	}
 
