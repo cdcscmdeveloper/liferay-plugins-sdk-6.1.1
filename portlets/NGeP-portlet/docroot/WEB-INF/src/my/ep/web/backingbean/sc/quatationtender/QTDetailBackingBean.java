@@ -2077,14 +2077,14 @@ public class QTDetailBackingBean extends
 					supplierreqDTO.setFetchSubEntity(true);
 					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
 							.retrievePanelItem(supplierreqDTO);
-					this.getManagedBean().setTotalSuppliers(0);
+					this.getManagedBean().setTotalSupplier(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != panelSupplierResDTO.getCtPanelItem()) {
 						CtPanelItem panelItem = panelSupplierResDTO
 								.getCtPanelItem();
 						if (null != panelItem.getCtPanelSuppliers()) {
-							this.getManagedBean().setTotalSuppliers(
+							this.getManagedBean().setTotalSupplier(
 									panelItem.getCtPanelSuppliers().size());
 							this.getManagedBean().setCtZoneSupplierList(
 									panelItem.getCtPanelSuppliers());
