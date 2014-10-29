@@ -232,6 +232,12 @@ public class SmApplicationBackingBean extends
 		}
 
 		if (appl != null && supplierProfile != null) {
+			if (appl.getSmApplSupportDocs() != null
+					&& !appl.getSmApplSupportDocs().isEmpty()) {
+				appl.getSmApplSupportDocs().clear();
+				appl.setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
+			}
+			appl.setSdoReceivedDate(null);
 			proceedToApplication(appl.getApplType(), Boolean.TRUE, appl,
 					supplierProfile);
 			getManagedBean().getSmAppl().setResubmit(true);
@@ -245,6 +251,7 @@ public class SmApplicationBackingBean extends
 			if (newApplNum != null) {
 				getManagedBean().getSmAppl().setApplNo(newApplNum);
 			}
+
 			setNavigationForResubmitAppln(appl.getApplType());
 		} else {
 			// redirect & display resubmit expired
@@ -310,9 +317,7 @@ public class SmApplicationBackingBean extends
 				SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
 
 				boolean cannotProceedAlertMsg = false;
-				cannotProceedAlertMsg = SmApplicationUtil
-						.checkPendingActivationPersonnelList(currSupp
-								.getSupplierId());
+
 				if (applicationType
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 					boolean hasActiveTransactions = SmApplicationUtil
@@ -320,6 +325,10 @@ public class SmApplicationBackingBean extends
 					if (hasActiveTransactions) {
 						throw new EpException(MessageConst.ERROR_722565);
 					}
+				} else {
+					cannotProceedAlertMsg = SmApplicationUtil
+							.checkPendingActivationPersonnelList(currSupp
+									.getSupplierId());
 				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
@@ -3897,7 +3906,10 @@ public class SmApplicationBackingBean extends
 			log.info("*** Remove unnecessary files for the sm supporting docs **** ");
 			for (SmApplSupportDoc doc : getManagedBean().getSmAppl()
 					.getSmApplSupportDocs()) {
-				doc.getSmApplDocFiles().clear();
+				if (doc.getSmApplDocFiles() != null
+						&& !doc.getSmApplDocFiles().isEmpty()) {
+					doc.getSmApplDocFiles().clear();
+				}
 			}
 		}
 		initiateSmApplicationTask();
