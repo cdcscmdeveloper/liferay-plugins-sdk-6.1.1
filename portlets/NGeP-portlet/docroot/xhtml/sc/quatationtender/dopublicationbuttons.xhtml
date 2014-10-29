@@ -23,11 +23,11 @@
 				
 						<p:commandButton
 								value="#{lbl['lbl.so.save']}"
-								action="#{qTDetailBB.saveQtDetailsAction}" process="@all"
-								icon="ui-icon-save" update="@all" /> <p:commandButton
+								action="#{qTDetailBB.saveQtDetailsAction}" process="@form"
+								icon="ui-icon-save" update="@form" /> <p:commandButton
 								value="#{lbl['lbl.so.submit']}"
-								action="#{qTDetailBB.submitQtDetailsForApproval}" process="@all"
-								icon="ui-icon-submit" update="@all"
+								action="#{qTDetailBB.submitQtDetailsForApproval}" process="@form"
+								icon="ui-icon-submit" update="@form"
 								rendered="#{qTDetailBB.managedBean.qt.getQtStatus().getStatusId() > QTStatusConst.QT_PENDING_QT_SUBMISSION and qTDetailBB.managedBean.outComes eq null}" />
 
 
@@ -36,7 +36,7 @@
 									value="#{qTDetailBB.managedBean.outComes}">
 									<ui:param name="buttonLabel"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-									<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
+									<p:commandButton value="#{lbl[buttonLabel]}" 
 										styleClass="ui-button"
 										icon="ui-icon-#{fn:toLowerCase(bpmAction)}"
 										action="#{qTDetailBB.updateBpmTask(bpmAction)}" />
