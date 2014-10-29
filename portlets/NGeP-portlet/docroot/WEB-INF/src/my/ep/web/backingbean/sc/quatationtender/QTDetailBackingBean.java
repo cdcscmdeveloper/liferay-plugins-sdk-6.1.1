@@ -1378,6 +1378,8 @@ public class QTDetailBackingBean extends
 				MenuItem committeItem = new MenuItem();
 				committeItem.setValue(tabBean.getTitleName());
 				committeItem.setUpdate("@form");
+				committeItem.setPartialSubmit(true);
+				committeItem.setProcess("@form");
 				if (!QTConstants.FINALIZATION_SECRETARY_TAB
 						.equalsIgnoreCase(tabBean.getTitleName())) {
 					if (tabBean.getScQtCommittee().getScCommittee()
