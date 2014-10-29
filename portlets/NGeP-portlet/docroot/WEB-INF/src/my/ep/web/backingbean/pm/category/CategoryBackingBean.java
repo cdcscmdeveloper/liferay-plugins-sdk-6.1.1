@@ -321,7 +321,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}finally {
 			categoryCodeSO = null;
 		}
-		return "/xhtml/pm/category/categoryl2.xhtml";
+		return "/xhtml/pm/category/categoryl2.xhtml?faces-redirect=true";
 	}
 	
 	public String editSubDivision(Long id) {
@@ -586,7 +586,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	
 	public String backToSearch() {
 		resetCategory();
-		return "/xhtml/pm/category/search.xhtml";
+		return "/xhtml/pm/category/search.xhtml?faces-redirect=true";
 	}
 
 	public IPagingDataModel<Object[]> getSearchCategory() {
