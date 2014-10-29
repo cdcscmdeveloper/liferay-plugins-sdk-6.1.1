@@ -70,6 +70,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -2501,6 +2502,18 @@ public void ConstructSideTabMenu(){
 			}
 			return null;
 		}
+	}
+	
+	public List<CtItemCeilingQty> getActiveItemCeilingQty() {
+		List<CtItemCeilingQty> activeList = new ArrayList<CtItemCeilingQty>();
+		if(getManagedBean().getSelectedItem()!=null) {
+			for(CtItemCeilingQty ctItemCeilingQty : getManagedBean().getSelectedItem().getCtItemCeilingQties()) {
+				if(ctItemCeilingQty.getCtAgency().getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					activeList.add(ctItemCeilingQty);
+				}
+			}
+		}
+		return activeList;
 	}
 	
 	public void setMinistryOwnerId(){
