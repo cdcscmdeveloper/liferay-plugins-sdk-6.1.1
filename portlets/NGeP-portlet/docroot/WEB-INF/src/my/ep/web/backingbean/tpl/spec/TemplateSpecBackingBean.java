@@ -773,7 +773,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);*/
 		
 		if (specZone != null) {
-			if (specZone.isBrandNew()) {
+			if (specZone.isBrandNew() || specZone.isModified()) {
 				specZoneDtls = specZone.getTplSpecZoneDtls();	
 			} else {
 				ISpecZoneLocSO specZoneLocSO;
