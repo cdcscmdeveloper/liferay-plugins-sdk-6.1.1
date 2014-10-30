@@ -162,7 +162,8 @@
 					</p:tab>
 					
 					<p:tab title="#{lbl['lbl.cm.promotion']}"
-						rendered="#{catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricing.price > 0}">
+						rendered="#{catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricing.price > 0 and 
+						catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.supplierItemObj)}">
 						<ui:include src="/xhtml/cm/pricing/promotionPricingTab.xhtml"></ui:include>
 					</p:tab>
 					
