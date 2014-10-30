@@ -36,6 +36,7 @@ import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sc.directpurchase.ScSupplierItemPrice;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -64,6 +65,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private	DualListModel<PmUser>	approvalUsers = new DualListModel<PmUser>();
 	private	String	fulfillmentType;
 	private Long supplierId;
+	private SmSupplier smSupplier;
 	private	Long	assignedToUserId;
 	private	String	periodType;
 	private	int	periodValue;
@@ -216,6 +218,18 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 		this.supplierId = supplierId;
 	}
 	
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
 	/**
 	 * @return the assignedToUserId
 	 */
