@@ -156,7 +156,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<SelectItem> monthList;
 	private int attachFileIndex;
 	private boolean percentExceeded;
-	private boolean progressiveButtonDeactive;
+	private boolean  progSchedButtonDeactive;
 	
 	public String[] getAction() {
 		return action;
@@ -941,12 +941,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.percentExceeded = percentExceeded;
 	}
 
-	public boolean isProgressiveButtonDeactive() {
-		return progressiveButtonDeactive;
+	public boolean isProgSchedButtonDeactive() {
+		return progSchedButtonDeactive;
 	}
 
-	public void setProgressiveButtonDeactive(boolean progressiveButtonDeactive) {
-		this.progressiveButtonDeactive = progressiveButtonDeactive;
+	public void setProgSchedButtonDeactive(boolean progSchedButtonDeactive) {
+		this.progSchedButtonDeactive = progSchedButtonDeactive;
 	}
 
 	public List<String> getYearList() {

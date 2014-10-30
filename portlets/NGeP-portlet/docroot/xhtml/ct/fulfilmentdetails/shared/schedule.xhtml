@@ -35,28 +35,22 @@
 		               </p:column> 
 		      
 		               <p:column style="width:28%;" headerText="#{lbl['lbl.ct.start.period']}">
-		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" 
-		                 	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
+		                   <p:selectOneMenu id="fromMonth" value="#{payScheduleObj.startMonth}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;">
                                <f:selectItems value="#{contractDetailsBackingBean.monthList}"/>  
-                               <p:ajax event="change" update=":form:payScheduleTableId" 
-                                  process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                               <p:ajax event="change" update=":form:payScheduleTableId"  process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
                            </p:selectOneMenu> 
                            <p:spacer width="1"/>
-                           <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" 
-                           	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
+                           <p:selectOneMenu id="fromYear" value="#{payScheduleObj.startYear}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;">
                                <f:selectItems value="#{contractDetailsBackingBean.yearList}" var="year" itemValue="#{year}" itemLabel="#{year}"  />  
-                               <p:ajax event="change" update=":form:payScheduleTableId"
-                                   process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
+                               <p:ajax event="change" update=":form:payScheduleTableId" process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}"/> 
                            </p:selectOneMenu> 
-		                </p:column> 	
+		               </p:column> 	
 		       
 		                <p:column style="width:32%;" headerText="#{lbl['lbl.ct.end.period']}">
 		                    <h:panelGroup>
-		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}"
-		                    	   disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
+		                        <p:selectOneMenu id="toMonth" value="#{payScheduleObj.endMonth}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:110px;" >
                                    <f:selectItems value="#{contractDetailsBackingBean.monthList}" />  
-                                   <p:ajax event="change" update=":form:payScheduleTableId"
-                                      process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
+                                   <p:ajax event="change" update=":form:payScheduleTableId" process="@form" listener="#{contractDetailsBackingBean.validateDate(payScheduleObj)}" />
                                 </p:selectOneMenu>
                                 <p:spacer width="1"/>
                                 <p:selectOneMenu id="toYear" value="#{payScheduleObj.endYear}" 
@@ -90,7 +84,8 @@
 	                <p:spacer height="2"  />
 		               <div class="ppRightBtn"> 
 		                   <p:commandButton id="addScheduleBtn" value="#{lbl['lbl.btn.add']}" icon="ui-icon-add" update=":form:payScheduleTableId"
-		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}">
+		                        action="#{contractDetailsBackingBean.addScheduleDetails}" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
+		                        disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}">
 		                      <p:tooltip for="addScheduleBtn">
 						         <h:outputText value="#{lbl['lbl.ct.tooltip.add.schedule']}" escape="false" />
 						      </p:tooltip>
@@ -203,7 +198,7 @@
 		        <div class="ppRightBtn"> 
 		           <p:commandButton id="proAddButtionId" value="#{lbl['lbl.btn.add']}" 
 		                partialSubmit="true" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"
-			            process="@form"  disabled="#{contractDetailsBackingBean.managedBean.progressiveButtonDeactive}"
+			            process="@form"  disabled="#{contractDetailsBackingBean.managedBean.progSchedButtonDeactive}"
 			            icon="ui-icon-add" update="progPaymentTableId" action="#{contractDetailsBackingBean.addFrequencyDetails()}">
 			       </p:commandButton>
 		           <p:spacer width="2"/>
