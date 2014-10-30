@@ -134,9 +134,9 @@
 							contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:260px;">
-		   <h:panelGrid columns="3">
+		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
-			 	disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -197,8 +197,8 @@
 	 rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 	       contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
          <h:panelGroup>
-		    <div style="height:90px; width:157px; vertical-align:top;">
-		       <h:panelGrid columns="2" style="float:right;margin-right:-11px;">
+		    <div style="height:65px; width:162px; vertical-align:top;">
+		       <h:panelGrid columns="2" style="float:right;margin-right:-8px;">
 		           <p:outputLabel value="*" styleClass="mandatory" />
 			   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}" />
 			   </h:panelGrid>
@@ -206,9 +206,8 @@
 	     </h:panelGroup>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  rows="4" style="width:570px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
-		  required="true" autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
-		   <p:ajax oncomplete="$('.ui-state-error').removeClass('ui-state-error');" update="justificationPanel"/></p:inputTextarea>
+		  rows="4" style="width:550px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+		  required="true" autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>
 		   <p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>		
     </h:panelGrid> 
