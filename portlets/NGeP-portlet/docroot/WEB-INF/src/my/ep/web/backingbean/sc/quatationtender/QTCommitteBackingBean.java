@@ -207,6 +207,14 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
+			if (null != this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile()) {
+				userSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(), this
+										.getManagedBean().getQt()
+										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
+			}
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
@@ -336,6 +344,14 @@ public class QTCommitteBackingBean extends
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
+			}
+			if (null != this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile()) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmOrgProfile.parentOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(), this
+										.getManagedBean().getQt()
+										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
