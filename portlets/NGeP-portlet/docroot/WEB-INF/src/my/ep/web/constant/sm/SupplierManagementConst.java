@@ -339,6 +339,9 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_EDU_DIPLOMA = "4";
 	public static final String SUPPLIER_EDU_CERTIFIED = "5";
 	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
+	
+	//PM Cert body
+	public static final String PM_CERT_BODY_OTHERS = "LL";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
@@ -684,6 +687,10 @@ public class SupplierManagementConst {
 
 	public String getSM_SUPPLIER_BUSINESS_TYPE_LLP() {
 		return SM_SUPPLIER_BUSINESS_TYPE_LLP;
+	}
+
+	public String getPM_CERT_BODY_OTHERS() {
+		return PM_CERT_BODY_OTHERS;
 	}
 
 }
