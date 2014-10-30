@@ -26,6 +26,7 @@ import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -46,6 +47,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -68,6 +71,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
@@ -293,6 +297,30 @@ public class QTSupplierQulCriteriaBackingBean extends
 			ex.printStackTrace();
 		} finally {
 			QtDetailsSO = null;
+		}
+	}
+	
+	public void retrieveMofNo(ScQtSupplier scQtSupplierd) {
+		debugLogger("retrieveMofNo");
+		
+		Long supplierId = scQtSupplierd.getSmSupplier().getSupplierId();
+		SmMofAccount smMofAccount = scQtSupplierd.getSmMofAccount();
+		if(smMofAccount == null){
+			IMofAccountSO mofAccountSO;
+			try {
+				mofAccountSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+
+				MofAccountReqDTO accountReqDTO  = new MofAccountReqDTO();
+				accountReqDTO.setSupplierId(supplierId);
+				MofAccountResDTO mofAccountResDTO = mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
+				
+				if(mofAccountResDTO.getMofAccount() != null){
+					smMofAccount = mofAccountResDTO.getMofAccount();
+					scQtSupplierd.setSmMofAccount(smMofAccount);
+				}
+			} finally {
+				mofAccountSO = null;
+			}
 		}
 	}
 
