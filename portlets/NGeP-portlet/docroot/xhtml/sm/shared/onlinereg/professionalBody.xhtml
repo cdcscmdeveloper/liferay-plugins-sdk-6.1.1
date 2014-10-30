@@ -11,7 +11,6 @@
 		<p:dataTable var="suppAssocBody" id="profBodyId"
 			value="#{registrationBackingBean.managedBean.smAppl.smAssociationBodies}"
 			selection="#{registrationBackingBean.managedBean.selectedAssociationBodies}" rowKey="#{suppAssocBody}">
-			<!-- 				<ac:paginator for="dt" /> -->
 			<p:column selectionMode="multiple" style="width:2%" />
 
 			<p:column>
@@ -20,19 +19,21 @@
 					#{lbl['lbl.sm.profBody.profBody']}
 				</f:facet>
 				
-				<ac:smPanel>
-				<p:selectOneMenu id="profBodyId" value="#{suppAssocBody.pmCertBody.certBodyId}" 
+				<p:selectOneMenu id="profBodyName" value="#{suppAssocBody.pmCertBody.certBodyId}" 
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.profBody.profBody']}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />	
 					<f:selectItems value="#{registrationBackingBean.managedBean.profCertBodyLs}"
 						var="profBody" itemLabel="#{profBody.bodyName}" itemValue="#{profBody.certBodyId}" />
+					<p:ajax event="change" update="profBodyName,otherAssocId" listener="#{registrationBackingBean.profBodyOnChange(suppAssocBody)}" />
 				</p:selectOneMenu>
-				<p:message id="profBodyIdMsg" for="profBodyId" display="icon" />
-				</ac:smPanel>
+				<p:message id="profBodyNameMsg" for="profBodyName" display="icon" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.profBody.others']}">
-				<p:inputText id="otherAssocId"  value="#{suppAssocBody.otherAssociation}" maxlength="200"></p:inputText>
+				<p:inputText id="otherAssocId"  disabled="#{suppAssocBody.pmCertBody.bodyCode != SupplierManagementConst.PM_CERT_BODY_OTHERS}" 
+				value="#{suppAssocBody.otherAssociation}" maxlength="200" 
+				required="#{suppAssocBody.pmCertBody.bodyCode == SupplierManagementConst.PM_CERT_BODY_OTHERS and !empty param['disableValidation']}"></p:inputText>
+				<p:message id="otherAssocIdMsg" for="otherAssocId" display="icon" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.profBody.regNo']}">
