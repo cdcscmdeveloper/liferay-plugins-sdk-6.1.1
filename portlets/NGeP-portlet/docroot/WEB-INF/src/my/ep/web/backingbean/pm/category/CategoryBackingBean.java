@@ -200,7 +200,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setPmCategoryL2(pmCategoryL2);
 		this.getManagedBean().setCatLevel("2");
 		this.getManagedBean().setNewCategory(true);
-		//this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().add(pmCategoryL2);
 		return "/xhtml/pm/category/categoryl2.xhtml";
 	}
 	
@@ -404,6 +403,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			if (resDTO.isSuccessful()) {
 				this.getManagedBean().setPmCategoryL2(resDTO.getCategoryL2());
 				this.getManagedBean().getPmCategoryL1().getPmCategoryL2s().add(this.getManagedBean().getPmCategoryL2());
+				
+				reqDTO.setPmCategoryL1(this.getManagedBean().getPmCategoryL1());
+				categoryCodeSO.saveCategory(reqDTO);
+				
+				
 				result = resDTO.isSuccessful();
 				resetCategory();
 				FacesContext.getCurrentInstance().addMessage(
@@ -444,6 +448,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 
 			this.getManagedBean().getPmCategoryL3().setCategoryName(this.getManagedBean().getPmCategoryL3().getCategoryName().toUpperCase());
+			this.getManagedBean().getPmCategoryL3().setBasicCategoryReq(this.getManagedBean().getPmCategoryL3().isBasicCategoryReqValue()?1:0);
+			this.getManagedBean().getPmCategoryL3().setHomeOperated(this.getManagedBean().getPmCategoryL3().isHomeOperatedValue()?1:0);
+			
 			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
@@ -517,7 +524,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if(this.getManagedBean().getSelectedLOV() != null && !this.getManagedBean().getSelectedLOV().isEmpty()) {
 			for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedLOV()) {
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
-				pmBasicCategory.setPmCategoryL3(pmCategoryL3);
+				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				pmBasicCategory.setBasicCategoryL3(pmCategoryL3.getCategoryL3Id());
 				pmBasicCategory.setBasicCategoryL2(pmCategoryL3.getPmCategoryL2().getCategoryL2Id());
 				pmBasicCategory.setBasicCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1().getCategoryL1Id());
