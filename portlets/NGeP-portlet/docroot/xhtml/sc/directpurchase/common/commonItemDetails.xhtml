@@ -11,7 +11,7 @@
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
-
+        <ac:lovPopup />
 		<h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl" style="white-space: normal;"
 				value="#{requestNoteBackingBean.managedBean.requestNoteDtls}"
@@ -114,22 +114,17 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
 					</f:facet>
-				
-				   <p:selectOneMenu value="#{requestNoteDtl.scRequestSupplierItem.supplierId}" 
-				        id="recSupplier" label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.rec.suppier']}" disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true'}"
-				        style="width:125px;" required="#{!requestNoteDtl.selected}">  
-					   <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 					
-                        <f:selectItems
-							value="#{requestNoteDtl.requestItem.supplierItems}" 
-							var="supplierItem" itemLabel="#{supplierItem.smSupplier.companyName}"
-							itemValue="#{supplierItem.smSupplier.supplierId}"></f:selectItems>
-							
-							<p:ajax event="change" update="priceType ,offerPriceId ,supplierViewId" partialSubmit="true"
-									process="@this"
-									listener="#{requestNoteBackingBean.supplierLister(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
-					</p:selectOneMenu>
-					<p:spacer width="2px"></p:spacer>
+			    <ac:lov id="supplier" lovId="V_SUPPLIER_ITEM" size="16"  headerText="Recommended Supplier"  readonly="true"
+						 postUpdateListener="requestNoteBackingBean.postUpdateListener(requestNoteBackingBean.managedBean.vCmSupplierItem)"
+						 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
+					     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
+						 update="@form"
+						 conditionField="#{requestNoteDtl.conditionField}">					
+				       <f:setPropertyActionListener for="actionEvent" target="#{requestNoteBackingBean.managedBean.vCmSupplierItem}" value="#{requestNoteDtl.vCmSupplierItem}" />
+					</ac:lov>
+					
+					
 					<p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 					    onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
@@ -139,9 +134,7 @@
 							style="vertical-align:middle" />
 							<f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
 					</p:commandLink>
-
-
-					<p:message id="recSupplierMsg" for="recSupplier" display="icon" />
+					
 				</p:column>
 				
 				<p:column style="width:11%;">

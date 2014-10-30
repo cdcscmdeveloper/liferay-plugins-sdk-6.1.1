@@ -26,6 +26,7 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -445,6 +446,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						scRequestSupplierItem.setSupplierItemPrice(scRequestSupplierItem.getSupplierItemPrices().get(0));
 						scRequestSupplierItem.setSupplierId(scRequestSupplierItem.getSmSupplier().getSupplierId());
 						scRequestNoteDtl.setScRequestSupplierItem(scRequestSupplierItem);
+						VCmSupplierItem vCmSupplierItem = new VCmSupplierItem();
+						vCmSupplierItem.setCompanyName(scRequestSupplierItem.getSmSupplier().getCompanyName());
 					}
 
 					// get PI id to Request note
@@ -1160,8 +1163,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 
 		} else {
-			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
-	    	CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+			//IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+	    	//CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 			// purchase in default & add to cart
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
@@ -1171,13 +1174,14 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	List<Long> cmSupplieritemIds = new ArrayList<Long>();
 		    	if(getManagedBean().getCompareSupplierItems() != null){
 		    		for (CmSupplierItem supplierItem : getManagedBean().getCompareSupplierItems()) {
-		    			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId())){
+		    			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId()) 
+		    					&& supplierItem.getPmUom().getUomName().equals(selectedSupplierItem.getPmUom().getUomName())){
 		    				cmSupplieritemIds.add(supplierItem.getSupplierItemId());	
 		    			}
 		    		}
 		    	}
 		    	
-		    	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+		    /*	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
 				searchBean.getDataFilterBeans().clear();
 				catalogueReqDTO.setViewSearchBean(searchBean);
 				catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
@@ -1201,13 +1205,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    				}
 		    			}
 		    		}
-		    		
 		    	}
 		    	// Add selected supplier item from compare 
-	    		supplierItems.add(requestSupplierItem);
+	    		supplierItems.add(requestSupplierItem);*/
 		    } else{
+		    	
 		    	// adding suppliers from search catalogue 
-		    	catalogueReqDTO = new CatalogueReqDTO();
+		    	/*catalogueReqDTO = new CatalogueReqDTO();
 		    	catalogueReqDTO.setViewSearchBean(new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean());
 		    	catalogueReqDTO.setSupplierItemId(selectedSupplierItem.getSupplierItemId());
 		    	catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
@@ -1225,9 +1229,38 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    		
 		    	}
 		    	// Add selected supplier item from search catalogue
-	    		supplierItems.add(requestSupplierItem);
+	    		supplierItems.add(requestSupplierItem);*/
 		    }
+		    
+		    ISearchBean viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+		    List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
+		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
+		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
+		    StringBuilder sb = new StringBuilder();
+		    sb.append("itemCode^").append(extensionCode).append("|")//item Code
+		    .append("catType^").append("XC").append("|")
+		    .append("uomId^").append(uomId);
+		    for (BaseSearchFilterBean baseFilterBean : filterBeans) {
+		    	if (baseFilterBean instanceof SearchFilterBean) {
+		    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
+		    		sb.append("|")
+		    		.append(filterBean.getSearchField()).append("^")
+		    		.append(filterBean.getSearchValue()).append("^")
+		    		.append(filterBean.getSearchOperator());
+		    	}
+		    } 
+		    
+		    String conditionField = sb.toString();
+		    scRequestNoteDtl.setConditionField(conditionField);
+		    
+		    VCmSupplierItem  vCmSupplierItem = new VCmSupplierItem();
+		    vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
+		    scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
+		    
+		    supplierItems.add(requestSupplierItem);
 		    scRequestItem.setSupplierItems(supplierItems);
+		    
+		    
 		    scRequestItem.setRequestNote(requestNote);
 		}
 		
@@ -2059,11 +2092,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNotes().get(0).getPmOrgProfile());
 					}
 
-					// location level by default - district 
+					// zone location level by default - district 
 					if(scQuote.getZoneLocatonLevel() != null){
 						simpleQuoteBackingBean.getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
 					}
-
+					
+					// supplier location level by default - district 
+					if(scQuote.getSupplierLocationLevel() != null){
+						simpleQuoteBackingBean.getManagedBean().setSupplierLocLevel(scQuote.getSupplierLocationLevel().getParameterCode());
+					}
+					
+					
 					// business nature details
 					if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() > 0){
 						simpleQuoteBackingBean.getManagedBean().setByBusinessNature(Boolean.TRUE);
@@ -2209,6 +2248,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 
+	public void postUpdateListener(VCmSupplierItem vCmSupplierItem) {
+		log.info("beforeSavePostListener");
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICatalogueSO.class);
+		CatalogueReqDTO catReqDTO = new CatalogueReqDTO();
+		if(vCmSupplierItem != null){
+
+			for (ScRequestNoteDtl scRequestNoteDtl : getManagedBean().getRequestNoteDtls()) {
+				if(scRequestNoteDtl.getvCmSupplierItem().getCompanyName().equals(vCmSupplierItem.getCompanyName())){
+					catReqDTO.setSupplierItemId(scRequestNoteDtl.getvCmSupplierItem().getDocId());
+					CatalogueResDTO catResDTO = catalogueSO.findActivePricing(catReqDTO);
+					ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
+
+					List<CmPricing> cmPricings = catResDTO.getPriceLs();
+					if(cmPricings != null && cmPricings.size() > 0){
+						CmSupplierItem cmSupplierItem = cmPricings.get(0).getCmSupplierItem();
+						cmSupplierItem.setCmPricings(cmPricings);
+						ScRequestItem requestItem = createRequestItem(cmSupplierItem);
+
+						requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+
+						scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
+					}
+				}
+			}
+		}
+	}
 
  /**
   * selected assigned user to apply supplier recommendation list for the simple quote zone
