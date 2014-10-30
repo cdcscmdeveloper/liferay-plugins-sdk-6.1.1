@@ -88,6 +88,12 @@
 			          <p:inputText id="expDate" disabled="true" style="width:200px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 			     	           <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			          </p:inputText>    
+			          
+			         <p:outputLabel value="Ministry Name" />
+	                    <p:inputText style="width:200px;" disabled="true"  value="#{supplierBackingBean.getMinistryAndPtjName(1)}"/> 
+	           
+	                 <p:outputLabel value="PTJ Name" />
+	                 <p:inputText style="width:200px;" disabled="true"  value="#{supplierBackingBean.getMinistryAndPtjName(2)}"/> 
 		      
 		              <h:panelGroup>
 		                  <div style="height: 40px; vertical-align: top;">

@@ -54,6 +54,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CTProcessNameConst;
@@ -2667,6 +2668,21 @@ public void ConstructSideTabMenu(){
     
     public Date getCurrentDate() {
         return new Date();
+    }
+    
+    public boolean getRendringValue(int temp){
+    	
+    	if(temp == 1 && getManagedBean().getCtContract().isAgreement() &&
+    			getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() != ContractStatusConst.AC_COMPLETE &&
+    					getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() != ContractStatusConst.SA_COMPLETE) {
+    		            return true;
+    	}
+    	
+    	if(temp == 2 && getManagedBean().getCtContract().isAgreement() &&
+    			getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.AC_COMPLETE &&
+    					getManagedBean().getCtContract().getCurrentAgreement().getStatus().getStatusId() == ContractStatusConst.SA_COMPLETE) {
+    		            return true;
+    	} return false;
     }
     
     public boolean isAddAgencyButtonFlg() {
