@@ -37,7 +37,19 @@ public class AddressUtils {
 			}
 			if (smAddress.getAddress4() != null && smAddress.getAddress4().length() > 0) {
 				address.append(smAddress.getAddress4());
+				address.append(separator);
 			}
+			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {			
+				address.append(smAddress.getPostcode());
+				address.append(separator);
+			}
+			if (smAddress.getPmCity() != null && smAddress.getPmCity().getCityName() !=null && smAddress.getPmCity().getCityName().length() > 0) {
+				address.append(smAddress.getPmCity().getCityName());
+				address.append(separator);
+			}
+			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
+				address.append(smAddress.getPmState().getStateName());
+			}			
 		}
 		return address.toString();
 	}
