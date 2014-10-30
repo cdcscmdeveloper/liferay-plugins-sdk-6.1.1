@@ -49,7 +49,7 @@
 				<p:inputText value="#{tech.qtScoreWeightage.score}"
 					id="techScoreWeight" required="true" maxlength="18"
 					label="#{lbl['lbl.sc.spec.stage2.score']}" style="text-align:right"
-					rendered="#{tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD'}">
+					rendered="#{((tech.definationType.parameterCode eq 'UP' or tech.definationType.parameterCode eq 'SP' or tech.definationType.parameterCode eq 'PD') and tech.scoringReq)}">
 					<ac:validateNumber integerOnly="
 					true" maxIntegerDigits="14">
 					</ac:validateNumber>
