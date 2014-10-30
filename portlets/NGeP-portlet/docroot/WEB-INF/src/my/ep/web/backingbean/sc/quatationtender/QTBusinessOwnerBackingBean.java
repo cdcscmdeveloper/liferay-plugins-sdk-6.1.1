@@ -209,14 +209,12 @@ public class QTBusinessOwnerBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype));
 			}
 			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
-
 				userSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.orgProfileId",
+								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
 								SearchOperator.OPERATOR_EQUALS.value(), this
 										.getManagedBean().getQt()
-										.getPmOrgProfile().getOrgProfileId()));
-
+										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
 			}
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -321,6 +319,14 @@ public class QTBusinessOwnerBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmOrgProfile.parentOrgProfile.orgProfileId",
+								SearchOperator.OPERATOR_EQUALS.value(), this
+										.getManagedBean().getQt()
+										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
+			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
 		}
@@ -412,18 +418,18 @@ public class QTBusinessOwnerBackingBean extends
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
 		reqDTO.setQtId(scQt.getQtId());
-		CommitteResDTO resDTO = null;
+		CommitteResDTO resDTO = new CommitteResDTO();
 		ICommitteSO committeSO;
 		try {
 			committeSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
-			List<ScCommitteeMember> commMembers = resDTO
-					.getCommMemberResultBean().getResultList();
-			this.getManagedBean().setCloneCommitteMemebers(commMembers);
-			log.info("List Size : "
-					+ getManagedBean().getCloneCommitteMemebers().size());
+			this.getManagedBean().setCloneCommitteMemebers(null);
+			if (null != resDTO.getCommMemberResultBean() && !resDTO.getCommMemberResultBean().getResultList().isEmpty()) {
+				List<ScCommitteeMember> commMembers = resDTO.getCommMemberResultBean().getResultList();
+				this.getManagedBean().setCloneCommitteMemebers(commMembers);
+			}
 		} finally {
 			committeSO = null;
 		}
