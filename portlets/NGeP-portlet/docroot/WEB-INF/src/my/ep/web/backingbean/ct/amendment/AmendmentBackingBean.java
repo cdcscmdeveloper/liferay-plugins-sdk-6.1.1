@@ -54,6 +54,7 @@ import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -88,6 +89,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -410,6 +413,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		    	     Collections.sort(getManagedBean().getContractVer().getCtContractZones(), new CtContractZone());
 		    		 retriveZonesByContractVer();
 		         }
+			    
+			    // Get performance bond rule amount
+			    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+			    RuleReqDTO ruleReqDTO = new RuleReqDTO();
+			    ruleReqDTO.setRuleType("BOND");
+			    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+			    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+			    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+			    }
+				
 			  initializeRemarks();
 			  getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 		      getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
