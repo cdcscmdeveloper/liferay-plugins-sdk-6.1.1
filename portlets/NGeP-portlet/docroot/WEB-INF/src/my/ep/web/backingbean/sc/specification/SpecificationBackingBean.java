@@ -218,10 +218,28 @@ public class SpecificationBackingBean extends
 	public String businessOwnerBackAction() {
 		this.getManagedBean().setActiveIndex(0);
 		this.getManagedBean().setTempIndex(0);
-		this.getManagedBean().setCircularType("");
-		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
-		this.getManagedBean().setPanelItemCategory(null);
-		this.getManagedBean().setSelectPanelItem(false);
+		// this.getManagedBean().setCircularType("");
+		// this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
+		// this.getManagedBean().setPanelItemCategory(null);
+		// this.getManagedBean().setSelectPanelItem(false);
+		if (this.getManagedBean().getScQt().isPanel()) {
+
+			if (null != this.getManagedBean().getCtPanelItem()) {
+
+				List<CtPanelItem> panelItem = this.getManagedBean()
+						.getPanelItemList();
+				panelItem = new ArrayList<CtPanelItem>();
+				panelItem.add(this.getManagedBean().getCtPanelItem());
+				this.getManagedBean().setPanelItemList(panelItem);
+			}
+
+			if (null != this.getManagedBean().getCtCircularVer()) {
+				this.getManagedBean().setCircularType(
+						this.getManagedBean().getCtCircularVer().getDocType());
+				this.getManagedBean().setCircularVer(
+						this.getManagedBean().getCtCircularVer());
+			}
+		}
 		return "specificationview.xhtml";
 	}
 
@@ -4120,10 +4138,29 @@ public class SpecificationBackingBean extends
 	}
 
 	// Panel Yes or no Method
-	public void panelChangeValue(AjaxBehaviorEvent event) {
-		Boolean panel = (Boolean) event.getComponent().getAttributes()
-				.get("value");
-		this.getManagedBean().getScQt().setPanel(panel);
+	public void panelChangeValue() {
+
+		// this.getManagedBean().getScQt().setPanel(panel);
+	}
+
+	public void panelConformation(AjaxBehaviorEvent event) {
+
+		if (null != this.getManagedBean().getScQt()
+				&& null != this.getManagedBean().getScQt().getEstimatedAmount()) {
+			RequestContext.getCurrentInstance().execute(
+					"reviceApprovalDlgs.show()");
+
+		}
+	}
+
+	public void panelNoConformation() {
+		Boolean panel = this.getManagedBean().getScQt().isPanel();
+		if (panel) {
+			this.getManagedBean().getScQt().setPanel(false);
+		} else {
+			this.getManagedBean().getScQt().setPanel(true);
+		}
+
 	}
 
 	// Technical Checklist Action values Chnanged by DocDefination type method
@@ -7949,13 +7986,13 @@ public class SpecificationBackingBean extends
 	// Search circular Details Method.
 	public void searchCircularList() {
 		searchCircular.reloadData();
-		this.getManagedBean().setCircularVer(null);
-		this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
-		this.getManagedBean().setCtPanelItem(null);
-		this.getManagedBean().setCircularExpDate(new Date());
+		// this.getManagedBean().setCircularVer(null);
+		// this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
+		// this.getManagedBean().setCtPanelItem(null);
+		// this.getManagedBean().setCircularExpDate(new Date());
 		// this.getManagedBean().setCirCularNo(null);
 		// this.getManagedBean().setCircularName(null);
-		this.getManagedBean().setCircularType(null);
+		// this.getManagedBean().setCircularType(null);
 
 	}
 
