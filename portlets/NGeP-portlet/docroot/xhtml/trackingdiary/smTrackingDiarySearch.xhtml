@@ -109,12 +109,14 @@
 				#{smSupplier.regNo}
 				</p:column>
 				<p:column>
-					<f:facet name="header">
-					Action
+						<f:facet name="header">
+						Action
 					</f:facet>
-					<p:commandLink action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
-						#{smSupplier.regNo}
-					</p:commandLink>
+						<p:commandLink
+							action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
+								<p:graphicImage library="ep/images/design" name="reset.png"
+									value="/resources/ep/images/design/reset.png" />
+						</p:commandLink>
 				</p:column>
 			</p:dataTable>
 

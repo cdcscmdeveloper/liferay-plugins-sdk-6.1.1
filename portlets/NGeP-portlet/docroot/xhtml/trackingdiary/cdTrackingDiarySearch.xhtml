@@ -70,13 +70,18 @@
 
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
+				<p:column width="15%">
+					<f:facet name="header">
+					Creation Date
+					</f:facet>
+				#{smSupplier.regNo}
+				</p:column>
 
 				<p:column width="15%">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
 							#{unspscObj.unspscCode}
-
 				</p:column>
 				<p:column>
 					<f:facet name="header">
@@ -84,14 +89,15 @@
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
-				<p:column>
+			<p:column>
 					<f:facet name="header">
 					Action
 				</f:facet>
 					<p:commandLink
 						action="#{cdTrackingDiaryBackingBean.goToTrackingDiarySearch(unspscObj)}">
-						Action
-							</p:commandLink>
+							<p:graphicImage library="ep/images/design" name="reset.png"
+								value="/resources/ep/images/design/reset.png" />
+					</p:commandLink>
 			</p:column>
 			</p:dataTable>
 
