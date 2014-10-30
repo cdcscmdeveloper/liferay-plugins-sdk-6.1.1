@@ -41,6 +41,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -65,6 +66,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -292,7 +295,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 			docType = ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT;
 		}
-
+		
+		// Get performance bond rule amount
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType("BOND");
+		RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+		if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+			getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+		}
+		
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
 		  ModuleCodeConst.CONTRACT_MANAGEMENT, docType,getManagedBean().getCtContract().getContractNo()));
 		initializeRemarks();

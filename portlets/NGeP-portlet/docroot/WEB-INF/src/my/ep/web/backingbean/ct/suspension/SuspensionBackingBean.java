@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -32,6 +33,8 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.persistence.entity.ct.CtRemark;
@@ -137,6 +140,15 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 			    getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+		    
+		    // Get performance bond rule amount
+		    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+		    RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		    ruleReqDTO.setRuleType("BOND");
+		    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+		    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+		    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+		    }
 		    
 		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	    
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 

@@ -33,6 +33,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -53,6 +54,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
+import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -186,6 +189,16 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
 				getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+		
+	    // Get performance bond rule amount
+	    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
+	    RuleReqDTO ruleReqDTO = new RuleReqDTO();
+	    ruleReqDTO.setRuleType("BOND");
+	    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
+	    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
+	    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+	    }
+		
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
