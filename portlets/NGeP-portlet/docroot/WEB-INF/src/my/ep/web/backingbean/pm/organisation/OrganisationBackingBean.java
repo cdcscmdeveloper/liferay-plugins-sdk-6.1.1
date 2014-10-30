@@ -363,6 +363,10 @@ public class OrganisationBackingBean extends
 					this.getManagedBean().setOfficeContactPerson(
 							pmAddressType.getPmContacts().get(0));
 				}
+				else{
+					getManagedBean().setOfficeContactPerson(new PmContact());
+					
+				}
 
 			}
 
@@ -537,16 +541,19 @@ public class OrganisationBackingBean extends
 			RegistrationReqDTO regReqDTO = new RegistrationReqDTO();
 			PmFinancialOrg bank = new PmFinancialOrg();
 			bank.setFinancialOrgId(1L);
-			regReqDTO.setOrgProfileId(71638L);
+			regReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			/*regReqDTO.setBank(getManagedBean().getPmFinancialAcc().get(0).getPmFinancialOrg());
+			regReqDTO.setBankAccountNo(getManagedBean().getPmFinancialAcc().get(0).getAccountNo());*/
 			regReqDTO.setBank(bank);
 			regReqDTO.setBankAccountNo("1134567");
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(2144L);
+			//userReqDTO.setUserId(2144L);
 			IUserSO userSO = (IUserSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
-			userReqDTO.setOrgProfileId(71638L);
+			userReqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+			System.out.println("Org Profile ID"+orgProfile.getOrgProfileId());
 
 			UserResDTO userResDTO = userSO.retrieveUserListByOrgProfileId(userReqDTO);
 			
@@ -563,9 +570,9 @@ public class OrganisationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Org successfully.", "Org Name : "
-									+ this.getManagedBean().getOrgValidity()
-											.getOrgName()));
+							"Org Name : ",
+									this.getManagedBean().getOrgValidity()
+											.getOrgName()+"Submit successfully."));
 		}
 
 		return "/xhtml/pm/organisation/maintainOrganisation.xhtml";
