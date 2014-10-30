@@ -888,9 +888,9 @@ public class SmPersonnelBackingBean extends BaseBackingBean<SmPersonnelManagedBe
 		reqDTO.setAccountStatus(getManagedBean().getAccountStatus());
 		PersonnelResDTO resDTO = new PersonnelResDTO();
 		resDTO = smPersonnelSO.updatePersonnelAccountStatusOrEpRole(reqDTO);
-		reqDTO = new PersonnelReqDTO();
-		reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
-		resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
+//		reqDTO = new PersonnelReqDTO();
+//		reqDTO.setSmPersonnel(resDTO.getSmPersonnel());
+//		resDTO = smPersonnelSO.savePersonnelRecord(reqDTO);
 		System.out.println("Result:" + resDTO.isSuccessful());
 		if(resDTO.isSuccessful()){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
