@@ -1144,6 +1144,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequired(Boolean.FALSE);
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
+		ISearchBean viewSearchBean = null;
+		List<Long> cmSupplieritemIds = null;
+		
 		if(scRequestItem.getQuantity() !=null && scRequestItem.getQuantity().intValue() < 0){
 			throw new EpException(MessageConst.INFO_100033, new String[]{" Order Quatity" ,"0"});
 		}
@@ -1172,7 +1175,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    
 		    if(cartFlag){
 		    	// adding suppliers from the compare screen 
-		    	List<Long> cmSupplieritemIds = new ArrayList<Long>();
+		    	cmSupplieritemIds = new ArrayList<Long>();
 		    	if(getManagedBean().getCompareSupplierItems() != null){
 		    		for (CmSupplierItem supplierItem : getManagedBean().getCompareSupplierItems()) {
 		    			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId()) 
@@ -1233,7 +1236,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    		supplierItems.add(requestSupplierItem);*/
 		    }
 		    
-		    ISearchBean viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+		    viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
 		    List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
 		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
 		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
@@ -1314,6 +1317,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    // validating suppliers
 	    RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 	    requestNoteReqDTO.setRequestNoteDtl(scRequestNoteDtl);
+	    requestNoteReqDTO.setExtensionCode(scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode());
+	    requestNoteReqDTO.setUomId(scRequestNoteDtl.getRequestItem().getUom().getUomId());
+	    requestNoteReqDTO.setViewSearchBean(viewSearchBean);
+	    requestNoteReqDTO.setCmSupplierItemIds(cmSupplieritemIds);
 	    directPurchaseSO.validateAddToCart(requestNoteReqDTO);
 	    
 		//TODO have to compare duplicate items in request note
