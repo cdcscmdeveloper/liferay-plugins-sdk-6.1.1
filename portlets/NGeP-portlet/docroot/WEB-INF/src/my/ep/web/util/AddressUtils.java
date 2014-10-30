@@ -32,6 +32,7 @@ public class AddressUtils {
 				address.append(separator);
 			}
 			if (smAddress.getAddress3() != null && smAddress.getAddress3().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getAddress3());
 				address.append(separator);
 			}
@@ -39,15 +40,17 @@ public class AddressUtils {
 				address.append(smAddress.getAddress4());
 				address.append(separator);
 			}
-			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {			
+			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getPostcode());
-				address.append(separator);
+				address.append(" ");
 			}
 			if (smAddress.getPmCity() != null && smAddress.getPmCity().getCityName() !=null && smAddress.getPmCity().getCityName().length() > 0) {
 				address.append(smAddress.getPmCity().getCityName());
 				address.append(separator);
 			}
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
+				address.append(System.getProperty("line.separator"));
 				address.append(smAddress.getPmState().getStateName());
 			}			
 		}
