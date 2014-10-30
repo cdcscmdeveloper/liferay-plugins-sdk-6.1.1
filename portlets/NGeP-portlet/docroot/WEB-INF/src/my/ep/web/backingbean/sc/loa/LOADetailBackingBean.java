@@ -2013,6 +2013,20 @@ public class LOADetailBackingBean extends
 
 				getManagedBean().setAgencyProfileDDList(
 						resDTO.getAgencyProfileDDList());
+				
+				if(scLoa.getScLoiLoa().getPmOrgProfile() != null){
+					boolean found = false;
+					for(Object[] object : resDTO.getAgencyProfileDDList()){
+						if(object[0].toString().equals(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId().toString())){
+						   found = true;
+						   break;
+						}
+					}
+					if(found){
+						scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
+					}
+				}
+				
 
 			} finally {
 				qtAwardSO = null;

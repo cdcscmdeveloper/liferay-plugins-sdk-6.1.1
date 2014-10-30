@@ -245,7 +245,7 @@
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractAgencyPG" />
+							update="contractAgencyPG,contractAdmin" />
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
