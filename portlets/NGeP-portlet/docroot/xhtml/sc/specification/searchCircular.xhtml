@@ -10,7 +10,7 @@
 
 	<ui:include
 		src="/xhtml/sc/presentationDemo/presentationDemoHeader.xhtml"></ui:include>
-	<p:panel>
+	<p:panel id="searchpanelBoUpdate">
 		<table>
 			<tr>
 				<td valign="top" style="width: 23%"><p:outputLabel
@@ -31,7 +31,7 @@
 									<f:selectItems
 										value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 									<p:ajax event="change" update="panelupdate"
-										listener="#{specificationBackingBean.panelChangeValue}"
+										listener="#{specificationBackingBean.panelConformation}"
 										process="@this" partialSubmit="true"></p:ajax>
 								</p:selectOneRadio></td>
 							<td style="margin-top: -3px"><p:message
@@ -41,7 +41,25 @@
 					</table></td>
 			</tr>
 		</table>
-
+		<p:dialog id="revicepanelDlgs" widgetVar="reviceApprovalDlgs"
+			header="Panel Confirmation" resizable="false" width="325" height="75"
+			closable="false">
+			<table>
+				<tr>
+					<td align="center"><p:outputLabel
+							value="All data you have entered will be clear, are you sure to proceed?" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" icon="ui-icon-accept"
+					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate"
+					action="#{specificationBackingBean.panelChangeValue}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" icon="ui-icon-reject"
+					actionListener="#{specificationBackingBean.panelNoConformation}"
+					oncomplete="reviceApprovalDlgs.hide();" update="searchpanelBoUpdate,panelupdate" />
+			</div>
+		</p:dialog>
 	</p:panel>
 	<h:panelGroup id="panelupdate">
 		<p:panel
