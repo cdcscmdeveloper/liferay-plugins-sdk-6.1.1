@@ -75,7 +75,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}"
-				style="width:10%">
+				style="width:10%;white-space: normal;">
 
 
 				<h:outputText
@@ -87,7 +87,7 @@
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
-				style="width:10%">
+				style="width:10%;white-space: normal;">
 
 				<ui:fragment
 					rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title eq  null}">
@@ -119,7 +119,7 @@
 				</ui:fragment>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.head']}"
-				style="width:10%">
+				style="width:10%;white-space: normal;">
 				<h:panelGroup id="scoreFinanceView">
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
@@ -146,14 +146,14 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.specification.status']}"
-				style="width:10%">
+				style="width:7%;white-space: normal;">
 				<h:outputText
 					value="#{specificationBackingBean.getStatusDescById(stageTwofunctional.pmStatus.statusId)}"></h:outputText>
 
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}"
-				style="width:13%">
+				style="width:16%;white-space: normal;">
 				<h:panelGroup id="uploadFinance">
 					<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 						update="financeProposaltwo"
