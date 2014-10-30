@@ -818,7 +818,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			cmSupplierItem.setCmPricings(cmPricings);
 			ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
-			requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+			requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
 			//ScSupplierItemPrice supplierItemPrice = createSupplierItemPrice(requestSupplierItem, cmPricings.get(0));
 			if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size()>0){
 				requestSupplierItem.setSupplierItemPrice(requestSupplierItem.getSupplierItemPrices().get(0));
@@ -919,11 +919,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return scRequestItem;
 	}
 	
-	private ScRequestSupplierItem createScRequestSupplierItem(ScRequestItem requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
+	private ScRequestSupplierItem createScRequestSupplierItem(CmSupplierItem cmSupplierItem, ScRequestItem requestItem, SmSupplier smSupplier, List<CmPricing> cmPricings) {
 		ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 		requestSupplierItem.setSupplierId(smSupplier.getSupplierId());
 		requestSupplierItem.setRequestNoteItem(requestItem);
 		requestSupplierItem.setSmSupplier(smSupplier);
+		requestSupplierItem.setCmSupplierItem(cmSupplierItem);
 		
 		requestSupplierItem.setSupplierItemPrices(createScSupplierItemPrices(requestSupplierItem, cmPricings));
 		
@@ -2266,7 +2267,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						cmSupplierItem.setCmPricings(cmPricings);
 						ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
-						requestSupplierItem = createScRequestSupplierItem(requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+						requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
 
 						scRequestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 					}
