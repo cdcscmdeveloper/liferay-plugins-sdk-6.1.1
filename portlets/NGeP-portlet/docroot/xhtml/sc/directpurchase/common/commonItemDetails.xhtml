@@ -22,11 +22,11 @@
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{requestNoteBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="requestListDataTable"  listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
+							<p:ajax partialSubmit="true" process="@this" update="requestListDataTable, :form:recSuppPG"  listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="@this" />
+						<p:ajax partialSubmit="true" process="@this" update="@this, :form:recSuppPG" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -120,7 +120,7 @@
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
 					</f:facet>
 					
-				 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="16"  headerText="Recommended Supplier"  readonly="true"
+				 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 						 postUpdateListener="#{requestNoteBackingBean.beforeSavePostListener(requestNoteDtl)}"
 						 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
 					     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
@@ -129,7 +129,7 @@
 						 conditionField="#{requestNoteDtl.conditionField}">					
 					</ac:lov>
 					
-				  <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="16"  headerText="Recommended Supplier"  readonly="true"
+				  <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="16"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 						 postUpdateListener="#{requestNoteBackingBean.afterSavePostListener(requestNoteDtl)}"
 						 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 					     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
@@ -262,24 +262,23 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
-					<h:panelGroup
-						rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}">
-						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
-						<p:spacer width="6px;"/>
-						<p:outputPanel autoUpdate="true">
-							<p:selectOneMenu
-								value="#{requestNoteBackingBean.managedBean.supplierId}"
-								style="width:155px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
-									itemValue="#{null}" />
-								<f:selectItems
-									value="#{requestNoteBackingBean.suppliersBySelectedItems}"
-									var="smSupplier" itemLabel="#{smSupplier.companyName}"
-									itemValue="#{smSupplier.supplierId}">
-								</f:selectItems>
-							</p:selectOneMenu>
-						</p:outputPanel>
-						<p:spacer width="10px;" />
+					<h:panelGroup id="recSuppPG">
+						<h:panelGroup
+							rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}">
+							<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
+							<p:spacer width="6px;" />
+
+							<ac:lov id="recSupp" lovId="SM_SUPPLIER_BY_REQUEST_SUPPLIER_ITEM"
+								size="16" headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"
+								readonly="true"
+								saveObject="requestNoteBackingBean.managedBean.smSupplier"
+								value="#{requestNoteBackingBean.managedBean.smSupplier.companyName}"
+								conditionField="#{requestNoteBackingBean.recommendSupplierConditionField}"
+								rendered1="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
+							</ac:lov>
+
+							<p:spacer width="10px;" />
+						</h:panelGroup>
 					</h:panelGroup>
 					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>
 					<p:spacer width="6px;"/>
