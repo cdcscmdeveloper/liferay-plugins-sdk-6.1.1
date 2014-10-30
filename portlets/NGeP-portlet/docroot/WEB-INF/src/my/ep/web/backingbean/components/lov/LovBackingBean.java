@@ -67,7 +67,7 @@ public class LovBackingBean implements Serializable {
 	private List<SelectItem> searchOptions = new ArrayList<SelectItem>();
 	
 	private List resultList = new ArrayList();
-	private BaseEntity selectedEntity;
+	private Object selectedEntity;
 	private List<BaseEntity> selectedEntities;
 //	private BaseEntity[] selectedEntities;
 	
@@ -531,7 +531,7 @@ public class LovBackingBean implements Serializable {
 			if(selectedEntity != null) {
 				ValueExpression valueExpression = context.getApplication().getExpressionFactory()
 													.createValueExpression(context.getELContext(),
-															expressionString, BaseEntity.class);
+															expressionString, Object.class);
 		
 				valueExpression.setValue(context.getELContext(), selectedEntity);
 		
@@ -640,11 +640,11 @@ public class LovBackingBean implements Serializable {
 		this.resultList = resultList;
 	}
 
-	public BaseEntity getSelectedEntity() {
+	public Object getSelectedEntity() {
 		return selectedEntity;
 	}
 
-	public void setSelectedEntity(BaseEntity selectedEntity) {
+	public void setSelectedEntity(Object selectedEntity) {
 		this.selectedEntity = selectedEntity;
 	}
 
