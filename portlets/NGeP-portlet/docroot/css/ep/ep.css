@@ -459,7 +459,7 @@ a:hover.linkButton {
 	text-align: left;
 }
 
-.outputLabel-view {
+label.outputLabel-view {
 	display: inline-block;
 	text-align: left !important;
 	font-size: 12px;
@@ -470,11 +470,11 @@ a:hover.linkButton {
 	font-family: Arial;
 }
 
-.outputLabel-view-label {
+label.outputLabel-view-label {
 	display: inline-block;
 	text-align: left !important;
 	font-size: 12px;
-	font-weight: bold;
+	font-weight: bold !important;
 	vertical-align: middle;
 	float: right;
 	padding: 0 10px 0 0;
