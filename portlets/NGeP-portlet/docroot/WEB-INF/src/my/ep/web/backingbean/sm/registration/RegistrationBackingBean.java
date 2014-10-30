@@ -107,6 +107,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
 	private static Map<Long, Object> identityType;
+	private static Map<Long, PmCertBody> profCertBodyMap;
 
 	public RegistrationBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
@@ -892,6 +893,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("*****certbody count" + resDTO.getCertBodyList().size());
 		this.getManagedBean().setProfCertBodyLs(new ArrayList<PmCertBody>());
 		this.getManagedBean().setProfCertBodyLs(resDTO.getCertBodyList());
+		
+		if(this.getManagedBean().getProfCertBodyLs().size() > 0){
+			profCertBodyMap = new HashMap<Long, PmCertBody>();
+			for(PmCertBody cb : this.getManagedBean().getProfCertBodyLs()){
+				profCertBodyMap.put(cb.getCertBodyId(), cb);
+			}
+		}
 	}
 
 	
@@ -1483,6 +1491,19 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 	}
+	
+	public void profBodyOnChange(SmAssociationBody assocBody){
+		System.out.println("Assoc >>>>>" + assocBody.getPmCertBody().getCertBodyId());
+		
+		if(assocBody.getPmCertBody().getCertBodyId() != null){
+			Long profCertId = assocBody.getPmCertBody().getCertBodyId();
+			PmCertBody selectedCertBody = profCertBodyMap.get(profCertId);
+			
+			assocBody.setPmCertBody(selectedCertBody);
+			
+		}
+	}
+
 }
 
 
