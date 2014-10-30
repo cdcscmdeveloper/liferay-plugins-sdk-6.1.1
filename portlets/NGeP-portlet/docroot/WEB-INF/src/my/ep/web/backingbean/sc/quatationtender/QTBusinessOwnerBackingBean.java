@@ -30,6 +30,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -970,9 +971,15 @@ public class QTBusinessOwnerBackingBean extends
 	}
 
 	public String createBusinessOwner() {
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getOrgProfile().getOrgProfileId());
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
+		PmOrgProfile orgProfile = resDTO.getPmOrgProfile();
+		
 		ScQt scQt = new ScQt();
 		// ScQt scQt = this.getManagedBean().getQt();
-		scQt.setPmOrgProfile(getManagedBean().getOrgProfile());
+		scQt.setPmOrgProfile(orgProfile);
 		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		scQt.setMinistrySpecSecrataryId(new PmUser());
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
