@@ -162,7 +162,7 @@
 	  <p:dataTable id="deliveryAddressTbl" var="deliveryAddress" value="#{contractDetailsBackingBean.managedBean.selectedAgency.ctAgencyAddresses}"
 		rowKey="#{deliveryAddress}">
 		<ac:paginator for="deliveryAddressTbl"/>
-		<p:column headerText="#{lbl['lbl.ct.delivery.address']}">
+		<p:column headerText="#{lbl['lbl.ct.delivery.address']}" style="white-space:normal;">
 		   <p:outputLabel value="#{contractDetailsBackingBean.getFullAddress(deliveryAddress.addressType.pmAddress)}" style="float:left;" />
 		</p:column>
 	   </p:dataTable>
