@@ -818,6 +818,7 @@
 	<bean id="SC_REQUEST_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="requestSupplierItemId" />
 		<property name="daoClass" value="my.ep.persistance.dao.sc.directpurchase.RequestSupplierItemDAO" />
+		<property name="searchMethod" value="retrieveSupplierItemList" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
