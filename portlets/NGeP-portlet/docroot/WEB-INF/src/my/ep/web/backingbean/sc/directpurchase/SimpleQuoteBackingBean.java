@@ -358,10 +358,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		this.getManagedBean().setScQuote(scQuote);
 
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
-		// location level by default - district 
+		// zone location level by default - district 
 		if(getManagedBean().getLocationLevel() == null){
 			getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 		}
+		// supplier location level by default - district 
+		if(getManagedBean().getSupplierLocLevel() == null){
+			getManagedBean().setSupplierLocLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
+		}
+
 		  
 		// to get ptj
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -671,9 +676,22 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					ParameterTypeConst.PROCUREMENT_TYPE, quote.getProcurementType().getParameterCode()));
 
 			// location level 
-			if(getManagedBean().getLocationLevel() != null){
-				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
-						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+			if(quote.isZonal()){
+				if(getManagedBean().getLocationLevel() != null){
+					quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+				}
+			} else{
+				quote.setZoneLocatonLevel(null);
+			}
+			// supplier location level by default - district 
+			if(getManagedBean().isByLocality()){
+				if(getManagedBean().getSupplierLocLevel() == null){
+					quote.setSupplierLocationLevel(getParameterByTypeAndCode(
+							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
+				}	
+			} else{
+				quote.setSupplierLocationLevel(null);
 			}
 			
 			// justification type
@@ -869,10 +887,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quote.setProcurementType(getParameterByTypeAndCode(
 					ParameterTypeConst.PROCUREMENT_TYPE, getManagedBean().getScQuote().getProcurementType().getParameterCode()));
 			
-			// location level
-			if(getManagedBean().getLocationLevel() != null){
-				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
-						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+			// location level 
+			if(quote.isZonal()){
+				if(getManagedBean().getLocationLevel() != null){
+					quote.setZoneLocatonLevel(getParameterByTypeAndCode(
+							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+				}
+			} else{
+				quote.setZoneLocatonLevel(null);
+			}
+			// supplier location level
+			if(getManagedBean().isByLocality()){
+				if(getManagedBean().getSupplierLocLevel() == null){
+					quote.setSupplierLocationLevel(getParameterByTypeAndCode(
+							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
+				}	
+			} else{
+				quote.setSupplierLocationLevel(null);
 			}
 			
 			// justification type
@@ -1793,11 +1824,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return nodesToRemoved;
 	}
 	
-
-	/**
-	 * To delete the selected TreeNode from the panel item zone
-	 */
-	public void deletePanelItemSuppliers(TplSpecZoneDtl tplSpecZoneDtl) {
+	private void deletePanelItemSuppliers(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<ScQuoteSupplier> panelSuppliers = new ArrayList<ScQuoteSupplier>();
 		// delete suppliers by selected zone to be delete
 		if(tplSpecZoneDtl.getPanelZone() !=null){
@@ -1812,9 +1839,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}	
 		}
+		removePanelItemZones(tplSpecZoneDtl);
 		getManagedBean().setPanelSuppliers(panelSuppliers);
 	}
 
+	private void removePanelItemZones(TplSpecZoneDtl tplSpecZoneDtl) {
+		ScQuote quote = 	getManagedBean().getScQuote();
+		if(tplSpecZoneDtl !=null){
+			if(quote.getQuoteZone() != null && quote.getQuoteZone().getTplSpecZoneDtls() != null && quote.getQuoteZone().getTplSpecZoneDtls().size()>0){
+				quote.getQuoteZone().getTplSpecZoneDtls().remove(tplSpecZoneDtl);
+				quote.getQuoteZone().setModified(Boolean.TRUE);
+			}	
+		}
+		getManagedBean().setScQuote(quote);
+	}
+	
 	public void selectPanelItemZone(NodeSelectEvent event) {
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
 		selectedNode.setSelected(true);
@@ -2066,11 +2105,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setActiveIndex(2);
 		} else if(activeIndex.equals(3)){
 			getManagedBean().setActiveIndex(3);
-		}
-		
-		// location level by default - district 
-		if(getManagedBean().getLocationLevel() == null){
-			getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 		}
 		procurementTypeEvent();
 	}
@@ -2662,10 +2696,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				getManagedBean().getRequestNote().setPmOrgProfile(scQuote.getRequestNotes().get(0).getPmOrgProfile());
 			}
 
-			// location level by default - district 
+			// zone location level by default - district 
 			if(scQuote.getZoneLocatonLevel() != null){
 				getManagedBean().setLocationLevel(scQuote.getZoneLocatonLevel().getParameterCode());
 			}
+			
+			// supplier location level by default - district 
+			if(scQuote.getSupplierLocationLevel() != null){
+				getManagedBean().setSupplierLocLevel(scQuote.getSupplierLocationLevel().getParameterCode());
+			}
+		
 			// business nature details
 			if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() > 0){
 				getManagedBean().setByBusinessNature(Boolean.TRUE);
