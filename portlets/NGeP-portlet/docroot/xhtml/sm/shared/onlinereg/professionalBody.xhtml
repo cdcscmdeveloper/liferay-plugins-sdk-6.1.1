@@ -31,7 +31,7 @@
 			
 			<p:column headerText="#{lbl['lbl.sm.profBody.others']}">
 				<p:inputText id="otherAssocId"  disabled="#{suppAssocBody.pmCertBody.bodyCode != SupplierManagementConst.PM_CERT_BODY_OTHERS}" 
-				value="#{suppAssocBody.otherAssociation}" maxlength="200" 
+				value="#{suppAssocBody.otherAssociation}" maxlength="200" label="#{lbl['lbl.sm.profBody.othersprofbody']}"
 				required="#{suppAssocBody.pmCertBody.bodyCode == SupplierManagementConst.PM_CERT_BODY_OTHERS and !empty param['disableValidation']}"></p:inputText>
 				<p:message id="otherAssocIdMsg" for="otherAssocId" display="icon" />
 			</p:column>
