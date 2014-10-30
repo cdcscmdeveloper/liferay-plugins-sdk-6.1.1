@@ -4230,6 +4230,59 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setDocId(view.getDocId());
 	
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItem(reqDTO);
+				
+				CmSupplierItem cmSupplierItem = resDTO.getSupplierItemList().get(0);
+				
+				log.info("filtering active price");
+				//tier
+				Iterator<CmTierPricing> a = cmSupplierItem.getCmTierPricings().iterator();
+				while(a.hasNext()){
+					CmTierPricing cmTierPricing = a.next();
+					if(!(cmTierPricing.getStartDate().getTime()<=new Date().getTime() && cmTierPricing.getEndDate().getTime()>=new Date().getTime())){
+						a.remove();
+					}
+				}
+				//tier promotion
+				Iterator<CmPromotionTierPricing> b = cmSupplierItem.getCmPromotionTierPricings().iterator();
+				while(b.hasNext()){
+					CmPromotionTierPricing cmPromotionTierPricing = b.next();
+					if(!(cmPromotionTierPricing.getStartDate().getTime()<=new Date().getTime() && cmPromotionTierPricing.getEndDate().getTime()>=new Date().getTime())){
+						b.remove();
+					}
+				}
+				//zonal
+				Iterator<CmZonalStandardPricing> c = cmSupplierItem.getzStdPrices().iterator();
+				while(c.hasNext()){
+					CmZonalStandardPricing cmZonalStandardPricing = c.next();
+					if(!(cmZonalStandardPricing.getStartDate().getTime()<=new Date().getTime() && cmZonalStandardPricing.getEndDate().getTime()>=new Date().getTime())){
+						c.remove();
+					}
+				}
+				//zonal promotion
+				Iterator<CmZonalPromotionPricing> d = cmSupplierItem.getCmZonalPromotionPricings().iterator();
+				while(d.hasNext()){
+					CmZonalPromotionPricing cmZonalPromotionPricing = d.next();
+					if(!(cmZonalPromotionPricing.getStartDate().getTime()<=new Date().getTime() && cmZonalPromotionPricing.getEndDate().getTime()>=new Date().getTime())){
+						d.remove();
+					}
+				}
+				//zonal tier
+				Iterator<CmZonalTierPricing> e = cmSupplierItem.getCmZonalTierPricings().iterator();
+				while(e.hasNext()){
+					CmZonalTierPricing cmZonalTierPricing = e.next();
+					if(!(cmZonalTierPricing.getStartDate().getTime()<=new Date().getTime() && cmZonalTierPricing.getEndDate().getTime()>=new Date().getTime())){
+						e.remove();
+					}
+				}
+				//zonal tier promotion
+				Iterator<CmZonalPromotionTierPricing> f = cmSupplierItem.getCmZonalPromotionTierPricings().iterator();
+				while(f.hasNext()){
+					CmZonalPromotionTierPricing cmZonalPromotionTierPricing = f.next();
+					if(!(cmZonalPromotionTierPricing.getStartDate().getTime()<=new Date().getTime() && cmZonalPromotionTierPricing.getEndDate().getTime()>=new Date().getTime())){
+						f.remove();
+					}
+				}
+				
 	
 				System.out.println("*****************end********************");
 	
@@ -7080,6 +7133,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			return cancelToPendingApprovalItem();
 		else
 			return cancelToSupplierItemSearch();
+	}
+	
+	public boolean showActivePromotion(CmSupplierItem cmSupplierItem){
+		log.info("showActivePromotion");
+		log.info(cmSupplierItem.getCmPromotionPricing().getStartDate());
+		log.info(cmSupplierItem.getCmPromotionPricing().getEndDate());
+		if(cmSupplierItem.getCmPromotionPricing().getStartDate()!=null && cmSupplierItem.getCmPromotionPricing().getEndDate()!=null){
+			if(!(cmSupplierItem.getCmPromotionPricing().getStartDate().getTime()<=new Date().getTime() && cmSupplierItem.getCmPromotionPricing().getEndDate().getTime()>=new Date().getTime())){
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			return false;
+		}
 	}
 	
 	public String cancelToPendingApprovalItem() {
