@@ -23,6 +23,7 @@ import my.ep.dto.sc.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.sc.directpurchase.RequestNoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -119,6 +120,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private boolean tierAndPromoTierFlag;;
     private boolean zonalStandardAndPromoFlag;
     private String reportURL;
+    private VCmSupplierItem vCmSupplierItem;
     
     public RequestNoteManagedBean() {
     	PmParameter pmParameter = new PmParameter();
@@ -885,6 +887,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	public void setZonalStandardAndPromoFlag(boolean zonalStandardAndPromoFlag) {
 		this.zonalStandardAndPromoFlag = zonalStandardAndPromoFlag;
+	}
+	public VCmSupplierItem getvCmSupplierItem() {
+		return vCmSupplierItem;
+	}
+	public void setvCmSupplierItem(VCmSupplierItem vCmSupplierItem) {
+		this.vCmSupplierItem = vCmSupplierItem;
 	}
 	
 }
