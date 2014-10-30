@@ -27,6 +27,8 @@ import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.catalogue.IZoneMaintenanceSO;
@@ -115,6 +117,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -2416,7 +2419,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestItemAttachment.setPrefixFileName(getItemCode(requestItem));
 				
 				generateMarketSummaryPdfFromVelocity((ScAttachment)requestItemAttachment, 
-						requestItem);
+						scRequestNoteDtl);
 			} catch (Exception e) {
 				e.printStackTrace();
 				throw new EpException(e.getMessage());
@@ -2478,7 +2481,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		}
 	}
 	
-	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestItem scRequestItem) throws Exception {
+	private void generateMarketSummaryPdfFromVelocity(ScAttachment attachment, ScRequestNoteDtl scRequestNoteDtl) throws Exception {
+		ScRequestItem scRequestItem = scRequestNoteDtl.getRequestItem();
 		attachment.setFileName("market_summary.pdf");
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
@@ -2518,29 +2522,78 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteReqDTO.setRequestItemId(scRequestItem.getRequestNoteItemId());
 				RequestNoteResDTO requestNoteResDTO = directPurchaseSO.getSuppItemWithPricesByReqItemId(requestNoteReqDTO);
 				supplierItems = requestNoteResDTO.getSupplierItems();
+				if (supplierItems != null) {
+					for(ScRequestSupplierItem supplierItem: supplierItems){			
+						for(int i = 0; i<supplierItem.getSupplierItemPrices().size();i++){
+							supplierItemPrice = supplierItem.getSupplierItemPrices().get(i);
+							marketSummaryAndPIBean = new MarketSummaryAndPIBean();
+							marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
+							marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
+							marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"N/A");
+							marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "N/A");
+							marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "N/A");
+							marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().intValue() : 0);
+							marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().intValue() : 0);
+							marketSummaryAndPIBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "N/A");
+							marketSummaryAndPIBean.setUnitPrice(supplierItemPrice.getItemPrice() !=null ? amountDF.format(supplierItemPrice.getItemPrice()).toString() : "N/A");			    
+							marketSummaryAndPIBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "N/A");
+							requestNoteVOList.add(marketSummaryAndPIBean);
+						}
+					}
+				}
 				
 			} finally {
 				directPurchaseSO = null;
 			}
 		} else {
-			supplierItems = scRequestItem.getSupplierItems();
-		}
-		
-		if (supplierItems != null) {
-			for(ScRequestSupplierItem supplierItem: supplierItems){			
-				for(int i = 0; i<supplierItem.getSupplierItemPrices().size();i++){
-					supplierItemPrice = supplierItem.getSupplierItemPrices().get(i);
+			CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
+			//construct search bean
+			String conditionField = scRequestNoteDtl.getConditionField();
+			
+			SearchBean<VCmSupplierItem> searchBean = new SearchBean<VCmSupplierItem>();
+			
+			for (String filter: conditionField.split("\\|")){
+		         System.out.println(filter);
+		         String searchField = null;
+		         String searchValue = null;
+		         int searchCondition = SearchOperator.OPERATOR_EQUALS.value();
+		         String[] conditions = filter.split("\\^");
+		         searchField = conditions[0];
+	        	 searchValue = conditions[1];
+		         if(conditions.length > 2) {
+		        	 searchCondition = Integer.parseInt(conditions[2]);
+		         }
+		         SearchFilterBean filterBean = new SearchFilterBean(searchCondition);
+		         filterBean.setCaseInsensitive(true);
+		         filterBean.setSearchField(searchField);
+		         filterBean.setSearchValue(searchValue);
+		         searchBean.getDataFilterBeans().add(
+		        		 filterBean);
+		         System.out.println(searchField + "|" + searchValue + "|" + searchCondition);
+		    }
+			//catalogueReqDTO.setSupplierItemId(scRequestNoteDtl.getvCmSupplierItem());
+			IViewSupplierItemSO viewSupplierItemSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, IViewSupplierItemSO.class);
+			//catalogueReqDTO.setExtensionCode(scRequestItem.getCmItem().getExtensionCode());
+			//catalogueReqDTO.setUomId(scRequestItem.getUom().getUomId());
+			catalogueReqDTO.setViewSearchBean(searchBean);
+			CatalogueResDTO  catalogueResDTO = viewSupplierItemSO.getSuppliersItemPricingByExtensionCode(catalogueReqDTO);
+			List<CmSupplierItem> cmSupplierItemList = catalogueResDTO.getSupplierItemList();
+
+			for(CmSupplierItem supplierItem: cmSupplierItemList){			
+				for(int i = 0; i<supplierItem.getItemPricings().size();i++){
+					CmPricing cmPrice = supplierItem.getItemPricings().get(i);
 					marketSummaryAndPIBean = new MarketSummaryAndPIBean();
-					marketSummaryAndPIBean.setSupplierId(supplierItem.getSmSupplier().getSupplierId());
-					marketSummaryAndPIBean.setSupplierName(supplierItem.getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
+					marketSummaryAndPIBean.setSupplierId(cmPrice.getCmSupplierItem().getSmSupplier().getSupplierId());
+					marketSummaryAndPIBean.setSupplierName(cmPrice.getCmSupplierItem().getSmSupplier().getCompanyName().replaceAll("&", "&#38;"));
 					marketSummaryAndPIBean.setMinQty(scRequestItem.getMinqty() != null ? scRequestItem.getMinqty().toString() :"N/A");
-					marketSummaryAndPIBean.setDeliveryTerm(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getLeadTime().toString() : "N/A");
-					marketSummaryAndPIBean.setAddItemDesc(supplierItemPrice.getPricing() !=null && supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() != null ? supplierItemPrice.getPricing().getCmSupplierItem().getItemDesc() : "N/A");
-					marketSummaryAndPIBean.setFrQty(supplierItemPrice.getFromQty() != null ? supplierItemPrice.getFromQty().intValue() : 0);
-					marketSummaryAndPIBean.setToQty(supplierItemPrice.getToQty() != null ? supplierItemPrice.getToQty().intValue() : 0);
-					marketSummaryAndPIBean.setPriceType(supplierItemPrice.getPriceType() != null ? getParameterDesc(supplierItemPrice.getPriceType()) : "N/A");
-					marketSummaryAndPIBean.setUnitPrice(supplierItemPrice.getItemPrice() !=null ? amountDF.format(supplierItemPrice.getItemPrice()).toString() : "N/A");			    
-					marketSummaryAndPIBean.setZone(supplierItemPrice.getTplSpecZone() !=null ? supplierItemPrice.getTplSpecZone().getZoneName() : "N/A");
+					marketSummaryAndPIBean.setDeliveryTerm(cmPrice.getCmSupplierItem().getLeadTime() != null ? cmPrice.getCmSupplierItem().getLeadTime().toString() : "N/A");
+					marketSummaryAndPIBean.setAddItemDesc(cmPrice.getCmSupplierItem().getItemDesc() != null ? cmPrice.getCmSupplierItem().getItemDesc() : "N/A");
+					marketSummaryAndPIBean.setFrQty(cmPrice.getFromQty() != null ? cmPrice.getFromQty().intValue() : 0);
+					marketSummaryAndPIBean.setToQty(cmPrice.getToQty() != null ? cmPrice.getToQty().intValue() : 0);
+					marketSummaryAndPIBean.setPriceType(cmPrice.getPricingType() != null ? getParameterDesc(
+							ParameterTypeConst.PRICE_TYPE, cmPrice.getPricingType()) : "N/A");
+					marketSummaryAndPIBean.setUnitPrice(cmPrice.getPrice() !=null ? amountDF.format(cmPrice.getPrice()).toString() : "N/A");			    
+					marketSummaryAndPIBean.setZone((cmPrice.getCmSupplierZone() !=null && cmPrice.getCmSupplierZone().getSuppZoneId() > 0) ? cmPrice.getCmSupplierZone().getSuppZoneName() : "N/A");
 					requestNoteVOList.add(marketSummaryAndPIBean);
 				}
 			}
