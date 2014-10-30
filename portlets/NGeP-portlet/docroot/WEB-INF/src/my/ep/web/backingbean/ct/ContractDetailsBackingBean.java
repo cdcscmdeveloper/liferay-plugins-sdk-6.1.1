@@ -412,7 +412,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		String endMonth = "";
 		for (CtSchedule ctSchedules : getManagedBean().getContractVer().getCtSchedules()) {
 			   
-			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
                 String fromdate = dateFormat.format(ctSchedules.getFromDate());
 			    String todate = dateFormat.format(ctSchedules.getToDate());
 			    String startdate = fromdate.substring(3, 5);
@@ -507,7 +507,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		String endMonth = "";
 		for (CtProgressivePayment ctSchedules : getManagedBean().getContractVer().getCtProgressivePayments()) {
 			   
-			    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			    SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
                 String fromdate = dateFormat.format(ctSchedules.getFromDate());
 			    String todate = dateFormat.format(ctSchedules.getToDate());
 			    String startdate = fromdate.substring(3, 5);
@@ -617,7 +617,8 @@ public void ConstructSideTabMenu(){
 		 		          getManagedBean().getFinalListOfSideMenu().addAll(menu.menuZone);
 			      }
 		 		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuItem);
-		          if (!getManagedBean().isDirectPurchase()) {
+		          if (!getManagedBean().isDirectPurchase() && getManagedBean().getContractVer().getCtDeductions() != null
+		        		  && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 		    	  		  getManagedBean().getFinalListOfSideMenu().addAll(menu.menuDeduction); 
 			      } 
 		         
@@ -1034,16 +1035,15 @@ public void ConstructSideTabMenu(){
 					}
 					Date d1 = new Date();
 
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 					String localDate = format.format(d1);
 					String date = localDate.substring(0, 2);
 					String fromdate = date + "/" + Startmonth + "/"+ schedule.getStartYear();
 					String toDate = date + "/" + endmonth + "/"+ schedule.getEndYear();
 
 					try {
-						schedule.setFromDate(df.parse(fromdate));
-						schedule.setToDate(df.parse(toDate));
+						schedule.setFromDate(format.parse(fromdate));
+						schedule.setToDate(format.parse(toDate));
 					} catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -1115,8 +1115,7 @@ public void ConstructSideTabMenu(){
 					}
 					Date d1 = new Date();
 
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 					String localDate = format.format(d1);
 					String date = localDate.substring(0, 2);
 					String fromdate = date + "/" + Startmonth + "/"
@@ -1124,8 +1123,8 @@ public void ConstructSideTabMenu(){
 					String toDate = date + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 					try {
-						schedule.setFromDate(df.parse(fromdate));
-						schedule.setToDate(df.parse(toDate));
+						schedule.setFromDate(format.parse(fromdate));
+						schedule.setToDate(format.parse(toDate));
 					} catch (ParseException e) {
 						log.debug(e.getMessage());
 					}
@@ -2007,34 +2006,46 @@ public void ConstructSideTabMenu(){
 	 }
 		 
      public void validateDate(CtSchedule ctSchedule){
+    	
+    	 getManagedBean().setProgSchedButtonDeactive(false);
     	 if(ctSchedule.getEndMonth() == null || ctSchedule.getStartMonth() == null) {
     		  for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
- 			
     			   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
  			          dataList.setValidateScheduleDate(false);
  			   }
-    	  } else {    	 
+    	
+    	 } else {    	 
 	    	           int startYear = Integer.valueOf((String) ctSchedule.getStartYear());  
 			            int endYear = Integer.valueOf((String) ctSchedule.getEndYear());
 			            int startMonth = Integer.valueOf((String) ctSchedule.getStartMonth());  
 			            int endMonth = Integer.valueOf((String) ctSchedule.getEndMonth());
-			 
-			            if((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear)) {
-			                for (CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {			            
-			                	if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
-			    	             	dataList.setValidateScheduleDate(true);
+			            
+			            SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		                int startContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(3, 5));
+					    int endContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(3, 5));
+					    int startContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+					    int endContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+					    
+					    if((startMonth > endMonth && startYear >= endYear)|| (startMonth <= endMonth && startYear > endYear) 
+					    	 ||(startMonth < startContractMonth -1 && startYear == startContractYear) || (startMonth > endContractMonth-1 && startYear == endContractYear)
+					    	 || (endMonth > endContractMonth-1 && endYear == endContractYear) || (endMonth < startContractMonth -1 && endYear == startContractYear)) {
+			                   for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {			            
+			                	   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())) {
+			    	             	      dataList.setValidateScheduleDate(true);
+			                	          getManagedBean().setProgSchedButtonDeactive(true);
+			                	   }
 			                }
-			          } else {
-			            for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
-				                if(dataList.toString().equalsIgnoreCase(ctSchedule.toString())){
-				                     dataList.setValidateScheduleDate(false);
-				                }
-				          }
-			         }
-    	       }
-	    }
+					    } else {
+			                  for(CtSchedule dataList : this.getManagedBean().getContractVer().getCtSchedules()) {
+				                   if(dataList.toString().equalsIgnoreCase(ctSchedule.toString()))
+				                       dataList.setValidateScheduleDate(false);
+				              }
+			            }
+    	        }
+	  }
 		 
     public void validateProgressiveDate(CtProgressivePayment  ctProgressivePayment){
+    	 getManagedBean().setProgSchedButtonDeactive(false);
     	if(ctProgressivePayment.getEndMonth() == null || ctProgressivePayment.getStartMonth() == null) {
     		 for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
 		    	  if(dataList.toString().equalsIgnoreCase(ctProgressivePayment.toString())){
@@ -2047,10 +2058,20 @@ public void ConstructSideTabMenu(){
 			 int endYear = Integer.valueOf((String) ctProgressivePayment.getEndYear());
 			 int startMonth = Integer.valueOf((String) ctProgressivePayment.getStartMonth());  
 			 int endMonth = Integer.valueOf((String) ctProgressivePayment.getEndMonth());
-			if((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)){
+			 
+			 SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+			 int startContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(3, 5));
+			 int endContractMonth = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(3, 5));
+			 int startContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()).substring(6, 10));
+			 int endContractYear = Integer.valueOf((String) dateFormat.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()).substring(6, 10));
+			  
+			if((startMonth > endMonth  &&  startYear >= endYear)||(startMonth <= endMonth  && startYear > endYear)
+					 ||(startMonth < startContractMonth -1 && startYear == startContractYear) || (startMonth > endContractMonth-1 && startYear == endContractYear)
+			    	 || (endMonth > endContractMonth-1 && endYear == endContractYear) || (endMonth < startContractMonth -1 && endYear == startContractYear)){
 			   for (CtProgressivePayment dataList : this.getManagedBean().getContractVer().getCtProgressivePayments()) {
-			    	  if(dataList.equals(ctProgressivePayment)){
+			    	  if(dataList.equals(ctProgressivePayment)) {
 			    		 dataList.setValidateProgressiveDate(true);
+			    		 getManagedBean().setProgSchedButtonDeactive(true);
 			    	}
 			    }
 			 }
@@ -2136,17 +2157,17 @@ public void ConstructSideTabMenu(){
 	
 	public void calculatePercentage(CtProgressivePayment progPayment){
 		float addValue = 0.0f;
-  	    getManagedBean().setProgressiveButtonDeactive(false);
+  	    getManagedBean().setProgSchedButtonDeactive(false);
  		for(CtProgressivePayment progressivePayment: getManagedBean().getContractVer().getCtProgressivePayments()) {
 				  addValue = addValue +progressivePayment.getPercentage();
 			      if(progressivePayment.equals(progPayment)) {
 		  
 			    	  if(Math.abs(addValue) > 100) {
-		    	             getManagedBean().setProgressiveButtonDeactive(true);
+		    	             getManagedBean().setProgSchedButtonDeactive(true);
 		    	             progressivePayment.setPercentageExceeded(true);
 		              
 			    	  } else if(Math.abs(addValue) == 100) {
-		    	           getManagedBean().setProgressiveButtonDeactive(true);
+		    	           getManagedBean().setProgSchedButtonDeactive(true);
 		    	           progressivePayment.setPercentageExceeded(false);
 		            
 			    	  } else {
