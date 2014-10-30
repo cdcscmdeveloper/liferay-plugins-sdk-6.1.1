@@ -9299,38 +9299,38 @@ public class SpecificationBackingBean extends
 
 		} else {
 			this.getManagedBean().setLocalOutCome(action);
-			/*
-			 * if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
-			 * 
-			 * RequestContext.getCurrentInstance().execute(
-			 * "reviceApprovalDlgs.show()"); } else if
-			 * (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
-			 * RequestContext.getCurrentInstance().execute("gpki_dlg.show()"); }
-			 * else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)) {
-			 */
-			SpecificationResDTO resDTO = updateSpecCommitteDtls(action, null);
-			if (resDTO.isSuccessful()) {
-				ScQt qt = resDTO.getScQt();
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														getMessgeConstant(action),
-														new String[] {
-																"Specification Preparation And Scoring For",
-																qt.getQtNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
 
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+
+				RequestContext.getCurrentInstance().execute(
+						"reviceApprovalDlgs.show()");
+			} else if (BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(action)
+					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACCEPT)) {
+
+				SpecificationResDTO resDTO = updateSpecCommitteDtls(action,
+						null);
+				if (resDTO.isSuccessful()) {
+					ScQt qt = resDTO.getScQt();
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															getMessgeConstant(action),
+															new String[] {
+																	"Specification Preparation And Scoring For",
+																	qt.getQtNo() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				}
 			}
-			// }
 		}
 		return null;
 
