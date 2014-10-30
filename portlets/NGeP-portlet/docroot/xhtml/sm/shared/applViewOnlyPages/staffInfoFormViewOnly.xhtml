@@ -23,12 +23,20 @@
 							<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.staff.clericalStaff']}"
 								rendered="#{staff.staffCategory eq SupplierManagementConst.STAFF_TYPE_CLERICAL}" /></td>
 						<td>
-							<p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" styleClass="outputLabel-view" />
-							<p:outputLabel value="(#{staff.totalBumi})" styleClass="outputLabel-view" /><br />
-							<p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" styleClass="outputLabel-view" />
-							<p:outputLabel value="(#{staff.totalNonBumi})" styleClass="outputLabel-view" /><br />
-							<p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" styleClass="outputLabel-view" />
-							<p:outputLabel value="(#{staff.totalForeigner})" styleClass="outputLabel-view" />
+							<table>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.staff.bumi']}" styleClass="outputLabel-view" /></td>
+									<td><p:outputLabel value="(#{staff.totalBumi})" styleClass="outputLabel-view" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.staff.nonBumi']}" styleClass="outputLabel-view" /></td>
+									<td><p:outputLabel value="(#{staff.totalNonBumi})" styleClass="outputLabel-view" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.staff.frgnr']}" styleClass="outputLabel-view" /></td>
+									<td><p:outputLabel value="(#{staff.totalForeigner})" styleClass="outputLabel-view" /></td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 				</table>
