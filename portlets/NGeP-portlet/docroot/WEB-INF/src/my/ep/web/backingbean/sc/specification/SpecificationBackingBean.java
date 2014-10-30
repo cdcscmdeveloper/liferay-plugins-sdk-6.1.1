@@ -2222,7 +2222,9 @@ public class SpecificationBackingBean extends
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
-					this.getManagedBean().getTechnicalScoring().add(list);
+					if (!list.getTitle().trim().contains("Service Scope")) {
+						this.getManagedBean().getTechnicalScoring().add(list);
+					}
 				}
 
 				this.getManagedBean().setTechPoints(score);
@@ -2327,7 +2329,14 @@ public class SpecificationBackingBean extends
 
 						specChecklist.add(list);
 					} else {
-						localChecklist.add(list);
+						if (!list.getTitle().trim()
+								.contains("Annual Balance Sheet")
+								&& !list.getTitle()
+										.trim()
+										.contains(
+												"Verification from Financial Institution")) {
+							localChecklist.add(list);
+						}
 					}
 
 					int local = (int) addScore;
@@ -5859,10 +5868,10 @@ public class SpecificationBackingBean extends
 			ScQtCheckList st2financeproposalList2 = createSpecList("2");
 
 			// st2financeproposalList2.setDefinationType(1);
-			st2financeproposalList2.setScoringReq(true);
+			// st2financeproposalList2.setScoringReq(true);
 			st2financeproposalList2
 					.setDocCategory(QTConstants.FINANCIAL_DOC_TYPE);
-			st2financeproposalList2.setScoringReq(true);
+			st2financeproposalList2.setScoringReq(false);
 			st2financeproposalList2.setChecklistSeq(1);
 
 			st2financeproposalList2.setScQt(this.getManagedBean().getScQt());
@@ -5980,7 +5989,7 @@ public class SpecificationBackingBean extends
 			st2technicalproposalList1.setDefinationType(new PmParameter());
 			st2technicalproposalList1
 					.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
-			st2technicalproposalList1.setScoringReq(true);
+			st2technicalproposalList1.setScoringReq(false);
 			st2technicalproposalList1.setChecklistSeq(1);
 
 			st2technicalproposalList1.setScQt(this.getManagedBean().getScQt());
@@ -10424,12 +10433,17 @@ public class SpecificationBackingBean extends
 		status.setStatusId(60550L);
 		specMaster.setStatus(status);
 		specMaster.setScQtDoc(scqtDocDest);
-		ParameterReqDTO localGoodsReqDTO = new ParameterReqDTO();
-		localGoodsReqDTO.setParameterType(ParameterTypeConst.ITEM_ORIGIN);
-		localGoodsReqDTO.setParameterCode(ParameterConst.LOCAL_GOODS);
-		ParameterResDTO localGoodsResDTO = parameterSo
-				.retrieveParameterByTypeAndCode(localGoodsReqDTO);
-		specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
+		if (null == specMaster.getItemOriginCode()
+				|| null == specMaster.getItemOriginCode().getParameterId()) {
+			ParameterReqDTO localGoodsReqDTO = new ParameterReqDTO();
+			localGoodsReqDTO.setParameterType(ParameterTypeConst.ITEM_ORIGIN);
+			localGoodsReqDTO.setParameterCode(ParameterConst.LOCAL_GOODS);
+			ParameterResDTO localGoodsResDTO = parameterSo
+					.retrieveParameterByTypeAndCode(localGoodsReqDTO);
+			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
+		} else {
+			specMaster.setItemOriginCode(specMaster.getItemOriginCode());
+		}
 		scqtDocDest.setTplSpecMaster(specMaster);
 		scqtDocDest.setScQt(this.getManagedBean().getScQt());
 		// scqtDocDest.setTplDocMaster(null);
