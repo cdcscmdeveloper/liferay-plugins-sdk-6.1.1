@@ -45,7 +45,10 @@
 				</f:facet>
 				<h:outputText
 					value="#{chargeLineNode.cmItem.extensionCode}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+					rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.cmItem!=null}" />
+				<h:outputText
+					value="#{chargeLineNode.scRequestItem.tempUnspscCode}"
+					rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.cmItem==null}" />	
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 				<h:outputText value="#{chargeLineNode.scRequestItem.itemName}"
