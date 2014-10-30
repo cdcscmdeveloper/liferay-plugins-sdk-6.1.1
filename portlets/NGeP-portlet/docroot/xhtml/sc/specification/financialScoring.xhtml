@@ -27,7 +27,7 @@
 
 		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
 			value="#{specificationBackingBean.managedBean.financialScoring}"
-			 style="width:100%" rowIndexVar="index">
+			style="width:100%" rowIndexVar="index">
 			<!-- <ac:paginator for="financialweightage" /> -->
 			<!-- 	<p:column selectionMode="multiple" style="text-align:center;" /> -->
 
@@ -48,7 +48,7 @@
 					<h:outputText value="#{finance.qtScoreWeightage.score}" />
 				</ui:fragment>
 				<ui:fragment
-					rendered="#{finance.definationType.parameterCode eq 'UP' }">
+					rendered="#{finance.definationType.parameterCode eq 'UP' and finance.scoringReq }">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
 						maxlength="18" required="true"
 						label="#{lbl['lbl.sc.spec.stage2.score']}" id="finScoreWeightage"
