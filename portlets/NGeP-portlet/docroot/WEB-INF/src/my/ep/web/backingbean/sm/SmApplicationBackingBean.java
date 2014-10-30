@@ -616,10 +616,6 @@ public class SmApplicationBackingBean extends
 	public String deletePendingMofApplication() {
 		IMofRegistrationSO mofRegistrationSO = null;
 		try {
-
-			// SmSupplier smSupplier = retriveSupplierById((long) 3)
-			// .getSmSupplier();
-
 			SmSupplier smSupplier = SmApplicationUtil.getCurrentSupplier();
 			log.info("****** Testing the delete pending *********"
 					+ smSupplier.getSupplierId());
@@ -637,9 +633,10 @@ public class SmApplicationBackingBean extends
 				SmAppl smAppl = SmApplicationUtil.defaultSmAppl(resDTO
 						.getSmAppl());
 				getManagedBean().setSmAppl(smAppl);
-				if (getManagedBean().getSmAppl().getPmStatus() != null) {
-					setPmStatusDesc(getManagedBean().getSmAppl().getPmStatus()
-							.getStatusId().toString());
+				SmWorkflowStatus sts = getCurrentActiveWokFlowStatus(getManagedBean()
+						.getSmAppl().getApplId());
+				if (sts != null && sts.getPmStatus() != null) {
+					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
 				}
 			}
 
@@ -3830,9 +3827,11 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (getManagedBean().getSmAppl().isResubmit()) {
-				reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(
-						SupplierManagementConst.PM_STATUS_PO_REVIEW,
-						getManagedBean().getSmAppl().getApplId()));
+				reqDTO.setPoLoginId(SmApplicationUtil
+						.getPOLoginId(
+								SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER,
+								SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION,
+								getManagedBean().getSmAppl().getApplId()));
 			}
 
 			// Set list of users to send to BPM
@@ -4286,6 +4285,20 @@ public class SmApplicationBackingBean extends
 		log.info("**** assignFinalApproveOrReject *** ");
 		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
 		assignValReqdToTrue();
+		RequestContext.getCurrentInstance().execute(dialog + ".show()");
+	}
+
+	public void assignSiteVisitPopUp(String dialog) {
+		log.info("**** assignSiteVisitPopUp *** ");
+		SmApplicationUtil.validateCategoryAndDocsDecision(getManagedBean());
+		getManagedBean()
+				.setSplCategoryList(new ArrayList<SmSupplierCategory>());
+		for (SmSupplierCategory category : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (category.isSpecialCategory()) {
+				getManagedBean().getSplCategoryList().add(category);
+			}
+		}
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 

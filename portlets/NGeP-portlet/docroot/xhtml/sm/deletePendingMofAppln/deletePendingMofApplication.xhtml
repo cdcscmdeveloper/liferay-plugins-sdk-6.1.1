@@ -33,11 +33,12 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.applicationtype']} : " /></td>
-					<td><p:inputText value="#{lbl['lbl.sm.mofReg.headerLbl']}" readonly="true"
-							disabled="true"
-							rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"
-							size="35" /> <p:inputText value="#{lbl['lbl.sm.renewMof.headerLbl']}"
+					<td><p:inputText value="#{lbl['lbl.sm.mofReg.headerLbl']}"
 							readonly="true" disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}"
+							size="35" /> <p:inputText
+							value="#{lbl['lbl.sm.renewMof.headerLbl']}" readonly="true"
+							disabled="true"
 							rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}"
 							size="35" /> <p:inputText
 							value="#{lbl['lbl.sm.updateMof.headerLbl']}" readonly="true"
@@ -77,14 +78,10 @@
 							value="#{backingBean.managedBean.supplierRemarks}" /></td>
 
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.if.any']}" /></td>
-					<td><p:fileUpload mode="simple" /></td>
-
-				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="delPenRegConfirm.show();" />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="delPenRegConfirm.show();" />
 
 			</div>
 		</p:panel>
