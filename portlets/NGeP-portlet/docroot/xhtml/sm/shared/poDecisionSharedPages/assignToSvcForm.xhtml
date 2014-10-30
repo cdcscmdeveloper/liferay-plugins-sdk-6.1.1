@@ -11,13 +11,18 @@
 	<table>
 
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.sitevist.to.be.performed']} *" /></td>
+			<td><p:outputLabel
+					value="#{lbl['lbl.sm.sitevist.to.be.performed']} *" /></td>
 			<td><p:selectOneMenu
 					value="#{backingBean.managedBean.poSiteVisitType}"
 					style="width: 207px;margin-bottom: 5px;">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="X" />
-					<f:selectItem itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}" itemValue="B" />
-					<f:selectItem itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}" itemValue="A" />
+					<f:selectItem
+						itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.before.approval']}"
+						itemValue="B" />
+					<f:selectItem
+						itemLabel="#{lbl['lbl.sm.sitevist.to.be.performed.after.approval']}"
+						itemValue="A" />
 					<p:ajax update=":form:tt:svcButPan" event="change" />
 				</p:selectOneMenu></td>
 
@@ -84,7 +89,8 @@
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
+			<p:column
+				headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
 				<h:outputText
 					value="#{fac.smAddress.address1},#{fac.smAddress.address2},#{fac.smAddress.address3}" />
 			</p:column>
@@ -92,9 +98,10 @@
 		</p:dataTable>
 	</p:panel>
 	<br />
-	<p:panel header="#{lbl['lbl.sm.category.categories']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.category.categories']}"
+		toggleable="true">
 		<p:dataTable var="catBean"
-			value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+			value="#{backingBean.managedBean.splCategoryList}"
 			selection="#{backingBean.managedBean.selectedCategories}"
 			rowKey="#{catBean}" rowIndexVar="index" id="svcCatDt">
 			<ac:paginator for="svcCatDt" />
@@ -119,8 +126,10 @@
 					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
-				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}" rendered="#{!catBean.specialCategory}" />
-				<h:outputText value="#{lbl['lbl.sm.category.type.special']}" rendered="#{catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.normal']}"
+					rendered="#{!catBean.specialCategory}" />
+				<h:outputText value="#{lbl['lbl.sm.category.type.special']}"
+					rendered="#{catBean.specialCategory}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -143,7 +152,8 @@
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
 					<td><p:selectOneRadio>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.reject']}" />
@@ -155,21 +165,21 @@
 		<div align="right">
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="svcDialog.hide();"
-						update=":form"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						onclick="svcDialog.hide();" update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
 				</c:when>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
-					<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="svcDialog.hide();"
-						update=":form"
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						onclick="svcDialog.hide();" update=":form"
 						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}" />
 				</c:when>
 				<c:otherwise>
 					<p:commandButton value="#{lbl['lbl.btn.submit']}" disabled="true" />
 				</c:otherwise>
 			</c:choose>
-			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="svcDialog.hide();"
-				immediate="true" />
+			<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+				onclick="svcDialog.hide();" immediate="true" />
 		</div>
 	</p:outputPanel>
 

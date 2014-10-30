@@ -89,6 +89,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> deleteCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierCategory> activeCategoryList;
+	private List<SmSupplierCategory> splCategoryList;
 	private List<SmAssociationBody> nonPersonnelProfBodyList;
 	private List<PmCategoryL1> supplierParentCatList;
 	private List<PmCategoryL2> supplierChildCatList;
@@ -2150,5 +2151,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCancellationAttachment(SmAttachment cancellationAttachment) {
 		this.cancellationAttachment = cancellationAttachment;
+	}
+
+	public List<SmSupplierCategory> getSplCategoryList() {
+		return splCategoryList;
+	}
+
+	public void setSplCategoryList(List<SmSupplierCategory> splCategoryList) {
+		this.splCategoryList = splCategoryList;
 	}
 }

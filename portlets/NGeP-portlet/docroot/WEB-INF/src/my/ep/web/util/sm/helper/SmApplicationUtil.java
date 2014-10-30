@@ -1532,7 +1532,8 @@ public class SmApplicationUtil {
 		return validSave;
 	}
 
-	public static void setCancellationSmAttachment(SmApplicationManagedBean managedBean) {
+	public static void setCancellationSmAttachment(
+			SmApplicationManagedBean managedBean) {
 		SmAttachment attach = new SmAttachment();
 		attach.setDocId(managedBean.getSmAppl().getApplId());
 		attach.setDocType(managedBean.getSmAppl().getApplNo().substring(0, 2));
@@ -1587,30 +1588,31 @@ public class SmApplicationUtil {
 		return stf;
 	}
 
-	public static String getPOLoginId(Long statusId, Long docId) {
-		System.out.println("*** This is resubmit to get po ****** ");
+	public static String getPOLoginId(Long statusId, Long secondaryStatusId,
+			Long docId) {
+		log.info("*** This is resubmit to get po ****** ");
 		SmWorkFlowStatusReqDTO reqDTO = new SmWorkFlowStatusReqDTO();
 		reqDTO.setStatusId(statusId);
+		reqDTO.setSecondaryStatusId(secondaryStatusId);
 		reqDTO.setApplId(docId);
 		ISmWorkFlowStatusSO reqSO = (ISmWorkFlowStatusSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject("sm", ISmWorkFlowStatusSO.class);
 		SmWorkFlowStatusResDTO resDTO = reqSO
-				.retrieveCurrentWorkDFlowByDocAndStatusId(reqDTO);
+				.retrieveCurrentWorkDFlowByDocAndWithinStatusIds(reqDTO);
 		String poLogin = null;
 		if (resDTO != null && resDTO.getWorkflowStatus() != null
-				&& resDTO.getWorkflowStatus().getChangedBy() != null) {
+				&& resDTO.getWorkflowStatus().getCreatedBy() != null) {
 			System.out.println("******** The user id from the data ******* "
-					+ resDTO.getWorkflowStatus().getChangedBy());
+					+ resDTO.getWorkflowStatus().getCreatedBy());
 			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(resDTO.getWorkflowStatus().getChangedBy());
+			userReqDTO.setUserId(resDTO.getWorkflowStatus().getCreatedBy());
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IUserSO.class);
 			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
 			if (userResDTO != null && userResDTO.getPmUser() != null) {
 				poLogin = userResDTO.getPmUser().getLoginId();
-				System.out
-						.println("******* After retrieve po details ******** ");
+				log.info("******* After retrieve po details ******** ");
 			}
 		}
 		return poLogin;

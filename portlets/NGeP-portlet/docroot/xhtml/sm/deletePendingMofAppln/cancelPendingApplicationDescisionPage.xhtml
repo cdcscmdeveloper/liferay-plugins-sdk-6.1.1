@@ -56,24 +56,23 @@
 							disabled="true" /></td>
 
 				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.supportingdoc']}" /></td>
-					<td><p:outputLabel value="   : " /></td>
-					<td><p:commandButton value="#{lbl['lbl.btn.download']}"
-							icon="ui-icon-arrowthichk-s" /></td>
-				</tr>
 
 			</table>
 			<p:separator />
 			<div>
-				<p><h:outputText value="#{lbl['lbl.sm.delete.pending.finished.review.notes']}" escape="false" /> </p>
+				<p>
+					<h:outputText
+						value="#{lbl['lbl.sm.delete.pending.finished.review.notes']}"
+						escape="false" />
+				</p>
 			</div>
 			<p:separator />
 
 			<div style="width: 100%" align="right">
 				<p:commandButton value="#{lbl['lbl.sm.button.approve']}"
 					onclick="approveAppCanDialog.show();" />
-				<p:commandButton value="#{lbl['lbl.sm.button.reject']}" onclick="rejectAppCanDialog.show();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.reject']}"
+					onclick="rejectAppCanDialog.show();" />
 
 			</div>
 		</p:panel>
@@ -100,9 +99,11 @@
 			<ui:include
 				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 			<div align="center">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="rejectAppCanDialog.hide();"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					onclick="rejectAppCanDialog.hide();"
 					action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
-				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}" onclick="rejectAppCanDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.sm.button.cancel']}"
+					onclick="rejectAppCanDialog.hide();" />
 			</div>
 		</p:dialog>
 	</ui:define>

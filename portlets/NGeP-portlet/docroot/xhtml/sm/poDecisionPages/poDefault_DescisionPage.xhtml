@@ -60,7 +60,8 @@
 							test="#{backingBean.managedBean.smAppl.applType eq 'B' or backingBean.managedBean.smAppl.applCategoryType eq 'S'}">
 							<p:commandButton
 								value="#{lbl['lbl.sm.button.recommend.site.visit']}"
-								partialSubmit="true" process="@this" onclick="svcDialog.show();"
+								partialSubmit="true" process="@this" update=":form:tt:svcDialog"
+								action="#{backingBean.assignSiteVisitPopUp('svcDialog')}"
 								disabled="#{!backingBean.managedBean.poSecReview.verifiedAll}" />
 						</c:if>
 					</c:if>
