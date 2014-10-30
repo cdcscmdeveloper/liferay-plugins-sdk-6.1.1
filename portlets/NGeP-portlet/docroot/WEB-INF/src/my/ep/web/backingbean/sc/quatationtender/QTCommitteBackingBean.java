@@ -64,6 +64,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.CommitteType;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -563,6 +564,23 @@ public class QTCommitteBackingBean extends
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
+		//logic to check whether committe will allow for clone or not..
+		List<TabBean> tabBeans = this.getManagedBean().getScCommitteeMemberTabList();
+		for(TabBean tabBean : tabBeans){
+			if(tabBean.getTitleName().equalsIgnoreCase(QTConstants.SPECIFICATION_COMMITTEE_TAB)){
+				ScCommittee committe = tabBean.getScQtCommittee().getScCommittee();
+				if(QTStatusConst.CM_PENDING_SUBMISSION.equals(committe.getCommitteStatus())){
+				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								ICommitteSO.class);
+				CommitteReqDTO reqDTO = new CommitteReqDTO();
+				reqDTO.setScCommittee(committe);
+				reqDTO.setScQt(this.getManagedBean().getQt());
+				reqDTO.setUser(new FacesScopes().getUserSessionBean());
+				committeSO.validateCommitteDtls(reqDTO);
+				}
+			}
+		}
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
