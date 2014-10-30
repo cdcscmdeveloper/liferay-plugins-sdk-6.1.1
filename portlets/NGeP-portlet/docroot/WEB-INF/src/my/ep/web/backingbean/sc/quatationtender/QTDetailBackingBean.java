@@ -2104,6 +2104,7 @@ public class QTDetailBackingBean extends
 	// To get the scdule tab details from so..
 	public void retrieveScheduleTabDtl() {
 		debugLogger("retrieveScheduleTabDtl");
+		if (this.getManagedBean().getScQtContactPersons() == null) {
 		IQTDetailSO detailSO;
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2209,7 +2210,7 @@ public class QTDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
-
+		}
 	}
 
 	public void retrieveDeductionPaymentTabDtl() {
