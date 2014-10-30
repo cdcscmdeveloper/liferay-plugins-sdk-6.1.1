@@ -171,6 +171,8 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	private List<ZonesBean> beans = new ArrayList<ZonesBean>();
 	
 	private boolean conformDlgBtnFlag;
+	
+	private String supplierLocLevel;
 
 	public SimpleQuoteManagedBean() {
 		super();
@@ -1413,4 +1415,11 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setConformDlgBtnFlag(boolean conformDlgBtnFlag) {
 		this.conformDlgBtnFlag = conformDlgBtnFlag;
 	}
+	public String getSupplierLocLevel() {
+		return supplierLocLevel;
+	}
+	public void setSupplierLocLevel(String supplierLocLevel) {
+		this.supplierLocLevel = supplierLocLevel;
+	}
+	
 }
