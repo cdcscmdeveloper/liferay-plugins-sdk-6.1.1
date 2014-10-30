@@ -300,8 +300,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 	
-	public void retrieveMofNo(ScQtSupplier scQtSupplierd) {
-		debugLogger("retrieveMofNo");
+	public void retrieveSmMofAccount(ScQtSupplier scQtSupplierd) {
+		debugLogger("retrieveSmMofAccount");
 		
 		Long supplierId = scQtSupplierd.getSmSupplier().getSupplierId();
 		SmMofAccount smMofAccount = scQtSupplierd.getSmMofAccount();
