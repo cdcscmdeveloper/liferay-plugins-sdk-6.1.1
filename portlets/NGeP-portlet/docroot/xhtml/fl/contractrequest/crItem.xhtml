@@ -547,12 +547,13 @@
 	<p:dialog id="addContractedItemDialog" header="#{lbl['lbl.fl.item.list']}" 
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		width="600" resizable="false">
+		<p:messages id="messages2" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error,info,warn" />
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.search.criteria']}" escape="false"/>
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.item.type']}" /></td>
-					<td><p:selectOneMenu 
+					<td><p:selectOneMenu
 						value="#{contractRequestBackingBean.managedBean.searchItemType}"
 						style="width: 115px;">
 						<f:selectItems value="#{contractRequestBackingBean.itemTypeValues}" />
