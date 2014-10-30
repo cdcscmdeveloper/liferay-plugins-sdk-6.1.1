@@ -21,9 +21,11 @@ public class DeletePendingActivationJob implements Job {
 
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		log.info("start executing delete pending job...");
 		// TODO include business logic here
 		Date activationDate = DateUtils.minusDays(new Date(), 7);
+
+		log.info("start executing delete pending job with activation date:"
+				+ DateUtils.dateToString("dd/MM/yyyy HH:mm", activationDate));
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setActivationDate(activationDate);
 		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
