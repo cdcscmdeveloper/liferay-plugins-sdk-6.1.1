@@ -114,6 +114,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<String> finalListOfSideMenu;
 	private CtCommitteeMember newCommitteMembers;
 	
+	private double performanceBondRuleAmt;
+	
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -682,5 +684,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setNewCommitteMembers(CtCommitteeMember newCommitteMembers) {
 		this.newCommitteMembers = newCommitteMembers;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }

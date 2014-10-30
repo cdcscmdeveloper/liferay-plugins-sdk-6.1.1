@@ -40,6 +40,8 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private List<CtContractItem> ctItemFilter;
 	private String fileDirectory;
 	
+	private double performanceBondRuleAmt;
+	
 	public String getEditorValue() {
 		return editorValue;
 	}
@@ -114,5 +116,13 @@ public class SuspensionManagedBean extends BaseManagedBean {
 
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }

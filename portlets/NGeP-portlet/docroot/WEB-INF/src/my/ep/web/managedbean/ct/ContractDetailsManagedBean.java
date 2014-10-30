@@ -84,6 +84,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private Long ministryProfileId;
 	private Long departmentProfileId;
     private double advancePaymentAmt;
+    private double performanceBondRuleAmt;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
 	private int selectedTabIndex =0;
@@ -954,5 +955,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setYearList(List<String> yearList) {
 		this.yearList = yearList;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }

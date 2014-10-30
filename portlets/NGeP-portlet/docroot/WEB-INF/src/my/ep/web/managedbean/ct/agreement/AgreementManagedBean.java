@@ -58,6 +58,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtAgreement ctAgreement;
 	private List<String> icNo;
 	
+	private double performanceBondRuleAmt;
+	
 	public AgreementManagedBean(){
 		
 	}
@@ -295,5 +297,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setValidateWitness(boolean validateWitness) {
 		this.validateWitness = validateWitness;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }
