@@ -175,7 +175,7 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	
-		    <h:panelGrid columns="3">
+		    <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount > amendmentBackingBean.managedBean.performanceBondRuleAmt and amendmentBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry}" >
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
