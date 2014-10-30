@@ -1,6 +1,9 @@
 package my.ep.web.scheduler.job.sm;
 
+import java.util.Date;
+
 import my.ep.factory.EpLogger;
+import my.ep.web.util.DateUtils;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -15,6 +18,7 @@ public class DeletePendingActivationJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 		log.info("start executing delete pending job...");
 		//TODO include business logic here
+		Date pastSevenDayDate = DateUtils.minusDays(new Date(), 7);
 		log.info("finish executing delete pending job...");
 	}
 
