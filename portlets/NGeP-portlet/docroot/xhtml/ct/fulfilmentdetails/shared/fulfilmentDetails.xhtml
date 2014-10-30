@@ -136,7 +136,7 @@
 		<h:panelGrid  style="width:260px;">
 		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
-			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract}">
+			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract or contractDetailsBackingBean.managedBean.directPurchase}">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
 			 <p:spacer width="2" />
@@ -172,7 +172,8 @@
 		   </h:panelGrid>	
 		   <h:panelGrid columns="3">
 			  <p:selectBooleanCheckbox id="exemptId" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}" 
-			    	disabled="#{contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract}" style="text-align:top;">
+			    	disabled="#{contractDetailsBackingBean.managedBean.chkConceValue or contractDetailsBackingBean.managedBean.viewContract or
+			    	contractDetailsBackingBean.managedBean.directPurchase}" style="text-align:top;">
 			     <p:ajax event="change" update=":form:justificationPanel" listener="#{contractDetailsBackingBean.chkJustificationAction}" process="@this"/> 
 			  </p:selectBooleanCheckbox>
 			  <p:spacer width="2" />	
@@ -181,7 +182,7 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>
-		   <h:panelGrid columns="3" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount > contractDetailsBackingBean.managedBean.performanceBondRuleAmt and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry}">
+		   <h:panelGrid columns="3" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount > contractDetailsBackingBean.managedBean.performanceBondRuleAmt}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	

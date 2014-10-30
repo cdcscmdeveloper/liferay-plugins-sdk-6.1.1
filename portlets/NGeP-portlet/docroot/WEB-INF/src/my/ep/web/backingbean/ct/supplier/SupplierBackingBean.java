@@ -925,6 +925,21 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 return sourceList;
 		}
 	  
+	  public String getMinistryAndPtjName(int temp){
+		 if(temp == 1 && getManagedBean().getCtContract() != null){
+			  if(getManagedBean().getCtContract().getOwnerOrgProfile() != null && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null){
+				  return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
+			  }
+		 
+		 }  if(temp == 2 && getManagedBean().getCtContract() != null) {
+			 if(getManagedBean().getCtContract().getOwnerOrgProfile() != null && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null 
+					 && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile() != null){
+				    return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName();
+			 }
+		 }
+        return "";
+	  }
+	  
 	public String getEditorValue() {
 		return editorValue;
 	}

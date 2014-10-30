@@ -82,10 +82,11 @@
 		       		<p:spacer width="1"/>
 			      	<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 			   </h:panelGrid>
-		       <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
-		       <p:inputText style="width:200px;"  disabled="true"
-		            value="#{supplierBackingBean.managedBean.ctContract.contractName}"/> 
-	        
+		      
+		      <p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
+		 	  	<p:inputText for="physicalNo" maxlength="30" style="width:200px;"  disabled="true"
+		 	    	value="#{contractDetailsBackingBean.managedBean.ctContract.contractPhysicalNo}"/>
+		 	    	
 	           <p:outputLabel value="#{lbl['lbl.ct.effective.date']}" />
 	           <p:inputText style="width:200px;" 
 	                disabled="true" value="#{supplierBackingBean.managedBean.ctContract.currentContractVer.ctContractValue.effDate}" >
@@ -99,13 +100,19 @@
 	           </p:inputText> 
 	           
 	            <p:outputLabel value="Ministry Name" />
-	           <p:inputText style="width:200px;" disabled="true" 
-	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/> 
+	           <p:inputText style="width:200px;" disabled="true"  value="#{supplierBackingBean.getMinistryAndPtjName(1)}"/> 
 	           
-	           
-	               <p:outputLabel value="PTJ Name" />
-	           <p:inputText style="width:200px;" disabled="true" 
-	               value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile == null ? ' ':supplierBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"/> 
+	           <p:outputLabel value="PTJ Name" />
+	           <p:inputText style="width:200px;" disabled="true"  value="#{supplierBackingBean.getMinistryAndPtjName(2)}"/> 
+	           <h:panelGroup>
+		                  <div style="height: 40px; vertical-align: top;">
+			                   <p:outputLabel  value="#{lbl['lbl.ct.contract.title']}"/>
+			              </div>
+		              </h:panelGroup>
+		              <h:panelGrid>
+		                  <p:inputTextarea id="contractName" rows="3" style="width:200px;" 
+		                       value="#{supplierBackingBean.managedBean.ctContract.contractName}"  disabled="true" autoResize="false" />	
+			          </h:panelGrid>
 	       </h:panelGrid>
         </p:panel>
    
