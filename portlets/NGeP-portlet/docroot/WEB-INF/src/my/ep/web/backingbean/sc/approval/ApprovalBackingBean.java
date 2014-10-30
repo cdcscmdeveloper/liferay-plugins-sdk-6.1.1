@@ -351,7 +351,7 @@ public class ApprovalBackingBean extends
 	}
 
 	public void approvalBpmTask(String action) {
-		if ("REVISE".equalsIgnoreCase(action)) {
+		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
 			this.getManagedBean().setAction(action);
 			RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
 		} else {
