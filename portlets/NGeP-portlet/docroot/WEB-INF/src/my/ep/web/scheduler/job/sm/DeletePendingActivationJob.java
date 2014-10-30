@@ -25,7 +25,8 @@ public class DeletePendingActivationJob implements Job {
 		Date activationDate = DateUtils.minusDays(new Date(), 7);
 
 		log.info("start executing delete pending job with activation date:"
-				+ DateUtils.dateToString("dd/MM/yyyy HH:mm", activationDate));
+				+ DateUtils.dateToString("dd/MM/yyyy HH:mm", activationDate)
+				+ "...");
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setActivationDate(activationDate);
 		IPersonnelSO reqSO = (IPersonnelSO) BusinessDelegate.getInstance()
