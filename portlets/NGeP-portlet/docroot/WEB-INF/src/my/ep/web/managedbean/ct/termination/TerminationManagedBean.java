@@ -48,6 +48,8 @@ public class TerminationManagedBean extends BaseManagedBean{
 	private CtContract ctContract;
 	private CtContractVer contractVer;
 	private String fileDirectory;
+	
+	private double performanceBondRuleAmt;
 
 	public String getTaskName() {
 		return taskName;
@@ -186,5 +188,13 @@ public class TerminationManagedBean extends BaseManagedBean{
 
 	public void setFileDirectory(String fileDirectory) {
 		this.fileDirectory = fileDirectory;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }
