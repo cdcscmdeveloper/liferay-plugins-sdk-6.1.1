@@ -19,8 +19,6 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -103,38 +101,7 @@ public class CommonMethod {
 	}
 	
 
-	public static String generateHeader(String viewMode, String progType){
-		log.info("generateHeader - Start");
-		String pageTitle = "";
-		String titleLabel = "";
-		if(ProcurementPlanConst.MODE_NEW.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.new";
-		}else if(ProcurementPlanConst.MODE_DRAFT.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.draft";
-		}else if(ProcurementPlanConst.MODE_VIEW.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.view";
-		}else if(ProcurementPlanConst.MODE_LIST.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.list";
-		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.approval";
-		}else if(ProcurementPlanConst.MODE_REVISION.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.revision";
-		}else if(ProcurementPlanConst.MODE_VERIFICATION.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.verification";
-		}else if(ProcurementPlanConst.MODE_MAINTAIN.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.maintain";
-		}else if(ProcurementPlanConst.MODE_NEW_MTO.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.mto.plan";
-		}else if(ProcurementPlanConst.MODE_APPROVAL_LIST.equals(viewMode)){
-			pageTitle = "lbl.pp." + progType + ".title.procurement.approval";
-		}
-
-		titleLabel = getMessageCommon(pageTitle);
-		
-		log.info("generateHeader - End");
-		return titleLabel;
-	}
-
+	
 	public static String getMessageCommon(String name){
 		log.info("getMessageCommon");
 		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
@@ -204,30 +171,7 @@ public class CommonMethod {
 		return months;
 	}
 	
-	/**
-	 * return default workflow status
-	 * @param docType
-	 * @return PmStatus
-	 */
-	public static PmStatus getDefaultStatus(String docType){
-		log.info("getDefaultStatus");
-		PmStatus ppWorkflowStatus = new PmStatus();
-		if(ParameterConst.DOCTYPE_BUDGET_ALLOC.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_DTL.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_ORG.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBO_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_PLAN.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
-		}else if(ParameterConst.DOCTYPE_PLAN_ITEM.equals(docType)){
-			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPI_PENDING_SUBMIT);
-		}
-		log.info("status id "  + ppWorkflowStatus.getStatusId());
-		return ppWorkflowStatus;
-	}
 	
-
 
 	public Integer getMonthInt(Date date) {
 		if(date!=null){
