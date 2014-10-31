@@ -956,7 +956,13 @@ public class LOADetailBackingBean extends
 						scLoaReportAttachment.setFileName(filename.toString());
 						formJadualHarga((ScAttachment) scLoaReportAttachment,
 								scLoa);
+					}else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateBondLetterFromVelocityToPdf((ScAttachment) scLoaReportAttachment,scLoa);
 					}
+					
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)){
 					// if pending supplier acknowledgement , always regenerate 
@@ -2840,7 +2846,7 @@ public class LOADetailBackingBean extends
 
 		ScPbAttachment pbAttachment = new ScPbAttachment();
 		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
-		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment);
+		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment,null);
 		StreamedContent pbStreamContent = getAttachmentStreamContent(
 				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
 
@@ -2848,17 +2854,48 @@ public class LOADetailBackingBean extends
 
 	}
 
-	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment)
+	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
 			throws Exception {
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		attachment.setFileName("Bond Letter.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-		context.put("contractNo", "");
-		context.put("supplierName", "");
-		context.put("sourcingTitle", "");
-		context.put("bondAmount", "");
-		context.put("bondAmountWord", "");
-		context.put("expiryPeriod", "");
+		String contractNo = "Contract Number";
+		String supplierName = null;
+		String sourcingTitle = null;
+		String bondAmount = null;
+		String bondAmountWord = null; 
+		String expiryPeriod = null;
+		int type = 0;
+		
+		if(scLoa != null){
+			type = 1;
+			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
+			sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
+			bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
+			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat.format(scLoa.getBondResDueDate()) : " ";
+			bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
+			
+		}else{
+			type = 0;
+			supplierName ="Supplier Name";
+			sourcingTitle ="Sourcing Title";
+			bondAmount ="Bond Amount";
+			expiryPeriod = "Expiry Period";
+			bondAmountWord = "Bond Amount Word"; 
+		}
+		
+		context.put("type", type);
+		context.put("contractNo", contractNo);
+		context.put("supplierName", supplierName);
+		context.put("sourcingTitle", sourcingTitle);
+		context.put("bondAmount", bondAmount);
+		context.put("bondAmountWord", bondAmountWord);
+		context.put("expiryPeriod", expiryPeriod);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_BOND_LETTER, context,
