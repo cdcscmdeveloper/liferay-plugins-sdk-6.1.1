@@ -1213,7 +1213,8 @@ public void ConstructSideTabMenu(){
 				double ceilingAmt = 0.0;
 				for(CtAgency ctAgency : contractVer.getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
-					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0){
+					if(ctAgency.isAp178() == true && contractVer.getAgencyAttachements().size() == 0 && 
+							ctAgency.getOrgProfile().getParentOrgProfile().getOrgName() != getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName()){
 						throw new EpException(MessageConst.ERROR_750015); 
 						// Approval document is mandatory for AP178 agency. Please upload the document.
 					}
