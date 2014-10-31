@@ -17,7 +17,7 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<ui:fragment
-						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId eq '60400' or specificationBackingBean.managedBean.currentStatusId eq '60405')) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId eq '60400')))}">
 						<p:commandButton value="Save" update="@all"
 							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}"
 							icon="ui-icon-save">

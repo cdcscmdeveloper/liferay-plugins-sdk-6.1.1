@@ -10,8 +10,8 @@
 	<p:dialog header="#{lbl['lbl.sc.spec.search.delivery.address']}"
 		position="top" widgetVar="deliveryAddress" modal="true" width="800"
 		height="500">
-		 <p:messages id="committeeDeliveryAddress" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" /> 
+		<p:messages id="committeeDeliveryAddress" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
 		<p:panel id="searDelivery" header="Search " toggleable="true">
 			<table>
 
@@ -32,7 +32,7 @@
 								listener="#{specificationBackingBean.ptjByDepartMent}"></p:ajax>
 						</p:selectOneMenu></td>
 				</tr>
-			
+
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.delivery.ptj']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="ptj"
@@ -64,6 +64,7 @@
 					<td style="width: 100px;"><h:outputLabel
 							value="#{lbl['lbl.sc.spec.search.delivery.address.district']}" /></td>
 					<td><p:selectOneMenu id="districtId" style="width:200px;"
+							disabled="#{specificationBackingBean.managedBean.stateCode eq '13'}"
 							value="#{specificationBackingBean.managedBean.districtId}">
 							<f:selectItem itemLabel="--Select One--" itemValue="#{null}"></f:selectItem>
 							<f:selectItems
@@ -112,8 +113,7 @@
 			icon="ui-icon-cancel"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
 			style="float:right;" process="@all" partialSubmit="true"
-			 icon="ui-icon-accept"
-			update="@(.deliveryUpdate)"
+			icon="ui-icon-accept" update="@(.deliveryUpdate)"
 			oncomplete="deliveryService.paginator.endLink.click();"
 			actionListener="#{specificationBackingBean.deliveryAccept}"></p:commandButton>
 
