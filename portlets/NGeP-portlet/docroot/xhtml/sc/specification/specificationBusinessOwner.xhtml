@@ -107,6 +107,9 @@
 							value="#{specificationBackingBean.managedBean.scQt.openFor}">
 							<f:selectItems
 								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@form"
+								listener="#{specificationBackingBean.openChange}"></p:ajax>
 						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
 				</ui:fragment>
 			</tr>
