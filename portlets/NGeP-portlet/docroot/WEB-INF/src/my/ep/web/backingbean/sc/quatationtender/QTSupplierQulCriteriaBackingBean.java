@@ -300,11 +300,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 	
-	public void retrieveSmMofAccount(ScQtSupplier scQtSupplierd) {
+	public SmMofAccount retrieveSmMofAccount(ScQtSupplier scQtSupplier, SmSupplier smSupplier) {
 		debugLogger("retrieveSmMofAccount");
+
+		Long supplierId = null;
+		SmMofAccount smMofAccount = null;
+		if(scQtSupplier != null){
+			supplierId = scQtSupplier.getSmSupplier().getSupplierId();
+			smMofAccount = scQtSupplier.getSmMofAccount();
+		}else{
+			supplierId = smSupplier.getSupplierId();
+		}
 		
-		Long supplierId = scQtSupplierd.getSmSupplier().getSupplierId();
-		SmMofAccount smMofAccount = scQtSupplierd.getSmMofAccount();
 		if(smMofAccount == null){
 			IMofAccountSO mofAccountSO;
 			try {
@@ -316,12 +323,18 @@ public class QTSupplierQulCriteriaBackingBean extends
 				
 				if(mofAccountResDTO.getMofAccount() != null){
 					smMofAccount = mofAccountResDTO.getMofAccount();
-					scQtSupplierd.setSmMofAccount(smMofAccount);
+					
+					if(scQtSupplier != null){
+						scQtSupplier.setSmMofAccount(smMofAccount);
+					}else{
+						supplierId = smSupplier.getSupplierId();
+					}
 				}
 			} finally {
 				mofAccountSO = null;
 			}
 		}
+		return smMofAccount;
 	}
 
 	public void addRestrictedToSupplierListAction() {
