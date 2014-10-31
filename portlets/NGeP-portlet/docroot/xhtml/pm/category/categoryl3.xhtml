@@ -204,7 +204,8 @@
 				action="#{categoryBackingBean.addBasicCategory()}" oncomplete="lovPopupCategory.show();" update="lovPopupCategory"/>
 			<p:commandButton 
 				value="#{lbl['lbl.btn.delete']}" icon="ui-icon-delete"
-				action="#{categoryBackingBean.addSubCategory()}" />
+				update="groupdetails"
+				action="#{categoryBackingBean.deleteBasicCategory()}" />
 		</div>
 
 		</p:panel>
