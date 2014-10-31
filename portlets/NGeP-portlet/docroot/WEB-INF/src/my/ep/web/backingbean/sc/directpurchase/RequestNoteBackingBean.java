@@ -422,7 +422,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			if(requestNote != null){
-				getManagedBean().setScRNZone(requestNote.getScRNZone());
+				if (requestNote.getScRNZone() != null) {
+					getManagedBean().setScRNZone(requestNote.getScRNZone());	
+				} else {
+					getManagedBean().setScRNZone(new ScRNZone());	
+				}
 				
 				retrieveRequestNoteDetails(requestNote, res.getDocStatus().longValue(), zoneFlag);
 			}
