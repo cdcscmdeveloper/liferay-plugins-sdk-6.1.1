@@ -478,6 +478,25 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			return "/xhtml/pm/category/search.xhtml";
 	}
 	
+	public void deleteBasicCategory() {
+		log.info("In deleteBasicCategory");
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
+		
+		if(this.getManagedBean().getSelectedBasicCategory() != null && !this.getManagedBean().getSelectedBasicCategory().isEmpty()) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+			for(PmBasicCategory pmBasicCategory: this.getManagedBean().getSelectedBasicCategory()) {
+				
+				reqDTO.setPmBasicCategory(pmBasicCategory);
+				categoryCodeSO.deleteBasicCategory(reqDTO);
+				
+				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().remove(pmBasicCategory);
+				
+				reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				categoryCodeSO.saveSubDivision(reqDTO);
+			}
+		}
+	}
+	
 	public boolean validatePmCategoryL1(PmCategoryL1 pmCategoryL1){
 		if(pmCategoryL1.getCategoryL1Code()==null)
 			return false;
