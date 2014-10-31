@@ -8,7 +8,7 @@ import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
-import my.ep.web.util.pp.common.CommonMethod;
+import my.ep.web.constant.report.CommonMethod;
 
 
 /**
