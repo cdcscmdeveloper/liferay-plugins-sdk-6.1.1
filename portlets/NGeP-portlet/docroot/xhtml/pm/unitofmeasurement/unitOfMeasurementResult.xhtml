@@ -32,7 +32,7 @@
 	
 	<p:panel id="measurementResult" header="#{lbl['lbl.pm.uom.result']}" toggleable="true">
 	<p:dataTable id="measurementSR" value="#{unitOfMeasurementBackingBean.unitOfMeasurementDataModel}"
-				var="measurementList" rowIndexVar="index" lazy="true">	
+				rows="10" var="measurementList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="measurementSR" />
 		
        <p:column headerText="#{lbl['lbl.pm.uom.uomcode']}" style="width:15%"> 

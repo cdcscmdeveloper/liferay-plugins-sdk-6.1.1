@@ -26,7 +26,7 @@
 	
 	<p:panel id="businessResult" header="RESULT" toggleable="true">
 	<p:dataTable id="businessNatureSR" value="#{businessNatureBackingBean.businessNatureDataModel}"
-				var="businessNatureList" rowIndexVar="index" lazy="true">	
+				var="businessNatureList" rows="10" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="businessNatureSR" />
 		
        <p:column headerText="#{lbl['lbl.pm.bn.level']}" style="width:10%">
