@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
@@ -124,6 +125,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -984,6 +986,7 @@ public class SmApplicationUtil {
 
 	public static boolean validateEquityOwnerAmount(
 			SmApplicationManagedBean managedBean, int currentTab) {
+		Locale locale = new FacesScopes().getUserLocale();
 		boolean validAmt = true;
 		String s = "";
 		if (managedBean
@@ -994,17 +997,20 @@ public class SmApplicationUtil {
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT)) {
-			s = "Accumulated Capital";
+			s = ResourceBundleUtils.getMessage("lbl.sm.accumulated.capital",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				|| managedBean
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
-			s = "Paid-Up Capital";
+			s = ResourceBundleUtils.getMessage("lbl.sm.paidup.capital",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else if (managedBean.getBusinessTypeVal().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT)) {
-			s = "Authorized Share";
+			s = ResourceBundleUtils.getMessage("lbl.sm.authorized.share",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		}
 
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
@@ -1018,14 +1024,18 @@ public class SmApplicationUtil {
 							.compareTo(new BigDecimal(50000)) < 0) {
 				validPaidUp = false;
 				amt = "RM.50,000";
-				supType = "consultant";
+				supType = ResourceBundleUtils.getMessage(
+						"lbl.sm.consultant.lowercaps",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			} else if (managedBean.getSmAppl().getSupplierType()
 					.equals(SupplierManagementConst.STYPE_CONTRACTOR)
 					&& managedBean.getSmAppl().getSmCompanyBasic()
 							.getPaidUpCapital().compareTo(new BigDecimal(2500)) < 0) {
 				validPaidUp = false;
 				amt = "RM.2,500";
-				supType = "contractor";
+				supType = ResourceBundleUtils.getMessage(
+						"lbl.sm.contractor.lowercaps",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			}
 			if (!validPaidUp) {
 				validAmt = false;
