@@ -36,6 +36,7 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
@@ -1798,10 +1799,14 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static List<PmCategoryL1> retrieveParentCategoryList() {
+	public static List<PmCategoryL1> retrieveParentCategoryList(
+			String supplierType) {
+		CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+		reqDTO.setSupplierTypeCode(supplierType);
 		ICategoryCodeSO reqSO = (ICategoryCodeSO) BusinessDelegate
 				.getInstance().getServiceObject("pm", ICategoryCodeSO.class);
-		CategoryCodeResDTO resDTO = reqSO.retrieveCategoryL1List();
+		CategoryCodeResDTO resDTO = reqSO
+				.retrieveCategoryL1ListBySupplierType(reqDTO);
 		if (resDTO != null) {
 			return resDTO.getCategoryL1List();
 		} else {
