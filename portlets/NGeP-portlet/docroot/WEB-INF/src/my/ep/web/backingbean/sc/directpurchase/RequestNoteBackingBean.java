@@ -2574,7 +2574,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		String imgUrl = getServerUrl()+ "NGeP-portlet/images/letter/gov.png";
+		String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
 		
 		String rightImgUrl = getServerUrl()+ "NGeP-portlet/css/images/eperolehan-footer.png";
 		
