@@ -353,7 +353,7 @@
 					<table border="0">
 						<TR>
 
-							<TD width="80%"><p:panel></p:panel>
+							<TD width="80%">
 								<div style="height: 300px; overflow-y: scroll;">
 									<p:tree id="treeZoneLocationPopup"
 										value="#{specificationBackingBean.managedBean.rootLocationTree}"
@@ -373,7 +373,8 @@
 											<h:outputText value="#{pmCity.cityName}" />
 										</p:treeNode>
 									</p:tree>
-								</div></TD>
+								</div>
+							</TD>
 						</TR>
 
 					</table>
@@ -426,10 +427,10 @@
 
 
 						<TR>
-							<TD width="20%" valign="top"><p:outputLabel
+							<TD valign="top"><p:outputLabel
 									value="#{lbl['lbl.sc.spec.zone.location']}" /> <p:outputLabel
 									value="*" styleClass="mandatory" /></TD>
-							<TD width="80%"><p:panel></p:panel>
+							<TD>
 								<div style="height: 500px; overflow-y: scroll;">
 									<p:tree id="treeZoneGeneralPopup"
 										value="#{specificationBackingBean.managedBean.rootZoanlTree}"
@@ -449,7 +450,8 @@
 											<h:outputText value="#{pmCity.cityName}" />
 										</p:treeNode>
 									</p:tree>
-								</div></TD>
+								</div>
+							</TD>
 						</TR>
 
 					</table>
