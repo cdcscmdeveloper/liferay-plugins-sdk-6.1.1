@@ -36,7 +36,7 @@
 		</f:facet>
 
 
-		<p:row>
+		<p:row rendered="#{catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.selectedMaintainItem)}">
 			<p:column>
 				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
 			</p:column>
@@ -60,9 +60,26 @@
 					</p:calendar>
 
 			</p:column>
-			
-			
-			
+		</p:row>
+		
+		<p:row rendered="#{!catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.selectedMaintainItem)}">
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.cm.promotion']}" />
+			</p:column>
+			<p:column>
+				<p:inputText readonly="true" style="text-align:right" value="">
+					</p:inputText>
+			</p:column>
+			<p:column>
+				<p:inputText readonly="true" style="text-align:right" value="">
+					</p:inputText>
+
+			</p:column>
+			<p:column>
+				<p:inputText readonly="true" style="text-align:right" value="">
+					</p:inputText>
+
+			</p:column>
 		</p:row>
 
 
