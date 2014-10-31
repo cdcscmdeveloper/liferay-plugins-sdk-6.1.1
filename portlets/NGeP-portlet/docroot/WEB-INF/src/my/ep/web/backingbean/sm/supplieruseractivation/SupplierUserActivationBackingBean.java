@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -8,11 +10,14 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
 import my.ep.dto.sm.supplieruseractivation.SupplierUserActivationReqDTO;
@@ -149,8 +154,36 @@ public class SupplierUserActivationBackingBean extends
 				if(orgResDTO.getPmOrgProfile() != null){
 					//create PmUser only
 					log.info("--------Org Progile in not null------" + orgResDTO.getPmOrgProfile());
-					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();					
+					
+					
+					IPersonnelSO personnelSO = null;
+					IMofRegistrationSO mofRegistrationSO = null;
+					List<SmPersonnel> personnelList = new ArrayList<SmPersonnel>();
+					try {
+						mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm",IMofRegistrationSO.class);
+						MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+						mofRegistrationReqDTO.setSupplierId(Long.parseLong(supplierId));
+						MofRegistrationResDTO mofRegistrationResDTO = mofRegistrationSO.retrieveActiveSmApplBySupp(mofRegistrationReqDTO);
+						Long draftApplId = mofRegistrationResDTO.getSmAppl().getApplId();
+						personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm",IPersonnelSO.class);
+						PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+						reqDTO.setIdentificationNo(this.getManagedBean().getSmPersonnel().getIdentificationNo());
+						reqDTO.setSmSupplierId(Long.parseLong(supplierId));
+						reqDTO.setDraftApplId(draftApplId);
+						PersonnelResDTO resDTO = personnelSO.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
+						if(resDTO.getSmPersonnel() != null) {
+							personnelList = resDTO.getSmPersonnelList();
+						}
+					} finally {
+						personnelSO = null;
+					}
+					
+					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
+					
+					if(personnelList != null && personnelList.size() > 0)
+						reqDTO.setSmPersonnels(personnelList);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
+					
 					reqDTO.setPassword(password);
 //					reqDTO.setConfirmPassword(confirmPassword);
 					System.out.println("Proceed to create user.............................");
