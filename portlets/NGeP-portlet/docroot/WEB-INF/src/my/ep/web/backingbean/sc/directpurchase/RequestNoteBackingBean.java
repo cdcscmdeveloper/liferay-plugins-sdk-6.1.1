@@ -2254,26 +2254,32 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
 				requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				
-				/*supplierLister(null, null, requestNoteDtl, 
-						requestNoteDtl.getAssignedUser().getUserId(), requestNoteDtl.getDeliverTermType().getParameterId());*/
+				if(requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() != null){
+					supplierListener(null, requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl , 
+							requestNoteDtl.getAssignedUser().getUserId(), requestNoteDtl.getDeliverTermType().getParameterId());
+				}
 			}
 		}
 	}
 
 	public void afterSavePostListener(ScRequestNoteDtl requestNoteDtl) {
 		log.info("afterSavePostLister");
-		
-		ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
+		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 
-		if(requestSupplierItem != null && requestSupplierItem.getRequestSupplierItemId() != null){
-			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
-			
-			RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
+		if(requestNoteDtl.getScRequestSupplierItem() != null && requestNoteDtl.getScRequestSupplierItem().getRequestSupplierItemId() != null){
+			ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
 			requestNoteReqDTO.setSupplierItemId(requestSupplierItem.getRequestSupplierItemId());
 			RequestNoteResDTO requestNoteResTO =  directPurchaseSO.getPricesBySupplierItemId(requestNoteReqDTO);
 			if(requestNoteResTO.getSupplierItemPrices() != null && requestNoteResTO.getSupplierItemPrices().size()>0){
 				requestSupplierItem.setSupplierItemPrices(requestNoteResTO.getSupplierItemPrices());
 			}
+			
+			if(requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() != null){
+				supplierListener(null, requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl , 
+						requestNoteDtl.getAssignedUser().getUserId(), requestNoteDtl.getDeliverTermType().getParameterId());
+			}
+			
 		}
 	}
 
