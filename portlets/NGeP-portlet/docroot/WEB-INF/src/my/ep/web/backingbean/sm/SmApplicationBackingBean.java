@@ -290,8 +290,7 @@ public class SmApplicationBackingBean extends
 			// SmApplicationUtil.retrievePmCertBodyList());
 			getManagedBean().setProfBodyLs(
 					SmApplicationUtil.retrievePmProfBodyList());
-			getManagedBean().setSupplierParentCatList(
-					SmApplicationUtil.retrieveParentCategoryList());
+
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
 			getManagedBean().setReasonDescList(
 					SmApplicationUtil.retrieveRejectReasonList());
@@ -326,9 +325,9 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722565);
 					}
 				} else {
-//					cannotProceedAlertMsg = SmApplicationUtil
-//							.checkPendingActivationPersonnelList(currSupp
-//									.getSupplierId());
+					// cannotProceedAlertMsg = SmApplicationUtil
+					// .checkPendingActivationPersonnelList(currSupp
+					// .getSupplierId());
 				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
@@ -544,6 +543,14 @@ public class SmApplicationBackingBean extends
 			if (smAppl.getApplType().equalsIgnoreCase(
 					ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
 				SmApplicationUtil.setCancellationSmAttachment(getManagedBean());
+			}
+			getManagedBean().setSupplierParentCatList(
+					SmApplicationUtil
+							.retrieveParentCategoryList(getManagedBean()
+									.getSmAppl().getSupplierType()));
+			if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
+				SmApplicationUtil
+						.assignNonPersonnelProfBodyList(getManagedBean());
 			}
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -787,8 +794,10 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getCurrentPageType() != null) {
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 						SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)) {
-					SmApplicationUtil
-							.assignNonPersonnelProfBodyList(getManagedBean());
+					if (getManagedBean().getSmAppl().getSmAssociationBodies() != null) {
+						SmApplicationUtil
+								.assignNonPersonnelProfBodyList(getManagedBean());
+					}
 				}
 				if (getManagedBean().getCurrentPageType().equalsIgnoreCase(
 						SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)) {
