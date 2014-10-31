@@ -90,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -4240,9 +4241,16 @@ public class SmApplicationBackingBean extends
 		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
 				.getSupplierType().toUpperCase());
-		reqDTO.setBaseOfficeState(getManagedBean().getSmAppl()
-				.getSmCompanyBasic().getSmCompanyAddresses().get(0)
-				.getSmAddress().getPmState().getStateName().toUpperCase());
+		PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+		if (state != null && state.getStateId() != null) {
+			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+					.getStateId());
+			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
+			reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase());
+		} else {
+			throw new EpException(MessageConst.ERROR_722568);
+		}
 
 		if (this.getManagedBean().getSmAppl().getSupportingDocMode()
 				.equalsIgnoreCase("O")) {
