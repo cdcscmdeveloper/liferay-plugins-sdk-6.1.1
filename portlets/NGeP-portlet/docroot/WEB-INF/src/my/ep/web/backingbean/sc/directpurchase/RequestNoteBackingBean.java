@@ -1192,7 +1192,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	//CatalogueReqDTO catalogueReqDTO = new CatalogueReqDTO();
 			// purchase in default & add to cart
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
-		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
 		    
 		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
 		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
@@ -2280,9 +2279,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			if(cmPricings != null && cmPricings.size() > 0){
 				CmSupplierItem cmSupplierItem = cmPricings.get(0).getCmSupplierItem();
 				cmSupplierItem.setCmPricings(cmPricings);
-				ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
-				requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+				requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestNoteDtl.getRequestItem(), cmSupplierItem.getSmSupplier(), cmPricings);
 				
 				requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				
