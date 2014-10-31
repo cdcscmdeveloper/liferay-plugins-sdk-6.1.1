@@ -207,13 +207,17 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile()) {
-				userSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()
+					.getParentOrgProfile()) {
+				userSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
 								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
 								SearchOperator.OPERATOR_EQUALS.value(), this
 										.getManagedBean().getQt()
-										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
+										.getPmOrgProfile()
+										.getParentOrgProfile()
+										.getOrgProfileId()));
 			}
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -345,13 +349,16 @@ public class QTCommitteBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile()) {
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()
+					.getParentOrgProfile()) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
 								"pmOrgProfile.parentOrgProfile.orgProfileId",
 								SearchOperator.OPERATOR_EQUALS.value(), this
 										.getManagedBean().getQt()
-										.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()));
+										.getPmOrgProfile()
+										.getParentOrgProfile()
+										.getOrgProfileId()));
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -596,7 +603,7 @@ public class QTCommitteBackingBean extends
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
 		// logic to check whether committe will allow for clone or not..
-		checkIsSpecCommitteFormOrNot();
+		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
