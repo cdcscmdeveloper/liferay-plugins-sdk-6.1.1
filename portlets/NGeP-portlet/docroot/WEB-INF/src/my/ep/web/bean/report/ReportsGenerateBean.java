@@ -52,6 +52,19 @@ public class ReportsGenerateBean {
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
+		private boolean scCreatedFromView = false;
+		private boolean scStatusView = false;
+		private boolean scPtjView = false;
+		private boolean scDeskOfficerView = false;
+		private boolean scRstrctdChkView = false;
+		private boolean scTenderChkView = false;
+		private boolean scQuotationChkView = false;
+		private boolean scProcureAllChkView = false;
+		private boolean scPublishDateView = false;
+		private boolean scProcureAllEditView = false;
+		private boolean scProcureQuoteEditView = false;
+		private boolean scProcureTenderEditView = false;
+		private boolean scProcureRestrctdEditView = false;
 		//cm module
 		private boolean cmItemTypeView = false;
 		private boolean cmItemStatusView = false;
@@ -269,7 +282,143 @@ public class ReportsGenerateBean {
 		private String flPurchaseOrderNoVar=ReportConst.EMPTY_VAL;
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
+		
+		private String scCreatedFromDtVar=ReportConst.EMPTY_VAL;
+		private String scCreatedToDtVar=ReportConst.EMPTY_VAL;
+		private String scStatusVar=ReportConst.EMPTY_VAL;
+		private String scPtjVar=ReportConst.EMPTY_VAL;
+		private String scDeskOfficerVar=ReportConst.EMPTY_VAL;		
+		private String scProcureMethodChkVar=ReportConst.EMPTY_VAL;
+		private String scPublishFromDateVar=ReportConst.EMPTY_VAL;
+		private String scPublishToDateVar=ReportConst.EMPTY_VAL;
 				
+		
+		public boolean isScProcureAllEditView() {
+			return scProcureAllEditView;
+		}
+		public void setScProcureAllEditView(boolean scProcureAllEditView) {
+			this.scProcureAllEditView = scProcureAllEditView;
+		}
+		public boolean isScProcureQuoteEditView() {
+			return scProcureQuoteEditView;
+		}
+		public void setScProcureQuoteEditView(boolean scProcureQuoteEditView) {
+			this.scProcureQuoteEditView = scProcureQuoteEditView;
+		}
+		public boolean isScProcureTenderEditView() {
+			return scProcureTenderEditView;
+		}
+		public void setScProcureTenderEditView(boolean scProcureTenderEditView) {
+			this.scProcureTenderEditView = scProcureTenderEditView;
+		}
+		public boolean isScProcureRestrctdEditView() {
+			return scProcureRestrctdEditView;
+		}
+		public void setScProcureRestrctdEditView(boolean scProcureRestrctdEditView) {
+			this.scProcureRestrctdEditView = scProcureRestrctdEditView;
+		}
+		public String getScProcureMethodChkVar() {
+			return scProcureMethodChkVar;
+		}
+		public void setScProcureMethodChkVar(String scProcureMethodChkVar) {
+			this.scProcureMethodChkVar = scProcureMethodChkVar;
+		}
+		public String getScCreatedFromDtVar() {
+			return scCreatedFromDtVar;
+		}
+		public void setScCreatedFromDtVar(String scCreatedFromDtVar) {
+			this.scCreatedFromDtVar = scCreatedFromDtVar;
+		}
+		public String getScCreatedToDtVar() {
+			return scCreatedToDtVar;
+		}
+		public void setScCreatedToDtVar(String scCreatedToDtVar) {
+			this.scCreatedToDtVar = scCreatedToDtVar;
+		}
+		public String getScPublishFromDateVar() {
+			return scPublishFromDateVar;
+		}
+		public void setScPublishFromDateVar(String scPublishFromDateVar) {
+			this.scPublishFromDateVar = scPublishFromDateVar;
+		}
+		public String getScPublishToDateVar() {
+			return scPublishToDateVar;
+		}
+		public void setScPublishToDateVar(String scPublishToDateVar) {
+			this.scPublishToDateVar = scPublishToDateVar;
+		}
+		public String getScStatusVar() {
+			return scStatusVar;
+		}
+		public void setScStatusVar(String scStatusVar) {
+			this.scStatusVar = scStatusVar;
+		}
+		public String getScPtjVar() {
+			return scPtjVar;
+		}
+		public void setScPtjVar(String scPtjVar) {
+			this.scPtjVar = scPtjVar;
+		}
+		public String getScDeskOfficerVar() {
+			return scDeskOfficerVar;
+		}
+		public void setScDeskOfficerVar(String scDeskOfficerVar) {
+			this.scDeskOfficerVar = scDeskOfficerVar;
+		}				
+		public boolean isScPublishDateView() {
+			return scPublishDateView;
+		}
+		public void setScPublishDateView(boolean scPublishDateView) {
+			this.scPublishDateView = scPublishDateView;
+		}
+		public boolean isScCreatedFromView() {
+			return scCreatedFromView;
+		}
+		public void setScCreatedFromView(boolean scCreatedFromView) {
+			this.scCreatedFromView = scCreatedFromView;
+		}
+		public boolean isScStatusView() {
+			return scStatusView;
+		}
+		public void setScStatusView(boolean scStatusView) {
+			this.scStatusView = scStatusView;
+		}
+		public boolean isScPtjView() {
+			return scPtjView;
+		}
+		public void setScPtjView(boolean scPtjView) {
+			this.scPtjView = scPtjView;
+		}
+		public boolean isScDeskOfficerView() {
+			return scDeskOfficerView;
+		}
+		public void setScDeskOfficerView(boolean scDeskOfficerView) {
+			this.scDeskOfficerView = scDeskOfficerView;
+		}
+		public boolean isScRstrctdChkView() {
+			return scRstrctdChkView;
+		}
+		public void setScRstrctdChkView(boolean scRstrctdChkView) {
+			this.scRstrctdChkView = scRstrctdChkView;
+		}
+		public boolean isScTenderChkView() {
+			return scTenderChkView;
+		}
+		public void setScTenderChkView(boolean scTenderChkView) {
+			this.scTenderChkView = scTenderChkView;
+		}
+		public boolean isScQuotationChkView() {
+			return scQuotationChkView;
+		}
+		public void setScQuotationChkView(boolean scQuotationChkView) {
+			this.scQuotationChkView = scQuotationChkView;
+		}
+		public boolean isScProcureAllChkView() {
+			return scProcureAllChkView;
+		}
+		public void setScProcureAllChkView(boolean scProcureAllChkView) {
+			this.scProcureAllChkView = scProcureAllChkView;
+		}
 		public String getReportValueIdVar() {
 			return reportValueIdVar;
 		}

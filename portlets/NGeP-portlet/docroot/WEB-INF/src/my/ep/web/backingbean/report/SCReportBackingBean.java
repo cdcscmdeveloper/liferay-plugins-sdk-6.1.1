@@ -1,14 +1,18 @@
 package my.ep.web.backingbean.report;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.exception.EpException;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
-import my.ep.web.util.pp.common.CommonMethod;
+import my.ep.web.constant.report.CommonMethod;
 /**
  * @Author Jangari Kondal Reddy
  */
@@ -18,6 +22,22 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	/*
 	 *Enable SC module criteria by report name 
 	 */
+	private List<SelectItem> monthList = new ArrayList<SelectItem>();
+	private List<String> yearList = new ArrayList<String>();
+	
+	public List<String> getYearList() {
+		return yearList;
+	}
+	public void setYearList(List<String> yearList) {
+		this.yearList = yearList;
+	}
+	public List<SelectItem> getMonthList() {
+		return monthList;
+	}
+	public void setMonthList(List<SelectItem> monthList) {
+		this.monthList = monthList;
+	}
+	
 	public void criteriaVariablesByReportBySC(ReportsGenerateBean rptGenBean){
 	
 		switch (getManagedBean().getReportValue()) {
@@ -127,9 +147,79 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        case ReportConst.KEDUDUKAN_KEWANGAN_FEC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);				
 	            break;
+	        case ReportConst.SC_QUOT_TENDER_OR_RPT_VAL:
+	        	//generateYearList();
+	        	//generateMonthList();
+	        	rptGenBean.setScProcureAllChkView(true);
+	        	rptGenBean.setScQuotationChkView(true);
+	        	rptGenBean.setScTenderChkView(true);
+	        	rptGenBean.setScRstrctdChkView(true);
+	        	rptGenBean.setScDeskOfficerView(true);
+	        	rptGenBean.setScPtjView(true);
+	        	rptGenBean.setScStatusView(true);
+	        	rptGenBean.setScCreatedFromView(true);
+	        	
+	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
 		}		
-	}	
+	}
+	public List generateMonthList(){
+		SelectItem selectItem1= new SelectItem();
+		selectItem1.setLabel("January");
+		selectItem1.setValue("01");
+		getMonthList().add(selectItem1);			
+		SelectItem selectItem2= new SelectItem();
+		selectItem2.setLabel("February");
+		selectItem2.setValue("02");
+		getMonthList().add(selectItem2);
+		SelectItem selectItem3= new SelectItem();
+		selectItem3.setLabel("March");
+		selectItem3.setValue("03");
+		getMonthList().add(selectItem3);
+		SelectItem selectItem4= new SelectItem();
+		selectItem4.setLabel("April");
+		selectItem4.setValue("04");
+		getMonthList().add(selectItem4);			
+		SelectItem selectItem5= new SelectItem();
+		selectItem5.setLabel("May");
+		selectItem5.setValue("05");
+		getMonthList().add(selectItem5);
+		SelectItem selectItem6= new SelectItem();
+		selectItem6.setLabel("June");
+		selectItem6.setValue("06");
+		getMonthList().add(selectItem6);
+		SelectItem selectItem7= new SelectItem();
+		selectItem7.setLabel("July");
+		selectItem7.setValue("07");
+		getMonthList().add(selectItem7);			
+		SelectItem selectItem8= new SelectItem();
+		selectItem8.setLabel("August");
+		selectItem8.setValue("08");
+		getMonthList().add(selectItem8);
+		SelectItem selectItem9= new SelectItem();
+		selectItem9.setLabel("September");
+		selectItem9.setValue("09");
+		getMonthList().add(selectItem9);
+		SelectItem selectItem10= new SelectItem();
+		selectItem10.setLabel("October");
+		selectItem10.setValue("10");
+		getMonthList().add(selectItem10);			
+		SelectItem selectItem11= new SelectItem();
+		selectItem11.setLabel("November");
+		selectItem11.setValue("11");
+		getMonthList().add(selectItem11);
+		SelectItem selectItem12= new SelectItem();
+		selectItem12.setLabel("December");
+		selectItem12.setValue("12");
+		getMonthList().add(selectItem12);
+		return getMonthList();
+	}
+	public List generateYearList(){
+		 for (int i = 1950; i <= 2150; i++) {
+			 getYearList().add(Integer.toString(i));
+		 }
+		 return getYearList(); 
+	}
 }
