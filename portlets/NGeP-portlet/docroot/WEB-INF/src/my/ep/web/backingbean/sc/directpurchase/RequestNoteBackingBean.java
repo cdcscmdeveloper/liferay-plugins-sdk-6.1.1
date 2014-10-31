@@ -272,23 +272,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    
 		if (requestNoteResDTO.isSuccessful()) {
 			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
-			if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+		/*	//if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, null, 
 						MessageUtils.getMessage(MessageConst.INFO_700025, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 				
-				requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
-				requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
-				getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
+				//requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
+				//requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
+				//getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
 				
-			} else{
+			} else{*/
+			
 				successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
 				// clear data
 				super.renewSesionObject();
-			}
+			//}
 		}else {
 			throw new EpException("Failed.");
 		}
