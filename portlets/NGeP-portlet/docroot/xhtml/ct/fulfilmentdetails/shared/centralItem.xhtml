@@ -122,8 +122,7 @@
 			            </p:column>     
 			        </c:if>   
 			       
-			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
-			            eq ParameterConst.priceTypeZonalStandard}">
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 			             <p:column headerText="#{lbl['lbl.ct.zone']}">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column>    
@@ -142,8 +141,7 @@
 			            </p:column>     
 			         </c:if>
 			   
-			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
-			            eq ParameterConst.priceTypeZonalTier}">
+			         <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier}">
 			             <p:column headerText="#{lbl['lbl.ct.zone']}">
 			               <p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" />
 			            </p:column> 
@@ -180,8 +178,7 @@
 			            </p:column>     
 			         </c:if> 
                  
-                     <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode
-			            eq ParameterConst.priceTypeTariff}">
+                     <c:if test="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeTariff}">
 			             <p:column style="text-align: right;">
 			             	<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
