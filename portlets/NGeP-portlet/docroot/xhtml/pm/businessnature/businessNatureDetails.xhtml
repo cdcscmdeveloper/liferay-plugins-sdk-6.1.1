@@ -8,16 +8,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	
-   <p:panel header="CATEGORY LEVEL" toggleable="true">
+   <p:panel header="CATEGORY LEVEL" id="categoryLevel" toggleable="true">
 			
-	<table style="width:100%;">
+	<table style="width:100%;">	
 	   <tr> 
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.bn.level']}" /></td>
-     	<td><p:selectOneMenu value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}" 
-     			style="width:178px;margin-bottom:5px;"> 
+     	<td><p:selectOneMenu id="busLv" value="#{businessNatureBackingBean.managedBean.pmBusinessNature.businessLevel}" 
+     			style="width:178px;margin-bottom:5px;" required="true"> 
   	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureCategoryLv()}"></f:selectItems>
+				<p:ajax event="change" update="@form" />
     	    </p:selectOneMenu></td>				
-	    </tr>	
+	    </tr>	    		    	
 	  <tr>	  	
 		<td><p:outputLabel value="#{lbl['lbl.pm.bn.code']}" />
 			<p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -36,7 +37,7 @@
 	  </tr>	  
 	   <tr> 
 		<td style="width:10%;"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.status']}" /></td>
-     	<td><p:selectOneMenu style="width:178px;margin-bottom:5px;" 
+     	<td><p:selectOneMenu id="statusBusiness" style="width:178px;margin-bottom:5px;" 
      			value="#{businessNatureBackingBean.managedBean.pmBusinessNature.recordStatusFlg}" > 
   	   			<f:selectItems value="#{businessNatureBackingBean.getBusinessNatureStatus()}"></f:selectItems>
     	    </p:selectOneMenu></td>				
