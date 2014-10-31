@@ -168,6 +168,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
@@ -967,6 +968,19 @@ public class SpecificationBackingBean extends
 			isTemplateSpecStatus(techCheckList, scqt);
 
 		} else {
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType()) && !scqt.isTechEvaluationReq()) {
+				retriveTechnicalSpecification();
+				techCheckList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
+			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(scqt
+					.getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
+							.getEvaluationType()) && scqt.isTechEvaluationReq())) {
+				retriveTechnicalCheckList();
+				techCheckList = this.getManagedBean()
+						.getScQtCheckSt2techProposal();
+			}
 			if (null == techCheckList || techCheckList.isEmpty()
 					|| techCheckList.isEmpty()) {
 				if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(scqt
@@ -2094,15 +2108,15 @@ public class SpecificationBackingBean extends
 		int i = 0;
 		if (null != checklist && checklist.isEmpty()) {
 			for (ScQtCheckList specChecklist : checklist) {
-				if(null!=specChecklist.getScQtDoc()){
-				if (specChecklist.getScQtDoc().getTplSpecMaster()
-						.getItemTypeCode().getParameterCode()
-						.equalsIgnoreCase("2")) {
-					i++;
-					if (i >= 1) {
-						return true;
+				if (null != specChecklist.getScQtDoc()) {
+					if (specChecklist.getScQtDoc().getTplSpecMaster()
+							.getItemTypeCode().getParameterCode()
+							.equalsIgnoreCase("2")) {
+						i++;
+						if (i >= 1) {
+							return true;
+						}
 					}
-				}
 				}
 			}
 		}
@@ -2924,9 +2938,9 @@ public class SpecificationBackingBean extends
 		IDistrictSO districtSo = null;
 		DistrictResDTO resDto = null;
 		try {
-			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			Long stateId = (Long) event.getComponent().getAttributes()
 					.get("value");
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			if (stateId != null) {
 				reqDTO.setStateId(stateId);
 				List<PmState> stateList = this.getManagedBean().getStateList();
@@ -2937,7 +2951,51 @@ public class SpecificationBackingBean extends
 					}
 				}
 			}
+			this.getManagedBean().setDistrictList(null);
+			this.getManagedBean().setDivisionList(null);
+			if (ParameterConst.SARAK_SK_CODE.equalsIgnoreCase(this
+					.getManagedBean().getStateCode())) {
 
+				this.getManagedBean().setDivisionList(
+						PmCommonUtil.retrievePmDivisionList(stateId));
+			} else {
+
+				districtSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
+				resDto = districtSo.retriveDistrictListByStateID(reqDTO);
+
+				if (resDto != null) {
+					this.getManagedBean().setDistrictList(
+							resDto.getDistrictList());
+				}
+
+			}
+		} finally {
+			districtSo = null;
+		}
+
+	}
+
+	public void retriveDivisionDistrict(AjaxBehaviorEvent event) {
+		IDistrictSO districtSo = null;
+		DistrictResDTO resDto = null;
+		try {
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			Long divisionId = (Long) event.getComponent().getAttributes()
+					.get("value");
+			if (divisionId != null) {
+				reqDTO.setStateId(divisionId);
+				List<PmDivision> divisionList = this.getManagedBean()
+						.getDivisionList();
+				for (PmDivision division : divisionList) {
+					if (division.getDivisionId().equals(divisionId)) {
+						this.getManagedBean().setDivisionCode(
+								division.getDivisionCode());
+
+					}
+				}
+			}
+			this.getManagedBean().setDistrictList(null);
 			districtSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
 			resDto = districtSo.retriveDistrictListByStateID(reqDTO);
@@ -4144,6 +4202,13 @@ public class SpecificationBackingBean extends
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setEvaluationType(type);
+	}
+
+	// Open For Change set Method
+	public void openChange(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().getScQt().setOpenFor(type);
 	}
 
 	// Quaptaion/Tender Type Set Method
@@ -8502,8 +8567,7 @@ public class SpecificationBackingBean extends
 
 		} else {
 
-			System.out.println("========display current statusid==="
-					+ this.getManagedBean().getCurrentStatusId());
+		
 			PmUser curLogedInUser = facesScopes.getUserSessionBean();
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -9388,8 +9452,22 @@ public class SpecificationBackingBean extends
 	}
 
 	public String specCommitteBpmTask(String action) {
+		FacesScopes facesScopes = new FacesScopes();
 
-		if (isDigiSigningRequired(RoleCode.SC_CHAIRPERSON.value())) {
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO
+				.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		if (member.getMemberRole().getParameterCode()
+				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(action);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
