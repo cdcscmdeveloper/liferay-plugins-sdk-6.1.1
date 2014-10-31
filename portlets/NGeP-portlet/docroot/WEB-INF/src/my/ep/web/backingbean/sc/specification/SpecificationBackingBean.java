@@ -223,7 +223,7 @@ public class SpecificationBackingBean extends
 		// this.getManagedBean().setPanelItemCategory(null);
 		// this.getManagedBean().setSelectPanelItem(false);
 		if (this.getManagedBean().getScQt().isPanel()) {
-
+			retriveBusinessOwnerQualificationCriteri();
 			if (null != this.getManagedBean().getCtPanelItem()) {
 
 				List<CtPanelItem> panelItem = this.getManagedBean()
@@ -2061,14 +2061,26 @@ public class SpecificationBackingBean extends
 			if (null == this.getManagedBean().getScQtCheckSt2techProposal()
 					|| this.getManagedBean().getScQtCheckSt2techProposal()
 							.isEmpty()) {
+				List<ScQtCheckList> localcheckList = new ArrayList<ScQtCheckList>();
 				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
 				specSo = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 				reqDTO.setScQt(this.getManagedBean().getScQt());
 				resDTO = specSo.retrieveCheckLists(reqDTO);
-
+				if (!isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
+					if (null != resDTO.getTechnicalCheckList()) {
+						for (ScQtCheckList checklist : resDTO
+								.getTechnicalCheckList()) {
+							if (!checklist.getTitle().contains("Service Scope")) {
+								localcheckList.add(checklist);
+							}
+						}
+					}
+				} else {
+					localcheckList.addAll(resDTO.getTechnicalCheckList());
+				}
 				this.getManagedBean().setScQtCheckSt2techProposal(
-						resDTO.getTechnicalCheckList());
+						localcheckList);
 				this.getManagedBean().setScQtCheckSt2financeProposalList(
 						resDTO.getFinancialCheckLists());
 
@@ -2078,15 +2090,25 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	/*
-	 * private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
-	 * int i = 0; for (ScQtCheckList specChecklist : checklist) { if
-	 * (specChecklist.getScQtDoc().getTplSpecMaster().getItemTypeCode()
-	 * .getParameterCode().equalsIgnoreCase("2")) { i++; if (i >= 1) { return
-	 * true; } } }
-	 * 
-	 * return false; }
-	 */
+	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
+		int i = 0;
+		if (null != checklist && checklist.isEmpty()) {
+			for (ScQtCheckList specChecklist : checklist) {
+				if(null!=specChecklist.getScQtDoc()){
+				if (specChecklist.getScQtDoc().getTplSpecMaster()
+						.getItemTypeCode().getParameterCode()
+						.equalsIgnoreCase("2")) {
+					i++;
+					if (i >= 1) {
+						return true;
+					}
+				}
+				}
+			}
+		}
+
+		return false;
+	}
 
 	public List<ScQtCheckList> convertCheckListByDocument(
 			List<PmDocument> documentList, String docType) {
@@ -2240,7 +2262,7 @@ public class SpecificationBackingBean extends
 					addScore = addScore
 							+ list.getQtScoreWeightage().getScore().intValue();
 					score = (int) addScore;
-					if (!list.getTitle().trim().contains("Service Scope")) {
+					if (list.isScoringReq()) {
 						this.getManagedBean().getTechnicalScoring().add(list);
 					}
 				}
@@ -2347,12 +2369,14 @@ public class SpecificationBackingBean extends
 
 						specChecklist.add(list);
 					} else {
-						if (!list.getTitle().trim()
-								.contains("Annual Balance Sheet")
-								&& !list.getTitle()
-										.trim()
-										.contains(
-												"Verification from Financial Institution")) {
+						/*
+						 * if (!list.getTitle().trim()
+						 * .contains("Annual Balance Sheet") && !list.getTitle()
+						 * .trim() .contains(
+						 * "Verification from Financial Institution")) {
+						 * localChecklist.add(list); }
+						 */
+						if (list.isScoringReq()) {
 							localChecklist.add(list);
 						}
 					}
@@ -2869,11 +2893,19 @@ public class SpecificationBackingBean extends
 	public void retriveStateList() {
 		IStateSO stateSo = null;
 		StateResDTO resDto = null;
+		ICountrySO countrySo = null;
 		this.getManagedBean().setDeliveryAddressSelect(
 				new ArrayList<PmAddressType>());
 		try {
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+
 			StateReqDTO reqDTO = new StateReqDTO();
-			reqDTO.setCountryId(1L);
+			reqDTO.setCountryId(countryResDTO.getPmCountry().getCountryId());
 			stateSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
 			resDto = stateSo.retriveStatesListByCountryID(reqDTO);
@@ -7986,7 +8018,7 @@ public class SpecificationBackingBean extends
 	// Search circular Details Method.
 	public void searchCircularList() {
 		searchCircular.reloadData();
-		// this.getManagedBean().setCircularVer(null);
+		this.getManagedBean().setCircularVer(null);
 		// this.getManagedBean().setPanelItemList(new ArrayList<CtPanelItem>());
 		// this.getManagedBean().setCtPanelItem(null);
 		// this.getManagedBean().setCircularExpDate(new Date());
@@ -8469,21 +8501,39 @@ public class SpecificationBackingBean extends
 			}
 
 		} else {
+
+			System.out.println("========display current statusid==="
+					+ this.getManagedBean().getCurrentStatusId());
+			PmUser curLogedInUser = facesScopes.getUserSessionBean();
+			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							ICommitteSO.class);
+			CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+			committeReqDTO.setQtId(quotationTenderDataType.getQtId()
+					.longValue());
+			committeReqDTO.setUser(curLogedInUser);
+			committeReqDTO
+					.setCommitteeType(ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE);
+			CommitteResDTO resDTO = committeSO
+					.retrieveCommitteMemberByUserId(committeReqDTO);
+			ScCommitteeMember member = resDTO.getCommMember();
+			if (null != member) {
+
+				if (member.getMemberRole().getParameterCode()
+						.contains(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
+					this.getManagedBean().setReadOnly(false);
+
+				} else {
+
+					this.getManagedBean().setReadOnly(true);
+				}
+			}
 			retriveSpecdetails(quotationTenderDataType.getQtId().longValue(),
 					getDocTypeByTaskName(this.getManagedBean().getTaskName()));
-
 			if (null == this.getManagedBean().getScQt().getFulfilmentType()) {
 
 				this.getManagedBean().getScQt()
 						.setFulfilmentType(new PmParameter());
-			}
-
-			if (isDigiSigningRequired(RoleCode.SC_SECRETARY.value())) {
-				this.getManagedBean().setReadOnly(false);
-
-			} else {
-
-				this.getManagedBean().setReadOnly(true);
 			}
 			fc.getApplication()
 					.getNavigationHandler()
