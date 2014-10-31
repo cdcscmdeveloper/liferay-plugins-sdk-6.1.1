@@ -49,7 +49,8 @@
 			                       <p:inputText for="centralDelPeriod" styleClass="ppRightBtn" style="width:45px;" validator="#{webappBean.validateDPeriod}" maxlength="4"
 			                          value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
 	                               <p:spacer width="2" />
-	                               <p:selectOneMenu id="centralDelPeriod" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:120px;"
+	                               <p:outputLabel value="#{lbl['lbl.ct.days']}" />
+	                               <p:selectOneMenu id="centralDelPeriod" rendered="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:120px;"
 	               	           	        value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}" required="true"  label="#{lbl['lbl.ct.delivery.period']}" >
 				                       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 				                   </p:selectOneMenu>			   

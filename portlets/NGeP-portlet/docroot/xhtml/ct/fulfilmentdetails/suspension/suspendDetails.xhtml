@@ -55,7 +55,8 @@
 				<p:inputText for="dperiod" styleClass="ppRightBtn" style="width:65px;" disabled="true" 
 				   value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
 				<p:spacer width="2"/>
-				<p:selectOneMenu  style="width:100px;"  disabled="true" 
+				<p:outputLabel value="#{lbl['lbl.ct.days']}" />
+				<p:selectOneMenu  style="width:100px;" rendered="false" disabled="true" 
 				   value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.deliveryTermUom.parameterId}">
 			       <f:selectItems value="#{suspensionBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			   </p:selectOneMenu>
