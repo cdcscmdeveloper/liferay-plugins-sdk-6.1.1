@@ -5780,6 +5780,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void validateZonalTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalTierPricings().get(index);
+		Date startDate = tier.getStartDate();
+		Date endDate = tier.getEndDate();
+		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 		
 		for(int i = 0; i < index; i++){
@@ -5795,6 +5798,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void validateZonalPromotionTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index);
+		Date startDate = tier.getStartDate();
+		Date endDate = tier.getEndDate();
+		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 		
 		for(int i = 0; i < index; i++){
@@ -5809,6 +5815,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void validateTierPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmTierPricings().get(index);
+		Date startDate = tier.getStartDate();
+		Date endDate = tier.getEndDate();
+		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 		for(int i = 0; i < index; i++){
 			pricings.add(this.getManagedBean()
@@ -5825,9 +5834,58 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		
 	}
 	
+	public void updateTierDate(int standGroupId, Date startDate, Date endDate, String priceType){
+
+		switch(priceType){
+			case "03":
+				for(CmPricing pricing : this.getManagedBean()
+						.getSelectedMaintainItem().getCmTierPricings()){
+					if(pricing.getStand_group_id() == standGroupId){
+						pricing.setStartDate(startDate);
+						pricing.setEndDate(endDate);
+					}
+				};
+				break;
+			case "04":
+				for(CmPricing pricing : this.getManagedBean()
+						.getSelectedMaintainItem().getCmPromotionTierPricings()){
+					if(pricing.getStand_group_id() == standGroupId){
+						pricing.setStartDate(startDate);
+						pricing.setEndDate(endDate);
+					}
+				};
+				break;
+			case "07":	
+				for(CmPricing pricing : this.getManagedBean()
+						.getSelectedMaintainItem().getCmZonalTierPricings()){
+					if(pricing.getStand_group_id() == standGroupId){
+						pricing.setStartDate(startDate);
+						pricing.setEndDate(endDate);
+					}
+				};
+				break;
+			case "08":	
+				for(CmPricing pricing : this.getManagedBean()
+						.getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+					if(pricing.getStand_group_id() == standGroupId){
+						pricing.setStartDate(startDate);
+						pricing.setEndDate(endDate);
+					}
+				};
+				break;
+			default:
+				// do nothing
+				break;
+		}
+		
+	}
+	
 	public void validateTierPromotionPrice(int index){
 		CmPricing tier = this.getManagedBean()
 				.getSelectedMaintainItem().getCmPromotionTierPricings().get(index);
+		Date startDate = tier.getStartDate();
+		Date endDate = tier.getEndDate();
+		updateTierDate(tier.getStand_group_id(), startDate, endDate, tier.getPricingType());
 		List<CmPricing> pricings = new ArrayList<CmPricing>();
 		
 		for(int i = 0; i < index; i++){
