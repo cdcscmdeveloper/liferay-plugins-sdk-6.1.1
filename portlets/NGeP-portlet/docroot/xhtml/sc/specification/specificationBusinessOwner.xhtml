@@ -292,8 +292,8 @@
 		</p:panel>
 	</h:panelGroup>
 	<p:dialog header="#{lbl['lbl.sc.spec.zone.add.location']}"
-		widgetVar="ZoneGeneral" modal="true" width="630" position="top"
-		height="500">
+		widgetVar="ZoneGeneral" modal="true" width="490" position="top"
+		height="410">
 		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true" />
 		<p:panel id="zonePopupGeneral">
@@ -327,7 +327,7 @@
 							value="#{lbl['lbl.sc.spec.zone.location']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></TD>
 					<TD width="80%"><p:panel></p:panel>
-						<div style="height: 500px; overflow-y: scroll;">
+						<div style="height: 300px; overflow-y: scroll;">
 							<p:tree id="treeZoneGeneralPopup"
 								value="#{specificationBackingBean.managedBean.rootZoanlTree}"
 								var="location"
