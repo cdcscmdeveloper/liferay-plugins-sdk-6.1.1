@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
@@ -121,6 +122,7 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.sc.purchaseindefault.PurchaseInDefaultBackingBean;
@@ -267,12 +269,26 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    	 requestNoteReqDTO.setOutcome("");
 	    	 requestNoteResDTO = directPurchaseSO.updateRequestNote(requestNoteReqDTO);
 	     }
+	    
 		if (requestNoteResDTO.isSuccessful()) {
 			ScRequestNote scRequestNote = requestNoteResDTO.getRequestNoteDetail();
-			successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
-					ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
-			// clear data
-			super.renewSesionObject();
+			if(BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, null, 
+						MessageUtils.getMessage(MessageConst.INFO_700025, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
+				
+				requestNoteReqDTO.setRequestItemId(scRequestNote.getRequestNoteId());
+				requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
+				getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
+				
+			} else{
+				successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_REQUEST_NOTE,scRequestNote.getRequestNoteNo());
+				// clear data
+				super.renewSesionObject();
+			}
 		}else {
 			throw new EpException("Failed.");
 		}
@@ -1138,7 +1154,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		return "catalogueSearch";
 	}
 
-	public String addToRequestNote(boolean cartFlag) {
+	public void addToRequestNote(boolean cartFlag) {
 		log.info("addToRequestNote");
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 		List<ScRequestNoteDtl>	requestNoteDtls = getManagedBean().getRequestNoteDtls();
@@ -1279,10 +1295,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    VCmSupplierItem  vCmSupplierItem = new VCmSupplierItem();
 		    vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
 		    scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
-		    
-		    supplierItems.add(requestSupplierItem);
-		    scRequestItem.setSupplierItems(supplierItems);
-		    
 		    
 		    scRequestItem.setRequestNote(requestNote);
 		}
@@ -1437,8 +1449,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		} 
-		
-		return null;
 	}
 
 	public List<PmParameter>  getPriceTypeByPrice(List<ScSupplierItemPrice> supplierItemPrices) {
@@ -2273,6 +2283,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				ScRequestItem requestItem = createRequestItem(cmSupplierItem);
 
 				requestSupplierItem = createScRequestSupplierItem(cmSupplierItem, requestItem, cmSupplierItem.getSmSupplier(), cmPricings);
+				
 				requestNoteDtl.setScRequestSupplierItem(requestSupplierItem);
 				
 				if(requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() != null){
