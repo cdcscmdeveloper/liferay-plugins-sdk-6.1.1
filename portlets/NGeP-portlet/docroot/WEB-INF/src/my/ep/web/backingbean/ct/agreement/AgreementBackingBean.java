@@ -1223,7 +1223,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 
-			String imgUrl = getServerUrl()+ "NGeP-portlet/images/letter/gov.png";
+			String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-cover-page.vm";
 			context.put("imgUrl", imgUrl);

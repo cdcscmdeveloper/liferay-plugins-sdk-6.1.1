@@ -361,7 +361,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			context = new VelocityContext();			
 			getManagedBean().setEditorValue("");
 			String imgUrl = getServerUrl()
-					+ "images/letter/gov.png";
+					+ "css/images/gov.png";
 			if(getManagedBean().isTermination()) {				
 				vmFile = "/ct/termination/termination-notice.vm";
 			}else if(getManagedBean().isMutualTermination()) {
