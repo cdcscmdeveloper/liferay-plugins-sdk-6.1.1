@@ -422,6 +422,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 
 			if(requestNote != null){
+				getManagedBean().setScRNZone(requestNote.getScRNZone());
+				
 				retrieveRequestNoteDetails(requestNote, res.getDocStatus().longValue(), zoneFlag);
 			}
 			// title checker
@@ -1002,8 +1004,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 					ScRNZone zone = getManagedBean().getScRNZone(); 
 					
-					zone.setScRequestNote(getManagedBean().getRequestNote());
-					getManagedBean().getRequestNote().setScRNZone(zone);
+					if (zone.isBrandNew()) {
+						zone.setScRequestNote(getManagedBean().getRequestNote());
+					}
 					specZoneDtl.setTplSpecZone(zone);
 					
 					List<TplSpecZoneLoc> zoneLocs = new ArrayList<TplSpecZoneLoc>();					
