@@ -1012,7 +1012,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
-				getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile());
+				getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
 				if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
 					getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
 				}else{
@@ -1960,7 +1960,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	private void validatePreparedOrgAndAgencies() {
-		if(!getManagedBean().getAgentOrgProfileList().contains(getManagedBean().getFlRequest().getPreparedOrgProfile())){
+		if(!getManagedBean().getAgentOrgProfileList().contains(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId())){
 			PmOrgProfile orgProfile = getManagedBean().getFlRequest().getPreparedOrgProfile();
 			throw new EpException(MessageConst.ERROR_745054, new String[]{orgProfile.getPmOrgValidity().getOrgCode(),orgProfile.getPmOrgValidity().getOrgName(),getManagedBean().getFlRequest().getCtContract().getContractNo()});
 		}
