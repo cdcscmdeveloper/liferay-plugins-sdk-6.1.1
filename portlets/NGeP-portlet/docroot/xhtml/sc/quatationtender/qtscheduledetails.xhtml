@@ -20,7 +20,7 @@
 									id="noticePublish" required="true" readonlyInput="true"
 									pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 									showOn="button"
-									maxdate="#{qTScheduleDetailBackingBean.managedBean.bsvDate}">
+									maxdate="#{qTScheduleDetailBackingBean.handleMaximumDate()}">
 									<p:ajax event="dateSelect" process="@this"
 										listener="#{qTScheduleDetailBackingBean.handleClosingNProposalDate}"
 										update="proposalvalidityid, closingDate" />

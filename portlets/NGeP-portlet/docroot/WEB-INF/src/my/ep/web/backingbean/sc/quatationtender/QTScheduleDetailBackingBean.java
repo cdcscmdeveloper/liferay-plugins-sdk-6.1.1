@@ -388,6 +388,13 @@ public class QTScheduleDetailBackingBean extends
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
 	
-	
+	public Date handleMaximumDate() {
+		Date bsvDate = this.getManagedBean().getBsvDate();
+		Date publishDate = new Date();
+		if (null != bsvDate) {
+			return	DateUtils.minusDays(bsvDate, 1);
+		}
+		return publishDate;
+	}
 
 }
