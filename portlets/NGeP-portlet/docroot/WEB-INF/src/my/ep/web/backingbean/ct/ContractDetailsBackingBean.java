@@ -374,7 +374,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    	this.getManagedBean().getContractVer().getCtContractValue().getDeliveryTermUom().setParameterId(getParameterIdByTypeAndCode(ParameterTypeConst.DELIVERY_TERM, ParameterConst.DELIVERY_TERM_DAYS));
 		    }
 		  
-		    if(this.getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
+		    if(getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 		    	this.getManagedBean().setDirectPurchase(true);
 		    	this.getManagedBean().setFlgPaymentTracking(false);
 		    }
