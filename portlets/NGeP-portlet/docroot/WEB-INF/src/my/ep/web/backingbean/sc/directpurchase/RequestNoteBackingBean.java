@@ -1142,7 +1142,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		getManagedBean().setRequired(Boolean.FALSE);
 		getManagedBean().setJustRequired(Boolean.FALSE);
 		
-		ISearchBean viewSearchBean = null;
+		ISearchBean<VCmSupplierItem> viewSearchBean = null;
 		List<Long> cmSupplieritemIds = null;
 		
 		if(scRequestItem.getQuantity() !=null && scRequestItem.getQuantity().intValue() < 0){
@@ -1171,17 +1171,37 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    requestNote.setSourceMethod(ParameterConst.REQUEST_NOTE_SC);
 		    List<ScRequestSupplierItem> supplierItems = new ArrayList<ScRequestSupplierItem>();
 		    
+		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
+		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
+		    StringBuilder sb = new StringBuilder();
+		    sb.append("itemCode^").append(extensionCode).append("|")//item Code
+		    .append("catType^").append("XC").append("|")
+		    .append("uomId^").append(uomId);
+		    
 		    if(cartFlag){
 		    	// adding suppliers from the compare screen 
+		    	StringBuilder supplierItemIds = new StringBuilder();
 		    	cmSupplieritemIds = new ArrayList<Long>();
 		    	if(getManagedBean().getCompareSupplierItems() != null){
 		    		for (CmSupplierItem supplierItem : getManagedBean().getCompareSupplierItems()) {
 		    			if(supplierItem.getCmItem().getItemId().equals(selectedSupplierItem.getCmItem().getItemId()) 
 		    					&& supplierItem.getPmUom().getUomName().equals(selectedSupplierItem.getPmUom().getUomName())){
-		    				cmSupplieritemIds.add(supplierItem.getSupplierItemId());	
+		    				Long supplierItemId = supplierItem.getSupplierItemId();
+		    				
+		    				cmSupplieritemIds.add(supplierItemId);	
+		    				if (supplierItemIds.length() > 0) {
+								supplierItemIds.append(",");
+							}
+							supplierItemIds.append(supplierItemId);
 		    			}
 		    		}
 		    	}
+		    	
+		    	sb.append("|")
+		    		.append("docId^")
+			    	.append(supplierItemIds)
+			    	.append("^")
+			    	.append(SearchOperator.OPERATOR_IN.value());
 		    	
 		    /*	ISearchBean<VCmSupplierItem>  searchBean  = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
 				searchBean.getDataFilterBeans().clear();
@@ -1232,28 +1252,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	}
 		    	// Add selected supplier item from search catalogue
 	    		supplierItems.add(requestSupplierItem);*/
+		    	
+		    	viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
+			    List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
+			    
+			    for (BaseSearchFilterBean baseFilterBean : filterBeans) {
+			    	if (baseFilterBean instanceof SearchFilterBean) {
+			    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
+			    		sb.append("|")
+			    		.append(filterBean.getSearchField()).append("^")
+			    		.append(filterBean.getSearchValue()).append("^")
+			    		.append(filterBean.getSearchOperator());
+			    	}
+			    }
 		    }
 		    
-		    viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
-		    List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
-		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
-		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
-		    StringBuilder sb = new StringBuilder();
-		    sb.append("itemCode^").append(extensionCode).append("|")//item Code
-		    .append("catType^").append("XC").append("|")
-		    .append("uomId^").append(uomId);
-		    for (BaseSearchFilterBean baseFilterBean : filterBeans) {
-		    	if (baseFilterBean instanceof SearchFilterBean) {
-		    		SearchFilterBean filterBean = (SearchFilterBean) baseFilterBean;
-		    		sb.append("|")
-		    		.append(filterBean.getSearchField()).append("^")
-		    		.append(filterBean.getSearchValue()).append("^")
-		    		.append(filterBean.getSearchOperator());
-		    	}
-		    } 
-		    
-		    String conditionField = sb.toString();
-		    scRequestNoteDtl.setConditionField(conditionField);
+		    scRequestNoteDtl.setConditionField(sb.toString());
 		    
 		    VCmSupplierItem  vCmSupplierItem = new VCmSupplierItem();
 		    vCmSupplierItem.setCompanyName(selectedSupplierItem.getSmSupplier().getCompanyName());
@@ -2825,34 +2839,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			generateReport(reportName, paramMap);
 		}
-	}
-	
-	public String getRecommendSupplierConditionField() {
-		StringBuilder conditionField = new StringBuilder();
-		
-		List<ScRequestNoteDtl> requestNoteDtls = getManagedBean().getRequestNoteDtls();
-		
-		if(requestNoteDtls != null && requestNoteDtls.size() >0) {
-			for(ScRequestNoteDtl selectedReqDtl : getManagedBean().getRequestNoteDtls()) {
-				if(selectedReqDtl.isSelected()){
-					if (conditionField.length() > 0) {
-						conditionField.append(",");
-					}
-					conditionField.append(selectedReqDtl.getRequestItem().getRequestNoteItemId());
-				}
-			}
-			
-			if (conditionField.length() > 0) {
-				conditionField.insert(0, "scRequestSupplierItems.requestNoteItem.requestNoteItemId^");
-				conditionField.append("^");
-				conditionField.append(SearchOperator.OPERATOR_IN.value());	
-			} else {
-				conditionField.append("supplierId^^");
-				conditionField.append(SearchOperator.OPERATOR_IS_NULL.value());	
-			}
-		}		
-		
-		return conditionField.toString();
 	}
 	
 	private IParameterSO getParameterSO() {
