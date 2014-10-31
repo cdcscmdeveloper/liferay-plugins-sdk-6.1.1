@@ -315,9 +315,29 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<String> supplierStateCode;
 	private List<String> supplierDistrictCode;
 	private List<String> supplierDivisionCode;
+	private Long divisionId;
+	private String divisionCode;
 	
 
 	
+
+	public Long getDivisionId() {
+		return divisionId;
+	}
+
+	public void setDivisionId(Long divisionId) {
+		this.divisionId = divisionId;
+	}
+
+	
+
+	public String getDivisionCode() {
+		return divisionCode;
+	}
+
+	public void setDivisionCode(String divisionCode) {
+		this.divisionCode = divisionCode;
+	}
 
 	public List<String> getSupplierStateCode() {
 		return supplierStateCode;
