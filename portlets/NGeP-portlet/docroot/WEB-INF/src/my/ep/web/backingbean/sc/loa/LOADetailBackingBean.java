@@ -1157,6 +1157,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getSupplierAddress() != null) {
 			supplierAddress = getFullAddress(scLoa.getSupplierAddress());
 			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
 		}
 		context.put("supplierAddress", supplierAddress);
 		String supplierPhoneNo = scLoa.getSupplierPhoneNo();
@@ -1314,6 +1315,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getBankAddress() != null) {
 			bankAddress = getFullAddress(scLoa.getBankAddress());
 			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+			bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
 		context.put("bankAddress", bankAddress);
 
@@ -2851,7 +2853,13 @@ public class LOADetailBackingBean extends
 		attachment.setFileName("Bond Letter.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
-
+		context.put("contractNo", "");
+		context.put("supplierName", "");
+		context.put("sourcingTitle", "");
+		context.put("bondAmount", "");
+		context.put("bondAmountWord", "");
+		context.put("expiryPeriod", "");
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_BOND_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
