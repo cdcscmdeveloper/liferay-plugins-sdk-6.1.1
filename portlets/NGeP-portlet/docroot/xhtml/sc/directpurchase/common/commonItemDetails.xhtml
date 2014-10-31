@@ -22,11 +22,11 @@
 					<f:facet name="header">
 						<p:selectBooleanCheckbox id="selAllChk"
 							value="#{requestNoteBackingBean.flag}">
-							<p:ajax partialSubmit="true" process="@this" update="requestListDataTable, :form:recSuppPG"  listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
+							<p:ajax partialSubmit="true" process="@this" update="requestListDataTable"  listener="#{requestNoteBackingBean.selectAll}"></p:ajax>
 						</p:selectBooleanCheckbox>
 					</f:facet>
 					<p:selectBooleanCheckbox value="#{requestNoteDtl.selected}">
-						<p:ajax partialSubmit="true" process="@this" update="@this, :form:recSuppPG" />
+						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:selectBooleanCheckbox>
 				</p:column>
 
@@ -47,8 +47,7 @@
 			      <h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 					  <p:commandLink partialSubmit="true" process="@this"
 						id="prInquiryResponse"
-						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}"
-						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
+						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 						<p:tooltip for="prInquiryResponse">
@@ -103,8 +102,7 @@
 				   <h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 				   <h:commandLink immediate="true" 
 						action="#{requestNoteBackingBean.downloadPurchaseInqReport(requestNoteDtl)}"
-						id="prInquirySummaryIcon"
-						rendered="#{requestNoteBackingBean.showPurchaseInqIcon(requestNoteDtl)}">
+						id="prInquirySummaryIcon">
 							<p:graphicImage library="ep/images/design" name="evaluate.png"
 							style="vertical-align:middle" />
 						<p:tooltip for="prInquirySummaryIcon">
@@ -262,24 +260,6 @@
 		<p:panelGrid styleClass="noBorders tr,noBorders td"  id="prepareBy" >
 			<p:row>
 				<p:column>
-					<h:panelGroup id="recSuppPG">
-						<h:panelGroup
-							rendered="#{requestNoteBackingBean.managedBean.requestNote.quote.multipleQuote ne 'true'}">
-							<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}" />
-							<p:spacer width="6px;" />
-
-							<ac:lov id="recSupp" lovId="SM_SUPPLIER_BY_REQUEST_SUPPLIER_ITEM"
-								size="16" headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"
-								readonly="true"
-								saveObject="requestNoteBackingBean.managedBean.smSupplier"
-								value="#{requestNoteBackingBean.managedBean.smSupplier.companyName}"
-								conditionField="#{requestNoteBackingBean.recommendSupplierConditionField}"
-								rendered1="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
-							</ac:lov>
-
-							<p:spacer width="10px;" />
-						</h:panelGroup>
-					</h:panelGroup>
 					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>
 					<p:spacer width="6px;"/>
 					<p:selectOneMenu style="width:155px;" 
