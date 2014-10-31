@@ -45,8 +45,9 @@
                      style="width:40px;" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" label="#{lbl['lbl.ct.delivery.term']}"
                      disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>
                 <p:spacer width="2" />
+                <p:outputLabel style="float:none;" value="#{lbl['lbl.ct.days']}" />
                 <p:selectOneMenu id="dTerms" value="#{zoneTree.uomId}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-                  required="true" rendered="#{zoneTree.zone != null}" style="width:100px;" label="#{lbl['lbl.ct.delivery.term']}">
+                  required="true" rendered="#{false and zoneTree.zone != null}" style="width:100px;" label="#{lbl['lbl.ct.delivery.term']}">
 			       <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
 			    </p:selectOneMenu>
              </p:treeNode>
