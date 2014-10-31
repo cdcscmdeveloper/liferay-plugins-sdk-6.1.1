@@ -2413,29 +2413,37 @@ public class ReportBackingBean extends SourcingBaseBackingBean<ReportMangedBean>
 		}		
 		return null;
 	}
-	public List generateMonthList(){		
+	public List<SelectItem> generateMonthList(){		
 		return scReportBackingBean.generateMonthList();
 	}
-	public List generateYearList(){		
+	public List<String> generateYearList(){		
 		 return scReportBackingBean.generateYearList(); 
 	}
 	public void createdToDtUpdate(){
 		this.setScCreatedToYear(this.getScCreatedFromYear());
 	}
-	public void onSelectEffectedValues(){
-		
-		if(this.getScProcureAllList().size()>0){
-			log.info(""+this.getScProcureAllList().get(0));
+	public void onSelectEffectedValues(){		
+		if(this.getScProcureAllList().size()>0){			
+			rptGenBean.setScProcureQuoteEditView(true);
+			rptGenBean.setScProcureTenderEditView(true);
+			rptGenBean.setScProcureRestrctdEditView(true);			 	
+			scQuotationList = new ArrayList<SelectItem>();	
+			scTenderList = new ArrayList<SelectItem>();	
+			scRstrctdTndrList = new ArrayList<SelectItem>();			
+		}else if((this.getScQuotationList().size()>0)&&(this.getScTenderList().size()>0)){			
+			rptGenBean.setScProcureAllEditView(true);			
+			rptGenBean.setScProcureRestrctdEditView(true);
+		}else if((this.getScRstrctdTndrList().size()>0)&&(this.getScTenderList().size()>0)){
+			rptGenBean.setScProcureAllEditView(true);
+			rptGenBean.setScProcureQuoteEditView(true);			
+		}else if((this.getScRstrctdTndrList().size()>0)&&(this.getScQuotationList().size()>0)){	
+			rptGenBean.setScProcureAllEditView(true);
+			rptGenBean.setScProcureTenderEditView(true);
+		}else{
+			rptGenBean.setScProcureAllEditView(false);
+			rptGenBean.setScProcureQuoteEditView(false);
+			rptGenBean.setScProcureTenderEditView(false);
+			rptGenBean.setScProcureRestrctdEditView(false);
 		}
-		if(this.getScQuotationList().size()>0){
-			log.info(""+this.getScQuotationList().get(0));
-		}
-		if(this.getScTenderList().size()>0){
-			log.info(""+this.getScTenderList().get(0));
-		}
-		if(this.getScRstrctdTndrList().size()>0){
-			log.info(""+this.getScRstrctdTndrList().get(0));
-		}
-	}
-	
+	}	
 }

@@ -165,7 +165,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            //break;
 		}		
 	}
-	public List generateMonthList(){
+	public List<SelectItem> generateMonthList(){
 		SelectItem selectItem1= new SelectItem();
 		selectItem1.setLabel("January");
 		selectItem1.setValue("01");
@@ -216,7 +216,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		getMonthList().add(selectItem12);
 		return getMonthList();
 	}
-	public List generateYearList(){
+	public List<String> generateYearList(){
 		 for (int i = 1950; i <= 2150; i++) {
 			 getYearList().add(Integer.toString(i));
 		 }
