@@ -23,6 +23,7 @@ import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
@@ -59,6 +60,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.pm.common.zone.ZoneReqDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -90,6 +93,7 @@ import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplDocFile;
@@ -1895,6 +1899,24 @@ public class SmApplicationUtil {
 		StateResDTO resDTO = reqSO.retriveStateDetailsByID(reqDTO);
 
 		return resDTO.getPmState();
+	}
+
+	public static PmZone retrieveZoneByStateId(Long stateId) {
+		IZoneSO zoneSO = (IZoneSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IZoneSO.class);
+
+		ZoneReqDTO reqDTO = new ZoneReqDTO();
+		reqDTO.setStateId(stateId);
+
+		ZoneResDTO resDTO = new ZoneResDTO();
+		resDTO = zoneSO.retrieveZoneByStateId(reqDTO);
+		if (resDTO != null && resDTO.getPmZone() != null) {
+			return resDTO.getPmZone();
+		} else {
+			throw new EpException(
+					"Cannot Submit Application : The State or Zone for supplier base office is empty or invalid.Please select valid address");
+		}
 	}
 
 	public static PmCity retrievePmCityById(Long cityId) {
