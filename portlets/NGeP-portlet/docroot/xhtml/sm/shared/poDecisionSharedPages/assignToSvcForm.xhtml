@@ -137,7 +137,7 @@
 	<table style="width: 100%">
 
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.remarks.svc']}" /></td>
+			<td style="width:30%;word-wrap: break-word"><p:outputLabel value="#{lbl['lbl.sm.remarks.svc']}" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;"
 					value="#{backingBean.managedBean.poSecReview.sitevisitRemark}" /></td>
 		</tr>
@@ -146,13 +146,13 @@
 	<br />
 	<p:outputPanel id="svcButPan">
 		<p:panel rendered="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
+					<td style="width:30%;word-wrap: break-word"><p:outputLabel value="#{lbl['lbl.sm.remarks.approver']}" /></td>
 					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
+					<td style="width:30%;word-wrap: break-word"><p:outputLabel
 							value="#{lbl['lbl.sm.recommendation.approver']}" /></td>
 					<td><p:selectOneRadio>
 							<f:selectItem itemLabel="#{lbl['lbl.sm.recommendation.approve']}" />
