@@ -959,7 +959,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(!getManagedBean().getFlRequest().getFlDeliveryAddresses().isEmpty()){
 				sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				getManagedBean().setSelectedDelAddr(getManagedBean().getFlRequest().getFlDeliveryAddresses().get(0));
-			}			
+			}	
+			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
+				getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile().getOrgProfileId());
+				if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
+					getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
+				}else{
+					getManagedBean().setOrgProfileIds(getManagedBean().getOrgProfileIds() + "," +agency.getOrgProfile().getOrgProfileId().toString());
+				}
+				
+			}
 		}else if(contractId != null){
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
