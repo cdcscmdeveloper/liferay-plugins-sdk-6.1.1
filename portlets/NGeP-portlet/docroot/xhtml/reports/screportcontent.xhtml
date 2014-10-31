@@ -34,26 +34,30 @@
 							    	 
 								  <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllChkView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.scProcurementMethod']}"   style="margin-top:5px;width:160px;"/>
-									 <p:selectManyCheckbox value="#{reportBackingBean.scProcureAllList}"	>
-										<f:selectItem itemLabel="All" itemValue="A" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllEditView}"/>										
+									 <p:selectManyCheckbox id="procureAllChk" value="#{reportBackingBean.scProcureAllList}"	>
+										<f:selectItem itemLabel="All" itemValue="A" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureAllEditView}"/>	
+										<p:ajax event="change" listener="#{reportBackingBean.onSelectEffectedValues()}" partialSubmit="true" process="@this" update=":form:quotationChk :form:tenderChk :form:restrctdTenderChk" />									
 									 </p:selectManyCheckbox>												
 									</c:if>	
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scQuotationChkView}" >			
 									 <p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
-									 <p:selectManyCheckbox value="#{reportBackingBean.scQuotationList}" >										
-										<f:selectItem itemLabel="Quotation" itemValue="Q" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureQuoteEditView}"/>										
+									 <p:selectManyCheckbox id="quotationChk" value="#{reportBackingBean.scQuotationList}" >										
+										<f:selectItem itemLabel="Quotation" itemValue="Q" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureQuoteEditView}"/>	
+										<p:ajax event="change" listener="#{reportBackingBean.onSelectEffectedValues()}" partialSubmit="true" process="@this" update=":form:procureAllChk :form:tenderChk :form:restrctdTenderChk" />									
 									 </p:selectManyCheckbox>												
 									</c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scTenderChkView}" >			
 									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
-									 <p:selectManyCheckbox value="#{reportBackingBean.scTenderList}">										
-										<f:selectItem itemLabel="Tender" itemValue="T" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureTenderEditView}"/>										
+									 <p:selectManyCheckbox id="tenderChk" value="#{reportBackingBean.scTenderList}">										
+										<f:selectItem itemLabel="Tender" itemValue="T" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureTenderEditView}"/>
+										<p:ajax event="change" listener="#{reportBackingBean.onSelectEffectedValues()}" partialSubmit="true" process="@this" update=":form:procureAllChk :form:quotationChk :form:restrctdTenderChk" />										
 									 </p:selectManyCheckbox>												
 									</c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRstrctdChkView}" >			
 									<p:outputLabel value=""  style="margin-top:5px;width:160px;"/>
-									 <p:selectManyCheckbox value="#{reportBackingBean.scRstrctdTndrList}">										
+									 <p:selectManyCheckbox id="restrctdTenderChk" value="#{reportBackingBean.scRstrctdTndrList}">										
 										<f:selectItem itemLabel="Restricted Tender" itemValue="R" itemDisabled="#{scReportBackingBean.managedBean.rptGenBean.scProcureRestrctdEditView}"/>
+										<p:ajax event="change" listener="#{reportBackingBean.onSelectEffectedValues()}" partialSubmit="true" process="@this" update=":form:procureAllChk :form:quotationChk :form:tenderChk" />
 									 </p:selectManyCheckbox>												
 									</c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scStatusView}">
