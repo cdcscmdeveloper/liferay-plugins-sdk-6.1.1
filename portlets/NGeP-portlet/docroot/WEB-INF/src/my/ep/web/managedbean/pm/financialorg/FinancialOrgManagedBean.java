@@ -38,7 +38,8 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	private String regTypeId;
 	private String orgStatus;
 	private String serviceType;
-	private int financialActiveIndex;
+	
+	private int selectedTabIndex;
 
 	// Financial Svc
 	private PmFinancialSvc financialSvc;
@@ -367,13 +368,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 		this.serviceType = serviceType;
 	}
 
-	public int getFinancialActiveIndex() {
-		return financialActiveIndex;
-	}
-
-	public void setFinancialActiveIndex(int financialActiveIndex) {
-		this.financialActiveIndex = financialActiveIndex;
-	}
+	
 
 	public PmAddressType getPmAddressType() {
 		return pmAddressType;
@@ -612,6 +607,20 @@ public class FinancialOrgManagedBean extends BaseManagedBean implements
 	 */
 	public void setPmFinancialSvcUpdate(List<PmFinancialSvc> pmFinancialSvcUpdate) {
 		this.pmFinancialSvcUpdate = pmFinancialSvcUpdate;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 }

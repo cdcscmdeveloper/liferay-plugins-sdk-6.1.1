@@ -91,6 +91,11 @@ public class OrganisationBackingBean extends
 	private IPagingDataModel<PmOrgProfile> searchOrganisation = new SearchOrgPagingDataModel();
 	private boolean flag;
 	boolean result = false;
+	//Tab values
+		public static final int PROFILE_DETAIL = 0;
+		public static final int GOV_SELLER = 1;
+		public static final int RESPONSIBLE_PROFILE = 2;
+		
 
 	/*
 	 * @PostConstruct public void init() {
@@ -116,16 +121,16 @@ public class OrganisationBackingBean extends
 		}
 	}
 
-	public void getProfileDetails() {
-		this.getManagedBean().setOrganisationActiveIndex(0);
+	public int getProfileDetails() {		
+		return PROFILE_DETAIL;
 	}
 
-	public void getGovernmentSeller() {
-		this.getManagedBean().setOrganisationActiveIndex(1);
+	public int getGovernmentSeller() {
+		return GOV_SELLER;
 	}
 
-	public void getResponsibleProfile() {
-		this.getManagedBean().setOrganisationActiveIndex(2);
+	public int getResponsibleProfile() {
+		return RESPONSIBLE_PROFILE;
 	}
 
 	public String backToSearch() {
@@ -236,7 +241,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public String editOrganization(PmOrgProfile orgProfile) {
-		// getManagedBean().setOrganisationActiveIndex(1);
+		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(orgProfile);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -348,17 +353,7 @@ public class OrganisationBackingBean extends
 					this.getManagedBean().setDeliveryAddress(
 							pmAddressType.getPmAddress());
 
-				} /*
-				 * else if
-				 * (pmAddressType.getAddressType().equalsIgnoreCase(AddressType
-				 * .DELIVERY_ADDRESS.value())) {
-				 * this.getManagedBean().setDeliveryAddress
-				 * (pmAddressType.getPmAddress());
-				 * 
-				 * 
-				 * 
-				 * }
-				 */
+				}
 				if (!pmAddressType.getPmContacts().isEmpty()) {
 					this.getManagedBean().setOfficeContactPerson(
 							pmAddressType.getPmContacts().get(0));
@@ -403,6 +398,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public void editDeliveryAddress(PmAddress address) {
+		
 		retrieveCountryList();
 		System.out.println("Address Type" + address.getAddress1());
 
@@ -534,6 +530,11 @@ public class OrganisationBackingBean extends
 		OrgProfileResDTO resDTO = orgProfileSO.saveOrUpdateOrgProfile(reqDTO);
 		if (getManagedBean().getOrgProfile().isGovtSeller()) {
 			
+			/*getManagedBean().getOrgProfile().getPmFinancialOrg().setPmFinancialAccs(this.getManagedBean().getPmFinancialAcc());
+			System.out.println("Org Account"+getManagedBean().getOrgProfile().getPmFinancialOrg().getPmFinancialAccs().get(0).getAccountNo());
+			System.out.println("Org Account"+getManagedBean().getOrgProfile().getPmFinancialOrg().getPmFinancialAccs().get(0).getFinancialAccId());*/
+			System.out.println("Account No"+this.getManagedBean().getPmFinancialAcc().get(0).getAccountNo());
+			System.out.println("Account Id ::"+this.getManagedBean().getPmFinancialAcc().get(0).getFinancialAccId());
 			IRegistrationSO registrationSO = (IRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.SUPPLIER_MANAGEMENT,
@@ -564,6 +565,11 @@ public class OrganisationBackingBean extends
 			regResDTO.setSuccessful(true);
 
 		}
+		if (getManagedBean().getOrgProfile().isGovtSeller()) {
+			
+			System.out.println("Is Gove Seller ");
+			
+		}
 
 		if (resDTO.isSuccessful()) {
 			result = resDTO.isSuccessful();
@@ -580,6 +586,7 @@ public class OrganisationBackingBean extends
 	}
 
 	public String addOrganisation() {
+		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		if (getManagedBean().getOrgProfile().getOrgProfileId() == null) {
 			getManagedBean().setOrgProfile(new PmOrgProfile());
 		}

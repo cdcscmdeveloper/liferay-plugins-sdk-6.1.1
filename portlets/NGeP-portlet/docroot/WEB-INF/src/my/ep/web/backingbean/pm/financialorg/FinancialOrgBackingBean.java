@@ -67,6 +67,9 @@ public class FinancialOrgBackingBean extends
 		BaseBackingBean<FinancialOrgManagedBean> {
 	private static Logger log = Logger.getLogger(FinancialOrgBackingBean.class);
 	boolean result = false;
+	//Tab values
+	public static final int GENERRAL = 0;
+	public static final int FACTRING_BRANCH = 1;
 
 	private IPagingDataModel<PmFinancialOrg> searchFinancialOrg = new FinancialOrgPagingDataModel();
 
@@ -81,12 +84,12 @@ public class FinancialOrgBackingBean extends
 
 	}
 
-	public void getGeneralInfo() {
-		this.getManagedBean().setFinancialActiveIndex(0);
+	public int getGeneralInfoTab() {
+		return GENERRAL;
 	}
 
-	public void getFactringBranchInfo() {
-		this.getManagedBean().setFinancialActiveIndex(1);
+	public int getFactringBranchInfoTab() {
+		return FACTRING_BRANCH;
 	}
 
 	public void resetFinOrg() {
@@ -124,6 +127,7 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public String addFinancialOrg() {
+		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		resetFinOrg();
 		retrieveCountryList();
 		retrievePmFinancialOrgList();
@@ -318,6 +322,7 @@ public class FinancialOrgBackingBean extends
 	}
 
 	public String editFinancialOrg(PmFinancialOrg financialOrg) {
+		this.getManagedBean().setSelectedTabIndex(GENERRAL);
 		FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 		reqDTO.setFinancialOrgId(financialOrg.getFinancialOrgId());
 		IFinancialOrgSO finSO = (IFinancialOrgSO) BusinessDelegate

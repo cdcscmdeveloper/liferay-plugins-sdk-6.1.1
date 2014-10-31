@@ -34,7 +34,8 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		Serializable {
 	private static final long serialVersionUID = 1L;
 	private int activeIndex = 0;
-	private int organisationActiveIndex;
+	
+	private int selectedTabIndex;
 	// Organization Search
 	private String orgTypeCode;
 	private String orgCode;
@@ -283,20 +284,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.activeIndex = activeIndex;
 	}
 
-	/**
-	 * @return the organisationActiveIndex
-	 */
-	public int getOrganisationActiveIndex() {
-		return organisationActiveIndex;
-	}
-
-	/**
-	 * @param organisationActiveIndex
-	 *            the organisationActiveIndex to set
-	 */
-	public void setOrganisationActiveIndex(int organisationActiveIndex) {
-		this.organisationActiveIndex = organisationActiveIndex;
-	}
+	
 
 	/**
 	 * @return the orgTypeCode
@@ -718,6 +706,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setSelectedUsers(List<PmUser> selectedUsers) {
 		this.selectedUsers = selectedUsers;
+	}
+
+	/**
+	 * @return the selectedTabIndex
+	 */
+	public int getSelectedTabIndex() {
+		return selectedTabIndex;
+	}
+
+	/**
+	 * @param selectedTabIndex the selectedTabIndex to set
+	 */
+	public void setSelectedTabIndex(int selectedTabIndex) {
+		this.selectedTabIndex = selectedTabIndex;
 	}
 
 	
