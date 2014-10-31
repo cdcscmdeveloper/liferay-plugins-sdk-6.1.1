@@ -832,72 +832,50 @@ public class OrganisationBackingBean extends
 	}
 
 	public void addNewPtjAction() {
+		PmPtjGroup pmPtjGroupList = new PmPtjGroup();
 
-		List<PmOrgProfile> orgProfileList = this.getManagedBean()
-				.getOrgProfileList();
-		if (orgProfileList == null) {
-			orgProfileList = new ArrayList<PmOrgProfile>();
-			this.getManagedBean().setOrgProfileList(orgProfileList);
+		try {
+			List<PmPtjGroup> ptjList = this.getManagedBean()
+					.getPtjGroupList();
+			if (null == ptjList) {
+				ptjList = new ArrayList<PmPtjGroup>();
+			}
+
+			for (PmPtjGroup pmPtj : ptjList) {
+				pmPtj.setBrandNew(false);
+			}
+			ptjList.add(pmPtjGroupList);
+			this.getManagedBean().setPtjGroupList(ptjList);
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
 		}
-
-		PmOrgProfile profile = new PmOrgProfile();
-
-		profile.setPmOrgValidity(new PmOrgValidity());
-		orgProfileList.add(profile);
 
 	}
 
 	public void deletePtjAction() {
 
-		List<PmOrgProfile> openList = this.getManagedBean().getOrgProfileList();
+		List<PmPtjGroup> openList = this.getManagedBean().getPtjGroupList();
 
 		if (null == openList) {
-			openList = new ArrayList<PmOrgProfile>();
+			openList = new ArrayList<PmPtjGroup>();
 		}
 
-		List<PmOrgProfile> openSelectList = this.getManagedBean()
-				.getSelectedPmOrgProfile();
+		List<PmPtjGroup> openSelectList = this.getManagedBean()
+				.getSelectedPtjGroup();
 		if (null == openSelectList) {
-			openSelectList = new ArrayList<PmOrgProfile>();
+			openSelectList = new ArrayList<PmPtjGroup>();
 		}
 
 		if (openList.size() == openSelectList.size()) {
 			openList.clear();
 		} else {
-			for (PmOrgProfile category : openSelectList)
+			for (PmPtjGroup category : openSelectList)
 				openList.remove(category);
 		}
 
 	}
 
-	public void deleteOrgUnit(PmOrgProfile orgProfile) {
-
-		if (orgProfile != null && orgProfile.isBrandNew()) {
-			if (this.getManagedBean().getPmOrgProfile() == null) {
-				this.getManagedBean().setPmOrgProfile(
-						new ArrayList<PmOrgProfile>());
-			}
-			this.getManagedBean().getSelectedPmOrgProfile().remove(orgProfile);
-		}
-	}
-
-	public void addOrgUnit() {
-
-		if (this.getManagedBean().getPmOrgProfile() == null) {
-			this.getManagedBean().setPtjGroups(new ArrayList<PmPtjGroup>());
-		}
-		if (!this.getManagedBean().getSelectedPtjGroup().isEmpty()) {
-			int size = this.getManagedBean().getSelectedPtjGroup().size();
-			PmPtjGroup pmUserOrg = this.getManagedBean().getSelectedPtjGroup()
-					.get(size - 1);
-
-		}
-
-		PmOrgProfile pmOrgProfile = new PmOrgProfile();
-		pmOrgProfile.setOrgTypeCode(new PmParameter());
-		pmOrgProfile.setPmOrgValidity(new PmOrgValidity());
-
-	}
+	
 
 	private PmAddress setDefaultAddr() {
 		PmAddress addr = new PmAddress();

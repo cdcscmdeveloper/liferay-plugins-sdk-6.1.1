@@ -80,8 +80,9 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	
 	private List<PmOrgProfile> selectedPmOrgProfile;
 	
-	private List<PmPtjGroup> ptjGroups;
+	private List<PmPtjGroup> ptjGroupList;
 	private List<PmPtjGroup> selectedPtjGroup;
+	private PmPtjGroup selectedPtj;
 	
 	private	DualListModel<PmUser> supplierUsers;
 	private List<PmUser> sourceUsers;
@@ -638,18 +639,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		this.selectedPmOrgProfile = selectedPmOrgProfile;
 	}
 
+	
+
 	/**
-	 * @return the ptjGroups
+	 * @return the ptjGroupList
 	 */
-	public List<PmPtjGroup> getPtjGroups() {
-		return ptjGroups;
+	public List<PmPtjGroup> getPtjGroupList() {
+		return ptjGroupList;
 	}
 
 	/**
-	 * @param ptjGroups the ptjGroups to set
+	 * @param ptjGroupList the ptjGroupList to set
 	 */
-	public void setPtjGroups(List<PmPtjGroup> ptjGroups) {
-		this.ptjGroups = ptjGroups;
+	public void setPtjGroupList(List<PmPtjGroup> ptjGroupList) {
+		this.ptjGroupList = ptjGroupList;
 	}
 
 	/**
@@ -720,6 +723,20 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 	 */
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	/**
+	 * @return the selectedPtj
+	 */
+	public PmPtjGroup getSelectedPtj() {
+		return selectedPtj;
+	}
+
+	/**
+	 * @param selectedPtj the selectedPtj to set
+	 */
+	public void setSelectedPtj(PmPtjGroup selectedPtj) {
+		this.selectedPtj = selectedPtj;
 	}
 
 	
