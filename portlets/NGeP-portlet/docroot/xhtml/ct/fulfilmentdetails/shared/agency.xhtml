@@ -9,72 +9,75 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
    <p:panel id="agencyId" header="#{lbl['lbl.ct.panel.agency']}"  toggleable="true"  toggleSpeed="500">
-     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agency.dtls']}"/> -->
-     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
-	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
-	 <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address']}" escape="false"/><br/><br/>
-     <div style="overflow-x:auto">
+       
+       <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency']}" escape="false"/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delete.agency']}" escape="false"/><br/>
+	   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.delivery.address']}" escape="false"/><br/><br/>
+  
        <p:dataTable id="tableAgencyDetails" var="agencyData" 
             value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" 
             selection="#{contractDetailsBackingBean.selectedListOfAgency}" rowKey="#{agencyData}">
                <ac:paginator for="tableAgencyDetails"/>
                <p:ajax event="rowSelect" update=":form:agencyId" />
-               <p:column selectionMode="multiple" style="width:2%;"
-                 	rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
+              
+               <p:column selectionMode="multiple" 
+                   style="width:2%;" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
             
-             <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
-				<h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
-			 </p:column>
+               <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
+				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
+			   </p:column>
 			
-			  <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:30%;white-space:normal;">
-				<h:outputText  value="#{agencyData.orgProfile.orgName}"/>
-				<p:spacer width="5"/>
-				<p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
-					rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}"
-					action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
-					<p:graphicImage value="/css/images/design/address.png" styleClass="ui-icon-address"
-						title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
-				</p:commandLink>
-			 </p:column>
+			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:28%;white-space:normal;">
+				   <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+				   <p:spacer width="5"/>
+				   <p:commandLink partialSubmit="true" process="@this" update=":form:deliveryAddressDlg"
+				       rendered="#{fn:length(agencyData.ctAgencyAddresses)!=0}" action="#{contractDetailsBackingBean.assignSelAgency(agencyData)}">
+					   <p:graphicImage value="/css/images/design/address.png" 
+					       styleClass="ui-icon-address" title="#{lbl['lbl.ct.tooltip.agency.address']}" style="margin-bottom: -5px;" />
+				   </p:commandLink>
+			    </p:column>
 			
-			 <p:column style="width:10%;white-space:normal;">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
-               	</f:facet>
-           		<p:inputText value="#{agencyData.ceilingAmount}"  required="true" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-			     	maxlength="23"  styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.amount']}">
-			 		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		<p:ajax event="change" update=":form:tableAgencyDetails"
-                    	process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
-				</p:inputText>
-		   	 </p:column>
+			    <p:column style="width:10%;white-space:normal;">
+			  	    <f:facet name="header">
+					   <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		   <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	    </f:facet>
+           		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
+           		        disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:100px;" maxlength="23"  styleClass="ppRightBtn">
+			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			 		    <p:ajax event="change" update=":form:tableAgencyDetails"
+                        	process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
+				     </p:inputText>
+		    	</p:column>
 		   
-		   	 <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
-			  	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"
-		             showOn="button" readonlyInput="true" navigator="true"
-		             mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
-		             disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
-		             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
-		       	</p:calendar>
-		   	 </p:column>
+		   	     <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
+			      	<p:calendar id="agencyDateActive" 
+		               value="#{agencyData.effDate}"  showOn="button" readonlyInput="true" navigator="true"
+		               mindate="#{contractDetailsBackingBean.currentDate}" maxdate="#{agencyData.expDate}"			             
+		               disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
+		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+		           </p:calendar>
+		          </p:column>
 		   	
-		   	 <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;">
-				<h:outputText value="#{agencyData.expDate}">
-				  <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
-		   	 </p:column>
+		   	      <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;">
+				  <h:outputText value="#{agencyData.expDate}">
+				      <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText>
+		   	   </p:column>
 		   	
-		   	 <p:column style="width:15%;white-space:normal;">
-		   	 	<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.ct.ap178']}"/>
-               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
-               	</f:facet>
-		   	    <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
-		   	      rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
+		   	   <p:column style="width:10%;white-space:normal;">
+		   	 	   <f:facet name="header">
+					  <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
+               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
+               	   </f:facet>
+		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
+		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != 
 		   	           agencyData.orgProfile.parentOrgProfile.orgName}"/>
-		   	 </p:column>
+		       </p:column>
+		        
+		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
+		   	        <p:outputLabel value="#{agencyData.recordStatus == true ? 'Activie':'Inactive'}"/>
+		       </p:column>
 			</p:dataTable> 
-       	</div>
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
        		    action="#{contractDetailsBackingBean.setMinistryOwnerId()}"  update=":form:ministry" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
