@@ -2653,8 +2653,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			int groupPrevious = 0;
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmTierPricings(), new Comparator<CmTierPricing>(){
 				@Override public int compare(CmTierPricing p1, CmTierPricing p2) {
-		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+					/*if(p1.getPricingId()>0 && p2.getPricingId()>0)
+						return Long.compare(p1.getPricingId(),p2.getPricingId());
+					else
+						return 0;*/
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
 		        }
+				
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
 			}
 			);
 			
@@ -2689,8 +2702,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			groupPrevious = 0;
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings(), new Comparator<CmPromotionTierPricing>(){
 				@Override public int compare(CmPromotionTierPricing p1, CmPromotionTierPricing p2) {
-		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+					/*if(p1.getPricingId()>0 && p2.getPricingId()>0)
+						return Long.compare(p1.getPricingId(),p2.getPricingId());
+					else
+						return 0;*/
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
 		        }
+				
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
 			}
 			);
 			
@@ -2775,8 +2801,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			groupPrevious = 0;
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings(), new Comparator<CmZonalTierPricing>(){
 				@Override public int compare(CmZonalTierPricing p1, CmZonalTierPricing p2) {
-		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+					/*if(p1.getPricingId()>0 && p2.getPricingId()>0)
+						return Long.compare(p1.getPricingId(),p2.getPricingId());
+					else
+						return 0;*/
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
 		        }
+				
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
 			}
 			);
 			
@@ -2818,8 +2857,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			groupPrevious = 0;
 			Collections.sort(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings(), new Comparator<CmZonalPromotionTierPricing>(){
 				@Override public int compare(CmZonalPromotionTierPricing p1, CmZonalPromotionTierPricing p2) {
-		            return Long.compare(p1.getPricingId(),p2.getPricingId());
+					/*if(p1.getPricingId()>0 && p2.getPricingId()>0)
+						return Long.compare(p1.getPricingId(),p2.getPricingId());
+					else
+						return 0;*/
+					if(p1.getStand_group_id()<p2.getStand_group_id())
+						return -1;
+					else if(p1.getStand_group_id()==p2.getStand_group_id())
+						return doSecodaryOrderSort(p1, p2);
+					else
+						return 1;
 		        }
+				
+				public int doSecodaryOrderSort(CmPricing p1,CmPricing p2) {
+				    return p1.getFromQty()<p2.getFromQty()?-1:0;
+				}
 			}
 			);
 			
