@@ -410,6 +410,7 @@ public class QTCommitteBackingBean extends
 
 	public void onRowCloneAction(SelectEvent event) {
 		debugLogger("onRowCloneAction");
+		this.getManagedBean().setSearchcommitteeNode(null);
 		ScQt scQt = (ScQt) event.getObject();
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
@@ -465,12 +466,13 @@ public class QTCommitteBackingBean extends
 		Map<String, List<ScCommitteeMember>> clonedCommittes = new HashMap<String, List<ScCommitteeMember>>();
 
 		if (null != treeNodes && treeNodes.length > 0) {
-			for (TreeNode treeNode : treeNodes) {
-				TreeNodeBean treeNodeBean = (TreeNodeBean) treeNode.getData();
+			for (int nodes = 0; nodes < treeNodes.length; nodes++) {
+				TreeNodeBean treeNodeBean = (TreeNodeBean) treeNodes[nodes]
+						.getData();
 				String type = treeNodeBean.getType();
 
 				if ("committee".equalsIgnoreCase(type)) {
-					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNode
+					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNodes[nodes]
 							.getData()).getObject();
 					if (!clonedCommittes.containsKey(scCommittee
 							.getCommitteeType().getParameterCode())) {
@@ -481,19 +483,20 @@ public class QTCommitteBackingBean extends
 
 				}
 				if ("scCommitteeMember".equalsIgnoreCase(type)) {
-					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNode
+					ScCommittee scCommittee = (ScCommittee) ((TreeNodeBean) treeNodes[nodes]
 							.getParent().getData()).getObject();
 					if (!clonedCommittes.containsKey(scCommittee
 							.getCommitteeType().getParameterCode())) {
 						clonedCommittes.put(scCommittee.getCommitteeType()
 								.getParameterCode(),
-								removeUnselectedChilds(treeNode.getParent()));
+								removeUnselectedChilds(treeNodes[nodes]
+										.getParent()));
 					}
 
 				}
 
 			}
-			
+
 		} else {
 			throw new EpException(MessageConst.ERROR_760103);
 		}
@@ -509,17 +512,24 @@ public class QTCommitteBackingBean extends
 				.getScCommitteeMemberTabList();
 
 		for (String committeType : needToCloneCommittes) {
-			for (TabBean tabBean : tabs) {
-				if (tabBean.getTitleName().equalsIgnoreCase(
-						CommitteType.getValue(committeType))) {
-					ScCommittee cloneCommitte = tabBean.getScQtCommittee()
-							.getScCommittee();
-					for (ScCommitteeMember members : clonedCommittes
-							.get(committeType)) {
+
+			for (int beanCount = 0; beanCount < tabs.size(); beanCount++) {
+				if (tabs.get(beanCount).getTitleName()
+						.equalsIgnoreCase(CommitteType.getValue(committeType))) {
+					if (null == tabs.get(beanCount).getMembers()) {
+						tabs.get(beanCount).setMembers(
+								new ArrayList<ScCommitteeMember>());
+					}
+					ScCommittee cloneCommitte = tabs.get(beanCount)
+							.getScQtCommittee().getScCommittee();
+					List<ScCommitteeMember> members = clonedCommittes
+							.get(committeType);
+
+					for (int i = 0; i < members.size(); i++) {
 						ScCommitteeMember member1 = null;
 						try {
 							member1 = (ScCommitteeMember) BeanUtils
-									.cloneBean(members);
+									.cloneBean(members.get(i));
 						} catch (IllegalAccessException
 								| InstantiationException
 								| InvocationTargetException
@@ -533,10 +543,15 @@ public class QTCommitteBackingBean extends
 								setUserDetails(member1);
 								member1.setChangedDate(null);
 								member1.setScCommittee(cloneCommitte);
-								cloneCommitte.getScCommitteeMembers().add(
-										member1);
+								tabs.get(beanCount).getMembers().add(member1);
 							} else {
-								throw new EpException(MessageConst.ERROR_760048);
+								throw new EpException(
+										MessageConst.ERROR_760048,
+										new String[] { CommitteType
+												.getValue(cloneCommitte
+														.getCommitteeType()
+														.getParameterCode()) });
+
 							}
 						}
 
@@ -545,21 +560,21 @@ public class QTCommitteBackingBean extends
 				}
 			}
 		}
-		FacesContext
-		.getCurrentInstance()
-		.addMessage(
+		// updating the memebers into sccommitte object if no error..
+		for (int i = 0; i < tabs.size(); i++) {
+			if (null != tabs.get(i).getMembers()) {
+				tabs.get(i).getScQtCommittee().getScCommittee()
+						.getScCommitteeMembers()
+						.addAll(tabs.get(i).getMembers());
+			}
+		}
+		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(
-						FacesMessage.SEVERITY_INFO,
-						null,
-						MessageUtils
-								.getMessage(
-										MessageConst.ERROR_760155,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes()
-												.getUserLocale())));
-		
-		
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(MessageConst.ERROR_760155,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
 	}
 
 	/**
@@ -580,23 +595,8 @@ public class QTCommitteBackingBean extends
 
 	public void cloneCommitteePopupAction() {
 		debugLogger("cloneCommitteePopupAction");
-		//logic to check whether committe will allow for clone or not..
-		List<TabBean> tabBeans = this.getManagedBean().getScCommitteeMemberTabList();
-		for(TabBean tabBean : tabBeans){
-			if(tabBean.getTitleName().equalsIgnoreCase(QTConstants.SPECIFICATION_COMMITTEE_TAB)){
-				ScCommittee committe = tabBean.getScQtCommittee().getScCommittee();
-				if(QTStatusConst.CM_PENDING_SUBMISSION.equals(committe.getCommitteStatus())){
-				ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								ICommitteSO.class);
-				CommitteReqDTO reqDTO = new CommitteReqDTO();
-				reqDTO.setScCommittee(committe);
-				reqDTO.setScQt(this.getManagedBean().getQt());
-				reqDTO.setUser(new FacesScopes().getUserSessionBean());
-				committeSO.validateCommitteDtls(reqDTO);
-				}
-			}
-		}
+		// logic to check whether committe will allow for clone or not..
+		checkIsSpecCommitteFormOrNot();
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
@@ -606,6 +606,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
 		getManagedBean().setSearchcommitteeNode(null);
+		RequestContext.getCurrentInstance().execute("screen2.show()");
 	}
 
 	public void committeeclonePopupAction(ScQtCommittee committee) {
@@ -681,6 +682,7 @@ public class QTCommitteBackingBean extends
 
 	public void addCloneToTecDtl() {
 		debugLogger("addCloneToTecDtl");
+		checkIsSpecCommitteFormOrNot();
 		// TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
@@ -698,15 +700,18 @@ public class QTCommitteBackingBean extends
 							.getScQtCommittee().getScCommittee()
 							.getScCommitteeMembers();
 					if (isMemberExists(existingMembers, selectedList)) {
-						throw new EpException(MessageConst.ERROR_760048);
+						throw new EpException(
+								MessageConst.ERROR_760048,
+								new String[] { QTConstants.TECHNICAL_COMMITTEE_TAB });
 					}
 					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
 
-					for (ScCommitteeMember member : selectedList) {
+					for (int memebersList = 0; memebersList < selectedList
+							.size(); memebersList++) {
 						ScCommitteeMember member1 = new ScCommitteeMember();
 						try {
 							member1 = (ScCommitteeMember) BeanUtils
-									.cloneBean(member);
+									.cloneBean(selectedList.get(memebersList));
 
 						} catch (IllegalAccessException
 								| InstantiationException
@@ -765,11 +770,7 @@ public class QTCommitteBackingBean extends
 		ScCommittee scCommittee = selectedCommitteTabBean.getScQtCommittee()
 				.getScCommittee();
 		ScQt scQt = this.getManagedBean().getQt();
-		List<ScCommitteeMember> memberList = scCommittee
-				.getScCommitteeMembers();
-		if (null == memberList) {
-			memberList = new ArrayList<ScCommitteeMember>();
-		}
+		List<ScCommitteeMember> toBeAddedList = new ArrayList<ScCommitteeMember>();
 
 		if (getManagedBean().getCommitteMember().getUserSelection().equals("N")) {
 			ScCommitteeMember member = new ScCommitteeMember();
@@ -874,21 +875,25 @@ public class QTCommitteBackingBean extends
 
 			member.setPmUser(resDTO.getPmUser());
 			setUserDetails(member);
-			memberList.add(member);
+			toBeAddedList.add(member);
 		} else {
-			List<String> itemIds = new ArrayList<String>();
+			// List<String> itemIds = new ArrayList<String>();
 			if (!this.getManagedBean().getSelectedPmUser().isEmpty()) {
-				for (PmUser user : getManagedBean().getSelectedPmUser()) {
+				List<PmUser> users = getManagedBean().getSelectedPmUser();
+
+				for (int i = 0; i < users.size(); i++) {
 					ScCommitteeMember committeeMember = new ScCommitteeMember();
-					committeeMember.setMemberName(user.getUserName());
-					committeeMember.setIcPassport(user.getIdentificationNo());
-					committeeMember.setDesignation(user.getDesignation());
-					committeeMember.setEmail(user.getEmail());
-					committeeMember.setGrade(user.getGrade());
-					committeeMember.setPNP(user.isPMP());
-					committeeMember.setPmUser(user);
+					committeeMember.setMemberName(users.get(i).getUserName());
+					committeeMember.setIcPassport(users.get(i)
+							.getIdentificationNo());
+					committeeMember.setDesignation(users.get(i)
+							.getDesignation());
+					committeeMember.setEmail(users.get(i).getEmail());
+					committeeMember.setGrade(users.get(i).getGrade());
+					committeeMember.setPNP(users.get(i).isPMP());
+					committeeMember.setPmUser(users.get(i));
 					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-					if (user.isPMP() == true) {
+					if (users.get(i).isPMP() == true) {
 						ParameterReqDTO reqDTO = new ParameterReqDTO();
 						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
 						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
@@ -902,18 +907,18 @@ public class QTCommitteBackingBean extends
 							if (parameter
 									.getPmParameter()
 									.getParameterId()
-									.equals(user.getMemberRole()
+									.equals(users.get(i).getMemberRole()
 											.getParameterId())) {
 								ParameterReqDTO reqDTO = new ParameterReqDTO();
-								reqDTO.setParameterId(user.getMemberRole()
-										.getParameterId());
+								reqDTO.setParameterId(users.get(i)
+										.getMemberRole().getParameterId());
 								ParameterResDTO resDTO = getParameterSO()
 										.retrieveParameterById(reqDTO);
 								committeeMember.setMemberRole(resDTO
 										.getPmParameter());
 								break;
 							} else {
-								committeeMember.setMemberRole(user
+								committeeMember.setMemberRole(users.get(i)
 										.getMemberRole());
 							}
 						}
@@ -921,30 +926,22 @@ public class QTCommitteBackingBean extends
 					committeeMember.setAccessRight(QTConstants.ACCESS_RIGHT);
 					committeeMember.setScCommittee(scCommittee);
 					setUserDetails(committeeMember);
-					// memberList.add(committeeMember);
-					if (scCommittee.getScCommitteeMembers().isEmpty()) {
-						// scCommittee.getScCommitteeMembers().add(committeeMember);
-						memberList.add(committeeMember);
-					} else {
-						for (ScCommitteeMember committeeMember2 : scCommittee
-								.getScCommitteeMembers()) {
-							itemIds.add(committeeMember2.getIcPassport());
-						}
-						if (itemIds.size() > 0) {
-							if (itemIds.contains(user.getIdentificationNo())) {
-								throw new EpException(MessageConst.ERROR_760120);
-							} else {
-								memberList.add(committeeMember);
-							}
-						}
-					}
+					toBeAddedList.add(committeeMember);
+
 				}
 			} else {
 				throw new EpException(MessageConst.ERROR_760121);
 			}
 
 		}
-		scCommittee.setScCommitteeMembers(memberList);
+		if (isMemberExists(scCommittee.getScCommitteeMembers(), toBeAddedList)) {
+			throw new EpException(MessageConst.ERROR_760048,
+					new String[] { CommitteType.getValue(scCommittee
+							.getCommitteeType().getParameterCode()) });
+
+		}
+
+		scCommittee.getScCommitteeMembers().addAll(toBeAddedList);
 		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
 
 		// Specification Committee validation
@@ -1217,17 +1214,16 @@ public class QTCommitteBackingBean extends
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
-		//List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
+		// List<ScCommitteeMember> members = new ArrayList<ScCommitteeMember>();
 		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
 				.removeAll(selectedList);
 
-		/*for (int i = 0; i < selectedList.size(); i++) {
-			if (null != selectedList.get(i).getCommitteeMemberId()) {
-				selectedList.get(i).setDeleted(true);
-				members.add(selectedList.get(i));
-			}
-		}
-		bean.setMembers(members);*/
+		/*
+		 * for (int i = 0; i < selectedList.size(); i++) { if (null !=
+		 * selectedList.get(i).getCommitteeMemberId()) {
+		 * selectedList.get(i).setDeleted(true);
+		 * members.add(selectedList.get(i)); } } bean.setMembers(members);
+		 */
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.remove(this.getManagedBean().getSelectedTabIndex());
 		this.getManagedBean().getScCommitteeMemberTabList()
@@ -1246,5 +1242,28 @@ public class QTCommitteBackingBean extends
 			}
 		}
 		return false;
+	}
+
+	private void checkIsSpecCommitteFormOrNot() {
+		ScCommittee committe = null;
+		for (TabBean tabBean : this.getManagedBean()
+				.getScCommitteeMemberTabList()) {
+
+			if (QTConstants.SPECIFICATION_COMMITTEE_TAB
+					.equalsIgnoreCase(tabBean.getTitleName())) {
+				committe = tabBean.getScQtCommittee().getScCommittee();
+
+				break;
+			}
+		}
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setScCommittee(committe);
+		reqDTO.setScQt(this.getManagedBean().getQt());
+		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		committeSO.validateCommitteDtls(reqDTO);
+
 	}
 }
