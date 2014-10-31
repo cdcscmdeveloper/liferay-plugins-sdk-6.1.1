@@ -1042,7 +1042,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			
 			SpecZoneLocReqDTO reqDTO = new SpecZoneLocReqDTO();
 			reqDTO.setDocType(ParameterConst.DOCTYPE_REQUEST_NOTE);
-			reqDTO.setDocId(zone.getSpecZoneId());
+			reqDTO.setDocId(zone.getDocId());
 			//reqDTO.setDocId(3391L);
 			SpecZoneLocResDTO resDTO = specZoneLocSO.retrieveZoneDtlListByDocIdNType(reqDTO);
 			
