@@ -39,6 +39,7 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -352,6 +353,15 @@ public class ApprovalBackingBean extends
 
 	public void approvalBpmTask(String action) {
 		if (BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(action)) {
+			List<ScQtApprovalRemark> remarks = this.getManagedBean().getScQtApproval().getScQtApprovalRemarks();
+			if (null != remarks) {
+				for (int i = 0; i < remarks.size(); i++) {
+					String userRemark = remarks.get(i).getRemark();
+					if (null == userRemark || "".equals(userRemark)) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
+					}
+				}
+			}
 			this.getManagedBean().setAction(action);
 			RequestContext.getCurrentInstance().execute("reviceApprovalDlg.show()");
 		} else {

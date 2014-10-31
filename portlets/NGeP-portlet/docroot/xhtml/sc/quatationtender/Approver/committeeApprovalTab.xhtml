@@ -38,7 +38,7 @@
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
-						value="#{lbl['lbl.sc.qt.remark']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+						value="#{lbl['lbl.sc.qt.remark']}" /></td>
 				<td class="TableFieldRight"><p:dataGrid var="remarkVar"
 						value="#{approvalBackingBean.managedBean.scQtApproval.scQtApprovalRemarks}"
 						rowIndexVar="remarkIndex" columns="1">
@@ -56,21 +56,11 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td>
-									<table>
-										<tr>
-											<td><p:inputTextarea id="remarksid" cols="40"
-													value="#{remarkVar.remark}" required="true"
-													label="#{lbl['lbl.sc.spec.approval.remark']}"
-													maxlength="1000" rendered="#{remarkVar.remarkId eq null}" />
-												<h:outputText value="#{remarkVar.remark}"
-													rendered="#{remarkVar.remarkId ne null}"
-													style="display: inline-block; width:220px;word-wrap: break-word;" />
-											</td>
-											<td><p:message id="remarksidMsg" for="remarksid"
-													display="icon" /></td>
-										</tr>
-									</table>
+								<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
+										maxlength="1000" rendered="#{remarkVar.remarkId eq null}" />
+									<h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkVar.remarkId ne null}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
 							</tr>
 						</table>
