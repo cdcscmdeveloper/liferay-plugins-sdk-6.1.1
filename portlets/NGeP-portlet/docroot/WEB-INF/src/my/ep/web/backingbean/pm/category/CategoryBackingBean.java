@@ -545,6 +545,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				CategoryCodeResDTO resDTO = categoryCodeSO.saveBasicCategory(reqDTO);
 				
 				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(resDTO.getPmBasicCategory());
+				
+				reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
+				categoryCodeSO.saveSubDivision(reqDTO);
 			}
 		}
 		resetLOV();
