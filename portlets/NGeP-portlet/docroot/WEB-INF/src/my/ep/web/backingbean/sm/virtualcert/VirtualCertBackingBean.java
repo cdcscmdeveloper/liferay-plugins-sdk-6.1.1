@@ -24,17 +24,22 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertReqDTO;
 import my.ep.dto.sm.virtualcert.VirtualCertResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmMofCert;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -96,7 +101,34 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 	}
 	
+	public SmAppl getSerializedAppl(String serPath) {
+		
+		System.out.println("serPath: " + serPath);
+		ISmApplRevisionSO applRevisionSO = null;
+
+		try {
+			applRevisionSO = (ISmApplRevisionSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							ISmApplRevisionSO.class);
+
+			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
+
+			reqDTO.setDeSerFileName(serPath);
+			SmApplRevisionResDTO resDTO = applRevisionSO.readApplicationHist(reqDTO);
+
+//		} catch (NullPointerException ne) {
+//			getManagedBean().setReviewApplicationExist(false);
+			return resDTO.getSmAppl();
+		} finally {
+			applRevisionSO = null;
+		}
+//		return null;
+	}
+	
 	public void generatePdf(SmMofAccount mofAcc) throws Exception {
+		
+//		SmSupplier smSupplier = getSmSupplier();
+//		smSupplier.setSmAppl(getSerializedAppl(smSupplier.getSmAppl().getApprovedSerFile()));
 		
 		Long applId = getSmSupplier().getSmAppl().getApplId();
 		
@@ -126,9 +158,17 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			resDto = mofRegistrationSO.retrieveSupplierProfileByApplId(reqDto);
 			log.info("*********Supplier ID>" + resDto.getSmAppl().getApplId());
 			smSupplier = resDto.getSmAppl().getSmSupplier();
+			
+			System.out.println("supplier.getSmAppl()::::::::::::::::000 " + resDto.getSmAppl().getApplId());
+			System.out.println("supplier.getSmAppl()::::::::::::::::000 " + resDto.getSmAppl().getSmSupplierCategories().size());
+			
 		} finally {
 			mofRegistrationSO = null;
 		}
+		
+		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getApplId());
+		System.out.println("supplier.getSmAppl()::::::::::::::::0 " + smSupplier.getSmAppl().getSmSupplierCategories().size());
+		
 		// instantiate velocity template
 		// replace value in velocity template
 		String coverHtml = getCoverHtmlFromVelocity(smSupplier, mofAcc, false);
@@ -296,7 +336,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	log.info("template: " + template);
     	
     	VelocityContext context = new VelocityContext();
-    	log.info("*********Supplier Appl**********" + supplier.getSmAppl());
+    	log.info("*********Supplier Appl**********" + supplier.getSmAppl().getApplId());
     	//String supplierType = supplier.getSmAppl().getSupplierType();
     	
     	//Date now = new Date();
@@ -336,7 +376,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	String cityName = smAddress.getPmCity().getCityName();
     	String stateName = smAddress.getPmState().getStateName();
     	String countryName = smAddress.getPmCountry().getCountryName();
-    	String regDate = supplier.getCreatedDate().toString();
+//    	String regDate = supplier.getCreatedDate().toString();
     	
     	FacesScopes fs = new FacesScopes();
     	String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
@@ -346,13 +386,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     		if(personnel.isAuthorized() && personnel.isRecordStatus()) {
     			personnelList.add(personnel);
     		}
-    	}
-    	
+    	}    	
     	
     	context.put("mofCertSerialNo", mofCertSerialNo);
     	context.put("mofAccountNo", mofAccountNo);
     	context.put("effDate", effDate);
     	context.put("expDate", expDate);
+    	context.put("regDate", toUtilDate(supplier.getCreatedDate()));
     	
     	context.put("companyName", companyName);
     	context.put("bizRegNo", bizRegNo);
@@ -364,8 +404,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("cityName", cityName);
     	context.put("stateName", stateName);
     	context.put("countryName", countryName);
-    	context.put("registrationDate", regDate);
-    	
+    	System.out.println("toUtilDate(supplier.getCreatedDate()): " + toUtilDate(supplier.getCreatedDate()));
     	context.put("personnelList", personnelList);
     	context.put("hostUrl", hostUrl);
     	
@@ -389,12 +428,29 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	
     	log.info("template: " + template);
     	
-    	List<SmSupplierCategory> categoryList = new ArrayList<SmSupplierCategory>();
+    	/*List<SmSupplierCategory> categoryList = new ArrayList<SmSupplierCategory>();
     	for(SmSupplierCategory supplierCategory : supplier.getSmAppl().getSmSupplierCategories()) {
     		if(supplierCategory.isRecordStatus() && supplierCategory.isApprovedByAp() && supplierCategory.isApprovedByPo()) {
     			categoryList.add(supplierCategory);
     		}
-    	}    	
+    	} */   	
+    	System.out.println("supplier.getSmAppl()::::::::::::::::1 " + supplier.getSmAppl().getApplId());
+    	System.out.println("supplier.getSmAppl()::::::::::::::::1 " + supplier.getSmAppl().getSmSupplierCategories().size());
+    	List categories = new ArrayList();
+    	for(SmSupplierCategory supplierCategory : supplier.getSmAppl().getSmSupplierCategories()) {
+    		
+    		System.out.println("supplierCategory: " + supplierCategory.isRecordStatus() + " || " +  supplierCategory.isApprovedByAp() + " || " + supplierCategory.isApprovedByPo());
+    		
+    		if(supplierCategory.isRecordStatus() && supplierCategory.isApprovedByAp() && supplierCategory.isApprovedByPo()) {
+    			List category = new ArrayList();
+    			
+    			category.add(toUtilDate(supplierCategory.getCreatedDate()));
+    			category.add(supplierCategory.getPmCategoryL1().getCategoryL1Code() + supplierCategory.getPmCategoryL2().getCategoryL2Code() + supplierCategory.getPmCategoryL3().getCategoryL3Code());
+    			category.add(supplierCategory.getPmCategoryL3().getCategoryName());
+    			
+    			categories.add(category);
+    		}
+    	}
     	
     	VelocityContext context = new VelocityContext();
     	
@@ -402,8 +458,9 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	context.put("mofAccountNo", this.getManagedBean().getMofAccountNo());
     	context.put("effDate", this.getManagedBean().getEffDate());
     	context.put("expDate", this.getManagedBean().getExpDate());
-    	
-    	context.put("categoryList", categoryList);
+    	context.put("regDate", toUtilDate(supplier.getCreatedDate()));
+//    	context.put("categoryList", categoryList);
+    	context.put("categories", categories);
     	
     	StringWriter output = new StringWriter();
     	    	
@@ -411,6 +468,13 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
     	log.debug("html output: " + output);
     	
     	return output.toString();
+    }
+    
+    private String toUtilDate(java.sql.Timestamp sqlDate) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		Calendar createdDate = Calendar.getInstance();
+		createdDate.setTimeInMillis(sqlDate.getTime());
+		return sdf.format(createdDate.getTime());
     }
     
 	public String getLampiranBFromVelocity()  throws Exception {
