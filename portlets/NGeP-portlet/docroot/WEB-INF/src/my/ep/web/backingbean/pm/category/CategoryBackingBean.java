@@ -519,10 +519,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	
 	public void populateToSaveLOV() {
 		log.info("In populateToSaveLOV");
+		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 		
-		FacesContext context = FacesContext.getCurrentInstance();
+		//FacesContext context = FacesContext.getCurrentInstance();
 		if(this.getManagedBean().getSelectedLOV() != null && !this.getManagedBean().getSelectedLOV().isEmpty()) {
+			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedLOV()) {
+				
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
 				pmBasicCategory.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 				pmBasicCategory.setBasicCategoryL3(pmCategoryL3.getCategoryL3Id());
@@ -538,7 +541,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						pmCategoryL3.getPmCategoryL2().getCategoryL2Code()+
 						pmCategoryL3.getCategoryL3Code());
 				
-				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(pmBasicCategory);
+				reqDTO.setPmBasicCategory(pmBasicCategory);
+				CategoryCodeResDTO resDTO = categoryCodeSO.saveBasicCategory(reqDTO);
+				
+				this.getManagedBean().getPmCategoryL3().getPmBasicCategory().add(resDTO.getPmBasicCategory());
 			}
 		}
 		resetLOV();

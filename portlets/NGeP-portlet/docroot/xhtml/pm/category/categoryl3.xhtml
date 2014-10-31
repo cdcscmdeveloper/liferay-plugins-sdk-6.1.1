@@ -161,16 +161,15 @@
 		</p:panel>
 		
 		<p:panel header="#{lbl['lbl.pm.category.grouping']}" toggleable="true" id="groupdetails">
-		<p:dataTable id="groupdetailsId" rowIndexVar="rowIndex" rowKey="#{pmBasicCategory.basicCategoryId}"
+		<p:dataTable id="groupdetailsId" 
+			rowKey="#{pmBasicCategory.basicCategoryId}"
 			value="#{categoryBackingBean.managedBean.pmCategoryL3.pmBasicCategory}"
-			
+			selection="#{categoryBackingBean.managedBean.selectedBasicCategory}"
 			width="100%" var="pmBasicCategory">
+			
 			<ac:paginator for="groupdetailsId"></ac:paginator>
 			
-			<ui:remove>
-			selection="#{categoryBackingBean.managedBean.selectedBasicCategory2}" selectionMode="multiple"
 			<p:column selectionMode="multiple" style="width:2%" />
-			</ui:remove>
 			
 			<p:column>
 				<f:facet name="header">
@@ -265,7 +264,7 @@
 		</p:panel>
 		
 		
-		<p:remoteCommand name="updateCategory" update="groupdetails"  action="#{categoryBackingBean.populateToSaveLOV}" />
+		<p:remoteCommand name="updateCategory" update="groupdetails" action="#{categoryBackingBean.populateToSaveLOV}" />
 		<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory" modal="true" width="700" position="top" >
 			<f:facet name="header">
 				<h:panelGroup id="lovTitle">#{lbl['lbl.pm.select.category']}</h:panelGroup>
