@@ -21,9 +21,10 @@
 				
 				<p:selectOneMenu id="profBodyName" value="#{suppAssocBody.pmCertBody.certBodyId}" 
 					required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.profBody.profBody']}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />	
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemDisabled="#{profBody.certBodyId == null}" />	
 					<f:selectItems value="#{registrationBackingBean.managedBean.profCertBodyLs}"
 						var="profBody" itemLabel="#{profBody.bodyName}" itemValue="#{profBody.certBodyId}" />
+					<p:ajax event="change" update="profBodyName,otherAssocId" listener="#{registrationBackingBean.profBodyOnChange(suppAssocBody)}" />
 				</p:selectOneMenu>
 				<p:message id="profBodyNameMsg" for="profBodyName" display="icon" />
 			</p:column>

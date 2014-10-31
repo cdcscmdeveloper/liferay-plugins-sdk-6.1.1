@@ -1495,12 +1495,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void profBodyOnChange(SmAssociationBody assocBody){
 		System.out.println("Assoc >>>>>" + assocBody.getPmCertBody().getCertBodyId());
 		
-		if(assocBody.getPmCertBody().getCertBodyId() != null){
+		if(assocBody.getPmCertBody().getCertBodyId() != null && !assocBody.getPmCertBody().getCertBodyId().equals("")){
 			Long profCertId = assocBody.getPmCertBody().getCertBodyId();
 			PmCertBody selectedCertBody = profCertBodyMap.get(profCertId);
-			
+
 			assocBody.setPmCertBody(selectedCertBody);
-			
 		}
 	}
 
