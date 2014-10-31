@@ -25,7 +25,7 @@
 	<p:panel header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
 		<p:dataTable id="searchGroupProfile"
 			value="#{usergroupBackingBean.userGroupList}" var="userGrp"
-			lazy="true">
+			rows="10" lazy="true">
 			<ac:paginator for="searchGroupProfile" />
 
 			<p:column headerText="#{lbl['lbl.pm.ug.result.groupcode']}" style="width:15%">

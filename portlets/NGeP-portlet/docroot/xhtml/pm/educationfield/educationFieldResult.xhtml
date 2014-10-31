@@ -29,7 +29,7 @@
 	
 	<p:panel id="educationResult" header="#{lbl['lbl.pm.sa.result']}" toggleable="true">
 	<p:dataTable id="educationSR" value="#{educationBackingBean.educationFieldDataModel}"
-				var="educationList" rowIndexVar="index" lazy="true">	
+				rows="10" var="educationList" rowIndexVar="index" lazy="true">	
 	   <ac:paginator for="educationSR" />
 		
        <p:column headerText="#{lbl['lbl.pm.ef.code']}" style="width:20%;"> 

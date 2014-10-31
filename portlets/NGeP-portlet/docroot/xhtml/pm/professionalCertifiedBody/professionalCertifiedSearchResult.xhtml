@@ -30,7 +30,8 @@
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.pm.search.result']}" id="professionalCertResult" toggleable="true">
-	<p:dataTable id="searchProfCertResult"  var="certBody" editable="true" value="#{profcertifiedbodyBackingBean.profCertBodyModel}" lazy="true">
+	<p:dataTable id="searchProfCertResult"  var="certBody" editable="true" value="#{profcertifiedbodyBackingBean.profCertBodyModel}"
+		rows="10" lazy="true">
 	<ac:paginator for="searchProfCertResult" />
        <p:column headerText="#{lbl['lbl.pm.pc.code']}" style="width:10%"> 
         <h:outputText  value="#{certBody.bodyCode}"/>       
