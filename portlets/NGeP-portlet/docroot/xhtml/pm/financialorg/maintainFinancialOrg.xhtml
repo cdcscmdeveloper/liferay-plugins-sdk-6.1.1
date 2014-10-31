@@ -30,27 +30,38 @@
 			test="#{!financialOrgBackingBean.managedBean.financialOrg.brandNew}">
 			<ui:include src="/xhtml/pm/financialorg/financialOrgHeader.xhtml"></ui:include>
 		</c:if>
-		<table border="0" cellspacing="0" cellpadding="0" width="100%" id="subMenu">
+		<table border="0" cellspacing="0" cellpadding="0" width="100%"
+			id="subMenu">
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu"
-						activeIndex="#{financialOrgBackingBean.managedBean.financialActiveIndex}"
+						activeIndex="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
 						<p:menuitem value="#{lbl['lbl.pm.menu.general.finance']}"
-							action="#{financialOrgBackingBean.getGeneralInfo}" update="@form" />
+							update="@form">
+							<f:param name="disableValidation" value="" />
+							<f:setPropertyActionListener
+								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
+								value="#{financialOrgBackingBean.generalInfoTab}" />
+						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.pm.menu.factoringbranch.finance']}"
-							action="#{financialOrgBackingBean.getFactringBranchInfo}"
 							rendered="#{financialOrgBackingBean.managedBean.pmFinancialSvc[0].serviceTypeCode.parameterCode eq 'FC'}"
-							update="@form" />
+							update="@form">
+							<f:param name="disableValidation" value="" />
+							<f:setPropertyActionListener
+								target="#{financialOrgBackingBean.managedBean.selectedTabIndex}"
+								value="#{financialOrgBackingBean.factringBranchInfoTab}" />
+						</p:menuitem>
 
 					</p:tabMenu></td>
-				<td width="80%" valign="top"><c:if
-						test="#{financialOrgBackingBean.managedBean.financialActiveIndex eq '0'}">
+				<td width="80%" valign="top"><p:outputPanel
+						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.generalInfoTab}">
 						<ui:include src="generalFinancialdetails.xhtml" />
-					</c:if> <c:if
-						test="#{financialOrgBackingBean.managedBean.financialActiveIndex eq '1'}">
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{financialOrgBackingBean.managedBean.selectedTabIndex == financialOrgBackingBean.factringBranchInfoTab}">
 						<ui:include src="factoringBranch.xhtml" />
-					</c:if></td>
+					</p:outputPanel> </td>
 			</tr>
 		</table>
 

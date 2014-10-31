@@ -33,33 +33,44 @@
 			<tr>
 				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
 						styleClass="sidemenu"
-						activeIndex="#{organisationBackingBean.managedBean.organisationActiveIndex}"
+						activeIndex="#{organisationBackingBean.managedBean.selectedTabIndex}"
 						style="display : table-caption;">
+
 						<p:menuitem value="#{lbl['lbl.pm.sidemenu.general.org.profile']}"
-							action="#{organisationBackingBean.getProfileDetails}"
-							update="@form" />
+							update="@form">
+							<f:param name="disableValidation" value="" />
+							<f:setPropertyActionListener
+								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
+								value="#{organisationBackingBean.profileDetails}" />
+						</p:menuitem>
 						<p:menuitem
-							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}"
-							action="#{organisationBackingBean.getGovernmentSeller}"
-							rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
-							update="@form" />
+							value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}"
+							update="@form">
+							<f:param name="disableValidation" value="" />
+							<f:setPropertyActionListener
+								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
+								value="#{organisationBackingBean.governmentSeller}" />
+						</p:menuitem>
 						<p:menuitem
-							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}"
-							action="#{organisationBackingBean.getResponsibleProfile}"
-							rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
-							update="@form" />
+							value="#{lbl['lbl.pm.sidemenu.general.org.resProfile']}" rendered="#{organisationBackingBean.managedBean.orgProfile.groupOrg}"
+							update="@form">
+							<f:param name="disableValidation" value="" />
+							<f:setPropertyActionListener
+								target="#{organisationBackingBean.managedBean.selectedTabIndex}"
+								value="#{organisationBackingBean.responsibleProfile}"  />
+						</p:menuitem>
 
 					</p:tabMenu></td>
-				<td width="80%" valign="top"><c:if
-						test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '0'}">
+				<td width="80%" valign="top"><p:outputPanel
+						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.profileDetails}">
 						<ui:include src="orgProfileDetails.xhtml" />
-					</c:if> <c:if
-						test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '1'}">
+					</p:outputPanel> <p:outputPanel
+						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.governmentSeller}">
 						<ui:include src="orgGovernmentSeller.xhtml" />
-					</c:if> <c:if
-						test="#{organisationBackingBean.managedBean.organisationActiveIndex eq '2'}">
+					</p:outputPanel> <p:outputPanel
+						rendered="#{organisationBackingBean.managedBean.selectedTabIndex == organisationBackingBean.responsibleProfile}">
 						<ui:include src="orgResponsibleProfile.xhtml" />
-					</c:if></td>
+					</p:outputPanel></td>
 			</tr>
 		</table>
 	</ui:define>

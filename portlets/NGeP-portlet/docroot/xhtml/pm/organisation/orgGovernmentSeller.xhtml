@@ -35,7 +35,8 @@
 			<p:column headerText="#{lbl['lbl.pm.financialorg.status']}">
 				<p:selectOneMenu value="#{financialacc.recordStatusFlg}"
 					required="true" style="margin-bottom: 5px;">
-					<f:selectItems value="#{organisationBackingBean.getStatusOptions()}" />
+					<f:selectItems
+						value="#{organisationBackingBean.getStatusOptions()}" />
 				</p:selectOneMenu>
 
 			</p:column>
@@ -59,20 +60,16 @@
 
 	<p:panel header="#{lbl['lbl.pm.header.general.org.supplierusr']}"
 		toggleable="true">
-		<p:pickList id="approverpickList" var="data" itemValue="#{data}"
-			itemLabel="#{data.userName}"
-			value="#{organisationBackingBean.managedBean.supplierUsers}"
-			showTargetControls="true" filterMatchMode="contains">
-			<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}
-										
+		
+		<p:pickList id="approverpickList" value="#{organisationBackingBean.managedBean.supplierUsers}"
+				var="data" showTargetControls="true"
+				itemLabel="#{data.userName}"
+				itemValue="#{data}" converter="supplierPickListConverter">
+				<f:facet name="sourceCaption">#{lbl['lbl.pm.org.availableUers']}										
 			</f:facet>
-			<f:facet name="targetCaption">#{lbl['lbl.pm.org.selectedUsers']}
-										
+			<f:facet name="targetCaption">#{lbl['lbl.pm.org.selectedUsers']}										
 			</f:facet>
-			<p:column style="width:75%;">
-				<h:outputText value="#{data}" />
-			</p:column>
-		</p:pickList>
+			</p:pickList>
 	</p:panel>
 
 </ui:composition>

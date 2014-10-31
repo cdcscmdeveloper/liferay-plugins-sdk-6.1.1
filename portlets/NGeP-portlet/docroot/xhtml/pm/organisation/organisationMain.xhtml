@@ -55,15 +55,10 @@
 					style="width :15%">
 
 					<h:outputText value="Active"
-						rendered="#{organisation.recordStatusFlg == '1'}" />
-					<h:outputText value="Expired"
-						rendered="#{organisation.recordStatusFlg == '2'}" />
-					<h:outputText value="Cancled"
-						rendered="#{organisation.recordStatusFlg == '3'}" />
+						rendered="#{organisation.recordStatusFlg == '1'}" />					
 					<h:outputText value="Inactive"
 						rendered="#{organisation.recordStatusFlg == '0'}" />
-					<h:outputText value="Deleted"
-						rendered="#{organisation.recordStatusFlg == '9'}" />
+					
 				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.organisation.action']}"
 					style="width :5%">
