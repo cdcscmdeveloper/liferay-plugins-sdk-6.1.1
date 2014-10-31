@@ -79,6 +79,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress flManualAddress;
 	private List<SelectItem> supplierBranchesList;
 	private List<PmUserGroup> userGroupList;
+	private List<PmOrgProfile> agentOrgProfileList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -2223,6 +2224,23 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setShowItemAddrList(List<FlFulfilmentItemAddr> showItemAddrList) {
 		this.showItemAddrList = showItemAddrList;
+	}
+
+	/**
+	 * @return the agentOrgProfileList
+	 */
+	public List<PmOrgProfile> getAgentOrgProfileList() {
+		if(agentOrgProfileList == null){
+			agentOrgProfileList = new ArrayList<PmOrgProfile>();
+		}
+		return agentOrgProfileList;
+	}
+
+	/**
+	 * @param agentOrgProfileList the agentOrgProfileList to set
+	 */
+	public void setAgentOrgProfileList(List<PmOrgProfile> agentOrgProfileList) {
+		this.agentOrgProfileList = agentOrgProfileList;
 	}
 
 }

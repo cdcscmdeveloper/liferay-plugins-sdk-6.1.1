@@ -303,6 +303,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			validatePreparedOrgAndAgencies();
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)){
 				if(getManagedBean().getFlRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Delivery Address"});
@@ -316,6 +317,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 				}
 			}
+			
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -904,7 +906,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,
 							IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -916,7 +918,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 			if (coObj.getContractId().intValue() == 0) {//TODO
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
-				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 			
@@ -1009,9 +1011,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 				}
 			}
-			
 			for(CtAgency agency : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()){
-				
+				getManagedBean().getAgentOrgProfileList().add(agency.getOrgProfile());
 				if(agency == getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0)){
 					getManagedBean().setOrgProfileIds(agency.getOrgProfile().getOrgProfileId().toString());
 				}else{
@@ -1932,14 +1933,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
+			validatePreparedOrgAndAgencies();
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
 		} else if(selectedTabIndex==2){
+			validatePreparedOrgAndAgencies();
 			validateOrderQuantity();
 			if(getManagedBean().getFlRequest().getFlDeliveryAddresses()!=null) { 
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			}
 		} else if(selectedTabIndex==3){
+			validatePreparedOrgAndAgencies();
 			validateOrderQuantity();
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
@@ -1950,10 +1954,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
 		} else if(selectedTabIndex==4){
+			validatePreparedOrgAndAgencies();
 			initializeApproverGroup();
 		}
 	}
 	
+	private void validatePreparedOrgAndAgencies() {
+		if(!getManagedBean().getAgentOrgProfileList().contains(getManagedBean().getFlRequest().getPreparedOrgProfile())){
+			PmOrgProfile orgProfile = getManagedBean().getFlRequest().getPreparedOrgProfile();
+			throw new EpException(MessageConst.ERROR_745054, new String[]{orgProfile.getPmOrgValidity().getOrgCode(),orgProfile.getPmOrgValidity().getOrgName(),getManagedBean().getFlRequest().getCtContract().getContractNo()});
+		}
+	}
+
 	private void validateOrderQuantity() {
 		// Order quantity must be larger than 0 if fulfilment type = scheduled or as and when
 		if(getManagedBean().getFlRequest().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_ONE_OFF)) {
