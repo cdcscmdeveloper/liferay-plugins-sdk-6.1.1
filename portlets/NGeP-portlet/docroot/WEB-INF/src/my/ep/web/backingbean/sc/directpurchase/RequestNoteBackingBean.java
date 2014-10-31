@@ -279,7 +279,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_REQUEST_NOTE), scRequestNote.getRequestNoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
 				
-				requestNoteReqDTO.setRequestItemId(scRequestNote.getRequestNoteId());
+				requestNoteReqDTO.setRequestNoteId(scRequestNote.getRequestNoteId());
 				requestNoteResDTO = directPurchaseSO.getRequestNote(requestNoteReqDTO);
 				getManagedBean().setRequestNote(requestNoteResDTO.getRequestNoteDetail());
 				
