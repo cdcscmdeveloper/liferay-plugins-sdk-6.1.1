@@ -326,9 +326,9 @@ public class SmApplicationBackingBean extends
 						throw new EpException(MessageConst.ERROR_722565);
 					}
 				} else {
-					cannotProceedAlertMsg = SmApplicationUtil
-							.checkPendingActivationPersonnelList(currSupp
-									.getSupplierId());
+//					cannotProceedAlertMsg = SmApplicationUtil
+//							.checkPendingActivationPersonnelList(currSupp
+//									.getSupplierId());
 				}
 				cannotProceedAlertMsg = SmApplicationUtil
 						.checkActiveSmApplForSupp(currSupp);
