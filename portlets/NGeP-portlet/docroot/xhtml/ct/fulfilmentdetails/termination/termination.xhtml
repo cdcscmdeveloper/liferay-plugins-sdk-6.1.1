@@ -125,7 +125,8 @@
 							terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:330px;">
-		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}">
+		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
+		   or suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true"/>
 			 <p:spacer width="2" />
 			 <h:panelGrid columns="2">
@@ -149,7 +150,8 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement']}" />
 			 </h:panelGrid>
 	       </h:panelGrid>	
-	       <h:panelGrid columns="3">
+	       <h:panelGrid columns="3" 
+	          rendered="#{suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}">
 			  <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.mto}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
@@ -167,7 +169,9 @@
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap201.exemption']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	
-		    <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount > terminationBackingBean.managedBean.performanceBondRuleAmt and terminationBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry}" >
+		    <h:panelGrid columns="3" 
+		      rendered="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount > terminationBackingBean.managedBean.performanceBondRuleAmt and terminationBackingBean.managedBean.ctContract.contractType.parameterCode==ParameterConst.contractTypeMinistry
+		      or suspensionBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}" >
 			 <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
