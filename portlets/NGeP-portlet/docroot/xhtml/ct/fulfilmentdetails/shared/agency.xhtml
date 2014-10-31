@@ -77,8 +77,7 @@
        	</div>
        	<div class="ppRightBtn">
        		<p:commandButton id="addBtn" value="#{lbl['lbl.btn.add']}" process="@form" icon="ui-icon-add" oncomplete="dlgAgency.show();" 
-       		    action="#{contractDetailsBackingBean.setMinistryOwnerId()}"  update=":form:ministry"
-       		    rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
+       		    action="#{contractDetailsBackingBean.setMinistryOwnerId()}"  update=":form:ministry" rendered="#{contractDetailsBackingBean.addAgencyButtonFlg}">
        			<p:tooltip for="addBtn">
 				    <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency']}" escape="false" />
 				</p:tooltip>

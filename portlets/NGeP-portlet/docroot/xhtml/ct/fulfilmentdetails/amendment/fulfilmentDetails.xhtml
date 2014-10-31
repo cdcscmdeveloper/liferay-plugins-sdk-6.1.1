@@ -128,7 +128,7 @@
 							amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
 	    </h:panelGrid>
 		<h:panelGrid  style="width:260px;">
-		   <h:panelGrid columns="3">
+		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement}">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			    <p:ajax event="change" update=":form:justificationPanel,:form:exemptId" listener="#{amendmentBackingBean.chkJustificationAction}" process="@this"/> 
 			 </p:selectBooleanCheckbox>
