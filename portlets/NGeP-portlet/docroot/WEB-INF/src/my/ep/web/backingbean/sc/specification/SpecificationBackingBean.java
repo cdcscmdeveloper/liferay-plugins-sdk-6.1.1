@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -119,6 +120,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
@@ -151,7 +153,6 @@ import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -689,14 +690,22 @@ public class SpecificationBackingBean extends
 
 			FacesScopes facesScopes = new FacesScopes();
 			ScQtRemark remark = new ScQtRemark();
-			remark.setScQt(this.getManagedBean().getScQt());
-			remark = new ScQtRemark();
+			// ScWorkFlowStatus status = new ScWorkFlowStatus();
+			// PmStatus status=new PmStatus();
 			setUserDetails(remark);
+			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
 			remark.setCreatedUser(facesScopes.getUserSessionBean());
-			PmStatus status = new PmStatus();
-			status.setStatusId(62651L);
-			// remark.setPmStatus(status);
+			remark.setScQt(this.getManagedBean().getScQt());
+			// status.setPmStatus(this.getManagedBean().getScQt().getQtStatus());
+			// status.setStatusId(this.getManagedBean().getScQt().getQtStatus().getStatusId());
+			remark.setScWorkFlowStatus(null);
 			this.getManagedBean().setContractremark(remark);
+			this.getManagedBean().setScQtRemarksList(
+					new ArrayList<ScQtRemark>());
+			this.getManagedBean().getScQtRemarksList()
+					.add(this.getManagedBean().getContractremark());
 
 			return "searchCircularPanelContract.xhtml?faces-redirect=true";
 		}
@@ -2984,7 +2993,7 @@ public class SpecificationBackingBean extends
 			Long divisionId = (Long) event.getComponent().getAttributes()
 					.get("value");
 			if (divisionId != null) {
-				reqDTO.setStateId(divisionId);
+				reqDTO.setDivisionId(divisionId);
 				List<PmDivision> divisionList = this.getManagedBean()
 						.getDivisionList();
 				for (PmDivision division : divisionList) {
@@ -2998,11 +3007,9 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setDistrictList(null);
 			districtSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IDistrictSO.class);
-			resDto = districtSo.retriveDistrictListByStateID(reqDTO);
+			resDto = districtSo.retriveDistrictListByDivision(reqDTO);
 
-			if (resDto != null) {
-				this.getManagedBean().setDistrictList(resDto.getDistrictList());
-			}
+			this.getManagedBean().setDistrictList(resDto.getDistrictList());
 
 		} finally {
 			districtSo = null;
@@ -8567,7 +8574,6 @@ public class SpecificationBackingBean extends
 
 		} else {
 
-		
 			PmUser curLogedInUser = facesScopes.getUserSessionBean();
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -10036,6 +10042,19 @@ public class SpecificationBackingBean extends
 		scQt.setScQtCommittees(null);
 		scQt.setScQtStatus(null);
 		scQt.setScQtBriefings(null);
+		List<ScQtRemark> remarks = this.getManagedBean().getScQtRemarksList();
+		if (null != remarks) {
+			for (int i = 0; i < remarks.size(); i++) {
+				String userRemark = remarks.get(i).getRemark();
+				if (null == userRemark || "".equals(userRemark)) {
+					remarks.remove(i);
+				}
+			}
+		}
+
+		if (null != remarks) {
+			scQt.setScQtRemarks(remarks);
+		}
 		spReqDTO.setScQt(scQt);
 		spReqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
