@@ -281,6 +281,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	//			  }
 
     	// Add selected supplier item.
+    	requestSupplierItem.setCmSupplierItem(cmSupplierItem);
     	supplierItems.add(requestSupplierItem);	
     	requestSupplierItem.setScPrInquiy(scPrInquiry);
     	requestItem.setSupplierItems(supplierItems);
@@ -449,9 +450,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 							} else{
 								//scSupplierItemPrices.add(scSupplierItemPrice);
 								itemPricesMap.put(scSupplierItemPrice, scSupplierItemPrice);
-								
 							}
-							
 						}
 					}
 				}
