@@ -10,13 +10,13 @@
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
-			widgetVar="technicalChecklist" rows="10"
+			widgetVar="technicalChecklist" 
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			rowIndexVar="index"
 			selection="#{specificationBackingBean.managedBean.s2TechSelect}"
 			first="#{specificationBackingBean.managedBean.technicalTableRow}"
 			rowKey="#{stageTwoTechnical}">
-			<ac:paginator for="stageTwotechProposal" />
+		<!-- 	<ac:paginator for="stageTwotechProposal" /> -->
 
 			<!-- 	<p:column selectionMode="multiple" style="text-align:left;"
 				rendered="#{stageTwoTechnical.manditory !='true' and stageTwoTechnical.definationType.parameterCode ne 'TS'}" />
