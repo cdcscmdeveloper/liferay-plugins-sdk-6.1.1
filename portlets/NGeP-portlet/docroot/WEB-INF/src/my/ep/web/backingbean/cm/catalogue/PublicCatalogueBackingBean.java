@@ -478,9 +478,9 @@ public class PublicCatalogueBackingBean extends
 
 			if (this.getManagedBean().getFamilyList().size() > 1) {
 				this.getManagedBean().setCatalogueList(null);
-				for (CmUnspsc commodity : this.getManagedBean().getFamilyList()) {
-					reqDTO.getSubStringFamilyCode().add(commodity.getUnspscCode());
-				}
+//				for (CmUnspsc commodity : this.getManagedBean().getFamilyList()) {//ByPass this condition clause
+//					reqDTO.getSubStringFamilyCode().add(commodity.getUnspscCode());
+//				}
 
 				resDTO = catalogueSO.findPubCatalogueByFamilyLevel(reqDTO);
 
