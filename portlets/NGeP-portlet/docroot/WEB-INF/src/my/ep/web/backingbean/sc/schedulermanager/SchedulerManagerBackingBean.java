@@ -9,9 +9,9 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sc.schedulermanager.SchedulerManagerManagedBean;
-import my.ep.web.scheduler.constants.sc.ebidding.EPSchedulerConstants;
+import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.sc.ebidding.util.SchedulerFactoryUtil;
+import my.ep.web.scheduler.util.SchedulerFactoryUtil;
 import my.ep.web.util.sc.helper.SchedulerHelper;
 import my.ep.web.vo.EpJobVO;
 
@@ -67,9 +67,9 @@ public class SchedulerManagerBackingBean extends
 					jobState = EpSchedulerHelper.getTriggerState(trigger);
 
 					if (jobState.equals(TriggerState.PAUSED.toString())) {
-						jobAction = EPSchedulerConstants.JOB_RESUME;
+						jobAction = ScSchedulerConstants.JOB_RESUME;
 					} else {
-						jobAction = EPSchedulerConstants.JOB_PAUSE;
+						jobAction = ScSchedulerConstants.JOB_PAUSE;
 					}
 
 					getManagedBean().getEpSchedulerJobList().add(
@@ -90,7 +90,7 @@ public class SchedulerManagerBackingBean extends
 
 	public void pauseOrResumeJob(EpJobVO epJobVO) {
 		try {
-			if (epJobVO.getAction().equals(EPSchedulerConstants.JOB_PAUSE)) {
+			if (epJobVO.getAction().equals(ScSchedulerConstants.JOB_PAUSE)) {
 				getManagedBean().getScheduler().pauseJob(epJobVO.getJobKey());
 			} else {
 				getManagedBean().getScheduler().resumeJob(epJobVO.getJobKey());
@@ -102,7 +102,7 @@ public class SchedulerManagerBackingBean extends
 
 	public void runNowJob(EpJobVO epJobVO) {
 
-		if (epJobVO.getStatus().equals(EPSchedulerConstants.JOB_WAIT)) {
+		if (epJobVO.getStatus().equals(ScSchedulerConstants.JOB_WAIT)) {
 			// schedule the job
 			EpSchedulerHelper.runBuildJobNow(epJobVO.getJobKey());
 		}
@@ -110,9 +110,9 @@ public class SchedulerManagerBackingBean extends
 	}
 
 	private String getJobStatus(JobKey jobKey) {
-		String retVal = EPSchedulerConstants.JOB_WAIT;
+		String retVal = ScSchedulerConstants.JOB_WAIT;
 		if (EpSchedulerHelper.isJobRunningNow(jobKey)) {
-			retVal = EPSchedulerConstants.JOB_RUN;
+			retVal = ScSchedulerConstants.JOB_RUN;
 		}
 		return retVal;
 	}
