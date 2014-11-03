@@ -16,16 +16,16 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:blockUI>		
 	
-			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{pPlanBackingBean.managedBean.taskId==null}" 
 		    	action="#{pPlanBackingBean.redirectToSearchPlan}"/>
 
 	    	<div class="rowBtnRight">
 				<ui:repeat
 					var="bpmAction"
 					value="#{pPlanBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
 						action="#{pPlanBackingBean.savePlan(bpmAction)}">
-						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<f:param name="disableValidation" value="true" />     
 					</p:commandButton>&nbsp;
 				</ui:repeat>
